@@ -1,0 +1,312 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HumanitarianAssistance.Common.Helpers
+{
+  public static class StaticResource
+  {
+    public const int successStatusCode = 200;
+    public const int otherManagerAlreadyParticipatedStatusCode = 800;
+    public const int failStatusCode = 400;
+    public const int NotParticipatedCode = 100;
+    public const int MandateNameAlreadyExistCode = 900;
+    public const string NoDataFound = "No Data Found";
+    public const int IdAlreadyUsedInOtherTable = 500;
+
+    public const int ParticipationApprovedCode = 600;
+    public const int ParticipationNotApprovedCode = 700;
+    public const int ParticipationRejectionCode = 300;
+    public const string ClaimAddedToRole = "Claim added to a role";
+    public const string NoCompanyTypeFound = "No CompanyType Found";
+    public const string NoCountryFound = "No Country found";
+    public const string NoStateFound = "No State found";
+    public const string InvalidCompanyTypeId = "Invalid Company type id";
+    public const string InvalidRole = "Invalid Role";
+    public const string SomethingWrong = "Something went wrong";
+    public const string RoleCreated = "Role Created";
+    public const string RoleAlreadyExist = "Role already exists";
+    public const string InvalidUser = "Invalid User";
+    public const string RoleAssignedToUser = "Role assigned to user";
+    public const string CompanyCreated = "Company Account Created";
+    public const string CompanyContactNotCreated = "Company contact not created";
+    public const string CompanyContactAlreadyExists = "Company contact already exists";
+    public const string CompanyAccountNotExists = "Company account not exists";
+    public const string CompanyContactCreated = "Company contact created";
+    public const string CompanyAccountNotCreated = "Company account not created";
+    public const string CompanyAccountAlreadyExists = "Company account already exists";
+    public const string CompanyNameAlreadyExists = "Company name already exists";
+    public const string CompanyNameNotExists = "Company name not exists";
+    public const string CompanyNameSameBySameId = "Company name saving by same Id";
+    public const string RoleAlreadyAssignedToUser = "Role assigned to user";
+    public const string EmailSentForResetPassword = "An email sent to registsred email address to reset password";
+    public const string EmailNotSentForResetPassword = "Email not sent";
+    public const string ChangePasswordSuccessfully = "Change Password successfully";
+    public const string PasswordNotChange = "Password change failed";
+    public const string PasswordResetSuccessfully = "Password reset successfuly";
+    public const string PasswordResetNotSuccess = "Password not reset";
+    public const string CompanyTypeAdded = "Company type added";
+    public const string CompanyTypeUpdated = "Company type updated";
+    public const string CompanyTypeDeleted = "Company type deleted";
+    public const string CompanyTypeNotAdded = "Company Type Not Added";
+    public const string CompanyTypeAlreadyExists = "Company Type already exists";
+    public const string ComapnyDeleted = "Company has deleted successfully";
+    public const string ComapnyNotDeleted = "Company has not deleted";
+    public const string ComapnyContactDeleted = "Company contact has deleted";
+    public const string ComapnyContactNotDeleted = "Company contact has not deleted";
+    public const string CompanyDataNotFound = "Invalid Company";
+    public const string CompanyContactNotFound = "Invalid Contact";
+    public const string NoCompanyFound = "No Company Found";
+    public const string NoCompanyContactFound = "No Company Contact Found";
+    public const string CompanyUpdated = "Company details has been updated successfully";
+    public const string CompanyContactUpdated = "Contact details has been updated successfully";
+    public const string AccountStatusUpdated = "Account Status Updated";
+    public const string InvalidCompanyId = "Invalid CompanyId";
+
+
+    public const string TaskTypeAdded = "Task Type has added";
+    public const string TaskTypeNotAdded = "Task Type has not added";
+    public const string TaskTypeDeleted = "Task Type has deleted";
+    public const string TaskTypeNotDeleted = "Task Type has not deleted";
+    public const string InvalidTaskTypeId = "Invalid Task Type Id";
+    public const string NoTaskTypeListFound = "No task type list found";
+    public const string MasterTaskTypeUpdated = "Task Type has updated";
+    public const string MasterTaskTypeNotUpdated = "Task Type has not updated";
+    public const string TaskTypeAlreadyExist = "Task Type has already exists";
+    public const string TaskCreated = "Task has created";
+    public const string TaskNotCreated = "Task has not created";
+    public const string TaskDeleted = "Task has deleted";
+    public const string TaskNotDeleted = "Task has not deleted";
+    public const string TaskEdit = "Task has updated";
+    public const string TaskNotEdit = "Task has not updated";
+    public const string InvalidTaskId = "Invalid Task Id";
+    public const string NoTaskFound = "No Task has found";
+    public const string GeographyAdded = "Geography has added";
+    public const string GeographyNotAdded = "Geography has not added";
+    public const string GeographyAlreadyExist = "Geography has already exists";
+    public const string InvalidGeographyId = "Invalid GeographyId";
+    public const string GeographyDeleted = "Geography has deleted";
+    public const string GeographyNotDeleted = "Geography has not deleted";
+    public const string GeographyEdit = "Geography has updated";
+    public const string GeographyNotEdit = "Geography has not updated";
+    public const string NoGeographyFound = "No Geography has found";
+    public const string RoleDeleted = "Role has deleted";
+    public const string RoleCannotDeleted = "Role cannot deleted";
+    public const string RoleUpdated = "Role has updated";
+    public const string RoleNotUpdated = "Role has not updated";
+    //AssetsClass Resourse
+    public const string AssetClassAdded = "Asset class has added";
+    public const string AssetClassNotAdded = "Task Type has not added";
+    public const string AssetClassAlreadyExist = "Asset class already exist";
+    public const string InvalidAssetClassId = "Invalid AssetClassId";
+    public const string AssetClassDeleted = "Asset Class has deleted";
+    public const string AssetClassNotDeleted = "Asset Class has not deleted";
+    public const string MasterAssetClassUpdated = "Asset Class has updated";
+    public const string MasterAssetClassNotUpdated = "Asset Class has not updated";
+    public const string NoAssetClassListFound = "No AssetClass list found";
+    //ListName Resourse
+    public const string ListNameAdded = "ListName has added";
+    public const string ListNameNotAdded = "ListName has not added";
+    public const string ListNameAlreadyExist = "ListName already exist";
+    public const string InvalidListNameId = "Invalid ListName Id";
+    public const string ListNameDeleted = "ListName has deleted";
+    public const string ListNameNotDeleted = "ListName has not deleted";
+    public const string ListNameUpdated = "ListName has updated";
+    public const string ListNameNotUpdated = "ListName has not updated";
+    public const string NoListFound = "No list found";
+    //Subscription Resourse
+    public const string SubcriptionAdded = "Subcription Saved";
+    public const string SubcriptionNotAdded = "Subcription not added";
+    public const string SubcriptionAlreadyExist = "Subcription already exist";
+    public const string InvalidSubcriptionId = "Invalid Subcription Id";
+    public const string SubcriptionDeleted = "Subcription has deleted";
+    public const string SubcriptionNotDeleted = "Subcription has not deleted";
+    public const string SubcriptionUpdated = "Subcription has updated";
+    public const string SubcriptionNotUpdated = "Subcription has not updated";
+    public const string NoSubscriptionListFound = "No Subscription list found";
+
+    // Mandate
+    public const string MandateStageFound = "Mandate and Stage Found";
+    public const string MandateStageNotFound = "Mandate and Stage Found";
+    public const string MandateCreated = "Mandate has created";
+    public const string MandateNotCreated = "Mandate has not created";
+    public const string NoMandateFound = "No Mandate Found";
+    public const string InvalidMandateId = "Invalid Mandate";
+    public const string InvalidMandateStageId = "Invalid Mandate Stage";
+    public const string NoStageFound = "No Stage Found";
+    public const string MandateCompanySaved = "Mandate Company Saved";
+    public const string InvalidData = "Invalid input data";
+    public const string MandateTeamSaved = "Mandate Team Saved";
+    public const string MandateStageTeamSaved = "Mandate Stage Team Saved";
+    public const string MandateStageCompanySaved = "Mandate Stage Company Saved";
+    public const string NoMandateStatusFound = "No Master Mandate Status Found";
+    public const string MandateNameNotExists = "Mandate Name Not Exists";
+    public const string MandateUpdated = "Mandate Updated";
+    public const string MandateDeleted = "MandateDeleted";
+    public const string MandateNotDeleted = "Mandate Cannot Deleted";
+    public const string MandateNameAlreadyExist = "Name already exists";
+    public const string MandateCopied = "Mandate copied";
+    public const string MandateNotCopied = "Mandate Not copied";
+    public const string StageNotUpdatedSuccessfully = "Stage not updated successfully";
+    public const string NoNextStageFound = "No Next Stage Found";
+    public const string StrategyTypeAdded = "Strategy Type Added";
+    public const string StrategyTypeNotAdded = "Strategy Type Not Added";
+    public const string StrategyTypeAlreadyExist = "Strategy Type Already exist";
+    public const string InvalidStrategyID = "Invalid Strategy ID";
+    //public const string StrategyUpdated = "Strategy Updated";
+    // public const string StrategyNotUpdated = "Strategy Not Updated";
+
+    // Workflow
+    public const string WorkflowCreated = "Workflow has created";
+    public const string WorkflowNotCreated = "Workflow has not created";
+    public const string NoWorkFlowFound = "No WorkFlow Found";
+    public const string InvalidWorkFlowId = "Invalid WorkFlow Id";
+    public const string WorkFlowAlreadyLinked = "Cannot edit, WorkFlow Already Linked";
+    public const string WorkFlowCannotDeleted = "Cannot Delete, WorkFlow Already Linked";
+    public const string WorkFlowAlreadyExists = "WorkFlow name already exists";
+    public const string WorkFlowDeleted = "Workflow deleted";
+    public const string WorkFlowNotDeleted = "Workflow Not deleted";
+    public const string WorkFlowCopied = "Mandate Copied";
+    public const string WorkFlowNotCopied = "Mandate Not Copied";
+
+    // Questionnaire
+    public const string QuestionnaireCreated = "Questionnaire has created";
+    public const string QuestionnaireNotCreated = "Questionnaire has not created";
+    public const string NoQuestionnaireFound = "No Questionnaire Found";
+    public const string QuestionnaireContactSaved = "Questionnaire Contact Saved";
+    public const string QuestionnaireTeamSaved = "Questionnaire team Saved";
+    public const string QuestionnaireSectionAdded = "Questionnaire Section Added";
+    public const string InvalidQuestionnairePublishId = "Invalid Questionnaire PublishId";
+    public const string QuestionnaireResponseSubmitted = "Questionnaire response submitted";
+    public const string QuestionnaireResponseSaved = "Questionnaire response saved";
+    public const string QuestionnaireResponseCannotSubmit = "Questionnaire response not submitted";
+    public const string QuestionnaireResponseCannotSaved = "Questionnaire response not saved";
+    public const string QuestionnaireFound = "Questionnaire found";
+    public const string ParticipationSent = "Participation request sent";
+    public const string ParticipationRejectedByManager = "Participation rejected by manager";
+    public const string OtherManagerAlreadyParticipated = "Other manager from your company already participated";
+    public const string QuestionnaireSectionDeleted = "Section Deleted";
+    public const string QuestionnaireSectionNotDeleted = "Section Not Deleted";
+    public const string AlreadyParticipated = "Already participated";
+    public const string NotParticipated = "Not yet participated";
+    public const string ParticipationNotApproved = "Participation not approved";
+    public const string ParticipationApproved = "Participation approved";
+    public const string ParticipatedRejected = "Participated rejected";
+    public const string AllowClarificationUpdated = "Allow Clarification Updated";
+    public const string NoResponseFound = "No querstionnaire response found";
+    public const string QuestionnaireImportedSuccess = "Questionnaire Imported Successfully";
+    public const string QuestionnaireNotImportedSuccess = "Questionnaire Not Imported Successfully";
+    public const string PartiallyStatusUpdated = "Partially Status Updated";
+    // public const string NoMasterQuestionnaireStatusFound = "No Master QuestionnaireStatus Found";
+
+    public const string SectionOrSubsectionDeleted = "SectionOrSubsection Deleted";
+    public const string InvalidSectionOrSubscetionId = "Invalid SectionOrSubsectionId";
+    public const string SectionOrSubsectionUpdated = "SectionOrSubscetion Updated";
+    public const string InvalidQuestionnaireId = "Invalid Questionnaire Id";
+    //public const string InvalidSectionOrSubsectionId = "Invalid SectionOrSubsection";
+    // public const string NoMasterQuestionnaireStatusFound = "No Master QuestionnaireStatus Found";
+
+    //Question Type Choice
+    public const string NoQuestionTypeChoiceFound = "No QuestionType Choice Found";
+
+    //Feature
+    public const string FeaturealreadyExists = "Feature already Exists";
+    public const string FeatureAdded = "Feature added";
+    public const string FeatureUpdated = "Feature updated";
+    public const string FeatureNotAdded = "Feature not added";
+    public const string NoFeatureFound = "No feature found";
+    public const string InvalidFeatureId = "Invalid feature Id";
+    public const string FeatureDeleted = "Feature has deleted";
+
+    // Home site users
+    public const string UserDetailsSaved = "Request has been saved. We will send you email once your account acitaved";
+    public const string NoApplicationFound = "No Application Found";
+
+    //Currency
+    public const string NoCurrencyFound = "No Currency Found";
+
+    //Company Contact
+    public const string UserCreated = "New User Created";
+    public const string UserAlreadyExist = "User is already exists";
+    public const string UserNotExist = "User does not exists";
+    public const string ApplicationStatusUpdated = "Application status has updated";
+    public const string ContactAccountStatusUpdated = "Contact Account Status Updated";
+    public const string InvalidContactId = "Invalid ContactId";
+    public const string ContactSaved = "Client Contact Saved";
+
+    //Question
+    public const string QuestionCreated = "Question Created";
+    public const string InvalidQuestionId = "Invalid QuestionId";
+    public const string QuestionUpdated = "Question Updated";
+    public const string QuestionDeleted = "Question Deleted";
+
+    public const string QuestionnaireTeamRoleCreated = "Questionnaire Team Role Created";
+    public const string QuestionnaireTeamRoleUpdated = "Questionnaire Team Role Updated";
+    public const string DuplicateRole = "Duplicate Role";
+    public const string QuestionnaireTeamRoleDeleted = "Questionnaire Team Role Deleted";
+    public const string InvalidQuestionnaireTeamRoleId = "Invalid Questionnaire Team Role Id";
+
+
+    //SubAssetClass
+    public const string NoSubAssetClassFound = "No SubAsset Class Found";
+
+    //Strategy
+    public const string NoStrategyFound = "No Strategy Found";
+    // Participant Query
+    public const string QuerySaved = "Query Saved";
+    public const string QueryResponseSaved = "Query Response Saved Successfully";
+    public const string StrategyAdded = "Strategy Added";
+    public const string NoStrategyAdded = "Strategy Not Added";
+    public const string StrategyAlreadyExist = "Strategy already exist";
+    public const string InvalidStrategyId = "Invalid Strategy Id";
+    public const string StrategyUpdated = "Strategy Updated";
+    public const string StrategyNotUpdated = "Strategy Not Updated";
+    public const string StrategyRatingCreated = "Strategy Rating Created";
+    public const string StrategyRatingUpdated = "Strategy Rating Updated";
+    public const string StrategyRatingNotCreated = "Strategy Rating Not Created";
+    public const string StrategyDeleted = "Strategy Deleted";
+    public const string StrategyNotDeleted = "Strategy Not Deleted";
+    public const string StrategyLinkedToMandate = "Strategy Linked To Mandate";
+    //Delete MangerCompany
+    public const string MandateCompanyDeleted = "MandateCompanyDeleted";
+    public const string MandateCompanyNotDeleted = "MandateCompanyNotDeleted";
+
+    //Document
+    public const string NoDocumentTypeFound = "No Document Type Found";
+    public const string DocumentFound = "Document Found";
+    public const string DocumnetNotFound = "Document Not Found";
+    public const string DocumentStatusUpdated = "Document Status Updated";
+    public const string DocumentUploadSuccessfully = "Document Upload Successfully";
+
+
+    //Delete Questionnaire
+    public const string QuestionnaireDeleted = "QuestionnaireDeleted";
+    public const string NoEvalutorFound = "No Evalutor Found";
+    public const string NoReportFound = "No Report Found";
+    public const string SomethingWentWrong = "SomethingWentWrong";
+    //
+    public const string QuestionnaireDedlineDateNotPassed = "Questionnaire DedlineDate Not Passed";
+    public const string SubAssetClassAdded = " Sub Asset class has added";
+    public const string GeohraphyClassCreated = " Geohraphy Class Created";
+    public const string GeographyLinkedToMandate = "Cannot deleted already linked to mandate";
+    public const string AssetLinkedToMandate = "Cannot deleted already linked to mandate";
+    public const string ShowWeightUpdated = "ShowWeightUpdated";
+
+    //Notification
+    public const string NoticiationNotFound = "Notification Not Found";
+    public const string NotificationUpdated = "Notification Updated";
+    public const string NotificationNotUpdated = "Notification Not Updated";
+    public const string InvalidId = "Invalid Id";
+    // Notification Messages
+    public const string Director = "You have been assigned as a Director role for questionnaire";
+    public const string Viewer = "You have been assigned as a Viewer role for questionnaire";
+    public const string Publisher = "You have been assigned as a Publisher role for questionnaire";
+    public const string Writer = "You have been assigned as a Writer role for questionnaire";
+    public const string Evaluator = "You have been assigned as a Evaluator role for questionnaire";
+
+    //Review Template
+    public const string TemplateCreated = "Template Created";
+    public const string TemplateUpdated = "Template Updated";
+
+  }
+}

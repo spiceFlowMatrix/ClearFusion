@@ -1,0 +1,89 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HumanitarianAssistance.Common.Enums
+{
+
+  public enum BalanceType
+  {
+    SUM=1,
+    DR=2,
+    CR=3
+  }
+  public enum AccountType
+  {
+    
+    ASSET=1,
+    LIBILITY=2,
+    EQUITY=3,
+    REVENUE=4,
+    EXPENSE=5,
+    INCOME=6,
+    FUNDS=7,
+    RESERVE_ACCOUNT_ADJUSTMENT=8,
+    LONG_TERM_LIBILITY=9,
+    CURRENT_LIBILITY=10,
+    RESERVE_ACCOUNT =11,
+  }
+
+  public enum FinancialReportType
+  {
+    BALANCESHEET = 1,
+    INCOMEANDEXPANCE = 2
+  }
+
+  public enum Gender
+  {
+    MALE = 1,
+    FEMALE = 2,
+    OTHER = 3
+  }
+
+  public enum AttendanceType
+  {
+    P = 1,
+    A = 2,
+    L = 3,
+    H = 4
+  }
+
+  public enum ApplyLeaveStatus
+  {
+    Approve = 1,
+    Reject = 2
+  }
+
+  public enum EmployeeTypeStatus
+  {
+    Prospective = 1,
+    Active = 2,
+    Terminated = 3
+  }
+
+  public enum HolidayType
+  {
+    PARTICULARDATE = 1,
+    REPEATWEEKLYDAY = 2
+  }
+
+  public enum SalaryHeadType
+  {
+    ALLOWANCE = 1,
+    DEDUCTION = 2,
+    GENERAL = 3
+  }
+
+  public enum RECORDTYPE
+  {
+    SINGLE = 1,
+    CONSOLIDATE = 2
+  }
+
+  public enum Sex
+  {
+    Male = 1,
+    Female = 2,
+    Other = 3
+  }
+}

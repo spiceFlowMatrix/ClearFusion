@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+
+namespace DataAccess.DbEntities
+{
+    public partial class VoucherDetail : BaseEntityWithoutId
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1, TypeName = "serial")]
+        public long VoucherNo { get; set; }
+        [StringLength(5)]
+        public CurrencyDetails CurrencyDetail { get; set; }		
+		public int CurrencyId { get; set; }
+        public DateTime? VoucherDate { get; set; }
+        [StringLength(10)]
+        public string ChequeNo { get; set; }
+        [StringLength(20)]
+        public string ReferenceNo { get; set; }
+        public string Description { get; set; }        
+        public JournalDetail JournalDetails { get; set; }
+        public int? JournalCode { get; set; }        
+        public VoucherType VoucherTypes { get; set; }
+        public int? VoucherTypeId { get; set; }
+        public OfficeDetail OfficeDetails { get; set; }
+        public int? OfficeId { get; set; }
+        public long ? ProjectId { get; set; }
+        public ProjectDetails ProjectDetails { get; set; }
+        public long ? BudgetLineId { get; set; }
+        public ProjectBudgetLine ProjectBudgetLine { get; set; }
+
+        public int? FinancialYearId { get; set; }
+        public FinancialYearDetail FinancialYearDetails { get; set; }
+
+        public List<VoucherTransactionDetails> VoucherTransactionDetails { get; set; }
+    }
+}

@@ -1,0 +1,12 @@
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\bin\Release\netcoreapp2.0\HumanitarianAssistance.Web.deps.json
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\bin\Release\netcoreapp2.0\HumanitarianAssistance.Web.runtimeconfig.json
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\bin\Release\netcoreapp2.0\HumanitarianAssistance.Web.runtimeconfig.dev.json
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\bin\Release\netcoreapp2.0\HumanitarianAssistance.Web.dll
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\bin\Release\netcoreapp2.0\HumanitarianAssistance.Web.pdb
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\obj\Release\netcoreapp2.0\HumanitarianAssistance.Web.csprojResolveAssemblyReference.cache
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\obj\Release\netcoreapp2.0\HumanitarianAssistance.Web.csproj.CoreCompileInputs.cache
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\obj\Release\netcoreapp2.0\UserSecretsAssemblyInfo.cs
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\obj\Release\netcoreapp2.0\HumanitarianAssistance.Web.AssemblyInfoInputs.cache
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\obj\Release\netcoreapp2.0\HumanitarianAssistance.Web.AssemblyInfo.cs
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\obj\Release\netcoreapp2.0\HumanitarianAssistance.Web.dll
+D:\Dayuser\Projects\chaRepo\HumanitarianAssistance.Web\obj\Release\netcoreapp2.0\HumanitarianAssistance.Web.pdb
