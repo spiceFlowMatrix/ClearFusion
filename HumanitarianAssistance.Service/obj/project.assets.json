@@ -12897,11 +12897,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "D:\\HumantarianServerGit\\HumanitarianAssistance.Service\\HumanitarianAssistance.Service.csproj",
+      "projectUniqueName": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Service\\HumanitarianAssistance.Service.csproj",
       "projectName": "HumanitarianAssistance.Service",
-      "projectPath": "D:\\HumantarianServerGit\\HumanitarianAssistance.Service\\HumanitarianAssistance.Service.csproj",
+      "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Service\\HumanitarianAssistance.Service.csproj",
       "packagesPath": "C:\\Users\\shubhamk\\.nuget\\packages\\",
-      "outputPath": "D:\\HumantarianServerGit\\HumanitarianAssistance.Service\\obj\\",
+      "outputPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Service\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -12920,11 +12920,11 @@
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "D:\\HumantarianServerGit\\DataAccess\\DataAccess.csproj": {
-              "projectPath": "D:\\HumantarianServerGit\\DataAccess\\DataAccess.csproj"
+            "D:\\Dayuser\\clear-fusion\\clear-fusion\\DataAccess\\DataAccess.csproj": {
+              "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\DataAccess\\DataAccess.csproj"
             },
-            "D:\\HumantarianServerGit\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj": {
-              "projectPath": "D:\\HumantarianServerGit\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj"
+            "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj": {
+              "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj"
             }
           }
         }

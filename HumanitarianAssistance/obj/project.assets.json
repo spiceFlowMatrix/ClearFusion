@@ -13623,11 +13623,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "D:\\HumantarianServerGit\\HumanitarianAssistance\\HumanitarianAssistance.WebAPI.csproj",
+      "projectUniqueName": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.WebAPI.csproj",
       "projectName": "HumanitarianAssistance.WebAPI",
-      "projectPath": "D:\\HumantarianServerGit\\HumanitarianAssistance\\HumanitarianAssistance.WebAPI.csproj",
+      "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.WebAPI.csproj",
       "packagesPath": "C:\\Users\\shubhamk\\.nuget\\packages\\",
-      "outputPath": "D:\\HumantarianServerGit\\HumanitarianAssistance\\obj\\",
+      "outputPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -13646,17 +13646,17 @@
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "D:\\HumantarianServerGit\\DataAccess\\DataAccess.csproj": {
-              "projectPath": "D:\\HumantarianServerGit\\DataAccess\\DataAccess.csproj"
+            "D:\\Dayuser\\clear-fusion\\clear-fusion\\DataAccess\\DataAccess.csproj": {
+              "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\DataAccess\\DataAccess.csproj"
             },
-            "D:\\HumantarianServerGit\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj": {
-              "projectPath": "D:\\HumantarianServerGit\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj"
+            "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj": {
+              "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj"
             },
-            "D:\\HumantarianServerGit\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj": {
-              "projectPath": "D:\\HumantarianServerGit\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj"
+            "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj": {
+              "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj"
             },
-            "D:\\HumantarianServerGit\\HumanitarianAssistance.Service\\HumanitarianAssistance.Service.csproj": {
-              "projectPath": "D:\\HumantarianServerGit\\HumanitarianAssistance.Service\\HumanitarianAssistance.Service.csproj"
+            "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Service\\HumanitarianAssistance.Service.csproj": {
+              "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Service\\HumanitarianAssistance.Service.csproj"
             }
           }
         }

@@ -107,6 +107,6 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> GetAllContractTypeContent(int OfficeId, int EmployeeContractTypeId);
 		Task<APIResponse> GetSelectedEmployeeContract(int OfficeId, int ProjectId, int BudgetLineId, int EmployeeId);
 		Task<APIResponse> GetEmployeeSalaryDetails(int OfficeId, int year, int month, int EmployeeId);
-		Task<APIResponse> EmployeeTaxCalculation(int OfficeId, int EmployeeId, int Year);
+		Task<APIResponse> EmployeeTaxCalculation(int OfficeId, int EmployeeId, int FinancialYearId);
 	}
 }

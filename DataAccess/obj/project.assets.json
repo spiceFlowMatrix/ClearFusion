@@ -12721,11 +12721,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "D:\\HumantarianServerGit\\DataAccess\\DataAccess.csproj",
+      "projectUniqueName": "D:\\Dayuser\\clear-fusion\\clear-fusion\\DataAccess\\DataAccess.csproj",
       "projectName": "DataAccess",
-      "projectPath": "D:\\HumantarianServerGit\\DataAccess\\DataAccess.csproj",
+      "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\DataAccess\\DataAccess.csproj",
       "packagesPath": "C:\\Users\\shubhamk\\.nuget\\packages\\",
-      "outputPath": "D:\\HumantarianServerGit\\DataAccess\\obj\\",
+      "outputPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\DataAccess\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -12744,11 +12744,11 @@
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "D:\\HumantarianServerGit\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj": {
-              "projectPath": "D:\\HumantarianServerGit\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj"
+            "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj": {
+              "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj"
             },
-            "D:\\HumantarianServerGit\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj": {
-              "projectPath": "D:\\HumantarianServerGit\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj"
+            "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj": {
+              "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj"
             }
           }
         }

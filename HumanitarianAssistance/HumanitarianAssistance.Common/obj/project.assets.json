@@ -673,11 +673,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "D:\\HumantarianServerGit\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj",
+      "projectUniqueName": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj",
       "projectName": "HumanitarianAssistance.Common",
-      "projectPath": "D:\\HumantarianServerGit\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj",
+      "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj",
       "packagesPath": "C:\\Users\\shubhamk\\.nuget\\packages\\",
-      "outputPath": "D:\\HumantarianServerGit\\HumanitarianAssistance\\HumanitarianAssistance.Common\\obj\\",
+      "outputPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

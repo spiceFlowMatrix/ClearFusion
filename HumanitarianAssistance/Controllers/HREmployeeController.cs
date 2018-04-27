@@ -1022,13 +1022,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> EmployeeTaxCalculation([FromQuery]int OfficeId, int EmployeeId, int Year)
+    public async Task<object> EmployeeTaxCalculation([FromQuery]int OfficeId, int EmployeeId, int FinancialYearId)
     {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
-        response = await _iHREmployee.EmployeeTaxCalculation(OfficeId, EmployeeId, Year);
+        response = await _iHREmployee.EmployeeTaxCalculation(OfficeId, EmployeeId, FinancialYearId);
       }
       return response;
     }
