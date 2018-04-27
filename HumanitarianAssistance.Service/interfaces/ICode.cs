@@ -41,6 +41,7 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> EditPensionRate(EmployeePensionRateModel model, string UserId);
 		Task<APIResponse> AddAppraisalQuestion(AppraisalQuestionModel model, string UserId);
 		Task<APIResponse> EditAppraisalQuestion(AppraisalQuestionModel model, string UserId);
+		Task<APIResponse> GetAppraisalQuestions(int OfficeId);
 
 	}
 }

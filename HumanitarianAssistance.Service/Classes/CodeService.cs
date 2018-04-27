@@ -844,7 +844,7 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-
+				response.data.AppraisalList = await _uow.GetDbContext().AppraisalGeneralQuestions.Where(x => x.IsDeleted == false && x.OfficeId == OfficeId).ToListAsync();
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}

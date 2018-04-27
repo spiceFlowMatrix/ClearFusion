@@ -45,6 +45,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 		public double? TotalGrossSalary { get; set; }
 		public double? TotalDeductions { get; set; }
 		public double? TotalAllowances { get; set; }
+		public List<AppraisalGeneralQuestions> AppraisalList { get; set; }
 		public EmployeeTaxReport EmployeeTaxReport { get; set; }
 		public List<EmployeeSalarySlipModel> EmployeeSalarySlipModelList { get; set; }
 		public List<EmployeeContractModel> EmployeeContractModellst { get; set; }
