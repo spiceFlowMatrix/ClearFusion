@@ -203,6 +203,8 @@ namespace HumanitarianAssistance.Entities
 		public DbSet<EmployeePensionRate> EmployeePensionRate { get; set; }
 		public DbSet<ContractTypeContent> ContractTypeContent { get; set; }
 		public DbSet<AppraisalGeneralQuestions> AppraisalGeneralQuestions { get; set; }
+		public DbSet<EmployeeAppraisalDetails> EmployeeAppraisalDetails { get; set; }
+		public DbSet<EmployeeAppraisalQuestions> EmployeeAppraisalQuestions { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });            

@@ -77,6 +77,8 @@ namespace DataAccess
 		IGenericRepository<EmployeeContractType> EmployeeContractTypeRepository { get; }
 		IGenericRepository<ContractTypeContent> ContractTypeContentRepository { get; }
 		IGenericRepository<AppraisalGeneralQuestions> AppraisalGeneralQuestionsRepository { get; }
+		IGenericRepository<EmployeeAppraisalDetails> EmployeeAppraisalDetailsRepository { get; }
+		IGenericRepository<EmployeeAppraisalQuestions> EmployeeAppraisalQuestionsRepository { get; }
 		void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();

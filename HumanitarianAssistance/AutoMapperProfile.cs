@@ -68,6 +68,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<EmployeePensionRate, EmployeePensionRateModel>().ReverseMap();
       CreateMap<ContractTypeContent, ContractTypeModel>().ReverseMap();
       CreateMap<AppraisalGeneralQuestions, AppraisalQuestionModel>().ReverseMap();
+      CreateMap<EmployeeAppraisalDetails, EmployeeAppraisalDetailsModel>().ReverseMap();
     }
   }
 }

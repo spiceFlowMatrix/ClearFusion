@@ -4332,7 +4332,7 @@ namespace HumanitarianAssistance.Service.Classes
 			return response;
 		}
 
-		public async Task<APIResponse> EmployeeTaxCalculation(int OfficeId, int EmployeeId, int Year)
+		public async Task<APIResponse> EmployeeTaxCalculation(int OfficeId, int EmployeeId, int FinancialYearId)
 		{
 			APIResponse response = new APIResponse();
 			try
@@ -4344,7 +4344,9 @@ namespace HumanitarianAssistance.Service.Classes
 				obj.TelephoneNumber = "+93(0)700291722, +93(0)729128401";
 				obj.EmailAddressEmployer = "info@cha-net.org";
 
-				var record = await _uow.GetDbContext().EmployeePaymentTypes.Include(x => x.EmployeeDetail).Where(x => x.EmployeeID == EmployeeId && x.FinancialYearDate.Date.Year == Year && x.OfficeId == OfficeId).ToListAsync();
+				var financialYear = await _uow.FinancialYearDetailRepository.FindAsync(x=>x.FinancialYearId == FinancialYearId);
+
+				var record = await _uow.GetDbContext().EmployeePaymentTypes.Include(x => x.EmployeeDetail).Where(x => x.EmployeeID == EmployeeId && x.OfficeId == OfficeId && x.FinancialYearDate.Date <= financialYear.StartDate.Date && x.FinancialYearDate.Date >= financialYear.EndDate.Date && x.IsApproved == true).ToListAsync();
 				if (record.Count > 0)
 				{
 					obj.EmployeeName = record[0].EmployeeName;
@@ -4364,6 +4366,57 @@ namespace HumanitarianAssistance.Service.Classes
 
 				}
 				response.data.EmployeeTaxReport = obj;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> EmployeeSalaryTaxDetails(SalaryTaxModel model)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var financialYear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.FinancialYearId == model.FinancialYearId);
+				if (financialYear != null)
+				{					
+					var lst = _uow.EmployeePaymentTypeRepository.FindAll(x => x.IsApproved == true && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId && x.FinancialYearDate.Date >= financialYear.StartDate.Date && x.FinancialYearDate.Date <= financialYear.EndDate.Date)
+					.Select(x => new SalaryTaxReportModel
+					 {
+						 CurrencyId = x.CurrencyId,
+						 Date = x.FinancialYearDate.Date,
+						 TotalTax = x.SalaryTax
+					 }).OrderBy(x=>x.Date).ToList();
+				}
+
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> AddEmployeeAppraisalDetails(EmployeeAppraisalDetailsModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				EmployeeAppraisalDetails obj = _mapper.Map<EmployeeAppraisalDetails>(model);
+				obj.CreatedById = UserId;
+				obj.CreatedDate = DateTime.Now;
+				await _uow.EmployeeAppraisalDetailsRepository.AddAsyn(obj);
+
+				//await _uow.GetDbContext.Empl
+
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
