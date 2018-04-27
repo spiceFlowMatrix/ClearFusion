@@ -4404,5 +4404,28 @@ namespace HumanitarianAssistance.Service.Classes
 			}
 			return response;
 		}
+
+		public async Task<APIResponse> AddEmployeeAppraisalDetails(EmployeeAppraisalDetailsModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				EmployeeAppraisalDetails obj = _mapper.Map<EmployeeAppraisalDetails>(model);
+				obj.CreatedById = UserId;
+				obj.CreatedDate = DateTime.Now;
+				await _uow.EmployeeAppraisalDetailsRepository.AddAsyn(obj);
+
+				//await _uow.GetDbContext.Empl
+
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
 	}
 }

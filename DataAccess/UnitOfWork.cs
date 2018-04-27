@@ -77,10 +77,28 @@ namespace DataAccess
 		private IGenericRepository<EmployeeContractType> _employeeContractTypeRepository;
 		private IGenericRepository<ContractTypeContent> _contractTypeContentRepository;
 		private IGenericRepository<AppraisalGeneralQuestions> _appraisalGeneralQuestionsRepository;
+		private IGenericRepository<EmployeeAppraisalDetails> _employeeAppraisalDetailsRepository;
+		private IGenericRepository<EmployeeAppraisalQuestions> _employeeAppraisalQuestionsRepository;
 		public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
+
+		public IGenericRepository<EmployeeAppraisalQuestions> EmployeeAppraisalQuestionsRepository
+		{
+			get
+			{
+				return _employeeAppraisalQuestionsRepository = _employeeAppraisalQuestionsRepository ?? new GenericRepository<EmployeeAppraisalQuestions>(_mschaContext);
+			}
+		}
+
+		public IGenericRepository<EmployeeAppraisalDetails> EmployeeAppraisalDetailsRepository
+		{
+			get
+			{
+				return _employeeAppraisalDetailsRepository = _employeeAppraisalDetailsRepository ?? new GenericRepository<EmployeeAppraisalDetails>(_mschaContext);
+			}
+		}
 
 		public IGenericRepository<AppraisalGeneralQuestions> AppraisalGeneralQuestionsRepository
 		{

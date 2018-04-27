@@ -6,15 +6,15 @@ using System.Text;
 
 namespace DataAccess.DbEntities
 {
-    public class AppraisalGeneralQuestions: BaseEntityWithoutId
+    public class EmployeeAppraisalQuestions: BaseEntityWithoutId
     {
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column(Order = 1, TypeName = "serial")]
+		public int EmployeeAppraisalQuestionsId { get; set; }
 		public int AppraisalGeneralQuestionsId { get; set; }
-		public int SequenceNo { get; set; }
-		public string Question { get; set; }
-		public string DariQuestion { get; set; }
-		public int OfficeId { get; set; }
+		public AppraisalGeneralQuestions AppraisalGeneralQuestions { get; set; }
+		public int Score { get; set; }
+		public string Remarks { get; set; }
 	}
 }

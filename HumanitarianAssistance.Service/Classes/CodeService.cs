@@ -825,8 +825,26 @@ namespace HumanitarianAssistance.Service.Classes
 				record.DariQuestion = model.DariQuestion;
 				record.ModifiedById = UserId;
 				record.ModifiedDate = DateTime.Now;
+				record.OfficeId = model.OfficeId;
 				await _uow.AppraisalGeneralQuestionsRepository.UpdateAsyn(record);
 				await _uow.SaveAsync();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetAppraisalQuestions(int OfficeId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
