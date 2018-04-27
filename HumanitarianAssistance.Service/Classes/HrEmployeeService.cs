@@ -4384,14 +4384,14 @@ namespace HumanitarianAssistance.Service.Classes
 			{
 				var financialYear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.FinancialYearId == model.FinancialYearId);
 				if (financialYear != null)
-				{
-					var lst = _uow.EmployeePaymentTypeRepository.FindAll(x => x.IsApproved == true && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId && x.FinancialYearDate.Date <= financialYear.StartDate.Date && x.FinancialYearDate.Date >= financialYear.EndDate.Date)
+				{					
+					var lst = _uow.EmployeePaymentTypeRepository.FindAll(x => x.IsApproved == true && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId && x.FinancialYearDate.Date >= financialYear.StartDate.Date && x.FinancialYearDate.Date <= financialYear.EndDate.Date)
 					.Select(x => new SalaryTaxReportModel
-					{
-						CurrencyId = x.CurrencyId,
-						Date = x.FinancialYearDate.Date,
-						TotalTax = x.SalaryTax
-					});
+					 {
+						 CurrencyId = x.CurrencyId,
+						 Date = x.FinancialYearDate.Date,
+						 TotalTax = x.SalaryTax
+					 }).OrderBy(x=>x.Date).ToList();
 				}
 
 				response.StatusCode = StaticResource.successStatusCode;
