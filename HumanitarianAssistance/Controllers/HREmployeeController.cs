@@ -1032,5 +1032,18 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return response;
     }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> EmployeeSalaryTaxDetails([FromBody]SalaryTaxModel model)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iHREmployee.EmployeeSalaryTaxDetails(model);
+      }
+      return response;
+    }
   }
 }

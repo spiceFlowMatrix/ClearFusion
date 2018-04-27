@@ -4346,7 +4346,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 				var financialYear = await _uow.FinancialYearDetailRepository.FindAsync(x=>x.FinancialYearId == FinancialYearId);
 
-				var record = await _uow.GetDbContext().EmployeePaymentTypes.Include(x => x.EmployeeDetail).Where(x => x.EmployeeID == EmployeeId && x.OfficeId == OfficeId && x.FinancialYearDate.Date <= financialYear.StartDate.Date && x.FinancialYearDate.Date >= financialYear.EndDate.Date).ToListAsync();
+				var record = await _uow.GetDbContext().EmployeePaymentTypes.Include(x => x.EmployeeDetail).Where(x => x.EmployeeID == EmployeeId && x.OfficeId == OfficeId && x.FinancialYearDate.Date <= financialYear.StartDate.Date && x.FinancialYearDate.Date >= financialYear.EndDate.Date && x.IsApproved == true).ToListAsync();
 				if (record.Count > 0)
 				{
 					obj.EmployeeName = record[0].EmployeeName;
@@ -4366,6 +4366,34 @@ namespace HumanitarianAssistance.Service.Classes
 
 				}
 				response.data.EmployeeTaxReport = obj;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> EmployeeSalaryTaxDetails(SalaryTaxModel model)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var financialYear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.FinancialYearId == model.FinancialYearId);
+				if (financialYear != null)
+				{
+					var lst = _uow.EmployeePaymentTypeRepository.FindAll(x => x.IsApproved == true && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId && x.FinancialYearDate.Date <= financialYear.StartDate.Date && x.FinancialYearDate.Date >= financialYear.EndDate.Date)
+					.Select(x => new SalaryTaxReportModel
+					{
+						CurrencyId = x.CurrencyId,
+						Date = x.FinancialYearDate.Date,
+						TotalTax = x.SalaryTax
+					});
+				}
+
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
