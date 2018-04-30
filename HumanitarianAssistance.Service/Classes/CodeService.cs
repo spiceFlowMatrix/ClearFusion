@@ -1104,41 +1104,42 @@ namespace HumanitarianAssistance.Service.Classes
 			return response;
 		}
 
-		public async Task<APIResponse> GetAllEmployeeAppraisalMoreDetails(int EmployeeId)
+		public async Task<APIResponse> GetAllEmployeeAppraisalMoreDetails(int OfficeId)
 		{
 			APIResponse response = new APIResponse();
 			try
 			{
-				//List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
-				//var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
-				//foreach (var item in emplst)
-				//{
-				//	EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
-				//	var quesLst = await _uow.GetDbContext().EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToListAsync();
-				//	model.EmployeeId = item.EmployeeId;
-				//	model.EmployeeCode = item.EmployeeCode;
-				//	model.EmployeeName = item.EmployeeName;
-				//	model.FatherName = item.FatherName;
-				//	model.Position = item.Position;
-				//	model.Department = item.Department;
-				//	model.Qualification = item.Qualification;
-				//	model.DutyStation = item.DutyStation;
-				//	model.RecruitmentDate = item.RecruitmentDate;
-				//	model.AppraisalPeriod = item.AppraisalPeriod;
-				//	model.CurrentAppraisalDate = item.CurrentAppraisalDate;
-				//	foreach (var element in quesLst)
-				//	{
-				//		EmployeeAppraisalQuestionModel questions = new EmployeeAppraisalQuestionModel();
-				//		questions.QuestionEnglish = element.AppraisalGeneralQuestions.Question;
-				//		questions.QuestionDari = element.AppraisalGeneralQuestions.DariQuestion;
-				//		questions.SequenceNo = element.AppraisalGeneralQuestions.SequenceNo;
-				//		questions.AppraisalGeneralQuestionsId = element.AppraisalGeneralQuestionsId;
-				//		questions.Score = element.Score;
-				//		questions.Remarks = element.Remarks;
-				//		model.EmployeeAppraisalQuestionList.Add(questions);
-				//	}
-				//	lst.Add(model);
-				//}
+				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();				);
+				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
+				foreach (var item in emplst)
+				{
+					var detail = emplst.Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToList();
+					//	EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
+					//	var quesLst = await _uow.GetDbContext().EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToListAsync();
+					//	model.EmployeeId = item.EmployeeId;
+					//	model.EmployeeCode = item.EmployeeCode;
+					//	model.EmployeeName = item.EmployeeName;
+					//	model.FatherName = item.FatherName;
+					//	model.Position = item.Position;
+					//	model.Department = item.Department;
+					//	model.Qualification = item.Qualification;
+					//	model.DutyStation = item.DutyStation;
+					//	model.RecruitmentDate = item.RecruitmentDate;
+					//	model.AppraisalPeriod = item.AppraisalPeriod;
+					//	model.CurrentAppraisalDate = item.CurrentAppraisalDate;
+					//	foreach (var element in quesLst)
+					//	{
+					//		EmployeeAppraisalQuestionModel questions = new EmployeeAppraisalQuestionModel();
+					//		questions.QuestionEnglish = element.AppraisalGeneralQuestions.Question;
+					//		questions.QuestionDari = element.AppraisalGeneralQuestions.DariQuestion;
+					//		questions.SequenceNo = element.AppraisalGeneralQuestions.SequenceNo;
+					//		questions.AppraisalGeneralQuestionsId = element.AppraisalGeneralQuestionsId;
+					//		questions.Score = element.Score;
+					//		questions.Remarks = element.Remarks;
+					//		model.EmployeeAppraisalQuestionList.Add(questions);
+					//	}
+					//	lst.Add(model);
+				}
 				//response.data.EmployeeAppraisalDetailsModelLst = lst;
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
