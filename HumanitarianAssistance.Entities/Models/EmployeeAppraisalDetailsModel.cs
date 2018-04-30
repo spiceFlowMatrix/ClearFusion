@@ -6,6 +6,10 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class EmployeeAppraisalDetailsModel
     {
+		public EmployeeAppraisalDetailsModel()
+		{
+			EmployeeAppraisalQuestionList = new List<EmployeeAppraisalQuestionModel>();
+		}
 		public int EmployeeId { get; set; }
 		public string EmployeeCode { get; set; }
 		public string EmployeeName { get; set; }
