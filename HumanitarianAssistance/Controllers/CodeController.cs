@@ -1043,5 +1043,33 @@ namespace HumanitarianAssistance.Controllers
       }
       return response;
     }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> EditEmployeeAppraisalDetails([FromBody] EmployeeAppraisalDetailsModel model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.EditEmployeeAppraisalDetails(model, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllEmployeeAppraisalDetails([FromQuery] int OfficeId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetAllEmployeeAppraisalDetails(OfficeId);
+      }
+      return response;
+    }
   }
 }

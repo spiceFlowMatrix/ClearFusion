@@ -6,6 +6,10 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class EmployeeAppraisalDetailsModel
     {
+		public EmployeeAppraisalDetailsModel()
+		{
+			EmployeeAppraisalQuestionList = new List<EmployeeAppraisalQuestionModel>();
+		}
 		public int EmployeeId { get; set; }
 		public string EmployeeCode { get; set; }
 		public string EmployeeName { get; set; }
@@ -17,6 +21,8 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public DateTime RecruitmentDate { get; set; }
 		public int AppraisalPeriod { get; set; }
 		public DateTime CurrentAppraisalDate { get; set; }
+		public int OfficeId { get; set; }
+		public int TotalScore { get; set; }
 		public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
 	}
 }
