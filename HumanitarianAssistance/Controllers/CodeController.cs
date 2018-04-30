@@ -1029,5 +1029,19 @@ namespace HumanitarianAssistance.Controllers
       }
       return response;
     }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> AddEmployeeAppraisalDetails([FromBody] EmployeeAppraisalDetailsModel model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.AddEmployeeAppraisalDetails(model, id);
+      }
+      return response;
+    }
   }
 }

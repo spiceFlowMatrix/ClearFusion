@@ -867,7 +867,6 @@ namespace HumanitarianAssistance.Service.Classes
 				await _uow.EmployeeAppraisalDetailsRepository.AddAsyn(obj);
 				EmployeeAppraisalQuestions eaq = _mapper.Map<EmployeeAppraisalQuestions>(model.EmployeeAppraisalQuestionList);
 				await _uow.SaveAsync();
-				//await _uow.GetDbContext().EmployeeAppraisalQuestions.AddRange(model.EmployeeAppraisalQuestionList);
 
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
