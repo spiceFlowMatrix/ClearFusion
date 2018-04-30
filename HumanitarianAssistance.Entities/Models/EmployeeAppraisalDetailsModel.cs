@@ -24,5 +24,21 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public int OfficeId { get; set; }
 		public int TotalScore { get; set; }
 		public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
+
+
+
+		public List<EmployeeEvaluationModel> EmployeeEvaluationModelList { get; set; }
+		public List<string> StrongPoints { get; set; }
+		public List<string> WeakPoints { get; set; }
+		public string FinalResultQues1 { get; set; }
+		public string FinalResultQues2 { get; set; }
+		public string FinalResultQues3 { get; set; }
+		public string FinalResultQues4 { get; set; }
+		public string FinalResultQues5 { get; set; }
+		public string DirectSupervisor { get; set; }
+		public string AppraisalTeamMember1 { get; set; }
+		public string AppraisalTeamMember2 { get; set; }
+		public string CommentsByEmployee { get; set; }
+
 	}
 }
