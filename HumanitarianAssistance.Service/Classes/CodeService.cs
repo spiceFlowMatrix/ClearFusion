@@ -751,7 +751,7 @@ namespace HumanitarianAssistance.Service.Classes
 					else
 						model.IsDefault = false;
 				}
-				
+
 				EmployeePensionRate obj = await _uow.EmployeePensionRateRepository.FindAsync(x => x.FinancialYearId == model.FinancialYearId);
 				obj.IsDefault = true;
 				obj.ModifiedById = UserId;
@@ -866,7 +866,7 @@ namespace HumanitarianAssistance.Service.Classes
 				obj.AppraisalStatus = false;
 				obj.CreatedById = UserId;
 				obj.CreatedDate = DateTime.Now;
-				await _uow.EmployeeAppraisalDetailsRepository.AddAsyn(obj);				
+				await _uow.EmployeeAppraisalDetailsRepository.AddAsyn(obj);
 				List<EmployeeAppraisalQuestions> lst = new List<EmployeeAppraisalQuestions>();
 				foreach (var item in model.EmployeeAppraisalQuestionList)
 				{
@@ -928,12 +928,12 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();				
-				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x=>x.OfficeId == OfficeId && x.AppraisalStatus == false);				
+				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
+				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
 				foreach (var item in emplst)
 				{
 					EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
-					var quesLst = await _uow.GetDbContext().EmployeeAppraisalQuestions.Include(x=>x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToListAsync();
+					var quesLst = await _uow.GetDbContext().EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToListAsync();
 					model.EmployeeId = item.EmployeeId;
 					model.EmployeeCode = item.EmployeeCode;
 					model.EmployeeName = item.EmployeeName;
@@ -956,10 +956,10 @@ namespace HumanitarianAssistance.Service.Classes
 						questions.AppraisalGeneralQuestionsId = element.AppraisalGeneralQuestionsId;
 						questions.Score = element.Score;
 						questions.Remarks = element.Remarks;
-						model.EmployeeAppraisalQuestionList.Add(questions);						
+						model.EmployeeAppraisalQuestionList.Add(questions);
 					}
 					lst.Add(model);
-				}				
+				}
 				response.data.EmployeeAppraisalDetailsModelLst = lst;
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
@@ -1111,38 +1111,41 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();			
+				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
 				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
 				foreach (var item in emplst)
 				{
-					var detail = emplst.Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToList();
-					//	EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
-					//	var quesLst = await _uow.GetDbContext().EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToListAsync();
-					//	model.EmployeeId = item.EmployeeId;
-					//	model.EmployeeCode = item.EmployeeCode;
-					//	model.EmployeeName = item.EmployeeName;
-					//	model.FatherName = item.FatherName;
-					//	model.Position = item.Position;
-					//	model.Department = item.Department;
-					//	model.Qualification = item.Qualification;
-					//	model.DutyStation = item.DutyStation;
-					//	model.RecruitmentDate = item.RecruitmentDate;
-					//	model.AppraisalPeriod = item.AppraisalPeriod;
-					//	model.CurrentAppraisalDate = item.CurrentAppraisalDate;
-					//	foreach (var element in quesLst)
-					//	{
-					//		EmployeeAppraisalQuestionModel questions = new EmployeeAppraisalQuestionModel();
-					//		questions.QuestionEnglish = element.AppraisalGeneralQuestions.Question;
-					//		questions.QuestionDari = element.AppraisalGeneralQuestions.DariQuestion;
-					//		questions.SequenceNo = element.AppraisalGeneralQuestions.SequenceNo;
-					//		questions.AppraisalGeneralQuestionsId = element.AppraisalGeneralQuestionsId;
-					//		questions.Score = element.Score;
-					//		questions.Remarks = element.Remarks;
-					//		model.EmployeeAppraisalQuestionList.Add(questions);
-					//	}
-					//	lst.Add(model);
+					EmployeeAppraisalDetailsModel obj = new EmployeeAppraisalDetailsModel();
+					var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate);
+					List<EmployeeEvaluationModel> eeList = new List<EmployeeEvaluationModel>();
+					foreach (var elements in empDetails)
+					{
+						EmployeeEvaluationModel eem = new EmployeeEvaluationModel();
+						eem.TrainingProgram = elements.TrainingProgram;
+						eem.Program = elements.Program;
+						eem.Participated = elements.Participated;
+						eem.CatchLevel = elements.CatchLevel;
+						eem.RefresherTrm = elements.RefresherTrm;
+						eem.OthRecommendation = elements.OthRecommendation;
+						eeList.Add(eem);
+						if (elements.StrongPoints != null)
+							obj.StrongPoints.Add(elements.StrongPoints);
+						if (elements.WeakPoints != null)
+							obj.WeakPoints.Add(elements.WeakPoints);
+						obj.FinalResultQues1 = elements.FinalResultQues1;
+						obj.FinalResultQues2 = elements.FinalResultQues2;
+						obj.FinalResultQues3 = elements.FinalResultQues3;
+						obj.FinalResultQues4 = elements.FinalResultQues4;
+						obj.FinalResultQues5 = elements.FinalResultQues5;
+						obj.DirectSupervisor = elements.DirectSupervisor;
+						obj.AppraisalTeamMember1 = elements.AppraisalTeamMember1;
+						obj.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
+						obj.CommentsByEmployee = elements.CommentsByEmployee;
+					}
+					obj.EmployeeEvaluationModelList = eeList;
+					lst.Add(obj);
 				}
-				//response.data.EmployeeAppraisalDetailsModelLst = lst;
+				response.data.EmployeeAppraisalDetailsModelLst = lst;
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
@@ -1159,7 +1162,7 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x=>x.EmployeeProfessionalDetail.OfficeId == OfficeId).Select(x=> new EmployeeDetailList
+				response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x => x.EmployeeProfessionalDetail.OfficeId == OfficeId).Select(x => new EmployeeDetailList
 				{
 					EmployeeId = x.EmployeeID,
 					EmployeeName = x.EmployeeName,
@@ -1181,7 +1184,7 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Include(x=>x.EmployeeProfessionalDetail.OfficeDetail).Include(x=>x.EmployeeProfessionalDetail.Department).Include(x=>x.ProfessionDetails).Include(x=>x.QualificationDetails).Where(x => x.EmployeeID == EmployeeId).Select(x => new EmployeeDetailList
+				response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Include(x => x.EmployeeProfessionalDetail.OfficeDetail).Include(x => x.EmployeeProfessionalDetail.Department).Include(x => x.ProfessionDetails).Include(x => x.QualificationDetails).Where(x => x.EmployeeID == EmployeeId).Select(x => new EmployeeDetailList
 				{
 					EmployeeId = x.EmployeeID,
 					EmployeeName = x.EmployeeName,

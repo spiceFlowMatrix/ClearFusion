@@ -9,6 +9,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public EmployeeAppraisalDetailsModel()
 		{
 			EmployeeAppraisalQuestionList = new List<EmployeeAppraisalQuestionModel>();
+			EmployeeEvaluationModelList = new List<EmployeeEvaluationModel>();
 		}
 		public int EmployeeId { get; set; }
 		public string EmployeeCode { get; set; }
