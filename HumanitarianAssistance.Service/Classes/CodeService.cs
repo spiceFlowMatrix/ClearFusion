@@ -969,5 +969,236 @@ namespace HumanitarianAssistance.Service.Classes
 			}
 			return response;
 		}
+
+		public async Task<APIResponse> AddEmployeeAppraisalMoreDetails(EmployeeAppraisalDetailsModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				List<EmployeeEvaluation> lst = new List<EmployeeEvaluation>();
+				foreach (var item in model.EmployeeEvaluationModelList)
+				{
+					EmployeeEvaluation obj = new EmployeeEvaluation();
+					obj.TrainingProgram = item.TrainingProgram;
+					obj.Program = item.Program;
+					obj.Participated = item.Participated;
+					obj.CatchLevel = item.CatchLevel;
+					obj.RefresherTrm = item.RefresherTrm;
+					obj.OthRecommendation = item.OthRecommendation;
+					obj.FinalResultQues1 = model.FinalResultQues1;
+					obj.FinalResultQues2 = model.FinalResultQues2;
+					obj.FinalResultQues3 = model.FinalResultQues3;
+					obj.FinalResultQues4 = model.FinalResultQues4;
+					obj.FinalResultQues5 = model.FinalResultQues5;
+					obj.DirectSupervisor = model.DirectSupervisor;
+					obj.AppraisalTeamMember1 = model.AppraisalTeamMember1;
+					obj.AppraisalTeamMember2 = model.AppraisalTeamMember2;
+					obj.CommentsByEmployee = model.CommentsByEmployee;
+					obj.CreatedById = UserId;
+					obj.CreatedDate = DateTime.Now;
+					obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
+					obj.EmployeeId = model.EmployeeId;
+					lst.Add(obj);
+				}
+				foreach (var item in model.StrongPoints)
+				{
+					EmployeeEvaluation obj = new EmployeeEvaluation();
+					obj.StrongPoints = item;
+					obj.CreatedById = UserId;
+					obj.CreatedDate = DateTime.Now;
+					obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
+					obj.EmployeeId = model.EmployeeId;
+					lst.Add(obj);
+				}
+				foreach (var item in model.WeakPoints)
+				{
+					EmployeeEvaluation obj = new EmployeeEvaluation();
+					obj.WeakPoints = item;
+					obj.CreatedById = UserId;
+					obj.CreatedDate = DateTime.Now;
+					obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
+					obj.EmployeeId = model.EmployeeId;
+					lst.Add(obj);
+				}
+				await _uow.GetDbContext().EmployeeEvaluation.AddRangeAsync(lst);
+				await _uow.SaveAsync();
+
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> EditEmployeeAppraisalMoreDetails(EmployeeAppraisalDetailsModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var recordList = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == model.EmployeeId && x.CurrentAppraisalDate == model.CurrentAppraisalDate);
+				_uow.GetDbContext().RemoveRange(recordList);
+
+				if (recordList != null)
+				{
+					List<EmployeeEvaluation> lst = new List<EmployeeEvaluation>();
+					foreach (var item in model.EmployeeEvaluationModelList)
+					{
+						EmployeeEvaluation obj = new EmployeeEvaluation();
+						obj.TrainingProgram = item.TrainingProgram;
+						obj.Program = item.Program;
+						obj.Participated = item.Participated;
+						obj.CatchLevel = item.CatchLevel;
+						obj.RefresherTrm = item.RefresherTrm;
+						obj.OthRecommendation = item.OthRecommendation;
+						obj.FinalResultQues1 = model.FinalResultQues1;
+						obj.FinalResultQues2 = model.FinalResultQues2;
+						obj.FinalResultQues3 = model.FinalResultQues3;
+						obj.FinalResultQues4 = model.FinalResultQues4;
+						obj.FinalResultQues5 = model.FinalResultQues5;
+						obj.DirectSupervisor = model.DirectSupervisor;
+						obj.AppraisalTeamMember1 = model.AppraisalTeamMember1;
+						obj.AppraisalTeamMember2 = model.AppraisalTeamMember2;
+						obj.CommentsByEmployee = model.CommentsByEmployee;
+						obj.CreatedById = UserId;
+						obj.CreatedDate = DateTime.Now;
+						obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
+						obj.EmployeeId = model.EmployeeId;
+						lst.Add(obj);
+					}
+					foreach (var item in model.StrongPoints)
+					{
+						EmployeeEvaluation obj = new EmployeeEvaluation();
+						obj.StrongPoints = item;
+						obj.CreatedById = UserId;
+						obj.CreatedDate = DateTime.Now;
+						obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
+						obj.EmployeeId = model.EmployeeId;
+						lst.Add(obj);
+					}
+					foreach (var item in model.WeakPoints)
+					{
+						EmployeeEvaluation obj = new EmployeeEvaluation();
+						obj.WeakPoints = item;
+						obj.CreatedById = UserId;
+						obj.CreatedDate = DateTime.Now;
+						obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
+						obj.EmployeeId = model.EmployeeId;
+						lst.Add(obj);
+					}
+					await _uow.GetDbContext().EmployeeEvaluation.AddRangeAsync(lst);
+				}
+				await _uow.SaveAsync();
+
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetAllEmployeeAppraisalMoreDetails(int EmployeeId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				//List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
+				//var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
+				//foreach (var item in emplst)
+				//{
+				//	EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
+				//	var quesLst = await _uow.GetDbContext().EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToListAsync();
+				//	model.EmployeeId = item.EmployeeId;
+				//	model.EmployeeCode = item.EmployeeCode;
+				//	model.EmployeeName = item.EmployeeName;
+				//	model.FatherName = item.FatherName;
+				//	model.Position = item.Position;
+				//	model.Department = item.Department;
+				//	model.Qualification = item.Qualification;
+				//	model.DutyStation = item.DutyStation;
+				//	model.RecruitmentDate = item.RecruitmentDate;
+				//	model.AppraisalPeriod = item.AppraisalPeriod;
+				//	model.CurrentAppraisalDate = item.CurrentAppraisalDate;
+				//	foreach (var element in quesLst)
+				//	{
+				//		EmployeeAppraisalQuestionModel questions = new EmployeeAppraisalQuestionModel();
+				//		questions.QuestionEnglish = element.AppraisalGeneralQuestions.Question;
+				//		questions.QuestionDari = element.AppraisalGeneralQuestions.DariQuestion;
+				//		questions.SequenceNo = element.AppraisalGeneralQuestions.SequenceNo;
+				//		questions.AppraisalGeneralQuestionsId = element.AppraisalGeneralQuestionsId;
+				//		questions.Score = element.Score;
+				//		questions.Remarks = element.Remarks;
+				//		model.EmployeeAppraisalQuestionList.Add(questions);
+				//	}
+				//	lst.Add(model);
+				//}
+				//response.data.EmployeeAppraisalDetailsModelLst = lst;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetEmployeeDetailByOfficeId(int OfficeId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x=>x.EmployeeProfessionalDetail.OfficeId == OfficeId).Select(x=> new EmployeeDetailList
+				{
+					EmployeeId = x.EmployeeID,
+					EmployeeName = x.EmployeeName,
+					EmployeeCode = x.EmployeeCode
+				}).ToListAsync();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetEmployeeDetailByEmployeeId(int EmployeeId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Include(x=>x.EmployeeProfessionalDetail.OfficeDetail).Include(x=>x.EmployeeProfessionalDetail.Department).Include(x=>x.ProfessionDetails).Include(x=>x.QualificationDetails).Where(x => x.EmployeeID == EmployeeId).Select(x => new EmployeeDetailList
+				{
+					EmployeeId = x.EmployeeID,
+					EmployeeName = x.EmployeeName,
+					EmployeeCode = x.EmployeeCode,
+					FathersName = x.FatherName,
+					Position = x.ProfessionDetails.ProfessionName,
+					Department = x.EmployeeProfessionalDetail.Department.DepartmentName,
+					Qualification = x.QualificationDetails.QualificationName,
+					DutyStation = x.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
+					RecruitmentDate = x.EmployeeProfessionalDetail.HiredOn
+				}).ToListAsync();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
 	}
 }

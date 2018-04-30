@@ -121,8 +121,7 @@ namespace HumanitarianAssistance.Controllers
       if (user == null) return BadRequest("could not apply claim: invalid user name");
       var result = await _userManager.CheckPasswordAsync(user, model.Password);
       if (!result) return BadRequest("could not apply claim : invalid password");
-      var claimresult = await _userManager.AddClaimAsync(user, new Claim("OfficeCode", ""));
-
+      var claimresult = await _userManager.AddClaimAsync(user, new Claim("OfficeCode", ""));      
       return Ok("Claim Created");
       //AppUser user = new AppUser
       //{

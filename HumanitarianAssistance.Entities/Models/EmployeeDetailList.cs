@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HumanitarianAssistance.ViewModels.Models
+{
+    public class EmployeeDetailList
+    {
+		public int EmployeeId { get; set; }
+		public string EmployeeName { get; set; }
+		public string EmployeeCode { get; set; }
+		public string FathersName { get; set; }
+		public string Position { get; set; }
+		public string Department { get; set; }
+		public string Qualification { get; set; }
+		public string DutyStation { get; set; }
+		public DateTime? RecruitmentDate { get; set; }
+	}
+}
