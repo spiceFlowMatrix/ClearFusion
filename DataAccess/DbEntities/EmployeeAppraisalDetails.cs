@@ -23,6 +23,9 @@ namespace DataAccess.DbEntities
 		public string DutyStation { get; set; }
 		public DateTime RecruitmentDate { get; set; }
 		public int AppraisalPeriod { get; set; }
-		public DateTime CurrentAppraisalDate { get; set; }		
+		public DateTime CurrentAppraisalDate { get; set; }
+		public int OfficeId { get; set; }
+		public bool AppraisalStatus { get; set; }
+		public int TotalScore { get; set; }
 	}
 }

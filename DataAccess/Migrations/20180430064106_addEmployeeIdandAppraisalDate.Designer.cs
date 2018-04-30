@@ -11,9 +11,10 @@ using System;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180430064106_addEmployeeIdandAppraisalDate")]
+    partial class addEmployeeIdandAppraisalDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1115,8 +1116,6 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("AppraisalPeriod");
 
-                    b.Property<bool>("AppraisalStatus");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime>("CreatedDate");
@@ -1141,15 +1140,11 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int>("OfficeId");
-
                     b.Property<string>("Position");
 
                     b.Property<string>("Qualification");
 
                     b.Property<DateTime>("RecruitmentDate");
-
-                    b.Property<int>("TotalScore");
 
                     b.HasKey("EmployeeAppraisalDetailsId");
 
