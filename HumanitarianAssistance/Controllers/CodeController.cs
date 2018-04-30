@@ -1016,7 +1016,7 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpPost]
+    [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAppraisalQuestions([FromQuery] int OfficeId)
     {
