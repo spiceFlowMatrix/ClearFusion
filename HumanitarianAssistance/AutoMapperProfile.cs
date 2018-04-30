@@ -1,5 +1,6 @@
 using AutoMapper;
 using DataAccess.DbEntities;
+using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
 using System;
 using System.Collections.Generic;
@@ -69,6 +70,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<ContractTypeContent, ContractTypeModel>().ReverseMap();
       CreateMap<AppraisalGeneralQuestions, AppraisalQuestionModel>().ReverseMap();
       CreateMap<EmployeeAppraisalDetails, EmployeeAppraisalDetailsModel>().ReverseMap();
+      CreateMap<EmployeeAppraisalQuestions, EmployeeAppraisalQuestionModel>().ReverseMap();
     }
   }
 }

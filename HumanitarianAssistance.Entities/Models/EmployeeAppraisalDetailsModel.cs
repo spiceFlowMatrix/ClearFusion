@@ -17,6 +17,6 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public DateTime RecruitmentDate { get; set; }
 		public int AppraisalPeriod { get; set; }
 		public DateTime CurrentAppraisalDate { get; set; }
-		public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionModel { get; set; }
+		public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
 	}
 }
