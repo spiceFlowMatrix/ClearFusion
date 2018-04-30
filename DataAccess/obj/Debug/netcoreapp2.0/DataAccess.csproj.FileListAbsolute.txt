@@ -28,21 +28,6 @@ D:\Shubham\HumanitarianService\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.Ass
 D:\Shubham\HumanitarianService\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.AssemblyInfo.cs
 D:\Shubham\HumanitarianService\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.dll
 D:\Shubham\HumanitarianService\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.pdb
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.deps.json
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.json
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.dev.json
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.dll
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.pdb
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csprojResolveAssemblyReference.cache
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csproj.CoreCompileInputs.cache
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.AssemblyInfoInputs.cache
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.AssemblyInfo.cs
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.dll
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.pdb
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.deps.json
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.json
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.dev.json
@@ -59,3 +44,18 @@ D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAcc
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csproj.CopyComplete
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.pdb
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.deps.json
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.json
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.dev.json
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.dll
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.pdb
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csprojResolveAssemblyReference.cache
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csproj.CoreCompileInputs.cache
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.AssemblyInfoInputs.cache
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.AssemblyInfo.cs
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.dll
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.pdb
