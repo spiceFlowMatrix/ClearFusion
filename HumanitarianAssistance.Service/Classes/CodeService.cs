@@ -944,7 +944,9 @@ namespace HumanitarianAssistance.Service.Classes
 					model.DutyStation = item.DutyStation;
 					model.RecruitmentDate = item.RecruitmentDate;
 					model.AppraisalPeriod = item.AppraisalPeriod;
-					model.CurrentAppraisalDate = item.CurrentAppraisalDate;					
+					model.CurrentAppraisalDate = item.CurrentAppraisalDate;
+					model.OfficeId = item.OfficeId;
+					model.TotalScore = item.TotalScore;
 					foreach (var element in quesLst)
 					{
 						EmployeeAppraisalQuestionModel questions = new EmployeeAppraisalQuestionModel();
@@ -1109,7 +1111,7 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();				);
+				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();			
 				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
 				foreach (var item in emplst)
 				{
