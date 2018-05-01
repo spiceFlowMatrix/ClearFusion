@@ -1109,7 +1109,7 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();				);
+				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();			
 				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
 				foreach (var item in emplst)
 				{
