@@ -49,5 +49,6 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> EditEmployeeAppraisalMoreDetails(EmployeeAppraisalDetailsModel model, string UserId);
 		Task<APIResponse> GetEmployeeDetailByOfficeId(int OfficeId);
 		Task<APIResponse> GetEmployeeDetailByEmployeeId(int EmployeeId);
+		Task<APIResponse> GetAllEmployeeAppraisalMoreDetails(int OfficeId);
 	}
 }
