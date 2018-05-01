@@ -10,6 +10,8 @@ namespace HumanitarianAssistance.ViewModels.Models
 		{
 			EmployeeAppraisalQuestionList = new List<EmployeeAppraisalQuestionModel>();
 			EmployeeEvaluationModelList = new List<EmployeeEvaluationModel>();
+			StrongPoints = new List<string>();
+			WeakPoints = new List<string>();
 		}
 		public int EmployeeId { get; set; }
 		public string EmployeeCode { get; set; }
