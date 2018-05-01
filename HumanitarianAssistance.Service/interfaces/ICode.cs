@@ -1,4 +1,5 @@
-﻿using HumanitarianAssistance.Service.APIResponses;
+﻿using DataAccess.DbEntities;
+using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
 using System;
 using System.Collections.Generic;
@@ -50,5 +51,9 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> GetEmployeeDetailByOfficeId(int OfficeId);
 		Task<APIResponse> GetEmployeeDetailByEmployeeId(int EmployeeId);
 		Task<APIResponse> GetAllEmployeeAppraisalMoreDetails(int OfficeId);
+		Task<APIResponse> AddInterviewTechnicalQuestions(InterviewTechnicalQuestions model, string UserId);
+		Task<APIResponse> EditInterviewTechnicalQuestions(InterviewTechnicalQuestions model, string UserId);
+		Task<APIResponse> GetAllInterviewTechnicalQuestionsByOfficeId(int OfficeId);
+
 	}
 }

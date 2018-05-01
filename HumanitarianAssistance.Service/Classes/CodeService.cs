@@ -1214,5 +1214,72 @@ namespace HumanitarianAssistance.Service.Classes
 			}
 			return response;
 		}
+
+		public async Task<APIResponse> AddInterviewTechnicalQuestions(InterviewTechnicalQuestions model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				if (model != null)
+				{
+					model.CreatedById = UserId;
+					model.CreatedDate = DateTime.Now;
+					model.IsDeleted = false;
+					await _uow.InterviewTechnicalQuestionsRepository.AddAsyn(model);
+					await _uow.SaveAsync();
+				}
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> EditInterviewTechnicalQuestions(InterviewTechnicalQuestions model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				if (model != null)
+				{
+					var obj = await _uow.InterviewTechnicalQuestionsRepository.FindAsync(x=>x.OfficeId == model.OfficeId && x.InterviewTechnicalQuestionsId == model.InterviewTechnicalQuestionsId);
+					obj.Question = model.Question;
+					obj.ModifiedById = UserId;
+					obj.ModifiedDate = DateTime.Now;
+					obj.IsDeleted = false;
+					await _uow.InterviewTechnicalQuestionsRepository.UpdateAsyn(obj);
+					await _uow.SaveAsync();
+				}
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetAllInterviewTechnicalQuestionsByOfficeId(int OfficeId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				response.data.InterviewTechnicalQuestionsList = await _uow.GetDbContext().InterviewTechnicalQuestions.Where(x=>x.OfficeId == OfficeId).ToListAsync();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
 	}
 }

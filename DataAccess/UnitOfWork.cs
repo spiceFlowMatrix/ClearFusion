@@ -80,10 +80,19 @@ namespace DataAccess
 		private IGenericRepository<EmployeeAppraisalDetails> _employeeAppraisalDetailsRepository;
 		private IGenericRepository<EmployeeAppraisalQuestions> _employeeAppraisalQuestionsRepository;
 		private IGenericRepository<EmployeeEvaluation> _employeeEvaluationRepository;
+		private IGenericRepository<InterviewTechnicalQuestions> _interviewTechnicalQuestionsRepository;
 		public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
+
+		public IGenericRepository<InterviewTechnicalQuestions> InterviewTechnicalQuestionsRepository
+		{
+			get
+			{
+				return _interviewTechnicalQuestionsRepository = _interviewTechnicalQuestionsRepository ?? new GenericRepository<InterviewTechnicalQuestions>(_mschaContext);
+			}
+		}
 
 		public IGenericRepository<EmployeeEvaluation> EmployeeEvaluationRepository
 		{
