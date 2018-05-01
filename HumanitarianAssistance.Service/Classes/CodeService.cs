@@ -1115,35 +1115,43 @@ namespace HumanitarianAssistance.Service.Classes
 				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
 				foreach (var item in emplst)
 				{
-					EmployeeAppraisalDetailsModel obj = new EmployeeAppraisalDetailsModel();
 					var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate);
-					List<EmployeeEvaluationModel> eeList = new List<EmployeeEvaluationModel>();
-					foreach (var elements in empDetails)
+					if (empDetails.Count > 0)
 					{
-						EmployeeEvaluationModel eem = new EmployeeEvaluationModel();
-						eem.TrainingProgram = elements.TrainingProgram;
-						eem.Program = elements.Program;
-						eem.Participated = elements.Participated;
-						eem.CatchLevel = elements.CatchLevel;
-						eem.RefresherTrm = elements.RefresherTrm;
-						eem.OthRecommendation = elements.OthRecommendation;
-						eeList.Add(eem);
-						if (elements.StrongPoints != null)
-							obj.StrongPoints.Add(elements.StrongPoints);
-						if (elements.WeakPoints != null)
-							obj.WeakPoints.Add(elements.WeakPoints);
-						obj.FinalResultQues1 = elements.FinalResultQues1;
-						obj.FinalResultQues2 = elements.FinalResultQues2;
-						obj.FinalResultQues3 = elements.FinalResultQues3;
-						obj.FinalResultQues4 = elements.FinalResultQues4;
-						obj.FinalResultQues5 = elements.FinalResultQues5;
-						obj.DirectSupervisor = elements.DirectSupervisor;
-						obj.AppraisalTeamMember1 = elements.AppraisalTeamMember1;
-						obj.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
-						obj.CommentsByEmployee = elements.CommentsByEmployee;
+						EmployeeAppraisalDetailsModel obj = new EmployeeAppraisalDetailsModel();
+						List<EmployeeEvaluationModel> eeList = new List<EmployeeEvaluationModel>();
+						foreach (var elements in empDetails)
+						{
+							EmployeeEvaluationModel eem = new EmployeeEvaluationModel();
+							if (elements.TrainingProgram != null)
+							{
+								eem.TrainingProgram = elements.TrainingProgram;
+								eem.Program = elements.Program;
+								eem.Participated = elements.Participated;
+								eem.CatchLevel = elements.CatchLevel;
+								eem.RefresherTrm = elements.RefresherTrm;
+								eem.OthRecommendation = elements.OthRecommendation;
+								eeList.Add(eem);
+							}
+							if (elements.StrongPoints != null)
+								obj.StrongPoints.Add(elements.StrongPoints);
+							if (elements.WeakPoints != null)
+								obj.WeakPoints.Add(elements.WeakPoints);
+
+							obj.EmployeeId = elements.EmployeeId;
+							obj.FinalResultQues1 = elements.FinalResultQues1;
+							obj.FinalResultQues2 = elements.FinalResultQues2;
+							obj.FinalResultQues3 = elements.FinalResultQues3;
+							obj.FinalResultQues4 = elements.FinalResultQues4;
+							obj.FinalResultQues5 = elements.FinalResultQues5;
+							obj.DirectSupervisor = elements.DirectSupervisor;
+							obj.AppraisalTeamMember1 = elements.AppraisalTeamMember1;
+							obj.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
+							obj.CommentsByEmployee = elements.CommentsByEmployee;
+						}
+						obj.EmployeeEvaluationModelList = eeList;
+						lst.Add(obj);
 					}
-					obj.EmployeeEvaluationModelList = eeList;
-					lst.Add(obj);
 				}
 				response.data.EmployeeAppraisalDetailsModelLst = lst;
 				response.StatusCode = StaticResource.successStatusCode;
