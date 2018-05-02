@@ -206,6 +206,7 @@ namespace HumanitarianAssistance.Entities
 		public DbSet<EmployeeAppraisalDetails> EmployeeAppraisalDetails { get; set; }
 		public DbSet<EmployeeAppraisalQuestions> EmployeeAppraisalQuestions { get; set; }
 		public DbSet<EmployeeEvaluation> EmployeeEvaluation { get; set; }
+		public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });            

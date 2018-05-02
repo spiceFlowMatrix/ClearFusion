@@ -977,6 +977,9 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
+				var recordList = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == model.EmployeeId && x.CurrentAppraisalDate.Date == DateTime.Now.Date);
+				_uow.GetDbContext().RemoveRange(recordList);
+
 				List<EmployeeEvaluation> lst = new List<EmployeeEvaluation>();
 				foreach (var item in model.EmployeeEvaluationModelList)
 				{
@@ -998,8 +1001,8 @@ namespace HumanitarianAssistance.Service.Classes
 					obj.CommentsByEmployee = model.CommentsByEmployee;
 					obj.CreatedById = UserId;
 					obj.CreatedDate = DateTime.Now;
-					obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
-					obj.EmployeeId = model.EmployeeId;
+					obj.CurrentAppraisalDate = DateTime.Now;
+					obj.EmployeeId = model.EmployeeId;					
 					lst.Add(obj);
 				}
 				foreach (var item in model.StrongPoints)
@@ -1008,8 +1011,8 @@ namespace HumanitarianAssistance.Service.Classes
 					obj.StrongPoints = item;
 					obj.CreatedById = UserId;
 					obj.CreatedDate = DateTime.Now;
-					obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
-					obj.EmployeeId = model.EmployeeId;
+					obj.CurrentAppraisalDate = DateTime.Now;
+					obj.EmployeeId = model.EmployeeId;					
 					lst.Add(obj);
 				}
 				foreach (var item in model.WeakPoints)
@@ -1018,8 +1021,8 @@ namespace HumanitarianAssistance.Service.Classes
 					obj.WeakPoints = item;
 					obj.CreatedById = UserId;
 					obj.CreatedDate = DateTime.Now;
-					obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
-					obj.EmployeeId = model.EmployeeId;
+					obj.CurrentAppraisalDate = DateTime.Now;
+					obj.EmployeeId = model.EmployeeId;					
 					lst.Add(obj);
 				}
 				await _uow.GetDbContext().EmployeeEvaluation.AddRangeAsync(lst);
@@ -1068,7 +1071,7 @@ namespace HumanitarianAssistance.Service.Classes
 						obj.CreatedById = UserId;
 						obj.CreatedDate = DateTime.Now;
 						obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
-						obj.EmployeeId = model.EmployeeId;
+						obj.EmployeeId = model.EmployeeId;						
 						lst.Add(obj);
 					}
 					foreach (var item in model.StrongPoints)
@@ -1088,7 +1091,7 @@ namespace HumanitarianAssistance.Service.Classes
 						obj.CreatedById = UserId;
 						obj.CreatedDate = DateTime.Now;
 						obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
-						obj.EmployeeId = model.EmployeeId;
+						obj.EmployeeId = model.EmployeeId;						
 						lst.Add(obj);
 					}
 					await _uow.GetDbContext().EmployeeEvaluation.AddRangeAsync(lst);
@@ -1115,42 +1118,46 @@ namespace HumanitarianAssistance.Service.Classes
 				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
 				foreach (var item in emplst)
 				{
-					var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate);
+					var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date <= DateTime.Now.Date);					
 					if (empDetails.Count > 0)
 					{
+						var Result = empDetails.GroupBy(x => x.CurrentAppraisalDate.Date).OrderByDescending(x => x.Key).ToList();
 						EmployeeAppraisalDetailsModel obj = new EmployeeAppraisalDetailsModel();
 						List<EmployeeEvaluationModel> eeList = new List<EmployeeEvaluationModel>();
 						foreach (var elements in empDetails)
 						{
-							EmployeeEvaluationModel eem = new EmployeeEvaluationModel();
-							if (elements.TrainingProgram != null)
+							if (elements.CurrentAppraisalDate.Date == Result[0].Key.Date)
 							{
-								eem.TrainingProgram = elements.TrainingProgram;
-								eem.Program = elements.Program;
-								eem.Participated = elements.Participated;
-								eem.CatchLevel = elements.CatchLevel;
-								eem.RefresherTrm = elements.RefresherTrm;
-								eem.OthRecommendation = elements.OthRecommendation;
-								eeList.Add(eem);
-							}
-							if (elements.StrongPoints != null)
-								obj.StrongPoints.Add(elements.StrongPoints);
-							if (elements.WeakPoints != null)
-								obj.WeakPoints.Add(elements.WeakPoints);
+								EmployeeEvaluationModel eem = new EmployeeEvaluationModel();
+								if (elements.TrainingProgram != null)
+								{
+									eem.TrainingProgram = elements.TrainingProgram;
+									eem.Program = elements.Program;
+									eem.Participated = elements.Participated;
+									eem.CatchLevel = elements.CatchLevel;
+									eem.RefresherTrm = elements.RefresherTrm;
+									eem.OthRecommendation = elements.OthRecommendation;
+									eeList.Add(eem);
+								}
+								if (elements.StrongPoints != null)
+									obj.StrongPoints.Add(elements.StrongPoints);
+								if (elements.WeakPoints != null)
+									obj.WeakPoints.Add(elements.WeakPoints);
 
-							obj.EmployeeId = elements.EmployeeId;
-							obj.FinalResultQues1 = elements.FinalResultQues1;
-							obj.FinalResultQues2 = elements.FinalResultQues2;
-							obj.FinalResultQues3 = elements.FinalResultQues3;
-							obj.FinalResultQues4 = elements.FinalResultQues4;
-							obj.FinalResultQues5 = elements.FinalResultQues5;
-							obj.DirectSupervisor = elements.DirectSupervisor;
-							obj.AppraisalTeamMember1 = elements.AppraisalTeamMember1;
-							obj.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
-							obj.CommentsByEmployee = elements.CommentsByEmployee;
+								obj.EmployeeId = elements.EmployeeId;
+								obj.FinalResultQues1 = elements.FinalResultQues1;
+								obj.FinalResultQues2 = elements.FinalResultQues2;
+								obj.FinalResultQues3 = elements.FinalResultQues3;
+								obj.FinalResultQues4 = elements.FinalResultQues4;
+								obj.FinalResultQues5 = elements.FinalResultQues5;
+								obj.DirectSupervisor = elements.DirectSupervisor;
+								obj.AppraisalTeamMember1 = elements.AppraisalTeamMember1;
+								obj.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
+								obj.CommentsByEmployee = elements.CommentsByEmployee;
+								obj.EmployeeEvaluationModelList = eeList;
+								lst.Add(obj);
+							}
 						}
-						obj.EmployeeEvaluationModelList = eeList;
-						lst.Add(obj);
 					}
 				}
 				response.data.EmployeeAppraisalDetailsModelLst = lst;
@@ -1204,6 +1211,73 @@ namespace HumanitarianAssistance.Service.Classes
 					DutyStation = x.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
 					RecruitmentDate = x.EmployeeProfessionalDetail.HiredOn
 				}).ToListAsync();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> AddInterviewTechnicalQuestions(InterviewTechnicalQuestions model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				if (model != null)
+				{
+					model.CreatedById = UserId;
+					model.CreatedDate = DateTime.Now;
+					model.IsDeleted = false;
+					await _uow.InterviewTechnicalQuestionsRepository.AddAsyn(model);
+					await _uow.SaveAsync();
+				}
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> EditInterviewTechnicalQuestions(InterviewTechnicalQuestions model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				if (model != null)
+				{
+					var obj = await _uow.InterviewTechnicalQuestionsRepository.FindAsync(x=>x.OfficeId == model.OfficeId && x.InterviewTechnicalQuestionsId == model.InterviewTechnicalQuestionsId);
+					obj.Question = model.Question;
+					obj.ModifiedById = UserId;
+					obj.ModifiedDate = DateTime.Now;
+					obj.IsDeleted = false;
+					await _uow.InterviewTechnicalQuestionsRepository.UpdateAsyn(obj);
+					await _uow.SaveAsync();
+				}
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetAllInterviewTechnicalQuestionsByOfficeId(int OfficeId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				response.data.InterviewTechnicalQuestionsList = await _uow.GetDbContext().InterviewTechnicalQuestions.Where(x=>x.OfficeId == OfficeId).ToListAsync();
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
