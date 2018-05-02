@@ -1158,9 +1158,10 @@ namespace HumanitarianAssistance.Service.Classes
 								lst.Add(obj);
 							}
 						}
-					}
+					}					
 				}
-				response.data.EmployeeAppraisalDetailsModelLst = lst;
+				//var finalLst = lst.GroupBy(x => x.EmployeeId).ToList();
+				response.data.EmployeeEvaluationDetailsModelLst = lst.GroupBy(x => x.EmployeeId).ToList();
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
@@ -1288,5 +1289,6 @@ namespace HumanitarianAssistance.Service.Classes
 			}
 			return response;
 		}
+
 	}
 }
