@@ -1122,12 +1122,12 @@ namespace HumanitarianAssistance.Service.Classes
 					if (empDetails.Count > 0)
 					{
 						var Result = empDetails.GroupBy(x => x.CurrentAppraisalDate.Date).OrderByDescending(x => x.Key).ToList();
-						EmployeeAppraisalDetailsModel obj = new EmployeeAppraisalDetailsModel();
-						List<EmployeeEvaluationModel> eeList = new List<EmployeeEvaluationModel>();
 						foreach (var elements in empDetails)
-						{
+						{							
 							if (elements.CurrentAppraisalDate.Date == Result[0].Key.Date)
 							{
+								EmployeeAppraisalDetailsModel obj = new EmployeeAppraisalDetailsModel();
+								List<EmployeeEvaluationModel> eeList = new List<EmployeeEvaluationModel>();
 								EmployeeEvaluationModel eem = new EmployeeEvaluationModel();
 								if (elements.TrainingProgram != null)
 								{
