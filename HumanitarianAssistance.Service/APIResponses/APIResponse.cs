@@ -3,6 +3,7 @@ using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace HumanitarianAssistance.Service.APIResponses
@@ -48,6 +49,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 		public List<InterviewTechnicalQuestions> InterviewTechnicalQuestionsList { get; set; }
 		public List<EmployeeDetailList> EmployeeDetailListData { get; set; }
 		public List<EmployeeAppraisalDetailsModel> EmployeeAppraisalDetailsModelLst { get; set; }
+		public List<IGrouping<int, EmployeeAppraisalDetailsModel>> EmployeeEvaluationDetailsModelLst { get; set; }
 		public List<AppraisalGeneralQuestions> AppraisalList { get; set; }
 		public EmployeeTaxReport EmployeeTaxReport { get; set; }
 		public List<EmployeeSalarySlipModel> EmployeeSalarySlipModelList { get; set; }
