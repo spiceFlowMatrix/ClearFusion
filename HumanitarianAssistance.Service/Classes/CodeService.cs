@@ -1114,20 +1114,24 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
+				List<EmployeeAppraisalDetailsModel> finallst = new List<EmployeeAppraisalDetailsModel>();
 				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
 				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
 				foreach (var item in emplst)
 				{
-					var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date <= DateTime.Now.Date);					
+					var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date <= DateTime.Now.Date);
+					List<string> strong = new List<string>();
+					List<string> weak = new List<string>();
+
 					if (empDetails.Count > 0)
 					{
 						var Result = empDetails.GroupBy(x => x.CurrentAppraisalDate.Date).OrderByDescending(x => x.Key).ToList();
-						EmployeeAppraisalDetailsModel obj = new EmployeeAppraisalDetailsModel();
-						List<EmployeeEvaluationModel> eeList = new List<EmployeeEvaluationModel>();
 						foreach (var elements in empDetails)
-						{
+						{							
 							if (elements.CurrentAppraisalDate.Date == Result[0].Key.Date)
 							{
+								EmployeeAppraisalDetailsModel obj = new EmployeeAppraisalDetailsModel();
+								List<EmployeeEvaluationModel> eeList = new List<EmployeeEvaluationModel>();
 								EmployeeEvaluationModel eem = new EmployeeEvaluationModel();
 								if (elements.TrainingProgram != null)
 								{
@@ -1140,10 +1144,15 @@ namespace HumanitarianAssistance.Service.Classes
 									eeList.Add(eem);
 								}
 								if (elements.StrongPoints != null)
+								{
 									obj.StrongPoints.Add(elements.StrongPoints);
+									strong.Add(elements.StrongPoints);
+								}
 								if (elements.WeakPoints != null)
+								{
 									obj.WeakPoints.Add(elements.WeakPoints);
-
+									weak.Add(elements.WeakPoints);
+								}
 								obj.EmployeeId = elements.EmployeeId;
 								obj.FinalResultQues1 = elements.FinalResultQues1;
 								obj.FinalResultQues2 = elements.FinalResultQues2;
@@ -1155,13 +1164,26 @@ namespace HumanitarianAssistance.Service.Classes
 								obj.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
 								obj.CommentsByEmployee = elements.CommentsByEmployee;
 								obj.EmployeeEvaluationModelList = eeList;
-								lst.Add(obj);
+								lst.Add(obj);								
+							}							
+						}
+						int i = 0;
+						foreach (var items in lst)
+						{
+							if (items.EmployeeId == empDetails.FirstOrDefault().EmployeeId && i==0)
+							{
+								items.StrongPoints = strong;
+								items.WeakPoints = weak;
+								finallst.Add(items);
+								i++;
 							}
 						}
 					}					
 				}
+
 				//var finalLst = lst.GroupBy(x => x.EmployeeId).ToList();
-				response.data.EmployeeEvaluationDetailsModelLst = lst.GroupBy(x => x.EmployeeId).ToList();
+				response.data.EmployeeAppraisalDetailsModelLst = finallst;
+				//response.data.EmployeeEvaluationDetailsModelLst = lst.GroupBy(x => x.EmployeeId).ToList();
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
