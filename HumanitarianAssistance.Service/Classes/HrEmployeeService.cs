@@ -2877,7 +2877,7 @@ namespace HumanitarianAssistance.Service.Classes
 										   PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
 										   NetSalary = ept.GrossSalary - ept.TotalDeduction,
 										   AdvanceAmount = ept.AdvanceAmount,
-										   IsAdvanceApproved = ept.IsAdvanceApproved
+										   IsDeductionApproved = ept.IsAdvanceApproved
 									   }).ToList();
 
 
@@ -2917,7 +2917,7 @@ namespace HumanitarianAssistance.Service.Classes
 					SalaryTax = x.FirstOrDefault().SalaryTax,
 					IsApproved = x.FirstOrDefault().IsApproved,
 					AdvanceAmount = x.FirstOrDefault().AdvanceAmount,
-					IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved
+					IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved
 				}).ToList();
 
 
@@ -3021,7 +3021,8 @@ namespace HumanitarianAssistance.Service.Classes
 								* pensionLst.PensionRate) + SalaryCalculate(Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), 1), 2))), 2),
 								// Net Salary End
 								IsApproved = false,
-								AdvanceAmount = advance
+								AdvanceAmount = advance,
+								IsDeductionApproved = advanceAmount.FirstOrDefault().IsDeducted
 							}).FirstOrDefault();
 						}
 						// TO CONVERT AMOUNT USING CONVERSION RATE
@@ -3084,7 +3085,8 @@ namespace HumanitarianAssistance.Service.Classes
 								* pensionLst.PensionRate) + SalaryCalculate(Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), conversionRate.Rate), 2))), 2),
 								// Net Salary End
 								IsApproved = false,
-								AdvanceAmount = advance
+								AdvanceAmount = advance,
+								IsDeductionApproved = advanceAmount.FirstOrDefault().IsDeducted
 							}).FirstOrDefault();
 						}
 						monthlypayrolllist.Add(payrollmodel);
