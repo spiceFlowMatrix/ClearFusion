@@ -4444,7 +4444,7 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{				
-				var record = await _uow.AdvancesRepository.FindAsync(x => x.OfficeId == model.OfficeId && x.EmployeeId == model.EmployeeId && x.AdvanceDate.Date.Month == model.AdvanceDate.Date.Month && x.AdvanceDate.Date.Year == model.AdvanceDate.Date.Year);
+				var record = await _uow.AdvancesRepository.FindAsync(x => x.OfficeId == model.OfficeId && x.EmployeeId == model.EmployeeId && x.AdvanceDate.Date.Month == model.AdvanceDate.Date.Month && x.AdvanceDate.Date.Year == model.AdvanceDate.Date.Year && x.IsDeleted == false);
 				if (record == null)
 				{
 					Advances obj = _mapper.Map<Advances>(model);
@@ -4474,7 +4474,7 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				var record = await _uow.AdvancesRepository.FindAsync(x=>x.AdvancesId == model.AdvancesId && x.IsApproved == false);
+				var record = await _uow.AdvancesRepository.FindAsync(x=>x.AdvancesId == model.AdvancesId && x.IsApproved == false && x.IsDeleted == false);
 				if (record != null)
 				{
 					record.AdvanceDate = model.AdvanceDate;
@@ -4512,7 +4512,7 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				response.data.AdvanceList = await _uow.GetDbContext().Advances.Where(x => x.OfficeId == OfficeId && x.AdvanceDate.Date.Month == month && x.AdvanceDate.Date.Year == year).ToListAsync();
+				response.data.AdvanceList = await _uow.GetDbContext().Advances.Where(x => x.OfficeId == OfficeId && x.AdvanceDate.Date.Month == month && x.AdvanceDate.Date.Year == year && x.IsDeleted == false).ToListAsync();
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
@@ -4529,10 +4529,12 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				var record = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == model.AdvancesId && x.IsApproved == false);
+				var record = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == model.AdvancesId && x.IsApproved == false && x.IsDeleted == false);
 				if (record != null)
 				{
 					record.IsApproved = true;
+					record.ModifiedById = UserId;
+					record.ModifiedDate = DateTime.Now;
 					await _uow.AdvancesRepository.UpdateAsyn(record);
 					await _uow.SaveAsync();
 					response.StatusCode = StaticResource.successStatusCode;
@@ -4551,6 +4553,34 @@ namespace HumanitarianAssistance.Service.Classes
 			}
 			return response;
 		}
-		
+		public async Task<APIResponse> RejectAdvances(AdvancesModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var record = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == model.AdvancesId && x.IsApproved == false && x.IsDeleted == false);
+				if (record != null)
+				{
+					record.IsDeleted = true;
+					record.ModifiedById = UserId;
+					record.ModifiedDate = DateTime.Now;
+					await _uow.AdvancesRepository.UpdateAsyn(record);
+					await _uow.SaveAsync();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = "Rejection Failed";
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
 	}
 }
