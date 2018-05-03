@@ -3022,7 +3022,7 @@ namespace HumanitarianAssistance.Service.Classes
 								// Net Salary End
 								IsApproved = false,
 								AdvanceAmount = advance,
-								IsDeductionApproved = advanceAmount.FirstOrDefault().IsDeducted
+								IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false
 							}).FirstOrDefault();
 						}
 						// TO CONVERT AMOUNT USING CONVERSION RATE
@@ -3086,7 +3086,7 @@ namespace HumanitarianAssistance.Service.Classes
 								// Net Salary End
 								IsApproved = false,
 								AdvanceAmount = advance,
-								IsDeductionApproved = advanceAmount.FirstOrDefault().IsDeducted
+								IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false
 							}).FirstOrDefault();
 						}
 						monthlypayrolllist.Add(payrollmodel);
