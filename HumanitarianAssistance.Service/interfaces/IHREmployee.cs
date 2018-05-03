@@ -112,5 +112,6 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> GetAllAdvancesByOfficeId(int OfficeId, int month, int year);
 		Task<APIResponse> EditAdvances(AdvancesModel model, string UserId);
 		Task<APIResponse> AddAdvances(AdvancesModel model, string UserId);
+		Task<APIResponse> ApproveAdvances(AdvancesModel model, string UserId);
 	}
 }

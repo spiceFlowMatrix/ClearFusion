@@ -16,7 +16,7 @@ namespace HumanitarianAssistance.Entities
         {
         }
         public DbSet<AccountNoteDetail> AccountNoteDetail { get; set; }
-        public DbSet<DataAccess.DbEntities.AdvanceDetail> AdvanceDetail { get; set; }
+        //public DbSet<DataAccess.DbEntities.AdvanceDetail> AdvanceDetail { get; set; }
 
         public DbSet<Permissions> Permissions { get; set; }
 

@@ -31,6 +31,8 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public double? PensionAmount { get; set; }
 
         public bool IsApproved { get; set; }
+		public double AdvanceAmount { get; set; }
+		public bool IsAdvanceApproved { get; set; }
 		public List<EmployeePayrollModel> employeepayrolllist { get; set; }
 	}
 }

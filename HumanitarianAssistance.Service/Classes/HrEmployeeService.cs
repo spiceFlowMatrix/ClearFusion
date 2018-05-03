@@ -2846,8 +2846,8 @@ namespace HumanitarianAssistance.Service.Classes
 			{
 				var userdetailslist = (from ept in await _uow.EmployeePaymentTypeRepository.GetAllAsyn()
 									   join emp in await _uow.EmployeeMonthlyPayrollRepository.GetAllAsyn() on ept.EmployeeID equals emp.EmployeeID
-									   join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId
-									   where ept.FinancialYearDate.Date.Month == month && ept.FinancialYearDate.Date.Year == year && emp.Date.Date.Month == month && emp.Date.Date.Year == year && ept.OfficeId == officeid && ept.PaymentType == paymentType
+									   join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId									   
+									   where ept.FinancialYearDate.Date.Month == month && ept.FinancialYearDate.Date.Year == year && emp.Date.Date.Month == month && emp.Date.Date.Year == year && ept.OfficeId == officeid && ept.PaymentType == paymentType 									      
 									   select new EmployeeMonthlyPayrollModel
 									   {
 										   EmployeeId = ept.EmployeeID,
@@ -2875,7 +2875,9 @@ namespace HumanitarianAssistance.Service.Classes
 										   PensionRate = ept.PensionRate,
 										   SalaryTax = ept.SalaryTax,
 										   PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
-										   NetSalary = ept.GrossSalary - ept.TotalDeduction
+										   NetSalary = ept.GrossSalary - ept.TotalDeduction,
+										   AdvanceAmount = ept.AdvanceAmount,
+										   IsAdvanceApproved = ept.IsAdvanceApproved
 									   }).ToList();
 
 
@@ -2913,7 +2915,9 @@ namespace HumanitarianAssistance.Service.Classes
 					NetSalary = x.FirstOrDefault().GrossSalary - x.FirstOrDefault().TotalDeduction,
 					PensionAmount = x.FirstOrDefault().PensionAmount,
 					SalaryTax = x.FirstOrDefault().SalaryTax,
-					IsApproved = x.FirstOrDefault().IsApproved
+					IsApproved = x.FirstOrDefault().IsApproved,
+					AdvanceAmount = x.FirstOrDefault().AdvanceAmount,
+					IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved
 				}).ToList();
 
 
@@ -2923,6 +2927,7 @@ namespace HumanitarianAssistance.Service.Classes
 					(ApplicationDbContext ctx) => ctx.EmployeeAttendance
 					.Include(e => e.EmployeeDetails).Include(e => e.EmployeeDetails.EmployeeProfessionalDetail).Where(x => x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == officeid)
 					.Include(e => e.EmployeeDetails.EmployeeSalaryDetails).Where(x => x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == paymentType)
+					//.Include(e=> e.EmployeeDetails.Advances).Where(x=>x.EmployeeDetails.Advances.AdvanceDate.Date.Month <month && x.EmployeeDetails.Advances.AdvanceDate.Date.Year == year && x.EmployeeDetails.Advances.IsApproved == true && x.EmployeeDetails.Advances.IsDeducted == false)
 					.Where(x => x.Date.Month == month && x.Date.Year == year).GroupBy(x => x.EmployeeId));
 					var payrolllist = await Task.Run(() =>
 						queryResult(_uow.GetDbContext()).ToListAsync().Result
@@ -2940,6 +2945,23 @@ namespace HumanitarianAssistance.Service.Classes
 						presentdays = payrolllist[i].Count(x => (x.AttendanceTypeId == (int)AttendanceType.P));
 						absentdays = payrolllist[i].Count(x => (x.AttendanceTypeId == (int)AttendanceType.A));
 						//leavedays = payrolllist[i].Count(x => (x.AttendanceTypeId == (int)AttendanceType.L));
+
+						// For calculating ADVANCE In SALARY PAYROLL (CONVERSION RATE ALSO)
+
+						var advanceAmount = _uow.AdvancesRepository.FindAllAsync(x => x.AdvanceDate.Date.Month < month && x.AdvanceDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == false && x.EmployeeId == payrolllist[i].FirstOrDefault().EmployeeId).Result.OrderByDescending(x=>x.AdvanceDate.Date).ToList();
+						double advance = 0;
+						foreach(var element in advanceAmount)					
+						{							
+							if (element.CurrencyId != currencyid)
+							{
+								var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+								advance += element.AdvanceAmount * conversionRate.Rate;
+							}
+							else
+							{
+								advance += element.AdvanceAmount;
+							}
+						}
 
 						// WHEN CURRENCY ID IS SAME (WITHOUT CONVERSION)
 						if (currencyid == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId)
@@ -2998,7 +3020,8 @@ namespace HumanitarianAssistance.Service.Classes
 								Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction + Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)
 								* pensionLst.PensionRate) + SalaryCalculate(Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), 1), 2))), 2),
 								// Net Salary End
-								IsApproved = false
+								IsApproved = false,
+								AdvanceAmount = advance
 							}).FirstOrDefault();
 						}
 						// TO CONVERT AMOUNT USING CONVERSION RATE
@@ -3060,7 +3083,8 @@ namespace HumanitarianAssistance.Service.Classes
 								Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate) - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate.Rate + Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate)
 								* pensionLst.PensionRate) + SalaryCalculate(Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), conversionRate.Rate), 2))), 2),
 								// Net Salary End
-								IsApproved = false
+								IsApproved = false,
+								AdvanceAmount = advance
 							}).FirstOrDefault();
 						}
 						monthlypayrolllist.Add(payrollmodel);
@@ -3945,6 +3969,15 @@ namespace HumanitarianAssistance.Service.Classes
 				List<EmployeeMonthlyPayroll> listMonthlyPayroll = new List<EmployeeMonthlyPayroll>();
 				foreach (var item in model)
 				{
+					if (item.AdvanceAmount > 0)
+					{
+						var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.AdvanceDate.Date.Month < item.FinancialYearDate.Date.Month && x.AdvanceDate.Date.Year == item.FinancialYearDate.Date.Year && x.IsApproved == true && x.IsDeducted == false);
+						foreach (var element in advancesRecords)
+						{
+							element.IsDeducted = true;
+							await _uow.AdvancesRepository.UpdateAsyn(element);
+						}
+					}
 					EmployeePaymentTypes emp = new EmployeePaymentTypes();
 					emp.OfficeId = item.OfficeId;
 					emp.CurrencyId = item.CurrencyId;
@@ -3971,7 +4004,8 @@ namespace HumanitarianAssistance.Service.Classes
 					emp.SalaryTax = item.SalaryTax;
 					emp.NetSalary = item.NetSalary;
 					emp.PensionRate = item.employeepayrolllist[0].PensionRate;
-
+					emp.AdvanceAmount = item.AdvanceAmount;
+					emp.IsAdvanceApproved = item.AdvanceAmount > 0 ? true : false;
 					list.Add(emp);
 					foreach (var element in item.employeepayrolllist)
 					{
@@ -4409,7 +4443,7 @@ namespace HumanitarianAssistance.Service.Classes
 		{
 			APIResponse response = new APIResponse();
 			try
-			{
+			{				
 				var record = await _uow.AdvancesRepository.FindAsync(x => x.OfficeId == model.OfficeId && x.EmployeeId == model.EmployeeId && x.AdvanceDate.Date.Month == model.AdvanceDate.Date.Month && x.AdvanceDate.Date.Year == model.AdvanceDate.Date.Year);
 				if (record == null)
 				{
@@ -4481,6 +4515,34 @@ namespace HumanitarianAssistance.Service.Classes
 				response.data.AdvanceList = await _uow.GetDbContext().Advances.Where(x => x.OfficeId == OfficeId && x.AdvanceDate.Date.Month == month && x.AdvanceDate.Date.Year == year && x.IsApproved == false).ToListAsync();
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> ApproveAdvances(AdvancesModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var record = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == model.AdvancesId && x.IsApproved == false);
+				if (record != null)
+				{
+					record.IsApproved = true;
+					await _uow.AdvancesRepository.UpdateAsyn(record);
+					await _uow.SaveAsync();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = "Approval Failed";
+				}
 			}
 			catch (Exception ex)
 			{

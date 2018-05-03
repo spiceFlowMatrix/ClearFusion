@@ -39,5 +39,7 @@ namespace DataAccess.DbEntities
         public double? PensionAmount { get; set; }
 		public double? SalaryTax { get; set; }
 		public double? NetSalary { get; set; }
+		public double AdvanceAmount { get; set; }
+		public bool IsAdvanceApproved { get; set; }
 	}
 }

@@ -97,6 +97,7 @@ namespace DataAccess.DbEntities
 		public List<EmployeePayroll> EmployeePayrollList { get; set; }
 		//public EmployeePaymentTypes EmployeePaymentTypes { get; set; }
 		public EmployeePensionRate EmployeePensionRate { get; set; }
+		public Advances Advances { get; set; }
 
 		//[StringLength(5)]
 		//public string ContractStatus { get; set; }
