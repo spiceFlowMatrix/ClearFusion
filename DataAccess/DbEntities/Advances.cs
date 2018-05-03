@@ -14,7 +14,7 @@ namespace DataAccess.DbEntities
 		public int AdvancesId { get; set; }
 		public DateTime AdvanceDate { get; set; }
 		public int EmployeeId { get; set; }
-		public EmployeeDetail EmployeeDetail { get; set; }
+		//public EmployeeDetail EmployeeDetail { get; set; }
 		public string EmployeeCode { get; set; }
 		public int CurrencyId { get; set; }
 		public CurrencyDetails CurrencyDetails { get; set; }

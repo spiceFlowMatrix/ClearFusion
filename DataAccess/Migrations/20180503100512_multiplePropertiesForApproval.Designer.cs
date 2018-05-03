@@ -11,9 +11,10 @@ using System;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180503100512_multiplePropertiesForApproval")]
+    partial class multiplePropertiesForApproval
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3184,7 +3185,7 @@ namespace DataAccess.Migrations
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DataAccess.DbEntities.EmployeeDetail")
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
                         .WithOne("Advances")
                         .HasForeignKey("DataAccess.DbEntities.Advances", "EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
