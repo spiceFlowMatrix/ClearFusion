@@ -109,5 +109,8 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> GetEmployeeSalaryDetails(int OfficeId, int year, int month, int EmployeeId);
 		Task<APIResponse> EmployeeTaxCalculation(int OfficeId, int EmployeeId, int FinancialYearId);
 		Task<APIResponse> EmployeeSalaryTaxDetails(SalaryTaxModel model);
+		Task<APIResponse> GetAllAdvancesByOfficeId(int OfficeId, int month, int year);
+		Task<APIResponse> EditAdvances(AdvancesModel model, string UserId);
+		Task<APIResponse> AddAdvances(AdvancesModel model, string UserId);
 	}
 }

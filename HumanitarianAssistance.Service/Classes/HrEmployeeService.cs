@@ -4403,8 +4403,91 @@ namespace HumanitarianAssistance.Service.Classes
 				response.Message = ex.Message;
 			}
 			return response;
-		}		
+		}
 
+		public async Task<APIResponse> AddAdvances(AdvancesModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var record = await _uow.AdvancesRepository.FindAsync(x => x.OfficeId == model.OfficeId && x.EmployeeId == model.EmployeeId && x.AdvanceDate.Date.Month == model.AdvanceDate.Date.Month && x.AdvanceDate.Date.Year == model.AdvanceDate.Date.Year);
+				if (record == null)
+				{
+					Advances obj = _mapper.Map<Advances>(model);
+					obj.CreatedById = UserId;
+					obj.CreatedDate = DateTime.Now;
+					await _uow.AdvancesRepository.AddAsyn(obj);
+					await _uow.SaveAsync();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = "Employee already requested for advance in this month.";
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
 
+		public async Task<APIResponse> EditAdvances(AdvancesModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var record = await _uow.AdvancesRepository.FindAsync(x=>x.AdvancesId == model.AdvancesId && x.IsApproved == false);
+				if (record != null)
+				{
+					record.AdvanceDate = model.AdvanceDate;
+					record.AdvanceAmount = model.AdvanceAmount;
+					record.ApprovedBy = model.ApprovedBy;
+					record.CurrencyId = model.CurrencyId;
+					record.EmployeeId = model.EmployeeId;
+					record.ModeOfReturn = model.ModeOfReturn;
+					record.ModifiedById = UserId;
+					record.ModifiedDate = DateTime.Now;
+					record.OfficeId = model.OfficeId;
+					record.RequestAmount = model.RequestAmount;
+					record.VoucherReferenceNo = model.VoucherReferenceNo;
+					await _uow.AdvancesRepository.UpdateAsyn(record);
+					await _uow.SaveAsync();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = "Update Failed";
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetAllAdvancesByOfficeId(int OfficeId, int month, int year)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				response.data.AdvanceList = await _uow.GetDbContext().Advances.Where(x => x.OfficeId == OfficeId && x.AdvanceDate.Date.Month == month && x.AdvanceDate.Date.Year == year && x.IsApproved == false).ToListAsync();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
 	}
 }

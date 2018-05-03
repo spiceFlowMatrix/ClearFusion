@@ -1044,10 +1044,10 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				var recordList = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == model.EmployeeId && x.CurrentAppraisalDate == model.CurrentAppraisalDate);
-				_uow.GetDbContext().RemoveRange(recordList);
+                var recordList = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == model.EmployeeId && x.CurrentAppraisalDate.Date == DateTime.Now.Date);
+                _uow.GetDbContext().RemoveRange(recordList);
 
-				if (recordList != null)
+                if (recordList != null)
 				{
 					List<EmployeeEvaluation> lst = new List<EmployeeEvaluation>();
 					foreach (var item in model.EmployeeEvaluationModelList)
@@ -1070,7 +1070,7 @@ namespace HumanitarianAssistance.Service.Classes
 						obj.CommentsByEmployee = model.CommentsByEmployee;
 						obj.CreatedById = UserId;
 						obj.CreatedDate = DateTime.Now;
-						obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
+						obj.CurrentAppraisalDate = DateTime.Now;
 						obj.EmployeeId = model.EmployeeId;						
 						lst.Add(obj);
 					}
@@ -1080,7 +1080,7 @@ namespace HumanitarianAssistance.Service.Classes
 						obj.StrongPoints = item;
 						obj.CreatedById = UserId;
 						obj.CreatedDate = DateTime.Now;
-						obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
+						obj.CurrentAppraisalDate = DateTime.Now;
 						obj.EmployeeId = model.EmployeeId;
 						lst.Add(obj);
 					}
@@ -1090,7 +1090,7 @@ namespace HumanitarianAssistance.Service.Classes
 						obj.WeakPoints = item;
 						obj.CreatedById = UserId;
 						obj.CreatedDate = DateTime.Now;
-						obj.CurrentAppraisalDate = model.CurrentAppraisalDate;
+						obj.CurrentAppraisalDate = DateTime.Now;
 						obj.EmployeeId = model.EmployeeId;						
 						lst.Add(obj);
 					}
@@ -1114,12 +1114,13 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				List<EmployeeAppraisalDetailsModel> finallst = new List<EmployeeAppraisalDetailsModel>();
-				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
+				List<EmployeeAppraisalDetailsModel> finallst = new List<EmployeeAppraisalDetailsModel>();                
+                List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
 				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
 				foreach (var item in emplst)
 				{
-					var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date <= DateTime.Now.Date);
+                    List<EmployeeEvaluationModel> eeFinalList = new List<EmployeeEvaluationModel>();
+                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date <= DateTime.Now.Date);
 					List<string> strong = new List<string>();
 					List<string> weak = new List<string>();
 
@@ -1141,8 +1142,9 @@ namespace HumanitarianAssistance.Service.Classes
 									eem.CatchLevel = elements.CatchLevel;
 									eem.RefresherTrm = elements.RefresherTrm;
 									eem.OthRecommendation = elements.OthRecommendation;
-									eeList.Add(eem);
-								}
+									eeList.Add(eem);                                    
+
+                                }
 								if (elements.StrongPoints != null)
 								{
 									obj.StrongPoints.Add(elements.StrongPoints);
@@ -1168,15 +1170,23 @@ namespace HumanitarianAssistance.Service.Classes
 							}							
 						}
 						int i = 0;
+                        foreach(var items in lst)
+                        {
+                            if (items.EmployeeEvaluationModelList.Count > 0)
+                            {
+                                eeFinalList.AddRange(items.EmployeeEvaluationModelList);
+                            }
+                        }
 						foreach (var items in lst)
 						{
 							if (items.EmployeeId == empDetails.FirstOrDefault().EmployeeId && i==0)
 							{
 								items.StrongPoints = strong;
 								items.WeakPoints = weak;
-								finallst.Add(items);
+                                items.EmployeeEvaluationModelList = eeFinalList;
+                                finallst.Add(items);
 								i++;
-							}
+							}                            
 						}
 					}					
 				}

@@ -81,9 +81,11 @@ namespace DataAccess
 		IGenericRepository<EmployeeAppraisalQuestions> EmployeeAppraisalQuestionsRepository { get; }
 		IGenericRepository<EmployeeEvaluation> EmployeeEvaluationRepository { get; }
 		IGenericRepository<InterviewTechnicalQuestions> InterviewTechnicalQuestionsRepository { get; }
+		IGenericRepository<Advances> AdvancesRepository { get; }
 		void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
         
     }
 }
+

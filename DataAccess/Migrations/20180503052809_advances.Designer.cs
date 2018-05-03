@@ -11,9 +11,10 @@ using System;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180503052809_advances")]
+    partial class advances
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,10 +162,6 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<bool>("IsApproved");
-
-                    b.Property<bool>("IsDeducted");
-
                     b.Property<bool>("IsDeleted");
 
                     b.Property<string>("ModeOfReturn");
@@ -172,8 +169,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("OfficeId");
 
                     b.Property<double>("RequestAmount");
 
