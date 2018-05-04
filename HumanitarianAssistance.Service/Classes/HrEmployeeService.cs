@@ -4513,10 +4513,41 @@ namespace HumanitarianAssistance.Service.Classes
 		{
 			APIResponse response = new APIResponse();
 			try
-			{
-				response.data.AdvanceList = await _uow.GetDbContext().Advances.Where(x => x.OfficeId == OfficeId && x.AdvanceDate.Date.Month == month && x.AdvanceDate.Date.Year == year && x.IsDeleted == false).ToListAsync();
-				response.StatusCode = StaticResource.successStatusCode;
-				response.Message = "Success";
+			{				
+				var lst = await _uow.GetDbContext().Advances.Where(x => x.OfficeId == OfficeId && x.AdvanceDate.Date.Month == month && x.AdvanceDate.Date.Year == year && x.IsDeleted == false).ToListAsync();
+				if (lst.Count > 0)
+				{
+					List<AdvanceModel> AdvanceList = new List<AdvanceModel>();
+					foreach (var item in lst)
+					{
+						var emp = await _uow.EmployeeDetailRepository.FindAsync(x=>x.EmployeeID == item.EmployeeId);
+						AdvanceModel obj = new AdvanceModel();
+						obj.AdvancesId = item.AdvancesId;
+						obj.AdvanceDate = item.AdvanceDate;
+						obj.EmployeeId = item.EmployeeId;
+						obj.EmployeeCode = item.EmployeeCode;
+						obj.CurrencyId = item.CurrencyId;
+						obj.VoucherReferenceNo = item.VoucherReferenceNo;
+						obj.Description = item.Description;
+						obj.ModeOfReturn = item.ModeOfReturn;
+						obj.ApprovedBy = item.ApprovedBy;
+						obj.RequestAmount = item.RequestAmount;
+						obj.AdvanceAmount = item.AdvanceAmount;
+						obj.OfficeId = item.OfficeId;
+						obj.IsApproved = item.IsApproved;
+						obj.IsDeducted = item.IsDeducted;
+						obj.EmployeeName = emp.EmployeeName;
+						AdvanceList.Add(obj);
+					}
+					response.data.AdvanceList = AdvanceList;
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = "No record found";
+				}
 			}
 			catch (Exception ex)
 			{
