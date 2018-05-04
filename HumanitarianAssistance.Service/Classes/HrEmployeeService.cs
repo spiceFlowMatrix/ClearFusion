@@ -3022,8 +3022,8 @@ namespace HumanitarianAssistance.Service.Classes
 								* pensionrateamount) + SalaryCalculate(Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), 1), 2))), 2),
 								// Net Salary End
 								IsApproved = false,
-								//AdvanceAmount = advance,
-								//IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false
+								AdvanceAmount = advance,
+								IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false
 							}).FirstOrDefault();
 						}
 						// TO CONVERT AMOUNT USING CONVERSION RATE
@@ -3086,8 +3086,8 @@ namespace HumanitarianAssistance.Service.Classes
 								* pensionrateamount) + SalaryCalculate(Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), conversionRate.Rate), 2))), 2),
 								// Net Salary End
 								IsApproved = false,
-								//AdvanceAmount = advance,
-								//IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false
+								AdvanceAmount = advance,
+								IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false
 							}).FirstOrDefault();
 						}
 						monthlypayrolllist.Add(payrollmodel);
@@ -4649,11 +4649,7 @@ namespace HumanitarianAssistance.Service.Classes
 						InterviewTechnicalQuestion itq = new InterviewTechnicalQuestion();
 						itq.InterviewDetailsId = obj.InterviewDetailsId;
 						itq.TechnicalQuestionId = item.TechnicalQuestionId;
-						itq.Poor = item.Poor;
-						itq.Perfect = item.Perfect;
-						itq.Fair = item.Fair;
-						itq.Good = item.Good;
-						itq.Excellent = item.Excellent;						
+						itq.Answer = item.Answer;				
 						itq.CreatedById = UserId;
 						itq.CreatedDate = DateTime.Now;
 						await _uow.InterviewTechnicalQuestionRepository.AddAsyn(itq);

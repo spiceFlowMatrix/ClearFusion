@@ -16,10 +16,11 @@ namespace DataAccess.DbEntities
 		public int InterviewDetailsId { get; set; }
 		public int TechnicalQuestionId { get; set; }
 		public TechnicalQuestion TechnicalQuestion { get; set; }
-		public int Poor { get; set; }
-		public int Fair { get; set; }
-		public int Good { get; set; }
-		public int Excellent { get; set; }
-		public int Perfect { get; set; }
+		//public int Poor { get; set; }
+		//public int Fair { get; set; }
+		//public int Good { get; set; }
+		//public int Excellent { get; set; }
+		//public int Perfect { get; set; }
+		public string Answer { get; set; }
 	}
 }
