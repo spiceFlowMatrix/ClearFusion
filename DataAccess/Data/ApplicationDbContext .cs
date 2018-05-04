@@ -208,6 +208,13 @@ namespace HumanitarianAssistance.Entities
 		public DbSet<EmployeeEvaluation> EmployeeEvaluation { get; set; }
 		public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }
 		public DbSet<Advances> Advances { get; set; }
+
+		public DbSet<InterviewDetails> InterviewDetails { get; set; }
+		public DbSet<InterviewLanguages> InterviewLanguages { get; set; }
+		public DbSet<InterviewTechnicalQuestion> InterviewTechnicalQuestion { get; set; }
+		public DbSet<InterviewTrainings> InterviewTrainings { get; set; }
+		public DbSet<TechnicalQuestion> TechnicalQuestion { get; set; }
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });            

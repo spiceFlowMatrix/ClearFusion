@@ -82,11 +82,51 @@ namespace DataAccess
 		private IGenericRepository<EmployeeEvaluation> _employeeEvaluationRepository;
 		private IGenericRepository<InterviewTechnicalQuestions> _interviewTechnicalQuestionsRepository;
 		private IGenericRepository<Advances> _advancesRepository;
+		private IGenericRepository<InterviewDetails> _interviewDetailsRepository;
+		private IGenericRepository<InterviewLanguages> _interviewLanguagesRepository;
+		private IGenericRepository<InterviewTechnicalQuestion> _interviewTechnicalQuestionRepository;
+		private IGenericRepository<InterviewTrainings> _interviewTrainingsRepository;
+		private IGenericRepository<TechnicalQuestion> _technicalQuestionRepository;
 		public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
 
+		public IGenericRepository<InterviewDetails> InterviewDetailsRepository
+		{
+			get
+			{
+				return _interviewDetailsRepository = _interviewDetailsRepository ?? new GenericRepository<InterviewDetails>(_mschaContext);
+			}
+		}
+		public IGenericRepository<InterviewLanguages> InterviewLanguagesRepository
+		{
+			get
+			{
+				return _interviewLanguagesRepository = _interviewLanguagesRepository ?? new GenericRepository<InterviewLanguages>(_mschaContext);
+			}
+		}
+		public IGenericRepository<InterviewTechnicalQuestion> InterviewTechnicalQuestionRepository
+		{
+			get
+			{
+				return _interviewTechnicalQuestionRepository = _interviewTechnicalQuestionRepository ?? new GenericRepository<InterviewTechnicalQuestion>(_mschaContext);
+			}
+		}
+		public IGenericRepository<InterviewTrainings> InterviewTrainingsRepository
+		{
+			get
+			{
+				return _interviewTrainingsRepository = _interviewTrainingsRepository ?? new GenericRepository<InterviewTrainings>(_mschaContext);
+			}
+		}
+		public IGenericRepository<TechnicalQuestion> TechnicalQuestionRepository
+		{
+			get
+			{
+				return _technicalQuestionRepository = _technicalQuestionRepository ?? new GenericRepository<TechnicalQuestion>(_mschaContext);
+			}
+		}
 		public IGenericRepository<Advances> AdvancesRepository
 		{
 			get

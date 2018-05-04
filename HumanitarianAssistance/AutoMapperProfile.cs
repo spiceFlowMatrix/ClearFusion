@@ -72,6 +72,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<EmployeeAppraisalDetails, EmployeeAppraisalDetailsModel>().ReverseMap();
       CreateMap<EmployeeAppraisalQuestions, EmployeeAppraisalQuestionModel>().ReverseMap();
       CreateMap<Advances, AdvancesModel>().ReverseMap();
+      CreateMap<InterviewDetails, InterviewDetailModel>().ReverseMap();
     }
   }
 }

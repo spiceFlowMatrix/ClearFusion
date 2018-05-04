@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace DataAccess.DbEntities
+namespace HumanitarianAssistance.ViewModels.Models
 {
-    public class InterviewDetails: BaseEntityWithoutId
+    public class InterviewDetailModel
     {
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		[Column(Order = 1, TypeName = "serial")]
 		public int InterviewDetailsId { get; set; }
 		public string CandidateName { get; set; }
 		public string CandidatePosition { get; set; }
@@ -34,5 +29,10 @@ namespace DataAccess.DbEntities
 		public string PreferedLocation { get; set; }
 		public string NoticePeriod { get; set; }
 		public DateTime JoiningDate { get; set; }
+
+		public List<InterviewLanguageModel> InterviewLanguageModelList { get; set; }
+		public List<InterviewTrainingModel> InterviewTrainingModelList { get; set; }
+		public List<InterviewTechQuesModel> InterviewTechQuesModelList { get; set; }
+
 	}
 }
