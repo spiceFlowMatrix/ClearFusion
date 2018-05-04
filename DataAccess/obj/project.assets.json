@@ -5993,7 +5993,7 @@
       ]
     },
     "Microsoft.Data.Edm/5.8.2": {
-      "sha512": "sHZTf9QoX4YPgqOM11t2GRiMlseUULs5HRDDKN2Zr50zhAm9SLm2ysZCaQb2+2Mwb+erZqtIb4/wY7wGxurkAQ==",
+      "sha512": "P/d8DxA6MFHroBEn/jW0LMQSIKnsRRibrZtRCLfov2boQfrQ1R1BVgkJ5oIhcQsOm0l4POv+I2ny6RBsclNbOw==",
       "type": "package",
       "path": "microsoft.data.edm/5.8.2",
       "files": [
@@ -6057,7 +6057,7 @@
       ]
     },
     "Microsoft.Data.OData/5.8.2": {
-      "sha512": "WyFV7Ks8uQ01JGJ1gzvhl7Q8IHlp7/EoIvKPOQ/qn0wMwgohC7B5sVWI8GJs5GQbWLx8KYDMllADTp9U8ZjUgQ==",
+      "sha512": "oEIUtXcRiKogF0yZxA+QdgxoBJ34989qL/5xOSrTfxAhzNJV5Hw6DRdWgUCpeXFMoJUQx7ptbHCN+My/LCQfsg==",
       "type": "package",
       "path": "microsoft.data.odata/5.8.2",
       "files": [
@@ -11625,7 +11625,7 @@
       ]
     },
     "System.Spatial/5.8.2": {
-      "sha512": "kjspKkA3D/rCkB9ut0UM0Qj/zgc+2tHxSxBhlgbNLkHTpE4APeziuL8alIPciyU+QqAKaKAmsZgtLW/BVN+9CA==",
+      "sha512": "0RfZZJ8RlrfjoBPAF6pczX4Nd2kyLM8EX1PCP5Rqs/jOhJBUPYhpXjIsVAYN7kocj9IJ9XoJWAxWgXIDtJY2Ag==",
       "type": "package",
       "path": "system.spatial/5.8.2",
       "files": [
@@ -12712,26 +12712,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\shubhamk\\.nuget\\packages\\": {},
+    "C:\\Users\\alpitg\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
-    "restoreSettings": {
-      "hideWarningsAndErrors": true
-    },
     "restore": {
-      "projectUniqueName": "D:\\Dayuser\\clear-fusion\\clear-fusion\\DataAccess\\DataAccess.csproj",
+      "projectUniqueName": "D:\\Alpit\\Project\\Humanitarian Assistance\\GCloudHumanitarian\\clear-fusion\\DataAccess\\DataAccess.csproj",
       "projectName": "DataAccess",
-      "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\DataAccess\\DataAccess.csproj",
-      "packagesPath": "C:\\Users\\shubhamk\\.nuget\\packages\\",
-      "outputPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\DataAccess\\obj\\",
+      "projectPath": "D:\\Alpit\\Project\\Humanitarian Assistance\\GCloudHumanitarian\\clear-fusion\\DataAccess\\DataAccess.csproj",
+      "packagesPath": "C:\\Users\\alpitg\\.nuget\\packages\\",
+      "outputPath": "D:\\Alpit\\Project\\Humanitarian Assistance\\GCloudHumanitarian\\clear-fusion\\DataAccess\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\shubhamk\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\alpitg\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -12744,11 +12741,11 @@
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj": {
-              "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj"
+            "D:\\Alpit\\Project\\Humanitarian Assistance\\GCloudHumanitarian\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj": {
+              "projectPath": "D:\\Alpit\\Project\\Humanitarian Assistance\\GCloudHumanitarian\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj"
             },
-            "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj": {
-              "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj"
+            "D:\\Alpit\\Project\\Humanitarian Assistance\\GCloudHumanitarian\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj": {
+              "projectPath": "D:\\Alpit\\Project\\Humanitarian Assistance\\GCloudHumanitarian\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj"
             }
           }
         }

@@ -664,26 +664,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\shubhamk\\.nuget\\packages\\": {},
+    "C:\\Users\\alpitg\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
-    "restoreSettings": {
-      "hideWarningsAndErrors": true
-    },
     "restore": {
-      "projectUniqueName": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj",
+      "projectUniqueName": "D:\\Alpit\\Project\\Humanitarian Assistance\\GCloudHumanitarian\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj",
       "projectName": "HumanitarianAssistance.Common",
-      "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj",
-      "packagesPath": "C:\\Users\\shubhamk\\.nuget\\packages\\",
-      "outputPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\obj\\",
+      "projectPath": "D:\\Alpit\\Project\\Humanitarian Assistance\\GCloudHumanitarian\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\HumanitarianAssistance.Common.csproj",
+      "packagesPath": "C:\\Users\\alpitg\\.nuget\\packages\\",
+      "outputPath": "D:\\Alpit\\Project\\Humanitarian Assistance\\GCloudHumanitarian\\clear-fusion\\HumanitarianAssistance\\HumanitarianAssistance.Common\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\shubhamk\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\alpitg\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
