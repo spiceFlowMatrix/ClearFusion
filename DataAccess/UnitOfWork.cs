@@ -87,12 +87,23 @@ namespace DataAccess
 		private IGenericRepository<InterviewTechnicalQuestion> _interviewTechnicalQuestionRepository;
 		private IGenericRepository<InterviewTrainings> _interviewTrainingsRepository;
 		private IGenericRepository<TechnicalQuestion> _technicalQuestionRepository;
-		public UnitOfWork(ApplicationDbContext mschaContext)
+        private IGenericRepository<ExistInterviewDetails> _existInterviewDetailsRepository;
+
+
+        public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
 
-		public IGenericRepository<InterviewDetails> InterviewDetailsRepository
+        public IGenericRepository<ExistInterviewDetails> ExistInterviewDetailsRepository
+        {
+            get
+            {
+                return _existInterviewDetailsRepository = _existInterviewDetailsRepository ?? new GenericRepository<ExistInterviewDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<InterviewDetails> InterviewDetailsRepository
 		{
 			get
 			{

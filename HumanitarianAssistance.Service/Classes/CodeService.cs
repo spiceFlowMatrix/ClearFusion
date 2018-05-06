@@ -1321,6 +1321,47 @@ namespace HumanitarianAssistance.Service.Classes
 			}
 			return response;
 		}
+        public async Task<APIResponse> AddExitInterview(ExitInterviewModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ExistInterviewDetails obj = _mapper.Map<ExistInterviewDetails>(model);
+                obj.CreatedById = UserId;
+                obj.CreatedDate = DateTime.Now;
+                await _uow.ExistInterviewDetailsRepository.AddAsyn(obj);
+                await _uow.SaveAsync();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
-	}
+        public async Task<APIResponse> EditExitInterview(ExitInterviewModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ExistInterviewDetails obj = await _uow.ExistInterviewDetailsRepository.FindAsync(x => x.ExistInterviewDetailsId == model.ExistInterviewDetailsId);
+                obj.ModifiedById = UserId;
+                obj.ModifiedDate = DateTime.Now;
+                var finalData = _mapper.Map(model, obj);
+                await _uow.ExistInterviewDetailsRepository.UpdateAsyn(obj);
+                await _uow.SaveAsync();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+    }
 }

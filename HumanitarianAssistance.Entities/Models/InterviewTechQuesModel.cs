@@ -7,6 +7,7 @@ namespace HumanitarianAssistance.ViewModels.Models
     public class InterviewTechQuesModel
     {
 		public int TechnicalQuestionId { get; set; }
-		public string Answer { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
 	}
 }

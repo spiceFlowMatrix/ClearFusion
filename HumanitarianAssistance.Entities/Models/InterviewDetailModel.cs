@@ -19,8 +19,11 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string PlaceOfBirth { get; set; }
 		public string TazkiraIssuePlace { get; set; }
 		public string MaritalStatus { get; set; }
+
 		public string Experience { get; set; }
+
 		public string ProfessionalCriteriaMarks { get; set; }
+
 		public string MarksObtained { get; set; }
 		public string WrittenTestMarks { get; set; }
 		public string Ques1 { get; set; }
@@ -34,5 +37,24 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public List<InterviewTrainingModel> InterviewTrainingModelList { get; set; }
 		public List<InterviewTechQuesModel> InterviewTechQuesModelList { get; set; }
 
-	}
+        public long CurrentBase { get; set; }
+        public bool CurrentTransportation { get; set; }
+        public bool CurrentMeal { get; set; }
+        public long CurrentOther { get; set; }
+
+        public long ExpectationBase { get; set; }
+        public bool ExpectationTransportation { get; set; }
+        public bool ExpectationMeal { get; set; }
+        public long ExpectationOther { get; set; }
+
+        public string TotalMarksObtained { get; set; }
+
+        public string Status { get; set; }
+
+        public string Interviewer1 { get; set; }
+        public string Interviewer2 { get; set; }
+        public string Interviewer3 { get; set; }
+        public string Interviewer4 { get; set; }
+
+    }
 }

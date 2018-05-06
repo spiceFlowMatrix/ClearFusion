@@ -59,3 +59,19 @@ D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\Humanit
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csproj.CopyComplete
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.deps.json
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\DataAccess.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\DataAccess.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csprojResolveAssemblyReference.cache
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csproj.CoreCompileInputs.cache
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.AssemblyInfoInputs.cache
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.AssemblyInfo.cs
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csproj.CopyComplete
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb

@@ -67,3 +67,21 @@ D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\Humanit
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csproj.CopyComplete
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.deps.json
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.runtimeconfig.json
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.runtimeconfig.dev.json
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\DataAccess.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\DataAccess.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csprojResolveAssemblyReference.cache
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csproj.CoreCompileInputs.cache
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csproj.CopyComplete
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.pdb

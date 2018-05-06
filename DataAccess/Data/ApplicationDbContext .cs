@@ -215,7 +215,9 @@ namespace HumanitarianAssistance.Entities
 		public DbSet<InterviewTrainings> InterviewTrainings { get; set; }
 		public DbSet<TechnicalQuestion> TechnicalQuestion { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public DbSet<ExistInterviewDetails> ExistInterviewDetails { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });            
             modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);

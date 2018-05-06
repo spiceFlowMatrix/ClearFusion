@@ -1183,5 +1183,33 @@ namespace HumanitarianAssistance.Controllers
       }
       return response;
     }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddExitInterview([FromBody]ExitInterviewModel model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.AddExitInterview(model, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditExitInterview([FromBody]ExitInterviewModel model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.EditExitInterview(model, id);
+      }
+      return response;
+    }
   }
 }
