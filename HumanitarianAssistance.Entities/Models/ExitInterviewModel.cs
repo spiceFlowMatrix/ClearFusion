@@ -6,13 +6,19 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class ExitInterviewModel
     {
+
         public int ExistInterviewDetailsId { get; set; }
         public int EmployeeId { get; set; }
-        public string EmployeeCode { get; set; }        
+        public string EmployeeCode { get; set; }
+		public string EmployeeName { get; set; }
+		public string Position { get; set; }
+		public string Department { get; set; }
+		public string TenureWithCHA { get; set; }
+		public string Gender { get; set; }
 
-        public string DutiesOfJob { get; set; }
+		public string DutiesOfJob { get; set; }
         public string TrainingAndDevelopmentPrograms { get; set; }
-        public string OpportunityAdvancement { get; set; }
+        public string OpportunityAdvancement { get; set; }	
         public string SalaryTreatment { get; set; }
         public string BenefitProgram { get; set; }
         public string WorkingConditions { get; set; }
