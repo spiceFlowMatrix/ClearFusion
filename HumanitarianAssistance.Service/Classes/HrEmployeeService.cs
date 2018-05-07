@@ -47,11 +47,15 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                EmployeeDetail obj = _mapper.Map<EmployeeDetail>(model);
+                EmployeeDetail obj = _mapper.Map<EmployeeDetail>(model);				
                 await _uow.EmployeeDetailRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
 
-                EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel();
+				var OfficeDetail = await _uow.OfficeDetailRepository.FindAsync(x => x.OfficeId == model.OfficeId);
+				obj.EmployeeCode = OfficeDetail.OfficeCode + obj.EmployeeID;
+				await _uow.EmployeeDetailRepository.AddAsyn(obj);
+
+				EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel();
                 empprofessional.EmployeeId = obj.EmployeeID;
                 empprofessional.EmployeeTypeId = model.EmployeeTypeId;
                 empprofessional.OfficeId = model.OfficeId;
@@ -110,6 +114,7 @@ namespace HumanitarianAssistance.Service.Classes
                 if (employeeinfo != null)
                 {
                     employeeinfo.EmployeeTypeId = model.EmployeeTypeId;
+					employeeinfo.EmployeeCode = model.EmployeeCode;
                     employeeinfo.EmployeeName = model.EmployeeName;
                     employeeinfo.IDCard = model.IDCard;
                     employeeinfo.FatherName = model.FatherName;
