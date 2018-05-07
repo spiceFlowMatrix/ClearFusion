@@ -1382,8 +1382,8 @@ namespace HumanitarianAssistance.Service.Classes
 					{
 						model.EmployeeCode = empRecord[0].EmployeeCode;
 						model.EmployeeName = empRecord[0].EmployeeName;
-						model.Position = empRecord[0].EmployeeProfessionalDetail.DesignationDetails.Designation;
-						model.Department = empRecord[0].EmployeeProfessionalDetail.Department.DepartmentName;
+						model.Position = empRecord[0].EmployeeProfessionalDetail?.DesignationDetails?.Designation ?? null;
+						model.Department = empRecord[0].EmployeeProfessionalDetail?.Department?.DepartmentName ?? null;
 						model.TenureWithCHA = (DateTime.Now.Date - empRecord[0].EmployeeProfessionalDetail.HiredOn.Value.Date).Days.ToString() + " Days";
 						model.Gender = empRecord[0].SexId == 1 ? "Male" : empRecord[0].SexId == 2 ? "Female" : "Other" ;
 					}
