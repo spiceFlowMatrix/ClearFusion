@@ -1232,18 +1232,20 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Include(x => x.EmployeeProfessionalDetail.OfficeDetail).Include(x => x.EmployeeProfessionalDetail.Department).Include(x => x.ProfessionDetails).Include(x => x.QualificationDetails).Where(x => x.EmployeeID == EmployeeId).Select(x => new EmployeeDetailList
+				response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Include(x => x.EmployeeProfessionalDetail.OfficeDetail).Include(x => x.EmployeeProfessionalDetail.Department).Include(x => x.QualificationDetails).Include(x=>x.EmployeeProfessionalDetail.DesignationDetails).Where(x => x.EmployeeID == EmployeeId).Select(x => new EmployeeDetailList
 				{
 					EmployeeId = x.EmployeeID,
 					EmployeeName = x.EmployeeName,
 					EmployeeCode = x.EmployeeCode,
 					FathersName = x.FatherName,
-					Position = x.ProfessionDetails.ProfessionName,
+					Position = x.EmployeeProfessionalDetail.DesignationDetails.Designation,
 					Department = x.EmployeeProfessionalDetail.Department.DepartmentName,
 					Qualification = x.QualificationDetails.QualificationName,
 					DutyStation = x.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
-					RecruitmentDate = x.EmployeeProfessionalDetail.HiredOn
-				}).ToListAsync();
+					RecruitmentDate = x.EmployeeProfessionalDetail.HiredOn,
+					TenureWithCHA = (DateTime.Now.Date - x.EmployeeProfessionalDetail.HiredOn.Value.Date).Days.ToString() + " Days",
+					Gender = x.SexId == 1 ? "Male" : x.SexId == 2 ? "Female" : "Other"
+			}).ToListAsync();
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
@@ -1350,7 +1352,7 @@ namespace HumanitarianAssistance.Service.Classes
                 ExistInterviewDetails obj = await _uow.ExistInterviewDetailsRepository.FindAsync(x => x.ExistInterviewDetailsId == model.ExistInterviewDetailsId);
                 obj.ModifiedById = UserId;
                 obj.ModifiedDate = DateTime.Now;
-                var finalData = _mapper.Map(model, obj);
+                _mapper.Map(model, obj);				
                 await _uow.ExistInterviewDetailsRepository.UpdateAsyn(obj);
                 await _uow.SaveAsync();
                 response.StatusCode = StaticResource.successStatusCode;
@@ -1363,5 +1365,40 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-    }
+
+		public async Task<APIResponse> GetAllExitInterview()
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var exitInterviewList = await _uow.GetDbContext().ExistInterviewDetails.Where(x=>x.IsDeleted == false).ToListAsync();
+				List<ExitInterviewModel> lst = new List<ExitInterviewModel>();
+				foreach (var item in exitInterviewList)
+				{
+					ExitInterviewModel model = new ExitInterviewModel();
+					_mapper.Map(item,model);					
+					var empRecord = await _uow.GetDbContext().EmployeeDetail.Include(x=>x.EmployeeProfessionalDetail).Include(x=>x.EmployeeProfessionalDetail.DesignationDetails).Include(x=>x.EmployeeProfessionalDetail.Department).Where(x=>x.EmployeeID == item.EmployeeID).ToListAsync();
+					if (empRecord != null)
+					{
+						model.EmployeeCode = empRecord[0].EmployeeCode;
+						model.EmployeeName = empRecord[0].EmployeeName;
+						model.Position = empRecord[0].EmployeeProfessionalDetail.DesignationDetails.Designation;
+						model.Department = empRecord[0].EmployeeProfessionalDetail.Department.DepartmentName;
+						model.TenureWithCHA = (DateTime.Now.Date - empRecord[0].EmployeeProfessionalDetail.HiredOn.Value.Date).Days.ToString() + " Days";
+						model.Gender = empRecord[0].SexId == 1 ? "Male" : empRecord[0].SexId == 2 ? "Female" : "Other" ;
+					}
+					lst.Add(model);
+				}
+				response.data.ExitInterviewList = lst;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+	}
 }
