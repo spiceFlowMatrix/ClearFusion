@@ -1,48 +1,3 @@
-D:\HumantarianServerGit\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.deps.json
-D:\HumantarianServerGit\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
-D:\HumantarianServerGit\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
-D:\HumantarianServerGit\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\DataAccess.dll
-D:\HumantarianServerGit\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
-D:\HumantarianServerGit\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
-D:\HumantarianServerGit\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\DataAccess.pdb
-D:\HumantarianServerGit\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
-D:\HumantarianServerGit\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
-D:\HumantarianServerGit\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csprojResolveAssemblyReference.cache
-D:\HumantarianServerGit\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csproj.CoreCompileInputs.cache
-D:\HumantarianServerGit\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.AssemblyInfoInputs.cache
-D:\HumantarianServerGit\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.AssemblyInfo.cs
-D:\HumantarianServerGit\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
-D:\HumantarianServerGit\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csprojResolveAssemblyReference.cache
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csproj.CoreCompileInputs.cache
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.AssemblyInfoInputs.cache
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.AssemblyInfo.cs
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.deps.json
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\DataAccess.dll
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\DataAccess.pdb
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
-D:\Shubham\HumanitarianService\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.deps.json
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\DataAccess.dll
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\DataAccess.pdb
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csprojResolveAssemblyReference.cache
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csproj.CoreCompileInputs.cache
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.AssemblyInfoInputs.cache
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.AssemblyInfo.cs
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.deps.json
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
@@ -59,19 +14,3 @@ D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\Humanit
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csproj.CopyComplete
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.deps.json
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\DataAccess.dll
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\DataAccess.pdb
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csprojResolveAssemblyReference.cache
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csproj.CoreCompileInputs.cache
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.AssemblyInfoInputs.cache
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.AssemblyInfo.cs
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.csproj.CopyComplete
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
-E:\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb

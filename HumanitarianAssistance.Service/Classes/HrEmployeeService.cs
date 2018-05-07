@@ -4653,7 +4653,7 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         InterviewTechnicalQuestion itq = new InterviewTechnicalQuestion();
                         itq.InterviewDetailsId = obj.InterviewDetailsId;
-                        itq.TechnicalQuestionId = item.TechnicalQuestionId;
+                        itq.Question = item.Question;
                         itq.Answer = item.Answer;
                         itq.CreatedById = UserId;
                         itq.CreatedDate = DateTime.Now;
@@ -4768,7 +4768,7 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         InterviewTechnicalQuestion itq = new InterviewTechnicalQuestion();
                         itq.InterviewDetailsId = model.InterviewDetailsId;
-                        itq.TechnicalQuestionId = item.TechnicalQuestionId;
+                        itq.Question = item.Question;
                         itq.Answer = item.Answer;
                         itq.CreatedById = UserId;
                         itq.CreatedDate = DateTime.Now;
@@ -4815,7 +4815,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     var languageRecords = await _uow.InterviewLanguagesRepository.FindAllAsync(x=>x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
                     var trainingRecords = await _uow.InterviewTrainingsRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
-                    var technicalRecords = await _uow.GetDbContext().InterviewTechnicalQuestion.Include(x=>x.TechnicalQuestion).Where(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId).ToListAsync();
+                    var technicalRecords = await _uow.GetDbContext().InterviewTechnicalQuestion.Where(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId).ToListAsync();
 
                     InterviewDetailModel obj = new InterviewDetailModel();
                     List<InterviewLanguageModel> languageList = new List<InterviewLanguageModel>();
@@ -4826,8 +4826,8 @@ namespace HumanitarianAssistance.Service.Classes
                     foreach (var item in technicalRecords)
                     {
                         InterviewTechQuesModel technicalModel = new InterviewTechQuesModel();
-                        technicalModel.TechnicalQuestionId = item.TechnicalQuestionId;
-                        technicalModel.Question = item.TechnicalQuestion.Question;
+                        //technicalModel.TechnicalQuestionId = item.TechnicalQuestionId;
+                        technicalModel.Question = item.Question;
                         technicalModel.Answer = item.Answer;
                         technicalList.Add(technicalModel);
                     }

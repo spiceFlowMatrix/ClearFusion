@@ -14,8 +14,8 @@ namespace DataAccess.DbEntities
 		public int InterviewTechnicalQuestionId { get; set; }
 		public InterviewDetails InterviewDetails { get; set; }
 		public int InterviewDetailsId { get; set; }
-		public int TechnicalQuestionId { get; set; }
-		public TechnicalQuestion TechnicalQuestion { get; set; }
+		public string Question { get; set; }
+		//public TechnicalQuestion TechnicalQuestion { get; set; }
 		//public int Poor { get; set; }
 		//public int Fair { get; set; }
 		//public int Good { get; set; }
