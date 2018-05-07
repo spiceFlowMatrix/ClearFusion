@@ -208,7 +208,16 @@ namespace HumanitarianAssistance.Entities
 		public DbSet<EmployeeEvaluation> EmployeeEvaluation { get; set; }
 		public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }
 		public DbSet<Advances> Advances { get; set; }
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+		public DbSet<InterviewDetails> InterviewDetails { get; set; }
+		public DbSet<InterviewLanguages> InterviewLanguages { get; set; }
+		public DbSet<InterviewTechnicalQuestion> InterviewTechnicalQuestion { get; set; }
+		public DbSet<InterviewTrainings> InterviewTrainings { get; set; }
+		public DbSet<TechnicalQuestion> TechnicalQuestion { get; set; }
+
+        public DbSet<ExistInterviewDetails> ExistInterviewDetails { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });            
             modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);

@@ -40,7 +40,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public DateTime Date { get; set; }
 
 		public double? SalaryTax { get; set; }
-		public double AdvanceAmount { get; set; }
+		public double? AdvanceAmount { get; set; }
 		public bool IsDeductionApproved { get; set; }
 
 		public List<EmployeePayrollModel> employeepayrolllist { get; set; }

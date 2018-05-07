@@ -11,9 +11,10 @@ using System;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180506195812_exitInterviewTable")]
+    partial class exitInterviewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1977,7 +1978,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("EmployeeCode");
 
-                    b.Property<int>("EmployeeID");
+                    b.Property<int>("EmployeeId");
 
                     b.Property<string>("EncouragedCooperation");
 
@@ -2069,7 +2070,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("ModifiedById");
 
@@ -4273,7 +4274,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
-                        .HasForeignKey("EmployeeID")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")

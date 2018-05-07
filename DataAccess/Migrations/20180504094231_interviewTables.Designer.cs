@@ -11,9 +11,10 @@ using System;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180504094231_interviewTables")]
+    partial class interviewTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1945,137 +1946,6 @@ namespace DataAccess.Migrations
                     b.ToTable("ExchangeRates");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.ExistInterviewDetails", b =>
-                {
-                    b.Property<int>("ExistInterviewDetailsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("BenefitProgram");
-
-                    b.Property<bool>("Benefits");
-
-                    b.Property<bool>("BetterJobOpportunity");
-
-                    b.Property<bool>("CareerChange");
-
-                    b.Property<string>("CoWorkers");
-
-                    b.Property<string>("ComfortableAppropriately");
-
-                    b.Property<bool>("CompanyInstability");
-
-                    b.Property<bool>("ConflictWithOther");
-
-                    b.Property<bool>("ConflictWithSuoervisors");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("DutiesOfJob");
-
-                    b.Property<string>("EmployeeCode");
-
-                    b.Property<int>("EmployeeID");
-
-                    b.Property<string>("EncouragedCooperation");
-
-                    b.Property<string>("Equipped");
-
-                    b.Property<string>("Explain");
-
-                    b.Property<bool>("FamilyReasons");
-
-                    b.Property<string>("GaveFairTreatment");
-
-                    b.Property<string>("GenderFriendlyEnvironment");
-
-                    b.Property<string>("HadAdequateEquipment");
-
-                    b.Property<string>("HadGoodSynergy");
-
-                    b.Property<string>("HadKnowledgeOfJob");
-
-                    b.Property<string>("HadKnowledgeSupervision");
-
-                    b.Property<bool>("HealthIssue");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("JobOrientation");
-
-                    b.Property<string>("JobWasChallenging");
-
-                    b.Property<string>("MaintainedConsistent");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<bool>("NotChallenged");
-
-                    b.Property<string>("OpportunityAdvancement");
-
-                    b.Property<string>("OverallJobSatisfaction");
-
-                    b.Property<bool>("Pay");
-
-                    b.Property<bool>("PersonalReasons");
-
-                    b.Property<string>("ProvidedDevelopment");
-
-                    b.Property<string>("ProvidedRecognition");
-
-                    b.Property<bool>("Question");
-
-                    b.Property<string>("RecognizedEmployeesContribution");
-
-                    b.Property<bool>("Relocation");
-
-                    b.Property<bool>("ReturnToSchool");
-
-                    b.Property<string>("SalaryTreatment");
-
-                    b.Property<string>("SkillsEffectivelyUsed");
-
-                    b.Property<string>("SufficientResources");
-
-                    b.Property<string>("Supervisors");
-
-                    b.Property<string>("TrainingAndDevelopmentPrograms");
-
-                    b.Property<string>("WasAdequatelyStaffed");
-
-                    b.Property<string>("WasAvailableToDiscuss");
-
-                    b.Property<string>("WasEfficient");
-
-                    b.Property<string>("WasOpenSuggestions");
-
-                    b.Property<string>("WelcomedSuggestions");
-
-                    b.Property<string>("WorkEnvironment");
-
-                    b.Property<string>("WorkLoadReasonable");
-
-                    b.Property<bool>("WorkRelationship");
-
-                    b.Property<string>("WorkingConditions");
-
-                    b.Property<string>("WorkingHours");
-
-                    b.HasKey("ExistInterviewDetailsId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("ExistInterviewDetails");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.FinancialYearDetail", b =>
                 {
                     b.Property<int>("FinancialYearId")
@@ -2204,37 +2074,13 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<long>("CurrentBase");
-
-                    b.Property<bool>("CurrentMeal");
-
-                    b.Property<long>("CurrentOther");
-
-                    b.Property<bool>("CurrentTransportation");
-
                     b.Property<DateTime>("DateOfBirth");
 
                     b.Property<string>("DutyStation");
 
-                    b.Property<long>("ExpectationBase");
-
-                    b.Property<bool>("ExpectationMeal");
-
-                    b.Property<long>("ExpectationOther");
-
-                    b.Property<bool>("ExpectationTransportation");
-
                     b.Property<string>("Experience");
 
                     b.Property<int>("Gender");
-
-                    b.Property<string>("Interviewer1");
-
-                    b.Property<string>("Interviewer2");
-
-                    b.Property<string>("Interviewer3");
-
-                    b.Property<string>("Interviewer4");
 
                     b.Property<bool>("IsDeleted");
 
@@ -2268,11 +2114,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("ResidingProvince");
 
-                    b.Property<string>("Status");
-
                     b.Property<string>("TazkiraIssuePlace");
-
-                    b.Property<string>("TotalMarksObtained");
 
                     b.Property<string>("University");
 
@@ -2384,11 +2226,15 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<string>("Answer");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime>("CreatedDate");
+
+                    b.Property<int>("Excellent");
+
+                    b.Property<int>("Fair");
+
+                    b.Property<int>("Good");
 
                     b.Property<int>("InterviewDetailsId");
 
@@ -2397,6 +2243,10 @@ namespace DataAccess.Migrations
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("Perfect");
+
+                    b.Property<int>("Poor");
 
                     b.Property<int>("TechnicalQuestionId");
 
@@ -4263,22 +4113,6 @@ namespace DataAccess.Migrations
                         .WithMany("ExchangeRateListTo")
                         .HasForeignKey("ToCurrency")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.ExistInterviewDetails", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.FinancialYearDetail", b =>

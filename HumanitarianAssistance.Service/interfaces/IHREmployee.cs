@@ -114,5 +114,10 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> AddAdvances(AdvancesModel model, string UserId);
 		Task<APIResponse> ApproveAdvances(AdvancesModel model, string UserId);
 		Task<APIResponse> RejectAdvances(AdvancesModel model, string UserId);
-	}
+        Task<APIResponse> AddInterviewDetails(InterviewDetailModel model, string UserId);
+        Task<APIResponse> EditInterviewDetails(InterviewDetailModel model, string UserId);
+        Task<APIResponse> GetAllInterviewDetails();
+        Task<APIResponse> AddTechnicalQuestions(InterviewTechnicalQuestionsModel model, string UserId);
+
+    }
 }
