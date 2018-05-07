@@ -43,22 +43,6 @@ D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAcce
 D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.AssemblyInfo.cs
 D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.dll
 D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.deps.json
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.json
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.dev.json
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csprojResolveAssemblyReference.cache
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csproj.CoreCompileInputs.cache
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.AssemblyInfoInputs.cache
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.AssemblyInfo.cs
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csproj.CopyComplete
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.pdb
 E:\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.deps.json
 E:\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.json
 E:\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.dev.json
@@ -75,3 +59,19 @@ E:\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.Assem
 E:\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csproj.CopyComplete
 E:\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.dll
 E:\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.deps.json
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.json
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.runtimeconfig.dev.json
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.dll
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\DataAccess.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csprojResolveAssemblyReference.cache
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csproj.CoreCompileInputs.cache
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.AssemblyInfoInputs.cache
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.AssemblyInfo.cs
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.csproj.CopyComplete
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.dll
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.0\DataAccess.pdb

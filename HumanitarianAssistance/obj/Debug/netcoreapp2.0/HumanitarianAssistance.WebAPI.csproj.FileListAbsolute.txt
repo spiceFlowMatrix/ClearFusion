@@ -49,24 +49,6 @@ D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csproj.CoreCompileInputs.cache
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.dll
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.deps.json
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.runtimeconfig.json
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.runtimeconfig.dev.json
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\DataAccess.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\DataAccess.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csprojResolveAssemblyReference.cache
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csproj.CoreCompileInputs.cache
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csproj.CopyComplete
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.pdb
 E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.deps.json
 E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.runtimeconfig.json
 E:\clear-fusion\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.runtimeconfig.dev.json
@@ -85,3 +67,21 @@ E:\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\Huma
 E:\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csproj.CopyComplete
 E:\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.dll
 E:\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.deps.json
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.runtimeconfig.json
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.runtimeconfig.dev.json
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.dll
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\DataAccess.dll
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.dll
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\DataAccess.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Service.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csprojResolveAssemblyReference.cache
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csproj.CoreCompileInputs.cache
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.csproj.CopyComplete
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.dll
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.0\HumanitarianAssistance.WebAPI.pdb
