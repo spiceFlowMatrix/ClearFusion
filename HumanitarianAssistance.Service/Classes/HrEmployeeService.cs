@@ -52,8 +52,9 @@ namespace HumanitarianAssistance.Service.Classes
                 await _uow.SaveAsync();
 
 				var OfficeDetail = await _uow.OfficeDetailRepository.FindAsync(x => x.OfficeId == model.OfficeId);
-				obj.EmployeeCode = OfficeDetail.OfficeCode + obj.EmployeeID;
-				await _uow.EmployeeDetailRepository.AddAsyn(obj);
+                var emp = await _uow.EmployeeDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeID == obj.EmployeeID);
+				emp.EmployeeCode = OfficeDetail.OfficeCode + obj.EmployeeID;
+				await _uow.EmployeeDetailRepository.UpdateAsyn(emp);
 
 				EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel();
                 empprofessional.EmployeeId = obj.EmployeeID;
