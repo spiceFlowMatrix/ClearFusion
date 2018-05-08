@@ -22,6 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using DataAccess;
+using HumanitarianAssistance.Common.Helpers;
 
 namespace HumanitarianAssistance.Controllers
 {
@@ -121,7 +122,7 @@ namespace HumanitarianAssistance.Controllers
       if (user == null) return BadRequest("could not apply claim: invalid user name");
       var result = await _userManager.CheckPasswordAsync(user, model.Password);
       if (!result) return BadRequest("could not apply claim : invalid password");
-      var claimresult = await _userManager.AddClaimAsync(user, new Claim("OfficeCode", ""));      
+      var claimresult = await _userManager.AddClaimAsync(user, new Claim("OfficeCode", ""));
       return Ok("Claim Created");
       //AppUser user = new AppUser
       //{
@@ -194,42 +195,51 @@ namespace HumanitarianAssistance.Controllers
     [HttpPost]
     public async Task<object> Login([FromBody]LoginUserModel model)
     {
-      if (!ModelState.IsValid) return BadRequest("Could not create token");
-      var user = await _userManager.FindByNameAsync(model.UserName);
-      if (user == null) return BadRequest("Could not create token");
-      var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-      //Comment
-      if (!result.Succeeded) return BadRequest("Could not create token");
+      try
+      {
+        if (!ModelState.IsValid) return BadRequest("Could not create token");
+        var user = await _userManager.FindByNameAsync(model.UserName);
+        if (user == null) return BadRequest("Could not create token");
+        var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+        //Comment
+        if (!result.Succeeded) return BadRequest("Could not create token");
 
-      var userClaims = await _userManager.GetClaimsAsync(user);
+        var userClaims = await _userManager.GetClaimsAsync(user);
 
-      var officedetais = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
+        var officedetais = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
 
-      var roles = _userManager.GetRolesAsync(user);
-      userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
-      userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-      
+        var roles = _userManager.GetRolesAsync(user);
+        userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
+        userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
-      string k = _configuration["JwtKey"];
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(k));
-      var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-      var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
 
-      var token = new JwtSecurityToken(
-        issuer: _configuration.GetSection("JwtIssuerOptions:Issuer").Value,
-        audience: _configuration.GetSection("JwtIssuerOptions:Audience").Value,
-        claims: userClaims,
-        expires: DateTime.Now.AddYears(1),
-        signingCredentials: creds
-      );
-      response = new APIResponse();
-      response.data.AspNetUserId = user.Id;
-      response.StatusCode = 200;
-      response.Message = "Success";
-      response.data.Token = new JwtSecurityTokenHandler().WriteToken(token);
-      response.data.Roles = roles.Result;
-      response.data.OfficeId = officedetais.OfficeId;
+        string k = _configuration["JwtKey"];
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(k));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
 
+        var token = new JwtSecurityToken(
+          issuer: _configuration.GetSection("JwtIssuerOptions:Issuer").Value,
+          audience: _configuration.GetSection("JwtIssuerOptions:Audience").Value,
+          claims: userClaims,
+          expires: DateTime.Now.AddYears(1),
+          signingCredentials: creds
+        );
+        response = new APIResponse();
+        var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == user.Id).Select(x => x.UserID).FirstOrDefault();
+        response.data.AspNetUserId = user.Id;
+        response.StatusCode = 200;
+        response.Message = "Success";
+        response.data.Token = new JwtSecurityTokenHandler().WriteToken(token);
+        response.data.Roles = roles.Result;
+        response.data.OfficeId = officedetais.OfficeId;
+        response.data.UserOfficesModelList = _uow.GetDbContext().UserOffices.Where(x => x.IsDeleted == false && x.UserId == User).ToList();
+      }
+      catch (Exception ex)
+      {
+        response.StatusCode = StaticResource.failStatusCode;
+        response.Message = StaticResource.SomethingWrong + ex.Message;
+      }
       return new OkObjectResult(response);
     }
 
@@ -271,9 +281,9 @@ namespace HumanitarianAssistance.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> ChangePassword([FromBody]ChangePasswordModel model)
     {
-      APIResponse response=null;
+      APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      
+
       if (user != null)
       {
         var id = user.Id;
@@ -289,7 +299,7 @@ namespace HumanitarianAssistance.Controllers
         response.StatusCode = 401;
         response.Message = "There is some error";
       }
-      
+
       return response;
     }
 
@@ -298,7 +308,7 @@ namespace HumanitarianAssistance.Controllers
     public async Task<object> ResetPassword([FromBody]ResetPassword model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      
+
 
       if (user != null)
       {
@@ -309,7 +319,7 @@ namespace HumanitarianAssistance.Controllers
       }
       APIResponse response = await _iuserDetails.ResetPassword(model);
       return response;
-    }    
+    }
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
@@ -328,11 +338,11 @@ namespace HumanitarianAssistance.Controllers
       await _userManager.RemoveFromRolesAsync(user, roles);
       var result = await _userManager.AddToRolesAsync(user, model.Roles);
 
-      await _userManager.RemoveClaimsAsync(user,await _userManager.GetClaimsAsync(user));
-      
+      await _userManager.RemoveClaimsAsync(user, await _userManager.GetClaimsAsync(user));
+
       foreach (var role in model?.Roles)
       {
-        
+
         await _userManager.AddClaimAsync(user, new Claim("Roles", role));
 
         if (result.Succeeded)
@@ -450,15 +460,15 @@ namespace HumanitarianAssistance.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetUserRole(string userid)
     {
-      APIResponse response = await _iuserDetails.GetUserRolesByUserId(userid);      
+      APIResponse response = await _iuserDetails.GetUserRolesByUserId(userid);
       return response;
     }
-  
+
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> CheckCurrentPassword(string pwd)
     {
-        APIResponse api = new APIResponse();
+      APIResponse api = new APIResponse();
       try
       {
         if (pwd != null)
@@ -477,12 +487,13 @@ namespace HumanitarianAssistance.Controllers
         {
           api.StatusCode = 401;
         }
-      }catch(Exception ex)
+      }
+      catch (Exception ex)
       {
         throw ex;
       }
       return api;
-      
+
     }
 
 
@@ -555,7 +566,7 @@ namespace HumanitarianAssistance.Controllers
     public async Task<object> GetJouranlVoucherDetails(int? CurrencyId = 2, DateTime? fromdate = null, DateTime? todate = null, int? officeid = null, int? RecordType = 1)
     {
       //APIResponse response = await _ivoucherDetail.GetJouranlVoucherDetails();
-      APIResponse response = await _ivoucherDetail.GetJouranlVoucherDetailsByCondition(CurrencyId,fromdate ,todate, officeid , RecordType);
+      APIResponse response = await _ivoucherDetail.GetJouranlVoucherDetailsByCondition(CurrencyId, fromdate, todate, officeid, RecordType);
       return response;
     }
 
@@ -654,7 +665,7 @@ namespace HumanitarianAssistance.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllLedgerDetails([FromBody] LedgerValueModel model)
     {
-      APIResponse response = await _ivoucherDetail.GetAllLedgerDetailsByCondition(model.CurrencyId,model.FromDate, model.ToDate, model.OfficeCode,model.AccountId,model.RecordType);
+      APIResponse response = await _ivoucherDetail.GetAllLedgerDetailsByCondition(model.CurrencyId, model.FromDate, model.ToDate, model.OfficeCode, model.AccountId, model.RecordType);
       return response;
     }
 
@@ -677,16 +688,16 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllVoucherTransactionDetailByBudgetLine(long projectId,long budgetLineId)
+    public async Task<APIResponse> GetAllVoucherTransactionDetailByBudgetLine(long projectId, long budgetLineId)
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherTransactionDetailByBudgetLine(projectId, budgetLineId);
       return response;
     }
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public  async  Task<APIResponse> GetProjectAndBudgetLine()
+    public async Task<APIResponse> GetProjectAndBudgetLine()
     {
-      APIResponse repsonse = await _ivoucherDetail.GetProjectAndBudgetLine();  
+      APIResponse repsonse = await _ivoucherDetail.GetProjectAndBudgetLine();
       return repsonse;
     }
 
