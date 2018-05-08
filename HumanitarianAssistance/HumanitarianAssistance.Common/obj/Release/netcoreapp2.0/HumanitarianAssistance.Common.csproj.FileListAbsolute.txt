@@ -1,0 +1,9 @@
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Release\netcoreapp2.0\HumanitarianAssistance.Common.deps.json
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Release\netcoreapp2.0\HumanitarianAssistance.Common.dll
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Release\netcoreapp2.0\HumanitarianAssistance.Common.pdb
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.0\HumanitarianAssistance.Common.csprojResolveAssemblyReference.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.0\HumanitarianAssistance.Common.csproj.CoreCompileInputs.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.0\HumanitarianAssistance.Common.AssemblyInfoInputs.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.0\HumanitarianAssistance.Common.AssemblyInfo.cs
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.0\HumanitarianAssistance.Common.dll
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.0\HumanitarianAssistance.Common.pdb
