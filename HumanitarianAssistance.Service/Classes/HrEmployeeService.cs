@@ -113,8 +113,9 @@ namespace HumanitarianAssistance.Service.Classes
                 var employeeinfo = await _uow.EmployeeDetailRepository.FindAsync(x => x.EmployeeID == model.EmployeeID);
                 if (employeeinfo != null)
                 {
-                    employeeinfo.EmployeeTypeId = model.EmployeeTypeId;
-					employeeinfo.EmployeeCode = model.EmployeeCode;
+					var OfficeDetail = await _uow.OfficeDetailRepository.FindAsync(x => x.OfficeId == model.OfficeId);
+					employeeinfo.EmployeeCode = OfficeDetail.OfficeCode + employeeinfo.EmployeeID;				
+					employeeinfo.EmployeeTypeId = model.EmployeeTypeId;					
                     employeeinfo.EmployeeName = model.EmployeeName;
                     employeeinfo.IDCard = model.IDCard;
                     employeeinfo.FatherName = model.FatherName;
