@@ -90,6 +90,7 @@ namespace DataAccess
 		IGenericRepository<TechnicalQuestion> TechnicalQuestionRepository { get; }
         IGenericRepository<ExistInterviewDetails> ExistInterviewDetailsRepository { get; }
 		IGenericRepository<UserOffices> UserOfficesRepository { get; }
+		IGenericRepository<StrongandWeakPoints> StrongandWeakPointsRepository { get; }		
 		void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
