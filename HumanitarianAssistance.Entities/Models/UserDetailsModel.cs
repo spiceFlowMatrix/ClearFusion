@@ -21,7 +21,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public byte? Status { get; set; }
         public string Phone { get; set; }
 		public int? OfficeId { get; set; }
-
+		public List<UserOfficesModel> UserOfficesModelList { get; set; }
 	}
 
     public class ChangePasswordModel : BaseModel
