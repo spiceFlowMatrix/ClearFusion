@@ -981,6 +981,8 @@ namespace HumanitarianAssistance.Service.Classes
 				_uow.GetDbContext().RemoveRange(recordList);
 
 				List<EmployeeEvaluation> lst = new List<EmployeeEvaluation>();
+				List<StrongandWeakPoints> StrongList = new List<StrongandWeakPoints>();
+				List<StrongandWeakPoints> WeakList = new List<StrongandWeakPoints>();
 				foreach (var item in model.EmployeeEvaluationModelList)
 				{
 					EmployeeEvaluation obj = new EmployeeEvaluation();
@@ -1005,29 +1007,34 @@ namespace HumanitarianAssistance.Service.Classes
 					obj.EmployeeId = model.EmployeeId;					
 					lst.Add(obj);
 				}
+				await _uow.GetDbContext().EmployeeEvaluation.AddRangeAsync(lst);
+
 				foreach (var item in model.StrongPoints)
 				{
-					EmployeeEvaluation obj = new EmployeeEvaluation();
-					obj.StrongPoints = item;
+					StrongandWeakPoints obj = new StrongandWeakPoints();
 					obj.CreatedById = UserId;
 					obj.CreatedDate = DateTime.Now;
 					obj.CurrentAppraisalDate = DateTime.Now;
-					obj.EmployeeId = model.EmployeeId;					
-					lst.Add(obj);
+					obj.EmployeeId = model.EmployeeId;
+					obj.Point = item;
+					obj.Status = 1;         // 1 for strong points
+					StrongList.Add(obj);
 				}
+				await _uow.GetDbContext().StrongandWeakPoints.AddRangeAsync(StrongList);
+
 				foreach (var item in model.WeakPoints)
 				{
-					EmployeeEvaluation obj = new EmployeeEvaluation();
-					obj.WeakPoints = item;
+					StrongandWeakPoints obj = new StrongandWeakPoints();
 					obj.CreatedById = UserId;
 					obj.CreatedDate = DateTime.Now;
 					obj.CurrentAppraisalDate = DateTime.Now;
-					obj.EmployeeId = model.EmployeeId;					
-					lst.Add(obj);
+					obj.EmployeeId = model.EmployeeId;
+					obj.Point = item;
+					obj.Status = 2;         // 2 for Weak points
+					WeakList.Add(obj);
 				}
-				await _uow.GetDbContext().EmployeeEvaluation.AddRangeAsync(lst);
+				await _uow.GetDbContext().StrongandWeakPoints.AddRangeAsync(WeakList);
 				await _uow.SaveAsync();
-
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
@@ -1050,6 +1057,8 @@ namespace HumanitarianAssistance.Service.Classes
                 if (recordList != null)
 				{
 					List<EmployeeEvaluation> lst = new List<EmployeeEvaluation>();
+					List<StrongandWeakPoints> StrongList = new List<StrongandWeakPoints>();
+					List<StrongandWeakPoints> WeakList = new List<StrongandWeakPoints>();
 					foreach (var item in model.EmployeeEvaluationModelList)
 					{
 						EmployeeEvaluation obj = new EmployeeEvaluation();
@@ -1074,27 +1083,36 @@ namespace HumanitarianAssistance.Service.Classes
 						obj.EmployeeId = model.EmployeeId;						
 						lst.Add(obj);
 					}
+					await _uow.GetDbContext().EmployeeEvaluation.AddRangeAsync(lst);
+
+					var empRecords = await _uow.StrongandWeakPointsRepository.FindAllAsync(x=>x.IsDeleted == false && x.EmployeeId == model.EmployeeId && x.CurrentAppraisalDate.Date == model.CurrentAppraisalDate.Date);
+					_uow.GetDbContext().StrongandWeakPoints.RemoveRange(empRecords);
+
 					foreach (var item in model.StrongPoints)
 					{
-						EmployeeEvaluation obj = new EmployeeEvaluation();
-						obj.StrongPoints = item;
+						StrongandWeakPoints obj = new StrongandWeakPoints();
 						obj.CreatedById = UserId;
 						obj.CreatedDate = DateTime.Now;
 						obj.CurrentAppraisalDate = DateTime.Now;
 						obj.EmployeeId = model.EmployeeId;
-						lst.Add(obj);
+						obj.Point = item;
+						obj.Status = 1;         // 1 for strong points
+						StrongList.Add(obj);
 					}
+					await _uow.GetDbContext().StrongandWeakPoints.AddRangeAsync(StrongList);
+
 					foreach (var item in model.WeakPoints)
 					{
-						EmployeeEvaluation obj = new EmployeeEvaluation();
-						obj.WeakPoints = item;
+						StrongandWeakPoints obj = new StrongandWeakPoints();
 						obj.CreatedById = UserId;
 						obj.CreatedDate = DateTime.Now;
 						obj.CurrentAppraisalDate = DateTime.Now;
-						obj.EmployeeId = model.EmployeeId;						
-						lst.Add(obj);
+						obj.EmployeeId = model.EmployeeId;
+						obj.Point = item;
+						obj.Status = 2;         // 2 for Weak points
+						WeakList.Add(obj);
 					}
-					await _uow.GetDbContext().EmployeeEvaluation.AddRangeAsync(lst);
+					await _uow.GetDbContext().StrongandWeakPoints.AddRangeAsync(WeakList);					
 				}
 				await _uow.SaveAsync();
 
@@ -1124,6 +1142,19 @@ namespace HumanitarianAssistance.Service.Classes
 					List<string> strong = new List<string>();
 					List<string> weak = new List<string>();
 
+					var strongAndWeakPointList = await _uow.StrongandWeakPointsRepository.FindAllAsync(x=>x.EmployeeId == item.EmployeeId && x.IsDeleted == false && x.CurrentAppraisalDate.Date == item.CurrentAppraisalDate.Date);
+
+					foreach (var count in strongAndWeakPointList)
+					{
+						if (count.Status == 1)
+						{
+							strong.Add(count.Point);
+						}
+						if (count.Status == 2)
+						{
+							weak.Add(count.Point);
+						}
+					}
 					if (empDetails.Count > 0)
 					{
 						var Result = empDetails.GroupBy(x => x.CurrentAppraisalDate.Date).OrderByDescending(x => x.Key).ToList();
@@ -1145,16 +1176,17 @@ namespace HumanitarianAssistance.Service.Classes
 									eeList.Add(eem);                                    
 
                                 }
-								if (elements.StrongPoints != null)
-								{
-									obj.StrongPoints.Add(elements.StrongPoints);
-									strong.Add(elements.StrongPoints);
-								}
-								if (elements.WeakPoints != null)
-								{
-									obj.WeakPoints.Add(elements.WeakPoints);
-									weak.Add(elements.WeakPoints);
-								}
+								//if (elements.StrongPoints != null)
+								//{
+								//	obj.StrongPoints.Add(elements.StrongPoints);
+								//	strong.Add(elements.StrongPoints);
+								//}
+								//if (elements.WeakPoints != null)
+								//{
+								//	obj.WeakPoints.Add(elements.WeakPoints);
+								//	weak.Add(elements.WeakPoints);
+								//}
+
 								obj.EmployeeId = elements.EmployeeId;
 								obj.FinalResultQues1 = elements.FinalResultQues1;
 								obj.FinalResultQues2 = elements.FinalResultQues2;
@@ -1210,7 +1242,7 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x => x.EmployeeProfessionalDetail.OfficeId == OfficeId).Select(x => new EmployeeDetailList
+				response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x => x.EmployeeProfessionalDetail.OfficeId == OfficeId && x.EmployeeTypeId == 2).Select(x => new EmployeeDetailList
 				{
 					EmployeeId = x.EmployeeID,
 					EmployeeName = x.EmployeeName,

@@ -206,9 +206,9 @@ namespace HumanitarianAssistance.Controllers
 
         var userClaims = await _userManager.GetClaimsAsync(user);
 
-        var officedetais = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
+        //var officedetais = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
 
-        var roles = _userManager.GetRolesAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
         userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
         userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
@@ -226,14 +226,15 @@ namespace HumanitarianAssistance.Controllers
           signingCredentials: creds
         );
         response = new APIResponse();
-        //var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == user.Id).Select(x => x.UserID).FirstOrDefault();
+        var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == user.Id).Select(x => x.UserID).FirstOrDefault();
+        var Offices = _uow.GetDbContext().UserOffices.Where(x => x.IsDeleted == false && x.UserId == User).Select(x=>x.OfficeId).ToList();
         response.data.AspNetUserId = user.Id;
         response.StatusCode = 200;
         response.Message = "Success";
         response.data.Token = new JwtSecurityTokenHandler().WriteToken(token);
-        response.data.Roles = roles.Result;
-        response.data.OfficeId = officedetais.OfficeId;
-        //response.data.UserOfficesModelList = _uow.GetDbContext().UserOffices.Where(x => x.IsDeleted == false && x.UserId == User).ToList();
+        response.data.Roles = roles.ToList();
+        //response.data.OfficeId = officedetais?.OfficeId ?? 0;
+        response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
       }
       catch (Exception ex)
       {

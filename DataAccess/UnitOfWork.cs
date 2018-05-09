@@ -89,12 +89,21 @@ namespace DataAccess
 		private IGenericRepository<TechnicalQuestion> _technicalQuestionRepository;
         private IGenericRepository<ExistInterviewDetails> _existInterviewDetailsRepository;
 		private IGenericRepository<UserOffices> _userOfficesRepository;
+		private IGenericRepository<StrongandWeakPoints> _strongandWeakPointsRepository;
 
 
 		public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
+
+		public IGenericRepository<StrongandWeakPoints> StrongandWeakPointsRepository
+		{
+			get
+			{
+				return _strongandWeakPointsRepository = _strongandWeakPointsRepository ?? new GenericRepository<StrongandWeakPoints>(_mschaContext);
+			}
+		}
 
 		public IGenericRepository<UserOffices> UserOfficesRepository
 		{

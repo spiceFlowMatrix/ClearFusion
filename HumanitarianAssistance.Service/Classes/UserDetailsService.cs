@@ -70,19 +70,28 @@ namespace HumanitarianAssistance.Service.Classes
 				if (existUser == null)
 				{
 					var objNew = await _userManager.CreateAsync(newUser, model.Password);
-					await _userManager.AddClaimAsync(newUser, new Claim("OfficeCode", model.OfficeCode));
-					await _userManager.AddClaimAsync(newUser, new Claim("DepartmentId", model.DepartmentId.ToString()));
+					//await _userManager.AddClaimAsync(newUser, new Claim("OfficeCode", model.OfficeCode));
+					//await _userManager.AddClaimAsync(newUser, new Claim("DepartmentId", model.DepartmentId.ToString()));
 
 					var id = newUser.Id;
-					UserDetails user = _mapper.Map<UserDetails>(model);
+					//UserDetails user = _mapper.Map<UserDetails>(model);
+					UserDetails user = new UserDetails();
+					user.FirstName = model.FirstName;
+					user.LastName = model.LastName;
+					user.Password = model.Password;
+					user.Status = model.Status;
+					user.Username = model.Email;
+					user.CreatedById = model.CreatedById;
+					user.CreatedDate = model.CreatedDate;
+					user.UserType = model.UserType;
 					user.AspNetUserId = id;
 					await _uow.UserDetailsRepository.AddAsyn(user);
 
 					List<UserOffices> lst = new List<UserOffices>();
-					foreach (var item in model.UserOfficesModelList)
+					foreach (var item in model.OfficeId)
 					{
 						UserOffices obj = new UserOffices();
-						obj.OfficeId = item.OfficeId;
+						obj.OfficeId = item;
 						obj.UserId = user.UserID;
 						obj.CreatedById = model.CreatedById;
 						obj.CreatedDate = model.CreatedDate;
@@ -132,7 +141,7 @@ namespace HumanitarianAssistance.Service.Classes
 						var UserInfo = await _uow.UserDetailsRepository.FindAsync(u => u.AspNetUserId == model.Id);
 						UserInfo.FirstName = model.FirstName;
 						UserInfo.LastName = model.LastName;
-						UserInfo.OfficeId = model.OfficeId;
+						//UserInfo.OfficeId = model.OfficeId;
 						UserInfo.DepartmentId = model.DepartmentId;
 						//UserInfo.Password = model.Password;
 						UserInfo.Status = model.Status;
@@ -145,18 +154,18 @@ namespace HumanitarianAssistance.Service.Classes
 						_uow.GetDbContext().UserOffices.RemoveRange(userOfficesList);
 
 						List<UserOffices> lst = new List<UserOffices>();
-						foreach (var item in model.UserOfficesModelList)
+						foreach (var item in model.OfficeId)
 						{
 							UserOffices obj = new UserOffices();
-							obj.OfficeId = item.OfficeId;
-							obj.UserId = model.UserID;
+							obj.OfficeId = item;
+							obj.UserId = UserInfo.UserID;
 							obj.CreatedById = model.CreatedById;
 							obj.CreatedDate = DateTime.Now;
 							obj.IsDeleted = false;
 							lst.Add(obj);
 						}
 						await _uow.GetDbContext().UserOffices.AddRangeAsync(lst);
-
+						await _uow.SaveAsync();
 						transaction.Commit();
 						response.StatusCode = StaticResource.successStatusCode;
 						response.Message = "Success";
@@ -176,28 +185,50 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				var userdetailslist = (from ud in await _uow.UserDetailsRepository.GetAllAsyn()
-									   join od in await _uow.OfficeDetailRepository.GetAllAsyn() on ud.OfficeId equals od.OfficeId
-									   join d in await _uow.DepartmentRepository.GetAllAsyn() on ud.DepartmentId equals d.DepartmentId									   
-									   where ud.IsDeleted == false
-									   select new UserDetailsModel
-									   {
-										   UserID = ud.UserID,
-										   Username = ud.Username,
-										   FirstName = ud.FirstName,
-										   LastName = ud.LastName,
-										   UserType = ud.UserType,
-										   Status = ud.Status,
-										   //OfficeId = od.OfficeId,
-										   OfficeName = od.OfficeName,
-										   DepartmentId = d.DepartmentId,
-										   DepartmentName = d.DepartmentName,
-										   Id = ud.AspNetUserId,
-										   UserOfficesModelList = _uow.UserOfficesRepository.FindAll(x=>x.UserId == ud.UserID && x.IsDeleted == false).Select(x=> new UserOfficesModel {
-											   OfficeId = x.OfficeId										   
-										   }).ToList()
-									   }).ToList();
-				response.data.UserDetailsList = userdetailslist.ToList();
+				//var userdetailslist = (from ud in await _uow.UserDetailsRepository.GetAllAsyn()
+				//					   join od in await _uow.OfficeDetailRepository.GetAllAsyn() on ud.OfficeId equals od.OfficeId
+				//					   join d in await _uow.DepartmentRepository.GetAllAsyn() on ud.DepartmentId equals d.DepartmentId									   
+				//					   where ud.IsDeleted == false
+				//					   select new UserDetailsModel
+				//					   {
+				//						   UserID = ud.UserID,
+				//						   Username = ud.Username,
+				//						   FirstName = ud.FirstName,
+				//						   LastName = ud.LastName,
+				//						   UserType = ud.UserType,
+				//						   Status = ud.Status,
+				//						   //OfficeId = od.OfficeId,
+				//						   OfficeName = od.OfficeName,
+				//						   DepartmentId = d.DepartmentId,
+				//						   DepartmentName = d.DepartmentName,
+				//						   Id = ud.AspNetUserId,
+				//						   UserOfficesList = _uow.UserOfficesRepository.FindAll(x=>x.UserId == ud.UserID && x.IsDeleted == false).Select(x=> new UserOfficesModel {
+				//							   OfficeId = x.OfficeId										   
+				//						   }).ToList()
+				//					   }).ToList();
+
+				List<UserDetailsModel> list = new List<UserDetailsModel>();
+				var userdetailslist = await _uow.UserDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
+				foreach (var item in userdetailslist)
+				{
+					UserDetailsModel obj = new UserDetailsModel();
+					var officeList = await _uow.UserOfficesRepository.FindAllAsync(x=>x.UserId == item.UserID);
+					obj.UserID = item.UserID;
+					obj.Id = item.AspNetUserId;
+					obj.Username = item.Username;
+					obj.FirstName = item.FirstName;
+					obj.LastName = item.LastName;
+					obj.UserType = item.UserType;
+					obj.Status = item.Status;
+					List<int> UserOfficesList = new List<int>();
+					foreach (var element in officeList)
+					{
+						UserOfficesList.Add(element.OfficeId);
+					}
+					obj.OfficeId = UserOfficesList;
+					list.Add(obj);
+				}
+				response.data.UserDetailsList = list;
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
@@ -215,30 +246,51 @@ namespace HumanitarianAssistance.Service.Classes
 			try
 			{
 
-				var userdetailslist = (from ud in await _uow.UserDetailsRepository.GetAllAsyn()
-									   join od in await _uow.OfficeDetailRepository.GetAllAsyn() on ud.OfficeId equals od.OfficeId
-									   join d in await _uow.DepartmentRepository.GetAllAsyn() on ud.DepartmentId equals d.DepartmentId
-									   where ud.AspNetUserId == UserId
-									   select new UserDetailsModel
-									   {
-										   UserID = ud.UserID,
-										   Username = ud.Username,
-										   FirstName = ud.FirstName,
-										   LastName = ud.LastName,
-										   UserType = ud.UserType,
-										   Password = ud.Password,
-										   Status = ud.Status,
-										   OfficeId = od.OfficeId,
-										   OfficeName = od.OfficeName,
-										   DepartmentId = d.DepartmentId,
-										   DepartmentName = d.DepartmentName,
-										   Id = ud.AspNetUserId
-									   }).ToList();
+				//var userdetailslist = (from ud in await _uow.UserDetailsRepository.GetAllAsyn()
+				//					   join od in await _uow.OfficeDetailRepository.GetAllAsyn() on ud.OfficeId equals od.OfficeId
+				//					   join d in await _uow.DepartmentRepository.GetAllAsyn() on ud.DepartmentId equals d.DepartmentId
+				//					   where ud.AspNetUserId == UserId
+				//					   select new UserDetailsModel
+				//					   {
+				//						   UserID = ud.UserID,
+				//						   Username = ud.Username,
+				//						   FirstName = ud.FirstName,
+				//						   LastName = ud.LastName,
+				//						   UserType = ud.UserType,
+				//						   Password = ud.Password,
+				//						   Status = ud.Status,
+				//						   OfficeId = od.OfficeId.,
+				//						   OfficeName = od.OfficeName,
+				//						   DepartmentId = d.DepartmentId,
+				//						   DepartmentName = d.DepartmentName,
+				//						   Id = ud.AspNetUserId
+				//					   }).ToList();
 
-				var existUser = await _userManager.FindByIdAsync(UserId);
-				userdetailslist[0].Email = existUser.Email;
-				userdetailslist[0].Phone = existUser.PhoneNumber;
-				response.data.UserDetailsList = userdetailslist.ToList();
+				//var existUser = await _userManager.FindByIdAsync(UserId);
+				//userdetailslist[0].Email = existUser.Email;
+				//userdetailslist[0].Phone = existUser.PhoneNumber;
+				//response.data.UserDetailsList = userdetailslist.ToList();
+
+				var userdetailslist = await _uow.UserDetailsRepository.FindAsync(x=>x.AspNetUserId == UserId);
+				UserDetailsModel obj = new UserDetailsModel();
+				if (userdetailslist != null)
+				{
+					var existUser = await _userManager.FindByIdAsync(UserId);
+					var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == UserId).Select(x => x.UserID).FirstOrDefault();
+					var Offices = _uow.GetDbContext().UserOffices.Where(x => x.IsDeleted == false && x.UserId == User).Select(x => x.OfficeId).ToList();					
+					obj.UserID = userdetailslist.UserID;
+					obj.Username = userdetailslist.Username;
+					obj.FirstName = userdetailslist.FirstName;
+					obj.LastName = userdetailslist.LastName;
+					obj.UserType = userdetailslist.UserType;
+					obj.OfficeId = Offices;
+					obj.DepartmentId = userdetailslist.DepartmentId;
+					obj.Phone = existUser.PhoneNumber;
+					obj.Email = existUser.Email;
+					obj.Id = UserId;
+					obj.Status = userdetailslist.Status;
+				}
+				response.data.UserDetails = obj;
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}

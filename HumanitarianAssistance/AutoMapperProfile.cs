@@ -21,7 +21,7 @@ namespace HumanitarianAssistance.WebAPI
     {
       CreateMap<Permissions, PermissionsModel>().ReverseMap();
       CreateMap<OfficeDetail, OfficeDetailModel>().ReverseMap();
-      CreateMap<UserDetails, UserDetailsModel>().ReverseMap();
+      CreateMap<UserDetails, UserDetailsModel>().ForMember(x=>x.OfficeId, opt=> opt.Ignore());
       CreateMap<Department, DepartmentModel>().ReverseMap();
       CreateMap<PermissionsInRoles, PermissionsInRolesModel>().ReverseMap();
       CreateMap<CurrencyDetails, CurrencyModel>().ReverseMap();

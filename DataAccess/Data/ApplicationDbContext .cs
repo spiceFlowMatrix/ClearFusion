@@ -219,6 +219,8 @@ namespace HumanitarianAssistance.Entities
 
 		public DbSet<UserOffices> UserOffices { get; set; }
 
+		public DbSet<StrongandWeakPoints> StrongandWeakPoints { get; set; }
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });            

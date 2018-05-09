@@ -46,7 +46,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 		public double? TotalGrossSalary { get; set; }
 		public double? TotalDeductions { get; set; }
 		public double? TotalAllowances { get; set; }
-		public List<UserOffices> UserOfficesModelList { get; set; }
+		public List<int> UserOfficeList { get; set; }
 		public List<ExitInterviewModel> ExitInterviewList { get; set; }
 		public List<InterviewDetailModel> InterviewDetailList { get; set; }
         public List<AdvanceModel> AdvanceList { get; set; }
@@ -73,7 +73,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<OfficeDetailModel> OfficeDetailsList { get; set; }
         public IList<DepartmentModel> Departments { get; set; }
         public IList<UserDetailsModel> UserDetailsList { get; set; }
-        public IList<PermissionsInRolesModel> PermissionsInRolesList { get; set; }
+		public UserDetailsModel UserDetails { get; set; }
+		public IList<PermissionsInRolesModel> PermissionsInRolesList { get; set; }
         public IList<PermissionsModel> PermissionsList { get; set; }
         public IList<CurrencyModel> CurrencyList { get; set; }
         public IList<JournalDetailModel> JournalDetailList { get; set; }
