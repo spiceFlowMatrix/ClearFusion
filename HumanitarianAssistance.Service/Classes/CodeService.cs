@@ -1197,7 +1197,9 @@ namespace HumanitarianAssistance.Service.Classes
 								obj.AppraisalTeamMember1 = elements.AppraisalTeamMember1;
 								obj.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
 								obj.CommentsByEmployee = elements.CommentsByEmployee;
-								obj.EmployeeEvaluationModelList = eeList;
+								obj.CurrentAppraisalDate = elements.CurrentAppraisalDate;
+
+                                obj.EmployeeEvaluationModelList = eeList;
 								lst.Add(obj);								
 							}							
 						}
