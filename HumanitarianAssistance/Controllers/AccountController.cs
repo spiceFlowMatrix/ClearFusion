@@ -226,14 +226,14 @@ namespace HumanitarianAssistance.Controllers
           signingCredentials: creds
         );
         response = new APIResponse();
-        var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == user.Id).Select(x => x.UserID).FirstOrDefault();
+        //var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == user.Id).Select(x => x.UserID).FirstOrDefault();
         response.data.AspNetUserId = user.Id;
         response.StatusCode = 200;
         response.Message = "Success";
         response.data.Token = new JwtSecurityTokenHandler().WriteToken(token);
         response.data.Roles = roles.Result;
         response.data.OfficeId = officedetais.OfficeId;
-        response.data.UserOfficesModelList = _uow.GetDbContext().UserOffices.Where(x => x.IsDeleted == false && x.UserId == User).ToList();
+        //response.data.UserOfficesModelList = _uow.GetDbContext().UserOffices.Where(x => x.IsDeleted == false && x.UserId == User).ToList();
       }
       catch (Exception ex)
       {
