@@ -313,44 +313,44 @@ namespace HumanitarianAssistance.Service.Classes
                 //var journalcodeList = _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(e => e.VoucherTransactionDetails).ToList();
 
                 List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
-                foreach (var j in journalcodeList)
-                {
-                    foreach (var v in j.VoucherDetails)
-                    {
-                        foreach (var t in v.VoucherTransactionDetails)
-                        {
-                            JournalVoucherViewModel vModel = new JournalVoucherViewModel();
-                            JournalVoucherViewModel vModel1 = new JournalVoucherViewModel();
-                            vModel.JournalCode = j.JournalName;
-                            vModel1.JournalCode = j.JournalName;
+                //foreach (var j in journalcodeList)
+                //{
+                //    foreach (var v in j.VoucherDetails)
+                //    {
+                //        foreach (var t in v.VoucherTransactionDetails)
+                //        {
+                //            JournalVoucherViewModel vModel = new JournalVoucherViewModel();
+                //            JournalVoucherViewModel vModel1 = new JournalVoucherViewModel();
+                //            vModel.JournalCode = j.JournalName;
+                //            vModel1.JournalCode = j.JournalName;
 
-                            vModel.VoucherNo = v.ReferenceNo;
-                            vModel1.VoucherNo = v.ReferenceNo;
-                            //var tran=journalcodeList1.Where(x => x.JournalCode == j.JournalCode).
-                            //    FirstOrDefault().
-                            //    VoucherDetails.Where(x => x.VoucherNo == v.VoucherNo).
-                            //    FirstOrDefault().VoucherTransactionDetails.Where(x => x.TransactionId == t.TransactionId).FirstOrDefault();
-                            vModel.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                            vModel.TransactionDate = t.TransactionDate.ToShortDateString();
-                            vModel.Amount = t.Amount;
-                            vModel.TransactionType = "Debit";
-                            vModel.AccountCode = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == t.DebitAccount).Result.AccountName;
-                            vModel1.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                            vModel1.TransactionDate = t.TransactionDate.ToShortDateString();
-                            vModel1.Amount = t.Amount;
-                            vModel1.TransactionType = "Credit";
-                            vModel1.AccountCode = t.CreditAccountDetails.AccountName;
-                            listJournalView.Add(vModel);
-                            listJournalView.Add(vModel1);
+                //            vModel.VoucherNo = v.ReferenceNo;
+                //            vModel1.VoucherNo = v.ReferenceNo;
+                //            //var tran=journalcodeList1.Where(x => x.JournalCode == j.JournalCode).
+                //            //    FirstOrDefault().
+                //            //    VoucherDetails.Where(x => x.VoucherNo == v.VoucherNo).
+                //            //    FirstOrDefault().VoucherTransactionDetails.Where(x => x.TransactionId == t.TransactionId).FirstOrDefault();
+                //            vModel.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
+                //            vModel.TransactionDate = t.TransactionDate.ToShortDateString();
+                //            vModel.Amount = t.Amount;
+                //            vModel.TransactionType = "Debit";
+                //            vModel.AccountCode = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == t.DebitAccount).Result.AccountName;
+                //            vModel1.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
+                //            vModel1.TransactionDate = t.TransactionDate.ToShortDateString();
+                //            vModel1.Amount = t.Amount;
+                //            vModel1.TransactionType = "Credit";
+                //            vModel1.AccountCode = t.CreditAccountDetails.AccountName;
+                //            listJournalView.Add(vModel);
+                //            listJournalView.Add(vModel1);
 
-                        }
-
-
-
-                    }
+                //        }
 
 
-                }
+
+                //    }
+
+
+                //}
 
                 response.data.JournalVoucherViewList = listJournalView;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -364,102 +364,215 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetJouranlVoucherDetailsByCondition(int? CurrencyId = null, DateTime? fromdate = null, DateTime? todate = null, int? officeid = null, int? RecordType = null)
+        public async Task<APIResponse> GetJouranlVoucherDetailsByCondition(JournalViewModel model)
         {
-            APIResponse response = new APIResponse();
+			//int JournalCode = 4;
+			//List<int> OfficesList = new List<int>();
+			//OfficesList.Add(12);
+			//OfficesList.Add(13);
+			//OfficesList.Add(14);
+			APIResponse response = new APIResponse();
             try
             {
                 var journalcodeList = await Task.Run(() =>
-                  _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(e => e.VoucherTransactionDetails).ThenInclude(e => e.CreditAccountDetails).ToList()
+                  _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(p => p.VoucherTransactionDetails).ThenInclude(p => p.CreditAccountDetails).Include(e=>e.VoucherDetails).ThenInclude(c=>c.ProjectBudgetLine).Where(x=>x.IsDeleted == false && x.JournalCode == model.JournalCode).ToList()
                     );
+				List<ExchangeRate> exchangeratelist = new List<ExchangeRate>();
+				if (model.fromdate == null && model.todate == null)
+				{
+					model.fromdate = new DateTime(DateTime.UtcNow.Year, 1, 1);
+					model.todate = DateTime.UtcNow;
+				}
+				exchangeratelist = await _uow.GetDbContext().ExchangeRates.Where(x => x.Date.Date >= model.fromdate.Date && x.Date.Date <= model.todate.Date).ToListAsync();
 
-                if (fromdate == null && todate == null)
-                {
-                    fromdate = new DateTime(DateTime.UtcNow.Year, 1, 1);
-                    todate = DateTime.UtcNow;
-                }
-                var exchangeratelist = await _uow.ExchangeRateRepository.GetAllAsyn();
-                double exchangerate = 0, amount = 0;
+				//double exchangerate = 0, amount = 0;
                 List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
                 foreach (var j in journalcodeList)
                 {
                     foreach (var v in j.VoucherDetails)
-                    {
-                        if (RecordType == 1)
-                        {
-                            v.VoucherTransactionDetails = v.VoucherTransactionDetails.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate && x.CurrencyId == CurrencyId).ToList();
-                        }
-                        else
-                        {
-                            v.VoucherTransactionDetails = v.VoucherTransactionDetails.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate).ToList();
-                        }
-                        if (officeid != null)
-                        {
-                            v.VoucherTransactionDetails = v.VoucherTransactionDetails.Where(x => x.OfficeId == officeid).ToList();
-                        }
+                    {						
+						foreach (var officeId in model.OfficesList)
+						{							
+							if (officeId == v.OfficeId)
+							{
+								foreach (var transactions in v.VoucherTransactionDetails)
+								{
+									if (transactions.TransactionDate.Date >= model.fromdate.Date && transactions.TransactionDate.Date <= model.todate.Date)
+									{
+										var creditAccount = await _uow.ChartAccountDetailRepository.FindAsync(x => x.IsDeleted == false && x.AccountCode == transactions.CreditAccount);
+										var debitAccount = await _uow.ChartAccountDetailRepository.FindAsync(x => x.IsDeleted == false && x.AccountCode == transactions.DebitAccount);
+										if (model.RecordType == 1)
+										{
+											if (model.CurrencyId == transactions.CurrencyId)
+											{
+												// Credit
+												JournalVoucherViewModel obj = new JournalVoucherViewModel();
+												obj.TransactionDate = transactions.TransactionDate;
+												obj.VoucherNo = transactions.VoucherNo;
+												obj.TransactionDescription = transactions.Description;
+												obj.CurrencyId = transactions.CurrencyId;
+												obj.ProjectId = v.ProjectId;
+												obj.BudgetLineDescription = v.ProjectBudgetLine.Description;
+												obj.AccountCode = creditAccount.ChartOfAccountCode;
+												obj.CreditAmount = transactions.Amount;
+												obj.DebitAmount = 0;
+												listJournalView.Add(obj);
 
-                        if (RecordType == 1)
-                        {
-                            foreach (var t in v.VoucherTransactionDetails)
-                            {
-                                JournalVoucherViewModel vModel = new JournalVoucherViewModel();
-                                JournalVoucherViewModel vModel1 = new JournalVoucherViewModel();
-                                vModel.JournalCode = j.JournalName;
-                                vModel1.JournalCode = j.JournalName;
+												// Debit
+												JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
+												obj1.TransactionDate = transactions.TransactionDate;
+												obj1.VoucherNo = transactions.VoucherNo;
+												obj1.TransactionDescription = transactions.Description;
+												obj1.CurrencyId = transactions.CurrencyId;
+												obj1.ProjectId = v.ProjectId;
+												obj1.BudgetLineDescription = v.ProjectBudgetLine.Description;
+												obj.AccountCode = debitAccount.ChartOfAccountCode;
+												obj1.CreditAmount = 0;
+												obj1.DebitAmount = transactions.Amount;
+												listJournalView.Add(obj1);
+											}
+										}
+										else
+										{
+											if (model.CurrencyId == transactions.CurrencyId)
+											{
+												// Credit
+												JournalVoucherViewModel obj = new JournalVoucherViewModel();
+												obj.TransactionDate = transactions.TransactionDate;
+												obj.VoucherNo = transactions.VoucherNo;
+												obj.TransactionDescription = transactions.Description;
+												obj.CurrencyId = transactions.CurrencyId;
+												obj.ProjectId = v.ProjectId;
+												obj.BudgetLineDescription = v.ProjectBudgetLine.Description;
+												obj.AccountCode = creditAccount.ChartOfAccountCode;
+												obj.CreditAmount = transactions.Amount;
+												obj.DebitAmount = 0;
+												listJournalView.Add(obj);
 
-                                vModel.VoucherNo = v.ReferenceNo;
-                                vModel1.VoucherNo = v.ReferenceNo;
-                                vModel.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                                vModel.TransactionDate = t.TransactionDate.ToShortDateString();
-                                vModel.Amount = t.Amount;
-                                vModel.TransactionType = "Debit";
-                                vModel.AccountCode = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == t.DebitAccount).Result.AccountName;
-                                vModel1.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                                vModel1.TransactionDate = t.TransactionDate.ToShortDateString();
-                                vModel1.Amount = t.Amount;
-                                vModel1.TransactionType = "Credit";
-                                vModel1.AccountCode = t.CreditAccountDetails.AccountName;
-                                listJournalView.Add(vModel);
-                                listJournalView.Add(vModel1);
-                            }
-                        }
-                        else
-                        {
-                            foreach (var t in v.VoucherTransactionDetails)
-                            {
-                                exchangerate = 0; amount = 0;
-                                if (t.CurrencyId != CurrencyId)
-                                {
-                                    var list = exchangeratelist.Where(x => x.FromCurrency == t.CurrencyId && x.ToCurrency == CurrencyId && x.Date.Date == t.TransactionDate.Date).OrderByDescending(o => o.ExchangeRateId).FirstOrDefault();
-                                    exchangerate = list?.Rate ?? 0;
-                                    amount = t.Amount * exchangerate;
-                                }
-                                else
-                                {
-                                    amount = t.Amount;
-                                }
+												// Debit
+												JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
+												obj1.TransactionDate = transactions.TransactionDate;
+												obj1.VoucherNo = transactions.VoucherNo;
+												obj1.TransactionDescription = transactions.Description;
+												obj1.CurrencyId = transactions.CurrencyId;
+												obj1.ProjectId = v.ProjectId;
+												obj1.BudgetLineDescription = v.ProjectBudgetLine.Description;
+												obj.AccountCode = debitAccount.ChartOfAccountCode;
+												obj1.CreditAmount = 0;
+												obj1.DebitAmount = transactions.Amount;
+												listJournalView.Add(obj1);
+											}
+											else
+											{
+												var exchangeRate = exchangeratelist.Where(x => x.IsDeleted == false && x.FromCurrency == transactions.CurrencyId && x.ToCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault().Rate;
+												JournalVoucherViewModel obj = new JournalVoucherViewModel();
+												obj.TransactionDate = transactions.TransactionDate;
+												obj.VoucherNo = transactions.VoucherNo;
+												obj.TransactionDescription = transactions.Description;
+												obj.CurrencyId = transactions.CurrencyId;
+												obj.ProjectId = v.ProjectId;
+												obj.BudgetLineDescription = v.ProjectBudgetLine.Description;
+												obj.AccountCode = creditAccount.ChartOfAccountCode;
+												obj.CreditAmount = transactions.Amount * exchangeRate;
+												obj.DebitAmount = 0;
+												listJournalView.Add(obj);
 
-                                JournalVoucherViewModel vModel = new JournalVoucherViewModel();
-                                JournalVoucherViewModel vModel1 = new JournalVoucherViewModel();
-                                vModel.JournalCode = j.JournalName;
-                                vModel1.JournalCode = j.JournalName;
+												// Debit
+												JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
+												obj1.TransactionDate = transactions.TransactionDate;
+												obj1.VoucherNo = transactions.VoucherNo;
+												obj1.TransactionDescription = transactions.Description;
+												obj1.CurrencyId = transactions.CurrencyId;
+												obj1.ProjectId = v.ProjectId;
+												obj1.BudgetLineDescription = v.ProjectBudgetLine.Description;
+												obj.AccountCode = debitAccount.ChartOfAccountCode;
+												obj1.CreditAmount = 0;
+												obj1.DebitAmount = transactions.Amount * exchangeRate;
+												listJournalView.Add(obj1);
+											}
+										}
+									}
+								}								
+							}
+						}
 
-                                vModel.VoucherNo = v.ReferenceNo;
-                                vModel1.VoucherNo = v.ReferenceNo;
-                                vModel.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                                vModel.TransactionDate = t.TransactionDate.ToShortDateString();
-                                vModel.Amount = amount;
-                                vModel.TransactionType = "Debit";
-                                vModel.AccountCode = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == t.DebitAccount).Result.AccountName;
-                                vModel1.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                                vModel1.TransactionDate = t.TransactionDate.ToShortDateString();
-                                vModel1.Amount = amount;
-                                vModel1.TransactionType = "Credit";
-                                vModel1.AccountCode = t.CreditAccountDetails.AccountName;
-                                listJournalView.Add(vModel);
-                                listJournalView.Add(vModel1);
-                            }
-                        }
+
+
+                        //if (RecordType == 1)
+                        //{
+                        //    v.VoucherTransactionDetails = v.VoucherTransactionDetails.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate && x.CurrencyId == CurrencyId).ToList();
+                        //}
+                        //else
+                        //{
+                        //    v.VoucherTransactionDetails = v.VoucherTransactionDetails.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate).ToList();
+                        //}
+                        //if (officeid != null)
+                        //{
+                        //    v.VoucherTransactionDetails = v.VoucherTransactionDetails.Where(x => x.OfficeId == officeid).ToList();
+                        //}
+
+                        //if (RecordType == 1)
+                        //{
+                        //    foreach (var t in v.VoucherTransactionDetails)
+                        //    {
+                        //        JournalVoucherViewModel vModel = new JournalVoucherViewModel();
+                        //        JournalVoucherViewModel vModel1 = new JournalVoucherViewModel();
+                        //        vModel.JournalCode = j.JournalName;
+                        //        vModel1.JournalCode = j.JournalName;
+
+                        //        vModel.VoucherNo = v.ReferenceNo;
+                        //        vModel1.VoucherNo = v.ReferenceNo;
+                        //        vModel.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
+                        //        vModel.TransactionDate = t.TransactionDate.ToShortDateString();
+                        //        vModel.Amount = t.Amount;
+                        //        vModel.TransactionType = "Debit";
+                        //        vModel.AccountCode = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == t.DebitAccount).Result.AccountName;
+                        //        vModel1.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
+                        //        vModel1.TransactionDate = t.TransactionDate.ToShortDateString();
+                        //        vModel1.Amount = t.Amount;
+                        //        vModel1.TransactionType = "Credit";
+                        //        vModel1.AccountCode = t.CreditAccountDetails.AccountName;
+                        //        listJournalView.Add(vModel);
+                        //        listJournalView.Add(vModel1);
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    foreach (var t in v.VoucherTransactionDetails)
+                        //    {
+                        //        exchangerate = 0; amount = 0;
+                        //        if (t.CurrencyId != CurrencyId)
+                        //        {
+                        //            var list = exchangeratelist.Where(x => x.FromCurrency == t.CurrencyId && x.ToCurrency == CurrencyId && x.Date.Date == t.TransactionDate.Date).OrderByDescending(o => o.ExchangeRateId).FirstOrDefault();
+                        //            exchangerate = list?.Rate ?? 0;
+                        //            amount = t.Amount * exchangerate;
+                        //        }
+                        //        else
+                        //        {
+                        //            amount = t.Amount;
+                        //        }
+
+                        //        JournalVoucherViewModel vModel = new JournalVoucherViewModel();
+                        //        JournalVoucherViewModel vModel1 = new JournalVoucherViewModel();
+                        //        vModel.JournalCode = j.JournalName;
+                        //        vModel1.JournalCode = j.JournalName;
+
+                        //        vModel.VoucherNo = v.ReferenceNo;
+                        //        vModel1.VoucherNo = v.ReferenceNo;
+                        //        vModel.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
+                        //        vModel.TransactionDate = t.TransactionDate.ToShortDateString();
+                        //        vModel.Amount = amount;
+                        //        vModel.TransactionType = "Debit";
+                        //        vModel.AccountCode = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == t.DebitAccount).Result.AccountName;
+                        //        vModel1.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
+                        //        vModel1.TransactionDate = t.TransactionDate.ToShortDateString();
+                        //        vModel1.Amount = amount;
+                        //        vModel1.TransactionType = "Credit";
+                        //        vModel1.AccountCode = t.CreditAccountDetails.AccountName;
+                        //        listJournalView.Add(vModel);
+                        //        listJournalView.Add(vModel1);
+                        //    }
+                        //}
                     }
                 }
 
@@ -641,9 +754,9 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var transactionDate = model.TransactionDate.ToLocalTime().Date;
                 //var isexistExchangeRate = await _uow.ExchangeRateRepository.FindAsync(x => x.Date.Date == transactionDate);
-                var isexistExchangeRate = await _uow.GetDbContext().ExchangeRates.FirstOrDefaultAsync(x => x.Date.Date == transactionDate.Date);
-                if (isexistExchangeRate != null)
-                {
+                //var isexistExchangeRate = await _uow.GetDbContext().ExchangeRates.FirstOrDefaultAsync(x => x.Date.Date == transactionDate.Date);
+                //if (isexistExchangeRate != null)
+                //{
                     VoucherTransactionDetails obj = _mapper.Map<VoucherTransactionDetails>(model);
                     obj.CreatedById = model.CreatedById;
                     obj.CreatedDate = DateTime.UtcNow;
@@ -652,12 +765,12 @@ namespace HumanitarianAssistance.Service.Classes
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "Exchange Rate is not diffined for this date.";
-                }
+                //}
+                //else
+                //{
+                //    response.StatusCode = StaticResource.failStatusCode;
+                //    response.Message = "Exchange Rate is not diffined for this date.";
+                //}
             }
             catch (Exception ex)
             {

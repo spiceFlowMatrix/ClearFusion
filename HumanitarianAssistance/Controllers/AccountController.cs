@@ -562,12 +562,12 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> GetJouranlVoucherDetails(int? CurrencyId = 2, DateTime? fromdate = null, DateTime? todate = null, int? officeid = null, int? RecordType = 1)
+    public async Task<APIResponse> GetJouranlVoucherDetailsByCondition([FromBody] JournalViewModel model)
     {
       //APIResponse response = await _ivoucherDetail.GetJouranlVoucherDetails();
-      APIResponse response = await _ivoucherDetail.GetJouranlVoucherDetailsByCondition(CurrencyId, fromdate, todate, officeid, RecordType);
+      APIResponse response = await _ivoucherDetail.GetJouranlVoucherDetailsByCondition(model);
       return response;
     }
 

@@ -35,6 +35,6 @@ namespace DataAccess.DbEntities
         public int? FinancialYearId { get; set; }
         public FinancialYearDetail FinancialYearDetails { get; set; }
 
-        public List<VoucherTransactionDetails> VoucherTransactionDetails { get; set; }
-    }
+        public List<VoucherTransactionDetails> VoucherTransactionDetails { get; set; }		
+	}
 }
