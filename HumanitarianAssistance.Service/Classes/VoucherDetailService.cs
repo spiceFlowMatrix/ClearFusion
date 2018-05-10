@@ -747,40 +747,40 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
 
-        public async Task<APIResponse> AddVoucherTransactionDetail(VoucherTransactionModel model)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var transactionDate = model.TransactionDate.ToLocalTime().Date;
-                //var isexistExchangeRate = await _uow.ExchangeRateRepository.FindAsync(x => x.Date.Date == transactionDate);
-                var isexistExchangeRate = await _uow.GetDbContext().ExchangeRates.FirstOrDefaultAsync(x => x.Date.Date == transactionDate.Date);
-                if (isexistExchangeRate != null)
-                {
-                    VoucherTransactionDetails obj = _mapper.Map<VoucherTransactionDetails>(model);
-                    obj.CreatedById = model.CreatedById;
-                    obj.CreatedDate = DateTime.UtcNow;
-                    obj.IsDeleted = false;
-                    await _uow.VoucherTransactionDetailsRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "Exchange Rate is not diffined for this date.";
-                }
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
+		public async Task<APIResponse> AddVoucherTransactionDetail(VoucherTransactionModel model)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				//var transactionDate = model.TransactionDate.ToLocalTime().Date;
+				//var isexistExchangeRate = await _uow.ExchangeRateRepository.FindAsync(x => x.Date.Date == transactionDate);
+				//var isexistExchangeRate = await _uow.GetDbContext().ExchangeRates.FirstOrDefaultAsync(x => x.Date.Date == transactionDate.Date);
+				//if (isexistExchangeRate != null)
+				//{
+				VoucherTransactionDetails obj = _mapper.Map<VoucherTransactionDetails>(model);
+				obj.CreatedById = model.CreatedById;
+				obj.CreatedDate = DateTime.UtcNow;
+				obj.IsDeleted = false;
+				await _uow.VoucherTransactionDetailsRepository.AddAsyn(obj);
+				await _uow.SaveAsync();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+				//}
+				//else
+				//{
+				//    response.StatusCode = StaticResource.failStatusCode;
+				//    response.Message = "Exchange Rate is not diffined for this date.";
+				//}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+			}
+			return response;
+		}
 
-        public async Task<APIResponse> EditVoucherTransactionDetail(VoucherTransactionModel model)
+		public async Task<APIResponse> EditVoucherTransactionDetail(VoucherTransactionModel model)
         {
             APIResponse response = new APIResponse();
             try
