@@ -12,7 +12,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public long AccountCode { get; set; }
 		public string TransactionDescription { get; set; }
 		public int? CurrencyId { get; set; }
-		public long? ProjectId { get; set; }
+		public string Project { get; set; }
 		public string BudgetLineDescription { get; set; }
 		public double? CreditAmount { get; set; }
 		public double? DebitAmount { get; set; }
