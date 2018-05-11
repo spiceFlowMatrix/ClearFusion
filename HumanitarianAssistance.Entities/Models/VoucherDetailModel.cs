@@ -101,7 +101,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 
     public class LedgerModel
     {
-        public int AccountCode { get; set; }
+        public long AccountCode { get; set; }
         public string ChartAccountName { get; set; }
         public string CurrencyName { get; set; }
         public string MainLevel { get; set; }
@@ -114,9 +114,9 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int TransactionNo { get; set; }
         public string AccountName { get; set; }
         public DateTime TransactionDate { get; set; }
-        public double DebitAmount { get; set; }
-        public double CreditAmount { get; set; }
-        public long VoucherNo { get; set; }
+        public double? DebitAmount { get; set; }
+        public double? CreditAmount { get; set; }
+        public string VoucherNo { get; set; }
         public string Description { get; set; }
         public List<Transaction> Transactionlist { get; set; }
         

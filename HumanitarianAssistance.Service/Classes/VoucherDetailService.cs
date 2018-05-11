@@ -1009,48 +1009,48 @@ namespace HumanitarianAssistance.Service.Classes
 						// currency = currencylist.CurrencyDetail.CurrencyName;
 					}
 
-					foreach (var debit in i.DebitAccountlist)
-					{
-						var currencylist = await Task.Run(() =>
-						   _uow.GetDbContext().VoucherDetail.Include(e => e.CurrencyDetail).Where(v => v.VoucherNo == debit.VoucherNo).FirstOrDefault()
-					   );
-						currency = currencylist.CurrencyDetail.CurrencyName;
-						LedgerModel leg = new LedgerModel();
-						leg.AccountCode = i.AccountCode;
-						leg.ChartAccountName = i.AccountName;
-						leg.CurrencyName = currency;
-						leg.MainLevel = mainlevel1;
-						leg.ControlLevel = controllevel1;
-						leg.SubLevel = sublevel1;
-						leg.Amount = debit.Amount;
-						leg.TransactionType = "Debit";
-						leg.AccountName = debit.CreditAccountDetails.AccountName;
-						leg.TransactionDate = debit.TransactionDate;
-						leg.VoucherNo = debit.VoucherNo;
-						leg.Description = debit.Description;
-						list1.Add(leg);
-					}
-					foreach (var credit in i.CreditAccountlist)
-					{
-						var currencylist = await Task.Run(() =>
-						   _uow.GetDbContext().VoucherDetail.Include(e => e.CurrencyDetail).Where(v => v.VoucherNo == credit.VoucherNo).FirstOrDefault()
-					   );
-						currency = currencylist.CurrencyDetail.CurrencyName;
-						LedgerModel leg = new LedgerModel();
-						leg.AccountCode = i.AccountCode;
-						leg.ChartAccountName = i.AccountName;
-						leg.CurrencyName = currency;
-						leg.MainLevel = mainlevel1;
-						leg.ControlLevel = controllevel1;
-						leg.SubLevel = sublevel1;
-						leg.Amount = credit.Amount;
-						leg.TransactionType = "Credit";
-						leg.AccountName = credit.DebitAccountDetails.AccountName;
-						leg.TransactionDate = credit.TransactionDate;
-						leg.VoucherNo = credit.VoucherNo;
-						leg.Description = credit.Description;
-						list1.Add(leg);
-					}
+					//foreach (var debit in i.DebitAccountlist)
+					//{
+					//	var currencylist = await Task.Run(() =>
+					//	   _uow.GetDbContext().VoucherDetail.Include(e => e.CurrencyDetail).Where(v => v.VoucherNo == debit.VoucherNo).FirstOrDefault()
+					//   );
+					//	currency = currencylist.CurrencyDetail.CurrencyName;
+					//	LedgerModel leg = new LedgerModel();
+					//	leg.AccountCode = i.AccountCode;
+					//	leg.ChartAccountName = i.AccountName;
+					//	leg.CurrencyName = currency;
+					//	leg.MainLevel = mainlevel1;
+					//	leg.ControlLevel = controllevel1;
+					//	leg.SubLevel = sublevel1;
+					//	leg.Amount = debit.Amount;
+					//	leg.TransactionType = "Debit";
+					//	leg.AccountName = debit.CreditAccountDetails.AccountName;
+					//	leg.TransactionDate = debit.TransactionDate;
+					//	leg.VoucherNo = debit.VoucherNo;
+					//	leg.Description = debit.Description;
+					//	list1.Add(leg);
+					//}
+					//foreach (var credit in i.CreditAccountlist)
+					//{
+					//	var currencylist = await Task.Run(() =>
+					//	   _uow.GetDbContext().VoucherDetail.Include(e => e.CurrencyDetail).Where(v => v.VoucherNo == credit.VoucherNo).FirstOrDefault()
+					//   );
+					//	currency = currencylist.CurrencyDetail.CurrencyName;
+					//	LedgerModel leg = new LedgerModel();
+					//	leg.AccountCode = i.AccountCode;
+					//	leg.ChartAccountName = i.AccountName;
+					//	leg.CurrencyName = currency;
+					//	leg.MainLevel = mainlevel1;
+					//	leg.ControlLevel = controllevel1;
+					//	leg.SubLevel = sublevel1;
+					//	leg.Amount = credit.Amount;
+					//	leg.TransactionType = "Credit";
+					//	leg.AccountName = credit.DebitAccountDetails.AccountName;
+					//	leg.TransactionDate = credit.TransactionDate;
+					//	leg.VoucherNo = credit.VoucherNo;
+					//	leg.Description = credit.Description;
+					//	list1.Add(leg);
+					//}
 				}
 				response.data.LedgerList = list1;
 
@@ -1099,12 +1099,116 @@ namespace HumanitarianAssistance.Service.Classes
 
 				List<LedgerModel> finalLedgerList = new List<LedgerModel>();
 				foreach (var items in ledgerList)
-				{
+				{						
 					foreach (var creditList in items.CreditAccountlist)
-					{
+					{												
+						if (creditList.TransactionDate.Date >= fromdate.Value.Date && creditList.TransactionDate.Date <= todate.Value.Date)
+						{
+							var currencyName = await _uow.CurrencyDetailsRepository.FindAsync(x => x.CurrencyId == creditList.CurrencyId);
+							var voucherReferenceNo = await _uow.VoucherDetailRepository.FindAsync(x => x.IsDeleted == false && x.VoucherNo == creditList.VoucherNo);
+							if (RecordType == 1)
+							{
+								if (creditList.CurrencyId == CurrencyId)
+								{									
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = creditList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = creditList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = creditList.Amount;
+									obj.DebitAmount = creditList.Amount;
+									finalLedgerList.Add(obj);
+								}
+							}
+							else
+							{								
+								if (creditList.CurrencyId == CurrencyId)
+								{
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = creditList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = creditList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = creditList.Amount;
+									obj.DebitAmount = creditList.Amount;
+									finalLedgerList.Add(obj);
+								}
+								else
+								{
+									var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == creditList.CurrencyId && x.ToCurrency == CurrencyId).OrderByDescending(x => x.Date).FirstOrDefaultAsync();									
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = creditList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = creditList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = creditList.Amount * exchangeRate?.Rate ?? 0;
+									obj.DebitAmount = creditList.Amount * exchangeRate?.Rate ?? 0;
+									finalLedgerList.Add(obj);
+								}
+							}
+						}
+					}
 
+					foreach (var debitList in items.DebitAccountlist)
+					{
+						if (debitList.TransactionDate.Date >= fromdate.Value.Date && debitList.TransactionDate.Date <= todate.Value.Date)
+						{
+							var currencyName = await _uow.CurrencyDetailsRepository.FindAsync(x => x.CurrencyId == debitList.CurrencyId);
+							var voucherReferenceNo = await _uow.VoucherDetailRepository.FindAsync(x => x.IsDeleted == false && x.VoucherNo == debitList.VoucherNo);
+							if (RecordType == 1)
+							{
+								if (debitList.CurrencyId == CurrencyId)
+								{
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = debitList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = debitList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = debitList.Amount;
+									obj.DebitAmount = debitList.Amount;
+									finalLedgerList.Add(obj);
+								}
+							}
+							else
+							{
+								if (debitList.CurrencyId == CurrencyId)
+								{
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = debitList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = debitList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = debitList.Amount;
+									obj.DebitAmount = debitList.Amount;
+									finalLedgerList.Add(obj);
+								}
+								else
+								{
+									var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == debitList.CurrencyId && x.ToCurrency == CurrencyId).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = debitList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = debitList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = debitList.Amount * exchangeRate?.Rate ?? 0;
+									obj.DebitAmount = debitList.Amount * exchangeRate?.Rate ?? 0;
+									finalLedgerList.Add(obj);
+								}
+							}
+						}
 					}
 				}
+
+				response.data.LedgerList = finalLedgerList;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+
 				//string mainlevel1 = null, controllevel1 = null, sublevel1 = null, currency = null;
 				//double totalDebit = 0, totalCredit = 0;
 				//List<VoucherTransactionDetails> openingdebitlist = null;
@@ -1291,8 +1395,8 @@ namespace HumanitarianAssistance.Service.Classes
 				//	};
 				//}
 				//response.data.LedgerList = list1;
-				response.StatusCode = StaticResource.successStatusCode;
-				response.Message = "Success";
+				//response.StatusCode = StaticResource.successStatusCode;
+				//response.Message = "Success";
 			}
 			catch (Exception ex)
 			{
