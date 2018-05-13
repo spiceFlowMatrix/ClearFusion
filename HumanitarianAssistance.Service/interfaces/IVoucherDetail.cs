@@ -28,8 +28,9 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> DeleteVoucherDocumentDetail(int DocumentId, string ModifiedById);
 		Task<APIResponse> GetAllLedgerDetails();
 		Task<APIResponse> GetTrailBlanceDetails();
-		Task<APIResponse> GetTrailBlanceDetailsByCondition(int? OfficeId = null, DateTime? Fromdate = null, DateTime? Todate = null, int? CurrencyId = null, int? RecordType = null);
-		Task<APIResponse> GetAllLedgerDetailsByCondition(LedgerModels model);
+        Task<APIResponse> GetTrailBlanceDetailsByCondition(LedgerModels model);
+        //Task<APIResponse> GetTrailBlanceDetailsByCondition(int? OfficeId = null, DateTime? Fromdate = null, DateTime? Todate = null, int? CurrencyId = null, int? RecordType = null);
+        Task<APIResponse> GetAllLedgerDetailsByCondition(LedgerModels model);
 		//Task<APIResponse> GetJouranlVoucherDetailsByCondition(int? CurrencyId = 2, DateTime? fromdate = null, DateTime? todate = null, int? officeid = null, int? RecordType = 1);
 		Task<APIResponse> GetJouranlVoucherDetailsByCondition(JournalViewModel model);
 

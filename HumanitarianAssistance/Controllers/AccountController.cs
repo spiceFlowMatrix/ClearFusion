@@ -679,11 +679,11 @@ namespace HumanitarianAssistance.Controllers
     }
 
 
-    [HttpGet]
+    [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> GetTrailBlanceDetailsByCondition(int? OfficeId = null, DateTime? Fromdate = null, DateTime? Todate = null, int? CurrencyId = 1, int? RecordType = 1)
+    public async Task<object> GetTrailBlanceDetailsByCondition([FromBody] LedgerModels model)
     {
-      APIResponse response = await _ivoucherDetail.GetTrailBlanceDetailsByCondition(OfficeId, Fromdate, Todate, CurrencyId, RecordType);
+      APIResponse response = await _ivoucherDetail.GetTrailBlanceDetailsByCondition(model);
       return response;
     }
 
