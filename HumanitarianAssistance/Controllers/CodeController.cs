@@ -1088,7 +1088,7 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> ApproveEmployeeEvaluationRequest([FromQuery] int EmployeeEvaluationId, string UserId)
+    public async Task<APIResponse> ApproveEmployeeEvaluationRequest([FromQuery] int EmployeeEvaluationId)
     {
       APIResponse response = new APIResponse();
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -1096,6 +1096,20 @@ namespace HumanitarianAssistance.Controllers
       {
         var id = user.Id;
         response = await _icode.ApproveEmployeeEvaluationRequest(EmployeeEvaluationId, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> ApproveEmployeeInterviewRequest([FromQuery] int InterviewDetailsId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.ApproveEmployeeInterviewRequest(InterviewDetailsId, id);
       }
       return response;
     }
