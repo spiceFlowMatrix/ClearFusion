@@ -664,23 +664,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\SHUBHAM KARNWAL\\.nuget\\packages\\": {},
+    "C:\\Users\\shubhamk\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
+    "restoreSettings": {
+      "hideWarningsAndErrors": true
+    },
     "restore": {
-      "projectUniqueName": "E:\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj",
+      "projectUniqueName": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj",
       "projectName": "HumanitarianAssistance.ViewModels",
-      "projectPath": "E:\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj",
-      "packagesPath": "C:\\Users\\SHUBHAM KARNWAL\\.nuget\\packages\\",
-      "outputPath": "E:\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\obj\\",
+      "projectPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\HumanitarianAssistance.ViewModels.csproj",
+      "packagesPath": "C:\\Users\\shubhamk\\.nuget\\packages\\",
+      "outputPath": "D:\\Dayuser\\clear-fusion\\clear-fusion\\HumanitarianAssistance.Entities\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\SHUBHAM KARNWAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\shubhamk\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
