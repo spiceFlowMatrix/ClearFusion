@@ -13,6 +13,8 @@ namespace HumanitarianAssistance.ViewModels.Models
 			StrongPoints = new List<string>();
 			WeakPoints = new List<string>();
 		}
+
+		public int EmployeeEvaluationId { get; set; }
 		public int EmployeeAppraisalDetailsId { get; set; }
 		public int EmployeeId { get; set; }
 		public string EmployeeCode { get; set; }
