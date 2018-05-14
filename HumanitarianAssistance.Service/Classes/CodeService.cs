@@ -1172,7 +1172,7 @@ namespace HumanitarianAssistance.Service.Classes
 				foreach (var item in emplst)
 				{
                     List<EmployeeEvaluationModel> eeFinalList = new List<EmployeeEvaluationModel>();
-                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date == item.CurrentAppraisalDate.Date);
+                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date == item.CurrentAppraisalDate.Date && x.EvaluationStatus == false);
 					List<string> strong = new List<string>();
 					List<string> weak = new List<string>();
 
@@ -1221,6 +1221,7 @@ namespace HumanitarianAssistance.Service.Classes
 								//	weak.Add(elements.WeakPoints);
 								//}
 
+								obj.EmployeeEvaluationId = elements.EmployeeEvaluationId;
 								obj.EmployeeId = elements.EmployeeId;
 								obj.FinalResultQues1 = elements.FinalResultQues1;
 								obj.FinalResultQues2 = elements.FinalResultQues2;
@@ -1262,6 +1263,28 @@ namespace HumanitarianAssistance.Service.Classes
 				//var finalLst = lst.GroupBy(x => x.EmployeeId).ToList();
 				response.data.EmployeeAppraisalDetailsModelLst = finallst;
 				//response.data.EmployeeEvaluationDetailsModelLst = lst.GroupBy(x => x.EmployeeId).ToList();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> ApproveEmployeeEvaluationRequest(int EmployeeEvaluationId, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
+				var emplst = await _uow.EmployeeEvaluationRepository.FindAsync(x => x.EmployeeEvaluationId == EmployeeEvaluationId);
+				emplst.EvaluationStatus = true;
+				emplst.ModifiedById = UserId;
+				emplst.ModifiedDate = DateTime.Now;
+				await _uow.EmployeeEvaluationRepository.UpdateAsyn(emplst);
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
@@ -1468,5 +1491,7 @@ namespace HumanitarianAssistance.Service.Classes
 			}
 			return response;
 		}
+
+
 	}
 }

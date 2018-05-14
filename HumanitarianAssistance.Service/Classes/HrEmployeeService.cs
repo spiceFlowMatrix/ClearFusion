@@ -2943,16 +2943,17 @@ namespace HumanitarianAssistance.Service.Classes
 					var pensionLst = _uow.EmployeePensionRateRepository.Find(x => x.IsDefault == true);
 					double pensionrateamount = pensionLst?.PensionRate ?? 0;
 					int monthdays = GetMonthDays(month, year);
-					int totalhours = 0, presentdays = 0, absentdays = 0, leavedays = 0, overtimehours = 0, leaveDaysCount = 0;
+					int totalhours = 0, presentdays = 0, absentdays = 0, leavedays = 0, overtimehours = 0;
 					List<EmployeeMonthlyPayrollModel> monthlypayrolllist = new List<EmployeeMonthlyPayrollModel>();
 					for (int i = 0; i < payrolllist.Count; i++)
 					{
-						var dailyHours = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.OfficeId == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeProfessionalDetail.OfficeId);
+						var dailyHours = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.OfficeId == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeProfessionalDetail.OfficeId);						
 						EmployeeMonthlyPayrollModel payrollmodel = new EmployeeMonthlyPayrollModel();
 						totalhours = payrolllist[i].Sum(x => Convert.ToInt32(x.TotalWorkTime));
 						overtimehours = payrolllist[i].Sum(x => Convert.ToInt32(x.HoverTimeHours));
 						presentdays = payrolllist[i].Count(x => (x.AttendanceTypeId == (int)AttendanceType.P));
 						absentdays = payrolllist[i].Count(x => (x.AttendanceTypeId == (int)AttendanceType.A));
+						totalhours += Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2));
 						//leavedays = payrolllist[i].Count(x => (x.AttendanceTypeId == (int)AttendanceType.L));
 
 						// For calculating ADVANCE In SALARY PAYROLL (CONVERSION RATE ALSO)
@@ -3098,7 +3099,6 @@ namespace HumanitarianAssistance.Service.Classes
 								IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false
 							}).FirstOrDefault();
 						}
-						//totalhours = dailyHours.
 						monthlypayrolllist.Add(payrollmodel);
 
 					}
