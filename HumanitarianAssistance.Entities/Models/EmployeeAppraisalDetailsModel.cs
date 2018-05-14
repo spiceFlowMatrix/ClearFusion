@@ -28,7 +28,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public int AppraisalPeriod { get; set; }
 		public DateTime CurrentAppraisalDate { get; set; }
 		public int OfficeId { get; set; }
-		public int TotalScore { get; set; }
+		public int? TotalScore { get; set; }
 		public bool AppraisalStatus { get; set; }
 		public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
 

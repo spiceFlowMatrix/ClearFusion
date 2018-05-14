@@ -26,6 +26,6 @@ namespace DataAccess.DbEntities
 		public DateTime CurrentAppraisalDate { get; set; }
 		public int OfficeId { get; set; }
 		public bool AppraisalStatus { get; set; }
-		public int TotalScore { get; set; }
+		public int? TotalScore { get; set; }
 	}
 }
