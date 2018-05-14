@@ -1492,6 +1492,27 @@ namespace HumanitarianAssistance.Service.Classes
 			return response;
 		}
 
+		public async Task<APIResponse> ApproveEmployeeInterviewRequest(int InterviewDetailsId, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
+				var emplst = await _uow.InterviewDetailsRepository.FindAsync(x => x.InterviewDetailsId == InterviewDetailsId);
+				emplst.InterviewStatus = true;
+				emplst.ModifiedById = UserId;
+				emplst.ModifiedDate = DateTime.Now;
+				await _uow.InterviewDetailsRepository.UpdateAsyn(emplst);
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
 
 	}
 }
