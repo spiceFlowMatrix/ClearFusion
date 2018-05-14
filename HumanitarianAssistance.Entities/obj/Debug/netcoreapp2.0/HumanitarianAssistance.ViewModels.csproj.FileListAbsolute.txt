@@ -19,4 +19,3 @@ D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\Humanit
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.AssemblyInfo.cs
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.0\HumanitarianAssistance.ViewModels.csprojResolveAssemblyReference.cache

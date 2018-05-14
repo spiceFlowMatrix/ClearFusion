@@ -15,11 +15,11 @@ namespace DataAccess.DbEntities
 		public InterviewDetails InterviewDetails { get; set; }
 		public int InterviewDetailsId { get; set; }
 		public string LanguageName { get; set; }
-		public int LanguageId { get; set; }
-		public int Reading { get; set; }
-		public int Writing { get; set; }
-		public int Listening { get; set; }
-		public int Speaking { get; set; }
+		public int? LanguageId { get; set; }
+		public int? Reading { get; set; }
+		public int? Writing { get; set; }
+		public int? Listening { get; set; }
+		public int? Speaking { get; set; }
 
 	}
 }
