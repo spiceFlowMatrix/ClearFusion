@@ -16,3 +16,12 @@ D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\Humanit
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Common.AssemblyInfo.cs
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.deps.json
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Common.csprojResolveAssemblyReference.cache
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Common.csproj.CoreCompileInputs.cache
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Common.AssemblyInfoInputs.cache
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Common.AssemblyInfo.cs
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Common.dll
+E:\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.0\HumanitarianAssistance.Common.pdb

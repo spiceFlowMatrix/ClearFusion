@@ -101,7 +101,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 
     public class LedgerModel
     {
-        public int AccountCode { get; set; }
+        public long AccountCode { get; set; }
         public string ChartAccountName { get; set; }
         public string CurrencyName { get; set; }
         public string MainLevel { get; set; }
@@ -114,15 +114,26 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int TransactionNo { get; set; }
         public string AccountName { get; set; }
         public DateTime TransactionDate { get; set; }
-        public double DebitAmount { get; set; }
-        public double CreditAmount { get; set; }
-        public long VoucherNo { get; set; }
+        public double? DebitAmount { get; set; }
+        public double? CreditAmount { get; set; }
+        public string VoucherNo { get; set; }
         public string Description { get; set; }
         public List<Transaction> Transactionlist { get; set; }
-        
-    }
+		public double TotalCredit { get; set; }
+		public double TotalDebit { get; set; }
 
-    public class Transaction
+	}
+
+	public class AccountTransactionLogger {
+		public long AccountCode { get; set; }
+		public long ChartAccountCode { get; set; }
+		public int? CurrencyId { get; set; }
+		public double TotalCredits { get; set; }
+		public double TotalDebits { get; set; }
+		public double ClosingBalance { get; set; }
+	}
+
+	public class Transaction
     {
         public int TransactionNo { get; set; }
         public string AccountName { get; set; }
@@ -144,8 +155,8 @@ namespace HumanitarianAssistance.ViewModels.Models
     }
     public class AccountOpendingAndClosingBL
     {
-        public double ClosingBalance { get; set; }
-        public double OpenningBalance { get; set; }
+        public double? ClosingBalance { get; set; }
+        public double OpeningBalance { get; set; }
         public string OpenningBalanceType { get; set; }
         public string ClosingBalanceType { get; set; }
     }
@@ -177,9 +188,10 @@ namespace HumanitarianAssistance.ViewModels.Models
 
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
-        public int? OfficeCode { get; set; }
-        public int? AccountId { get; set; }
-        
- 
-    }
+        //public int? OfficeCode { get; set; }
+        //public int? AccountId { get; set; }
+		public List<int> accountLists { get; set; }
+
+
+	}
 }
