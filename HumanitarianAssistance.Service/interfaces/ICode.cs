@@ -57,6 +57,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddExitInterview(ExitInterviewModel model, string UserId);
         Task<APIResponse> EditExitInterview(ExitInterviewModel model, string UserId);
 		Task<APIResponse> GetAllExitInterview();
-
+		Task<APIResponse> ApproveEmployeeAppraisalRequest(int EmployeeAppraisalDetailsId, string UserId);
 	}
 }

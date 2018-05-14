@@ -934,6 +934,7 @@ namespace HumanitarianAssistance.Service.Classes
 				{
 					EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
 					var quesLst = await _uow.GetDbContext().EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToListAsync();
+					model.EmployeeAppraisalDetailsId = item.EmployeeAppraisalDetailsId;
 					model.EmployeeId = item.EmployeeId;
 					model.EmployeeCode = item.EmployeeCode;
 					model.EmployeeName = item.EmployeeName;
@@ -947,6 +948,7 @@ namespace HumanitarianAssistance.Service.Classes
 					model.CurrentAppraisalDate = item.CurrentAppraisalDate;
 					model.OfficeId = item.OfficeId;
 					model.TotalScore = item.TotalScore;
+					model.AppraisalStatus = item.AppraisalStatus;
 					foreach (var element in quesLst)
 					{
 						EmployeeAppraisalQuestionModel questions = new EmployeeAppraisalQuestionModel();
@@ -961,6 +963,38 @@ namespace HumanitarianAssistance.Service.Classes
 					lst.Add(model);
 				}
 				response.data.EmployeeAppraisalDetailsModelLst = lst;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> ApproveEmployeeAppraisalRequest(int EmployeeAppraisalDetailsId, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
+				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAsync(x => x.EmployeeAppraisalDetailsId == EmployeeAppraisalDetailsId && x.AppraisalStatus == false);
+				emplst.AppraisalStatus = true;
+				emplst.ModifiedById = UserId;
+				emplst.ModifiedDate = DateTime.Now;
+				await _uow.EmployeeAppraisalDetailsRepository.UpdateAsyn(emplst);
+
+				EmployeeEvaluation evaluationModel = new EmployeeEvaluation();
+				evaluationModel.CreatedById = UserId;
+				evaluationModel.CreatedDate = DateTime.Now;
+				evaluationModel.EmployeeId = emplst.EmployeeId;
+				evaluationModel.CurrentAppraisalDate = emplst.CurrentAppraisalDate;
+				evaluationModel.IsDeleted = false;
+				await _uow.EmployeeEvaluationRepository.AddAsyn(evaluationModel);
+				await _uow.SaveAsync();
+
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
@@ -1132,13 +1166,13 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				List<EmployeeAppraisalDetailsModel> finallst = new List<EmployeeAppraisalDetailsModel>();                
+				List<EmployeeAppraisalDetailsModel> finallst = new List<EmployeeAppraisalDetailsModel>();            
                 List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
-				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
+				var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == true && x.IsDeleted == false);
 				foreach (var item in emplst)
 				{
                     List<EmployeeEvaluationModel> eeFinalList = new List<EmployeeEvaluationModel>();
-                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date <= DateTime.Now.Date);
+                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date == item.CurrentAppraisalDate.Date);
 					List<string> strong = new List<string>();
 					List<string> weak = new List<string>();
 

@@ -13,6 +13,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 			StrongPoints = new List<string>();
 			WeakPoints = new List<string>();
 		}
+		public int EmployeeAppraisalDetailsId { get; set; }
 		public int EmployeeId { get; set; }
 		public string EmployeeCode { get; set; }
 		public string EmployeeName { get; set; }
@@ -26,6 +27,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public DateTime CurrentAppraisalDate { get; set; }
 		public int OfficeId { get; set; }
 		public int TotalScore { get; set; }
+		public bool AppraisalStatus { get; set; }
 		public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
 
 
