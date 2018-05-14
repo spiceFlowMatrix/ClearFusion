@@ -1610,13 +1610,13 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                List<int> accountLists = new List<int>();
-                accountLists.Add(19);
-                accountLists.Add(23);
-                accountLists.Add(24);
-                accountLists.Add(25);
+                //List<int> accountLists = new List<int>();
+                //accountLists.Add(19);
+                //accountLists.Add(23);
+                //accountLists.Add(24);
+                //accountLists.Add(25);
                 List<ChartAccountDetail> ledgerList = new List<ChartAccountDetail>();
-                foreach (var account in accountLists)
+                foreach (var account in model.accountLists)
                 {
                     ChartAccountDetail obj = new ChartAccountDetail();
                     obj = await _uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).Where(x => x.AccountLevelId == 4 && x.AccountCode == account).FirstOrDefaultAsync();
