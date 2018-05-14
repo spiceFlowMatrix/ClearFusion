@@ -4816,7 +4816,7 @@ namespace HumanitarianAssistance.Service.Classes
 			try
 			{
 				List<InterviewDetailModel> lst = new List<InterviewDetailModel>();
-				var recordLst = await _uow.InterviewDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
+				var recordLst = await _uow.InterviewDetailsRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewStatus == false);
 				foreach (var model in recordLst)
 				{
 					var languageRecords = await _uow.InterviewLanguagesRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
