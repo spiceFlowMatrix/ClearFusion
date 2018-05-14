@@ -14,7 +14,7 @@ namespace DataAccess.DbEntities
 		public int EmployeeAppraisalQuestionsId { get; set; }
 		public int AppraisalGeneralQuestionsId { get; set; }
 		public AppraisalGeneralQuestions AppraisalGeneralQuestions { get; set; }
-		public int Score { get; set; }
+		public int? Score { get; set; }
 		public string Remarks { get; set; }
 		public DateTime CurrentAppraisalDate { get; set; }
 		public int EmployeeId { get; set; }
