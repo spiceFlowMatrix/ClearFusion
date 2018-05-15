@@ -88,7 +88,7 @@ namespace DataAccess
 		private IGenericRepository<InterviewTrainings> _interviewTrainingsRepository;
 		private IGenericRepository<TechnicalQuestion> _technicalQuestionRepository;
         private IGenericRepository<ExistInterviewDetails> _existInterviewDetailsRepository;
-		private IGenericRepository<UserOffices> _userOfficesRepository;
+		private IGenericRepository<UserDetailOffices> _userOfficesRepository;
 		private IGenericRepository<StrongandWeakPoints> _strongandWeakPointsRepository;
 
 
@@ -105,11 +105,11 @@ namespace DataAccess
 			}
 		}
 
-		public IGenericRepository<UserOffices> UserOfficesRepository
+		public IGenericRepository<UserDetailOffices> UserOfficesRepository
 		{
 			get
 			{
-				return _userOfficesRepository = _userOfficesRepository ?? new GenericRepository<UserOffices>(_mschaContext);
+				return _userOfficesRepository = _userOfficesRepository ?? new GenericRepository<UserDetailOffices>(_mschaContext);
 			}
 		}
 

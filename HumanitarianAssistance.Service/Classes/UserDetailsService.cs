@@ -87,10 +87,10 @@ namespace HumanitarianAssistance.Service.Classes
 					user.AspNetUserId = id;
 					await _uow.UserDetailsRepository.AddAsyn(user);
 
-					List<UserOffices> lst = new List<UserOffices>();
+					List<UserDetailOffices> lst = new List<UserDetailOffices>();
 					foreach (var item in model.OfficeId)
 					{
-						UserOffices obj = new UserOffices();
+						UserDetailOffices obj = new UserDetailOffices();
 						obj.OfficeId = item;
 						obj.UserId = user.UserID;
 						obj.CreatedById = model.CreatedById;
@@ -98,7 +98,7 @@ namespace HumanitarianAssistance.Service.Classes
 						obj.IsDeleted = false;
 						lst.Add(obj);
 					}
-					await _uow.GetDbContext().UserOffices.AddRangeAsync(lst);
+					await _uow.GetDbContext().UserDetailOffices.AddRangeAsync(lst);
 
 					await _uow.SaveAsync();
 					response.StatusCode = StaticResource.successStatusCode;
@@ -123,10 +123,10 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				using (var context = _uow.GetDbContext())
-				{
-					using (var transaction = context.Database.BeginTransaction())
-					{
+				//using (var context = _uow.GetDbContext())
+				//{
+				//	using (var transaction = context.Database.BeginTransaction())
+				//	{
 						var existUser = await _userManager.FindByIdAsync(model.Id);
 						//string token = await _userManager.GeneratePasswordResetTokenAsync(existUser);
 						//var passchangeResult = await _userManager.ResetPasswordAsync(existUser, token, model.Password);
@@ -135,28 +135,26 @@ namespace HumanitarianAssistance.Service.Classes
 						existUser.Email = model.Email;
 						existUser.NormalizedEmail = model.Email;
 						existUser.NormalizedUserName = model.Email;
-						existUser.PhoneNumber = model.Phone;
-						await _userManager.UpdateAsync(existUser);
+						existUser.PhoneNumber = model.Phone;						
 
 						var UserInfo = await _uow.UserDetailsRepository.FindAsync(u => u.AspNetUserId == model.Id);
 						UserInfo.FirstName = model.FirstName;
 						UserInfo.LastName = model.LastName;
 						//UserInfo.OfficeId = model.OfficeId;
-						UserInfo.DepartmentId = model.DepartmentId;
-						//UserInfo.Password = model.Password;
+						//UserInfo.DepartmentId = model.DepartmentId;
+						UserInfo.Password = model.Password;
 						UserInfo.Status = model.Status;
 						UserInfo.UserType = model.UserType;
 						UserInfo.ModifiedById = model.ModifiedById;
-						UserInfo.ModifiedDate = model.ModifiedDate;
-						await _uow.UserDetailsRepository.UpdateAsyn(UserInfo, UserInfo.UserID);
+						UserInfo.ModifiedDate = model.ModifiedDate;						
 
-						var userOfficesList = await _uow.UserOfficesRepository.FindAllAsync(x=>x.UserId == model.UserID);
-						_uow.GetDbContext().UserOffices.RemoveRange(userOfficesList);
+						var userOfficesList = await _uow.UserOfficesRepository.FindAllAsync(x=>x.UserId == UserInfo.UserID);
+						_uow.GetDbContext().UserDetailOffices.RemoveRange(userOfficesList);
 
-						List<UserOffices> lst = new List<UserOffices>();
+						List<UserDetailOffices> lst = new List<UserDetailOffices>();
 						foreach (var item in model.OfficeId)
 						{
-							UserOffices obj = new UserOffices();
+							UserDetailOffices obj = new UserDetailOffices();
 							obj.OfficeId = item;
 							obj.UserId = UserInfo.UserID;
 							obj.CreatedById = model.CreatedById;
@@ -164,13 +162,15 @@ namespace HumanitarianAssistance.Service.Classes
 							obj.IsDeleted = false;
 							lst.Add(obj);
 						}
-						await _uow.GetDbContext().UserOffices.AddRangeAsync(lst);
+						await _uow.GetDbContext().UserDetailOffices.AddRangeAsync(lst);
+						await _userManager.UpdateAsync(existUser);
+						await _uow.UserDetailsRepository.UpdateAsyn(UserInfo);
 						await _uow.SaveAsync();
-						transaction.Commit();
+						//transaction.Commit();
 						response.StatusCode = StaticResource.successStatusCode;
 						response.Message = "Success";
-					}
-				}
+				//	}
+				//}
 			}
 			catch (Exception ex)
 			{
@@ -277,7 +277,7 @@ namespace HumanitarianAssistance.Service.Classes
 				{
 					var existUser = await _userManager.FindByIdAsync(UserId);
 					var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == UserId).Select(x => x.UserID).FirstOrDefault();
-					var Offices = _uow.GetDbContext().UserOffices.Where(x => x.IsDeleted == false && x.UserId == User).Select(x => x.OfficeId).ToList();					
+					var Offices = _uow.GetDbContext().UserDetailOffices.Where(x => x.IsDeleted == false && x.UserId == User).Select(x => x.OfficeId).ToList();
 					obj.UserID = userdetailslist.UserID;
 					obj.Username = userdetailslist.Username;
 					obj.FirstName = userdetailslist.FirstName;

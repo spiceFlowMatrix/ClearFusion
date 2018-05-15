@@ -89,7 +89,7 @@ namespace DataAccess
 		IGenericRepository<InterviewTrainings> InterviewTrainingsRepository { get; }
 		IGenericRepository<TechnicalQuestion> TechnicalQuestionRepository { get; }
         IGenericRepository<ExistInterviewDetails> ExistInterviewDetailsRepository { get; }
-		IGenericRepository<UserOffices> UserOfficesRepository { get; }
+		IGenericRepository<UserDetailOffices> UserOfficesRepository { get; }
 		IGenericRepository<StrongandWeakPoints> StrongandWeakPointsRepository { get; }		
 		void Save();
         Task<int> SaveAsync();
