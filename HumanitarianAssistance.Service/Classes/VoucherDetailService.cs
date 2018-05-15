@@ -598,7 +598,7 @@ namespace HumanitarianAssistance.Service.Classes
                                        select new AccountDetailModel
                                        {
                                            AccountCode = c.AccountCode,
-                                           AccountName = c.AccountName,
+                                           AccountName = c.ChartOfAccountCode + " - " +c.AccountName,
                                            ChartOfAccountCode = c.ChartOfAccountCode
                                        }).ToList();
                 response.data.AccountDetailList = accountcodelist;
@@ -696,7 +696,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.TransactionDate = debit.TransactionDate.ToLocalTime().Date;
                     obj.VoucherNo = debit.VoucherNo;
                     obj.Description = debit?.Description;
-                    obj.AccountName = debit.DebitAccountDetails?.AccountName ?? null;
+                    obj.AccountName = debit.DebitAccountDetails?.ChartOfAccountCode + " - " + debit.DebitAccountDetails?.AccountName ?? null;
                     obj.DebitAmount = debit?.Amount;
                     obj.DebitAccount = debit?.DebitAccount;
                     obj.Amount = debit.Amount;
@@ -706,7 +706,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj1.TransactionDate = debit.TransactionDate.ToLocalTime().Date;
                     obj1.VoucherNo = debit.VoucherNo;
                     obj1.Description = debit?.Description;
-                    obj1.AccountName = debit.CreditAccountDetails?.AccountName ?? null;
+                    obj1.AccountName = debit.CreditAccountDetails?.ChartOfAccountCode + " - " + debit.CreditAccountDetails?.AccountName ?? null;
                     obj1.CreditAmount = debit?.Amount;
                     obj1.CreditAccount = debit?.CreditAccount;
                     obj1.Amount = debit.Amount;
