@@ -4402,7 +4402,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 				var financialYear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.FinancialYearId == FinancialYearId);
 
-				var record = await _uow.GetDbContext().EmployeePaymentTypes.Include(x => x.EmployeeDetail).Where(x => x.EmployeeID == EmployeeId && x.OfficeId == OfficeId && x.FinancialYearDate.Date <= financialYear.StartDate.Date && x.FinancialYearDate.Date >= financialYear.EndDate.Date && x.IsApproved == true).ToListAsync();
+				var record = await _uow.GetDbContext().EmployeePaymentTypes.Include(x => x.EmployeeDetail).Where(x => x.EmployeeID == EmployeeId && x.OfficeId == OfficeId && x.FinancialYearDate.Date >= financialYear.StartDate.Date && x.FinancialYearDate.Date <= financialYear.EndDate.Date && x.IsApproved == true).ToListAsync();
 				if (record.Count > 0)
 				{
 					obj.EmployeeName = record[0].EmployeeName;
