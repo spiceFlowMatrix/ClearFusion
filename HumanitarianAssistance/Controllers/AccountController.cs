@@ -227,7 +227,7 @@ namespace HumanitarianAssistance.Controllers
         );
         response = new APIResponse();
         var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == user.Id).Select(x => x.UserID).FirstOrDefault();
-        var Offices = _uow.GetDbContext().UserOffices.Where(x => x.IsDeleted == false && x.UserId == User).Select(x=>x.OfficeId).ToList();
+        var Offices = _uow.GetDbContext().UserDetailOffices.Where(x => x.IsDeleted == false && x.UserId == User).Select(x => x.OfficeId).ToList();
         response.data.AspNetUserId = user.Id;
         response.StatusCode = 200;
         response.Message = "Success";

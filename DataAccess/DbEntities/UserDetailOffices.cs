@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DataAccess.DbEntities
 {
-    public class UserOffices: BaseEntityWithoutId
+    public class UserDetailOffices: BaseEntityWithoutId
     {
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]

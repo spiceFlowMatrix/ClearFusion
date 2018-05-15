@@ -156,8 +156,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<AccountType> AccountType { get; set; }
         public DbSet<VoucherType> VoucherType { get; set; }
         public DbSet<VoucherTransactionDetails> VoucherTransactionDetails { get; set; }
-        public DbSet<AnalyticalType> AnalyticalType { get; set; }
-        public DbSet<AnalyticalDetail> AnalyticalDetail { get; set; }
+		//public DbSet<AnalyticalType> AnalyticalType { get; set; }
+		public DbSet<AnalyticalDetail> AnalyticalDetail { get; set; }
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
 		public DbSet<ProjectDetails> ProjectDetails { get; set; }
 		public DbSet<ProjectBudget> ProjectBudget { get; set; }
@@ -217,7 +217,7 @@ namespace HumanitarianAssistance.Entities
 
         public DbSet<ExistInterviewDetails> ExistInterviewDetails { get; set; }
 
-		public DbSet<UserOffices> UserOffices { get; set; }
+		public DbSet<UserDetailOffices> UserDetailOffices { get; set; }
 
 		public DbSet<StrongandWeakPoints> StrongandWeakPoints { get; set; }
 
