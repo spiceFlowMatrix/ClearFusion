@@ -408,27 +408,27 @@ namespace HumanitarianAssistance.Service.Classes
                                                 // Credit
                                                 JournalVoucherViewModel obj = new JournalVoucherViewModel();
                                                 obj.TransactionDate = transactions.TransactionDate;
-                                                obj.VoucherNo = transactions.VoucherNo;
-                                                obj.TransactionDescription = transactions.Description;
+                                                obj.VoucherNo = transactions?.VoucherNo ?? 0;
+                                                obj.TransactionDescription = transactions?.Description ?? null;
                                                 obj.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails.Description;
-                                                obj.BudgetLineDescription = v.ProjectBudgetLine.Description;
-                                                obj.AccountCode = creditAccount.ChartOfAccountCode;
-                                                obj.CreditAmount = transactions.Amount;
+                                                obj.Project = v.ProjectDetails?.Description ?? null;
+                                                obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+                                                obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
+                                                obj.CreditAmount = transactions?.Amount ?? 0;
                                                 obj.DebitAmount = 0;
                                                 listJournalView.Add(obj);
 
                                                 // Debit
                                                 JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
                                                 obj1.TransactionDate = transactions.TransactionDate;
-                                                obj1.VoucherNo = transactions.VoucherNo;
-                                                obj1.TransactionDescription = transactions.Description;
+                                                obj1.VoucherNo = transactions?.VoucherNo ?? 0;
+                                                obj1.TransactionDescription = transactions?.Description ?? null;
                                                 obj1.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails.Description;
-                                                obj1.BudgetLineDescription = v.ProjectBudgetLine.Description;
-                                                obj.AccountCode = debitAccount.ChartOfAccountCode;
+                                                obj.Project = v.ProjectDetails?.Description ?? null;
+                                                obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+                                                obj.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
                                                 obj1.CreditAmount = 0;
-                                                obj1.DebitAmount = transactions.Amount;
+                                                obj1.DebitAmount = transactions?.Amount ?? 0;
                                                 listJournalView.Add(obj1);
                                             }
                                         }
@@ -439,27 +439,27 @@ namespace HumanitarianAssistance.Service.Classes
                                                 // Credit
                                                 JournalVoucherViewModel obj = new JournalVoucherViewModel();
                                                 obj.TransactionDate = transactions.TransactionDate;
-                                                obj.VoucherNo = transactions.VoucherNo;
-                                                obj.TransactionDescription = transactions.Description;
+                                                obj.VoucherNo = transactions?.VoucherNo ?? 0;
+                                                obj.TransactionDescription = transactions?.Description ?? null;
                                                 obj.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails.Description;
-                                                obj.BudgetLineDescription = v.ProjectBudgetLine.Description;
-                                                obj.AccountCode = creditAccount.ChartOfAccountCode;
-                                                obj.CreditAmount = transactions.Amount;
+                                                obj.Project = v.ProjectDetails?.Description ?? null;
+                                                obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+                                                obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
+                                                obj.CreditAmount = transactions?.Amount ?? 0;
                                                 obj.DebitAmount = 0;
                                                 listJournalView.Add(obj);
 
                                                 // Debit
                                                 JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
                                                 obj1.TransactionDate = transactions.TransactionDate;
-                                                obj1.VoucherNo = transactions.VoucherNo;
-                                                obj1.TransactionDescription = transactions.Description;
+                                                obj1.VoucherNo = transactions?.VoucherNo ?? 0;
+                                                obj1.TransactionDescription = transactions?.Description ?? null;
                                                 obj1.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails.Description;
-                                                obj1.BudgetLineDescription = v.ProjectBudgetLine.Description;
-                                                obj.AccountCode = debitAccount.ChartOfAccountCode;
+                                                obj.Project = v.ProjectDetails?.Description ?? null;
+                                                obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+                                                obj.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
                                                 obj1.CreditAmount = 0;
-                                                obj1.DebitAmount = transactions.Amount;
+                                                obj1.DebitAmount = transactions?.Amount ?? 0;
                                                 listJournalView.Add(obj1);
                                             }
                                             else
@@ -467,27 +467,27 @@ namespace HumanitarianAssistance.Service.Classes
                                                 var exchangeRate = exchangeratelist.Where(x => x.IsDeleted == false && x.FromCurrency == transactions.CurrencyId && x.ToCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault().Rate;
                                                 JournalVoucherViewModel obj = new JournalVoucherViewModel();
                                                 obj.TransactionDate = transactions.TransactionDate;
-                                                obj.VoucherNo = transactions.VoucherNo;
-                                                obj.TransactionDescription = transactions.Description;
+                                                obj.VoucherNo = transactions?.VoucherNo ?? 0;
+                                                obj.TransactionDescription = transactions?.Description ?? null;
                                                 obj.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails.Description;
-                                                obj.BudgetLineDescription = v.ProjectBudgetLine.Description;
-                                                obj.AccountCode = creditAccount.ChartOfAccountCode;
-                                                obj.CreditAmount = transactions.Amount * exchangeRate;
+                                                obj.Project = v.ProjectDetails?.Description ?? null;
+                                                obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+                                                obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
+                                                obj.CreditAmount = transactions?.Amount ?? 0 * exchangeRate;
                                                 obj.DebitAmount = 0;
                                                 listJournalView.Add(obj);
 
                                                 // Debit
                                                 JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
                                                 obj1.TransactionDate = transactions.TransactionDate;
-                                                obj1.VoucherNo = transactions.VoucherNo;
-                                                obj1.TransactionDescription = transactions.Description;
+                                                obj1.VoucherNo = transactions?.VoucherNo ?? 0;
+                                                obj1.TransactionDescription = transactions?.Description ?? null;
                                                 obj1.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails.Description;
-                                                obj1.BudgetLineDescription = v.ProjectBudgetLine.Description;
-                                                obj.AccountCode = debitAccount.ChartOfAccountCode;
+                                                obj.Project = v.ProjectDetails?.Description ?? null;
+                                                obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+												obj.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
                                                 obj1.CreditAmount = 0;
-                                                obj1.DebitAmount = transactions.Amount * exchangeRate;
+                                                obj1.DebitAmount = transactions?.Amount ?? 0 * exchangeRate;
                                                 listJournalView.Add(obj1);
                                             }
                                         }
