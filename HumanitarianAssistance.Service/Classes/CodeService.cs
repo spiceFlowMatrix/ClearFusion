@@ -1192,7 +1192,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     EmployeeAppraisalDetailsModel objAppraisal = new EmployeeAppraisalDetailsModel();
 
-                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId);
+                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && x.EvaluationStatus.ToLower() != "reject");
 
                     List<EmployeeEvaluationTrainingModel> trainingList = new List<EmployeeEvaluationTrainingModel>();
 
@@ -1539,7 +1539,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
                 var emplst = await _uow.InterviewDetailsRepository.FindAsync(x => x.InterviewDetailsId == InterviewDetailsId);
-                emplst.InterviewStatus = "reject" ;
+                emplst.InterviewStatus = "reject";
                 emplst.ModifiedById = UserId;
                 emplst.ModifiedDate = DateTime.Now;
                 await _uow.InterviewDetailsRepository.UpdateAsyn(emplst);
