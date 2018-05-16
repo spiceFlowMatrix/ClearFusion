@@ -16,16 +16,16 @@ namespace DataAccess.DbEntities
 		public int EmployeeId { get; set; }
 
 
-		public string TrainingProgram { get; set; }
-		public string Program { get; set; }
-		public string Participated { get; set; }
-		public string CatchLevel { get; set; }
-		public string RefresherTrm { get; set; }
-		public string OthRecommendation { get; set; }
+		//public string TrainingProgram { get; set; }
+		//public string Program { get; set; }
+		//public string Participated { get; set; }
+		//public string CatchLevel { get; set; }
+		//public string RefresherTrm { get; set; }
+		//public string OthRecommendation { get; set; }
 
 
-		public string StrongPoints { get; set; }
-		public string WeakPoints { get; set; }
+		//public string StrongPoints { get; set; }
+		//public string WeakPoints { get; set; }
 
 
 		public string FinalResultQues1 { get; set; }
@@ -37,6 +37,8 @@ namespace DataAccess.DbEntities
 		public string AppraisalTeamMember1 { get; set; }
 		public string AppraisalTeamMember2 { get; set; }
 		public string CommentsByEmployee { get; set; }
-		public bool EvaluationStatus { get; set; }
-	}
+		public string EvaluationStatus { get; set; }
+        public int EmployeeAppraisalDetailsId { get; set; }
+
+    }
 }

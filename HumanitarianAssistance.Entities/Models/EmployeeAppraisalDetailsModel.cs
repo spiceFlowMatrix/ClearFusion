@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public EmployeeAppraisalDetailsModel()
 		{
 			EmployeeAppraisalQuestionList = new List<EmployeeAppraisalQuestionModel>();
-			EmployeeEvaluationModelList = new List<EmployeeEvaluationModel>();
+			EmployeeEvaluationModelList = new List<EmployeeEvaluationTrainingModel>();
 			StrongPoints = new List<string>();
 			WeakPoints = new List<string>();
 		}
@@ -34,7 +34,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 
 
 
-		public List<EmployeeEvaluationModel> EmployeeEvaluationModelList { get; set; }
+		public List<EmployeeEvaluationTrainingModel> EmployeeEvaluationModelList { get; set; }
 		public List<string> StrongPoints { get; set; }
 		public List<string> WeakPoints { get; set; }
 		public string FinalResultQues1 { get; set; }
@@ -46,6 +46,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string AppraisalTeamMember1 { get; set; }
 		public string AppraisalTeamMember2 { get; set; }
 		public string CommentsByEmployee { get; set; }
+        public string EvaluationStatus { get; set; }
 
-	}
+    }
 }

@@ -14,8 +14,9 @@ namespace DataAccess.DbEntities
 		public int StrongPointsId { get; set; }
 		public DateTime CurrentAppraisalDate { get; set; }
 		public int EmployeeId { get; set; }
+        public int EmployeeAppraisalDetailsId { get; set; }
 
-		public string Point { get; set; }
+        public string Point { get; set; }
 		public int Status { get; set; }					// 1 for strong and 2 for weak (Managed at backend)
 
 	}

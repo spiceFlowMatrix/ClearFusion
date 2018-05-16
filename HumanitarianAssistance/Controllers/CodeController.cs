@@ -585,7 +585,8 @@ namespace HumanitarianAssistance.Controllers
           return response;
         }
       }
-      catch (Exception ex) {
+      catch (Exception ex)
+      {
         throw ex;
       }
     }
@@ -798,8 +799,8 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-   
-    
+
+
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetBudgetLineTypes()
@@ -970,7 +971,7 @@ namespace HumanitarianAssistance.Controllers
       {
         var id = user.Id;
         response = await _icode.AddPensionRate(model, id);
-      }      
+      }
       return response;
     }
 
@@ -983,8 +984,8 @@ namespace HumanitarianAssistance.Controllers
       if (user != null)
       {
         var id = user.Id;
-        response = await _icode.EditPensionRate(model,id);
-      }      
+        response = await _icode.EditPensionRate(model, id);
+      }
       return response;
     }
 
@@ -1096,6 +1097,20 @@ namespace HumanitarianAssistance.Controllers
       {
         var id = user.Id;
         response = await _icode.ApproveEmployeeEvaluationRequest(EmployeeEvaluationId, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> RejectEmployeeEvaluationRequest([FromQuery] int EmployeeEvaluationId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.RejectEmployeeEvaluationRequest(EmployeeEvaluationId, id);
       }
       return response;
     }

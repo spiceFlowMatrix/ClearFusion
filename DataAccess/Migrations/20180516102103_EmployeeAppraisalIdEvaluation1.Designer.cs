@@ -11,9 +11,10 @@ using System;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180516102103_EmployeeAppraisalIdEvaluation1")]
+    partial class EmployeeAppraisalIdEvaluation1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1442,6 +1443,8 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("AppraisalTeamMember2");
 
+                    b.Property<string>("CatchLevel");
+
                     b.Property<string>("CommentsByEmployee");
 
                     b.Property<string>("CreatedById");
@@ -1474,35 +1477,6 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.HasKey("EmployeeEvaluationId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("EmployeeEvaluation");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.EmployeeEvaluationTraining", b =>
-                {
-                    b.Property<int>("EmployeeEvaluationTrainingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CatchLevel");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<int>("EmployeeAppraisalDetailsId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
                     b.Property<string>("OthRecommendation");
 
                     b.Property<string>("Participated");
@@ -1511,15 +1485,19 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("RefresherTrm");
 
+                    b.Property<string>("StrongPoints");
+
                     b.Property<string>("TrainingProgram");
 
-                    b.HasKey("EmployeeEvaluationTrainingId");
+                    b.Property<string>("WeakPoints");
+
+                    b.HasKey("EmployeeEvaluationId");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ModifiedById");
 
-                    b.ToTable("EmployeeEvaluationTraining");
+                    b.ToTable("EmployeeEvaluation");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeHealthDetail", b =>
@@ -4138,17 +4116,6 @@ namespace DataAccess.Migrations
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeEvaluation", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.EmployeeEvaluationTraining", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()

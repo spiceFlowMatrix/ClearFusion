@@ -220,8 +220,9 @@ namespace HumanitarianAssistance.Entities
 		public DbSet<UserDetailOffices> UserDetailOffices { get; set; }
 
 		public DbSet<StrongandWeakPoints> StrongandWeakPoints { get; set; }
+		public DbSet<EmployeeEvaluationTraining> EmployeeEvaluationTraining { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });            
             modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);
