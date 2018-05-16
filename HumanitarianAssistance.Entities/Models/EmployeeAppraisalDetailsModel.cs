@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public bool AppraisalStatus { get; set; }
 		public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
 
-
+		
 
 		public List<EmployeeEvaluationTrainingModel> EmployeeEvaluationModelList { get; set; }
 		public List<string> StrongPoints { get; set; }

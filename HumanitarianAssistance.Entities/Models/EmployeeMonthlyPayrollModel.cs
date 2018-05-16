@@ -14,8 +14,9 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int PresentDays { get; set; }
         public int AbsentDays { get; set; }
         public int LeaveDays { get; set; }
-        //public int TotalWorkedDays { get; set; }
-        public int TotalWorkHours { get; set; }
+		public int LeaveHours { get; set; }
+		//public int TotalWorkedDays { get; set; }
+		public int TotalWorkHours { get; set; }
         public double? HourlyRate { get; set; }
         public double? TotalGeneralAmount { get; set; }
         public double? TotalAllowance { get; set; }

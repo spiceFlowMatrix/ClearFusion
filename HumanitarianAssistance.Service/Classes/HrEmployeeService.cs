@@ -2947,15 +2947,18 @@ namespace HumanitarianAssistance.Service.Classes
 					List<EmployeeMonthlyPayrollModel> monthlypayrolllist = new List<EmployeeMonthlyPayrollModel>();
 					for (int i = 0; i < payrolllist.Count; i++)
 					{
-						var dailyHours = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.OfficeId == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeProfessionalDetail.OfficeId);						
+						var dailyHours = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.OfficeId == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeProfessionalDetail.OfficeId);
 						EmployeeMonthlyPayrollModel payrollmodel = new EmployeeMonthlyPayrollModel();
 						totalhours = payrolllist[i].Sum(x => Convert.ToInt32(x.TotalWorkTime));
 						overtimehours = payrolllist[i].Sum(x => Convert.ToInt32(x.HoverTimeHours));
 						presentdays = payrolllist[i].Count(x => (x.AttendanceTypeId == (int)AttendanceType.P));
 						absentdays = payrolllist[i].Count(x => (x.AttendanceTypeId == (int)AttendanceType.A));
-						totalhours += Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2));
-						//leavedays = payrolllist[i].Count(x => (x.AttendanceTypeId == (int)AttendanceType.L));
+						leavedays = payrolllist[i].Count(x => (x.AttendanceTypeId == (int)AttendanceType.L));
 
+						//if (leavedays > 0)
+						//{
+						//	totalhours += Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2));
+						//}
 						// For calculating ADVANCE In SALARY PAYROLL (CONVERSION RATE ALSO)
 
 						var advanceAmount = _uow.AdvancesRepository.FindAllAsync(x => x.AdvanceDate.Date.Month < month && x.AdvanceDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == false && x.EmployeeId == payrolllist[i].FirstOrDefault().EmployeeId).Result.OrderByDescending(x => x.AdvanceDate.Date).ToList();
@@ -2998,6 +3001,7 @@ namespace HumanitarianAssistance.Service.Classes
 								PresentDays = presentdays,
 								AbsentDays = absentdays,
 								LeaveDays = leavedays,
+								LeaveHours = leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)),
 								TotalWorkHours = totalhours,
 								OverTimeHours = overtimehours,
 								TotalGeneralAmount = x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount,
@@ -3065,6 +3069,7 @@ namespace HumanitarianAssistance.Service.Classes
 								PresentDays = presentdays,
 								AbsentDays = absentdays,
 								LeaveDays = leavedays,
+								LeaveHours = leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)),
 								TotalWorkHours = totalhours,
 								OverTimeHours = overtimehours,
 								TotalGeneralAmount = x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate.Rate,
@@ -4824,7 +4829,7 @@ namespace HumanitarianAssistance.Service.Classes
 			try
 			{
 				List<InterviewDetailModel> lst = new List<InterviewDetailModel>();
-				var recordLst = await _uow.InterviewDetailsRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewStatus == false);
+				var recordLst = await _uow.InterviewDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
 				foreach (var model in recordLst)
 				{
 					var languageRecords = await _uow.InterviewLanguagesRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
