@@ -57,6 +57,6 @@ namespace DataAccess.DbEntities
         public string Interviewer3 { get; set; }
         public string Interviewer4 { get; set; }
 
-		public bool InterviewStatus { get; set; }
+		public string InterviewStatus { get; set; }
 	}
 }
