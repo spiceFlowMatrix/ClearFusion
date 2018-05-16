@@ -32,6 +32,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public bool AppraisalStatus { get; set; }
 		public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
 
+		
 
 
 		public List<EmployeeEvaluationModel> EmployeeEvaluationModelList { get; set; }
@@ -46,6 +47,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string AppraisalTeamMember1 { get; set; }
 		public string AppraisalTeamMember2 { get; set; }
 		public string CommentsByEmployee { get; set; }
+		public bool EvaluationStatus { get; set; }
 
 	}
 }

@@ -1172,7 +1172,7 @@ namespace HumanitarianAssistance.Service.Classes
 				foreach (var item in emplst)
 				{
                     List<EmployeeEvaluationModel> eeFinalList = new List<EmployeeEvaluationModel>();
-                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date == item.CurrentAppraisalDate.Date && x.EvaluationStatus == false);
+                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate.Date == item.CurrentAppraisalDate.Date );
 					List<string> strong = new List<string>();
 					List<string> weak = new List<string>();
 
@@ -1233,7 +1233,7 @@ namespace HumanitarianAssistance.Service.Classes
 								obj.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
 								obj.CommentsByEmployee = elements.CommentsByEmployee;
 								obj.CurrentAppraisalDate = elements.CurrentAppraisalDate;
-
+								obj.EvaluationStatus = elements.EvaluationStatus;
                                 obj.EmployeeEvaluationModelList = eeList;
 								lst.Add(obj);								
 							}							
