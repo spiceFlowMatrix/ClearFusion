@@ -62,6 +62,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? FinancialYearId { get; set; }
 
         public string AccountName { get; set; }
+
         public double? DebitAmount { get; set; }
         public double? CreditAmount { get; set; }
     }
