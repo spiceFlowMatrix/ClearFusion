@@ -717,6 +717,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreditAmount = debit?.Amount;
                     obj.CreditAccount = debit?.CreditAccount;
                     tranlist.Add(obj);
+
                     //obj.DebitAccountName = debit.DebitAccountDetails?.ChartOfAccountCode + " - " + debit.DebitAccountDetails?.AccountName ?? null;
                     //obj.CreditAccountName = debit.CreditAccountDetails?.ChartOfAccountCode + " - " + debit.CreditAccountDetails?.AccountName ?? null;
 
