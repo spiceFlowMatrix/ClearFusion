@@ -4716,15 +4716,18 @@ namespace HumanitarianAssistance.Service.Classes
                     var record = await _uow.InterviewDetailsRepository.FindAsync(x => x.InterviewDetailsId == model.InterviewDetailsId);
                     if (record != null)
                     {
-                        record.CandidateName = model.CandidateName;
-                        record.CandidatePosition = model.CandidatePosition;
-                        record.ResidingProvince = model.ResidingProvince;
-                        record.DutyStation = model.DutyStation;
-                        record.Gender = model.Gender;
+
+                        //record.CandidateName = model.CandidateName;
+                        //record.CandidatePosition = model.CandidatePosition;
+                        //record.ResidingProvince = model.ResidingProvince;
+                        //record.DutyStation = model.DutyStation;
+                        //record.Gender = model.Gender;
+
+                        record.JobId = model.JobId;
                         record.PassportNo = model.PassportNo;
-                        record.Qualification = model.Qualification;
+                        //record.Qualification = model.Qualification;
                         record.University = model.University;
-                        record.DateOfBirth = model.DateOfBirth;
+                        //record.DateOfBirth = model.DateOfBirth;
                         record.PlaceOfBirth = model.PlaceOfBirth;
                         record.TazkiraIssuePlace = model.TazkiraIssuePlace;
                         record.MaritalStatus = model.MaritalStatus;
@@ -4875,16 +4878,28 @@ namespace HumanitarianAssistance.Service.Classes
                         trainingModel.EndDate = item.EndDate;
                         trainingList.Add(trainingModel);
                     }
+
+                    var empDetail = await _uow.EmployeeDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeID == model.EmployeeID);
+                    var jobDetail = await _uow.GetDbContext().JobHiringDetails.Include(x => x.OfficeDetails).FirstOrDefaultAsync(x => x.IsDeleted == false && x.JobId == model.JobId);
+                    //var jobDetail = await _uow.JobHiringDetailsRepository.FindAsync(x => x.IsDeleted == false && x.JobId == model.JobId);
+
+
+                    obj.EmployeeID = model.EmployeeID;
+                    obj.CandidateName = empDetail.EmployeeName;
+
+                    obj.JobId = model.JobId;
+                    obj.DutyStation = jobDetail.OfficeDetails?.OfficeName;
+
+
                     obj.InterviewDetailsId = model.InterviewDetailsId;
-                    obj.CandidateName = model.CandidateName;
-                    obj.CandidatePosition = model.CandidatePosition;
-                    obj.ResidingProvince = model.ResidingProvince;
-                    obj.DutyStation = model.DutyStation;
-                    obj.Gender = model.Gender;
+                    //obj.CandidatePosition = model.CandidatePosition;
+                    //obj.ResidingProvince = model.ResidingProvince;
+                    //obj.DutyStation = model.DutyStation;
+                    //obj.Gender = model.Gender;
                     obj.PassportNo = model.PassportNo;
-                    obj.Qualification = model.Qualification;
+                    //obj.Qualification = model.Qualification;
                     obj.University = model.University;
-                    obj.DateOfBirth = model.DateOfBirth;
+                    //obj.DateOfBirth = model.DateOfBirth;
                     obj.PlaceOfBirth = model.PlaceOfBirth;
                     obj.TazkiraIssuePlace = model.TazkiraIssuePlace;
                     obj.MaritalStatus = model.MaritalStatus;

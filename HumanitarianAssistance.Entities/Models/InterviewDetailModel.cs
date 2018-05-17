@@ -7,15 +7,20 @@ namespace HumanitarianAssistance.ViewModels.Models
     public class InterviewDetailModel
     {
 		public int InterviewDetailsId { get; set; }
-		public string CandidateName { get; set; }
-		public string CandidatePosition { get; set; }
-		public string ResidingProvince { get; set; }
-		public string DutyStation { get; set; }
-		public int Gender { get; set; }
-		public string PassportNo { get; set; }
-		public string Qualification { get; set; }
+
+        public int EmployeeID { get; set; }
+        public long JobId { get; set; }
+
+        public string CandidateName { get; set; }
+        //public string CandidatePosition { get; set; }
+        public string ResidingProvince { get; set; }
+        public string DutyStation { get; set; }
+        public int Gender { get; set; }
+
+        public string PassportNo { get; set; }
+		//public string Qualification { get; set; }
 		public string University { get; set; }
-		public DateTime DateOfBirth { get; set; }
+		//public DateTime DateOfBirth { get; set; }
 		public string PlaceOfBirth { get; set; }
 		public string TazkiraIssuePlace { get; set; }
 		public string MaritalStatus { get; set; }

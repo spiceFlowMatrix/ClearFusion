@@ -2,6 +2,7 @@
 using DataAccess;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Entities;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models;
@@ -623,7 +624,7 @@ namespace HumanitarianAssistance.Service.Classes
 				//byte[] filepath = Encoding.UTF8.GetBytes(str[1]);
 				string filename = guidname + "." + ex;
 
-				File.WriteAllBytes(@"Documents\" + filename, filepath);
+				File.WriteAllBytes(@"Documents/" + filename, filepath);
 
 				ProjectDocument obj = new ProjectDocument();
 				obj.DocumentGUID = guidname;
@@ -677,10 +678,17 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				var list = await Task.Run(() =>
-					_uow.ProjectDocumentRepository.FindAllAsync(x => x.IsDeleted == false && x.ProjectId == projectid).Result.ToList()
-				);
-				var projectdocumentlist = list.Select(x => new ProjectDocumentModel
+                //var list = await Task.Run(() =>
+                //	_uow.ProjectDocumentRepository.FindAllAsync(x => x.IsDeleted == false && x.ProjectId == projectid).Result.ToList()
+                //);
+
+                var queryResult = EF.CompileAsyncQuery(
+                  (ApplicationDbContext ctx) => ctx.ProjectDocument.Where(x => x.ProjectId == projectid));
+                var list = await Task.Run(() =>
+                    queryResult(_uow.GetDbContext()).ToListAsync().Result
+                );
+               
+                var projectdocumentlist = list.Select(x => new ProjectDocumentModel
 				{
 					ProjectDocumentId = x.ProjectDocumentId,
 					DocumentName = x.DocumentName,
