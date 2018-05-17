@@ -1192,9 +1192,10 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     EmployeeAppraisalDetailsModel objAppraisal = new EmployeeAppraisalDetailsModel();
 
-                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && x.EvaluationStatus.ToLower() != "reject");
+					//var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && (x.EvaluationStatus == null || x.EvaluationStatus == "approved"));
+					var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId);
 
-                    List<EmployeeEvaluationTrainingModel> trainingList = new List<EmployeeEvaluationTrainingModel>();
+					List<EmployeeEvaluationTrainingModel> trainingList = new List<EmployeeEvaluationTrainingModel>();
 
                     List<string> strong = new List<string>();
                     List<string> weak = new List<string>();

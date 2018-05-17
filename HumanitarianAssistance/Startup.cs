@@ -35,6 +35,7 @@ using HumanitarianAssistance.WebAPI;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using HumanitarianAssistance.WebAPI.ChaHub;
 
 namespace HumanitarianAssistance
 { 
@@ -212,7 +213,7 @@ namespace HumanitarianAssistance
         options.AddPolicy(DefaultCorsPolicyName, p =>
         {
           //todo: Get from confiuration
-          p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod();
+          p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
         });
       });
 
@@ -227,8 +228,8 @@ namespace HumanitarianAssistance
 
       //Mapper.Initialize(cfg => cfg.AddProfile<AutoMapperProfile>());
       services.AddRouting();
-    
 
+      services.AddSignalR();
 
     }
 
@@ -276,18 +277,23 @@ namespace HumanitarianAssistance
         RequestPath = new PathString("/Docs")
       });
 
+      
+      app.UseSwagger();
+      app.UseSwaggerUI(c => {
+        c.SwaggerEndpoint("../swagger/v1/swagger.json", "CHA Core API");
+      });
+
+      app.UseSignalR(routes =>
+      {
+        routes.MapHub<LoopyHub>("/chathub");
+      });
+
       app.UseMvc(routes =>
       {
         // SwaggerGen won't find controllers that are routed via this technique.
         routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
 
       });
-      app.UseSwagger();
-      app.UseSwaggerUI(c => {
-        c.SwaggerEndpoint("../swagger/v1/swagger.json", "CHA Core API");
-      });
-     
-
     }
   }
 }
