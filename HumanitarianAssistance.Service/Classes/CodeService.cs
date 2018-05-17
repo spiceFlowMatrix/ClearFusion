@@ -1192,7 +1192,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     EmployeeAppraisalDetailsModel objAppraisal = new EmployeeAppraisalDetailsModel();
 
-                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && x.EvaluationStatus.ToLower() != "reject");
+                    var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && (x.EvaluationStatus == null || x.EvaluationStatus == "approved"));
 
                     List<EmployeeEvaluationTrainingModel> trainingList = new List<EmployeeEvaluationTrainingModel>();
 
