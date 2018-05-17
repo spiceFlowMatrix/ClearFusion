@@ -106,7 +106,7 @@ namespace DataAccess
 			}
 		}
 
-		public IGenericRepository<EmployeeEvaluationTraining> LoggerDetailsRepository
+		public IGenericRepository<LoggerDetails> LoggerDetailsRepository
 		{
             get
             {

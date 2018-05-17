@@ -519,7 +519,7 @@ namespace HumanitarianAssistance.Controllers
     public async Task<object> AddVoucherDetail([FromBody] VoucherDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
+      
       if (user != null)
       {
         var id = user.Id;

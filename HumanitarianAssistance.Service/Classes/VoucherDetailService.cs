@@ -109,14 +109,23 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.CreatedDate = DateTime.UtcNow;
                 obj.IsDeleted = false;
                 await _uow.VoucherDetailRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
+				await _uow.SaveAsync();
 
-                obj.ReferenceNo = officekey + "-" + obj.VoucherNo;
+				obj.ReferenceNo = officekey + "-" + obj.VoucherNo;
                 await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
+				var user = await _uow.UserDetailsRepository.FindAsync(x=>x.AspNetUserId == model.CreatedById);
 
+				LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+				loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
+				loggerObj.IsRead = false;
+				loggerObj.UserName = user.FirstName + " " + user.LastName;
+				loggerObj.UserId = model.CreatedById;
+				loggerObj.LoggedDetail = "Voucher Created";
+				loggerObj.CreatedDate = model.CreatedDate;
 
-                response.StatusCode = StaticResource.successStatusCode;
+				response.LoggerDetailsModel = loggerObj;
+				response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -148,7 +157,17 @@ namespace HumanitarianAssistance.Service.Classes
                     voucherdetailInfo.ModifiedById = model.ModifiedById;
                     voucherdetailInfo.ModifiedDate = model.ModifiedDate;
                     await _uow.VoucherDetailRepository.UpdateAsyn(voucherdetailInfo);
-                    response.StatusCode = StaticResource.successStatusCode;
+
+					//LoggerDetails loggerObj = new LoggerDetails();
+					//loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherUpdate;
+					//loggerObj.IsRead = false;
+					//loggerObj.CreatedById = model.CreatedById;
+					//loggerObj.CreatedDate = model.CreatedDate;
+					//await _uow.LoggerDetailsRepository.AddAsyn(loggerObj);
+
+					await _uow.SaveAsync();
+
+					response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
                 else
