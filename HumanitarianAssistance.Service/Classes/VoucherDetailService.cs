@@ -711,21 +711,25 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.TransactionDate = debit.TransactionDate.ToLocalTime().Date;
                     obj.VoucherNo = debit.VoucherNo;
                     obj.Description = debit?.Description;
-                    obj.AccountName = debit.DebitAccountDetails?.ChartOfAccountCode + " - " + debit.DebitAccountDetails?.AccountName ?? null;
                     obj.DebitAmount = debit?.Amount;
                     obj.DebitAccount = debit?.DebitAccount;
                     obj.Amount = debit.Amount;
+                    obj.CreditAmount = debit?.Amount;
+                    obj.CreditAccount = debit?.CreditAccount;
                     tranlist.Add(obj);
-                    VoucherTransactionModel obj1 = new VoucherTransactionModel();
-                    obj1.TransactionId = debit.TransactionId;
-                    obj1.TransactionDate = debit.TransactionDate.ToLocalTime().Date;
-                    obj1.VoucherNo = debit.VoucherNo;
-                    obj1.Description = debit?.Description;
-                    obj1.AccountName = debit.CreditAccountDetails?.ChartOfAccountCode + " - " + debit.CreditAccountDetails?.AccountName ?? null;
-                    obj1.CreditAmount = debit?.Amount;
-                    obj1.CreditAccount = debit?.CreditAccount;
-                    obj1.Amount = debit.Amount;
-                    tranlist.Add(obj1);
+                    //obj.DebitAccountName = debit.DebitAccountDetails?.ChartOfAccountCode + " - " + debit.DebitAccountDetails?.AccountName ?? null;
+                    //obj.CreditAccountName = debit.CreditAccountDetails?.ChartOfAccountCode + " - " + debit.CreditAccountDetails?.AccountName ?? null;
+
+                    //VoucherTransactionModel obj1 = new VoucherTransactionModel();
+                    //obj1.TransactionId = debit.TransactionId;
+                    //obj1.TransactionDate = debit.TransactionDate.ToLocalTime().Date;
+                    //obj1.VoucherNo = debit.VoucherNo;
+                    //obj1.Description = debit?.Description;
+                    //obj1.AccountName = debit.CreditAccountDetails?.ChartOfAccountCode + " - " + debit.CreditAccountDetails?.AccountName ?? null;
+                    //obj1.CreditAmount = debit?.Amount;
+                    //obj1.CreditAccount = debit?.CreditAccount;
+                    //obj1.Amount = debit.Amount;
+                    //tranlist.Add(obj1);
                 }
 
 
