@@ -114,6 +114,8 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.ReferenceNo = officekey + "-" + obj.VoucherNo;
                 await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
+
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

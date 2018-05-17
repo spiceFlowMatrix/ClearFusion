@@ -91,18 +91,26 @@ namespace DataAccess
         private IGenericRepository<UserDetailOffices> _userOfficesRepository;
         private IGenericRepository<StrongandWeakPoints> _strongandWeakPointsRepository;
         private IGenericRepository<EmployeeEvaluationTraining> _employeeEvaluationTrainingRepository;
+		private IGenericRepository<LoggerDetails> _loggerDetailsRepository;
 
-
-        public UnitOfWork(ApplicationDbContext mschaContext)
+		public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
 
-        public IGenericRepository<EmployeeEvaluationTraining> EmployeeEvaluationTrainingRepository
-        {
+		public IGenericRepository<EmployeeEvaluationTraining> EmployeeEvaluationTrainingRepository
+		{
+			get
+			{
+				return _employeeEvaluationTrainingRepository = _employeeEvaluationTrainingRepository ?? new GenericRepository<EmployeeEvaluationTraining>(_mschaContext);
+			}
+		}
+
+		public IGenericRepository<EmployeeEvaluationTraining> LoggerDetailsRepository
+		{
             get
             {
-                return _employeeEvaluationTrainingRepository = _employeeEvaluationTrainingRepository ?? new GenericRepository<EmployeeEvaluationTraining>(_mschaContext);
+                return _loggerDetailsRepository = _loggerDetailsRepository ?? new GenericRepository<LoggerDetails>(_mschaContext);
             }
         }
 
