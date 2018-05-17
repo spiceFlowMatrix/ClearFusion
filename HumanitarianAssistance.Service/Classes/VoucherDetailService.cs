@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Entities;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -207,14 +208,28 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var documentlist = (from v in await _uow.VoucherDocumentDetailRepository.FindAllAsync(v => v.VoucherNo == VoucherNo)
-                                    where v.IsDeleted == false
-                                    select new VoucherDocumentDetailModel
-                                    {
-                                        DocumentGUID = v.DocumentGUID + v.Extension,
-                                        DocumentName = v.DocumentName,
-                                        //FilePath = Encoding.UTF8.GetString(v.FilePath)
-                                    }).ToList();
+                //var documentlist = (from v in await _uow.VoucherDocumentDetailRepository.FindAllAsync(v => v.VoucherNo == VoucherNo)
+                //                    where v.IsDeleted == false
+                //                    select new VoucherDocumentDetailModel
+                //                    {
+                //                        DocumentGUID = v.DocumentGUID + v.Extension,
+                //                        DocumentName = v.DocumentName,
+                //                        //FilePath = Encoding.UTF8.GetString(v.FilePath)
+                //                    }).ToList();
+
+
+                var queryResult = EF.CompileAsyncQuery(
+                (ApplicationDbContext ctx) => ctx.VoucherDocumentDetail.Where(x => x.VoucherNo == VoucherNo));
+                var list = await Task.Run(() =>
+                    queryResult(_uow.GetDbContext()).ToListAsync().Result
+                );
+
+                var documentlist = list.Select(x => new VoucherDocumentDetailModel
+                {
+                    DocumentGUID = x.DocumentGUID + x.Extension,
+                    DocumentName = x.DocumentName,
+                }).ToList();
+
                 response.data.VoucherDocumentDetailList = documentlist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -242,7 +257,7 @@ namespace HumanitarianAssistance.Service.Classes
                 //byte[] filepath = Encoding.UTF8.GetBytes(str[1]);
                 string filename = guidname + "." + ex;
 
-                File.WriteAllBytes(@"Documents\" + filename, filepath);
+                File.WriteAllBytes(@"Documents/" + filename, filepath);
 
                 //VoucherDocumentDetail obj = _mapper.Map<VoucherDocumentDetail>(model);
                 VoucherDocumentDetail obj = new VoucherDocumentDetail();
@@ -485,7 +500,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                 obj1.CurrencyId = transactions.CurrencyId;
                                                 obj.Project = v.ProjectDetails?.Description ?? null;
                                                 obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-												obj.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
+                                                obj.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
                                                 obj1.CreditAmount = 0;
                                                 obj1.DebitAmount = transactions?.Amount ?? 0 * exchangeRate;
                                                 listJournalView.Add(obj1);
@@ -598,7 +613,7 @@ namespace HumanitarianAssistance.Service.Classes
                                        select new AccountDetailModel
                                        {
                                            AccountCode = c.AccountCode,
-                                           AccountName = c.ChartOfAccountCode + " - " +c.AccountName,
+                                           AccountName = c.ChartOfAccountCode + " - " + c.AccountName,
                                            ChartOfAccountCode = c.ChartOfAccountCode
                                        }).ToList();
                 response.data.AccountDetailList = accountcodelist;
@@ -1297,8 +1312,8 @@ namespace HumanitarianAssistance.Service.Classes
                 }
 
                 // Till Now Final Ledger List is having all transactions of given date range of all accounts passed in accountList && newlist is having all previous transactions sum  account wise.
-                
-                
+
+
                 // For opening And Closing Amount Calculation
                 double? creditSum = 0, debitSum = 0;
                 creditSum = finalLedgerList.Where(x => x.CreditAmount != 0).Sum(x => x.CreditAmount);
@@ -1624,7 +1639,7 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         if (obj.CreditAccountlist.Count > 0 || obj.DebitAccountlist.Count > 0)
                             ledgerList.Add(obj);
-                    }                    
+                    }
                 }
 
                 DateTime defaultdate = new DateTime(DateTime.UtcNow.Year, 1, 1);
@@ -1638,7 +1653,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     foreach (var creditList in items.CreditAccountlist)
                     {
-                        var voucherOfficeId = await _uow.VoucherDetailRepository.FindAsync(x=>x.IsDeleted == false && x.VoucherNo == creditList.VoucherNo);
+                        var voucherOfficeId = await _uow.VoucherDetailRepository.FindAsync(x => x.IsDeleted == false && x.VoucherNo == creditList.VoucherNo);
                         foreach (var offices in model.OfficesList)
                         {
                             if (offices == voucherOfficeId.OfficeId)
@@ -1874,7 +1889,7 @@ namespace HumanitarianAssistance.Service.Classes
                     //		}
                     //	}
                     //}
-                    
+
                 }
                 response.data.TrailBlanceList = finalLedgerList;
                 response.StatusCode = StaticResource.successStatusCode;
