@@ -19,6 +19,7 @@ namespace DataAccess.DbEntities
         public float? CurrencyRate { get; set; }
         public List<ExchangeRate> ExchangeRateListFrom { get; set; }
         public List<ExchangeRate> ExchangeRateListTo { get; set; }
+		public bool Status { get; set; }
 
-    }
+	}
 }
