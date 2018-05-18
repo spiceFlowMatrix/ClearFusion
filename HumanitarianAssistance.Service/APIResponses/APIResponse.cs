@@ -17,7 +17,19 @@ namespace HumanitarianAssistance.Service.APIResponses
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public data data { get; set; }
-    }
+		public LoggerDetailsModel LoggerDetailsModel { get; set; }
+	}
+
+	public class LoggerDetailsModel
+	{
+		public int LoggerDetailsId { get; set; }
+		public int NotificationId { get; set; }
+		public bool IsRead { get; set; }
+		public string UserName { get; set; }
+		public string UserId { get; set; }
+		public string LoggedDetail { get; set; }
+		public DateTime CreatedDate { get; set; }
+	}
 
 	public class data
 	{

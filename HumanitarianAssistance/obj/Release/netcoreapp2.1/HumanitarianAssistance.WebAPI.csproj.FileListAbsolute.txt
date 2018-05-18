@@ -1,0 +1,4 @@
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Release\netcoreapp2.1\HumanitarianAssistance.WebAPI.csprojResolveAssemblyReference.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Release\netcoreapp2.1\HumanitarianAssistance.WebAPI.csproj.CoreCompileInputs.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Release\netcoreapp2.1\HumanitarianAssistance.WebAPI.RazorAssemblyInfo.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Release\netcoreapp2.1\HumanitarianAssistance.WebAPI.RazorAssemblyInfo.cs

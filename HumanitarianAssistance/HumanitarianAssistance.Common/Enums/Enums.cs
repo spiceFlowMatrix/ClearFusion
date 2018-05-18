@@ -86,4 +86,15 @@ namespace HumanitarianAssistance.Common.Enums
     Female = 2,
     Other = 3
   }
+
+  public enum LoggerEnum
+  {
+    VoucherCreated = 1,
+    VoucherUpdate = 2,
+    VoucherDeleted = 3,
+    EmployeeCreated = 4,
+    EmployeeUpdate = 5,
+    EmployeeDeleted = 6
+  }
+
 }

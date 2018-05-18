@@ -92,9 +92,10 @@ namespace DataAccess
         IGenericRepository<UserDetailOffices> UserOfficesRepository { get; }
         IGenericRepository<StrongandWeakPoints> StrongandWeakPointsRepository { get; }
         IGenericRepository<EmployeeEvaluationTraining> EmployeeEvaluationTrainingRepository { get; }
+		IGenericRepository<LoggerDetails> LoggerDetailsRepository { get; }
 
 
-        void Save();
+		void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
 

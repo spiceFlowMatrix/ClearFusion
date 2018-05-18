@@ -4539,8 +4539,10 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var lst = await _uow.GetDbContext().Advances.Where(x => x.OfficeId == OfficeId && x.AdvanceDate.Date.Month == month && x.AdvanceDate.Date.Year == year && x.IsDeleted == false).ToListAsync();
-                if (lst.Count > 0)
+				var lst = await _uow.AdvancesRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.IsDeleted == false);
+				lst = lst.Where(x => x.AdvanceDate.Date.Month == month && x.AdvanceDate.Date.Year == year).ToList();
+				//var lst = await _uow.GetDbContext().Advances.Where(x => x.OfficeId == OfficeId && x.AdvanceDate.Month == month && x.AdvanceDate.Year == year && x.IsDeleted == false).ToListAsync();
+				if (lst.Count > 0)
                 {
                     List<AdvanceModel> AdvanceList = new List<AdvanceModel>();
                     foreach (var item in lst)
