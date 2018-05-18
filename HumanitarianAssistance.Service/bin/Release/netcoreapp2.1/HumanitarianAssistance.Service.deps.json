@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "f1609b35d3444ae7ca321608ebd43d1716d5d723"
+    "signature": "3c19a1035e0148333af6216fc986ab932da5ee1b"
   },
   "compilationOptions": {},
   "targets": {
@@ -2790,29 +2790,29 @@
           }
         }
       },
-      "Npgsql/3.2.7": {
+      "Npgsql/3.2.5": {
         "dependencies": {
           "System.Threading.Tasks.Extensions": "4.5.0-rc1"
         },
         "runtime": {
           "lib/netstandard2.0/Npgsql.dll": {
-            "assemblyVersion": "3.2.7.0",
-            "fileVersion": "3.2.7.0"
+            "assemblyVersion": "3.2.5.0",
+            "fileVersion": "3.2.5.0"
           }
         }
       },
-      "Npgsql.EntityFrameworkCore.PostgreSQL/2.0.2": {
+      "Npgsql.EntityFrameworkCore.PostgreSQL/2.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "2.1.0-rc1-final",
           "Microsoft.EntityFrameworkCore.Relational": "2.1.0-rc1-final",
           "Microsoft.Extensions.DependencyInjection": "2.1.0-rc1-final",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.0-rc1-final",
-          "Npgsql": "3.2.7"
+          "Npgsql": "3.2.5"
         },
         "runtime": {
           "lib/netstandard2.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll": {
-            "assemblyVersion": "2.0.2.0",
-            "fileVersion": "2.0.2.0"
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
           }
         }
       },
@@ -2823,8 +2823,8 @@
           "Microsoft.EntityFrameworkCore.Relational.Design": "1.1.2",
           "Microsoft.Extensions.DependencyInjection": "2.1.0-rc1-final",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.0-rc1-final",
-          "Npgsql": "3.2.7",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "2.0.2"
+          "Npgsql": "3.2.5",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "2.0.0"
         },
         "runtime": {
           "lib/netstandard1.3/Npgsql.EntityFrameworkCore.PostgreSQL.Design.dll": {
@@ -4318,7 +4318,7 @@
           "Microsoft.AspNetCore.All": "2.1.0-rc1-final",
           "Microsoft.EntityFrameworkCore.Tools": "2.1.0-rc1-final",
           "Microsoft.EntityFrameworkCore.Tools.DotNet": "2.0.0",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "2.0.2",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "2.0.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.1"
         },
         "runtime": {
@@ -5165,14 +5165,14 @@
     "Microsoft.Data.Edm/5.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-P/d8DxA6MFHroBEn/jW0LMQSIKnsRRibrZtRCLfov2boQfrQ1R1BVgkJ5oIhcQsOm0l4POv+I2ny6RBsclNbOw==",
+      "sha512": "sha512-sHZTf9QoX4YPgqOM11t2GRiMlseUULs5HRDDKN2Zr50zhAm9SLm2ysZCaQb2+2Mwb+erZqtIb4/wY7wGxurkAQ==",
       "path": "microsoft.data.edm/5.8.2",
       "hashPath": "microsoft.data.edm.5.8.2.nupkg.sha512"
     },
     "Microsoft.Data.OData/5.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oEIUtXcRiKogF0yZxA+QdgxoBJ34989qL/5xOSrTfxAhzNJV5Hw6DRdWgUCpeXFMoJUQx7ptbHCN+My/LCQfsg==",
+      "sha512": "sha512-WyFV7Ks8uQ01JGJ1gzvhl7Q8IHlp7/EoIvKPOQ/qn0wMwgohC7B5sVWI8GJs5GQbWLx8KYDMllADTp9U8ZjUgQ==",
       "path": "microsoft.data.odata/5.8.2",
       "hashPath": "microsoft.data.odata.5.8.2.nupkg.sha512"
     },
@@ -5715,19 +5715,19 @@
       "path": "newtonsoft.json.bson/1.0.1",
       "hashPath": "newtonsoft.json.bson.1.0.1.nupkg.sha512"
     },
-    "Npgsql/3.2.7": {
+    "Npgsql/3.2.5": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-CxSXzWn/MNbHX8L1xfQSzrZfJEA2Yt5cvT27Az5abmvbqtUY1ab6xAkmBj5FfLyKCIYEnmSrxn1IY1+Jy13oFA==",
-      "path": "npgsql/3.2.7",
-      "hashPath": "npgsql.3.2.7.nupkg.sha512"
+      "sha512": "sha512-89z5pHuLuwjkHz/cQLuM/YxlepR/0NKJP+Cvu8z1cAMv7AdKZnN5leQqV6HxIQDR245Xal1w5OH7kDb9hDRupg==",
+      "path": "npgsql/3.2.5",
+      "hashPath": "npgsql.3.2.5.nupkg.sha512"
     },
-    "Npgsql.EntityFrameworkCore.PostgreSQL/2.0.2": {
+    "Npgsql.EntityFrameworkCore.PostgreSQL/2.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-VA2eAmUwtfteaJ05jgVyI6p7r3NcJsaOZuFPQR3uWRfZZUZ1tdQBISPBIFoD81PYG2SwivudPF6/TfPAgRTJtQ==",
-      "path": "npgsql.entityframeworkcore.postgresql/2.0.2",
-      "hashPath": "npgsql.entityframeworkcore.postgresql.2.0.2.nupkg.sha512"
+      "sha512": "sha512-saKCNK8A5OW3sUhL/tvYqNyKUK7AbIQlZUVmjn4Fw9wstyopECeF/9Er1fexRLpWev0/H9fUzFclTrXm+omsag==",
+      "path": "npgsql.entityframeworkcore.postgresql/2.0.0",
+      "hashPath": "npgsql.entityframeworkcore.postgresql.2.0.0.nupkg.sha512"
     },
     "Npgsql.EntityFrameworkCore.PostgreSQL.Design/1.1.1": {
       "type": "package",
@@ -6495,7 +6495,7 @@
     "System.Spatial/5.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-0RfZZJ8RlrfjoBPAF6pczX4Nd2kyLM8EX1PCP5Rqs/jOhJBUPYhpXjIsVAYN7kocj9IJ9XoJWAxWgXIDtJY2Ag==",
+      "sha512": "sha512-kjspKkA3D/rCkB9ut0UM0Qj/zgc+2tHxSxBhlgbNLkHTpE4APeziuL8alIPciyU+QqAKaKAmsZgtLW/BVN+9CA==",
       "path": "system.spatial/5.8.2",
       "hashPath": "system.spatial.5.8.2.nupkg.sha512"
     },
