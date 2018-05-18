@@ -43,9 +43,12 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string FinalResultQues4 { get; set; }
 		public string FinalResultQues5 { get; set; }
 		public string DirectSupervisor { get; set; }
-		public string AppraisalTeamMember1 { get; set; }
-		public string AppraisalTeamMember2 { get; set; }
-		public string CommentsByEmployee { get; set; }
+		//public string AppraisalTeamMember1 { get; set; }
+		//public string AppraisalTeamMember2 { get; set; }
+
+        public List<EmployeeAppraisalTeamMemberModel> EmployeeAppraisalTeamMemberList { get; set; }
+
+        public string CommentsByEmployee { get; set; }
         public string EvaluationStatus { get; set; }
 
     }
