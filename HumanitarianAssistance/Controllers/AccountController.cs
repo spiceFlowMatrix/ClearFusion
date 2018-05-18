@@ -588,6 +588,21 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<object> AddVoucherTransactionDetail([FromBody] List<VoucherTransactionModel> model)
+    //{
+    //  APIResponse apiRespone = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    APIResponse response = await _ivoucherDetail.AddVoucherTransactionDetail(model, id);
+    //  }
+    //  return apiRespone;
+    //}
+
+
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> AddVoucherTransactionDetail([FromBody] VoucherTransactionModel model)
@@ -605,6 +620,7 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> EditVoucherTransactionDetail([FromBody] VoucherTransactionModel model)
@@ -621,6 +637,22 @@ namespace HumanitarianAssistance.Controllers
       APIResponse response = await _ivoucherDetail.EditVoucherTransactionDetail(model);
       return response;
     }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteVoucherTransactionDetail(int transactionId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var userid = user.Id;
+        response = await _ivoucherDetail.DeleteVoucherTransactionDetail(transactionId, userid);
+      }
+      return response;
+    }
+
+
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
