@@ -1,4 +1,0 @@
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Release\netcoreapp2.1\DataAccess.csprojResolveAssemblyReference.cache
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Release\netcoreapp2.1\DataAccess.csproj.CoreCompileInputs.cache
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Release\netcoreapp2.1\DataAccess.AssemblyInfoInputs.cache
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Release\netcoreapp2.1\DataAccess.AssemblyInfo.cs
