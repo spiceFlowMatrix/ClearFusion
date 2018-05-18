@@ -1137,7 +1137,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                         appraisalTeamMemberList.Add(obj);
                     }
-                    await _uow.GetDbContext().EmployeeEvaluationTraining.AddRangeAsync(trainingList);
+                    await _uow.GetDbContext().EmployeeAppraisalTeamMember.AddRangeAsync(appraisalTeamMemberList);
 
                     //EmployeeEvaluation objEval = new EmployeeEvaluation();
 
