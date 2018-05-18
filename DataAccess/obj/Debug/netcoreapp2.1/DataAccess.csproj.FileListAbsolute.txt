@@ -28,4 +28,4 @@ D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAcce
 D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.AssemblyInfo.cs
 D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.dll
 D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.pdb
-D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csproj.CopyComplete
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csprojResolveAssemblyReference.cache

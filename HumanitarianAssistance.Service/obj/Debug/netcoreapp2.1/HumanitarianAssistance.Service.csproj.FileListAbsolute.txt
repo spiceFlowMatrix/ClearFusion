@@ -28,5 +28,4 @@ D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\ne
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Service.AssemblyInfo.cs
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Service.dll
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Service.pdb
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Service.csprojAssemblyReference.cache
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Service.csproj.CopyComplete
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Service\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Service.csprojResolveAssemblyReference.cache
