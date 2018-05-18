@@ -14,3 +14,18 @@ D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAcc
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csproj.CopyComplete
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.pdb
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.deps.json
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.runtimeconfig.json
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.runtimeconfig.dev.json
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.dll
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.pdb
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.Common.dll
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.dll
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.pdb
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.Common.pdb
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csproj.CoreCompileInputs.cache
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.AssemblyInfoInputs.cache
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.AssemblyInfo.cs
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.dll
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.pdb
+D:\Dayuser\clear-fusion\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csprojResolveAssemblyReference.cache
