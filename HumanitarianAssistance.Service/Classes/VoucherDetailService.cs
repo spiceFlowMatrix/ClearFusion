@@ -702,20 +702,22 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var transactionlist = await _uow.GetDbContext().VoucherTransactionDetails.Include(x => x.CreditAccountDetails).Include(x => x.DebitAccountDetails).Where(x => x.VoucherNo == VoucherNo).ToListAsync();
+                var transactionlist = await _uow.GetDbContext().VoucherTransactionDetails.Include(x => x.CreditAccountDetails).Include(x => x.DebitAccountDetails).Where(x => x.VoucherNo == VoucherNo && x.IsDeleted == false).ToListAsync();
                 IList<VoucherTransactionModel> tranlist = new List<VoucherTransactionModel>();
-                foreach (var debit in transactionlist)
+                foreach (var item in transactionlist)
                 {
                     VoucherTransactionModel obj = new VoucherTransactionModel();
-                    obj.TransactionId = debit.TransactionId;
-                    obj.TransactionDate = debit.TransactionDate.ToLocalTime().Date;
-                    obj.VoucherNo = debit.VoucherNo;
-                    obj.Description = debit?.Description;
-                    obj.DebitAmount = debit?.Amount;
-                    obj.DebitAccount = debit?.DebitAccount;
-                    obj.Amount = debit.Amount;
-                    obj.CreditAmount = debit?.Amount;
-                    obj.CreditAccount = debit?.CreditAccount;
+                    obj.TransactionId = item.TransactionId;
+                    obj.TransactionDate = item.TransactionDate.ToLocalTime().Date;
+                    obj.VoucherNo = item.VoucherNo;
+                    obj.Description = item?.Description;
+                    obj.DebitAmount = item?.Amount;
+                    obj.DebitAccount = item?.DebitAccount;
+                    obj.Amount = item.Amount;
+                    obj.CreditAmount = item?.Amount;
+                    obj.CreditAccount = item?.CreditAccount;
+                    obj.CreatedDate = item.CreatedDate;
+                    obj.ModifiedDate = item.ModifiedDate;
                     tranlist.Add(obj);
 
                     //obj.DebitAccountName = debit.DebitAccountDetails?.ChartOfAccountCode + " - " + debit.DebitAccountDetails?.AccountName ?? null;
@@ -751,7 +753,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 //var list= await PaginatedList<VoucherTransactionModel>.CreateAsync(tranlist.AsQueryable<VoucherTransactionModel>(), 1, 10);
 
-                response.data.VoucherTransactionList = tranlist;
+                response.data.VoucherTransactionList = tranlist.OrderByDescending(x => x.CreatedDate).ThenBy(x => x.ModifiedDate).ToList();
                 //response.data.VoucherTransactionList = list;
 
                 response.StatusCode = StaticResource.successStatusCode;
@@ -767,30 +769,55 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
 
+        //public async Task<APIResponse> AddVoucherTransactionDetail(List<VoucherTransactionModel> model, string userId)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        List<VoucherTransactionDetails> voucherTransactionList = new List<VoucherTransactionDetails>();
+        //        foreach (var item in model)
+        //        {
+        //            VoucherTransactionDetails obj = new VoucherTransactionDetails();
+        //            obj.TransactionId = item.TransactionId;
+        //            obj.TransactionDate = item.TransactionDate.ToLocalTime().Date;
+        //            obj.VoucherNo = item.VoucherNo;
+        //            obj.Description = item.Description;
+        //            obj.DebitAccount = item.DebitAccount;
+        //            obj.CreditAccount = item?.CreditAccount;
+        //            obj.Amount = item.Amount;
+        //            obj.CreatedById = userId;
+        //            obj.CreatedDate = DateTime.UtcNow;
+        //            obj.IsDeleted = false;
+
+        //            voucherTransactionList.Add(obj);
+        //        }
+        //        await _uow.GetDbContext().VoucherTransactionDetails.AddRangeAsync(voucherTransactionList);
+        //        await _uow.SaveAsync();
+
+        //        response.StatusCode = StaticResource.successStatusCode;
+        //        response.Message = "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //    }
+        //    return response;
+        //}
+
+
         public async Task<APIResponse> AddVoucherTransactionDetail(VoucherTransactionModel model)
         {
             APIResponse response = new APIResponse();
             try
             {
-                //var transactionDate = model.TransactionDate.ToLocalTime().Date;
-                //var isexistExchangeRate = await _uow.ExchangeRateRepository.FindAsync(x => x.Date.Date == transactionDate);
-                //var isexistExchangeRate = await _uow.GetDbContext().ExchangeRates.FirstOrDefaultAsync(x => x.Date.Date == transactionDate.Date);
-                //if (isexistExchangeRate != null)
-                //{
                 VoucherTransactionDetails obj = _mapper.Map<VoucherTransactionDetails>(model);
-                obj.CreatedById = model.CreatedById;
-                obj.CreatedDate = DateTime.UtcNow;
-                obj.IsDeleted = false;
-                await _uow.VoucherTransactionDetailsRepository.AddAsyn(obj);
+
+                await _uow.GetDbContext().VoucherTransactionDetails.AddAsync(obj);
                 await _uow.SaveAsync();
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
-                //}
-                //else
-                //{
-                //    response.StatusCode = StaticResource.failStatusCode;
-                //    response.Message = "Exchange Rate is not diffined for this date.";
-                //}
             }
             catch (Exception ex)
             {
@@ -799,6 +826,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
 
         public async Task<APIResponse> EditVoucherTransactionDetail(VoucherTransactionModel model)
         {
@@ -832,6 +860,38 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+
+        public async Task<APIResponse> DeleteVoucherTransactionDetail(int transactionId, string modifiedById)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var transactionInfo = await _uow.VoucherTransactionDetailsRepository.FindAsync(d => d.TransactionId == transactionId);
+                if (transactionInfo != null)
+                {
+                    transactionInfo.ModifiedById = modifiedById;
+                    transactionInfo.ModifiedDate = DateTime.UtcNow;
+                    transactionInfo.IsDeleted = true;
+                    await _uow.VoucherTransactionDetailsRepository.UpdateAsyn(transactionInfo);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
 
         //public async Task<APIResponse> GetAllLedgerDetails()
         //{
