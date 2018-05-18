@@ -26,48 +26,48 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmailType> EmailType { get; set; }
         public DbSet<EmailSettingDetail> EmailSettingDetail { get; set; }
 
-		public DbSet<EmployeeAnalyticalDetail> EmployeeAnalyticalDetail { get; set; }
+        public DbSet<EmployeeAnalyticalDetail> EmployeeAnalyticalDetail { get; set; }
 
-		public DbSet<EmployeeDetail> EmployeeDetail { get; set; }
+        public DbSet<EmployeeDetail> EmployeeDetail { get; set; }
 
         public DbSet<EmployeeDocumentDetail> EmployeeDocumentDetail { get; set; }
-		public DbSet<EmployeePaymentTypes> EmployeePaymentTypes { get; set; }
-		//public DbSet<EmployeeSalary> EmployeeSalary { get; set; }
+        public DbSet<EmployeePaymentTypes> EmployeePaymentTypes { get; set; }
+        //public DbSet<EmployeeSalary> EmployeeSalary { get; set; }
 
-		public DbSet<EmployeeHistoryDetail> EmployeeHistoryDetail { get; set; }
-		
-		public DbSet<EmployeeMonthlyPayroll> EmployeeMonthlyPayroll { get; set; }
-		
+        public DbSet<EmployeeHistoryDetail> EmployeeHistoryDetail { get; set; }
 
-		//public DbSet<testtable> testtable { get; set; }
+        public DbSet<EmployeeMonthlyPayroll> EmployeeMonthlyPayroll { get; set; }
 
-		//public DbSet<EmployeeLeaveDetail> EmployeeLeaveDetail { get; set; }
 
-		//public DbSet<EmployeePayrollDetail> EmployeePayrollDetail { get; set; }
+        //public DbSet<testtable> testtable { get; set; }
 
-		//public DbSet<EmployeeSalaryBudgetDetail> EmployeeSalaryBudgetDetail { get; set; }
+        //public DbSet<EmployeeLeaveDetail> EmployeeLeaveDetail { get; set; }
 
-		//public DbSet<ExchangeRateDetail> ExchangeRateDetail { get; set; }
+        //public DbSet<EmployeePayrollDetail> EmployeePayrollDetail { get; set; }
 
-		//public DbSet<ExpendableStoreItemDetail> ExpendableStoreItemDetail { get; set; }
+        //public DbSet<EmployeeSalaryBudgetDetail> EmployeeSalaryBudgetDetail { get; set; }
 
-		//public DbSet<EXRate_> EXRate_ { get; set; }
+        //public DbSet<ExchangeRateDetail> ExchangeRateDetail { get; set; }
 
-		//public DbSet<FuelGeneratorDetail> FuelGeneratorDetail { get; set; }
+        //public DbSet<ExpendableStoreItemDetail> ExpendableStoreItemDetail { get; set; }
 
-		//public DbSet<FuelTransportDetail> FuelTransportDetail { get; set; }
+        //public DbSet<EXRate_> EXRate_ { get; set; }
 
-		//public DbSet<HiringCandidateDetail> HiringCandidateDetail { get; set; }
+        //public DbSet<FuelGeneratorDetail> FuelGeneratorDetail { get; set; }
 
-		//public DbSet<HiringDetail> HiringDetail { get; set; }
+        //public DbSet<FuelTransportDetail> FuelTransportDetail { get; set; }
 
-		//public DbSet<InterviewHiringCandidateDetail> InterviewHiringCandidateDetail { get; set; }
+        //public DbSet<HiringCandidateDetail> HiringCandidateDetail { get; set; }
 
-		//public DbSet<ItemCodeDemo> ItemCodeDemo { get; set; }
+        //public DbSet<HiringDetail> HiringDetail { get; set; }
 
-		//public DbSet<JobEntryCategoryDetail> JobEntryCategoryDetail { get; set; }
+        //public DbSet<InterviewHiringCandidateDetail> InterviewHiringCandidateDetail { get; set; }
 
-		public DbSet<JournalDetail> JournalDetail { get; set; }
+        //public DbSet<ItemCodeDemo> ItemCodeDemo { get; set; }
+
+        //public DbSet<JobEntryCategoryDetail> JobEntryCategoryDetail { get; set; }
+
+        public DbSet<JournalDetail> JournalDetail { get; set; }
 
         //public DbSet<LogisticProjectDetail> LogisticProjectDetail { get; set; }
 
@@ -97,7 +97,7 @@ namespace HumanitarianAssistance.Entities
 
         //public DbSet<PMUActivityDetail> PMUActivityDetail { get; set; }
 
-       // public DbSet<PMUActivityDocumentDetail> PMUActivityDocumentDetail { get; set; }
+        // public DbSet<PMUActivityDocumentDetail> PMUActivityDocumentDetail { get; set; }
 
         //public DbSet<PMUBeneficiaryDetail> PMUBeneficiaryDetail { get; set; }
 
@@ -134,7 +134,7 @@ namespace HumanitarianAssistance.Entities
 
         //public DbSet<StoreSourceCodeDetail> StoreSourceCodeDetail { get; set; }
 
-       // public DbSet<StoreVoucherDetail> StoreVoucherDetail { get; set; }
+        // public DbSet<StoreVoucherDetail> StoreVoucherDetail { get; set; }
 
         //public DbSet<TempStoreDocumentDetail> TempStoreDocumentDetail { get; set; }
 
@@ -156,16 +156,16 @@ namespace HumanitarianAssistance.Entities
         public DbSet<AccountType> AccountType { get; set; }
         public DbSet<VoucherType> VoucherType { get; set; }
         public DbSet<VoucherTransactionDetails> VoucherTransactionDetails { get; set; }
-		//public DbSet<AnalyticalType> AnalyticalType { get; set; }
-		public DbSet<AnalyticalDetail> AnalyticalDetail { get; set; }
+        //public DbSet<AnalyticalType> AnalyticalType { get; set; }
+        public DbSet<AnalyticalDetail> AnalyticalDetail { get; set; }
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
-		public DbSet<ProjectDetails> ProjectDetails { get; set; }
-		public DbSet<ProjectBudget> ProjectBudget { get; set; }
-		public DbSet<ProjectBudgetLine> ProjectBudgetLine { get; set; }
-		public DbSet<BudgetReceivable> BudgetReceivable { get; set; }
-		public DbSet<BudgetReceivedAmount> BudgetReceivedAmount { get; set; }
-		public DbSet<BudgetPayable> BudgetPayable { get; set; }
-		public DbSet<BudgetPayableAmount> BudgetPayableAmount { get; set; }		
+        public DbSet<ProjectDetails> ProjectDetails { get; set; }
+        public DbSet<ProjectBudget> ProjectBudget { get; set; }
+        public DbSet<ProjectBudgetLine> ProjectBudgetLine { get; set; }
+        public DbSet<BudgetReceivable> BudgetReceivable { get; set; }
+        public DbSet<BudgetReceivedAmount> BudgetReceivedAmount { get; set; }
+        public DbSet<BudgetPayable> BudgetPayable { get; set; }
+        public DbSet<BudgetPayableAmount> BudgetPayableAmount { get; set; }
         public DbSet<CodeType> CodeType { get; set; }
         public DbSet<ProvinceDetails> ProvinceDetails { get; set; }
         public DbSet<CountryDetails> CountryDetails { get; set; }
@@ -173,9 +173,9 @@ namespace HumanitarianAssistance.Entities
         public DbSet<QualificationDetails> QualificationDetails { get; set; }
         public DbSet<ProfessionDetails> ProfessionDetails { get; set; }
         public DbSet<JobHiringDetails> JobHiringDetails { get; set; }
-		//public DbSet<InterviewRoundTypeMaster> InterviewRoundTypeMaster { get; set; }
-		public DbSet<BudgetLineEmployees> BudgetLineEmployees { get; set; }
-		public DbSet<InterviewScheduleDetails> InterviewScheduleDetails { get; set; }
+        //public DbSet<InterviewRoundTypeMaster> InterviewRoundTypeMaster { get; set; }
+        public DbSet<BudgetLineEmployees> BudgetLineEmployees { get; set; }
+        public DbSet<InterviewScheduleDetails> InterviewScheduleDetails { get; set; }
         //public DbSet<InterviewFeedbackDetails> InterviewFeedbackDetails { get; set; }
         public DbSet<EmployeeSalaryDetails> EmployeeSalaryDetails { get; set; }
         public DbSet<LeaveReasonDetail> LeaveReasonDetail { get; set; }
@@ -183,11 +183,11 @@ namespace HumanitarianAssistance.Entities
         public DbSet<FinancialYearDetail> FinancialYearDetail { get; set; }
         public DbSet<TaskMaster> TaskMaster { get; set; }
         public DbSet<ActivityMaster> ActivityMaster { get; set; }
-		public DbSet<ProjectDocument> ProjectDocument { get; set; }
+        public DbSet<ProjectDocument> ProjectDocument { get; set; }
         public DbSet<BudgetLineType> BudgetLineType { get; set; }
         public DbSet<EmployeeType> EmployeeType { get; set; }
-		public DbSet<EmployeeContractType> EmployeeContractType { get; set; }
-		public DbSet<AssignActivity> AssignActivity { get; set; }
+        public DbSet<EmployeeContractType> EmployeeContractType { get; set; }
+        public DbSet<AssignActivity> AssignActivity { get; set; }
         public DbSet<AssignActivityApproveBy> AssignActivityApproveBy { get; set; }
         public DbSet<AssignActivityFeedback> AssignActivityFeedback { get; set; }
         public DbSet<EmployeeProfessionalDetail> EmployeeProfessionalDetail { get; set; }
@@ -200,45 +200,46 @@ namespace HumanitarianAssistance.Entities
         public DbSet<HolidayWeeklyDetails> HolidayWeeklyDetails { get; set; }
         public DbSet<SalaryHeadDetails> SalaryHeadDetails { get; set; }
         public DbSet<EmployeePayroll> EmployeePayroll { get; set; }
-		public DbSet<EmployeePensionRate> EmployeePensionRate { get; set; }
-		public DbSet<ContractTypeContent> ContractTypeContent { get; set; }
-		public DbSet<AppraisalGeneralQuestions> AppraisalGeneralQuestions { get; set; }
-		public DbSet<EmployeeAppraisalDetails> EmployeeAppraisalDetails { get; set; }
-		public DbSet<EmployeeAppraisalQuestions> EmployeeAppraisalQuestions { get; set; }
-		public DbSet<EmployeeEvaluation> EmployeeEvaluation { get; set; }
-		public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }
-		public DbSet<Advances> Advances { get; set; }
+        public DbSet<EmployeePensionRate> EmployeePensionRate { get; set; }
+        public DbSet<ContractTypeContent> ContractTypeContent { get; set; }
+        public DbSet<AppraisalGeneralQuestions> AppraisalGeneralQuestions { get; set; }
+        public DbSet<EmployeeAppraisalDetails> EmployeeAppraisalDetails { get; set; }
+        public DbSet<EmployeeAppraisalQuestions> EmployeeAppraisalQuestions { get; set; }
+        public DbSet<EmployeeEvaluation> EmployeeEvaluation { get; set; }
+        public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }
+        public DbSet<Advances> Advances { get; set; }
 
-		public DbSet<InterviewDetails> InterviewDetails { get; set; }
-		public DbSet<InterviewLanguages> InterviewLanguages { get; set; }
-		public DbSet<InterviewTechnicalQuestion> InterviewTechnicalQuestion { get; set; }
-		public DbSet<InterviewTrainings> InterviewTrainings { get; set; }
-		public DbSet<TechnicalQuestion> TechnicalQuestion { get; set; }
+        public DbSet<InterviewDetails> InterviewDetails { get; set; }
+        public DbSet<InterviewLanguages> InterviewLanguages { get; set; }
+        public DbSet<InterviewTechnicalQuestion> InterviewTechnicalQuestion { get; set; }
+        public DbSet<InterviewTrainings> InterviewTrainings { get; set; }
+        public DbSet<TechnicalQuestion> TechnicalQuestion { get; set; }
 
         public DbSet<ExistInterviewDetails> ExistInterviewDetails { get; set; }
 
-		public DbSet<UserDetailOffices> UserDetailOffices { get; set; }
+        public DbSet<UserDetailOffices> UserDetailOffices { get; set; }
 
-		public DbSet<StrongandWeakPoints> StrongandWeakPoints { get; set; }
-		public DbSet<EmployeeEvaluationTraining> EmployeeEvaluationTraining { get; set; }
+        public DbSet<StrongandWeakPoints> StrongandWeakPoints { get; set; }
+        public DbSet<EmployeeEvaluationTraining> EmployeeEvaluationTraining { get; set; }
+        public DbSet<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMember { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });            
+            modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
             modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);
             modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.DebitAccountDetails).WithMany(b => b.DebitAccountlist);
             modelBuilder.Entity<VoucherTransactionDetails>().HasOne(p => p.VoucherDetails).WithMany(b => b.VoucherTransactionDetails);
             modelBuilder.Entity<ExchangeRate>().HasOne(x => x.CurrencyFrom).WithMany(b => b.ExchangeRateListFrom);
             modelBuilder.Entity<ExchangeRate>().HasOne(x => x.CurrencyTo).WithMany(b => b.ExchangeRateListTo);
-			//modelBuilder.Entity<EmployeePaymentType>().HasIndex(b => b.EmployeeID).IsUnique(false);
-			//modelBuilder.Entity<EmployeePaymentType>().HasIndex(b => b.EmployeeID).IsUnique(false);
+            //modelBuilder.Entity<EmployeePaymentType>().HasIndex(b => b.EmployeeID).IsUnique(false);
+            //modelBuilder.Entity<EmployeePaymentType>().HasIndex(b => b.EmployeeID).IsUnique(false);
 
-			//Non Clustered Index
-			modelBuilder.Entity<BudgetLineEmployees>().HasIndex(t => new { t.OfficeId, t.ProjectId, t.BudgetLineId, t.IsActive });
+            //Non Clustered Index
+            modelBuilder.Entity<BudgetLineEmployees>().HasIndex(t => new { t.OfficeId, t.ProjectId, t.BudgetLineId, t.IsActive });
 
 
-			//Global filter on table
-			modelBuilder.Entity<JobHiringDetails>().HasQueryFilter(x => x.IsDeleted == false);
+            //Global filter on table
+            modelBuilder.Entity<JobHiringDetails>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<EmployeeDetail>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<EmployeeSalaryDetails>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<EmployeeDocumentDetail>().HasQueryFilter(x => x.IsDeleted == false);

@@ -1036,8 +1036,8 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.FinalResultQues4 = model.FinalResultQues4;
                     obj.FinalResultQues5 = model.FinalResultQues5;
                     obj.DirectSupervisor = model.DirectSupervisor;
-                    obj.AppraisalTeamMember1 = model.AppraisalTeamMember1;
-                    obj.AppraisalTeamMember2 = model.AppraisalTeamMember2;
+                    //obj.AppraisalTeamMember1 = model.AppraisalTeamMember1;
+                    //obj.AppraisalTeamMember2 = model.AppraisalTeamMember2;
                     obj.CommentsByEmployee = model.CommentsByEmployee;
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.Now;
@@ -1095,6 +1095,7 @@ namespace HumanitarianAssistance.Service.Classes
                 if (recordList != null)
                 {
                     List<EmployeeEvaluationTraining> trainingList = new List<EmployeeEvaluationTraining>();
+                    List<EmployeeAppraisalTeamMember> appraisalTeamMemberList = new List<EmployeeAppraisalTeamMember>();
                     List<StrongandWeakPoints> StrongList = new List<StrongandWeakPoints>();
                     List<StrongandWeakPoints> WeakList = new List<StrongandWeakPoints>();
 
@@ -1120,6 +1121,24 @@ namespace HumanitarianAssistance.Service.Classes
                     }
                     await _uow.GetDbContext().EmployeeEvaluationTraining.AddRangeAsync(trainingList);
 
+                    //AppraisalTeamMemberList
+                    var appraisalTeamMemberData = await _uow.EmployeeAppraisalTeamMemberRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == model.EmployeeAppraisalDetailsId);
+                    _uow.GetDbContext().RemoveRange(appraisalTeamMemberData);
+
+                    foreach (var item in model.EmployeeAppraisalTeamMemberList)
+                    {
+                        EmployeeAppraisalTeamMember obj = new EmployeeAppraisalTeamMember();
+                        obj.EmployeeAppraisalDetailsId = item.EmployeeAppraisalDetailsId;
+                        obj.EmployeeAppraisalTeamMemberId = item.EmployeeAppraisalTeamMemberId;
+                        obj.EmployeeId = item.EmployeeId;
+
+                        obj.CreatedById = UserId;
+                        obj.CreatedDate = DateTime.Now;
+
+                        appraisalTeamMemberList.Add(obj);
+                    }
+                    await _uow.GetDbContext().EmployeeEvaluationTraining.AddRangeAsync(trainingList);
+
                     //EmployeeEvaluation objEval = new EmployeeEvaluation();
 
                     recordList.FinalResultQues1 = model.FinalResultQues1;
@@ -1128,8 +1147,8 @@ namespace HumanitarianAssistance.Service.Classes
                     recordList.FinalResultQues4 = model.FinalResultQues4;
                     recordList.FinalResultQues5 = model.FinalResultQues5;
                     recordList.DirectSupervisor = model.DirectSupervisor;
-                    recordList.AppraisalTeamMember1 = model.AppraisalTeamMember1;
-                    recordList.AppraisalTeamMember2 = model.AppraisalTeamMember2;
+                    //recordList.AppraisalTeamMember1 = model.AppraisalTeamMember1;
+                    //recordList.AppraisalTeamMember2 = model.AppraisalTeamMember2;
                     recordList.CommentsByEmployee = model.CommentsByEmployee;
                     recordList.CurrentAppraisalDate = model.CurrentAppraisalDate;
                     recordList.EmployeeId = model.EmployeeId;
@@ -1194,7 +1213,8 @@ namespace HumanitarianAssistance.Service.Classes
 
                     var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && (x.EvaluationStatus == null || x.EvaluationStatus == "approved"));
 
-					List<EmployeeEvaluationTrainingModel> trainingList = new List<EmployeeEvaluationTrainingModel>();
+                    List<EmployeeEvaluationTrainingModel> trainingList = new List<EmployeeEvaluationTrainingModel>();
+                    List<EmployeeAppraisalTeamMemberModel> appraisalTeamMemberList = new List<EmployeeAppraisalTeamMemberModel>();
 
                     List<string> strong = new List<string>();
                     List<string> weak = new List<string>();
@@ -1218,6 +1238,19 @@ namespace HumanitarianAssistance.Service.Classes
                             objTraining.CatchLevel = ele.CatchLevel;
 
                             trainingList.Add(objTraining);
+                        }
+
+                        //AppraisalTeamMemberList
+                        var appraisalTeamMemberData = await _uow.EmployeeAppraisalTeamMemberRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && x.IsDeleted == false);
+
+                        foreach (var teamElement in appraisalTeamMemberData)
+                        {
+                            EmployeeAppraisalTeamMemberModel obj = new EmployeeAppraisalTeamMemberModel();
+                            obj.EmployeeAppraisalDetailsId = teamElement.EmployeeAppraisalDetailsId;
+                            obj.EmployeeAppraisalTeamMemberId = teamElement.EmployeeAppraisalTeamMemberId;
+                            obj.EmployeeId = teamElement.EmployeeId;
+
+                            appraisalTeamMemberList.Add(obj);
                         }
 
                         //Strong n Weak
@@ -1244,14 +1277,15 @@ namespace HumanitarianAssistance.Service.Classes
                         objAppraisal.FinalResultQues4 = elements.FinalResultQues4;
                         objAppraisal.FinalResultQues5 = elements.FinalResultQues5;
                         objAppraisal.DirectSupervisor = elements.DirectSupervisor;
-                        objAppraisal.AppraisalTeamMember1 = elements.AppraisalTeamMember1;
-                        objAppraisal.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
+                        //objAppraisal.AppraisalTeamMember1 = elements.AppraisalTeamMember1;
+                        //objAppraisal.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
                         objAppraisal.CommentsByEmployee = elements.CommentsByEmployee;
                         objAppraisal.CurrentAppraisalDate = elements.CurrentAppraisalDate;
                         objAppraisal.EvaluationStatus = elements.EvaluationStatus;
                         objAppraisal.EmployeeEvaluationModelList = trainingList;
                         objAppraisal.StrongPoints = strong;
                         objAppraisal.WeakPoints = weak;
+                        objAppraisal.EmployeeAppraisalTeamMemberList = appraisalTeamMemberList;
                         lst.Add(objAppraisal);
 
                     }
