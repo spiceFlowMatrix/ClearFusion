@@ -1360,7 +1360,7 @@ namespace HumanitarianAssistance.Service.Classes
                     EmployeeId = x.EmployeeID,
                     EmployeeName = x.EmployeeName,
                     EmployeeCode = x.EmployeeCode != null ? x.EmployeeCode : OfficeDetail.OfficeCode + x.EmployeeID,
-                    CodeEmployeeName = OfficeDetail.OfficeCode + x.EmployeeID + " - " + x.EmployeeName
+                    CodeEmployeeName = x.EmployeeCode != null ? x.EmployeeCode + " - " + x.EmployeeName : OfficeDetail.OfficeCode + x.EmployeeID + " - " + x.EmployeeName
                 }).ToListAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
