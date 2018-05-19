@@ -1128,9 +1128,9 @@ namespace HumanitarianAssistance.Service.Classes
                     foreach (var item in model.EmployeeAppraisalTeamMemberList)
                     {
                         EmployeeAppraisalTeamMember obj = new EmployeeAppraisalTeamMember();
-                        obj.EmployeeAppraisalDetailsId = item.EmployeeAppraisalDetailsId;
-                        obj.EmployeeAppraisalTeamMemberId = item.EmployeeAppraisalTeamMemberId;
-                        obj.EmployeeId = item.EmployeeId;
+                        obj.EmployeeAppraisalDetailsId = model.EmployeeAppraisalDetailsId;
+                        //obj.EmployeeAppraisalTeamMemberId = item;
+                        obj.EmployeeId = item;
 
                         obj.CreatedById = UserId;
                         obj.CreatedDate = DateTime.Now;
@@ -1214,7 +1214,7 @@ namespace HumanitarianAssistance.Service.Classes
                     var empDetails = await _uow.EmployeeEvaluationRepository.FindAllAsync(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && (x.EvaluationStatus == null || x.EvaluationStatus == "approved"));
 
                     List<EmployeeEvaluationTrainingModel> trainingList = new List<EmployeeEvaluationTrainingModel>();
-                    List<EmployeeAppraisalTeamMemberModel> appraisalTeamMemberList = new List<EmployeeAppraisalTeamMemberModel>();
+                    List<int> appraisalTeamMemberList = new List<int>();
 
                     List<string> strong = new List<string>();
                     List<string> weak = new List<string>();
@@ -1245,12 +1245,12 @@ namespace HumanitarianAssistance.Service.Classes
 
                         foreach (var teamElement in appraisalTeamMemberData)
                         {
-                            EmployeeAppraisalTeamMemberModel obj = new EmployeeAppraisalTeamMemberModel();
-                            obj.EmployeeAppraisalDetailsId = teamElement.EmployeeAppraisalDetailsId;
-                            obj.EmployeeAppraisalTeamMemberId = teamElement.EmployeeAppraisalTeamMemberId;
-                            obj.EmployeeId = teamElement.EmployeeId;
+                            //EmployeeAppraisalTeamMemberModel obj = new EmployeeAppraisalTeamMemberModel();
+                            //obj.EmployeeAppraisalDetailsId = teamElement.EmployeeAppraisalDetailsId;
+                            //obj.EmployeeAppraisalTeamMemberId = teamElement.EmployeeAppraisalTeamMemberId;
+                            //obj.EmployeeId = teamElement.EmployeeId;
 
-                            appraisalTeamMemberList.Add(obj);
+                            appraisalTeamMemberList.Add(teamElement.EmployeeId);
                         }
 
                         //Strong n Weak
