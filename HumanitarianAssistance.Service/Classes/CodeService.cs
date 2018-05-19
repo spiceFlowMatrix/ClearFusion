@@ -1353,11 +1353,14 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
+                var OfficeDetail = await _uow.OfficeDetailRepository.FindAsync(x => x.OfficeId == OfficeId);
+
                 response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x => x.EmployeeProfessionalDetail.OfficeId == OfficeId && x.EmployeeTypeId == 2).Select(x => new EmployeeDetailList
                 {
                     EmployeeId = x.EmployeeID,
                     EmployeeName = x.EmployeeName,
-                    EmployeeCode = x.EmployeeCode
+                    EmployeeCode = x.EmployeeCode != null ? x.EmployeeCode : OfficeDetail.OfficeCode + x.EmployeeID,
+                    CodeEmployeeName = OfficeDetail.OfficeCode + x.EmployeeID + " - " + x.EmployeeName
                 }).ToListAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1508,6 +1511,32 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+        public async Task<APIResponse> DeleteExitInterview(int existInterviewDetailsId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var exitInterviewRecord = await _uow.ExistInterviewDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ExistInterviewDetailsId == existInterviewDetailsId);
+                if (exitInterviewRecord != null)
+                {
+                    exitInterviewRecord.ModifiedById = UserId;
+                    exitInterviewRecord.ModifiedDate = DateTime.UtcNow;
+                    exitInterviewRecord.IsDeleted = true;
+                    await _uow.ExistInterviewDetailsRepository.UpdateAsyn(exitInterviewRecord);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
 
         public async Task<APIResponse> GetAllExitInterview()
         {

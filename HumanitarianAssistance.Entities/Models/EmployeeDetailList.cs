@@ -17,7 +17,8 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public DateTime? RecruitmentDate { get; set; }
 
 
-		public string TenureWithCHA { get; set; }
+        public string CodeEmployeeName { get; set; }
+        public string TenureWithCHA { get; set; }
 		public string Gender { get; set; }
 	}
 }
