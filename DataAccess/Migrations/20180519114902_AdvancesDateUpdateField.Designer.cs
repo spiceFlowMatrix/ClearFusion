@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180519114902_AdvancesDateUpdateField")]
+    partial class AdvancesDateUpdateField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,8 +97,6 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime>("AdvanceDate");
 
-                    b.Property<DateTime>("AdvanceRecoveryDate");
-
                     b.Property<DateTime>("AppraisalApprovedDate");
 
                     b.Property<string>("ApprovedBy");
@@ -114,8 +114,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("EmployeeCode");
 
                     b.Property<int>("EmployeeId");
-
-                    b.Property<bool>("IsAdvanceRecovery");
 
                     b.Property<bool>("IsApproved");
 

@@ -27,5 +27,9 @@ namespace DataAccess.DbEntities
 		public int OfficeId { get; set; }
 		public bool IsApproved { get; set; }        // Is advance approved by manager or not (false means not approved)
 		public bool IsDeducted { get; set; }        // Is advance amount deducted from next month salary when defining monthly salary payroll (false means not distributed)
+		public DateTime AppraisalApprovedDate { get; set; }
+		public DateTime DeductedDate { get; set; }
+		public bool IsAdvanceRecovery { get; set; }
+		public DateTime AdvanceRecoveryDate { get; set; }
 	}
 }

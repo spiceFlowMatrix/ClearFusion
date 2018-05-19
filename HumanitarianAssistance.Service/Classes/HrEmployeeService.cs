@@ -2975,7 +2975,7 @@ namespace HumanitarianAssistance.Service.Classes
                                            PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
                                            NetSalary = ept.GrossSalary - ept.TotalDeduction,
                                            AdvanceAmount = ept.AdvanceAmount,
-                                           IsDeductionApproved = ept.IsAdvanceApproved
+										   IsAdvanceApproved = ept.IsAdvanceApproved
                                        }).ToList();
 
 
@@ -3015,8 +3015,9 @@ namespace HumanitarianAssistance.Service.Classes
                     SalaryTax = x.FirstOrDefault().SalaryTax,
                     IsApproved = x.FirstOrDefault().IsApproved,
                     AdvanceAmount = x.FirstOrDefault().AdvanceAmount,
-                    IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved
-                }).ToList();
+                    IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved,
+					IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved
+				}).ToList();
 
 
                 if (userdetailslist.Count == 0)
@@ -3058,7 +3059,7 @@ namespace HumanitarianAssistance.Service.Classes
                         //}
                         // For calculating ADVANCE In SALARY PAYROLL (CONVERSION RATE ALSO)
 
-                        var advanceAmount = _uow.AdvancesRepository.FindAllAsync(x => x.AdvanceDate.Date.Month < month && x.AdvanceDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == false && x.EmployeeId == payrolllist[i].FirstOrDefault().EmployeeId).Result.OrderByDescending(x => x.AdvanceDate.Date).ToList();
+                        var advanceAmount = await _uow.AdvancesRepository.FindAllAsync(x => x.AppraisalApprovedDate.Date.Month <= month && x.AppraisalApprovedDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false && x.EmployeeId == payrolllist[i].FirstOrDefault().EmployeeId);
                         double advance = 0;
                         foreach (var element in advanceAmount)
                         {
@@ -3073,8 +3074,23 @@ namespace HumanitarianAssistance.Service.Classes
                             }
                         }
 
-                        // WHEN CURRENCY ID IS SAME (WITHOUT CONVERSION)
-                        if (currencyid == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId)
+						var advanceDeductionApproved = await _uow.AdvancesRepository.FindAllAsync(x => x.AppraisalApprovedDate.Date.Month <= month && x.AppraisalApprovedDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == true && x.IsAdvanceRecovery == false && x.EmployeeId == payrolllist[i].FirstOrDefault().EmployeeId);
+						double advanceRecovery = 0;
+						foreach (var element in advanceDeductionApproved)
+						{
+							if (element.CurrencyId != currencyid)
+							{
+								var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+								advanceRecovery += element.AdvanceAmount * conversionRate.Rate;
+							}
+							else
+							{
+								advanceRecovery += element.AdvanceAmount;
+							}
+						}
+
+						// WHEN CURRENCY ID IS SAME (WITHOUT CONVERSION)
+						if (currencyid == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId)
                         {
                             payrollmodel = payrolllist[i].Select(x => new EmployeeMonthlyPayrollModel
                             {
@@ -3135,10 +3151,12 @@ namespace HumanitarianAssistance.Service.Classes
                                 //Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction + Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)
                                 //* pensionrateamount) - SalaryCalculate(Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), 1), 2))), 2),
                                 // Net Salary End
-                                IsApproved = false,
+                                IsApproved = false,				 // Field for salary approved for the particular month
                                 AdvanceAmount = advance,
-                                IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false
-                            }).FirstOrDefault();
+                                IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false,
+								IsAdvanceRecovery = advanceRecovery > 0 ? true : false,
+								AdvanceRecoveryAmount = advanceRecovery
+							}).FirstOrDefault();
                         }
                         // TO CONVERT AMOUNT USING CONVERSION RATE
                         else
@@ -3206,8 +3224,10 @@ namespace HumanitarianAssistance.Service.Classes
                                 // Net Salary End
                                 IsApproved = false,
                                 AdvanceAmount = advance,
-                                IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false
-                            }).FirstOrDefault();
+                                IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false,
+								IsAdvanceRecovery = advanceRecovery > 0 ? true : false,
+								AdvanceRecoveryAmount = advanceRecovery
+							}).FirstOrDefault();
                         }
                         monthlypayrolllist.Add(payrollmodel);
 
@@ -4095,14 +4115,28 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     if (item.AdvanceAmount > 0)
                     {
-                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.AdvanceDate.Date.Month < item.FinancialYearDate.Date.Month && x.AdvanceDate.Date.Year == item.FinancialYearDate.Date.Year && x.IsApproved == true && x.IsDeducted == false);
-                        foreach (var element in advancesRecords)
+                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);						
+						foreach (var element in advancesRecords)
                         {
-                            element.IsDeducted = true;
-                            await _uow.AdvancesRepository.UpdateAsyn(element);
+							var updateRecord = await _uow.AdvancesRepository.FindAsync(x=>x.AdvancesId == element.AdvancesId);
+							updateRecord.IsDeducted = true;
+							updateRecord.DeductedDate = DateTime.Now;
+							await _uow.AdvancesRepository.UpdateAsyn(updateRecord);
                         }
                     }
-                    EmployeePaymentTypes emp = new EmployeePaymentTypes();
+
+					if (item.AdvanceRecoveryAmount > 0)
+					{
+						var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);
+						foreach (var element in advancesRecords)
+						{
+							var updateRecord = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == element.AdvancesId);
+							updateRecord.IsAdvanceRecovery = true;
+							updateRecord.AdvanceRecoveryDate = DateTime.Now;
+							await _uow.AdvancesRepository.UpdateAsyn(updateRecord);
+						}
+					}
+					EmployeePaymentTypes emp = new EmployeePaymentTypes();
                     emp.OfficeId = item.OfficeId;
                     emp.CurrencyId = item.CurrencyId;
                     emp.FinancialYearDate = item.FinancialYearDate;
@@ -4611,7 +4645,7 @@ namespace HumanitarianAssistance.Service.Classes
                     record.ModifiedDate = DateTime.Now;
                     record.OfficeId = model.OfficeId;
                     record.RequestAmount = model.RequestAmount;
-                    record.VoucherReferenceNo = model.VoucherReferenceNo;
+                    record.VoucherReferenceNo = model.VoucherReferenceNo;					
                     await _uow.AdvancesRepository.UpdateAsyn(record);
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -4692,6 +4726,7 @@ namespace HumanitarianAssistance.Service.Classes
                     record.IsApproved = true;
                     record.ModifiedById = UserId;
                     record.ModifiedDate = DateTime.Now;
+					record.AppraisalApprovedDate = DateTime.Now;
                     await _uow.AdvancesRepository.UpdateAsyn(record);
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -4710,6 +4745,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
         public async Task<APIResponse> RejectAdvances(AdvancesModel model, string UserId)
         {
             APIResponse response = new APIResponse();
