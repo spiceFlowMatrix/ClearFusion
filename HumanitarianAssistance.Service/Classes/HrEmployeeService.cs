@@ -1744,18 +1744,62 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 TimeSpan? totalworkhour;
-                var existrecord = await _uow.EmployeeAttendanceRepository.FindAsync(x => x.AttendanceId == model.AttendanceId);
+				TimeSpan? totalovertime;
+				int? overtime = 0, workingHours = 0;
+				DateTime OfficeInTime = new DateTime();
+				DateTime OfficeOutTime = new DateTime();
+				var existrecord = await _uow.EmployeeAttendanceRepository.FindAsync(x => x.AttendanceId == model.AttendanceId);
                 if (existrecord != null)
                 {
                     //var userdetails = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == userid);
                     int? defaulthours = 0;
-                    var DefaultHourDetail = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false && x.OfficeId == model.OfficeId);
-                    if (DefaultHourDetail != null)
+                    var DefaultHourDetail = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false && x.OfficeId == model.OfficeId);									
+
+					if (DefaultHourDetail != null)
                     {
                         defaulthours = DefaultHourDetail.Hours;
                     }
 
-                    totalworkhour = model.OutTime - model.InTime;
+					OfficeInTime = new DateTime(model.InTime.Value.Year, model.InTime.Value.Month, model.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
+					OfficeOutTime = new DateTime(model.OutTime.Value.Year, model.OutTime.Value.Month, model.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
+
+					if (model.InTime < OfficeInTime)
+					{
+						totalovertime = OfficeInTime - model.InTime;
+						overtime += totalovertime.Value.Hours;
+						if (model.OutTime <= OfficeOutTime)
+						{
+							totalworkhour = model.OutTime - OfficeInTime;
+							workingHours += totalworkhour.Value.Hours;
+						}
+						if (model.OutTime > OfficeOutTime)
+						{
+							totalovertime = model.OutTime - OfficeOutTime;
+							overtime += totalovertime.Value.Hours;
+							totalworkhour = OfficeOutTime - OfficeInTime;
+							workingHours += totalworkhour.Value.Hours;							
+						}
+					}
+
+
+					if (model.InTime >= OfficeInTime)
+					{
+						if (model.OutTime <= OfficeOutTime)
+						{
+							totalworkhour = model.OutTime - model.InTime;
+							workingHours += totalworkhour.Value.Hours;							
+						}
+						if (model.OutTime > OfficeOutTime)
+						{
+							totalovertime = model.OutTime - OfficeOutTime;
+							overtime += totalovertime.Value.Hours;							
+							totalworkhour = OfficeOutTime - model.InTime;
+							workingHours += totalworkhour.Value.Hours;							
+						}
+					}					
+
+
+					totalworkhour = model.OutTime - model.InTime;
                     if (totalworkhour.ToString() == "00:00:00" || existrecord.AttendanceTypeId == (int)AttendanceType.A)
                     {
                         existrecord.AttendanceTypeId = 2;
@@ -1763,19 +1807,21 @@ namespace HumanitarianAssistance.Service.Classes
                         existrecord.OutTime = model.Date;
                         totalworkhour = model.Date.Date - model.Date.Date;
                     }
-                    if (Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) > defaulthours)
-                    {
-                        existrecord.TotalWorkTime = defaulthours.ToString();
-                        existrecord.HoverTimeHours = Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) - defaulthours;
-                    }
-                    else
-                    {
-                        existrecord.TotalWorkTime = totalworkhour.ToString().Substring(0, 2);
-                        existrecord.HoverTimeHours = 0;
-                    }
+					//if (Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) > defaulthours)
+					//{
+					//    existrecord.TotalWorkTime = defaulthours.ToString();
+					//    existrecord.HoverTimeHours = Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) - defaulthours;
+					//}
+					else
+					{
+						//existrecord.TotalWorkTime = totalworkhour.ToString().Substring(0, 2);
+						//existrecord.HoverTimeHours = 0;
+						existrecord.TotalWorkTime = workingHours.ToString();
+						existrecord.HoverTimeHours = overtime;
+					}
 
 
-                    existrecord.InTime = model.InTime;
+					existrecord.InTime = model.InTime;
                     existrecord.OutTime = model.OutTime;
                     existrecord.AttendanceTypeId = model.AttendanceTypeId;
                     existrecord.ModifiedById = model.ModifiedById;
@@ -1796,9 +1842,13 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         public async Task<APIResponse> AddEmployeeAttendanceDetails(List<EmployeeAttendanceModel> modellist, string UserId)
-        {
-            TimeSpan? totalworkhour;
-            APIResponse response = new APIResponse();
+        {            
+			TimeSpan? totalworkhour;
+			TimeSpan? totalovertime;
+			int? overtime = 0, workingHours = 0;
+			DateTime OfficeInTime = new DateTime();
+			DateTime OfficeOutTime = new DateTime();
+			APIResponse response = new APIResponse();
             try
             {
                 var existrecord = await Task.Run(() =>
@@ -1834,16 +1884,57 @@ namespace HumanitarianAssistance.Service.Classes
                                 //list.OutTime = list.Date.Date;
                                 totalworkhour = list.Date.Date - list.Date.Date;
                             }
-                            if (Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) > defaulthours)
+
+							OfficeInTime = new DateTime(list.InTime.Value.Year, list.InTime.Value.Month, list.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
+							OfficeOutTime = new DateTime(list.OutTime.Value.Year, list.OutTime.Value.Month, list.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
+
+							if (list.InTime < OfficeInTime)
+							{
+								totalovertime = OfficeInTime - list.InTime;
+								overtime += totalovertime.Value.Hours;
+								if (list.OutTime <= OfficeOutTime)
+								{
+									totalworkhour = list.OutTime - OfficeInTime;
+									workingHours += totalworkhour.Value.Hours;
+								}
+								if (list.OutTime > OfficeOutTime)
+								{
+									totalovertime = list.OutTime - OfficeOutTime;
+									overtime += totalovertime.Value.Hours;
+									totalworkhour = OfficeOutTime - OfficeInTime;
+									workingHours += totalworkhour.Value.Hours;
+								}
+							}
+
+
+							if (list.InTime >= OfficeInTime)
+							{
+								if (list.OutTime <= OfficeOutTime)
+								{
+									totalworkhour = list.OutTime - list.InTime;
+									workingHours += totalworkhour.Value.Hours;
+								}
+								if (list.OutTime > OfficeOutTime)
+								{
+									totalovertime = list.OutTime - OfficeOutTime;
+									overtime += totalovertime.Value.Hours;
+									totalworkhour = OfficeOutTime - list.InTime;
+									workingHours += totalworkhour.Value.Hours;
+								}
+							}
+
+							//if (Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) > defaulthours)
+							//{
+							//    list.TotalWorkTime = defaulthours.ToString();
+							//    list.HoverTimeHours = Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) - defaulthours;
+							//}
+							else
                             {
-                                list.TotalWorkTime = defaulthours.ToString();
-                                list.HoverTimeHours = Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) - defaulthours;
-                            }
-                            else
-                            {
-                                list.TotalWorkTime = totalworkhour.ToString().Substring(0, 2);
-                                list.HoverTimeHours = 0;
-                            }
+								list.TotalWorkTime = workingHours.ToString();
+								list.HoverTimeHours = overtime;
+								//list.TotalWorkTime = totalworkhour.ToString().Substring(0, 2);
+								//list.HoverTimeHours = 0;
+							}
                             list.FinancialYearId = financiallist.FinancialYearId;
                             list.CreatedById = UserId;
                             list.CreatedDate = DateTime.UtcNow;
@@ -2930,17 +3021,23 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (userdetailslist.Count == 0)
                 {
-                    var queryResult = EF.CompileAsyncQuery(
-                    (ApplicationDbContext ctx) => ctx.EmployeeAttendance
-                    .Include(e => e.EmployeeDetails).Include(e => e.EmployeeDetails.EmployeeProfessionalDetail).Where(x => x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == officeid)
-                    .Include(e => e.EmployeeDetails.EmployeeSalaryDetails).Where(x => x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == paymentType)
-                    //.Include(e=> e.EmployeeDetails.Advances).Where(x=>x.EmployeeDetails.Advances.AdvanceDate.Date.Month <month && x.EmployeeDetails.Advances.AdvanceDate.Date.Year == year && x.EmployeeDetails.Advances.IsApproved == true && x.EmployeeDetails.Advances.IsDeducted == false)
-                    .Where(x => x.Date.Month == month && x.Date.Year == year).GroupBy(x => x.EmployeeId));
-                    var payrolllist = await Task.Run(() =>
-                        queryResult(_uow.GetDbContext()).ToListAsync().Result
-                    );
-                    //var pensionLst = _uow.EmployeePensionRateRepository.FindAsync(x => x.FinancialYearId == payrolllist[0].FirstOrDefault().FinancialYearId);					
-                    var pensionLst = _uow.EmployeePensionRateRepository.Find(x => x.IsDefault == true);
+					var queryResult = EF.CompileAsyncQuery(
+					(ApplicationDbContext ctx) => ctx.EmployeeAttendance
+					.Include(e => e.EmployeeDetails).Include(e => e.EmployeeDetails.EmployeeProfessionalDetail).Where(x => x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == officeid)
+					.Include(e => e.EmployeeDetails.EmployeeSalaryDetails)
+					//.Include(e=> e.EmployeeDetails.Advances).Where(x=>x.EmployeeDetails.Advances.AdvanceDate.Date.Month <month && x.EmployeeDetails.Advances.AdvanceDate.Date.Year == year && x.EmployeeDetails.Advances.IsApproved == true && x.EmployeeDetails.Advances.IsDeducted == false)
+					.Where(x => x.Date.Month == month && x.Date.Year == year).GroupBy(x => x.EmployeeId));
+					var payrolllist = await Task.Run(() =>
+						queryResult(_uow.GetDbContext()).ToListAsync().Result
+					);
+
+					//var payrolllist = await _uow.GetDbContext().EmployeeAttendance.Include(x=>x.EmployeeDetails).ThenInclude(x=>x.EmployeeProfessionalDetail)
+					//	.Include(x=>x.EmployeeDetails).ThenInclude(x=>x.EmployeeSalaryDetails)
+					//	.Where(x => x.Date.Month == month && x.Date.Year == year && x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == officeid).GroupBy(x=>x.EmployeeId).ToListAsync();
+
+
+					//var pensionLst = _uow.EmployeePensionRateRepository.FindAsync(x => x.FinancialYearId == payrolllist[0].FirstOrDefault().FinancialYearId);					
+					var pensionLst = _uow.EmployeePensionRateRepository.Find(x => x.IsDefault == true);
                     double pensionrateamount = pensionLst?.PensionRate ?? 0;
                     int monthdays = GetMonthDays(month, year);
                     int totalhours = 0, presentdays = 0, absentdays = 0, leavedays = 0, overtimehours = 0;
@@ -3056,7 +3153,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     EmployeeId = e.EmployeeID,
                                     CurrencyId = e.CurrencyId,
                                     PaymentType = e.PaymentType,
-                                    MonthlyAmount = e.MonthlyAmount * conversionRate.Rate,
+                                    MonthlyAmount = e.MonthlyAmount * conversionRate?.Rate ?? 0,
                                     PensionRate = pensionrateamount,
                                     SalaryHead = e.SalaryHeadDetails.HeadName,
                                     HeadTypeId = e.SalaryHeadDetails.HeadTypeId,
@@ -3072,22 +3169,22 @@ namespace HumanitarianAssistance.Service.Classes
                                 LeaveHours = leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)),
                                 TotalWorkHours = totalhours,
                                 OverTimeHours = overtimehours,
-                                TotalGeneralAmount = x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate.Rate,
-                                TotalAllowance = x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate,
-                                GrossSalary = x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * conversionRate.Rate), 2)
+                                TotalGeneralAmount = x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate?.Rate ?? 0,
+                                TotalAllowance = x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0,
+                                GrossSalary = x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * conversionRate?.Rate ?? 0), 2)
                                 :
-                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate)), 2),
+                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0)), 2),
 
-                                SalaryTax = SalaryCalculate(x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * conversionRate.Rate), 2) :
-                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate)), 2), conversionRate.Rate),
+                                SalaryTax = SalaryCalculate(x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * conversionRate?.Rate ?? 0), 2) :
+                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0)), 2), conversionRate?.Rate ?? 0),
 
                                 PensionAmount = x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ?
-                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * conversionRate.Rate) * pensionrateamount), 2)
+                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * conversionRate?.Rate ?? 0) * pensionrateamount), 2)
                                 :
-                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate) * pensionrateamount), 2),
+                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0) * pensionrateamount), 2),
 
                                 // Deduction Starts
-                                TotalDeduction = (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate.Rate),
+                                TotalDeduction = (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate?.Rate ?? 0),
                                 //+ (x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ?
                                 //Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate.Rate + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate)
                                 //* pensionrateamount), 2)
@@ -3097,13 +3194,13 @@ namespace HumanitarianAssistance.Service.Classes
                                 // Deduction Ends
 
                                 // Net Salary Starts
-                                NetSalary = x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate.Rate
-                                + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate) - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate.Rate + Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate.Rate + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate)
-                                * pensionrateamount) - SalaryCalculate(Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), conversionRate.Rate), 2))), 2)
+                                NetSalary = x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate?.Rate ?? 0
+                                + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0) - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate?.Rate ?? 0 + Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate?.Rate ?? 0 + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0)
+                                * pensionrateamount) - SalaryCalculate(Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), conversionRate?.Rate ?? 0), 2))), 2)
                                 :
-                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate)), 2)
-                                - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate.Rate) - Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate) * pensionrateamount), 2)
-                                - SalaryCalculate(Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate)), 2), conversionRate.Rate),
+                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0)), 2)
+                                - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate?.Rate ?? 0) - Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0) * pensionrateamount), 2)
+                                - SalaryCalculate(Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0)), 2), conversionRate?.Rate ?? 0),
                                 //Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate) - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate.Rate + Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate)
                                 //* pensionrateamount) - SalaryCalculate(Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), conversionRate.Rate), 2))), 2),
                                 // Net Salary End
