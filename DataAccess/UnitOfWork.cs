@@ -93,6 +93,7 @@ namespace DataAccess
         private IGenericRepository<EmployeeEvaluationTraining> _employeeEvaluationTrainingRepository;
 		private IGenericRepository<LoggerDetails> _loggerDetailsRepository;
 		private IGenericRepository<EmployeeAppraisalTeamMember> _employeeAppraisalTeamMemberRepository;
+		private IGenericRepository<RatingBasedCriteria> _ratingBasedCriteriaRepository;
 
         
 
@@ -101,6 +102,13 @@ namespace DataAccess
             _mschaContext = mschaContext;
         }
 
+        public IGenericRepository<RatingBasedCriteria> RatingBasedCriteriaRepository
+        {
+            get
+            {
+                return _ratingBasedCriteriaRepository = _ratingBasedCriteriaRepository ?? new GenericRepository<RatingBasedCriteria>(_mschaContext);
+            }
+        }
         public IGenericRepository<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMemberRepository
         {
             get

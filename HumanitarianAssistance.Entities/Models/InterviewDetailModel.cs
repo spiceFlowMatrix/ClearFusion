@@ -38,7 +38,10 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string NoticePeriod { get; set; }
 		public DateTime JoiningDate { get; set; }
 
-		public List<InterviewLanguageModel> InterviewLanguageModelList { get; set; }
+
+        public List<RatingBasedCriteriaModel> RatingBasedCriteriaList { get; set; }
+
+        public List<InterviewLanguageModel> InterviewLanguageModelList { get; set; }
 		public List<InterviewTrainingModel> InterviewTrainingModelList { get; set; }
 		public List<InterviewTechQuesModel> InterviewTechQuesModelList { get; set; }
 
