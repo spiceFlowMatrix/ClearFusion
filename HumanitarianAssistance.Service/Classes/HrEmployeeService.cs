@@ -1743,7 +1743,8 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                TimeSpan? totalworkhour;
+				TimeSpan? OfficeHoursDifference;
+				TimeSpan? totalworkhour;
 				TimeSpan? totalovertime;
 				int? overtime = 0, workingHours = 0;
 				DateTime OfficeInTime = new DateTime();
@@ -1760,8 +1761,10 @@ namespace HumanitarianAssistance.Service.Classes
                         defaulthours = DefaultHourDetail.Hours;
                     }
 
+					OfficeHoursDifference = DefaultHourDetail.OutTime - DefaultHourDetail.InTime;
 					OfficeInTime = new DateTime(model.InTime.Value.Year, model.InTime.Value.Month, model.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
-					OfficeOutTime = new DateTime(model.OutTime.Value.Year, model.OutTime.Value.Month, model.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
+					//OfficeOutTime = new DateTime(model.OutTime.Value.Year, model.OutTime.Value.Month, model.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
+					OfficeOutTime = OfficeInTime.AddHours(OfficeHoursDifference.Value.Hours);
 
 					if (model.InTime < OfficeInTime)
 					{
@@ -1869,6 +1872,9 @@ namespace HumanitarianAssistance.Service.Classes
 
                     foreach (var list in modellist)
                     {
+						//list.
+						//var leaveRecord = await _uow.EmployeeApplyLeaveRepository.FindAsync()
+
                         var isemprecord = existrecord.Where(x => x.EmployeeId == list.EmployeeId && x.Date.Date == list.Date.Date).ToList();
                         if (isemprecord.Count == 0)
                         {
