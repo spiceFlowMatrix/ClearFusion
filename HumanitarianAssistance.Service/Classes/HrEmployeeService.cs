@@ -1785,7 +1785,7 @@ namespace HumanitarianAssistance.Service.Classes
                     }
 
 
-                    if (model.InTime >= OfficeInTime)
+                    if (model.InTime >= OfficeInTime && model.InTime < OfficeOutTime)
                     {
                         if (model.OutTime <= OfficeOutTime)
                         {
@@ -1801,8 +1801,22 @@ namespace HumanitarianAssistance.Service.Classes
                         }
                     }
 
+					if (model.InTime >= OfficeOutTime)
+					{
+						workingHours = 0;
+						totalovertime = model.OutTime - model.InTime;
+						overtime += totalovertime.Value.Hours;
+					}
 
-                    totalworkhour = model.OutTime - model.InTime;
+					if (model.OutTime <= OfficeInTime)
+					{
+						workingHours = 0;
+						totalovertime = model.OutTime - model.InTime;
+						overtime += totalovertime.Value.Hours;
+					}
+
+
+					totalworkhour = model.OutTime - model.InTime;
                     if (totalworkhour.ToString() == "00:00:00" || existrecord.AttendanceTypeId == (int)AttendanceType.A)
                     {
                         existrecord.AttendanceTypeId = 2;
@@ -4476,7 +4490,7 @@ namespace HumanitarianAssistance.Service.Classes
                                join odr in await _uow.OfficeDetailRepository.GetAllAsyn() on epr.OfficeId equals odr.OfficeId
                                join blr in await _uow.BudgetLineEmployeesRepository.GetAllAsyn() on edr.EmployeeID equals blr.EmployeeId
                                join ear in await _uow.EmployeePaymentTypeRepository.GetAllAsyn() on edr.EmployeeID equals ear.EmployeeID
-                               join epp in await _uow.EmployeePayrollRepository.FindAllAsync(x => x.EmployeeID == EmployeeId) on edr.EmployeeID equals epp.EmployeeID
+                               join epp in await _uow.EmployeeMonthlyPayrollRepository.FindAllAsync(x => x.EmployeeID == EmployeeId) on edr.EmployeeID equals epp.EmployeeID
                                join sdr in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on epp.SalaryHeadId equals sdr.SalaryHeadId
                                join ccr in await _uow.CurrencyDetailsRepository.GetAllAsyn() on ear.CurrencyId equals ccr.CurrencyId
                                where edr.EmployeeID == EmployeeId && ear.FinancialYearDate.Year == year && ear.FinancialYearDate.Month == month && epr.OfficeId == OfficeId
@@ -4502,15 +4516,15 @@ namespace HumanitarianAssistance.Service.Classes
                                    Attendance = ear.PresentDays,
                                    Absentese = ear.AbsentDays,
 
-                                   PayrollId = epp?.PayrollId ?? 0,
+                                   //PayrollId = epp?. ?? 0,
                                    SalaryHeadType = sdr.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : sdr.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : sdr.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
                                    HeadTypeId = sdr.HeadTypeId,
                                    SalaryHeadId = sdr.SalaryHeadId,
                                    SalaryHead = sdr.HeadName,
                                    MonthlyAmount = epp?.MonthlyAmount ?? 0,
-                                   CurrencyId = epp?.CurrencyId ?? 0,
-                                   PaymentType = epp?.PaymentType ?? 0,
-                                   PensionRate = epp?.PensionRate ?? 0,
+                                   CurrencyId = ear?.CurrencyId ?? 0,
+                                   PaymentType = ear?.PaymentType ?? 0,
+                                   PensionRate = ear?.PensionRate ?? 0,
 
                                    GrossSalary = ear.TotalGeneralAmount + ear.TotalAllowance,
                                    NetSalary = Math.Round(Convert.ToDouble(ear.TotalGeneralAmount + ear.TotalAllowance - ear.TotalDeduction - ear.PensionAmount), 2),
