@@ -4813,7 +4813,7 @@ namespace HumanitarianAssistance.Service.Classes
                     foreach (var item in model.RatingBasedCriteriaList)
                     {
                         RatingBasedCriteria ratingobj = new RatingBasedCriteria();
-                        ratingobj.InterviewDetailsId = item.InterviewDetailsId;
+                        ratingobj.InterviewDetailsId = obj.InterviewDetailsId;
                         ratingobj.CriteriaQuestion = item.CriteriaQuestion;
                         ratingobj.Rating = item.Rating;
                         ratingobj.CreatedById = UserId;
@@ -5032,7 +5032,7 @@ namespace HumanitarianAssistance.Service.Classes
                     List<InterviewTrainingModel> trainingList = new List<InterviewTrainingModel>();
 
                     //rating based criteria
-                    foreach (var item in ratingCriteriaRecordList)
+                    foreach (var item in ratingCriteriaRecord)
                     {
                         RatingBasedCriteriaModel criteriaModel = new RatingBasedCriteriaModel();
                         //technicalModel.TechnicalQuestionId = item.TechnicalQuestionId;
