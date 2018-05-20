@@ -94,6 +94,7 @@ namespace DataAccess
         IGenericRepository<EmployeeEvaluationTraining> EmployeeEvaluationTrainingRepository { get; }
 		IGenericRepository<LoggerDetails> LoggerDetailsRepository { get; }
 		IGenericRepository<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMemberRepository { get; }
+        IGenericRepository<RatingBasedCriteria> RatingBasedCriteriaRepository { get; }
 
         
         void Save();

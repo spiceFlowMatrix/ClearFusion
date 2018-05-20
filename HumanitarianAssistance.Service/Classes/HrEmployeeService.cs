@@ -1754,9 +1754,9 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     //var userdetails = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == userid);
                     int? defaulthours = 0;
-                    var DefaultHourDetail = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false && x.OfficeId == model.OfficeId);									
+                    var DefaultHourDetail = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false && x.OfficeId == model.OfficeId);
 
-					if (DefaultHourDetail != null)
+                    if (DefaultHourDetail != null)
                     {
                         defaulthours = DefaultHourDetail.Hours;
                     }
@@ -1766,43 +1766,43 @@ namespace HumanitarianAssistance.Service.Classes
 					//OfficeOutTime = new DateTime(model.OutTime.Value.Year, model.OutTime.Value.Month, model.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
 					OfficeOutTime = OfficeInTime.AddHours(OfficeHoursDifference.Value.Hours);
 
-					if (model.InTime < OfficeInTime)
-					{
-						totalovertime = OfficeInTime - model.InTime;
-						overtime += totalovertime.Value.Hours;
-						if (model.OutTime <= OfficeOutTime)
-						{
-							totalworkhour = model.OutTime - OfficeInTime;
-							workingHours += totalworkhour.Value.Hours;
-						}
-						if (model.OutTime > OfficeOutTime)
-						{
-							totalovertime = model.OutTime - OfficeOutTime;
-							overtime += totalovertime.Value.Hours;
-							totalworkhour = OfficeOutTime - OfficeInTime;
-							workingHours += totalworkhour.Value.Hours;							
-						}
-					}
+                    if (model.InTime < OfficeInTime)
+                    {
+                        totalovertime = OfficeInTime - model.InTime;
+                        overtime += totalovertime.Value.Hours;
+                        if (model.OutTime <= OfficeOutTime)
+                        {
+                            totalworkhour = model.OutTime - OfficeInTime;
+                            workingHours += totalworkhour.Value.Hours;
+                        }
+                        if (model.OutTime > OfficeOutTime)
+                        {
+                            totalovertime = model.OutTime - OfficeOutTime;
+                            overtime += totalovertime.Value.Hours;
+                            totalworkhour = OfficeOutTime - OfficeInTime;
+                            workingHours += totalworkhour.Value.Hours;
+                        }
+                    }
 
 
-					if (model.InTime >= OfficeInTime)
-					{
-						if (model.OutTime <= OfficeOutTime)
-						{
-							totalworkhour = model.OutTime - model.InTime;
-							workingHours += totalworkhour.Value.Hours;							
-						}
-						if (model.OutTime > OfficeOutTime)
-						{
-							totalovertime = model.OutTime - OfficeOutTime;
-							overtime += totalovertime.Value.Hours;							
-							totalworkhour = OfficeOutTime - model.InTime;
-							workingHours += totalworkhour.Value.Hours;							
-						}
-					}					
+                    if (model.InTime >= OfficeInTime)
+                    {
+                        if (model.OutTime <= OfficeOutTime)
+                        {
+                            totalworkhour = model.OutTime - model.InTime;
+                            workingHours += totalworkhour.Value.Hours;
+                        }
+                        if (model.OutTime > OfficeOutTime)
+                        {
+                            totalovertime = model.OutTime - OfficeOutTime;
+                            overtime += totalovertime.Value.Hours;
+                            totalworkhour = OfficeOutTime - model.InTime;
+                            workingHours += totalworkhour.Value.Hours;
+                        }
+                    }
 
 
-					totalworkhour = model.OutTime - model.InTime;
+                    totalworkhour = model.OutTime - model.InTime;
                     if (totalworkhour.ToString() == "00:00:00" || existrecord.AttendanceTypeId == (int)AttendanceType.A)
                     {
                         existrecord.AttendanceTypeId = 2;
@@ -1810,21 +1810,21 @@ namespace HumanitarianAssistance.Service.Classes
                         existrecord.OutTime = model.Date;
                         totalworkhour = model.Date.Date - model.Date.Date;
                     }
-					//if (Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) > defaulthours)
-					//{
-					//    existrecord.TotalWorkTime = defaulthours.ToString();
-					//    existrecord.HoverTimeHours = Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) - defaulthours;
-					//}
-					else
-					{
-						//existrecord.TotalWorkTime = totalworkhour.ToString().Substring(0, 2);
-						//existrecord.HoverTimeHours = 0;
-						existrecord.TotalWorkTime = workingHours.ToString();
-						existrecord.HoverTimeHours = overtime;
-					}
+                    //if (Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) > defaulthours)
+                    //{
+                    //    existrecord.TotalWorkTime = defaulthours.ToString();
+                    //    existrecord.HoverTimeHours = Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) - defaulthours;
+                    //}
+                    else
+                    {
+                        //existrecord.TotalWorkTime = totalworkhour.ToString().Substring(0, 2);
+                        //existrecord.HoverTimeHours = 0;
+                        existrecord.TotalWorkTime = workingHours.ToString();
+                        existrecord.HoverTimeHours = overtime;
+                    }
 
 
-					existrecord.InTime = model.InTime;
+                    existrecord.InTime = model.InTime;
                     existrecord.OutTime = model.OutTime;
                     existrecord.AttendanceTypeId = model.AttendanceTypeId;
                     existrecord.ModifiedById = model.ModifiedById;
@@ -1845,13 +1845,13 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         public async Task<APIResponse> AddEmployeeAttendanceDetails(List<EmployeeAttendanceModel> modellist, string UserId)
-        {            
-			TimeSpan? totalworkhour;
-			TimeSpan? totalovertime;
-			int? overtime = 0, workingHours = 0;
-			DateTime OfficeInTime = new DateTime();
-			DateTime OfficeOutTime = new DateTime();
-			APIResponse response = new APIResponse();
+        {
+            TimeSpan? totalworkhour;
+            TimeSpan? totalovertime;
+            int? overtime = 0, workingHours = 0;
+            DateTime OfficeInTime = new DateTime();
+            DateTime OfficeOutTime = new DateTime();
+            APIResponse response = new APIResponse();
             try
             {
                 var existrecord = await Task.Run(() =>
@@ -1891,56 +1891,56 @@ namespace HumanitarianAssistance.Service.Classes
                                 totalworkhour = list.Date.Date - list.Date.Date;
                             }
 
-							OfficeInTime = new DateTime(list.InTime.Value.Year, list.InTime.Value.Month, list.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
-							OfficeOutTime = new DateTime(list.OutTime.Value.Year, list.OutTime.Value.Month, list.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
+                            OfficeInTime = new DateTime(list.InTime.Value.Year, list.InTime.Value.Month, list.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
+                            OfficeOutTime = new DateTime(list.OutTime.Value.Year, list.OutTime.Value.Month, list.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
 
-							if (list.InTime < OfficeInTime)
-							{
-								totalovertime = OfficeInTime - list.InTime;
-								overtime += totalovertime.Value.Hours;
-								if (list.OutTime <= OfficeOutTime)
-								{
-									totalworkhour = list.OutTime - OfficeInTime;
-									workingHours += totalworkhour.Value.Hours;
-								}
-								if (list.OutTime > OfficeOutTime)
-								{
-									totalovertime = list.OutTime - OfficeOutTime;
-									overtime += totalovertime.Value.Hours;
-									totalworkhour = OfficeOutTime - OfficeInTime;
-									workingHours += totalworkhour.Value.Hours;
-								}
-							}
-
-
-							if (list.InTime >= OfficeInTime)
-							{
-								if (list.OutTime <= OfficeOutTime)
-								{
-									totalworkhour = list.OutTime - list.InTime;
-									workingHours += totalworkhour.Value.Hours;
-								}
-								if (list.OutTime > OfficeOutTime)
-								{
-									totalovertime = list.OutTime - OfficeOutTime;
-									overtime += totalovertime.Value.Hours;
-									totalworkhour = OfficeOutTime - list.InTime;
-									workingHours += totalworkhour.Value.Hours;
-								}
-							}
-
-							//if (Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) > defaulthours)
-							//{
-							//    list.TotalWorkTime = defaulthours.ToString();
-							//    list.HoverTimeHours = Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) - defaulthours;
-							//}
-							else
+                            if (list.InTime < OfficeInTime)
                             {
-								list.TotalWorkTime = workingHours.ToString();
-								list.HoverTimeHours = overtime;
-								//list.TotalWorkTime = totalworkhour.ToString().Substring(0, 2);
-								//list.HoverTimeHours = 0;
-							}
+                                totalovertime = OfficeInTime - list.InTime;
+                                overtime += totalovertime.Value.Hours;
+                                if (list.OutTime <= OfficeOutTime)
+                                {
+                                    totalworkhour = list.OutTime - OfficeInTime;
+                                    workingHours += totalworkhour.Value.Hours;
+                                }
+                                if (list.OutTime > OfficeOutTime)
+                                {
+                                    totalovertime = list.OutTime - OfficeOutTime;
+                                    overtime += totalovertime.Value.Hours;
+                                    totalworkhour = OfficeOutTime - OfficeInTime;
+                                    workingHours += totalworkhour.Value.Hours;
+                                }
+                            }
+
+
+                            if (list.InTime >= OfficeInTime)
+                            {
+                                if (list.OutTime <= OfficeOutTime)
+                                {
+                                    totalworkhour = list.OutTime - list.InTime;
+                                    workingHours += totalworkhour.Value.Hours;
+                                }
+                                if (list.OutTime > OfficeOutTime)
+                                {
+                                    totalovertime = list.OutTime - OfficeOutTime;
+                                    overtime += totalovertime.Value.Hours;
+                                    totalworkhour = OfficeOutTime - list.InTime;
+                                    workingHours += totalworkhour.Value.Hours;
+                                }
+                            }
+
+                            //if (Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) > defaulthours)
+                            //{
+                            //    list.TotalWorkTime = defaulthours.ToString();
+                            //    list.HoverTimeHours = Convert.ToInt32(totalworkhour.ToString().Substring(0, 2)) - defaulthours;
+                            //}
+                            else
+                            {
+                                list.TotalWorkTime = workingHours.ToString();
+                                list.HoverTimeHours = overtime;
+                                //list.TotalWorkTime = totalworkhour.ToString().Substring(0, 2);
+                                //list.HoverTimeHours = 0;
+                            }
                             list.FinancialYearId = financiallist.FinancialYearId;
                             list.CreatedById = UserId;
                             list.CreatedDate = DateTime.UtcNow;
@@ -2981,7 +2981,7 @@ namespace HumanitarianAssistance.Service.Classes
                                            PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
                                            NetSalary = ept.GrossSalary - ept.TotalDeduction,
                                            AdvanceAmount = ept.AdvanceAmount,
-										   IsAdvanceApproved = ept.IsAdvanceApproved
+                                           IsAdvanceApproved = ept.IsAdvanceApproved
                                        }).ToList();
 
 
@@ -3022,29 +3022,29 @@ namespace HumanitarianAssistance.Service.Classes
                     IsApproved = x.FirstOrDefault().IsApproved,
                     AdvanceAmount = x.FirstOrDefault().AdvanceAmount,
                     IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved,
-					IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved
-				}).ToList();
+                    IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved
+                }).ToList();
 
 
                 if (userdetailslist.Count == 0)
                 {
-					var queryResult = EF.CompileAsyncQuery(
-					(ApplicationDbContext ctx) => ctx.EmployeeAttendance
-					.Include(e => e.EmployeeDetails).Include(e => e.EmployeeDetails.EmployeeProfessionalDetail).Where(x => x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == officeid)
-					.Include(e => e.EmployeeDetails.EmployeeSalaryDetails)
-					//.Include(e=> e.EmployeeDetails.Advances).Where(x=>x.EmployeeDetails.Advances.AdvanceDate.Date.Month <month && x.EmployeeDetails.Advances.AdvanceDate.Date.Year == year && x.EmployeeDetails.Advances.IsApproved == true && x.EmployeeDetails.Advances.IsDeducted == false)
-					.Where(x => x.Date.Month == month && x.Date.Year == year).GroupBy(x => x.EmployeeId));
-					var payrolllist = await Task.Run(() =>
-						queryResult(_uow.GetDbContext()).ToListAsync().Result
-					);
+                    var queryResult = EF.CompileAsyncQuery(
+                    (ApplicationDbContext ctx) => ctx.EmployeeAttendance
+                    .Include(e => e.EmployeeDetails).Include(e => e.EmployeeDetails.EmployeeProfessionalDetail).Where(x => x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == officeid)
+                    .Include(e => e.EmployeeDetails.EmployeeSalaryDetails)
+                    //.Include(e=> e.EmployeeDetails.Advances).Where(x=>x.EmployeeDetails.Advances.AdvanceDate.Date.Month <month && x.EmployeeDetails.Advances.AdvanceDate.Date.Year == year && x.EmployeeDetails.Advances.IsApproved == true && x.EmployeeDetails.Advances.IsDeducted == false)
+                    .Where(x => x.Date.Month == month && x.Date.Year == year).GroupBy(x => x.EmployeeId));
+                    var payrolllist = await Task.Run(() =>
+                        queryResult(_uow.GetDbContext()).ToListAsync().Result
+                    );
 
-					//var payrolllist = await _uow.GetDbContext().EmployeeAttendance.Include(x=>x.EmployeeDetails).ThenInclude(x=>x.EmployeeProfessionalDetail)
-					//	.Include(x=>x.EmployeeDetails).ThenInclude(x=>x.EmployeeSalaryDetails)
-					//	.Where(x => x.Date.Month == month && x.Date.Year == year && x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == officeid).GroupBy(x=>x.EmployeeId).ToListAsync();
+                    //var payrolllist = await _uow.GetDbContext().EmployeeAttendance.Include(x=>x.EmployeeDetails).ThenInclude(x=>x.EmployeeProfessionalDetail)
+                    //	.Include(x=>x.EmployeeDetails).ThenInclude(x=>x.EmployeeSalaryDetails)
+                    //	.Where(x => x.Date.Month == month && x.Date.Year == year && x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == officeid).GroupBy(x=>x.EmployeeId).ToListAsync();
 
 
-					//var pensionLst = _uow.EmployeePensionRateRepository.FindAsync(x => x.FinancialYearId == payrolllist[0].FirstOrDefault().FinancialYearId);					
-					var pensionLst = _uow.EmployeePensionRateRepository.Find(x => x.IsDefault == true);
+                    //var pensionLst = _uow.EmployeePensionRateRepository.FindAsync(x => x.FinancialYearId == payrolllist[0].FirstOrDefault().FinancialYearId);					
+                    var pensionLst = _uow.EmployeePensionRateRepository.Find(x => x.IsDefault == true);
                     double pensionrateamount = pensionLst?.PensionRate ?? 0;
                     int monthdays = GetMonthDays(month, year);
                     int totalhours = 0, presentdays = 0, absentdays = 0, leavedays = 0, overtimehours = 0;
@@ -3080,23 +3080,23 @@ namespace HumanitarianAssistance.Service.Classes
                             }
                         }
 
-						var advanceDeductionApproved = await _uow.AdvancesRepository.FindAllAsync(x => x.AppraisalApprovedDate.Date.Month <= month && x.AppraisalApprovedDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == true && x.IsAdvanceRecovery == false && x.EmployeeId == payrolllist[i].FirstOrDefault().EmployeeId);
-						double advanceRecovery = 0;
-						foreach (var element in advanceDeductionApproved)
-						{
-							if (element.CurrencyId != currencyid)
-							{
-								var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
-								advanceRecovery += element.AdvanceAmount * conversionRate.Rate;
-							}
-							else
-							{
-								advanceRecovery += element.AdvanceAmount;
-							}
-						}
+                        var advanceDeductionApproved = await _uow.AdvancesRepository.FindAllAsync(x => x.AppraisalApprovedDate.Date.Month <= month && x.AppraisalApprovedDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == true && x.IsAdvanceRecovery == false && x.EmployeeId == payrolllist[i].FirstOrDefault().EmployeeId);
+                        double advanceRecovery = 0;
+                        foreach (var element in advanceDeductionApproved)
+                        {
+                            if (element.CurrencyId != currencyid)
+                            {
+                                var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+                                advanceRecovery += element.AdvanceAmount * conversionRate.Rate;
+                            }
+                            else
+                            {
+                                advanceRecovery += element.AdvanceAmount;
+                            }
+                        }
 
-						// WHEN CURRENCY ID IS SAME (WITHOUT CONVERSION)
-						if (currencyid == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId)
+                        // WHEN CURRENCY ID IS SAME (WITHOUT CONVERSION)
+                        if (currencyid == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId)
                         {
                             payrollmodel = payrolllist[i].Select(x => new EmployeeMonthlyPayrollModel
                             {
@@ -3160,9 +3160,9 @@ namespace HumanitarianAssistance.Service.Classes
                                 IsApproved = false,				 // Field for salary approved for the particular month
                                 AdvanceAmount = advance,
                                 IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false,
-								IsAdvanceRecovery = advanceRecovery > 0 ? true : false,
-								AdvanceRecoveryAmount = advanceRecovery
-							}).FirstOrDefault();
+                                IsAdvanceRecovery = advanceRecovery > 0 ? true : false,
+                                AdvanceRecoveryAmount = advanceRecovery
+                            }).FirstOrDefault();
                         }
                         // TO CONVERT AMOUNT USING CONVERSION RATE
                         else
@@ -3231,9 +3231,9 @@ namespace HumanitarianAssistance.Service.Classes
                                 IsApproved = false,
                                 AdvanceAmount = advance,
                                 IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false,
-								IsAdvanceRecovery = advanceRecovery > 0 ? true : false,
-								AdvanceRecoveryAmount = advanceRecovery
-							}).FirstOrDefault();
+                                IsAdvanceRecovery = advanceRecovery > 0 ? true : false,
+                                AdvanceRecoveryAmount = advanceRecovery
+                            }).FirstOrDefault();
                         }
                         monthlypayrolllist.Add(payrollmodel);
 
@@ -4121,28 +4121,28 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     if (item.AdvanceAmount > 0)
                     {
-                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);						
-						foreach (var element in advancesRecords)
+                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);
+                        foreach (var element in advancesRecords)
                         {
-							var updateRecord = await _uow.AdvancesRepository.FindAsync(x=>x.AdvancesId == element.AdvancesId);
-							updateRecord.IsDeducted = true;
-							updateRecord.DeductedDate = DateTime.Now;
-							await _uow.AdvancesRepository.UpdateAsyn(updateRecord);
+                            var updateRecord = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == element.AdvancesId);
+                            updateRecord.IsDeducted = true;
+                            updateRecord.DeductedDate = DateTime.Now;
+                            await _uow.AdvancesRepository.UpdateAsyn(updateRecord);
                         }
                     }
 
-					if (item.AdvanceRecoveryAmount > 0)
-					{
-						var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);
-						foreach (var element in advancesRecords)
-						{
-							var updateRecord = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == element.AdvancesId);
-							updateRecord.IsAdvanceRecovery = true;
-							updateRecord.AdvanceRecoveryDate = DateTime.Now;
-							await _uow.AdvancesRepository.UpdateAsyn(updateRecord);
-						}
-					}
-					EmployeePaymentTypes emp = new EmployeePaymentTypes();
+                    if (item.AdvanceRecoveryAmount > 0)
+                    {
+                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);
+                        foreach (var element in advancesRecords)
+                        {
+                            var updateRecord = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == element.AdvancesId);
+                            updateRecord.IsAdvanceRecovery = true;
+                            updateRecord.AdvanceRecoveryDate = DateTime.Now;
+                            await _uow.AdvancesRepository.UpdateAsyn(updateRecord);
+                        }
+                    }
+                    EmployeePaymentTypes emp = new EmployeePaymentTypes();
                     emp.OfficeId = item.OfficeId;
                     emp.CurrencyId = item.CurrencyId;
                     emp.FinancialYearDate = item.FinancialYearDate;
@@ -4651,7 +4651,7 @@ namespace HumanitarianAssistance.Service.Classes
                     record.ModifiedDate = DateTime.Now;
                     record.OfficeId = model.OfficeId;
                     record.RequestAmount = model.RequestAmount;
-                    record.VoucherReferenceNo = model.VoucherReferenceNo;					
+                    record.VoucherReferenceNo = model.VoucherReferenceNo;
                     await _uow.AdvancesRepository.UpdateAsyn(record);
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -4676,10 +4676,10 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-				var lst = await _uow.AdvancesRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.IsDeleted == false);
-				lst = lst.Where(x => x.AdvanceDate.Date.Month == month && x.AdvanceDate.Date.Year == year).ToList();
-				//var lst = await _uow.GetDbContext().Advances.Where(x => x.OfficeId == OfficeId && x.AdvanceDate.Month == month && x.AdvanceDate.Year == year && x.IsDeleted == false).ToListAsync();
-				if (lst.Count > 0)
+                var lst = await _uow.AdvancesRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.IsDeleted == false);
+                lst = lst.Where(x => x.AdvanceDate.Date.Month == month && x.AdvanceDate.Date.Year == year).ToList();
+                //var lst = await _uow.GetDbContext().Advances.Where(x => x.OfficeId == OfficeId && x.AdvanceDate.Month == month && x.AdvanceDate.Year == year && x.IsDeleted == false).ToListAsync();
+                if (lst.Count > 0)
                 {
                     List<AdvanceModel> AdvanceList = new List<AdvanceModel>();
                     foreach (var item in lst)
@@ -4732,7 +4732,7 @@ namespace HumanitarianAssistance.Service.Classes
                     record.IsApproved = true;
                     record.ModifiedById = UserId;
                     record.ModifiedDate = DateTime.Now;
-					record.AppraisalApprovedDate = DateTime.Now;
+                    record.AppraisalApprovedDate = DateTime.Now;
                     await _uow.AdvancesRepository.UpdateAsyn(record);
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -4794,6 +4794,18 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.Now;
                     await _uow.InterviewDetailsRepository.AddAsyn(obj);
+
+                    //Rating Based Criteria
+                    foreach (var item in model.RatingBasedCriteriaList)
+                    {
+                        RatingBasedCriteria ratingobj = new RatingBasedCriteria();
+                        ratingobj.InterviewDetailsId = item.InterviewDetailsId;
+                        ratingobj.CriteriaQuestion = item.CriteriaQuestion;
+                        ratingobj.Rating = item.Rating;
+                        ratingobj.CreatedById = UserId;
+                        ratingobj.CreatedDate = DateTime.Now;
+                        await _uow.RatingBasedCriteriaRepository.AddAsyn(ratingobj);
+                    }
 
                     foreach (var item in model.InterviewLanguageModelList)
                     {
@@ -4908,6 +4920,22 @@ namespace HumanitarianAssistance.Service.Classes
                         await _uow.InterviewDetailsRepository.UpdateAsyn(record);
                     }
 
+                    //Rating based Criteria
+                    var criteriaRecord = await _uow.RatingBasedCriteriaRepository.FindAllAsync(x => x.InterviewDetailsId == model.InterviewDetailsId);
+                    _uow.GetDbContext().RatingBasedCriteria.RemoveRange(criteriaRecord);
+
+                    foreach (var item in model.RatingBasedCriteriaList)
+                    {
+                        RatingBasedCriteria ratingObj = new RatingBasedCriteria();
+                        ratingObj.InterviewDetailsId = model.InterviewDetailsId;
+                        ratingObj.CriteriaQuestion = item.CriteriaQuestion;
+                        ratingObj.Rating = item.Rating;
+                        ratingObj.CreatedById = UserId;
+                        ratingObj.CreatedDate = DateTime.Now;
+                        await _uow.RatingBasedCriteriaRepository.AddAsyn(ratingObj);
+                    }
+
+
                     var languageRecord = await _uow.InterviewLanguagesRepository.FindAllAsync(x => x.InterviewDetailsId == model.InterviewDetailsId);
                     _uow.GetDbContext().InterviewLanguages.RemoveRange(languageRecord);
 
@@ -4978,15 +5006,26 @@ namespace HumanitarianAssistance.Service.Classes
                 var recordLst = await _uow.InterviewDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
                 foreach (var model in recordLst)
                 {
+                    var ratingCriteriaRecord = await _uow.RatingBasedCriteriaRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
                     var languageRecords = await _uow.InterviewLanguagesRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
                     var trainingRecords = await _uow.InterviewTrainingsRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
                     var technicalRecords = await _uow.GetDbContext().InterviewTechnicalQuestion.Where(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId).ToListAsync();
 
                     InterviewDetailModel obj = new InterviewDetailModel();
+                    List<RatingBasedCriteriaModel> ratingCriteriaRecordList = new List<RatingBasedCriteriaModel>();
                     List<InterviewLanguageModel> languageList = new List<InterviewLanguageModel>();
                     List<InterviewTechQuesModel> technicalList = new List<InterviewTechQuesModel>();
                     List<InterviewTrainingModel> trainingList = new List<InterviewTrainingModel>();
 
+                    //rating based criteria
+                    foreach (var item in ratingCriteriaRecordList)
+                    {
+                        RatingBasedCriteriaModel criteriaModel = new RatingBasedCriteriaModel();
+                        //technicalModel.TechnicalQuestionId = item.TechnicalQuestionId;
+                        criteriaModel.CriteriaQuestion = item.CriteriaQuestion;
+                        criteriaModel.Rating = item.Rating;
+                        ratingCriteriaRecordList.Add(criteriaModel);
+                    }
 
                     foreach (var item in technicalRecords)
                     {
@@ -5070,6 +5109,8 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.Interviewer2 = model.Interviewer2;
                     obj.Interviewer3 = model.Interviewer3;
                     obj.Interviewer4 = model.Interviewer4;
+
+                    obj.RatingBasedCriteriaList = ratingCriteriaRecordList;
 
                     obj.InterviewLanguageModelList = languageList;
                     obj.InterviewTrainingModelList = trainingList;

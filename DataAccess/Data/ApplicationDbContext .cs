@@ -222,6 +222,9 @@ namespace HumanitarianAssistance.Entities
         public DbSet<StrongandWeakPoints> StrongandWeakPoints { get; set; }
         public DbSet<EmployeeEvaluationTraining> EmployeeEvaluationTraining { get; set; }
         public DbSet<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMember { get; set; }
+        public DbSet<RatingBasedCriteria> RatingBasedCriteria { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
