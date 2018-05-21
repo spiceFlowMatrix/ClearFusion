@@ -38,9 +38,9 @@ using System.IO;
 using HumanitarianAssistance.WebAPI.ChaHub;
 
 namespace HumanitarianAssistance
-{ 
-    public class Startup
-    {
+{
+  public class Startup
+  {
     private string DefaultCorsPolicyName;
     private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
     private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
@@ -58,7 +58,7 @@ namespace HumanitarianAssistance
       Configuration = builder.Build();
     }
 
-        public IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; }
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
@@ -68,11 +68,12 @@ namespace HumanitarianAssistance
       string connectionString = Configuration.GetConnectionString("linuxdb");
 
       //string str = "shubham karnwal";
-      
-      services.AddDbContextPool<ApplicationDbContext>(options=> options.UseNpgsql(connectionString));
 
-      services.AddSwaggerGen(p=> {
-        p.SwaggerDoc("v1",new Info {Title="CHA Core API",Description="Swagger API" });
+      services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+
+      services.AddSwaggerGen(p =>
+      {
+        p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
         p.AddSecurityDefinition("Bearer", new ApiKeyScheme
         {
           Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -82,13 +83,14 @@ namespace HumanitarianAssistance
         });
       });
       // ===== Add Identity ========
-      services.AddIdentity<AppUser, IdentityRole>(o => {
+      services.AddIdentity<AppUser, IdentityRole>(o =>
+      {
         o.Password.RequireDigit = false;
         o.Password.RequireLowercase = false;
         o.Password.RequireUppercase = false;
         o.Password.RequireNonAlphanumeric = false;
         o.Password.RequiredLength = 6;
-        
+
       }).AddEntityFrameworkStores<ApplicationDbContext>()
           .AddDefaultTokenProviders();
 
@@ -154,7 +156,7 @@ namespace HumanitarianAssistance
         ClockSkew = TimeSpan.Zero
       };
 
-      
+
       //services.AddTransient<IAccountNoteDetails, AccountNoteService>();
 
       //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
@@ -178,17 +180,17 @@ namespace HumanitarianAssistance
               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
               RequireExpirationTime = true,
               ClockSkew = TimeSpan.Zero
-               
-              
-            }; 
+
+
+            };
           });
 
       // api user claim policy
       services.AddAuthorization(options =>
       {
-    //  options.AddPolicy("Trust", policy => policy.RequireClaim("Permission", "dashboardhome"));
-      options.AddPolicy("Trust", policy => policy.RequireClaim("Roles","Admin","SuperAdmin"));
-        options.AddPolicy("DepartmentUser",policy => policy.RequireClaim("OfficeCode"));
+        //  options.AddPolicy("Trust", policy => policy.RequireClaim("Permission", "dashboardhome"));
+        options.AddPolicy("Trust", policy => policy.RequireClaim("Roles", "Admin", "SuperAdmin", "Accounting Manager", "HR Manager", "Project Manager"));
+        options.AddPolicy("DepartmentUser", policy => policy.RequireClaim("OfficeCode"));
         options.AddPolicy("DepartmentUser", policy => policy.RequireClaim("DepartmentId"));
         //options.AddPolicy("Trust", policy => policy.RequireClaim("OfficeCode"));
         //options.AddPolicy("AdministratorPolicy", policy =>
@@ -222,7 +224,7 @@ namespace HumanitarianAssistance
       services.AddMvc()
           .AddJsonOptions(config =>
           {
-           // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
           });
 
@@ -261,10 +263,10 @@ namespace HumanitarianAssistance
                    }
                  });
            });
-      
-        
-      
-       
+
+
+
+
       app.UseCors(DefaultCorsPolicyName);
       app.UseAuthentication();
 
@@ -277,9 +279,10 @@ namespace HumanitarianAssistance
         RequestPath = new PathString("/Docs")
       });
 
-      
+
       app.UseSwagger();
-      app.UseSwaggerUI(c => {
+      app.UseSwaggerUI(c =>
+      {
         c.SwaggerEndpoint("../swagger/v1/swagger.json", "CHA Core API");
       });
 

@@ -157,41 +157,45 @@ namespace HumanitarianAssistance.Controllers
 
     }
 
-    //  [HttpPost]
-    //public async Task<object> Post([FromBody] RegistrationModel model)
-    //{
-    //  //var user = new AppUser
-    //  //{
-    //  //  FirstName = "naval",
-    //  //  LastName="bhatt",
-    //  //  UserName = model.Email,
-    //  //  Email = model.Email
+    [HttpPost]
+    public async Task<object> Post(string RoleName)
+    {
+      //var user = new AppUser
+      //{
+      //  FirstName = "naval",
+      //  LastName="bhatt",
+      //  UserName = model.Email,
+      //  Email = model.Email
 
 
-    //  //};
-    //  //var result = await _userManager.CreateAsync(user, model.Password);
+      //};
+      //var result = await _userManager.CreateAsync(user, model.Password);
 
-    // // if (result.Succeeded)
-    //  //{
-    //   // if (result.Succeeded)
-    //    //{
-    //      //var role = new IdentityRole();
-    //      //role.Name = "Admin";
-    //      //await _roleManager.CreateAsync(role);
-    //      //role = new IdentityRole();
-    //      //role.Name = "Normal";
-    //      var supadmin=await _roleManager.FindByNameAsync("SuperAdmin");
-    //      await _roleManager.AddClaimAsync(supadmin, new Claim("Permission", "dashboardhome"));
+      // if (result.Succeeded)
+      //{
+      // if (result.Succeeded)
+      //{
+      var roleExists = await _roleManager.FindByNameAsync(RoleName);
+      if (roleExists == null)
+      {
+        var role = new IdentityRole();
+        role.Name = RoleName;
+        await _roleManager.CreateAsync(role);
+      }
+      //role = new IdentityRole();
+      //role.Name = "Normal";
+      //var supadmin = await _roleManager.FindByNameAsync("SuperAdmin");
+      //await _roleManager.AddClaimAsync(supadmin, new Claim("Permission", "dashboardhome"));
 
 
-    //  // }
+      // }
 
-    //  //await _signInManager.SignInAsync(user, false);
-    //  //return await GenerateJwtToken(model.Email, user);
-    //  // }
-    //  return Ok("SDFF");
-    //  //throw new ApplicationException("UNKNOWN_ERROR");
-    //}
+      //await _signInManager.SignInAsync(user, false);
+      //return await GenerateJwtToken(model.Email, user);
+      // }
+      return Ok("SDFF");
+      //throw new ApplicationException("UNKNOWN_ERROR");
+    }
     [HttpPost]
     public async Task<object> Login([FromBody]LoginUserModel model)
     {
@@ -519,7 +523,7 @@ namespace HumanitarianAssistance.Controllers
     public async Task<object> AddVoucherDetail([FromBody] VoucherDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      
+
       if (user != null)
       {
         var id = user.Id;
