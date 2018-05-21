@@ -1743,12 +1743,13 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                TimeSpan? totalworkhour;
-                TimeSpan? totalovertime;
-                int? overtime = 0, workingHours = 0;
-                DateTime OfficeInTime = new DateTime();
-                DateTime OfficeOutTime = new DateTime();
-                var existrecord = await _uow.EmployeeAttendanceRepository.FindAsync(x => x.AttendanceId == model.AttendanceId);
+				TimeSpan? OfficeHoursDifference;
+				TimeSpan? totalworkhour;
+				TimeSpan? totalovertime;
+				int? overtime = 0, workingHours = 0;
+				DateTime OfficeInTime = new DateTime();
+				DateTime OfficeOutTime = new DateTime();
+				var existrecord = await _uow.EmployeeAttendanceRepository.FindAsync(x => x.AttendanceId == model.AttendanceId);
                 if (existrecord != null)
                 {
                     //var userdetails = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == userid);
@@ -1760,8 +1761,10 @@ namespace HumanitarianAssistance.Service.Classes
                         defaulthours = DefaultHourDetail.Hours;
                     }
 
-                    OfficeInTime = new DateTime(model.InTime.Value.Year, model.InTime.Value.Month, model.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
-                    OfficeOutTime = new DateTime(model.OutTime.Value.Year, model.OutTime.Value.Month, model.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
+					OfficeHoursDifference = DefaultHourDetail.OutTime - DefaultHourDetail.InTime;
+					OfficeInTime = new DateTime(model.InTime.Value.Year, model.InTime.Value.Month, model.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
+					//OfficeOutTime = new DateTime(model.OutTime.Value.Year, model.OutTime.Value.Month, model.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
+					OfficeOutTime = OfficeInTime.AddHours(OfficeHoursDifference.Value.Hours);
 
                     if (model.InTime < OfficeInTime)
                     {
@@ -1782,7 +1785,7 @@ namespace HumanitarianAssistance.Service.Classes
                     }
 
 
-                    if (model.InTime >= OfficeInTime)
+                    if (model.InTime >= OfficeInTime && model.InTime < OfficeOutTime)
                     {
                         if (model.OutTime <= OfficeOutTime)
                         {
@@ -1798,8 +1801,22 @@ namespace HumanitarianAssistance.Service.Classes
                         }
                     }
 
+					if (model.InTime >= OfficeOutTime)
+					{
+						workingHours = 0;
+						totalovertime = model.OutTime - model.InTime;
+						overtime += totalovertime.Value.Hours;
+					}
 
-                    totalworkhour = model.OutTime - model.InTime;
+					if (model.OutTime <= OfficeInTime)
+					{
+						workingHours = 0;
+						totalovertime = model.OutTime - model.InTime;
+						overtime += totalovertime.Value.Hours;
+					}
+
+
+					totalworkhour = model.OutTime - model.InTime;
                     if (totalworkhour.ToString() == "00:00:00" || existrecord.AttendanceTypeId == (int)AttendanceType.A)
                     {
                         existrecord.AttendanceTypeId = 2;
@@ -1869,6 +1886,9 @@ namespace HumanitarianAssistance.Service.Classes
 
                     foreach (var list in modellist)
                     {
+						//list.
+						//var leaveRecord = await _uow.EmployeeApplyLeaveRepository.FindAsync()
+
                         var isemprecord = existrecord.Where(x => x.EmployeeId == list.EmployeeId && x.Date.Date == list.Date.Date).ToList();
                         if (isemprecord.Count == 0)
                         {
@@ -4472,7 +4492,7 @@ namespace HumanitarianAssistance.Service.Classes
                                join odr in await _uow.OfficeDetailRepository.GetAllAsyn() on epr.OfficeId equals odr.OfficeId
                                join blr in await _uow.BudgetLineEmployeesRepository.GetAllAsyn() on edr.EmployeeID equals blr.EmployeeId
                                join ear in await _uow.EmployeePaymentTypeRepository.GetAllAsyn() on edr.EmployeeID equals ear.EmployeeID
-                               join epp in await _uow.EmployeePayrollRepository.FindAllAsync(x => x.EmployeeID == EmployeeId) on edr.EmployeeID equals epp.EmployeeID
+                               join epp in await _uow.EmployeeMonthlyPayrollRepository.FindAllAsync(x => x.EmployeeID == EmployeeId) on edr.EmployeeID equals epp.EmployeeID
                                join sdr in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on epp.SalaryHeadId equals sdr.SalaryHeadId
                                join ccr in await _uow.CurrencyDetailsRepository.GetAllAsyn() on ear.CurrencyId equals ccr.CurrencyId
                                where edr.EmployeeID == EmployeeId && ear.FinancialYearDate.Year == year && ear.FinancialYearDate.Month == month && epr.OfficeId == OfficeId
@@ -4498,15 +4518,15 @@ namespace HumanitarianAssistance.Service.Classes
                                    Attendance = ear.PresentDays,
                                    Absentese = ear.AbsentDays,
 
-                                   PayrollId = epp?.PayrollId ?? 0,
+                                   //PayrollId = epp?. ?? 0,
                                    SalaryHeadType = sdr.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : sdr.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : sdr.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
                                    HeadTypeId = sdr.HeadTypeId,
                                    SalaryHeadId = sdr.SalaryHeadId,
                                    SalaryHead = sdr.HeadName,
                                    MonthlyAmount = epp?.MonthlyAmount ?? 0,
-                                   CurrencyId = epp?.CurrencyId ?? 0,
-                                   PaymentType = epp?.PaymentType ?? 0,
-                                   PensionRate = epp?.PensionRate ?? 0,
+                                   CurrencyId = ear?.CurrencyId ?? 0,
+                                   PaymentType = ear?.PaymentType ?? 0,
+                                   PensionRate = ear?.PensionRate ?? 0,
 
                                    GrossSalary = ear.TotalGeneralAmount + ear.TotalAllowance,
                                    NetSalary = Math.Round(Convert.ToDouble(ear.TotalGeneralAmount + ear.TotalAllowance - ear.TotalDeduction - ear.PensionAmount), 2),

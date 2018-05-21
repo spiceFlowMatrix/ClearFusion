@@ -17,7 +17,6 @@ D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.RazorTargetAssemblyInfo.cache
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.dll
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.pdb
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.csprojResolveAssemblyReference.cache
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.deps.json
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.runtimeconfig.json
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\bin\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.runtimeconfig.dev.json
@@ -39,3 +38,4 @@ D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\Humanit
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.csproj.CopyComplete
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.pdb
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.csprojResolveAssemblyReference.cache
