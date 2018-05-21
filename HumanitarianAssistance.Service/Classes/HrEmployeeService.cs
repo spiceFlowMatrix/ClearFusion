@@ -4268,6 +4268,8 @@ namespace HumanitarianAssistance.Service.Classes
                 List<EmployeePensionReportModel> lst = new List<EmployeePensionReportModel>();
                 var financialYearList = _uow.FinancialYearDetailRepository.FindAllAsync(x => x.FinancialYearId == model.FinancialYearId).Result.FirstOrDefault();
                 var empList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.FinancialYearDate >= financialYearList.StartDate && x.FinancialYearDate <= financialYearList.EndDate && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId);
+                //var empList = await _uow.GetDbContext().EmployeePaymentTypes.Include(x=>x.EmployeeDetail).Where(x => x.FinancialYearDate >= financialYearList.StartDate && x.FinancialYearDate <= financialYearList.EndDate && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId).ToListAsync();
+
                 var previousPensionList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.FinancialYearDate.Date < financialYearList.StartDate.Date);
                 epm.PreviousPensionRate = previousPensionList.Average(x => x.PensionRate);
                 foreach (var item in previousPensionList)
