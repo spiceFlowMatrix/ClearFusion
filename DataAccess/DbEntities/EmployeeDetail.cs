@@ -98,6 +98,11 @@ namespace DataAccess.DbEntities
 		//public EmployeePaymentTypes EmployeePaymentTypes { get; set; }
 		public EmployeePensionRate EmployeePensionRate { get; set; }
 		public Advances Advances { get; set; }
+		public int MaritalStatus { get; set; }
+		public string PassportNo { get; set; }
+		public string University { get; set; }
+		public string BirthPlace { get; set; }
+		public string IssuePlace { get; set; }
 
 		//[StringLength(5)]
 		//public string ContractStatus { get; set; }

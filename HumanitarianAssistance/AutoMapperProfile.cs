@@ -75,6 +75,8 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<InterviewDetails, InterviewDetailModel>().ReverseMap();
       CreateMap<InterviewTechnicalQuestion, InterviewTechQuesModel>().ReverseMap();
       CreateMap<ExistInterviewDetails, ExitInterviewModel>().ReverseMap();
+      CreateMap<RatingBasedCriteriaModel, RatingBasedCriteria>().ReverseMap();
     }
   }
 }
+

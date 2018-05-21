@@ -54,6 +54,12 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string DocumentGUID { get; set; }
 		public int OfficeId { get; set; }
 
+		public int MaritalStatus { get; set; }
+		public string PassportNo { get; set; }
+		public string University { get; set; }
+		public string BirthPlace { get; set; }
+		public string IssuePlace { get; set; }
+
 		//public IList<EmployeeProfessionalDetailModel> EmployeeProfessionalList { get; set; }
 		//public IList<EmployeeDocumentDetailModel> EmployeeDocumentDetailList { get; set; }
 		//public IList<EmployeeHistoryDetailModel> EmployeeHistoryDetailList { get; set; }
@@ -79,6 +85,11 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public int? DesignationId { get; set; }
 		public int? ExperienceYear { get; set; }
 		public int? ExperienceMonth { get; set; }
+		public int MaritalStatus { get; set; }
+		public string PassportNo { get; set; }
+		public string University { get; set; }
+		public string BirthPlace { get; set; }
+		public string IssuePlace { get; set; }
 
 	}
 

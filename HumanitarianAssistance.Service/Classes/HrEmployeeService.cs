@@ -145,6 +145,11 @@ namespace HumanitarianAssistance.Service.Classes
                     employeeinfo.ExperienceYear = model.ExperienceYear;
                     employeeinfo.ExperienceMonth = model.ExperienceMonth;
                     employeeinfo.EmployeePhoto = model.EmployeePhoto;
+					employeeinfo.MaritalStatus = model.MaritalStatus;
+					employeeinfo.University = model.University;
+					employeeinfo.PassportNo = model.PassportNo;
+					employeeinfo.BirthPlace = model.BirthPlace;
+					employeeinfo.IssuePlace = model.IssuePlace;
                     await _uow.EmployeeDetailRepository.UpdateAsyn(employeeinfo);
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -259,7 +264,12 @@ namespace HumanitarianAssistance.Service.Classes
                     Profession = x.EmployeeProfessionalDetail.JobDescription,
                     DesignationId = x.EmployeeProfessionalDetail.DesignationId,
                     ExperienceYear = x.ExperienceYear,
-                    ExperienceMonth = x.ExperienceMonth
+                    ExperienceMonth = x.ExperienceMonth,
+					MaritalStatus = x.MaritalStatus,
+					PassportNo = x.PassportNo,
+					University = x.University,
+					BirthPlace = x.BirthPlace,
+					IssuePlace = x.IssuePlace
                 }).ToList();
 
                 response.data.EmployeeDetailsList = employeedetaillist;
@@ -402,7 +412,12 @@ namespace HumanitarianAssistance.Service.Classes
                     Resume = x.Resume,
                     EmployeePhoto = x.EmployeePhoto,
                     DocumentGUID = x.DocumentGUID + x.Extension,
-                }).ToList();
+					MaritalStatus = x.MaritalStatus,
+					University = x.University,
+					BirthPlace = x.BirthPlace,
+					IssuePlace = x.IssuePlace,
+					PassportNo = x.PassportNo
+				}).ToList();
 
 
                 //Get EmployeeProfessional Details
@@ -585,7 +600,12 @@ namespace HumanitarianAssistance.Service.Classes
                     ExperienceYear = x.ExperienceYear,
                     ExperienceMonth = x.ExperienceMonth,
                     //Resume = x.Resume,
-                    EmployeePhoto = x.EmployeePhoto
+                    EmployeePhoto = x.EmployeePhoto,
+					MaritalStatus = x.MaritalStatus,
+					University = x.University,
+					BirthPlace = x.BirthPlace,
+					IssuePlace = x.IssuePlace,
+					PassportNo = x.PassportNo
                 }).ToList();
                 response.data.EmployeeDetailList = employeedetaillist;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5031,8 +5051,10 @@ namespace HumanitarianAssistance.Service.Classes
                     List<InterviewTechQuesModel> technicalList = new List<InterviewTechQuesModel>();
                     List<InterviewTrainingModel> trainingList = new List<InterviewTrainingModel>();
 
-                    //rating based criteria
-                    foreach (var item in ratingCriteriaRecord)
+					//ratingCriteriaRecordList = _mapper.Map<List<RatingBasedCriteriaModel>, RatingBasedCriteria>(
+
+					//rating based criteria
+					foreach (var item in ratingCriteriaRecord)
                     {
                         RatingBasedCriteriaModel criteriaModel = new RatingBasedCriteriaModel();
                         //technicalModel.TechnicalQuestionId = item.TechnicalQuestionId;
