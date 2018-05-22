@@ -94,15 +94,22 @@ namespace DataAccess
 		private IGenericRepository<LoggerDetails> _loggerDetailsRepository;
 		private IGenericRepository<EmployeeAppraisalTeamMember> _employeeAppraisalTeamMemberRepository;
 		private IGenericRepository<RatingBasedCriteria> _ratingBasedCriteriaRepository;
+		private IGenericRepository<CategoryPopulator> _categoryPopulatorRepository;
 
-        
 
-        public UnitOfWork(ApplicationDbContext mschaContext)
+		public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
 
-        public IGenericRepository<RatingBasedCriteria> RatingBasedCriteriaRepository
+		public IGenericRepository<CategoryPopulator> CategoryPopulatorRepository
+		{
+			get
+			{
+				return _categoryPopulatorRepository = _categoryPopulatorRepository ?? new GenericRepository<CategoryPopulator>(_mschaContext);
+			}
+		}
+		public IGenericRepository<RatingBasedCriteria> RatingBasedCriteriaRepository
         {
             get
             {

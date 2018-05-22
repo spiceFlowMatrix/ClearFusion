@@ -2355,5 +2355,77 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-    }
+
+		public async Task<APIResponse> AddCategoryPopulator(CategoryPopulatorModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				CategoryPopulator obj = _mapper.Map<CategoryPopulator>(model);
+				obj.CreatedById = UserId;
+				obj.CreatedDate = DateTime.Now;
+				await _uow.CategoryPopulatorRepository.AddAsyn(obj);
+				await _uow.SaveAsync();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> EditCategoryPopulator(CategoryPopulatorModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var recordExists = await _uow.CategoryPopulatorRepository.FindAsync(x => x.CategoryPopulatorId == model.CategoryPopulatorId);
+				if (recordExists != null)
+				{
+					recordExists.ModifiedById = UserId;
+					recordExists.ModifiedDate = DateTime.Now;
+					_mapper.Map(model, recordExists);
+					await _uow.CategoryPopulatorRepository.UpdateAsyn(recordExists);
+					await _uow.SaveAsync();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetAllCategoryPopulator()
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var lst = await _uow.CategoryPopulatorRepository.GetAllAsyn();
+				if (lst != null)
+				{
+					response.data.CategoryPopulatorLst = lst.GroupBy(x => x.AccountTypeId).ToList();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+				else
+				{
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "No record found";
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+	}
 }

@@ -95,9 +95,9 @@ namespace DataAccess
 		IGenericRepository<LoggerDetails> LoggerDetailsRepository { get; }
 		IGenericRepository<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMemberRepository { get; }
         IGenericRepository<RatingBasedCriteria> RatingBasedCriteriaRepository { get; }
+		IGenericRepository<CategoryPopulator> CategoryPopulatorRepository { get; }
 
-        
-        void Save();
+		void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
 

@@ -223,10 +223,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeeEvaluationTraining> EmployeeEvaluationTraining { get; set; }
         public DbSet<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMember { get; set; }
         public DbSet<RatingBasedCriteria> RatingBasedCriteria { get; set; }
-
-
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		public DbSet<CategoryPopulator> CategoryPopulator { get; set; }
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
             modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);
