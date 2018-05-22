@@ -1,3 +1,4 @@
+using HumanitarianAssistance.Service.APIResponses;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
