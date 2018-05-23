@@ -828,6 +828,13 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllUserNotifications(string userid)
+    {
+      APIResponse response = await _ivoucherDetail.GetAllUserNotifications(userid);
+      return response;
+    }
 
   }
 

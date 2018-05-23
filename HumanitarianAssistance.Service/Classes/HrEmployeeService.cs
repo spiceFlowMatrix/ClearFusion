@@ -74,7 +74,7 @@ namespace HumanitarianAssistance.Service.Classes
 				loggerObj.IsRead = false;
 				loggerObj.UserName = user.FirstName + " " + user.LastName;
 				loggerObj.UserId = model.CreatedById;
-				loggerObj.LoggedDetail = "Employee Created";
+				loggerObj.LoggedDetail = "Employee " + obj.EmployeeName + " Created";
 				loggerObj.CreatedDate = model.CreatedDate;
 
 				response.LoggerDetailsModel = loggerObj;
@@ -172,7 +172,7 @@ namespace HumanitarianAssistance.Service.Classes
 					loggerObj.IsRead = false;
 					loggerObj.UserName = user.FirstName + " " + user.LastName;
 					loggerObj.UserId = model.CreatedById;
-					loggerObj.LoggedDetail = "Employee Updated";
+					loggerObj.LoggedDetail = "Employee "+ employeeinfo.EmployeeName +" Updated";
 					loggerObj.CreatedDate = model.CreatedDate;
 
 					response.LoggerDetailsModel = loggerObj;
