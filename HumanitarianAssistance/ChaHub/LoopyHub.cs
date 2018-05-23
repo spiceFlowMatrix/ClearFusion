@@ -2,6 +2,7 @@ using AutoMapper;
 using DataAccess;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Service.APIResponses;
+using HumanitarianAssistance.ViewModels.Models;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -39,6 +40,11 @@ namespace HumanitarianAssistance.WebAPI.ChaHub
       }
 
       var list = await _uow.LoggerDetailsRepository.FindAllAsync(x=>x.CreatedById == data.UserId);
+      list = list.OrderByDescending(x=>x.CreatedDate).ToList();
+      //var unReadCounts = list.Count(x=>x.IsRead == false);
+      //LogData model = new LogData();
+      //model.LogList = list;
+      //model.unReadCounts = unReadCounts;
       return Clients.All.SendAsync("Send", list);
     }
   }
