@@ -46,5 +46,12 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteVoucherTransactionDetail(int transactionId, string modifiedById);
 		Task<APIResponse> GetAllUserNotifications(string userid);
 
-	}
+        Task<APIResponse> DeleteVoucherTransactionDetail(int transactionId, string modifiedById);
+
+
+
+        Task<APIResponse> AddCategoryPopulator(CategoryPopulatorModel model, string UserId);
+        Task<APIResponse> EditCategoryPopulator(CategoryPopulatorModel model, string UserId);
+        Task<APIResponse> GetAllCategoryPopulator();
+    }
 }

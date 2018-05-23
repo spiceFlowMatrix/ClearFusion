@@ -794,13 +794,40 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllUserNotifications([FromQuery] string userid)
+    public async Task<APIResponse> AddCategoryPopulator([FromBody] CategoryPopulatorModel model)
     {
-      APIResponse response = await _ivoucherDetail.GetAllUserNotifications(userid);
+      APIResponse respone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        respone = await _ivoucherDetail.AddCategoryPopulator(model, user.Id);
+      }
+      return respone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditCategoryPopulator([FromBody] CategoryPopulatorModel model)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _ivoucherDetail.EditCategoryPopulator(model, user.Id);
+      }
       return response;
     }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllCategoryPopulator()
+    {
+      APIResponse response = await _ivoucherDetail.GetAllCategoryPopulator();
+      return response;
+    }
+
 
   }
 
