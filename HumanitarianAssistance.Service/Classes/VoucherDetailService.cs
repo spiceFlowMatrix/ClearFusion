@@ -158,12 +158,17 @@ namespace HumanitarianAssistance.Service.Classes
                     voucherdetailInfo.ModifiedDate = model.ModifiedDate;
                     await _uow.VoucherDetailRepository.UpdateAsyn(voucherdetailInfo);
 
-					//LoggerDetails loggerObj = new LoggerDetails();
-					//loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherUpdate;
-					//loggerObj.IsRead = false;
-					//loggerObj.CreatedById = model.CreatedById;
-					//loggerObj.CreatedDate = model.CreatedDate;
-					//await _uow.LoggerDetailsRepository.AddAsyn(loggerObj);
+					var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
+
+					LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+					loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherUpdate;
+					loggerObj.IsRead = false;
+					loggerObj.UserName = user.FirstName + " " + user.LastName;
+					loggerObj.UserId = model.CreatedById;
+					loggerObj.LoggedDetail = "Voucher Updated";
+					loggerObj.CreatedDate = model.CreatedDate;
+
+					response.LoggerDetailsModel = loggerObj;
 
 					await _uow.SaveAsync();
 
