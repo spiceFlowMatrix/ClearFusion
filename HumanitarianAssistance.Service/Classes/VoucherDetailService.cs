@@ -109,23 +109,23 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.CreatedDate = DateTime.UtcNow;
                 obj.IsDeleted = false;
                 await _uow.VoucherDetailRepository.AddAsyn(obj);
-				await _uow.SaveAsync();
+                await _uow.SaveAsync();
 
-				obj.ReferenceNo = officekey + "-" + obj.VoucherNo;
+                obj.ReferenceNo = officekey + "-" + obj.VoucherNo;
                 await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
-				var user = await _uow.UserDetailsRepository.FindAsync(x=>x.AspNetUserId == model.CreatedById);
+                var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
 
-				LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-				loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
-				loggerObj.IsRead = false;
-				loggerObj.UserName = user.FirstName + " " + user.LastName;
-				loggerObj.UserId = model.CreatedById;
-				loggerObj.LoggedDetail = "Voucher Created";
-				loggerObj.CreatedDate = model.CreatedDate;
+                LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
+                loggerObj.IsRead = false;
+                loggerObj.UserName = user.FirstName + " " + user.LastName;
+                loggerObj.UserId = model.CreatedById;
+                loggerObj.LoggedDetail = "Voucher Created";
+                loggerObj.CreatedDate = model.CreatedDate;
 
-				response.LoggerDetailsModel = loggerObj;
-				response.StatusCode = StaticResource.successStatusCode;
+                response.LoggerDetailsModel = loggerObj;
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -158,21 +158,21 @@ namespace HumanitarianAssistance.Service.Classes
                     voucherdetailInfo.ModifiedDate = model.ModifiedDate;
                     await _uow.VoucherDetailRepository.UpdateAsyn(voucherdetailInfo);
 
-					var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
+                    var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
 
-					LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-					loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherUpdate;
-					loggerObj.IsRead = false;
-					loggerObj.UserName = user.FirstName + " " + user.LastName;
-					loggerObj.UserId = model.CreatedById;
-					loggerObj.LoggedDetail = "Voucher Updated";
-					loggerObj.CreatedDate = model.CreatedDate;
+                    LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                    loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherUpdate;
+                    loggerObj.IsRead = false;
+                    loggerObj.UserName = user.FirstName + " " + user.LastName;
+                    loggerObj.UserId = model.CreatedById;
+                    loggerObj.LoggedDetail = "Voucher Updated";
+                    loggerObj.CreatedDate = model.CreatedDate;
 
-					response.LoggerDetailsModel = loggerObj;
+                    response.LoggerDetailsModel = loggerObj;
 
-					await _uow.SaveAsync();
+                    await _uow.SaveAsync();
 
-					response.StatusCode = StaticResource.successStatusCode;
+                    response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
                 else
@@ -2361,76 +2361,108 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-		public async Task<APIResponse> AddCategoryPopulator(CategoryPopulatorModel model, string UserId)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				CategoryPopulator obj = _mapper.Map<CategoryPopulator>(model);
-				obj.CreatedById = UserId;
-				obj.CreatedDate = DateTime.Now;
-				await _uow.CategoryPopulatorRepository.AddAsyn(obj);
-				await _uow.SaveAsync();
-				response.StatusCode = StaticResource.successStatusCode;
-				response.Message = "Success";
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
+        public async Task<APIResponse> AddCategoryPopulator(CategoryPopulatorModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CategoryPopulator obj = _mapper.Map<CategoryPopulator>(model);
+                obj.CreatedById = UserId;
+                obj.CreatedDate = DateTime.Now;
+                await _uow.CategoryPopulatorRepository.AddAsyn(obj);
+                await _uow.SaveAsync();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
-		public async Task<APIResponse> EditCategoryPopulator(CategoryPopulatorModel model, string UserId)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				var recordExists = await _uow.CategoryPopulatorRepository.FindAsync(x => x.CategoryPopulatorId == model.CategoryPopulatorId);
-				if (recordExists != null)
-				{
-					recordExists.ModifiedById = UserId;
-					recordExists.ModifiedDate = DateTime.Now;
-					_mapper.Map(model, recordExists);
-					await _uow.CategoryPopulatorRepository.UpdateAsyn(recordExists);
-					await _uow.SaveAsync();
-					response.StatusCode = StaticResource.successStatusCode;
-					response.Message = "Success";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
+        public async Task<APIResponse> EditCategoryPopulator(CategoryPopulatorModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var recordExists = await _uow.CategoryPopulatorRepository.FindAsync(x => x.CategoryPopulatorId == model.CategoryPopulatorId);
+                if (recordExists != null)
+                {
+                    recordExists.ModifiedById = UserId;
+                    recordExists.ModifiedDate = DateTime.Now;
+                    _mapper.Map(model, recordExists);
+                    await _uow.CategoryPopulatorRepository.UpdateAsyn(recordExists);
+                    await _uow.SaveAsync();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
-		public async Task<APIResponse> GetAllCategoryPopulator()
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				var lst = await _uow.CategoryPopulatorRepository.GetAllAsyn();
-				if (lst != null)
-				{
-					response.data.CategoryPopulatorLst = lst.GroupBy(x => x.AccountTypeId).ToList();
-					response.StatusCode = StaticResource.successStatusCode;
-					response.Message = "Success";
-				}
-				else
-				{
-					response.StatusCode = StaticResource.successStatusCode;
-					response.Message = "No record found";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
-	}
+        public async Task<APIResponse> DeleteCategoryPopulator(int categoryPopulatorId, string modifiedById)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var recordExists = await _uow.CategoryPopulatorRepository.FindAsync(x => x.CategoryPopulatorId == categoryPopulatorId);
+                if (recordExists != null)
+                {
+                    recordExists.ModifiedById = modifiedById;
+                    recordExists.ModifiedDate = DateTime.Now;
+                    recordExists.IsDeleted = true;
+                    await _uow.CategoryPopulatorRepository.UpdateAsyn(recordExists);
+                    await _uow.SaveAsync();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> GetAllCategoryPopulator()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var lst = await _uow.CategoryPopulatorRepository.FindAllAsync(x => x.IsDeleted == false);
+                if (lst != null)
+                {
+                    //response.data.CategoryPopulatorLst = lst.GroupBy(x => x.AccountTypeId).ToList();
+                    response.data.CategoryPopulatorLst = lst.ToList();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "No record found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+    }
 }

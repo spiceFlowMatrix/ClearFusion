@@ -822,6 +822,20 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> DeleteCategoryPopulator(int categoryPopulatorId)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      string ModifiedById = "";
+      if (user != null)
+      {
+        ModifiedById = user.Id;
+      }
+      APIResponse response = await _ivoucherDetail.DeleteCategoryPopulator(categoryPopulatorId, ModifiedById);
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllCategoryPopulator()
     {
       APIResponse response = await _ivoucherDetail.GetAllCategoryPopulator();

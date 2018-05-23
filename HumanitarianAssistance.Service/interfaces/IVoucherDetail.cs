@@ -23,7 +23,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllVoucherTransactionDetailByVoucherNo(int VoucherNo);
         //Task<APIResponse> AddVoucherTransactionDetail(List<VoucherTransactionModel> model, string userId);
         Task<APIResponse> AddVoucherTransactionDetail(VoucherTransactionModel model);
-        
+
         Task<APIResponse> EditVoucherTransactionDetail(VoucherTransactionModel model);
         Task<APIResponse> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo);
         Task<APIResponse> AddVoucherDocumentDetail(VoucherDocumentDetailModel model);
@@ -50,6 +50,9 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> AddCategoryPopulator(CategoryPopulatorModel model, string UserId);
         Task<APIResponse> EditCategoryPopulator(CategoryPopulatorModel model, string UserId);
+
+        Task<APIResponse> DeleteCategoryPopulator(int categoryPopulatorId, string modifiedById);
+
         Task<APIResponse> GetAllCategoryPopulator();
     }
 }
