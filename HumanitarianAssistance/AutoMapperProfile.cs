@@ -1,5 +1,6 @@
 using AutoMapper;
 using DataAccess.DbEntities;
+using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
 using System;
@@ -77,6 +78,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<ExistInterviewDetails, ExitInterviewModel>().ReverseMap();
       CreateMap<RatingBasedCriteriaModel, RatingBasedCriteria>().ReverseMap();
       CreateMap<CategoryPopulator, CategoryPopulatorModel>().ReverseMap();
+      CreateMap<LoggerDetails, LoggerDetailsModel>().ReverseMap();
     }
   }
 }

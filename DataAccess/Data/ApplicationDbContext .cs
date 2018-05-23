@@ -224,6 +224,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMember { get; set; }
         public DbSet<RatingBasedCriteria> RatingBasedCriteria { get; set; }
 		public DbSet<CategoryPopulator> CategoryPopulator { get; set; }
+		public DbSet<LoggerDetails> LoggerDetails { get; set; }
+		
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });

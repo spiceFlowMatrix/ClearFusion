@@ -31,6 +31,11 @@ namespace HumanitarianAssistance.Service.APIResponses
 		public DateTime CreatedDate { get; set; }
 	}
 
+	public class Parent
+	{
+		public dynamic LoggerDetailsModel { get; set; }
+	}
+
 	public class data
 	{
 		public string AspNetUserId { get; set; }
