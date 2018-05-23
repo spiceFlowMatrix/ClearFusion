@@ -2086,26 +2086,26 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var list = await Task.Run(() =>
-                    //_uow.NotesMasterRepository.FindAllAsync(x=> x.IsDeleted== false).Result.ToList()
-                    _uow.GetDbContext().NotesMaster.Include(a => a.AccountType).Include(c => c.ChartAccountDetails).Where(x => x.IsDeleted == false).ToListAsync()
-                );
-                var noteslist = list.Select(x => new NotesMasterModel
-                {
-                    NoteId = x.NoteId,
-                    Notes = x.Notes,
-                    AccountCode = x.AccountCode,
-                    ChartOfAccountCode = x.ChartAccountDetails?.ChartOfAccountCode ?? 0,
-                    Narration = x.Narration,
-                    BlanceType = x.BlanceType,
-                    BlanceTypeName = x.BlanceType == (int)BalanceType.SUM ? "Sum" : x.BlanceType == (int)BalanceType.CR ? "Cr" : x.BlanceType == (int)BalanceType.DR ? "Dr" : "",
-                    FinancialReportTypeId = x.FinancialReportTypeId,
-                    FinancialReportTypeName = x.FinancialReportTypeId == (int)FinancialReportType.BALANCESHEET ? "Blance Sheet" : x.FinancialReportTypeId == (int)FinancialReportType.INCOMEANDEXPANCE ? "Income and Expance" : "",
-                    AccountTypeId = x.AccountTypeId,
-                    AccountTypeName = x.AccountType?.AccountTypeName ?? null
-                }).ToList();
-                response.data.NotesDetailsList = noteslist;
-                response.StatusCode = StaticResource.successStatusCode;
+				var list = await Task.Run(() =>
+					//_uow.NotesMasterRepository.FindAllAsync(x=> x.IsDeleted== false).Result.ToList()
+					_uow.GetDbContext().NotesMaster.Include(a => a.AccountType).Include(c => c.ChartAccountDetails).Where(x => x.IsDeleted == false).ToListAsync()
+				);
+				var noteslist = list.Select(x => new NotesMasterModel
+				{
+					NoteId = x.NoteId,
+					Notes = x.Notes,
+					AccountCode = x.AccountCode,
+					ChartOfAccountCode = x.ChartAccountDetails?.ChartOfAccountCode ?? 0,
+					Narration = x.Narration,
+					BlanceType = x.BlanceType,
+					BlanceTypeName = x.BlanceType == (int)BalanceType.SUM ? "Sum" : x.BlanceType == (int)BalanceType.CR ? "Cr" : x.BlanceType == (int)BalanceType.DR ? "Dr" : "",
+					FinancialReportTypeId = x.FinancialReportTypeId,
+					FinancialReportTypeName = x.FinancialReportTypeId == (int)FinancialReportType.BALANCESHEET ? "Blance Sheet" : x.FinancialReportTypeId == (int)FinancialReportType.INCOMEANDEXPANCE ? "Income and Expance" : "",
+					AccountTypeId = x.AccountTypeId,
+					AccountTypeName = x.AccountType?.AccountTypeName ?? null
+				}).ToList();
+				response.data.NotesDetailsList = noteslist;
+				response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)

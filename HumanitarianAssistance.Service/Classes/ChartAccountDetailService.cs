@@ -32,25 +32,25 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var charlist =  await Task.Run(()=>
-                   _uow.GetDbContext().ChartAccountDetail.Include(c => c.AccountTypes).Where(a => a.IsDeleted == false).ToList()
-                    );
-                var chartaccountlist = charlist.Select(blog => new ChartAccountDetailModel
-                    {
-                        AccountCode = blog.AccountCode,
-                        AccountName = blog.AccountName,
-                        AccountLevelId = blog.AccountLevelId,
-                        AccountTypeName = blog.AccountTypes.AccountTypeName,
-                        AccountTypeId = blog.AccountTypes.AccountTypeId,
-                        ParentID = blog.ParentID,
-                        ChartOfAccountCode = blog.ChartOfAccountCode
-                        //DepRate = blog.DepRate,
-                        //DepMethod = blog.DepMethod,
-                        //MDCode = blog.MDCode,
-                        //Show = blog.Show
-                    }).ToList();
-                response.data.ChartAccountList = chartaccountlist;
-                response.StatusCode = StaticResource.successStatusCode;
+				var charlist = await Task.Run(() =>
+				  _uow.GetDbContext().ChartAccountDetail.Include(c => c.AccountType).Where(a => a.IsDeleted == false).ToList()
+					);
+				var chartaccountlist = charlist.Select(blog => new ChartAccountDetailModel
+				{
+					AccountCode = blog.AccountCode,
+					AccountName = blog.AccountName,
+					AccountLevelId = blog.AccountLevelId,
+					AccountTypeName = blog.AccountType.AccountTypeName,
+					AccountTypeId = blog.AccountType.AccountTypeId,
+					ParentID = blog.ParentID,
+					ChartOfAccountCode = blog.ChartOfAccountCode
+					//DepRate = blog.DepRate,
+					//DepMethod = blog.DepMethod,
+					//MDCode = blog.MDCode,
+					//Show = blog.Show
+				}).ToList();
+				response.data.ChartAccountList = chartaccountlist;
+				response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -94,7 +94,7 @@ namespace HumanitarianAssistance.Service.Classes
                                         {
                                             AccountTypeId = a.AccountTypeId,
                                             AccountTypeName = a.AccountTypeName
-                                        }).ToList();
+										}).ToList();
                 response.data.AccountTypeList = accounttypelist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

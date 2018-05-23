@@ -7,7 +7,7 @@ using System.Text;
 namespace DataAccess.DbEntities
 {
     public partial class AccountType
-    {
+	{
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]

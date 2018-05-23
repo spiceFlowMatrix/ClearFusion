@@ -20,7 +20,7 @@ namespace DataAccess.DbEntities
         public int BlanceType { get; set; } // 1 = Sum , 2 = CR , 3 = DR
         public int FinancialReportTypeId { get; set; } // 1 = Balance Sheet , 2 = Income and Expance
         public int? AccountTypeId { get; set; }
-        [ForeignKey("AccountTypeId")]
-        public AccountType AccountType { get; set; }
-    }
+		//[ForeignKey("AccountTypeId")]
+		public AccountType AccountType { get; set; }
+	}
 }

@@ -17,9 +17,9 @@ namespace DataAccess.DbEntities
         public string AccountName { get; set; }
         public AccountLevel AccountLevels { get; set; }
         public int AccountLevelId { get; set; }
-        public AccountType AccountTypes { get; set; }
-        public int? AccountTypeId { get; set; }
-        public int? ParentID { get; set; }
+		public AccountType AccountType { get; set; }
+		public int? AccountTypeId { get; set; }
+		public int? ParentID { get; set; }
         [ForeignKey("ParentID")]
         public ChartAccountDetail CreditAccountDetails { get; set; }
         public List<VoucherTransactionDetails> CreditAccountlist { get; set; }
