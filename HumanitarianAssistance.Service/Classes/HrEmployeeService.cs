@@ -67,7 +67,20 @@ namespace HumanitarianAssistance.Service.Classes
                 await _uow.EmployeeProfessionalDetailRepository.AddAsyn(obj1);
                 await _uow.SaveAsync();
 
-                response.StatusCode = StaticResource.successStatusCode;
+				var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
+
+				LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+				loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeCreated;
+				loggerObj.IsRead = false;
+				loggerObj.UserName = user.FirstName + " " + user.LastName;
+				loggerObj.UserId = model.CreatedById;
+				loggerObj.LoggedDetail = "Employee " + obj.EmployeeName + " Created";
+				loggerObj.CreatedDate = model.CreatedDate;
+
+				response.LoggerDetailsModel = loggerObj;
+
+				await _uow.SaveAsync();
+				response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -151,7 +164,22 @@ namespace HumanitarianAssistance.Service.Classes
 					employeeinfo.BirthPlace = model.BirthPlace;
 					employeeinfo.IssuePlace = model.IssuePlace;
                     await _uow.EmployeeDetailRepository.UpdateAsyn(employeeinfo);
-                    response.StatusCode = StaticResource.successStatusCode;
+
+					var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.ModifiedById);
+
+					LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+					loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeUpdate;
+					loggerObj.IsRead = false;
+					loggerObj.UserName = user.FirstName + " " + user.LastName;
+					loggerObj.UserId = model.CreatedById;
+					loggerObj.LoggedDetail = "Employee "+ employeeinfo.EmployeeName +" Updated";
+					loggerObj.CreatedDate = model.CreatedDate;
+
+					response.LoggerDetailsModel = loggerObj;
+
+					await _uow.SaveAsync();
+
+					response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
             }

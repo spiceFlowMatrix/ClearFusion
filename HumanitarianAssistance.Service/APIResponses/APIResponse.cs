@@ -68,6 +68,15 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<int> UserOfficeList { get; set; }
         public List<ExitInterviewModel> ExitInterviewList { get; set; }
         public List<InterviewDetailModel> InterviewDetailList { get; set; }
+		public int? TotalEmployees { get; set; }
+		public double? TotalGrossSalary { get; set; }
+		public double? TotalDeductions { get; set; }
+		public double? TotalAllowances { get; set; }
+		public List<LoggerModel> LoggerDetailsModelList { get; set; }
+		public List<IGrouping<int, CategoryPopulator>> CategoryPopulatorLst { get; set; }
+		public List<int> UserOfficeList { get; set; }
+		public List<ExitInterviewModel> ExitInterviewList { get; set; }
+		public List<InterviewDetailModel> InterviewDetailList { get; set; }
         public List<AdvanceModel> AdvanceList { get; set; }
         public List<InterviewTechnicalQuestions> InterviewTechnicalQuestionsList { get; set; }
         public List<EmployeeDetailList> EmployeeDetailListData { get; set; }
