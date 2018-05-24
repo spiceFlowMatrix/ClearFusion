@@ -167,6 +167,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<CurrentFinancialYear> CurrentFinancialYearList { get; set; }
 
         public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
+        public List<DetailsOfNotesFinalModel> DetailsOfNotesFinalList { get; set; }
 
         //Alpit
         public IList<ScheduleCandidateModel> ScheduledProspectiveEmployee { get; set; }

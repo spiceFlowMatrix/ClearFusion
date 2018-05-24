@@ -11,6 +11,8 @@ namespace HumanitarianAssistance.Service.interfaces
     {
         Task<APIResponse> GetAllVoucherDetails();
 
+        Task<APIResponse> GetAllVoucherDetailsByFilter(VoucherFilterModel filterModel);
+
         Task<APIResponse> GetAllVoucherType();
 
         Task<APIResponse> AddVoucherDetail(VoucherDetailModel model);
@@ -43,8 +45,11 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllNotesDetails();
         Task<APIResponse> GetBlanceSheetDetails(int? financialyearid, int? currencyid, int? financialreporttype);
         Task<APIResponse> GetDetailsOfNotes(int? financialyearid, int? currencyid);
+
+        Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid);
+
         Task<APIResponse> DeleteVoucherTransactionDetail(int transactionId, string modifiedById);
-		Task<APIResponse> GetAllUserNotifications(string userid);
+        Task<APIResponse> GetAllUserNotifications(string userid);
 
         Task<APIResponse> AddCategoryPopulator(CategoryPopulatorModel model, string UserId);
         Task<APIResponse> EditCategoryPopulator(CategoryPopulatorModel model, string UserId);

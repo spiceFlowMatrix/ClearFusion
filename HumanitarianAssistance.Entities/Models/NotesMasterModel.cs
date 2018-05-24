@@ -8,7 +8,7 @@ namespace HumanitarianAssistance.ViewModels.Models
     {
         public int NoteId { get; set; }
         public int? AccountCode { get; set; }
-		public long ChartOfAccountCode { get; set; }
+        public long ChartOfAccountCode { get; set; }
         public string Narration { get; set; }
         public int Notes { get; set; }
         public int BlanceType { get; set; } // 1 = Sum , 2 = CR , 3 = DR
@@ -26,5 +26,15 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string AccountName { get; set; }
         public int Notes { get; set; }
         public double BalanceAmount { get; set; }
+        public double? CreditAmount { get; set; }
+        public double? DebitAmount { get; set; }
+    }
+
+    public class DetailsOfNotesFinalModel
+    {
+        public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
+        public double? CreditSum { get; set; }
+        public double? DebitSum { get; set; }
+        public double BalanceSum { get; set; }
     }
 }

@@ -501,12 +501,19 @@ namespace HumanitarianAssistance.Controllers
 
     }
 
-
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllVoucherDetails()
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherDetails();
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllVoucherDetailsByFilter([FromBody] VoucherFilterModel filterModel)
+    {
+      APIResponse response = await _ivoucherDetail.GetAllVoucherDetailsByFilter(filterModel);
       return response;
     }
 
@@ -791,6 +798,14 @@ namespace HumanitarianAssistance.Controllers
     public async Task<APIResponse> GetDetailsOfNotes(int? financialyearid, int? currencyid)
     {
       APIResponse response = await _ivoucherDetail.GetDetailsOfNotes(financialyearid, currencyid);
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
+    {
+      APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData(financialyearid, currencyid);
       return response;
     }
 
