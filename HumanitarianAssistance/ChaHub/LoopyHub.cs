@@ -35,6 +35,7 @@ namespace HumanitarianAssistance.WebAPI.ChaHub
         obj.IsRead = data.IsRead;
         obj.UserName = data.UserName;
         obj.LoggedDetail = data.LoggedDetail;
+        //obj.NotificationPath = data.NotificationPath;
         await _uow.LoggerDetailsRepository.AddAsyn(obj);
         await _uow.SaveAsync();
       }

@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180523114545_accountType")]
+    partial class accountType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,80 +151,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("Advances");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.AnalyticalDetail", b =>
-                {
-                    b.Property<long>("AnalyticalId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Area")
-                        .HasMaxLength(10);
-
-                    b.Property<string>("Attachment")
-                        .HasMaxLength(100);
-
-                    b.Property<float>("BLAmount");
-
-                    b.Property<string>("BLCurrCode")
-                        .HasMaxLength(5);
-
-                    b.Property<byte>("BLType");
-
-                    b.Property<string>("CostBook")
-                        .HasMaxLength(10);
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("DonorCode")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("Job")
-                        .HasMaxLength(10);
-
-                    b.Property<string>("MDCode")
-                        .HasMaxLength(10);
-
-                    b.Property<string>("MemoCode")
-                        .HasMaxLength(10);
-
-                    b.Property<string>("MemoName")
-                        .HasMaxLength(200);
-
-                    b.Property<byte>("MemoType");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Program")
-                        .HasMaxLength(10);
-
-                    b.Property<string>("Project")
-                        .HasMaxLength(10);
-
-                    b.Property<float>("ReceivedAmount");
-
-                    b.Property<string>("Sector")
-                        .HasMaxLength(10);
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.Property<byte>("Status");
-
-                    b.HasKey("AnalyticalId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("AnalyticalDetail");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AppraisalGeneralQuestions", b =>
@@ -3776,17 +3704,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.AnalyticalDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.AppraisalGeneralQuestions", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -4013,7 +3930,7 @@ namespace DataAccess.Migrations
                         .HasForeignKey("AccountLevelId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DataAccess.DbEntities.AccountType", "AccountType")
+                    b.HasOne("DataAccess.DbEntities.AccountType", "AccountTypes")
                         .WithMany()
                         .HasForeignKey("AccountTypeId");
 

@@ -171,7 +171,7 @@ namespace HumanitarianAssistance.Service.Classes
 					loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeUpdate;
 					loggerObj.IsRead = false;
 					loggerObj.UserName = user.FirstName + " " + user.LastName;
-					loggerObj.UserId = model.CreatedById;
+					loggerObj.UserId = model.ModifiedById;
 					loggerObj.LoggedDetail = "Employee "+ employeeinfo.EmployeeName +" Updated";
 					loggerObj.CreatedDate = model.CreatedDate;
 
