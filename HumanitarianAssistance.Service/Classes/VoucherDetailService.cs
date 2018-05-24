@@ -2200,103 +2200,119 @@ namespace HumanitarianAssistance.Service.Classes
 
                 BalanceSheet bal = new BalanceSheet();
 
-                bal.CurrentAssest = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.ASSET).GroupBy(x => x.Notes)
-                    .Select(x => new BalanceSheetModel
-                    {
-                        Note = x.First().Notes,
-                        Narration = x.First().Narration,
-                        Balance = x.Sum(y => y.BalanceAmount)
+				if (financialreporttype == 1)
+				{
+					bal.CapitalAssetsWrittenOff = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.CapitalAssetsWrittenOff).GroupBy(x => x.Notes)
+						.Select(x => new BalanceSheetModel
+						{
+							Note = x.First().Notes,
+							Narration = x.First().Narration,
+							Balance = x.Sum(y => y.BalanceAmount)
 
-                    }).ToList();
+						}).ToList();
 
-                bal.Libility = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.LIBILITY).GroupBy(x => x.Notes)
-                    .Select(x => new BalanceSheetModel
-                    {
-                        Note = x.First().Notes,
-                        Narration = x.First().Narration,
-                        Balance = x.Sum(y => y.BalanceAmount)
+					bal.CurrentAssets = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.CurrentAssets).GroupBy(x => x.Notes)
+						.Select(x => new BalanceSheetModel
+						{
+							Note = x.First().Notes,
+							Narration = x.First().Narration,
+							Balance = x.Sum(y => y.BalanceAmount)
 
-                    }).ToList();
+						}).ToList();
 
-                bal.Equity = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.EQUITY).GroupBy(x => x.Notes)
-                    .Select(x => new BalanceSheetModel
-                    {
-                        Note = x.First().Notes,
-                        Narration = x.First().Narration,
-                        Balance = x.Sum(y => y.BalanceAmount)
+					bal.Funds = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.Funds).GroupBy(x => x.Notes)
+						.Select(x => new BalanceSheetModel
+						{
+							Note = x.First().Notes,
+							Narration = x.First().Narration,
+							Balance = x.Sum(y => y.BalanceAmount)
 
-                    }).ToList();
+						}).ToList();
 
-                bal.Revenue = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.REVENUE).GroupBy(x => x.Notes)
-                    .Select(x => new BalanceSheetModel
-                    {
-                        Note = x.First().Notes,
-                        Narration = x.First().Narration,
-                        Balance = x.Sum(y => y.BalanceAmount)
+					bal.EndownmentFund = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.EndownmentFund).GroupBy(x => x.Notes)
+						.Select(x => new BalanceSheetModel
+						{
+							Note = x.First().Notes,
+							Narration = x.First().Narration,
+							Balance = x.Sum(y => y.BalanceAmount)
 
-                    }).ToList();
+						}).ToList();
 
-                bal.Expense = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.EXPENSE).GroupBy(x => x.Notes)
-                    .Select(x => new BalanceSheetModel
-                    {
-                        Note = x.First().Notes,
-                        Narration = x.First().Narration,
-                        Balance = x.Sum(y => y.BalanceAmount)
+					bal.ReserveAccountAdjustment = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.ReserveAccountAdjustment).GroupBy(x => x.Notes)
+						.Select(x => new BalanceSheetModel
+						{
+							Note = x.First().Notes,
+							Narration = x.First().Narration,
+							Balance = x.Sum(y => y.BalanceAmount)
 
-                    }).ToList();
+						}).ToList();
 
-                bal.Income = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.INCOME).GroupBy(x => x.Notes)
-                    .Select(x => new BalanceSheetModel
-                    {
-                        Note = x.First().Notes,
-                        Narration = x.First().Narration,
-                        Balance = x.Sum(y => y.BalanceAmount)
+					bal.LongtermLiability = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.LongtermLiability).GroupBy(x => x.Notes)
+						.Select(x => new BalanceSheetModel
+						{
+							Note = x.First().Notes,
+							Narration = x.First().Narration,
+							Balance = x.Sum(y => y.BalanceAmount)
 
-                    }).ToList();
-                bal.Funds = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.FUNDS).GroupBy(x => x.Notes)
-                  .Select(x => new BalanceSheetModel
-                  {
-                      Note = x.First().Notes,
-                      Narration = x.First().Narration,
-                      Balance = x.Sum(y => y.BalanceAmount)
+						}).ToList();
+					bal.CurrentLiability = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.CurrentLiability).GroupBy(x => x.Notes)
+					  .Select(x => new BalanceSheetModel
+					  {
+						  Note = x.First().Notes,
+						  Narration = x.First().Narration,
+						  Balance = x.Sum(y => y.BalanceAmount)
 
-                  }).ToList();
-                bal.Reserve_Account_Adjustment = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.RESERVE_ACCOUNT_ADJUSTMENT).GroupBy(x => x.Notes)
-                  .Select(x => new BalanceSheetModel
-                  {
-                      Note = x.First().Notes,
-                      Narration = x.First().Narration,
-                      Balance = x.Sum(y => y.BalanceAmount)
+					  }).ToList();
+					bal.ReserveAccount = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.ReserveAccount).GroupBy(x => x.Notes)
+					  .Select(x => new BalanceSheetModel
+					  {
+						  Note = x.First().Notes,
+						  Narration = x.First().Narration,
+						  Balance = x.Sum(y => y.BalanceAmount)
 
-                  }).ToList();
-                bal.Current_Libility = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.CURRENT_LIBILITY).GroupBy(x => x.Notes)
-                  .Select(x => new BalanceSheetModel
-                  {
-                      Note = x.First().Notes,
-                      Narration = x.First().Narration,
-                      Balance = x.Sum(y => y.BalanceAmount)
+					  }).ToList();
 
-                  }).ToList();
+				}
+
+				else if (financialreporttype == 2)
+				{
+					bal.IncomeFromDonor = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.IncomeFromDonor).GroupBy(x => x.Notes)
+					  .Select(x => new BalanceSheetModel
+					  {
+						  Note = x.First().Notes,
+						  Narration = x.First().Narration,
+						  Balance = x.Sum(y => y.BalanceAmount)
+
+					  }).ToList();
 
 
-                bal.Long_Term_Libility = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.LONG_TERM_LIBILITY).GroupBy(x => x.Notes)
-                  .Select(x => new BalanceSheetModel
-                  {
-                      Note = x.First().Notes,
-                      Narration = x.First().Narration,
-                      Balance = x.Sum(y => y.BalanceAmount)
+					bal.IncomeFromProjects = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.IncomeFromProjects).GroupBy(x => x.Notes)
+					  .Select(x => new BalanceSheetModel
+					  {
+						  Note = x.First().Notes,
+						  Narration = x.First().Narration,
+						  Balance = x.Sum(y => y.BalanceAmount)
 
-                  }).ToList();
-                bal.Reserve_Account = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.RESERVE_ACCOUNT).GroupBy(x => x.Notes)
-                  .Select(x => new BalanceSheetModel
-                  {
-                      Note = x.First().Notes,
-                      Narration = x.First().Narration,
-                      Balance = x.Sum(y => y.BalanceAmount)
+					  }).ToList();
+					bal.ProfitOnBankDeposits = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.ProfitOnBankDeposits).GroupBy(x => x.Notes)
+					  .Select(x => new BalanceSheetModel
+					  {
+						  Note = x.First().Notes,
+						  Narration = x.First().Narration,
+						  Balance = x.Sum(y => y.BalanceAmount)
 
-                  }).ToList();
+					  }).ToList();
+					bal.IncomeExpenditureFund = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.IncomeExpenditureFund).GroupBy(x => x.Notes)
+					  .Select(x => new BalanceSheetModel
+					  {
+						  Note = x.First().Notes,
+						  Narration = x.First().Narration,
+						  Balance = x.Sum(y => y.BalanceAmount)
 
-                response.data.BalanceSheet = bal;
+					  }).ToList();
+				}
+
+				response.data.BalanceSheet = bal;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

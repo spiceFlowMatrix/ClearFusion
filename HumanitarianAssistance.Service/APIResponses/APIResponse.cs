@@ -29,7 +29,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public string UserId { get; set; }
         public string LoggedDetail { get; set; }
         public DateTime CreatedDate { get; set; }
-    }
+		public string NotificationPath { get; set; }
+	}
 
     public class Parent
     {
