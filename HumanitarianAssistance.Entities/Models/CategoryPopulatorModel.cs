@@ -6,7 +6,8 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class CategoryPopulatorModel
     {
-		public int CategoryPopulatorId { get; set; }
+        public int FinancialReportType { get; set; }
+        public int CategoryPopulatorId { get; set; }
 		public string SubCategoryLabel { get; set; }
 		public long ChartOfAccountCode { get; set; }
 		//public string AccountName { get; set; }
