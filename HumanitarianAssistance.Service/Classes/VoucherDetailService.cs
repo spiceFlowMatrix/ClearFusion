@@ -84,7 +84,53 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 if (filterModel != null)
                 {
-                    if (filterModel.Date != null && filterModel.OfficesList != null)
+
+                    if (filterModel.OfficesList != null)
+                    {
+                        var voucherList = await _uow.GetDbContext().VoucherDetail
+                                                      .Include(o => o.OfficeDetails).Include(j => j.JournalDetails)
+                                                      .Include(c => c.CurrencyDetail)
+                                                      .Include(f => f.FinancialYearDetails)
+                                                      .Where(v => v.IsDeleted == false).OrderBy(x => x.VoucherDate).ToListAsync();
+
+                        List<VoucherDetailModel> voucherFilteredList = new List<VoucherDetailModel>();
+
+
+                        foreach (var item in filterModel.OfficesList)
+                        {
+                            VoucherDetailModel obj = new VoucherDetailModel();
+
+                            var voucherData = voucherList.FirstOrDefault(v => v.OfficeId == item);
+                            if (voucherData != null)
+                            {
+                                obj.VoucherNo = voucherData.VoucherNo;
+                                obj.CurrencyCode = voucherData.CurrencyDetail?.CurrencyCode ?? null;
+                                obj.CurrencyId = voucherData.CurrencyDetail?.CurrencyId ?? 0;
+                                obj.VoucherDate = voucherData.VoucherDate;
+                                obj.ChequeNo = voucherData.ChequeNo;
+                                obj.ReferenceNo = voucherData.ReferenceNo;
+                                obj.Description = voucherData.Description;
+                                obj.JournalName = voucherData.JournalDetails?.JournalName ?? null;
+                                obj.JournalCode = voucherData.JournalDetails?.JournalCode ?? null;
+                                obj.VoucherTypeId = voucherData.VoucherTypeId;
+                                obj.OfficeId = voucherData.OfficeId;
+                                obj.ProjectId = voucherData.ProjectId;
+                                obj.BudgetLineId = voucherData.BudgetLineId;
+                                obj.OfficeName = voucherData.OfficeDetails?.OfficeName ?? null;
+                                obj.FinancialYearId = voucherData.FinancialYearId;
+                                obj.FinancialYearName = voucherData.FinancialYearDetails?.FinancialYearName ?? null;
+
+                                voucherFilteredList.Add(obj);
+                            }
+                        }
+
+                        response.data.VoucherDetailList = voucherFilteredList.OrderBy(v => v.VoucherDate).ToList();
+
+                    }
+
+
+
+                    else if (filterModel.Date != null && filterModel.OfficesList != null)
                     {
                         var voucherList = await _uow.GetDbContext().VoucherDetail
                                                       .Include(o => o.OfficeDetails).Include(j => j.JournalDetails)
@@ -2472,58 +2518,121 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetDetailsOfNotes(int? financialyearid, int? currencyid)
+        //public async Task<APIResponse> GetDetailsOfNotes(int? financialyearid, int? currencyid)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        var Noteslist = await _uow.GetDbContext().NotesMaster
+        //                .Include(c => c.ChartAccountDetails)
+        //                .Include(c => c.ChartAccountDetails.CreditAccountlist)
+        //                .Include(c => c.ChartAccountDetails.DebitAccountlist)
+        //                .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1)
+        //                .GroupBy(g => g.Notes)
+        //                .ToListAsync();
+
+        //        var list = await Task.Run(() =>
+        //            _uow.GetDbContext().NotesMaster.Include(c => c.ChartAccountDetails)
+        //            .Include(c => c.ChartAccountDetails.CreditAccountlist)
+        //            .Include(c => c.ChartAccountDetails.DebitAccountlist)
+        //            .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1).ToListAsync()
+        //        );
+
+        //        List<DetailsOfNotesModel> detailsofnoteList = new List<DetailsOfNotesModel>();
+        //        double creditAmount = 0, debitAmount = 0, balanceAmount = 0;
+        //        foreach (var l in list)
+        //        {
+        //            if (l.BlanceType == (int)BalanceType.SUM)
+        //            {
+        //                creditAmount = l.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
+        //                debitAmount = l.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
+        //                balanceAmount = debitAmount - creditAmount;
+        //            }
+        //            if (l.BlanceType == (int)BalanceType.DR)
+        //            {
+        //                debitAmount = l.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
+        //                balanceAmount = debitAmount;
+        //            }
+        //            if (l.BlanceType == (int)BalanceType.CR)
+        //            {
+        //                creditAmount = l.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
+        //                balanceAmount = creditAmount;
+        //            }
+
+        //            DetailsOfNotesModel obj = new DetailsOfNotesModel();
+        //            obj.ChartOfAccountCode = l.ChartAccountDetails?.ChartOfAccountCode ?? null;
+        //            obj.AccountName = l.ChartAccountDetails?.AccountName ?? null;
+        //            obj.Notes = l.Notes;
+        //            obj.BalanceAmount = balanceAmount;
+        //            detailsofnoteList.Add(obj);
+        //        }
+
+        //        response.data.DetailsOfNotesList = detailsofnoteList.OrderBy(x => x.Notes).ToList();
+        //        response.StatusCode = StaticResource.successStatusCode;
+        //        response.Message = "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = ex.Message;
+        //    }
+        //    return response;
+        //}
+
+        public async Task<APIResponse> GetDetailsOfNotes(int? accountType, int? financialyearid, int? currencyid)
         {
             APIResponse response = new APIResponse();
             try
             {
-
-
-                var Noteslist = await _uow.GetDbContext().NotesMaster
-                        .Include(c => c.ChartAccountDetails)
-                        .Include(c => c.ChartAccountDetails.CreditAccountlist)
-                        .Include(c => c.ChartAccountDetails.DebitAccountlist)
-                        .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1)
-                        .GroupBy(g => g.Notes)
-                        .ToListAsync();
-
-                var list = await Task.Run(() =>
-                    _uow.GetDbContext().NotesMaster.Include(c => c.ChartAccountDetails)
-                    .Include(c => c.ChartAccountDetails.CreditAccountlist)
-                    .Include(c => c.ChartAccountDetails.DebitAccountlist)
-                    .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1).ToListAsync()
-                );
-
-                List<DetailsOfNotesModel> detailsofnoteList = new List<DetailsOfNotesModel>();
-                double creditAmount = 0, debitAmount = 0, balanceAmount = 0;
-                foreach (var l in list)
+                if (financialyearid != null && currencyid != null)
                 {
-                    if (l.BlanceType == (int)BalanceType.SUM)
+                    var list = await Task.Run(() =>
+                                _uow.GetDbContext().NotesMaster.Include(c => c.ChartAccountDetails)
+                                .Include(c => c.ChartAccountDetails.CreditAccountlist)
+                                .Include(c => c.ChartAccountDetails.DebitAccountlist)
+                                .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1).ToListAsync()
+                               );
+                    list = list.Where(x => x.ChartAccountDetails.AccountLevelId == 4).ToList();
+
+
+                    if (accountType != null)
                     {
-                        creditAmount = l.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                        debitAmount = l.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                        balanceAmount = debitAmount - creditAmount;
-                    }
-                    if (l.BlanceType == (int)BalanceType.DR)
-                    {
-                        debitAmount = l.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                        balanceAmount = debitAmount;
-                    }
-                    if (l.BlanceType == (int)BalanceType.CR)
-                    {
-                        creditAmount = l.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                        balanceAmount = creditAmount;
+                        list = list.Where(x => x.ChartAccountDetails.AccountTypeId == accountType).ToList();
                     }
 
-                    DetailsOfNotesModel obj = new DetailsOfNotesModel();
-                    obj.ChartOfAccountCode = l.ChartAccountDetails?.ChartOfAccountCode ?? null;
-                    obj.AccountName = l.ChartAccountDetails?.AccountName ?? null;
-                    obj.Notes = l.Notes;
-                    obj.BalanceAmount = balanceAmount;
-                    detailsofnoteList.Add(obj);
+                    List<DetailsOfNotesModel> detailsofnoteList = new List<DetailsOfNotesModel>();
+                    double creditAmount = 0, debitAmount = 0, balanceAmount = 0;
+                    foreach (var l in list)
+                    {
+                        if (l.BlanceType == (int)BalanceType.SUM)
+                        {
+                            creditAmount = l.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
+                            debitAmount = l.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
+                            balanceAmount = debitAmount - creditAmount;
+                        }
+                        if (l.BlanceType == (int)BalanceType.DR)
+                        {
+                            debitAmount = l.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
+                            balanceAmount = debitAmount;
+                        }
+                        if (l.BlanceType == (int)BalanceType.CR)
+                        {
+                            creditAmount = l.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
+                            balanceAmount = creditAmount;
+                        }
+
+                        DetailsOfNotesModel obj = new DetailsOfNotesModel();
+                        obj.ChartOfAccountCode = l.ChartAccountDetails?.ChartOfAccountCode ?? null;
+                        obj.AccountName = l.ChartAccountDetails?.AccountName ?? null;
+                        obj.Notes = l.Notes;
+                        obj.BalanceAmount = balanceAmount;
+                        detailsofnoteList.Add(obj);
+                    }
+                    response.data.DetailsOfNotesList = detailsofnoteList.OrderBy(x => x.Notes).ToList();
                 }
 
-                response.data.DetailsOfNotesList = detailsofnoteList.OrderBy(x => x.Notes).ToList();
+
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -2536,54 +2645,69 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
 
-        public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
+        public async Task<APIResponse> GetDetailsOfNotesReportData(int? accountType, int? financialyearid, int? currencyid)
         {
             APIResponse response = new APIResponse();
             try
             {
-                //Grouped
-                var Noteslist = await _uow.GetDbContext().NotesMaster
-                        .Include(c => c.ChartAccountDetails)
-                        .Include(c => c.ChartAccountDetails.CreditAccountlist)
-                        .Include(c => c.ChartAccountDetails.DebitAccountlist)
-                        .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1)
-                        .OrderBy(o => o.Notes)
-                        .GroupBy(g => g.Notes)
-                        .ToListAsync();
 
-                if (Noteslist != null)
+                if (financialyearid != null && currencyid != null)
                 {
-                    List<DetailsOfNotesFinalModel> detailsOfNotesFinalList = new List<DetailsOfNotesFinalModel>();
 
-                    foreach (var groupedItem in Noteslist)
+                    //Grouped
+                    var allNotes = await _uow.GetDbContext().NotesMaster
+                            .Include(c => c.ChartAccountDetails)
+                            .Include(c => c.ChartAccountDetails.CreditAccountlist)
+                            .Include(c => c.ChartAccountDetails.DebitAccountlist)
+                            .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1)
+                            .OrderBy(o => o.Notes)
+                            //.GroupBy(g => g.Notes)
+                            .ToListAsync();
+
+                    allNotes = allNotes.Where(x => x.ChartAccountDetails.AccountLevelId == 4).ToList();
+                    var Noteslist = allNotes.GroupBy(g => g.Notes).ToList();
+
+                    if (accountType != null)
                     {
-                        DetailsOfNotesFinalModel finalObj = new DetailsOfNotesFinalModel();
-                        List<DetailsOfNotesModel> detailsOfNoteList = new List<DetailsOfNotesModel>();
-
-                        foreach (var item in groupedItem)
-                        {
-                            DetailsOfNotesModel obj = new DetailsOfNotesModel();
-
-                            obj.CreditAmount = item.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                            obj.DebitAmount = item.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                            //obj.BalanceAmount = obj.CreditAmount.Value - obj.DebitAmount.Value;
-
-                            obj.ChartOfAccountCode = item.ChartAccountDetails?.ChartOfAccountCode ?? null;
-                            obj.AccountName = item.ChartAccountDetails?.AccountName ?? null;
-                            obj.Notes = item.Notes;
-                            detailsOfNoteList.Add(obj);
-                        }
-
-                        finalObj.DetailsOfNotesList = detailsOfNoteList.ToList();
-
-                        finalObj.CreditSum = detailsOfNoteList.Sum(x => x.CreditAmount);
-                        finalObj.DebitSum = detailsOfNoteList.Sum(x => x.DebitAmount);
-                        finalObj.BalanceSum = (finalObj.DebitSum - finalObj.CreditSum).Value;
-
-                        detailsOfNotesFinalList.Add(finalObj);
+                        Noteslist = allNotes.Where(x => x.ChartAccountDetails.AccountTypeId == accountType).GroupBy(g => g.Notes).ToList();
                     }
 
-                    response.data.DetailsOfNotesFinalList = detailsOfNotesFinalList.ToList();
+
+                    if (Noteslist != null)
+                    {
+                        List<DetailsOfNotesFinalModel> detailsOfNotesFinalList = new List<DetailsOfNotesFinalModel>();
+
+                        foreach (var groupedItem in Noteslist)
+                        {
+                            DetailsOfNotesFinalModel finalObj = new DetailsOfNotesFinalModel();
+                            List<DetailsOfNotesModel> detailsOfNoteList = new List<DetailsOfNotesModel>();
+
+                            foreach (var item in groupedItem)
+                            {
+                                DetailsOfNotesModel obj = new DetailsOfNotesModel();
+
+                                obj.CreditAmount = item.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
+                                obj.DebitAmount = item.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
+                                //obj.BalanceAmount = obj.CreditAmount.Value - obj.DebitAmount.Value;
+
+                                obj.ChartOfAccountCode = item.ChartAccountDetails?.ChartOfAccountCode ?? null;
+                                obj.AccountName = item.ChartAccountDetails?.AccountName ?? null;
+                                obj.Notes = item.Notes;
+                                detailsOfNoteList.Add(obj);
+                            }
+
+                            finalObj.DetailsOfNotesList = detailsOfNoteList.ToList();
+
+                            finalObj.CreditSum = detailsOfNoteList.Sum(x => x.CreditAmount);
+                            finalObj.DebitSum = detailsOfNoteList.Sum(x => x.DebitAmount);
+                            finalObj.BalanceSum = (finalObj.DebitSum - finalObj.CreditSum).Value;
+
+                            detailsOfNotesFinalList.Add(finalObj);
+                        }
+
+                        response.data.DetailsOfNotesFinalList = detailsOfNotesFinalList.ToList();
+                    }
+
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
