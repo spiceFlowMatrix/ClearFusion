@@ -2240,7 +2240,70 @@ namespace HumanitarianAssistance.Service.Classes
 
                 var exchangeratelist = await _uow.ExchangeRateRepository.GetAllAsyn();
 
+                var categoryPopulatorList = await _uow.CategoryPopulatorRepository.GetAllAsyn(); //Alpit
 
+                ////var chartOfAccountList = await _uow.ChartAccountDetailRepository.GetAllAsyn();
+
+                //var voucherTransactions = await _uow.VoucherTransactionDetailsRepository.GetAllAsyn();
+
+
+                //List<NotesMaster> list1 = new List<NotesMaster>();
+                //foreach (var item1 in categoryPopulatorList) {
+                //    //NotesMaster obj = new NotesMaster();
+                //    var ChartAccountlist = _uow.GetDbContext().ChartAccountDetail.Include(c => c.CreditAccountlist).Include(c => c.DebitAccountlist).Where(x => x.ChartOfAccountCode == item1.ChartOfAccountCode && x.IsDeleted == false).ToList();
+
+                //    foreach(var main in ChartAccountlist)
+                //    {
+                //        if (main.AccountLevelId == 4)
+                //        {
+                //            //Add in list
+                //        }
+                //    }
+
+                //}
+
+
+
+                //List<BalanceSheetSupportModel> vtList = new List<BalanceSheetSupportModel>();
+
+
+                //foreach (var item in categoryPopulatorList)
+                //{
+                //    BalanceSheetSupportModel obj = new BalanceSheetSupportModel();
+
+                //    var vtDebitObj = _uow.GetDbContext().VoucherTransactionDetails.Where(x => x.DebitAccount == item.ChartOfAccountCode).ToList();
+                //    var vtCreditObj = _uow.GetDbContext().VoucherTransactionDetails.Where(x => x.CreditAccount == item.ChartOfAccountCode).ToList();
+
+                //    obj.DebitAccountlist = vtDebitObj.Select(x=>new VoucherTransactionModel {
+                //       Amount= x.Amount,
+                //       CreditAccount = x.CreditAccount,
+                //       DebitAccount
+                //    }).ToList();
+
+
+                //    obj.CreditAccountlist = vtCreditObj;
+
+                //    obj.ChartOfAccountCode = item.ChartOfAccountCode;
+                //    obj.AccountName = item.SubCategoryLabel;
+                //    vtList.Add(obj);
+                //}
+
+
+                //var userdetailslist = (from cp in await _uow.CategoryPopulatorRepository.GetAllAsyn()
+                //                       join coa in await _uow.ChartAccountDetailRepository.GetAllAsyn() on cp.ChartOfAccountCode equals coa.ChartOfAccountCode
+                //                       join vt in await _uow.ChartAccountDetailRepository.GetAllAsyn() on coa.
+                //                       select new
+                //                       {
+
+                //                           CategoryPopulatorId = cp.CategoryPopulatorId,
+                //                           SubCategoryLabel = cp.SubCategoryLabel,
+                //                           ChartOfAccountCode = cp.ChartOfAccountCode,
+                //                           AccountTypeId = cp.AccountTypeId,
+                //                           ValueSource = cp.ValueSource,
+
+                //                           AccountLevelId = coa.AccountTypeId
+
+                //                       }).ToList();
 
                 List<NotesMasterModel> noteList = new List<NotesMasterModel>();
                 double creditAmount = 0, debitAmount = 0, balanceAmount = 0, exchangerate = 0;
@@ -2313,7 +2376,6 @@ namespace HumanitarianAssistance.Service.Classes
 
                 BalanceSheet bal = new BalanceSheet();
 
-                var categoryPopulatorList = await _uow.CategoryPopulatorRepository.GetAllAsyn(); //Alpit
 
                 foreach (var item in categoryPopulatorList)
                 {
@@ -2335,19 +2397,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     //1
                     var capData = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.CapitalAssetsWrittenOff).GroupBy(x => x.Notes);
-
-
-                    //foreach (var item in categoryPopulatorList)
-                    //{
-                    //    foreach (var capDataItem in capData)
-                    //    {
-                    //        foreach (var i in capDataItem)
-                    //            if (i.AccountCode == item.ChartOfAccountCode && i.BlanceType == item.ValueSource)
-                    //            {
-                    //                i.Narration = item.SubCategoryLabel;
-                    //            }
-                    //    }
-                    //}
+                    
                     bal.CapitalAssetsWrittenOff = capData
                         .Select(x => new BalanceSheetModel
                         {
@@ -2361,18 +2411,6 @@ namespace HumanitarianAssistance.Service.Classes
                     //2
                     var currentAssetsData = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.CurrentAssets).GroupBy(x => x.Notes);
 
-
-                    //foreach (var item in categoryPopulatorList)
-                    //{
-                    //    foreach (var capDataItem in capData)
-                    //    {
-                    //        foreach (var i in capDataItem)
-                    //            if (i.AccountCode == item.ChartOfAccountCode && i.BlanceType == item.ValueSource)
-                    //            {
-                    //                i.Narration = item.SubCategoryLabel;
-                    //            }
-                    //    }
-                    //}
                     bal.CurrentAssets = currentAssetsData
                         .Select(x => new BalanceSheetModel
                         {
@@ -2386,18 +2424,6 @@ namespace HumanitarianAssistance.Service.Classes
                     //3
                     var fundsData = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.Funds).GroupBy(x => x.Notes);
 
-
-                    //foreach (var item in categoryPopulatorList)
-                    //{
-                    //    foreach (var capDataItem in capData)
-                    //    {
-                    //        foreach (var i in capDataItem)
-                    //            if (i.AccountCode == item.ChartOfAccountCode && i.BlanceType == item.ValueSource)
-                    //            {
-                    //                i.Narration = item.SubCategoryLabel;
-                    //            }
-                    //    }
-                    //}
                     bal.Funds = fundsData
                         .Select(x => new BalanceSheetModel
                         {
@@ -2411,18 +2437,6 @@ namespace HumanitarianAssistance.Service.Classes
                     //4
                     var endownmentFundData = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.EndownmentFund).GroupBy(x => x.Notes);
 
-
-                    //foreach (var item in categoryPopulatorList)
-                    //{
-                    //    foreach (var capDataItem in capData)
-                    //    {
-                    //        foreach (var i in capDataItem)
-                    //            if (i.AccountCode == item.ChartOfAccountCode && i.BlanceType == item.ValueSource)
-                    //            {
-                    //                i.Narration = item.SubCategoryLabel;
-                    //            }
-                    //    }
-                    //}
                     bal.EndownmentFund = endownmentFundData
                         .Select(x => new BalanceSheetModel
                         {
