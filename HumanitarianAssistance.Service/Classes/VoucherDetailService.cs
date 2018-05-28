@@ -565,6 +565,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                 obj.Project = v.ProjectDetails?.Description ?? null;
                                                 obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
                                                 obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
+                                                obj.AccountName = creditAccount?.AccountName ?? null;
                                                 obj.CreditAmount = transactions?.Amount ?? 0;
                                                 obj.DebitAmount = 0;
                                                 listJournalView.Add(obj);
@@ -575,9 +576,10 @@ namespace HumanitarianAssistance.Service.Classes
                                                 obj1.VoucherNo = transactions?.VoucherNo ?? 0;
                                                 obj1.TransactionDescription = transactions?.Description ?? null;
                                                 obj1.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails?.Description ?? null;
+                                                obj1.Project = v.ProjectDetails?.Description ?? null;
                                                 obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-                                                obj.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
+                                                obj1.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
+                                                obj1.AccountName = debitAccount?.AccountName ?? null;
                                                 obj1.CreditAmount = 0;
                                                 obj1.DebitAmount = transactions?.Amount ?? 0;
                                                 listJournalView.Add(obj1);
@@ -596,6 +598,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                 obj.Project = v.ProjectDetails?.Description ?? null;
                                                 obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
                                                 obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
+                                                obj.AccountName = creditAccount?.AccountName ?? null;
                                                 obj.CreditAmount = transactions?.Amount ?? 0;
                                                 obj.DebitAmount = 0;
                                                 listJournalView.Add(obj);
@@ -606,9 +609,10 @@ namespace HumanitarianAssistance.Service.Classes
                                                 obj1.VoucherNo = transactions?.VoucherNo ?? 0;
                                                 obj1.TransactionDescription = transactions?.Description ?? null;
                                                 obj1.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails?.Description ?? null;
+                                                obj1.Project = v.ProjectDetails?.Description ?? null;
                                                 obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-                                                obj.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
+                                                obj1.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
+                                                obj1.AccountName = debitAccount?.AccountName ?? null;
                                                 obj1.CreditAmount = 0;
                                                 obj1.DebitAmount = transactions?.Amount ?? 0;
                                                 listJournalView.Add(obj1);
@@ -624,7 +628,8 @@ namespace HumanitarianAssistance.Service.Classes
                                                 obj.Project = v.ProjectDetails?.Description ?? null;
                                                 obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
                                                 obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
-                                                obj.CreditAmount = transactions?.Amount ?? 0 * exchangeRate;
+                                                obj.AccountName = creditAccount?.AccountName ?? null;
+                                                obj.CreditAmount = exchangeRate * transactions?.Amount ?? 0;
                                                 obj.DebitAmount = 0;
                                                 listJournalView.Add(obj);
 
@@ -634,11 +639,12 @@ namespace HumanitarianAssistance.Service.Classes
                                                 obj1.VoucherNo = transactions?.VoucherNo ?? 0;
                                                 obj1.TransactionDescription = transactions?.Description ?? null;
                                                 obj1.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails?.Description ?? null;
+                                                obj1.Project = v.ProjectDetails?.Description ?? null;
                                                 obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-                                                obj.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
+                                                obj1.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
+                                                obj1.AccountName = debitAccount?.AccountName ?? null;
                                                 obj1.CreditAmount = 0;
-                                                obj1.DebitAmount = transactions?.Amount ?? 0 * exchangeRate;
+                                                obj1.DebitAmount = exchangeRate * transactions?.Amount ?? 0;
                                                 listJournalView.Add(obj1);
                                             }
                                         }
@@ -1413,6 +1419,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     obj.Description = creditList.Description;
                                     obj.CurrencyName = currencyName?.CurrencyName ?? null;
                                     obj.AccountCode = items.ChartOfAccountCode;
+                                    obj.ChartAccountName = items.AccountName;
                                     obj.CreditAmount = creditList.Amount;
                                     obj.DebitAmount = 0;
                                     finalLedgerList.Add(obj);
@@ -1429,6 +1436,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     obj.Description = creditList.Description;
                                     obj.CurrencyName = currencyName?.CurrencyName ?? null;
                                     obj.AccountCode = items.ChartOfAccountCode;
+                                    obj.ChartAccountName = items.AccountName;
                                     obj.CreditAmount = creditList.Amount;
                                     obj.DebitAmount = 0;
                                     finalLedgerList.Add(obj);
@@ -1444,6 +1452,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     obj.Description = creditList.Description;
                                     obj.CurrencyName = currencyName?.CurrencyName ?? null;
                                     obj.AccountCode = items.ChartOfAccountCode;
+                                    obj.ChartAccountName = items.AccountName;
                                     obj.CreditAmount = creditList.Amount * exchangeRate?.Rate ?? 0;
                                     obj.DebitAmount = 0;
                                     finalLedgerList.Add(obj);
@@ -1471,6 +1480,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     obj.Description = debitList.Description;
                                     obj.CurrencyName = currencyName?.CurrencyName ?? null;
                                     obj.AccountCode = items.ChartOfAccountCode;
+                                    obj.ChartAccountName = items.AccountName;
                                     obj.CreditAmount = 0;
                                     obj.DebitAmount = debitList.Amount;
                                     finalLedgerList.Add(obj);
@@ -1487,6 +1497,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     obj.Description = debitList.Description;
                                     obj.CurrencyName = currencyName?.CurrencyName ?? null;
                                     obj.AccountCode = items.ChartOfAccountCode;
+                                    obj.ChartAccountName = items.AccountName;
                                     obj.CreditAmount = 0;
                                     obj.DebitAmount = debitList.Amount;
                                     finalLedgerList.Add(obj);
@@ -1501,6 +1512,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     obj.Description = debitList.Description;
                                     obj.CurrencyName = currencyName?.CurrencyName ?? null;
                                     obj.AccountCode = items.ChartOfAccountCode;
+                                    obj.ChartAccountName = items.AccountName;
                                     obj.CreditAmount = 0;
                                     obj.DebitAmount = debitList.Amount * exchangeRate?.Rate ?? 0;
                                     finalLedgerList.Add(obj);
@@ -2397,7 +2409,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     //1
                     var capData = noteList.Where(x => x.AccountTypeId == (int)Common.Enums.AccountType.CapitalAssetsWrittenOff).GroupBy(x => x.Notes);
-                    
+
                     bal.CapitalAssetsWrittenOff = capData
                         .Select(x => new BalanceSheetModel
                         {
@@ -2606,7 +2618,49 @@ namespace HumanitarianAssistance.Service.Classes
                                 .Include(c => c.ChartAccountDetails.DebitAccountlist)
                                 .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1).ToListAsync()
                                );
-                    list = list.Where(x => x.ChartAccountDetails.AccountLevelId == 4).ToList();
+                    //list = list.Where(x => x.ChartAccountDetails.AccountLevelId == 4).ToList();
+
+                    List<NotesMaster> parentNodes = new List<NotesMaster>();
+                    List<NotesMaster> childNodes = new List<NotesMaster>();
+
+
+                    var allTransaction = await _uow.VoucherTransactionDetailsRepository.GetAllAsyn();
+
+
+
+                    foreach (var item in list)
+                    {
+                        if (item.ChartAccountDetails.AccountLevelId == 1)
+                        {
+                            parentNodes.Add(item);
+                        }
+                        else if (item.ChartAccountDetails.AccountLevelId == 4)
+                        {
+                            childNodes.Add(item);
+                        }
+                    }
+
+
+                    //foreach (var item in parentNodes)
+                    //{
+                    //    var childItem = item
+                    //}
+
+
+
+
+                    //foreach (var item in list)
+                    //{
+                    //    if (item.ChartAccountDetails.AccountLevelId == 1)
+                    //    {
+                    //        var dataLevel = item.ChartAccountDetails.ParentID
+                    //    }
+                    //}
+
+
+
+
+
 
 
                     if (accountType != null)
