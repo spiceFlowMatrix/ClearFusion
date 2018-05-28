@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         //public string AccountType { get; set; }
         public string Narration { get; set; }
         public int Note { get; set; }
-        public double Balance { get; set; }
+        public double? Balance { get; set; }
 		public int AccountTypeId { get; set; }
 	}
 
