@@ -803,9 +803,9 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetDetailsOfNotesReportData(int? accountType, int? financialyearid, int? currencyid)
+    public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
     {
-      APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData(accountType, financialyearid, currencyid);
+      APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData( financialyearid, currencyid);
       return response;
     }
 

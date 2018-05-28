@@ -27,8 +27,8 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int Notes { get; set; }
         public double BalanceAmount { get; set; }
         public double? CreditAmount { get; set; }
-        public double? DebitAmount { get; set; }
-    }
+        public double? DebitAmount { get; set; }		
+	}
 
     public class DetailsOfNotesFinalModel
     {
