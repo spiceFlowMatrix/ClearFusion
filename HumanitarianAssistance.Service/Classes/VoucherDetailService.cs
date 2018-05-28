@@ -2251,76 +2251,86 @@ namespace HumanitarianAssistance.Service.Classes
 
                     var accountDetails = await _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == items.ChartOfAccountCode);       // Just used for finding the details of this account
 
-                    double creditAmount = 0, debitAmount = 0, balanceAmount = 0, exchangerate = 0;
-                    if (accountDetails.AccountLevelId == 4)
-                    {
-                        // Gets the transactions for level 4th account
-                        var accountsLevelFourthWithTransactions = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).Where(x => x.AccountCode == items.ChartOfAccountCode).ToListAsync();
+					double? creditAmount = 0, debitAmount = 0, balanceAmount = 0, exchangerate = 0;
+					if (accountDetails.AccountLevelId == 4)
+					{
+						// Gets the transactions for level 4th account
+						var accountsLevelFourthWithTransactions = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).Where(x => x.AccountCode == items.ChartOfAccountCode).ToListAsync();
 
-                        #region "For calculations of Balance TYPE"
-                        if (items.ValueSource == (int)BalanceType.SUM)
-                        {
-                            foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                            {
-                                if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                {
-                                    creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
-                                    debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
-                                    balanceAmount = debitAmount - creditAmount;
-                                }
-                                else
-                                {
-                                    //var conversionRate = await _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId).OrderByDescending(x => x.Date).Fir();
-                                    var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                    creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                    debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                    balanceAmount = debitAmount - creditAmount;
-                                }
-                            }
-                        }
+						#region "For calculations of Balance TYPE"
+						if (items.ValueSource == (int)BalanceType.SUM)
+						{
+							foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+							{
 
-                        else if (items.ValueSource == (int)BalanceType.DR)
-                        {
-                            foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                            {
-                                if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                {
-                                    creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
-                                    //debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                    balanceAmount = creditAmount;
-                                }
-                                else
-                                {
-                                    //var conversionRate = await _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId).OrderByDescending(x => x.Date).Fir();
-                                    var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                    creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                    //debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                    balanceAmount = creditAmount;
-                                }
-                            }
-                        }
+								if (transactionCalcuate.CreditAccountlist.Count > 0)
+								{
+									if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+									{
+										creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+									}
+									else
+									{
+										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+										creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+									}
+								}
 
-                        else if (items.ValueSource == (int)BalanceType.CR)
-                        {
-                            foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                            {
-                                if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                {
-                                    //creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                    debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
-                                    balanceAmount = debitAmount;
-                                }
-                                else
-                                {
-                                    //var conversionRate = await _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId).OrderByDescending(x => x.Date).Fir();
-                                    var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                    //creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                    debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                    balanceAmount = debitAmount;
-                                }
+								if (transactionCalcuate.DebitAccountlist.Count > 0)
+								{
+									if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+									{
+										debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+									}
+									else
+									{
+										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+										debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+									}
+								}
+							}
+						}
 
-                            }
-                        }
+						else if (items.ValueSource == (int)BalanceType.DR)
+						{
+							foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+							{
+
+								if (transactionCalcuate.CreditAccountlist.Count > 0)
+								{
+									if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+									{
+										creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+									}
+									else
+									{
+										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+										creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+									}
+								}
+
+							}
+						}
+
+						else if (items.ValueSource == (int)BalanceType.CR)
+						{
+							foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+							{
+
+								if (transactionCalcuate.DebitAccountlist.Count > 0)
+								{
+									if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+									{
+										debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+									}
+									else
+									{
+										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+										debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+									}
+								}
+							}
+						}
 
                         BalanceSheetModel balanceSheetObj = new BalanceSheetModel();
                         balanceSheetObj.Narration = items.SubCategoryLabel;
@@ -2340,69 +2350,83 @@ namespace HumanitarianAssistance.Service.Classes
                             // Gets the transactions for level 4th account
                             var accountsLevelFourthWithTransactions = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).Where(x => x.AccountCode == elements.AccountCode).ToListAsync();
 
-                            #region "For calculations of Balance TYPE"
-                            if (items.ValueSource == (int)BalanceType.SUM)
-                            {
-                                foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                {
-                                    if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                    {
-                                        creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                        debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                        //balanceAmount = creditAmount - debitAmount;
-                                    }
-                                    else
-                                    {
-                                        var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                        creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                        debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                        //balanceAmount = debitAmount - creditAmount;
-                                    }
-                                }
-                                balanceAmount = debitAmount - creditAmount;
-                            }
+							#region "For calculations of Balance TYPE"
+							if (items.ValueSource == (int)BalanceType.SUM)
+							{
+								foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+								{
 
-                            else if (items.ValueSource == (int)BalanceType.DR)
-                            {
-                                foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                {
-                                    if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                    {
-                                        creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                        //debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                        //balanceAmount = creditAmount;
-                                    }
-                                    else
-                                    {
-                                        var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                        creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                        //debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                        //balanceAmount = debitAmount - creditAmount;
-                                    }
-                                }
-                                balanceAmount = creditAmount;
-                            }
+									if (transactionCalcuate.CreditAccountlist.Count > 0)
+									{
+										if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+										{
+											creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+										}
+										else
+										{
+											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+											creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+										}
+									}
 
-                            else if (items.ValueSource == (int)BalanceType.CR)
-                            {
-                                foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                {
-                                    if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                    {
-                                        //creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                        debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                        //balanceAmount = debitAmount;
-                                    }
-                                    else
-                                    {
-                                        var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                        //creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                        debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                        //balanceAmount = debitAmount - creditAmount;
-                                    }
-                                }
-                                balanceAmount = debitAmount;
-                            }
+									if (transactionCalcuate.DebitAccountlist.Count > 0)
+									{
+										if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+										{
+											debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+										}
+										else
+										{
+											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+											debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+										}
+									}
+								}
+								balanceAmount = debitAmount - creditAmount;
+							}
+
+							else if (items.ValueSource == (int)BalanceType.DR)
+							{
+								foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+								{
+
+									if (transactionCalcuate.CreditAccountlist.Count > 0)
+									{
+										if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+										{
+											creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+										}
+										else
+										{
+											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+											creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+										}
+									}
+
+								}
+								balanceAmount = creditAmount;
+							}
+
+							else if (items.ValueSource == (int)BalanceType.CR)
+							{
+								foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+								{
+
+									if (transactionCalcuate.DebitAccountlist.Count > 0)
+									{
+										if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+										{
+											debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+										}
+										else
+										{
+											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+											debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+										}
+									}
+								}
+								balanceAmount = debitAmount;
+							}
 
 
                             #endregion
@@ -2429,69 +2453,85 @@ namespace HumanitarianAssistance.Service.Classes
                                 // Gets the transactions for level 4th account
                                 var accountsLevelFourthWithTransactions = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).Where(x => x.AccountCode == elements.AccountCode).ToListAsync();
 
-                                #region "For calculations of Balance TYPE"
-                                if (items.ValueSource == (int)BalanceType.SUM)
-                                {
-                                    foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                    {
-                                        if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                        {
-                                            creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                            debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                            //balanceAmount = creditAmount - debitAmount;
-                                        }
-                                        else
-                                        {
-                                            var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                            creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                            debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                            //balanceAmount = debitAmount - creditAmount;
-                                        }
-                                    }
-                                    balanceAmount = debitAmount - creditAmount;
-                                }
+								#region "For calculations of Balance TYPE"
+								if (items.ValueSource == (int)BalanceType.SUM)
+								{
+									foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+									{
 
-                                else if (items.ValueSource == (int)BalanceType.DR)
-                                {
-                                    foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                    {
-                                        if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                        {
-                                            creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                            //debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                            //balanceAmount = creditAmount;
-                                        }
-                                        else
-                                        {
-                                            var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                            creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                            //debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                            //balanceAmount = debitAmount - creditAmount;
-                                        }
-                                    }
-                                    balanceAmount = creditAmount;
-                                }
+										if (transactionCalcuate.CreditAccountlist.Count > 0)
+										{
+											if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+											{
+												creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+											}
+											else
+											{
+												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+												creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+											}
+										}
 
-                                else if (items.ValueSource == (int)BalanceType.CR)
-                                {
-                                    foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                    {
-                                        if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                        {
-                                            //creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                            debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                            //balanceAmount = debitAmount;
-                                        }
-                                        else
-                                        {
-                                            var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                            //creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                            debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                            //balanceAmount = debitAmount - creditAmount;
-                                        }
-                                    }
-                                    balanceAmount = debitAmount;
-                                }
+										if (transactionCalcuate.DebitAccountlist.Count > 0)
+										{
+											if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+											{
+												debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+											}
+											else
+											{
+												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+												debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+											}
+										}
+									}
+									balanceAmount = debitAmount - creditAmount;
+								}
+
+								else if (items.ValueSource == (int)BalanceType.DR)
+								{
+									foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+									{
+
+										if (transactionCalcuate.CreditAccountlist.Count > 0)
+										{
+											if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+											{
+												creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+											}
+											else
+											{
+												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+												creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+											}
+										}
+
+
+									}
+									balanceAmount = creditAmount;
+								}
+
+								else if (items.ValueSource == (int)BalanceType.CR)
+								{
+									foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+									{
+
+
+										if (transactionCalcuate.DebitAccountlist.Count > 0)
+										{
+											if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+											{
+												debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+											}
+											else
+											{
+												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+												debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+											}
+										}
+									}
+									balanceAmount = debitAmount;
+								}
 
                                 #endregion
                             }
@@ -2523,69 +2563,82 @@ namespace HumanitarianAssistance.Service.Classes
                                     // Gets the transactions for level 4th account
                                     var accountsLevelFourthWithTransactions = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).Where(x => x.AccountCode == elements.AccountCode).ToListAsync();
 
-                                    #region "For calculations of Balance TYPE"
-                                    if (items.ValueSource == (int)BalanceType.SUM)
-                                    {
-                                        foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                        {
-                                            if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                            {
-                                                creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                                debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                                //balanceAmount = creditAmount - debitAmount;
-                                            }
-                                            else
-                                            {
-                                                var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                                creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                                debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                                //balanceAmount = debitAmount - creditAmount;
-                                            }
-                                        }
-                                        balanceAmount = debitAmount - creditAmount;
-                                    }
+									#region "For calculations of Balance TYPE"
+									if (items.ValueSource == (int)BalanceType.SUM)
+									{
+										foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+										{
 
-                                    else if (items.ValueSource == (int)BalanceType.DR)
-                                    {
-                                        foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                        {
-                                            if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                            {
-                                                creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                                //debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                                //balanceAmount = creditAmount;
-                                            }
-                                            else
-                                            {
-                                                var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                                creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                                //debitAmount = transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                                //balanceAmount = debitAmount - creditAmount;
-                                            }
-                                        }
-                                        balanceAmount = creditAmount;
-                                    }
+											if (transactionCalcuate.CreditAccountlist.Count > 0)
+											{
+												if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+												{
+													creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+												}
+												else
+												{
+													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+													creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+												}
+											}
 
-                                    else if (items.ValueSource == (int)BalanceType.CR)
-                                    {
-                                        foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                        {
-                                            if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
-                                            {
-                                                //creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                                debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                                //balanceAmount = debitAmount;
-                                            }
-                                            else
-                                            {
-                                                var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                                //creditAmount = transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                                debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
-                                                //balanceAmount = debitAmount - creditAmount;
-                                            }
-                                        }
-                                        balanceAmount = debitAmount;
-                                    }
+											if (transactionCalcuate.DebitAccountlist.Count > 0)
+											{
+												if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+												{
+													debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+												}
+												else
+												{
+													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+													debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+												}
+											}
+										}
+										balanceAmount = debitAmount - creditAmount;
+									}
+
+									else if (items.ValueSource == (int)BalanceType.DR)
+									{
+										foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+										{											
+											if (transactionCalcuate.CreditAccountlist.Count > 0)
+											{
+												if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+												{
+													creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+												}
+												else
+												{
+													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+													creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+												}
+											}
+											
+										}
+										balanceAmount = creditAmount;
+									}
+
+									else if (items.ValueSource == (int)BalanceType.CR)
+									{
+										foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+										{
+									
+											if (transactionCalcuate.DebitAccountlist.Count > 0)
+											{
+												if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+												{
+													debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+												}
+												else
+												{
+													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+													debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+												}
+											}
+										}
+										balanceAmount = debitAmount;
+									}
 
 
 
@@ -2859,37 +2912,269 @@ namespace HumanitarianAssistance.Service.Classes
         //}
 
 
-        public async Task<APIResponse> GetDetailsOfNotesReportData(int? accountType, int? financialyearid, int? currencyid)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
+		public async Task<APIResponse> GetDetailsOfNotesReportData( int? financialyearid, int? currencyid)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				if (financialyearid != null && currencyid != null)
+				{
 
-                if (financialyearid != null && currencyid != null)
-                {
+					//Grouped
+					var allNotes = await _uow.GetDbContext().NotesMaster
+							.Include(c => c.ChartAccountDetails)
+							.Where(x => x.IsDeleted == false)
+							.OrderBy(o => o.Notes)
+							//.GroupBy(g => g.Notes)
+							.ToListAsync();
 
-                    //Grouped
-                    var allNotes = await _uow.GetDbContext().NotesMaster
-                            .Include(c => c.ChartAccountDetails)
-                            .Include(c => c.ChartAccountDetails.CreditAccountlist)
-                            .Include(c => c.ChartAccountDetails.DebitAccountlist)
-                            .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1)
-                            .OrderBy(o => o.Notes)
-                            //.GroupBy(g => g.Notes)
-                            .ToListAsync();
+					List<DetailsOfNotesModel> lst = new List<DetailsOfNotesModel>();
+					foreach (var items in allNotes)
+					{
 
-                    allNotes = allNotes.Where(x => x.ChartAccountDetails.AccountLevelId == 4).ToList();
-                    var Noteslist = allNotes.GroupBy(g => g.Notes).ToList();
+						var accountDetails = items.ChartAccountDetails;       // Just used for finding the details of this account
 
-                    if (accountType != null)
-                    {
-                        Noteslist = allNotes.Where(x => x.ChartAccountDetails.AccountTypeId == accountType).GroupBy(g => g.Notes).ToList();
-                    }
+						double? creditAmount = 0, debitAmount = 0, balanceAmount = 0, exchangerate = 0;
+						if (accountDetails.AccountLevelId == 4)
+						{
+							// Gets the transactions for level 4th account
+							var accountsLevelFourthWithTransactions = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).Where(x => x.AccountCode == items.AccountCode).ToListAsync();
+
+							#region "For calculations of Balance TYPE"
+
+							foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+							{
+								if (transactionCalcuate.CreditAccountlist.Count > 0)
+								{
+									if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+									{
+										creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+									}
+									else
+									{
+										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+										creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+									}
+								}
+
+								if (transactionCalcuate.DebitAccountlist.Count > 0)
+								{
+									if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+									{
+										debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+									}
+									else
+									{
+										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+										debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+									}
+								}
+
+							}
+							//balanceAmount = debitAmount - creditAmount;
+
+							DetailsOfNotesModel obj = new DetailsOfNotesModel();
+							obj.ChartOfAccountCode = accountDetails.ChartOfAccountCode;
+							obj.CreditAmount = creditAmount;
+							obj.DebitAmount = debitAmount;
+							obj.AccountName = accountDetails.AccountName;
+							obj.Notes = items.Notes;
+							lst.Add(obj);
+
+							#endregion
+						}
+						else if (accountDetails.AccountLevelId == 3)
+						{
+							// Gets the fourth level accounts
+							var accountsLevelFourth = await _uow.ChartAccountDetailRepository.FindAllAsync(x => x.ParentID == accountDetails.AccountCode && x.AccountLevelId == 4);
+
+							foreach (var elements in accountsLevelFourth)
+							{
+								// Gets the transactions for level 4th account
+								var accountsLevelFourthWithTransactions = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).Where(x => x.AccountCode == elements.AccountCode).ToListAsync();
+
+								#region "For calculations of Balance TYPE"
+
+								foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+								{
+									if (transactionCalcuate.CreditAccountlist.Count > 0)
+									{
+										if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+										{
+											creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+										}
+										else
+										{
+											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+											creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+										}
+									}
+
+									if (transactionCalcuate.DebitAccountlist.Count > 0)
+									{
+										if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+										{
+											debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+										}
+										else
+										{
+											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+											debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+										}
+									}
+
+								}
+								//balanceAmount = debitAmount - creditAmount;
+							}
+
+							DetailsOfNotesModel obj = new DetailsOfNotesModel();
+							obj.ChartOfAccountCode = accountDetails.ChartOfAccountCode;
+							obj.CreditAmount = creditAmount;
+							obj.DebitAmount = debitAmount;
+							obj.AccountName = accountDetails.AccountName;
+							obj.Notes = items.Notes;
+							lst.Add(obj);
+							#endregion
+						}
+						else if (accountDetails.AccountLevelId == 2)
+						{
+							// Gets the level 3rd accounts
+							var accountsLevelThird = await _uow.ChartAccountDetailRepository.FindAllAsync(x => x.ParentID == accountDetails.AccountCode && x.AccountLevelId == 3);
+
+							foreach (var element in accountsLevelThird)
+							{
+								// Gets the fourth level accounts
+								var accountsLevelFourth = await _uow.ChartAccountDetailRepository.FindAllAsync(x => x.ParentID == element.AccountCode && x.AccountLevelId == 4);
+
+								foreach (var elements in accountsLevelFourth)
+								{
+									// Gets the transactions for level 4th account
+									var accountsLevelFourthWithTransactions = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).Where(x => x.AccountCode == elements.AccountCode).ToListAsync();
+
+									#region "For calculations of Balance TYPE"
+
+									foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+									{
+										if (transactionCalcuate.CreditAccountlist.Count > 0)
+										{
+											if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+											{
+												creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+											}
+											else
+											{
+												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+												creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+											}
+										}
+
+										if (transactionCalcuate.DebitAccountlist.Count > 0)
+										{
+											if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+											{
+												debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+											}
+											else
+											{
+												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+												debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+											}
+										}
+
+									}
+									//balanceAmount = debitAmount - creditAmount;									
+
+									#endregion
+								}
+							}
+
+							DetailsOfNotesModel obj = new DetailsOfNotesModel();
+							obj.ChartOfAccountCode = accountDetails.ChartOfAccountCode;
+							obj.CreditAmount = creditAmount;
+							obj.DebitAmount = debitAmount;
+							obj.AccountName = accountDetails.AccountName;
+							obj.Notes = items.Notes;
+							lst.Add(obj);
+
+						}
+						else if (accountDetails.AccountLevelId == 1)
+						{
+							// Gets the level 2nd accounts
+							var accountsLevelSecond = await _uow.ChartAccountDetailRepository.FindAllAsync(x => x.ParentID == accountDetails.AccountCode && x.AccountLevelId == 2);
+
+							foreach (var item in accountsLevelSecond)
+							{
+								// Gets the level 3rd accounts
+								var accountsLevelThird = await _uow.ChartAccountDetailRepository.FindAllAsync(x => x.ParentID == item.AccountCode && x.AccountLevelId == 3);
+
+								foreach (var element in accountsLevelThird)
+								{
+									// Gets the fourth level accounts
+									var accountsLevelFourth = await _uow.ChartAccountDetailRepository.FindAllAsync(x => x.ParentID == element.AccountCode && x.AccountLevelId == 4);
+
+									foreach (var elements in accountsLevelFourth)
+									{
+										// Gets the transactions for level 4th account
+										// Gets the transactions for level 4th account
+										var accountsLevelFourthWithTransactions = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).Where(x => x.AccountCode == items.AccountCode).ToListAsync();
+
+										#region "For calculations of Balance TYPE"
+
+										foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+										{											
+											if (transactionCalcuate.CreditAccountlist.Count > 0)
+											{
+												if (transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId == currencyid)
+												{
+													creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+												}
+												else
+												{
+													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+													creditAmount += transactionCalcuate.CreditAccountlist?.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+												}
+											}
+
+											if (transactionCalcuate.DebitAccountlist.Count > 0)
+											{
+												if (transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId == currencyid)
+												{
+													debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount);
+												}
+												else
+												{
+													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+													debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
+												}
+											}
+
+										}
+										//balanceAmount = debitAmount - creditAmount;
+
+										
+
+										#endregion
+									}
+								}
+							}
+
+							DetailsOfNotesModel obj = new DetailsOfNotesModel();
+							obj.ChartOfAccountCode = accountDetails.ChartOfAccountCode;
+							obj.CreditAmount = creditAmount;
+							obj.DebitAmount = debitAmount;
+							obj.AccountName = accountDetails.AccountName;
+							obj.Notes = items.Notes;
+							lst.Add(obj);
+						}
+					}
 
 
-                    if (Noteslist != null)
-                    {
-                        List<DetailsOfNotesFinalModel> detailsOfNotesFinalList = new List<DetailsOfNotesFinalModel>();
+					//allNotes = allNotes.Where(x => x.ChartAccountDetails.AccountLevelId == 4).ToList();
+					var Noteslist = lst.GroupBy(g => g.Notes).ToList();
+					
+					if (Noteslist != null)
+					{
+						List<DetailsOfNotesFinalModel> detailsOfNotesFinalList = new List<DetailsOfNotesFinalModel>();
 
                         foreach (var groupedItem in Noteslist)
                         {
@@ -2900,15 +3185,15 @@ namespace HumanitarianAssistance.Service.Classes
                             {
                                 DetailsOfNotesModel obj = new DetailsOfNotesModel();
 
-                                obj.CreditAmount = item.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                obj.DebitAmount = item.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                                //obj.BalanceAmount = obj.CreditAmount.Value - obj.DebitAmount.Value;
+								obj.CreditAmount = item.CreditAmount;
+								obj.DebitAmount = item.DebitAmount;
+								//obj.BalanceAmount = obj.CreditAmount.Value - obj.DebitAmount.Value;
 
-                                obj.ChartOfAccountCode = item.ChartAccountDetails?.ChartOfAccountCode ?? null;
-                                obj.AccountName = item.ChartAccountDetails?.AccountName ?? null;
-                                obj.Notes = item.Notes;
-                                detailsOfNoteList.Add(obj);
-                            }
+								obj.ChartOfAccountCode = item.ChartOfAccountCode;
+								obj.AccountName = item.AccountName;
+								obj.Notes = item.Notes;
+								detailsOfNoteList.Add(obj);
+							}
 
                             finalObj.DetailsOfNotesList = detailsOfNoteList.ToList();
 
