@@ -85,7 +85,7 @@ namespace HumanitarianAssistance.Service.Classes
                 if (filterModel != null)
                 {
 
-                    if (filterModel.OfficesList != null)
+                    if (filterModel.Date == null && filterModel.OfficesList != null)
                     {
                         var voucherList = await _uow.GetDbContext().VoucherDetail
                                                       .Include(o => o.OfficeDetails).Include(j => j.JournalDetails)
