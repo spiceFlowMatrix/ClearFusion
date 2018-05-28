@@ -536,122 +536,122 @@ namespace HumanitarianAssistance.Service.Classes
 				}
 				exchangeratelist = await _uow.GetDbContext().ExchangeRates.Where(x => x.Date.Date >= model.fromdate.Date && x.Date.Date <= model.todate.Date).ToListAsync();
 
-                //double exchangerate = 0, amount = 0;
-                List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
-                foreach (var j in journalcodeList)
-                {
-                    foreach (var v in j.VoucherDetails)
-                    {
-                        foreach (var officeId in model.OfficesList)
-                        {
-                            if (officeId == v.OfficeId)
-                            {
-                                foreach (var transactions in v.VoucherTransactionDetails)
-                                {
-                                    if (transactions.TransactionDate.Date >= model.fromdate.Date && transactions.TransactionDate.Date <= model.todate.Date)
-                                    {
-                                        var creditAccount = await _uow.ChartAccountDetailRepository.FindAsync(x => x.IsDeleted == false && x.AccountCode == transactions.CreditAccount);
-                                        var debitAccount = await _uow.ChartAccountDetailRepository.FindAsync(x => x.IsDeleted == false && x.AccountCode == transactions.DebitAccount);
-                                        if (model.RecordType == 1)
-                                        {
-                                            if (model.CurrencyId == transactions.CurrencyId)
-                                            {
-                                                // Credit
-                                                JournalVoucherViewModel obj = new JournalVoucherViewModel();
-                                                obj.TransactionDate = transactions.TransactionDate;
-                                                obj.VoucherNo = transactions?.VoucherNo ?? 0;
-                                                obj.TransactionDescription = transactions?.Description ?? null;
-                                                obj.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails?.Description ?? null;
-                                                obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-                                                obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
+				//double exchangerate = 0, amount = 0;
+				List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
+				foreach (var j in journalcodeList)
+				{
+					foreach (var v in j.VoucherDetails)
+					{
+						foreach (var officeId in model.OfficesList)
+						{
+							if (officeId == v.OfficeId)
+							{
+								foreach (var transactions in v.VoucherTransactionDetails)
+								{
+									if (transactions.TransactionDate.Date >= model.fromdate.Date && transactions.TransactionDate.Date <= model.todate.Date)
+									{
+										var creditAccount = await _uow.ChartAccountDetailRepository.FindAsync(x => x.IsDeleted == false && x.AccountCode == transactions.CreditAccount);
+										var debitAccount = await _uow.ChartAccountDetailRepository.FindAsync(x => x.IsDeleted == false && x.AccountCode == transactions.DebitAccount);
+										if (model.RecordType == 1)
+										{
+											if (model.CurrencyId == transactions.CurrencyId)
+											{
+												// Credit
+												JournalVoucherViewModel obj = new JournalVoucherViewModel();
+												obj.TransactionDate = transactions.TransactionDate;
+												obj.VoucherNo = transactions?.VoucherNo ?? 0;
+												obj.TransactionDescription = transactions?.Description ?? null;
+												obj.CurrencyId = transactions.CurrencyId;
+												obj.Project = v.ProjectDetails?.Description ?? null;
+												obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+												obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
+												obj.AccountName = creditAccount?.AccountName ?? null;
+                                                obj.CreditAmount = transactions?.Amount ?? 0;
+												obj.DebitAmount = 0;
+												listJournalView.Add(obj);
+
+												// Debit
+												JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
+												obj1.TransactionDate = transactions.TransactionDate;
+												obj1.VoucherNo = transactions?.VoucherNo ?? 0;
+												obj1.TransactionDescription = transactions?.Description ?? null;
+												obj1.CurrencyId = transactions.CurrencyId;
+												obj1.Project = v.ProjectDetails?.Description ?? null;
+												obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+												obj1.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
+                                                obj1.AccountName = debitAccount?.AccountName ?? null;
+                                                obj1.CreditAmount = 0;
+												obj1.DebitAmount = transactions?.Amount ?? 0;
+												listJournalView.Add(obj1);
+											}
+										}
+										else
+										{
+											if (model.CurrencyId == transactions.CurrencyId)
+											{
+												// Credit
+												JournalVoucherViewModel obj = new JournalVoucherViewModel();
+												obj.TransactionDate = transactions.TransactionDate;
+												obj.VoucherNo = transactions?.VoucherNo ?? 0;
+												obj.TransactionDescription = transactions?.Description ?? null;
+												obj.CurrencyId = transactions.CurrencyId;
+												obj.Project = v.ProjectDetails?.Description ?? null;
+												obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+												obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
                                                 obj.AccountName = creditAccount?.AccountName ?? null;
                                                 obj.CreditAmount = transactions?.Amount ?? 0;
-                                                obj.DebitAmount = 0;
-                                                listJournalView.Add(obj);
+												obj.DebitAmount = 0;
+												listJournalView.Add(obj);
 
-                                                // Debit
-                                                JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
-                                                obj1.TransactionDate = transactions.TransactionDate;
-                                                obj1.VoucherNo = transactions?.VoucherNo ?? 0;
-                                                obj1.TransactionDescription = transactions?.Description ?? null;
-                                                obj1.CurrencyId = transactions.CurrencyId;
-                                                obj1.Project = v.ProjectDetails?.Description ?? null;
-                                                obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-                                                obj1.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
+												// Debit
+												JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
+												obj1.TransactionDate = transactions.TransactionDate;
+												obj1.VoucherNo = transactions?.VoucherNo ?? 0;
+												obj1.TransactionDescription = transactions?.Description ?? null;
+												obj1.CurrencyId = transactions.CurrencyId;
+												obj1.Project = v.ProjectDetails?.Description ?? null;
+												obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+												obj1.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
                                                 obj1.AccountName = debitAccount?.AccountName ?? null;
                                                 obj1.CreditAmount = 0;
-                                                obj1.DebitAmount = transactions?.Amount ?? 0;
-                                                listJournalView.Add(obj1);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (model.CurrencyId == transactions.CurrencyId)
-                                            {
-                                                // Credit
-                                                JournalVoucherViewModel obj = new JournalVoucherViewModel();
-                                                obj.TransactionDate = transactions.TransactionDate;
-                                                obj.VoucherNo = transactions?.VoucherNo ?? 0;
-                                                obj.TransactionDescription = transactions?.Description ?? null;
-                                                obj.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails?.Description ?? null;
-                                                obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-                                                obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
+												obj1.DebitAmount = transactions?.Amount ?? 0;
+												listJournalView.Add(obj1);
+											}
+											else
+											{
+												var exchangeRate = exchangeratelist.Where(x => x.IsDeleted == false && x.FromCurrency == transactions.CurrencyId && x.ToCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault().Rate;
+												JournalVoucherViewModel obj = new JournalVoucherViewModel();
+												obj.TransactionDate = transactions.TransactionDate;
+												obj.VoucherNo = transactions?.VoucherNo ?? 0;
+												obj.TransactionDescription = transactions?.Description ?? null;
+												obj.CurrencyId = transactions.CurrencyId;
+												obj.Project = v.ProjectDetails?.Description ?? null;
+												obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+												obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
                                                 obj.AccountName = creditAccount?.AccountName ?? null;
-                                                obj.CreditAmount = transactions?.Amount ?? 0;
-                                                obj.DebitAmount = 0;
-                                                listJournalView.Add(obj);
+                                                obj.CreditAmount = transactions?.Amount ?? 0 * exchangeRate;
+												obj.DebitAmount = 0;
+												listJournalView.Add(obj);
 
-                                                // Debit
-                                                JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
-                                                obj1.TransactionDate = transactions.TransactionDate;
-                                                obj1.VoucherNo = transactions?.VoucherNo ?? 0;
-                                                obj1.TransactionDescription = transactions?.Description ?? null;
-                                                obj1.CurrencyId = transactions.CurrencyId;
-                                                obj1.Project = v.ProjectDetails?.Description ?? null;
-                                                obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-                                                obj1.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
+												// Debit
+												JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
+												obj1.TransactionDate = transactions.TransactionDate;
+												obj1.VoucherNo = transactions?.VoucherNo ?? 0;
+												obj1.TransactionDescription = transactions?.Description ?? null;
+												obj1.CurrencyId = transactions.CurrencyId;
+												obj.Project = v.ProjectDetails?.Description ?? null;
+												obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
+												obj1.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
                                                 obj1.AccountName = debitAccount?.AccountName ?? null;
                                                 obj1.CreditAmount = 0;
-                                                obj1.DebitAmount = transactions?.Amount ?? 0;
-                                                listJournalView.Add(obj1);
-                                            }
-                                            else
-                                            {
-                                                var exchangeRate = exchangeratelist.Where(x => x.IsDeleted == false && x.FromCurrency == transactions.CurrencyId && x.ToCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault().Rate;
-                                                JournalVoucherViewModel obj = new JournalVoucherViewModel();
-                                                obj.TransactionDate = transactions.TransactionDate;
-                                                obj.VoucherNo = transactions?.VoucherNo ?? 0;
-                                                obj.TransactionDescription = transactions?.Description ?? null;
-                                                obj.CurrencyId = transactions.CurrencyId;
-                                                obj.Project = v.ProjectDetails?.Description ?? null;
-                                                obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-                                                obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
-                                                obj.AccountName = creditAccount?.AccountName ?? null;
-                                                obj.CreditAmount = exchangeRate * transactions?.Amount ?? 0;
-                                                obj.DebitAmount = 0;
-                                                listJournalView.Add(obj);
-
-                                                // Debit
-                                                JournalVoucherViewModel obj1 = new JournalVoucherViewModel();
-                                                obj1.TransactionDate = transactions.TransactionDate;
-                                                obj1.VoucherNo = transactions?.VoucherNo ?? 0;
-                                                obj1.TransactionDescription = transactions?.Description ?? null;
-                                                obj1.CurrencyId = transactions.CurrencyId;
-                                                obj1.Project = v.ProjectDetails?.Description ?? null;
-                                                obj1.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-                                                obj1.AccountCode = debitAccount?.ChartOfAccountCode ?? 0;
-                                                obj1.AccountName = debitAccount?.AccountName ?? null;
-                                                obj1.CreditAmount = 0;
-                                                obj1.DebitAmount = exchangeRate * transactions?.Amount ?? 0;
-                                                listJournalView.Add(obj1);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+												obj1.DebitAmount = transactions?.Amount ?? 0 * exchangeRate;
+												listJournalView.Add(obj1);
+											}
+										}
+									}
+								}
+							}
+						}
 
 
 
@@ -1405,121 +1405,115 @@ namespace HumanitarianAssistance.Service.Classes
 					foreach (var creditList in items.CreditAccountlist)
 					{
 
-                        if (creditList.TransactionDate.Date >= model.fromdate.Date && creditList.TransactionDate.Date <= model.todate.Date)
-                        {
-                            var currencyName = await _uow.CurrencyDetailsRepository.FindAsync(x => x.CurrencyId == creditList.CurrencyId);
-                            var voucherReferenceNo = await _uow.VoucherDetailRepository.FindAsync(x => x.IsDeleted == false && x.VoucherNo == creditList.VoucherNo);
-                            if (model.RecordType == 1)
-                            {
-                                if (creditList.CurrencyId == model.CurrencyId)
-                                {
-                                    LedgerModel obj = new LedgerModel();
-                                    obj.TransactionDate = creditList.TransactionDate;
-                                    obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
-                                    obj.Description = creditList.Description;
-                                    obj.CurrencyName = currencyName?.CurrencyName ?? null;
-                                    obj.AccountCode = items.ChartOfAccountCode;
-                                    obj.ChartAccountName = items.AccountName;
-                                    obj.CreditAmount = creditList.Amount;
-                                    obj.DebitAmount = 0;
-                                    finalLedgerList.Add(obj);
-                                    totalCredit += creditList.Amount;
-                                }
-                            }
-                            else
-                            {
-                                if (creditList.CurrencyId == model.CurrencyId)
-                                {
-                                    LedgerModel obj = new LedgerModel();
-                                    obj.TransactionDate = creditList.TransactionDate;
-                                    obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
-                                    obj.Description = creditList.Description;
-                                    obj.CurrencyName = currencyName?.CurrencyName ?? null;
-                                    obj.AccountCode = items.ChartOfAccountCode;
-                                    obj.ChartAccountName = items.AccountName;
-                                    obj.CreditAmount = creditList.Amount;
-                                    obj.DebitAmount = 0;
-                                    finalLedgerList.Add(obj);
+						if (creditList.TransactionDate.Date >= model.fromdate.Date && creditList.TransactionDate.Date <= model.todate.Date)
+						{
+							var currencyName = await _uow.CurrencyDetailsRepository.FindAsync(x => x.CurrencyId == creditList.CurrencyId);
+							var voucherReferenceNo = await _uow.VoucherDetailRepository.FindAsync(x => x.IsDeleted == false && x.VoucherNo == creditList.VoucherNo);
+							if (model.RecordType == 1)
+							{
+								if (creditList.CurrencyId == model.CurrencyId)
+								{
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = creditList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = creditList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = creditList.Amount;
+									obj.DebitAmount = 0;
+									finalLedgerList.Add(obj);
+									totalCredit += creditList.Amount;
+								}
+							}
+							else
+							{
+								if (creditList.CurrencyId == model.CurrencyId)
+								{
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = creditList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = creditList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = creditList.Amount;
+									obj.DebitAmount = 0;
+									finalLedgerList.Add(obj);
 
-                                    totalCredit += creditList.Amount;
-                                }
-                                else
-                                {
-                                    var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == creditList.CurrencyId && x.ToCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                    LedgerModel obj = new LedgerModel();
-                                    obj.TransactionDate = creditList.TransactionDate;
-                                    obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
-                                    obj.Description = creditList.Description;
-                                    obj.CurrencyName = currencyName?.CurrencyName ?? null;
-                                    obj.AccountCode = items.ChartOfAccountCode;
-                                    obj.ChartAccountName = items.AccountName;
-                                    obj.CreditAmount = creditList.Amount * exchangeRate?.Rate ?? 0;
-                                    obj.DebitAmount = 0;
-                                    finalLedgerList.Add(obj);
-                                    totalCredit += creditList.Amount * exchangeRate?.Rate ?? 0;
-                                }
-                            }
-                        }
+									totalCredit += creditList.Amount;
+								}
+								else
+								{
+									var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == creditList.CurrencyId && x.ToCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = creditList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = creditList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = creditList.Amount * exchangeRate?.Rate ?? 0;
+									obj.DebitAmount = 0;
+									finalLedgerList.Add(obj);
+									totalCredit += creditList.Amount * exchangeRate?.Rate ?? 0;
+								}
+							}
+						}
 
 					}
 
 					foreach (var debitList in items.DebitAccountlist)
 					{
 
-                        if (debitList.TransactionDate.Date >= model.fromdate.Date && debitList.TransactionDate.Date <= model.todate.Date)
-                        {
-                            var currencyName = await _uow.CurrencyDetailsRepository.FindAsync(x => x.CurrencyId == debitList.CurrencyId);
-                            var voucherReferenceNo = await _uow.VoucherDetailRepository.FindAsync(x => x.IsDeleted == false && x.VoucherNo == debitList.VoucherNo);
-                            if (model.RecordType == 1)
-                            {
-                                if (debitList.CurrencyId == model.CurrencyId)
-                                {
-                                    LedgerModel obj = new LedgerModel();
-                                    obj.TransactionDate = debitList.TransactionDate;
-                                    obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
-                                    obj.Description = debitList.Description;
-                                    obj.CurrencyName = currencyName?.CurrencyName ?? null;
-                                    obj.AccountCode = items.ChartOfAccountCode;
-                                    obj.ChartAccountName = items.AccountName;
-                                    obj.CreditAmount = 0;
-                                    obj.DebitAmount = debitList.Amount;
-                                    finalLedgerList.Add(obj);
-                                    totalDebit += debitList.Amount;
-                                }
-                            }
-                            else
-                            {
-                                if (debitList.CurrencyId == model.CurrencyId)
-                                {
-                                    LedgerModel obj = new LedgerModel();
-                                    obj.TransactionDate = debitList.TransactionDate;
-                                    obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
-                                    obj.Description = debitList.Description;
-                                    obj.CurrencyName = currencyName?.CurrencyName ?? null;
-                                    obj.AccountCode = items.ChartOfAccountCode;
-                                    obj.ChartAccountName = items.AccountName;
-                                    obj.CreditAmount = 0;
-                                    obj.DebitAmount = debitList.Amount;
-                                    finalLedgerList.Add(obj);
-                                    totalDebit += debitList.Amount;
-                                }
-                                else
-                                {
-                                    var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == debitList.CurrencyId && x.ToCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-                                    LedgerModel obj = new LedgerModel();
-                                    obj.TransactionDate = debitList.TransactionDate;
-                                    obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
-                                    obj.Description = debitList.Description;
-                                    obj.CurrencyName = currencyName?.CurrencyName ?? null;
-                                    obj.AccountCode = items.ChartOfAccountCode;
-                                    obj.ChartAccountName = items.AccountName;
-                                    obj.CreditAmount = 0;
-                                    obj.DebitAmount = debitList.Amount * exchangeRate?.Rate ?? 0;
-                                    finalLedgerList.Add(obj);
-                                    totalDebit += debitList.Amount * exchangeRate?.Rate ?? 0;
-                                }
-                            }
-                        }
+						if (debitList.TransactionDate.Date >= model.fromdate.Date && debitList.TransactionDate.Date <= model.todate.Date)
+						{
+							var currencyName = await _uow.CurrencyDetailsRepository.FindAsync(x => x.CurrencyId == debitList.CurrencyId);
+							var voucherReferenceNo = await _uow.VoucherDetailRepository.FindAsync(x => x.IsDeleted == false && x.VoucherNo == debitList.VoucherNo);
+							if (model.RecordType == 1)
+							{
+								if (debitList.CurrencyId == model.CurrencyId)
+								{
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = debitList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = debitList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = 0;
+									obj.DebitAmount = debitList.Amount;
+									finalLedgerList.Add(obj);
+									totalDebit += debitList.Amount;
+								}
+							}
+							else
+							{
+								if (debitList.CurrencyId == model.CurrencyId)
+								{
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = debitList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = debitList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = 0;
+									obj.DebitAmount = debitList.Amount;
+									finalLedgerList.Add(obj);
+									totalDebit += debitList.Amount;
+								}
+								else
+								{
+									var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == debitList.CurrencyId && x.ToCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+									LedgerModel obj = new LedgerModel();
+									obj.TransactionDate = debitList.TransactionDate;
+									obj.VoucherNo = voucherReferenceNo?.ReferenceNo ?? null;
+									obj.Description = debitList.Description;
+									obj.CurrencyName = currencyName?.CurrencyName ?? null;
+									obj.AccountCode = items.ChartOfAccountCode;
+									obj.CreditAmount = 0;
+									obj.DebitAmount = debitList.Amount * exchangeRate?.Rate ?? 0;
+									finalLedgerList.Add(obj);
+									totalDebit += debitList.Amount * exchangeRate?.Rate ?? 0;
+								}
+							}
+						}
 
 					}
 				}
