@@ -2242,13 +2242,13 @@ namespace HumanitarianAssistance.Service.Classes
 		{
 			APIResponse response = new APIResponse();
 			try
-			{
+			{				
 				var cpList = await _uow.GetDbContext().CategoryPopulator.Include(o => o.AccountType).Where(x => x.IsDeleted == false && x.AccountType.AccountCategory == model.financialreporttype).ToListAsync();
 				//var allAccounts = await _uow.GetDbContext().ChartAccountDetail.Include(x=>x.CreditAccountlist).Include(x=>x.DebitAccountlist).ToListAsync();
 				List<ChartAccountDetail> allAccounts = new List<ChartAccountDetail>();
 				// For INCOME/EXPENSE REPORT
-				if (model.EndDate != null)
-				{
+				if (model.StartDate != null)
+				{					
 					allAccounts = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist)
 						.Select(x => new ChartAccountDetail
 						{
@@ -2270,6 +2270,7 @@ namespace HumanitarianAssistance.Service.Classes
 				// For BALANCE SHEET REPORT
 				else
 				{
+					var financialYearDetails = await _uow.FinancialYearDetailRepository.FindAsync(x => x.StartDate.Date <= model.EndDate.Value.Date && x.EndDate.Date >= model.EndDate.Value.Date);
 					allAccounts = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist)
 						.Select(x => new ChartAccountDetail
 						{
@@ -2284,8 +2285,8 @@ namespace HumanitarianAssistance.Service.Classes
 							CreatedDate = x.CreatedDate,
 							ParentID = x.ParentID,
 							CreditAccountDetails = x.CreditAccountDetails,
-							CreditAccountlist = x.CreditAccountlist.Where(o => o.TransactionDate.Date == model.StartDate.Value.Date ).ToList(),
-							DebitAccountlist = x.DebitAccountlist.Where(o => o.TransactionDate.Date == model.StartDate.Value.Date ).ToList()
+							CreditAccountlist = x.CreditAccountlist.Where(o => o.TransactionDate.Date >= financialYearDetails.StartDate.Date && o.TransactionDate.Date <= model.EndDate.Value.Date).ToList(),
+							DebitAccountlist = x.DebitAccountlist.Where(o => o.TransactionDate.Date >= financialYearDetails.StartDate.Date && o.TransactionDate.Date <= model.EndDate.Value.Date).ToList()
 						}).ToListAsync();
 				}
 				List<BalanceSheetModel> lstBalanceSheetModel = new List<BalanceSheetModel>();
