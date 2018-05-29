@@ -43,8 +43,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddNotesDetails(NotesMasterModel model);
         Task<APIResponse> EditNotesDetails(NotesMasterModel model);
         Task<APIResponse> GetAllNotesDetails();
-        Task<APIResponse> GetBlanceSheetDetails(int? financialyearid, int? currencyid, int? financialreporttype);
-        Task<APIResponse> GetDetailsOfNotes(int? financialyearid, int? currencyid);
+		//Task<APIResponse> GetBlanceSheetDetails(int? financialyearid, int? currencyid, int? financialreporttype);
+		Task<APIResponse> GetBlanceSheetDetails(FinancialReportModel model);
+		//Task<APIResponse> GetDetailsOfNotes(int? GetDetailsOfNotes, int? financialyearid, int? currencyid);
+		Task<APIResponse> GetDetailsOfNotes(int? financialyearid, int? currencyid);
 
 
 		Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid);
