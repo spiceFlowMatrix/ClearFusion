@@ -98,29 +98,38 @@ namespace HumanitarianAssistance.Service.Classes
 
                         foreach (var item in filterModel.OfficesList)
                         {
-                            VoucherDetailModel obj = new VoucherDetailModel();
+                           
 
-                            var voucherData = voucherList.FirstOrDefault(v => v.OfficeId == item);
+                            var voucherData = voucherList.FindAll(v => v.OfficeId == item);
                             if (voucherData != null)
                             {
-                                obj.VoucherNo = voucherData.VoucherNo;
-                                obj.CurrencyCode = voucherData.CurrencyDetail?.CurrencyCode ?? null;
-                                obj.CurrencyId = voucherData.CurrencyDetail?.CurrencyId ?? 0;
-                                obj.VoucherDate = voucherData.VoucherDate;
-                                obj.ChequeNo = voucherData.ChequeNo;
-                                obj.ReferenceNo = voucherData.ReferenceNo;
-                                obj.Description = voucherData.Description;
-                                obj.JournalName = voucherData.JournalDetails?.JournalName ?? null;
-                                obj.JournalCode = voucherData.JournalDetails?.JournalCode ?? null;
-                                obj.VoucherTypeId = voucherData.VoucherTypeId;
-                                obj.OfficeId = voucherData.OfficeId;
-                                obj.ProjectId = voucherData.ProjectId;
-                                obj.BudgetLineId = voucherData.BudgetLineId;
-                                obj.OfficeName = voucherData.OfficeDetails?.OfficeName ?? null;
-                                obj.FinancialYearId = voucherData.FinancialYearId;
-                                obj.FinancialYearName = voucherData.FinancialYearDetails?.FinancialYearName ?? null;
+                                //List<VoucherDetailModel> voucherFilteredList = new List<VoucherDetailModel>();
 
-                                voucherFilteredList.Add(obj);
+                                foreach (var i in voucherData)
+                                {
+                                    VoucherDetailModel obj = new VoucherDetailModel();
+
+                                    obj.VoucherNo = i.VoucherNo;
+                                    obj.CurrencyCode = i.CurrencyDetail?.CurrencyCode ?? null;
+                                    obj.CurrencyId = i.CurrencyDetail?.CurrencyId ?? 0;
+                                    obj.VoucherDate = i.VoucherDate;
+                                    obj.ChequeNo = i.ChequeNo;
+                                    obj.ReferenceNo = i.ReferenceNo;
+                                    obj.Description = i.Description;
+                                    obj.JournalName = i.JournalDetails?.JournalName ?? null;
+                                    obj.JournalCode = i.JournalDetails?.JournalCode ?? null;
+                                    obj.VoucherTypeId = i.VoucherTypeId;
+                                    obj.OfficeId = i.OfficeId;
+                                    obj.ProjectId = i.ProjectId;
+                                    obj.BudgetLineId = i.BudgetLineId;
+                                    obj.OfficeName = i.OfficeDetails?.OfficeName ?? null;
+                                    obj.FinancialYearId = i.FinancialYearId;
+                                    obj.FinancialYearName = i.FinancialYearDetails?.FinancialYearName ?? null;
+
+                                    voucherFilteredList.Add(obj);
+                                }
+
+                            
                             }
                         }
 
@@ -143,29 +152,38 @@ namespace HumanitarianAssistance.Service.Classes
 
                         foreach (var item in filterModel.OfficesList)
                         {
-                            VoucherDetailModel obj = new VoucherDetailModel();
 
-                            var voucherData = voucherList.FirstOrDefault(v => v.OfficeId == item);
+
+                            var voucherData = voucherList.FindAll(v => v.OfficeId == item);
                             if (voucherData != null)
                             {
-                                obj.VoucherNo = voucherData.VoucherNo;
-                                obj.CurrencyCode = voucherData.CurrencyDetail?.CurrencyCode ?? null;
-                                obj.CurrencyId = voucherData.CurrencyDetail?.CurrencyId ?? 0;
-                                obj.VoucherDate = voucherData.VoucherDate;
-                                obj.ChequeNo = voucherData.ChequeNo;
-                                obj.ReferenceNo = voucherData.ReferenceNo;
-                                obj.Description = voucherData.Description;
-                                obj.JournalName = voucherData.JournalDetails?.JournalName ?? null;
-                                obj.JournalCode = voucherData.JournalDetails?.JournalCode ?? null;
-                                obj.VoucherTypeId = voucherData.VoucherTypeId;
-                                obj.OfficeId = voucherData.OfficeId;
-                                obj.ProjectId = voucherData.ProjectId;
-                                obj.BudgetLineId = voucherData.BudgetLineId;
-                                obj.OfficeName = voucherData.OfficeDetails?.OfficeName ?? null;
-                                obj.FinancialYearId = voucherData.FinancialYearId;
-                                obj.FinancialYearName = voucherData.FinancialYearDetails?.FinancialYearName ?? null;
+                                //List<VoucherDetailModel> objList = new List<VoucherDetailModel>();
 
-                                voucherFilteredList.Add(obj);
+                                foreach (var i in voucherData)
+                                {
+                                    VoucherDetailModel obj = new VoucherDetailModel();
+
+                                    obj.VoucherNo = i.VoucherNo;
+                                    obj.CurrencyCode = i.CurrencyDetail?.CurrencyCode ?? null;
+                                    obj.CurrencyId = i.CurrencyDetail?.CurrencyId ?? 0;
+                                    obj.VoucherDate = i.VoucherDate;
+                                    obj.ChequeNo = i.ChequeNo;
+                                    obj.ReferenceNo = i.ReferenceNo;
+                                    obj.Description = i.Description;
+                                    obj.JournalName = i.JournalDetails?.JournalName ?? null;
+                                    obj.JournalCode = i.JournalDetails?.JournalCode ?? null;
+                                    obj.VoucherTypeId = i.VoucherTypeId;
+                                    obj.OfficeId = i.OfficeId;
+                                    obj.ProjectId = i.ProjectId;
+                                    obj.BudgetLineId = i.BudgetLineId;
+                                    obj.OfficeName = i.OfficeDetails?.OfficeName ?? null;
+                                    obj.FinancialYearId = i.FinancialYearId;
+                                    obj.FinancialYearName = i.FinancialYearDetails?.FinancialYearName ?? null;
+
+                                    voucherFilteredList.Add(obj);
+                                }
+
+
                             }
                         }
 
