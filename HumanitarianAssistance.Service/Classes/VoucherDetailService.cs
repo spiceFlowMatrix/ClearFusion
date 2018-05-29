@@ -2328,7 +2328,7 @@ namespace HumanitarianAssistance.Service.Classes
 									}
 									else
 									{
-										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 										debitAmount += transactionCalcuate.DebitAccountlist.Sum(x => x.Amount) * exchangeRate.Rate;
 									}
 								}
@@ -2369,7 +2369,7 @@ namespace HumanitarianAssistance.Service.Classes
 									}
 									else
 									{
-										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 										debitAmount += transactionCalcuate.DebitAccountlist.Sum(x => x.Amount) * exchangeRate.Rate;
 									}
 								}
@@ -2421,7 +2421,7 @@ namespace HumanitarianAssistance.Service.Classes
 										}
 										else
 										{
-											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 											debitAmount += transactionCalcuate.DebitAccountlist.Sum(x => x.Amount) * exchangeRate.Rate;
 										}
 									}
@@ -2464,7 +2464,7 @@ namespace HumanitarianAssistance.Service.Classes
 										}
 										else
 										{
-											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 											debitAmount += transactionCalcuate.DebitAccountlist.Sum(x => x.Amount) * exchangeRate.Rate;
 										}
 									}
@@ -2524,7 +2524,7 @@ namespace HumanitarianAssistance.Service.Classes
 											}
 											else
 											{
-												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 												debitAmount += transactionCalcuate.DebitAccountlist.Sum(x => x.Amount) * exchangeRate.Rate;
 											}
 										}
@@ -2569,7 +2569,7 @@ namespace HumanitarianAssistance.Service.Classes
 											}
 											else
 											{
-												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 												debitAmount += transactionCalcuate.DebitAccountlist.Sum(x => x.Amount) * exchangeRate.Rate;
 											}
 										}
@@ -2634,7 +2634,7 @@ namespace HumanitarianAssistance.Service.Classes
 												}
 												else
 												{
-													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 													debitAmount += transactionCalcuate.DebitAccountlist.Sum(x => x.Amount) * exchangeRate.Rate;
 												}
 											}
@@ -2676,7 +2676,7 @@ namespace HumanitarianAssistance.Service.Classes
 												}
 												else
 												{
-													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == model.currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 													debitAmount += transactionCalcuate.DebitAccountlist.Sum(x => x.Amount) * exchangeRate.Rate;
 												}
 											}
@@ -3030,7 +3030,7 @@ namespace HumanitarianAssistance.Service.Classes
 									}
 									else
 									{
-										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+										var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 										debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
 									}
 								}
@@ -3083,7 +3083,7 @@ namespace HumanitarianAssistance.Service.Classes
 										}
 										else
 										{
-											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+											var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 											debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
 										}
 									}
@@ -3141,7 +3141,7 @@ namespace HumanitarianAssistance.Service.Classes
 											}
 											else
 											{
-												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+												var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 												debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
 											}
 										}
@@ -3208,7 +3208,7 @@ namespace HumanitarianAssistance.Service.Classes
 												}
 												else
 												{
-													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+													var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
 													debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
 												}
 											}
