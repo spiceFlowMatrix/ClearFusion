@@ -3059,8 +3059,9 @@ namespace HumanitarianAssistance.Service.Classes
 
                             foreach (var elements in accountsLevelFourth)
                             {
-                                // Gets the transactions for level 4th account
-                                var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
+								creditAmount = 0; debitAmount = 0;
+								// Gets the transactions for level 4th account
+								var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
 
                                 #region "For calculations of Balance TYPE"
 
@@ -3090,19 +3091,22 @@ namespace HumanitarianAssistance.Service.Classes
                                             var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.DebitAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
                                             debitAmount += transactionCalcuate.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Amount) * exchangeRate.Rate;
                                         }
-                                    }
+                                    }								
 
-                                }
-                                //balanceAmount = debitAmount - creditAmount;
-                            }
+								}
+								//balanceAmount = debitAmount - creditAmount;
 
-                            DetailsOfNotesModel obj = new DetailsOfNotesModel();
-                            obj.ChartOfAccountCode = accountDetails.ChartOfAccountCode;
-                            obj.CreditAmount = creditAmount;
-                            obj.DebitAmount = debitAmount;
-                            obj.AccountName = accountDetails.AccountName;
-                            obj.Notes = items.Notes;
-                            lst.Add(obj);
+								DetailsOfNotesModel obj = new DetailsOfNotesModel();
+								obj.ChartOfAccountCode = elements.ChartOfAccountCode;
+								obj.CreditAmount = creditAmount;
+								obj.DebitAmount = debitAmount;
+								obj.AccountName = elements.AccountName;
+								obj.Notes = items.Notes;
+								lst.Add(obj);
+
+							}
+
+                            
                             #endregion
                         }
                         else if (accountDetails.AccountLevelId == 2)
@@ -3112,13 +3116,14 @@ namespace HumanitarianAssistance.Service.Classes
 
                             foreach (var element in accountsLevelThird)
                             {
-                                // Gets the fourth level accounts
-                                var accountsLevelFourth = allAccounts.FindAll(x => x.ParentID == element.AccountCode && x.AccountLevelId == 4);
+								// Gets the fourth level accounts
+								var accountsLevelFourth = allAccounts.FindAll(x => x.ParentID == element.AccountCode && x.AccountLevelId == 4);
 
                                 foreach (var elements in accountsLevelFourth)
                                 {
-                                    // Gets the transactions for level 4th account
-                                    var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
+									creditAmount = 0; debitAmount = 0;
+									// Gets the transactions for level 4th account
+									var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
 
                                     #region "For calculations of Balance TYPE"
 
@@ -3151,19 +3156,19 @@ namespace HumanitarianAssistance.Service.Classes
                                         }
 
                                     }
-                                    //balanceAmount = debitAmount - creditAmount;									
+									//balanceAmount = debitAmount - creditAmount;									
 
-                                    #endregion
-                                }
-                            }
+									#endregion
+									DetailsOfNotesModel obj = new DetailsOfNotesModel();
+									obj.ChartOfAccountCode = elements.ChartOfAccountCode;
+									obj.CreditAmount = creditAmount;
+									obj.DebitAmount = debitAmount;
+									obj.AccountName = elements.AccountName;
+									obj.Notes = items.Notes;
+									lst.Add(obj);
 
-                            DetailsOfNotesModel obj = new DetailsOfNotesModel();
-                            obj.ChartOfAccountCode = accountDetails.ChartOfAccountCode;
-                            obj.CreditAmount = creditAmount;
-                            obj.DebitAmount = debitAmount;
-                            obj.AccountName = accountDetails.AccountName;
-                            obj.Notes = items.Notes;
-                            lst.Add(obj);
+								}
+                            }                            
 
                         }
                         else if (accountDetails.AccountLevelId == 1)
@@ -3183,9 +3188,10 @@ namespace HumanitarianAssistance.Service.Classes
 
                                     foreach (var elements in accountsLevelFourth)
                                     {
-                                        // Gets the transactions for level 4th account
-                                        // Gets the transactions for level 4th account
-                                        var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == items.AccountCode).ToList();
+										creditAmount = 0; debitAmount = 0;
+										// Gets the transactions for level 4th account
+										// Gets the transactions for level 4th account
+										var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
 
                                         #region "For calculations of Balance TYPE"
 
@@ -3218,22 +3224,19 @@ namespace HumanitarianAssistance.Service.Classes
                                             }
 
                                         }
-                                        //balanceAmount = debitAmount - creditAmount;
+										//balanceAmount = debitAmount - creditAmount;
+										#endregion
 
-
-
-                                        #endregion
-                                    }
+										DetailsOfNotesModel obj = new DetailsOfNotesModel();
+										obj.ChartOfAccountCode = elements.ChartOfAccountCode;
+										obj.CreditAmount = creditAmount;
+										obj.DebitAmount = debitAmount;
+										obj.AccountName = elements.AccountName;
+										obj.Notes = items.Notes;
+										lst.Add(obj);
+									}
                                 }
-                            }
-
-                            DetailsOfNotesModel obj = new DetailsOfNotesModel();
-                            obj.ChartOfAccountCode = accountDetails.ChartOfAccountCode;
-                            obj.CreditAmount = creditAmount;
-                            obj.DebitAmount = debitAmount;
-                            obj.AccountName = accountDetails.AccountName;
-                            obj.Notes = items.Notes;
-                            lst.Add(obj);
+                            }                            
                         }
                     }
 
