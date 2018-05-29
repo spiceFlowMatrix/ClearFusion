@@ -785,11 +785,11 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetBlanceSheetDetails(int? financialyearid, int? currencyid, int financialreporttype)
+    public async Task<APIResponse> GetBlanceSheetDetails([FromBody]FinancialReportModel model)
     {
-      APIResponse response = await _ivoucherDetail.GetBlanceSheetDetails(financialyearid, currencyid, financialreporttype);
+      APIResponse response = await _ivoucherDetail.GetBlanceSheetDetails(model);
       return response;
     }
 
