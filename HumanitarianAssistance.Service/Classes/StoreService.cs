@@ -1,23 +1,320 @@
-﻿using AutoMapper;
+﻿
+
+using AutoMapper;
 using DataAccess;
 using DataAccess.DbEntities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using DataAccess.DbEntities.Store;
+using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Service.APIResponses;
+using HumanitarianAssistance.Service.interfaces;
+using HumanitarianAssistance.ViewModels.Models.Store;
+using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Service.Classes
 {
-    public class StoreService
-    {
-        IUnitOfWork _uow;
-        IMapper _mapper;
-        UserManager<AppUser> _userManager;
-        public StoreService(IUnitOfWork uow, IMapper mapper, UserManager<AppUser> userManager)
-        {
-            this._uow = uow;
-            this._mapper = mapper;
-            this._userManager = userManager;
-        }
-    }
+	public class StoreService : IStore
+	{
+		IUnitOfWork _uow;
+		IMapper _mapper;
+		UserManager<AppUser> _userManager;
+		public StoreService(IUnitOfWork uow, IMapper mapper, UserManager<AppUser> userManager)
+		{
+			this._uow = uow;
+			this._mapper = mapper;
+			this._userManager = userManager;
+		}
+
+		// Store Inventories
+		public async Task<APIResponse> AddInventory(StoreInventoryModel model)
+		{
+			var response = new APIResponse();
+			try
+			{
+
+				var inventoryAccount =
+					await _uow.ChartAccountDetailRepository.FindAsync(x =>
+						x.ChartOfAccountCode == model.InventoryAccountCode);
+				if (inventoryAccount != null)
+				{
+					StoreInventory inventory = _mapper.Map<StoreInventory>(model);
+					inventory.InventoryAccount = inventoryAccount.AccountCode;
+					inventory.CreatedById = model.CreatedById;
+					inventory.CreatedDate = DateTime.UtcNow;
+					inventory.IsDeleted = false;
+					await _uow.StoreInventoryRepository.AddAsyn(inventory);
+					await _uow.SaveAsync();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = StaticResource.SomethingWrong;
+				}
+
+			}
+			catch (Exception e)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + e.Message;
+				return response;
+			}
+
+			return response;
+		}
+
+		public async Task<APIResponse> EditInventory(StoreInventoryViewModel model)
+		{
+			var response = new APIResponse();
+			try
+			{
+				var edInv = await _uow.StoreInventoryRepository.FindAsync(c => c.InventoryId == model.InventoryId);
+				var inventoryAccount =
+					await _uow.ChartAccountDetailRepository.FindAsync(x =>
+						x.ChartOfAccountCode == model.ChartAccountCode);
+				if (edInv != null && inventoryAccount != null)
+				{
+					edInv.InventoryCode = model.InventoryCode;
+					edInv.InventoryDescription = model.InventoryDescription;
+					edInv.InventoryAccount = inventoryAccount.AccountCode;
+					await _uow.StoreInventoryRepository.UpdateAsyn(edInv);
+					await _uow.SaveAsync();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = StaticResource.SomethingWrong;
+				}
+
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+				return response;
+			}
+
+			return response;
+		}
+
+		public async Task<APIResponse> DeleteInventory(StoreInventoryModel model)
+		{
+			var response = new APIResponse();
+			try
+			{
+				var toDeleteInv = await Task.Run(() =>
+					_uow.GetDbContext().StoreInventories
+						.Include(x => x.InventoryItems).FirstOrDefault(i => i.InventoryId == model.InventoryId));
+				if (toDeleteInv != null)
+				{
+					if (toDeleteInv.InventoryItems.Count == 0)
+					{
+						toDeleteInv.IsDeleted = true;
+						toDeleteInv.ModifiedById = model.ModifiedById;
+						toDeleteInv.ModifiedDate = model.ModifiedDate;
+						response.StatusCode = StaticResource.successStatusCode;
+						response.Message = "Success";
+					}
+					else
+					{
+						response.StatusCode = StaticResource.IdAlreadyUsedInOtherTable;
+						response.Message = "This inventory is being used for items.";
+					}
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = StaticResource.SomethingWrong;
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+				return response;
+			}
+
+			return response;
+		}
+
+		public async Task<APIResponse> GetAllInventories()
+		{
+			var response = new APIResponse();
+			try
+			{
+				var inventoryList = await Task.Run(() =>
+					_uow.GetDbContext().StoreInventories
+						.Include(c => c.ChartAccountDetails)
+						.Include(c => c.CreatedBy)
+						.OrderBy(c => c.CreatedDate));
+				var invModelList = inventoryList.Select(v => new StoreInventoryViewModel
+				{
+					CreatedDate = v.CreatedDate,
+					CreatedById = v.CreatedBy.Id,
+					InventoryCode = v.InventoryCode,
+					InventoryDescription = v.InventoryDescription,
+					ChartAccountCode = v.ChartAccountDetails.ChartOfAccountCode
+				}).ToList();
+				//response.data.InventoryList = invModelList;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+				return response;
+			}
+
+			return response;
+		}
+
+		// Inventory Items
+
+		// Item purchases
+
+		// TODO: ReadMe
+		// When creating purchases towards an item, we must know the item type. Based on that
+		// we must create a purchase for that item and also create entries for that object as well
+		// E.g, if the itemtype is vehicle and the purchase detail specifies a quantity of 2, then two
+		// vehicles must be created in the database.
+		// MotorFuel, MotorMaintenance, and MotorSpareParts items in the database must only be created separately when they are ordered, and assigned a vehicle or generator
+		// at purchase time, we must always know the item type.
+		// Only Vehicles and Generators items are created in the database upon purchase
+
+
+		public async Task<APIResponse> AddPurchase(ItemPurchaseWithDataModel model)
+		{
+			var response = new APIResponse();
+			try
+			{
+				StoreItemPurchase purchase = _mapper.Map<StoreItemPurchase>(model.Purchase);
+
+			}
+			catch (Exception ex)
+			{
+
+			}
+
+			return response;
+		}
+
+		public async Task<APIResponse> GetAllPurchasesByItem(string itemId)
+		{
+			var response = new APIResponse();
+			try
+			{
+				var purchases = await Task.Run(() =>
+					_uow.GetDbContext().StoreItemPurchases
+						.Include(c => c.PurchaseOrders)
+						.Include(c => c.PurchaseUnitType)
+						.Include(e => e.EmployeeDetail)
+						.Include(t => t.StoreInventoryItem.ItemTypes) // TODO: Make sure that these includes actually populate the required data
+						.OrderBy(c => c.CreatedDate));
+				var purchasesModel = purchases.Select(v => new StoreItemPurchaseViewModel
+				{
+					CreatedDate = v.CreatedDate,
+					CreatedById = v.CreatedById,
+					PurchaseDate = v.PurchaseDate,
+					DeliveryDate = v.DeliveryDate,
+					UnitType = v.PurchaseUnitType.UnitTypeName,
+					Currency = v.CurrencyDetails.CurrencyName,
+					UnitCost = v.UnitCost,
+					Quantity = v.Quantity,
+					TotalCost = v.UnitCost * v.Quantity,
+					ApplyDepreciation = v.ApplyDepreciation,
+					CurrentQuantity = v.Quantity - v.PurchaseOrders.Sum(q => q.IssuedQuantity),
+					PurchasedBy = v.EmployeeDetail.EmployeeName,
+					ImageFileName = v.ImageFileName,
+					ItemType = v.StoreInventoryItem.ItemTypes.TypeName // TODO: Please test if this will return the item type object
+				}).ToList();
+				//response.data.StoreItemsPurchaseViewList = purchasesModel;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+				return response;
+			}
+			return response;
+		}
+
+
+		// Purchase orders
+
+		// TODO: ReadMe
+		// When ordering MotorFuel item, a MotorFuel object must be created and then assigned to
+		// a vehicle. Fuel purchase orders must not be returnable. If the purchase order is deleted, then so must the MotorFuel item
+		// When ordering a MotorMaintenance item, a MotorMaintenance object must be generated in the database
+		// and assigned to a vehicle
+		// When ordering a MotorSpareParts item, a MotorSpareParts object must be generated in the database and 
+		// assigned to a vehicle
+		// For the above, the relevant details for each object must be updated both in the newly created
+		// object and in the PurchaseOrder that they are related to.
+
+
+
+
+		// Item Purchase Documents
+		public async Task<APIResponse> AddItemPurchaseDocument(StoreItemPurchaseDocumentModel model)
+		{
+			var response = new APIResponse();
+			try
+			{
+				// Save the file
+				string[] str = model.File.Split(",");
+				byte[] file = Convert.FromBase64String(str[1]);
+
+				string ex = str[0].Split("/")[1].Split(";")[0];
+				string guidName = Guid.NewGuid().ToString();
+
+				string fileName = "purchaseDoc." + guidName + "." + model.DocumentName + "." + ex;
+				File.WriteAllBytes(@"Documents\" + fileName, file);
+
+				// Add database entry for document
+				ItemPurchaseDocument doc = new ItemPurchaseDocument();
+				doc.CreatedById = model.CreatedById;
+				doc.CreatedDate = model.CreatedDate;
+				doc.DocumentGuid = guidName;
+				doc.DocumentName = model.DocumentName;
+				doc.File = null;
+				doc.FileType = ex;
+				doc.FileName = fileName;
+				doc.Purchase = model.PurchaseId;
+
+
+				await _uow.ItemPurchaseDocumentRepository.AddAsyn(doc);
+				await _uow.SaveAsync();
+
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+			}
+			return response;
+		}
+
+		// Depreciation
+
+		// Must filter on store name, inventory, item, and purchase
+		public async Task<APIResponse> GetAllDepreciationByFilter()
+		{
+			var response = new APIResponse();
+			return response;
+		}
+	}
 }
