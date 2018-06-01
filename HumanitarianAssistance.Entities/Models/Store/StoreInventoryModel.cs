@@ -11,7 +11,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public string InventoryId { get; set; }
         public string InventoryCode { get; set; }
         public string InventoryDescription { get; set; }
-        public int InventoryAccountCode { get; set; } 
+        public int InventoryAccount { get; set; } 
     }
 
     public class StoreInventoryViewModel : BaseModel

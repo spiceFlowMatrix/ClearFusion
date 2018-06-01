@@ -126,6 +126,7 @@ namespace HumanitarianAssistance
       services.AddTransient<ICode, CodeService>();
       services.AddTransient<ITaskAndActivity, TaskAndActivityService>();
       services.AddTransient<IProjectPipeLining, ProjectPipeLiningService>();
+      services.AddTransient<IStore, StoreService>();
 
       //services.AddTransient<UserManager<AppUser>>();
 
@@ -189,7 +190,7 @@ namespace HumanitarianAssistance
       services.AddAuthorization(options =>
       {
         //  options.AddPolicy("Trust", policy => policy.RequireClaim("Permission", "dashboardhome"));
-        options.AddPolicy("Trust", policy => policy.RequireClaim("Roles", "Admin", "SuperAdmin", "Accounting Manager", "HR Manager", "Project Manager"));
+        options.AddPolicy("Trust", policy => policy.RequireClaim("Roles", "Admin", "SuperAdmin", "Accounting Manager", "HR Manager", "Project Manager", "Administrator"));
         options.AddPolicy("DepartmentUser", policy => policy.RequireClaim("OfficeCode"));
         options.AddPolicy("DepartmentUser", policy => policy.RequireClaim("DepartmentId"));
         //options.AddPolicy("Trust", policy => policy.RequireClaim("OfficeCode"));

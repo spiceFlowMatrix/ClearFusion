@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using DataAccess;
 using DataAccess.DbEntities;
 using Microsoft.AspNetCore.Identity;
@@ -37,17 +35,12 @@ namespace HumanitarianAssistance.Service.Classes
 			var response = new APIResponse();
 			try
 			{
-
 				var inventoryAccount =
 					await _uow.ChartAccountDetailRepository.FindAsync(x =>
-						x.ChartOfAccountCode == model.InventoryAccountCode);
+						x.AccountCode == model.InventoryAccount);
 				if (inventoryAccount != null)
 				{
-					StoreInventory inventory = _mapper.Map<StoreInventory>(model);
-					inventory.InventoryAccount = inventoryAccount.AccountCode;
-					inventory.CreatedById = model.CreatedById;
-					inventory.CreatedDate = DateTime.UtcNow;
-					inventory.IsDeleted = false;
+					StoreInventory inventory = _mapper.Map<StoreInventory>(model);					
 					await _uow.StoreInventoryRepository.AddAsyn(inventory);
 					await _uow.SaveAsync();
 					response.StatusCode = StaticResource.successStatusCode;
@@ -56,9 +49,8 @@ namespace HumanitarianAssistance.Service.Classes
 				else
 				{
 					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = StaticResource.SomethingWrong;
+					response.Message = StaticResource.AccountNoteNotExists;
 				}
-
 			}
 			catch (Exception e)
 			{
@@ -164,7 +156,7 @@ namespace HumanitarianAssistance.Service.Classes
 					InventoryDescription = v.InventoryDescription,
 					ChartAccountCode = v.ChartAccountDetails.ChartOfAccountCode
 				}).ToList();
-				//response.data.InventoryList = invModelList;
+				response.data.InventoryList = invModelList;
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
@@ -192,21 +184,23 @@ namespace HumanitarianAssistance.Service.Classes
 		// Only Vehicles and Generators items are created in the database upon purchase
 
 
-		public async Task<APIResponse> AddPurchase(ItemPurchaseWithDataModel model)
-		{
-			var response = new APIResponse();
-			try
-			{
-				StoreItemPurchase purchase = _mapper.Map<StoreItemPurchase>(model.Purchase);
+		//public async Task<APIResponse> AddPurchase(ItemPurchaseWithDataModel model)
+		//{
+		//	var response = new APIResponse();
+		//	try
+		//	{
+		//		StoreItemPurchase purchase = _mapper.Map<StoreItemPurchase>(model.Purchase);
 
-			}
-			catch (Exception ex)
-			{
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		response.StatusCode = StaticResource.failStatusCode;
+		//		response.Message = StaticResource.SomethingWrong + ex.Message;
+		//		return response;
+		//	}
 
-			}
-
-			return response;
-		}
+		//	return response;
+		//}
 
 		public async Task<APIResponse> GetAllPurchasesByItem(string itemId)
 		{
@@ -237,7 +231,7 @@ namespace HumanitarianAssistance.Service.Classes
 					ImageFileName = v.ImageFileName,
 					ItemType = v.StoreInventoryItem.ItemTypes.TypeName // TODO: Please test if this will return the item type object
 				}).ToList();
-				//response.data.StoreItemsPurchaseViewList = purchasesModel;
+				response.data.StoreItemsPurchaseViewList = purchasesModel;
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
@@ -311,10 +305,10 @@ namespace HumanitarianAssistance.Service.Classes
 		// Depreciation
 
 		// Must filter on store name, inventory, item, and purchase
-		public async Task<APIResponse> GetAllDepreciationByFilter()
-		{
-			var response = new APIResponse();
-			return response;
-		}
+		//public async Task<APIResponse> GetAllDepreciationByFilter()
+		//{
+		//	var response = new APIResponse();
+		//	return response;
+		//}
 	}
 }

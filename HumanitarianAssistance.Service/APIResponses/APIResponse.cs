@@ -1,6 +1,7 @@
 ﻿using DataAccess.DbEntities;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -197,8 +198,12 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<EmployeePayrollModel> EmployeePayrollList { get; set; }
         public EmployeePensionModel EmployeePensionModel { get; set; }
 
+		// Store classes
+		public List<StoreInventoryViewModel> InventoryList { get; set; }
+		public List<StoreItemPurchaseViewModel> StoreItemsPurchaseViewList { get; set; }
 
-    }
+
+	}
 
     public class Roles
     {

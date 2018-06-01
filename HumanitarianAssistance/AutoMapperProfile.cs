@@ -3,6 +3,7 @@ using DataAccess.DbEntities;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,6 +80,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<RatingBasedCriteriaModel, RatingBasedCriteria>().ReverseMap();
       CreateMap<CategoryPopulator, CategoryPopulatorModel>().ReverseMap();
       CreateMap<LoggerDetails, LoggerDetailsModel>().ReverseMap();
+      CreateMap<StoreInventory, StoreInventoryModel>().ReverseMap();
     }
   }
 }

@@ -17,6 +17,7 @@ namespace HumanitarianAssistance.Common.Helpers
     public const int ParticipationApprovedCode = 600;
     public const int ParticipationNotApprovedCode = 700;
     public const int ParticipationRejectionCode = 300;
+    public const int AccountAlreadyExistsCode = 520;
     public const string ClaimAddedToRole = "Claim added to a role";
     public const string NoCompanyTypeFound = "No CompanyType Found";
     public const string NoCountryFound = "No Country found";
@@ -62,6 +63,8 @@ namespace HumanitarianAssistance.Common.Helpers
     public const string CompanyContactUpdated = "Contact details has been updated successfully";
     public const string AccountStatusUpdated = "Account Status Updated";
     public const string InvalidCompanyId = "Invalid CompanyId";
+    public const string AccountNoteNotExists = "Account doesn't exists";
+    public const string AccountAlreadyExists = "Account Code already exists";
 
 
     public const string TaskTypeAdded = "Task Type has added";
