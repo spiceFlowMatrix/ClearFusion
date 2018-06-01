@@ -1,0 +1,28 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DataAccess.DbEntities.Store
+{
+    public class StorePurchaseOrder : BaseEntityWithoutId
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string OrderId { get; set; }
+        public string Purchase { get; set; }
+        public string InventoryItem { get; set; }
+
+        public int IssuedQuantity { get; set; }
+        public bool MustReturn { get; set; }
+        public int IssuedToEmployeeId { get; set; }
+        public DateTime IssueDate { get; set; }
+        public DateTime ReturnedDate { get; set; }
+
+        [ForeignKey("Purchase")]
+        public StoreItemPurchase StoreItemPurchase { get; set; }
+        [ForeignKey("InventoryItem")]
+        public StoreInventoryItem StoreInventoryItem { get; set; }
+        [ForeignKey("EmployeeId")]
+        public EmployeeDetail EmployeeDetail { get; set; }
+    }
+}

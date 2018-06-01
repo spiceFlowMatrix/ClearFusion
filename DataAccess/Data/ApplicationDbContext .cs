@@ -1,4 +1,5 @@
 using DataAccess.DbEntities;
+using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Entities.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -225,7 +226,22 @@ namespace HumanitarianAssistance.Entities
         public DbSet<RatingBasedCriteria> RatingBasedCriteria { get; set; }
 		public DbSet<CategoryPopulator> CategoryPopulator { get; set; }
 		public DbSet<LoggerDetails> LoggerDetails { get; set; }
-		
+
+		// Store
+		public DbSet<StoreInventory> StoreInventories { get; set; }
+		public DbSet<StoreInventoryItem> InventoryItems { get; set; }
+		public DbSet<StoreItemPurchase> StoreItemPurchases { get; set; }
+		public DbSet<StorePurchaseOrder> StorePurchaseOrders { get; set; }
+		public DbSet<ItemPurchaseDocument> ItemPurchaseDocuments { get; set; }
+		public DbSet<PurchaseVehicle> PurchaseVehicles { get; set; }
+		public DbSet<MotorFuel> VehicleFuel { get; set; }
+		public DbSet<VehicleLocation> VehicleLocations { get; set; }
+		public DbSet<VehicleMileage> VehicleMileages { get; set; }
+		public DbSet<PurchaseGenerator> PurchaseGenerators { get; set; }
+		public DbSet<MotorMaintenance> MotorMaintenances { get; set; }
+		public DbSet<MotorSparePart> MotorSpareParts { get; set; }
+		//
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
