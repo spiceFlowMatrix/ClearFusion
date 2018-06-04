@@ -77,7 +77,7 @@ namespace HumanitarianAssistance.Service.Classes
                     edInv.InventoryName = model.InventoryName;
                     edInv.InventoryDescription = model.InventoryDescription;
                     edInv.InventoryChartOfAccount = inventoryAccount.ChartOfAccountCode;
-                    edInv.AssetTypes = model.AssetTypes;
+                    edInv.AssetType = model.AssetType;
 
                     await _uow.StoreInventoryRepository.UpdateAsyn(edInv);
                     await _uow.SaveAsync();
@@ -165,7 +165,7 @@ namespace HumanitarianAssistance.Service.Classes
                     InventoryName = v.InventoryName,
                     InventoryDescription = v.InventoryDescription,
                     InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
-                    AssetTypes = v.AssetTypes
+                    AssetType = v.AssetType
                 }).ToList();
                 response.data.InventoryList = invModelList;
                 response.StatusCode = StaticResource.successStatusCode;

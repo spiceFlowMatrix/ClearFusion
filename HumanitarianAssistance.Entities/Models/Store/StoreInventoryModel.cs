@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public string InventoryName { get; set; }
         public string InventoryDescription { get; set; }
         public long InventoryChartOfAccount { get; set; }
-        public int AssetTypes { get; set; }
+        public int AssetType { get; set; }
 
     }
 
