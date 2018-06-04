@@ -199,7 +199,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public EmployeePensionModel EmployeePensionModel { get; set; }
 
 		// Store classes
-		public List<StoreInventoryViewModel> InventoryList { get; set; }
+		public List<StoreInventoryModel> InventoryList { get; set; }
 		public List<StoreItemPurchaseViewModel> StoreItemsPurchaseViewList { get; set; }
 
 
