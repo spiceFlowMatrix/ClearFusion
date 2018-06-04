@@ -52,7 +52,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> EditInventory([FromBody] StoreInventoryViewModel model)
+    public async Task<APIResponse> EditInventory([FromBody] StoreInventoryModel model)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);

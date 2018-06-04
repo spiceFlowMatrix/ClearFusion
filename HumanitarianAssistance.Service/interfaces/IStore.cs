@@ -10,7 +10,7 @@ namespace HumanitarianAssistance.Service.interfaces
 	public interface IStore
 	{
 		Task<APIResponse> AddInventory(StoreInventoryModel model);
-		Task<APIResponse> EditInventory(StoreInventoryViewModel model);
+		Task<APIResponse> EditInventory(StoreInventoryModel model);
 		Task<APIResponse> DeleteInventory(StoreInventoryModel model);
 		Task<APIResponse> GetAllInventories();
 		//Task<APIResponse> AddPurchase(ItemPurchaseWithDataModel model);
