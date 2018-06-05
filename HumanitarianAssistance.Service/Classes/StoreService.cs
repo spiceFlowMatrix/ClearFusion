@@ -155,8 +155,8 @@ namespace HumanitarianAssistance.Service.Classes
             {
 				var inventoryList = await Task.Run(() =>
 					_uow.GetDbContext().StoreInventories
-						.Include(c => c.ChartAccountDetails)
-						.Include(c => c.CreatedBy)
+						//.Include(c => c.ChartAccountDetails)
+						//.Include(c => c.CreatedBy)
 						.Where(c => c.IsDeleted == false)
 						.OrderBy(c => c.CreatedDate));
 
@@ -167,7 +167,7 @@ namespace HumanitarianAssistance.Service.Classes
 					InventoryName = v.InventoryName,
 					InventoryDescription = v.InventoryDescription,
 					//InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
-					InventoryAccount = v.ChartAccountDetails.AccountCode,
+					InventoryAccount = v.InventoryAccount,
 					AssetType = v.AssetType
 				}).ToList();
 				response.data.InventoryList = invModelList;
