@@ -80,6 +80,59 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddInventoryItems([FromBody] StoreInventoryItemModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.CreatedById = user.Id;
+        model.CreatedDate = DateTime.Now;
+        apiRespone = await _iStore.AddInventoryItems(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditInventoryItems([FromBody] StoreInventoryItemModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+        apiRespone = await _iStore.EditInventoryItems(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteInventoryItems([FromBody] StoreInventoryItemModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+        apiRespone = await _iStore.DeleteInventoryItems(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllInventoryItems(string ItemInventory)
+    {
+      APIResponse apiresponse = await _iStore.GetAllInventoryItems(ItemInventory);
+      return apiresponse;
+    }
+
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllPurchasesByItem(string itemId)

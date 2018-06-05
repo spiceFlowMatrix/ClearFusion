@@ -81,6 +81,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<CategoryPopulator, CategoryPopulatorModel>().ReverseMap();
       CreateMap<LoggerDetails, LoggerDetailsModel>().ReverseMap();
       CreateMap<StoreInventory, StoreInventoryModel>().ReverseMap();
+      CreateMap<StoreInventoryItem, StoreInventoryItemModel>().ReverseMap();
     }
   }
 }
