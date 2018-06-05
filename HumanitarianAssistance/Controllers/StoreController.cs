@@ -30,9 +30,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Store Inventories"
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllInventories()
+    public async Task<APIResponse> GetAllInventories(int? AssetType)
     {
-      APIResponse apiresponse = await _iStore.GetAllInventories();
+      APIResponse apiresponse = await _iStore.GetAllInventories(AssetType);
       return apiresponse;
     }
 
