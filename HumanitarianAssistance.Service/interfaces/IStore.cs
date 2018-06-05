@@ -17,5 +17,10 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> GetAllPurchasesByItem(string itemId);
 		Task<APIResponse> AddItemPurchaseDocument(StoreItemPurchaseDocumentModel model);
 		//Task<APIResponse> GetAllDepreciationByFilter();
+
+		Task<APIResponse> AddInventoryItems(StoreInventoryItemModel model);
+		Task<APIResponse> EditInventoryItems(StoreInventoryItemModel model);
+		Task<APIResponse> DeleteInventoryItems(StoreInventoryItemModel model);
+		Task<APIResponse> GetAllInventoryItems(string ItemInventory);
 	}
 }
