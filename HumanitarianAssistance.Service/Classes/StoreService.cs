@@ -37,7 +37,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var inventoryAccount =
                     await _uow.ChartAccountDetailRepository.FindAsync(x =>
-                        x.ChartOfAccountCode == model.InventoryChartOfAccount);
+                        x.AccountCode == model.InventoryAccount);
                 if (inventoryAccount != null)
                 {
                     StoreInventory inventory = _mapper.Map<StoreInventory>(model);
@@ -70,14 +70,16 @@ namespace HumanitarianAssistance.Service.Classes
                 var edInv = await _uow.StoreInventoryRepository.FindAsync(c => c.InventoryId == model.InventoryId);
                 var inventoryAccount =
                     await _uow.ChartAccountDetailRepository.FindAsync(x =>
-                        x.ChartOfAccountCode == model.InventoryChartOfAccount);
+                        x.AccountCode == model.InventoryAccount);
                 if (edInv != null && inventoryAccount != null)
                 {
-                    edInv.InventoryCode = model.InventoryCode;
-                    edInv.InventoryName = model.InventoryName;
-                    edInv.InventoryDescription = model.InventoryDescription;
-                    edInv.InventoryChartOfAccount = inventoryAccount.ChartOfAccountCode;
-                    edInv.AssetType = model.AssetType;
+					//edInv.InventoryCode = model.InventoryCode;
+					//edInv.InventoryName = model.InventoryName;
+					//edInv.InventoryDescription = model.InventoryDescription;
+					//edInv.InventoryChartOfAccount = inventoryAccount.ChartOfAccountCode;
+					//edInv.AssetType = model.AssetType;
+
+					_mapper.Map(model,edInv);
 
                     await _uow.StoreInventoryRepository.UpdateAsyn(edInv);
                     await _uow.SaveAsync();
@@ -164,7 +166,8 @@ namespace HumanitarianAssistance.Service.Classes
 					InventoryCode = v.InventoryCode,
 					InventoryName = v.InventoryName,
 					InventoryDescription = v.InventoryDescription,
-					InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
+					//InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
+					InventoryAccount = v.ChartAccountDetails.AccountCode,
 					AssetType = v.AssetType
 				}).ToList();
 				response.data.InventoryList = invModelList;
