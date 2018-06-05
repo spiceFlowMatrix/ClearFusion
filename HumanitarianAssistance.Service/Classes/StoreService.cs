@@ -29,6 +29,8 @@ namespace HumanitarianAssistance.Service.Classes
 			this._userManager = userManager;
 		}
 
+
+		#region "Store Inventories"
 		// Store Inventories
 		public async Task<APIResponse> AddInventory(StoreInventoryModel model)
 		{
@@ -104,6 +106,7 @@ namespace HumanitarianAssistance.Service.Classes
 			return response;
 		}
 
+
 		public async Task<APIResponse> DeleteInventory(StoreInventoryModel model)
 		{
 			var response = new APIResponse();
@@ -147,7 +150,6 @@ namespace HumanitarianAssistance.Service.Classes
 
 			return response;
 		}
-
 		public async Task<APIResponse> GetAllInventories()
 		{
 			var response = new APIResponse();
@@ -184,6 +186,10 @@ namespace HumanitarianAssistance.Service.Classes
 			return response;
 		}
 
+		#endregion
+
+
+		#region "Store Items"
 		// Inventory Items
 
 		public async Task<APIResponse> AddInventoryItems(StoreInventoryItemModel model)
@@ -311,6 +317,135 @@ namespace HumanitarianAssistance.Service.Classes
 
 			return response;
 		}
+
+		#endregion
+
+
+		#region "Store Item Types"
+
+		public async Task<APIResponse> AddInventoryItemsType(InventoryItemTypeModel model)
+		{
+			var response = new APIResponse();
+			try
+			{				
+				if (model != null)
+				{
+					InventoryItemType obj = _mapper.Map<InventoryItemType>(model);
+					await _uow.InventoryItemTypeRepository.AddAsyn(obj);
+					await _uow.SaveAsync();
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = "Please add item type details";
+					return response;
+				}
+			}
+			catch (Exception e)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + e.Message;
+				return response;
+			}
+
+			return response;
+		}
+
+		public async Task<APIResponse> EditInventoryItemsType(InventoryItemTypeModel model)
+		{
+			var response = new APIResponse();
+			try
+			{
+				var editItemType = await _uow.InventoryItemTypeRepository.FindAsync(x => x.ItemType == model.ItemType);
+				if (editItemType != null)
+				{
+					_mapper.Map(model, editItemType);
+					await _uow.InventoryItemTypeRepository.UpdateAsyn(editItemType);
+					await _uow.SaveAsync();
+
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = StaticResource.SomethingWrong;
+				}
+
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+				return response;
+			}
+
+			return response;
+		}
+
+		public async Task<APIResponse> DeleteInventoryItemsType(InventoryItemTypeModel model)
+		{
+			var response = new APIResponse();
+			try
+			{
+				var deleteItem = await _uow.InventoryItemTypeRepository.FindAsync(x => x.ItemType == model.ItemType);
+				if (deleteItem != null)
+				{
+					deleteItem.IsDeleted = true;
+					await _uow.InventoryItemTypeRepository.UpdateAsyn(deleteItem);
+					await _uow.SaveAsync();
+
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = StaticResource.SomethingWrong;
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+				return response;
+			}
+
+			return response;
+		}
+
+		public async Task<APIResponse> GetAllInventoryItemsType()
+		{
+			var response = new APIResponse();
+			try
+			{
+				//var inventoryItemsList = await Task.Run(() =>
+				//	_uow.GetDbContext().InventoryItemType
+				//		.Where(c => c.IsDeleted == false )
+				//		.OrderByDescending(c => c.CreatedDate));
+
+				var inventoryItemsList = await _uow.InventoryItemTypeRepository.GetAllAsyn();
+
+				var invModelList = inventoryItemsList.Select(v => new InventoryItemTypeModel
+				{
+					TypeName = v.TypeName,
+					ItemType = v.ItemType
+				}).ToList();
+				response.data.InventoryItemTypeList = invModelList;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+				return response;
+			}
+
+			return response;
+		}
+
+		#endregion
 
 
 		// Item purchases

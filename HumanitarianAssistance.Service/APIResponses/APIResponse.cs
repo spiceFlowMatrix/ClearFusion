@@ -201,6 +201,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 		// Store classes
 		public List<StoreInventoryModel> InventoryList { get; set; }
 		public List<StoreInventoryItemModel> InventoryItemList { get; set; }
+		public List<InventoryItemTypeModel> InventoryItemTypeList { get; set; }
 		public List<StoreItemPurchaseViewModel> StoreItemsPurchaseViewList { get; set; }
 
 

@@ -27,6 +27,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       _iStore = iStore;
     }
 
+    #region "Store Inventories"
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllInventories()
@@ -79,6 +80,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
+
+    #endregion
+
+
+    #region "Store Items"
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
@@ -133,6 +139,69 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    #endregion
+
+
+    #region "Store Item Types"
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddInventoryItemsType([FromBody] InventoryItemTypeModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.CreatedById = user.Id;
+        model.CreatedDate = DateTime.Now;
+        apiRespone = await _iStore.AddInventoryItemsType(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditInventoryItemsType([FromBody] InventoryItemTypeModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+        apiRespone = await _iStore.EditInventoryItemsType(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteInventoryItemsType([FromBody] InventoryItemTypeModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+        apiRespone = await _iStore.DeleteInventoryItemsType(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllInventoryItemsType()
+    {
+      APIResponse apiresponse = await _iStore.GetAllInventoryItemsType();
+      return apiresponse;
+    }
+
+    #endregion
+
+
+    #region "Store Purchase"
+
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllPurchasesByItem(string itemId)
@@ -155,6 +224,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
+
+    #endregion
+
 
   }
 }

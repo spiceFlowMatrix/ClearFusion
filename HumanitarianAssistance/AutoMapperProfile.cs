@@ -1,5 +1,6 @@
 using AutoMapper;
 using DataAccess.DbEntities;
+using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
@@ -82,6 +83,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<LoggerDetails, LoggerDetailsModel>().ReverseMap();
       CreateMap<StoreInventory, StoreInventoryModel>().ReverseMap();
       CreateMap<StoreInventoryItem, StoreInventoryItemModel>().ReverseMap();
+      CreateMap<InventoryItemType, InventoryItemTypeModel>().ReverseMap();
     }
   }
 }
