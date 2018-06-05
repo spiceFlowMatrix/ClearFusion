@@ -111,7 +111,7 @@ namespace DataAccess
 		private IGenericRepository<PurchaseGenerator> _purchaseGeneratorRepository;
 		private IGenericRepository<MotorMaintenance> _motorMaintenanceRepository;
 		private IGenericRepository<MotorSparePart> _motorSparePartsRepository;
-
+		private IGenericRepository<InventoryItemType> _inventoryItemTypeRepository;
 
 		public UnitOfWork(ApplicationDbContext mschaContext)
         {
@@ -119,6 +119,15 @@ namespace DataAccess
         }
 
 		// Store
+		public IGenericRepository<InventoryItemType> InventoryItemTypeRepository
+		{
+			get
+			{
+				return _inventoryItemTypeRepository =
+					_inventoryItemTypeRepository ?? new GenericRepository<InventoryItemType>(_mschaContext);
+			}
+		}
+
 		public IGenericRepository<StoreInventory> StoreInventoryRepository
 		{
 			get

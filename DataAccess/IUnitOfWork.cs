@@ -112,7 +112,8 @@ namespace DataAccess
 		IGenericRepository<PurchaseGenerator> PurchaseGeneratorRepository { get; }
 		IGenericRepository<MotorMaintenance> MotorMaintenanceRepository { get; }
 		IGenericRepository<MotorSparePart> MotorSparePartsRepository { get; }
-
+		IGenericRepository<InventoryItemType> InventoryItemTypeRepository { get; }
+		
 
 		void Save();
         Task<int> SaveAsync();
