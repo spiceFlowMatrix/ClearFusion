@@ -107,35 +107,35 @@ namespace HumanitarianAssistance.Service.Classes
             var response = new APIResponse();
             try
             {
-                var toDeleteInv = await Task.Run(() =>
-                    _uow.GetDbContext().StoreInventories
-                        .Include(x => x.InventoryItems).FirstOrDefault(i => i.InventoryId == model.InventoryId));
-                if (toDeleteInv != null)
-                {
-                    if (toDeleteInv.InventoryItems.Count == 0)
-                    {
-                        toDeleteInv.IsDeleted = true;
-                        toDeleteInv.ModifiedById = model.ModifiedById;
-                        toDeleteInv.ModifiedDate = model.ModifiedDate;
+				var toDeleteInv = await Task.Run(() =>
+					_uow.GetDbContext().StoreInventories
+						.Include(x => x.InventoryItems).FirstOrDefault(i => i.InventoryId == model.InventoryId));
+				if (toDeleteInv != null)
+				{
+					if (toDeleteInv.InventoryItems.Count == 0)
+					{
+						toDeleteInv.IsDeleted = true;
+						toDeleteInv.ModifiedById = model.ModifiedById;
+						toDeleteInv.ModifiedDate = model.ModifiedDate;
 
-                        await _uow.StoreInventoryRepository.UpdateAsyn(toDeleteInv);
-                        await _uow.SaveAsync();
+						await _uow.StoreInventoryRepository.UpdateAsyn(toDeleteInv);
+						await _uow.SaveAsync();
 
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Success";
-                    }
-                    else
-                    {
-                        response.StatusCode = StaticResource.IdAlreadyUsedInOtherTable;
-                        response.Message = "This inventory is being used for items.";
-                    }
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.SomethingWrong;
-                }
-            }
+						response.StatusCode = StaticResource.successStatusCode;
+						response.Message = "Success";
+					}
+					else
+					{
+						response.StatusCode = StaticResource.IdAlreadyUsedInOtherTable;
+						response.Message = "This inventory is being used for items.";
+					}
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = StaticResource.SomethingWrong;
+				}
+			}
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
@@ -151,24 +151,24 @@ namespace HumanitarianAssistance.Service.Classes
             var response = new APIResponse();
             try
             {
-                var inventoryList = await Task.Run(() =>
-                    _uow.GetDbContext().StoreInventories
-                        .Include(c => c.ChartAccountDetails)
-                        .Include(c => c.CreatedBy)
-                        .Where(c => c.IsDeleted == false)
-                        .OrderBy(c => c.CreatedDate));
+				var inventoryList = await Task.Run(() =>
+					_uow.GetDbContext().StoreInventories
+						.Include(c => c.ChartAccountDetails)
+						.Include(c => c.CreatedBy)
+						.Where(c => c.IsDeleted == false)
+						.OrderBy(c => c.CreatedDate));
 
-                var invModelList = inventoryList.Select(v => new StoreInventoryModel
-                {
-                    InventoryId = v.InventoryId,
-                    InventoryCode = v.InventoryCode,
-                    InventoryName = v.InventoryName,
-                    InventoryDescription = v.InventoryDescription,
-                    InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
-                    AssetType = v.AssetType
-                }).ToList();
-                response.data.InventoryList = invModelList;
-                response.StatusCode = StaticResource.successStatusCode;
+				var invModelList = inventoryList.Select(v => new StoreInventoryModel
+				{
+					InventoryId = v.InventoryId,
+					InventoryCode = v.InventoryCode,
+					InventoryName = v.InventoryName,
+					InventoryDescription = v.InventoryDescription,
+					InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
+					AssetType = v.AssetType
+				}).ToList();
+				response.data.InventoryList = invModelList;
+				response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
