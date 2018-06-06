@@ -204,6 +204,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetSerialNumber(string serialNumber)
+    {
+      APIResponse apiresponse = await _iStore.GetSerialNumber(serialNumber);
+      return apiresponse;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllPurchasesByItem(string itemId)
     {
       APIResponse apiresponse = await _iStore.GetAllPurchasesByItem(itemId);
@@ -212,7 +220,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> AddItemPurchaseDocument([FromBody] StoreItemPurchaseDocumentModel model)
+    public async Task<APIResponse> AddPurchase([FromBody] ItemPurchaseModel model)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -220,7 +228,37 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         model.CreatedById = user.Id;
         model.CreatedDate = DateTime.Now;
-        apiRespone = await _iStore.AddItemPurchaseDocument(model);
+        apiRespone = await _iStore.AddPurchase(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditPurchase([FromBody] ItemPurchaseModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+        apiRespone = await _iStore.EditPurchase(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeletePurchase([FromBody] ItemPurchaseModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+        apiRespone = await _iStore.DeletePurchase(model);
       }
       return apiRespone;
     }

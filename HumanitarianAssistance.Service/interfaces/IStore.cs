@@ -14,7 +14,7 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> DeleteInventory(StoreInventoryModel model);
 		Task<APIResponse> GetAllInventories();
 		//Task<APIResponse> AddPurchase(ItemPurchaseWithDataModel model);
-		Task<APIResponse> GetAllPurchasesByItem(string itemId);
+		//Task<APIResponse> GetAllPurchasesByItem(string itemId);
 		Task<APIResponse> AddItemPurchaseDocument(StoreItemPurchaseDocumentModel model);
 		//Task<APIResponse> GetAllDepreciationByFilter();
 
@@ -28,6 +28,10 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> DeleteInventoryItemsType(InventoryItemTypeModel model);
 		Task<APIResponse> GetAllInventoryItemsType();
 
-
+		Task<APIResponse> AddPurchase(ItemPurchaseModel model);
+		Task<APIResponse> EditPurchase(ItemPurchaseModel model);
+		Task<APIResponse> DeletePurchase(ItemPurchaseModel model);
+		Task<APIResponse> GetAllPurchasesByItem(string itemId);
+		Task<APIResponse> GetSerialNumber(string serialNumber);
 	}
 }

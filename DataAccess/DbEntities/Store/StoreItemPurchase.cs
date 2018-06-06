@@ -26,13 +26,13 @@ namespace DataAccess.DbEntities.Store
         public bool ApplyDepreciation { get; set; }
         public long DepreciationRate { get; set; }
 
-        public byte[] Image { get; set; }
-        public string ImageGuid { get; set; }
-        public string ImageName { get; set; }
         public string ImageFileType { get; set; }
         public string ImageFileName { get; set; }
 
-        public int PurchasedById { get; set; }
+		public string InvoiceFileType { get; set; }
+		public string InvoiceFileName { get; set; }
+
+		public int PurchasedById { get; set; }
 
         [ForeignKey("InventoryItem")]
         public StoreInventoryItem StoreInventoryItem { get; set; }
