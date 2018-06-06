@@ -18,10 +18,14 @@ namespace DataAccess.DbEntities
         public string InventoryDescription { get; set; }
         //public long InventoryChartOfAccount { get; set; }
         public int AssetType { get; set; }
-		public int InventoryAccount { get; set; }
-		[ForeignKey("InventoryAccount")]
-        public ChartAccountDetail ChartAccountDetails { get; set; }
+		public int InventoryDebitAccount { get; set; }
+		[ForeignKey("InventoryDebitAccount")]
+        public ChartAccountDetail ChartDebitAccountDetails { get; set; }
 
-        public List<StoreInventoryItem> InventoryItems { get; set; }
+		public int? InventoryCreditAccount { get; set; }
+		[ForeignKey("InventoryCreditAccount")]
+		public ChartAccountDetail ChartCreditAccountDetails { get; set; }
+
+		public List<StoreInventoryItem> InventoryItems { get; set; }
     }
 }
