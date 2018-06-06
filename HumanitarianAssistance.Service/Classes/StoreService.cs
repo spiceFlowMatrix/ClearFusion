@@ -42,7 +42,7 @@ namespace HumanitarianAssistance.Service.Classes
 			{
 				var inventoryAccount =
 					await _uow.ChartAccountDetailRepository.FindAsync(x =>
-						x.AccountCode == model.InventoryAccount);
+						x.AccountCode == model.InventoryDebitAccount && x.AccountCode == model.InventoryCreditAccount);
 				if (inventoryAccount != null)
 				{
 					StoreInventory inventory = _mapper.Map<StoreInventory>(model);
@@ -73,10 +73,10 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var edInv = await _uow.StoreInventoryRepository.FindAsync(c => c.InventoryId == model.InventoryId);
-                var inventoryAccount =
-                    await _uow.ChartAccountDetailRepository.FindAsync(x =>
-                        x.AccountCode == model.InventoryAccount);
-                if (edInv != null && inventoryAccount != null)
+				var inventoryAccount =
+					await _uow.ChartAccountDetailRepository.FindAsync(x =>
+						x.AccountCode == model.InventoryCreditAccount && x.AccountCode == model.InventoryDebitAccount);
+				if (edInv != null && inventoryAccount != null)
                 {
                     //edInv.InventoryCode = model.InventoryCode;
                     //edInv.InventoryName = model.InventoryName;
@@ -187,7 +187,8 @@ namespace HumanitarianAssistance.Service.Classes
                     InventoryName = v.InventoryName,
                     InventoryDescription = v.InventoryDescription,
                     //InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
-                    InventoryAccount = v.InventoryAccount,
+                    InventoryCreditAccount = v.InventoryCreditAccount,
+					InventoryDebitAccount = v.InventoryDebitAccount,
                     AssetType = v.AssetType
                 }).ToList();
                 response.data.InventoryList = invModelList;
