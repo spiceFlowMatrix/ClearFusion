@@ -5165,14 +5165,14 @@
     "Microsoft.Data.Edm/5.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-P/d8DxA6MFHroBEn/jW0LMQSIKnsRRibrZtRCLfov2boQfrQ1R1BVgkJ5oIhcQsOm0l4POv+I2ny6RBsclNbOw==",
+      "sha512": "sha512-sHZTf9QoX4YPgqOM11t2GRiMlseUULs5HRDDKN2Zr50zhAm9SLm2ysZCaQb2+2Mwb+erZqtIb4/wY7wGxurkAQ==",
       "path": "microsoft.data.edm/5.8.2",
       "hashPath": "microsoft.data.edm.5.8.2.nupkg.sha512"
     },
     "Microsoft.Data.OData/5.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oEIUtXcRiKogF0yZxA+QdgxoBJ34989qL/5xOSrTfxAhzNJV5Hw6DRdWgUCpeXFMoJUQx7ptbHCN+My/LCQfsg==",
+      "sha512": "sha512-WyFV7Ks8uQ01JGJ1gzvhl7Q8IHlp7/EoIvKPOQ/qn0wMwgohC7B5sVWI8GJs5GQbWLx8KYDMllADTp9U8ZjUgQ==",
       "path": "microsoft.data.odata/5.8.2",
       "hashPath": "microsoft.data.odata.5.8.2.nupkg.sha512"
     },
@@ -6495,7 +6495,7 @@
     "System.Spatial/5.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-0RfZZJ8RlrfjoBPAF6pczX4Nd2kyLM8EX1PCP5Rqs/jOhJBUPYhpXjIsVAYN7kocj9IJ9XoJWAxWgXIDtJY2Ag==",
+      "sha512": "sha512-kjspKkA3D/rCkB9ut0UM0Qj/zgc+2tHxSxBhlgbNLkHTpE4APeziuL8alIPciyU+QqAKaKAmsZgtLW/BVN+9CA==",
       "path": "system.spatial/5.8.2",
       "hashPath": "system.spatial.5.8.2.nupkg.sha512"
     },
