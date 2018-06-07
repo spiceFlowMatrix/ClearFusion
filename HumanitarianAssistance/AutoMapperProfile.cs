@@ -85,6 +85,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<StoreInventoryItem, StoreInventoryItemModel>().ReverseMap();
       CreateMap<InventoryItemType, InventoryItemTypeModel>().ReverseMap();
       CreateMap<StoreItemPurchase, ItemPurchaseModel>().ReverseMap();
+      CreateMap<StorePurchaseOrder, ItemOrderModel>().ReverseMap();
     }
   }
 }

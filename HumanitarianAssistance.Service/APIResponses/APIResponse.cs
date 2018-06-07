@@ -66,8 +66,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double? TotalGrossSalary { get; set; }
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
-        //public List<IGrouping<int, CategoryPopulator>> CategoryPopulatorLst { get; set; }
-        public List<CategoryPopulator> CategoryPopulatorLst { get; set; }
+		public List<ItemOrderModel> ItemOrderModelList { get; set; }
+	    //public List<IGrouping<int, CategoryPopulator>> CategoryPopulatorLst { get; set; }
+		public List<CategoryPopulator> CategoryPopulatorLst { get; set; }
         public List<int> UserOfficeList { get; set; }
         public List<ExitInterviewModel> ExitInterviewList { get; set; }
         public List<InterviewDetailModel> InterviewDetailList { get; set; }
