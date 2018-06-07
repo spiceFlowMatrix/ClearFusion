@@ -700,21 +700,15 @@ namespace HumanitarianAssistance.Service.Classes
                 var purchases = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.PurchaseOrders).Include(x => x.StoreInventoryItem).Where(x => x.InventoryItem == itemId && x.IsDeleted == false).ToListAsync();
                 var purchasesModel = purchases.Select(v => new StoreItemPurchaseViewModel
                 {
-                    CreatedDate = v.CreatedDate,
-                    CreatedById = v.CreatedById,
-                    PurchaseDate = v.PurchaseDate,
-                    DeliveryDate = v.DeliveryDate,
-                    UnitType = v.UnitType,
+                    PurchaseId = v.PurchaseId,
+                    SerialNo = v.SerialNo,
                     Currency = v.Currency,
                     UnitCost = v.UnitCost,
                     Quantity = v.Quantity,
                     TotalCost = v.UnitCost * v.Quantity,
-                    ApplyDepreciation = v.ApplyDepreciation,
                     CurrentQuantity = v.Quantity - (v.PurchaseOrders != null ? v.PurchaseOrders.Sum(q => q.IssuedQuantity) : 0),
-                    PurchasedBy = v.PurchasedById,
                     ImageFileName = v.ImageFileName,
-                    ItemType = v.StoreInventoryItem.ItemType // TODO: Please test if this will return the item type object
-                    //ItemType = v.StoreInventoryItem.ItemTypes.TypeName // TODO: Please test if this will return the item type object
+
                 }).ToList();
                 response.data.StoreItemsPurchaseViewList = purchasesModel;
                 response.StatusCode = StaticResource.successStatusCode;
