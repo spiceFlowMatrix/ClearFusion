@@ -17,52 +17,52 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Service.Classes
 {
-	public class StoreService : IStore
-	{
-		#region "Variables & Dependencies"
-		IUnitOfWork _uow;
-		IMapper _mapper;
-		UserManager<AppUser> _userManager;
-		public StoreService(IUnitOfWork uow, IMapper mapper, UserManager<AppUser> userManager)
-		{
-			this._uow = uow;
-			this._mapper = mapper;
-			this._userManager = userManager;
-		}
+    public class StoreService : IStore
+    {
+        #region "Variables & Dependencies"
+        IUnitOfWork _uow;
+        IMapper _mapper;
+        UserManager<AppUser> _userManager;
+        public StoreService(IUnitOfWork uow, IMapper mapper, UserManager<AppUser> userManager)
+        {
+            this._uow = uow;
+            this._mapper = mapper;
+            this._userManager = userManager;
+        }
 
-		#endregion
+        #endregion
 
 
-		#region "Store Inventories"
-		// Store Inventories
-		public async Task<APIResponse> AddInventory(StoreInventoryModel model)
-		{
-			var response = new APIResponse();
-			try
-			{
-				var inventoryAccount =
-					await _uow.ChartAccountDetailRepository.FindAsync(x =>
-						x.AccountCode == model.InventoryDebitAccount && x.AccountCode == model.InventoryCreditAccount);
-				if (inventoryAccount != null)
-				{
-					StoreInventory inventory = _mapper.Map<StoreInventory>(model);
-					await _uow.StoreInventoryRepository.AddAsyn(inventory);
-					await _uow.SaveAsync();
-					response.StatusCode = StaticResource.successStatusCode;
-					response.Message = "Success";
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = StaticResource.AccountNoteNotExists;
-				}
-			}
-			catch (Exception e)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + e.Message;
-				return response;
-			}
+        #region "Store Inventories"
+        // Store Inventories
+        public async Task<APIResponse> AddInventory(StoreInventoryModel model)
+        {
+            var response = new APIResponse();
+            try
+            {
+                var inventoryAccount =
+                    await _uow.ChartAccountDetailRepository.FindAsync(x =>
+                        x.AccountCode == model.InventoryDebitAccount && x.AccountCode == model.InventoryCreditAccount);
+                if (inventoryAccount != null)
+                {
+                    StoreInventory inventory = _mapper.Map<StoreInventory>(model);
+                    await _uow.StoreInventoryRepository.AddAsyn(inventory);
+                    await _uow.SaveAsync();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.AccountNoteNotExists;
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + e.Message;
+                return response;
+            }
 
             return response;
         }
@@ -73,10 +73,10 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var edInv = await _uow.StoreInventoryRepository.FindAsync(c => c.InventoryId == model.InventoryId);
-				var inventoryAccount =
-					await _uow.ChartAccountDetailRepository.FindAsync(x =>
-						x.AccountCode == model.InventoryCreditAccount && x.AccountCode == model.InventoryDebitAccount);
-				if (edInv != null && inventoryAccount != null)
+                var inventoryAccount =
+                    await _uow.ChartAccountDetailRepository.FindAsync(x =>
+                        x.AccountCode == model.InventoryCreditAccount && x.AccountCode == model.InventoryDebitAccount);
+                if (edInv != null && inventoryAccount != null)
                 {
                     //edInv.InventoryCode = model.InventoryCode;
                     //edInv.InventoryName = model.InventoryName;
@@ -188,7 +188,7 @@ namespace HumanitarianAssistance.Service.Classes
                     InventoryDescription = v.InventoryDescription,
                     //InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
                     InventoryCreditAccount = v.InventoryCreditAccount,
-					InventoryDebitAccount = v.InventoryDebitAccount,
+                    InventoryDebitAccount = v.InventoryDebitAccount,
                     AssetType = v.AssetType
                 }).ToList();
                 response.data.InventoryList = invModelList;
@@ -489,8 +489,8 @@ namespace HumanitarianAssistance.Service.Classes
         #endregion
 
 
-		#region "Store Item Purchase"
-		// Item purchases
+        #region "Store Item Purchase"
+        // Item purchases
 
         // TODO: ReadMe
         // When creating purchases towards an item, we must know the item type. Based on that
@@ -502,258 +502,262 @@ namespace HumanitarianAssistance.Service.Classes
         // Only Vehicles and Generators items are created in the database upon purchase
 
 
-		public async Task<APIResponse> AddPurchase(ItemPurchaseModel model)
-		{
-			var response = new APIResponse();
-			try
-			{
-				if (model != null)
-				{
-					StoreItemPurchase purchase = _mapper.Map<StoreItemPurchase>(model);
+        public async Task<APIResponse> AddPurchase(ItemPurchaseModel model)
+        {
+            var response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    StoreItemPurchase purchase = _mapper.Map<StoreItemPurchase>(model);
 
-					// For Image 
+                    // For Image 
 
-					if (model.ImageFileName != null)
-					{
-						string[] str = model.ImageFileName.Split(",");
-						byte[] filepath = Convert.FromBase64String(str[1]);
-						string ex = str[0].Split("/")[1].Split(";")[0];
-						string guidname = Guid.NewGuid().ToString();
-						string filename = guidname + "." + ex;
-						var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-						File.WriteAllBytes(@"Documents/" + filename, filepath);
+                    if (model.ImageFileName != null)
+                    {
+                        string[] str = model.ImageFileName.Split(",");
+                        byte[] filepath = Convert.FromBase64String(str[1]);
+                        string ex = str[0].Split("/")[1].Split(";")[0];
+                        string guidname = Guid.NewGuid().ToString();
+                        string filename = guidname + "." + ex;
+                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                        File.WriteAllBytes(@"Documents/" + filename, filepath);
 
-						purchase.ImageFileName = guidname;
-						purchase.ImageFileType = "." + ex;
-					}
-					else
-					{
-						purchase.ImageFileName = null;
-						purchase.ImageFileType = null;
-					}
+                        purchase.ImageFileName = guidname;
+                        purchase.ImageFileType = "." + ex;
+                    }
+                    else
+                    {
+                        purchase.ImageFileName = null;
+                        purchase.ImageFileType = null;
+                    }
 
-					// For invoice 
+                    // For invoice 
 
-					if (model.Invoice != null)
-					{
-						string[] str = model.Invoice.Split(",");
-						byte[] filepath = Convert.FromBase64String(str[1]);
-						string ex = str[0].Split("/")[1].Split(";")[0];
-						string guidname = Guid.NewGuid().ToString();
-						string filename = guidname + "." + ex;
-						var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-						File.WriteAllBytes(@"Documents/" + filename, filepath);
+                    if (model.Invoice != null)
+                    {
+                        string[] str = model.Invoice.Split(",");
+                        byte[] filepath = Convert.FromBase64String(str[1]);
+                        string ex = str[0].Split("/")[1].Split(";")[0];
+                        string guidname = Guid.NewGuid().ToString();
+                        string filename = guidname + "." + ex;
+                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                        File.WriteAllBytes(@"Documents/" + filename, filepath);
 
-						purchase.InvoiceFileName = guidname;
-						purchase.InvoiceFileType = "." + ex;
-					}
-					else
-					{
-						purchase.InvoiceFileName = null;
-						purchase.InvoiceFileType = null;
-					}
+                        purchase.InvoiceFileName = guidname;
+                        purchase.InvoiceFileType = "." + ex;
+                    }
+                    else
+                    {
+                        purchase.InvoiceFileName = null;
+                        purchase.InvoiceFileType = null;
+                    }
 
-					await _uow.StoreItemPurchaseRepository.AddAsyn(purchase);
-					await _uow.SaveAsync();
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Model values are inappropriate";
-					return response;
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-				return response;
-			}
-			return response;
-		}
+                    await _uow.StoreItemPurchaseRepository.AddAsyn(purchase);
+                    await _uow.SaveAsync();
 
-		public async Task<APIResponse> EditPurchase(ItemPurchaseModel model)
-		{
-			var response = new APIResponse();
-			try
-			{
-				if (model != null)
-				{
-					var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x=>x.PurchaseId == model.PurchaseId);
-					if (purchaseRecord != null)
-					{
-						_mapper.Map(model, purchaseRecord);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model values are inappropriate";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+            return response;
+        }
 
-						// For Image 
+        public async Task<APIResponse> EditPurchase(ItemPurchaseModel model)
+        {
+            var response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
+                    if (purchaseRecord != null)
+                    {
+                        _mapper.Map(model, purchaseRecord);
 
-						if (model.ImageFileName != null)
-						{
-							string[] str = model.ImageFileName.Split(",");
-							byte[] filepath = Convert.FromBase64String(str[1]);
-							string ex = str[0].Split("/")[1].Split(";")[0];
-							string guidname = Guid.NewGuid().ToString();
-							string filename = guidname + "." + ex;
-							var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-							File.WriteAllBytes(@"Documents/" + filename, filepath);
+                        // For Image 
 
-							purchaseRecord.ImageFileName = guidname;
-							purchaseRecord.ImageFileType = "." + ex;
-						}
-						else
-						{
-							purchaseRecord.ImageFileName = null;
-							purchaseRecord.ImageFileType = null;
-						}
+                        if (model.ImageFileName != null)
+                        {
+                            string[] str = model.ImageFileName.Split(",");
+                            byte[] filepath = Convert.FromBase64String(str[1]);
+                            string ex = str[0].Split("/")[1].Split(";")[0];
+                            string guidname = Guid.NewGuid().ToString();
+                            string filename = guidname + "." + ex;
+                            var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                            File.WriteAllBytes(@"Documents/" + filename, filepath);
 
-						// For invoice 
+                            purchaseRecord.ImageFileName = guidname;
+                            purchaseRecord.ImageFileType = "." + ex;
+                        }
+                        else
+                        {
+                            purchaseRecord.ImageFileName = null;
+                            purchaseRecord.ImageFileType = null;
+                        }
 
-						if (model.Invoice != null)
-						{
-							string[] str = model.Invoice.Split(",");
-							byte[] filepath = Convert.FromBase64String(str[1]);
-							string ex = str[0].Split("/")[1].Split(";")[0];
-							string guidname = Guid.NewGuid().ToString();
-							string filename = guidname + "." + ex;
-							var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-							File.WriteAllBytes(@"Documents/" + filename, filepath);
+                        // For invoice 
 
-							purchaseRecord.InvoiceFileName = guidname;
-							purchaseRecord.InvoiceFileType = "." + ex;
-						}
-						else
-						{
-							purchaseRecord.InvoiceFileName = null;
-							purchaseRecord.InvoiceFileType = null;
-						}
+                        if (model.Invoice != null)
+                        {
+                            string[] str = model.Invoice.Split(",");
+                            byte[] filepath = Convert.FromBase64String(str[1]);
+                            string ex = str[0].Split("/")[1].Split(";")[0];
+                            string guidname = Guid.NewGuid().ToString();
+                            string filename = guidname + "." + ex;
+                            var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                            File.WriteAllBytes(@"Documents/" + filename, filepath);
 
-						await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
-						await _uow.SaveAsync();
-					}
-					else
-					{
-						response.StatusCode = StaticResource.failStatusCode;
-						response.Message = "Record cannot be updated";
-						return response;
-					}
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Model values are inappropriate";
-					return response;
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-				return response;
-			}
-			return response;
-		}
+                            purchaseRecord.InvoiceFileName = guidname;
+                            purchaseRecord.InvoiceFileType = "." + ex;
+                        }
+                        else
+                        {
+                            purchaseRecord.InvoiceFileName = null;
+                            purchaseRecord.InvoiceFileType = null;
+                        }
 
-		public async Task<APIResponse> DeletePurchase(ItemPurchaseModel model)
-		{
-			var response = new APIResponse();
-			try
-			{
-				if (model != null)
-				{
-					var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
-					if (purchaseRecord != null)
-					{
-						purchaseRecord.IsDeleted = true;
-						await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
-						await _uow.SaveAsync();
-					}
-					else
-					{
-						response.StatusCode = StaticResource.failStatusCode;
-						response.Message = "Record cannot be deleted";
-						return response;
-					}
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Model values are inappropriate";
-					return response;
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-				return response;
-			}
-			return response;
-		}
+                        await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
+                        await _uow.SaveAsync();
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Record cannot be updated";
+                        return response;
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model values are inappropriate";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+            return response;
+        }
 
-		public async Task<APIResponse> GetAllPurchasesByItem(string itemId)
-		{
-			var response = new APIResponse();
-			try
-			{				
-				var purchases = await _uow.StoreItemPurchaseRepository.FindAllAsync(x => x.InventoryItem == itemId && x.IsDeleted == true);
-				var purchasesModel = purchases.Select(v => new StoreItemPurchaseViewModel
-				{
-					CreatedDate = v.CreatedDate,
-					CreatedById = v.CreatedById,
-					PurchaseDate = v.PurchaseDate,
-					DeliveryDate = v.DeliveryDate,
-					UnitType = v.PurchaseUnitType.UnitTypeName,
-					Currency = v.CurrencyDetails.CurrencyName,
-					UnitCost = v.UnitCost,
-					Quantity = v.Quantity,
-					TotalCost = v.UnitCost * v.Quantity,
-					ApplyDepreciation = v.ApplyDepreciation,
-					CurrentQuantity = v.Quantity - v.PurchaseOrders.Sum(q => q.IssuedQuantity),
-					PurchasedBy = v.EmployeeDetail.EmployeeName,
-					ImageFileName = v.ImageFileName,
-					ItemType = v.StoreInventoryItem.ItemTypes.TypeName // TODO: Please test if this will return the item type object
-				}).ToList();
-				response.data.StoreItemsPurchaseViewList = purchasesModel;
-				response.StatusCode = StaticResource.successStatusCode;
-				response.Message = "Success";
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-				return response;
-			}
-			return response;
-		}
+        public async Task<APIResponse> DeletePurchase(ItemPurchaseModel model)
+        {
+            var response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
+                    if (purchaseRecord != null)
+                    {
+                        purchaseRecord.IsDeleted = true;
+                        await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
+                        await _uow.SaveAsync();
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Record cannot be deleted";
+                        return response;
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model values are inappropriate";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+            return response;
+        }
 
-		public async Task<APIResponse> GetSerialNumber(string serialNumber)
-		{
-			var response = new APIResponse();
-			try
-			{
-				var checkSerialNumber = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.SerialNo == serialNumber);
-				if (checkSerialNumber != null)
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Serial Number already exits";
-					return response;
-				}
-				response.StatusCode = StaticResource.successStatusCode;
-				response.Message = "Success";
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-				return response;
-			}
-			return response;
-		}
+        public async Task<APIResponse> GetAllPurchasesByItem(string itemId)
+        {
+            var response = new APIResponse();
+            try
+            {
+                var purchases = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.PurchaseOrders).Include(x => x.StoreInventoryItem).Where(x => x.InventoryItem == itemId && x.IsDeleted == false).ToListAsync();
+                var purchasesModel = purchases.Select(v => new StoreItemPurchaseViewModel
+                {
+                    CreatedDate = v.CreatedDate,
+                    CreatedById = v.CreatedById,
+                    PurchaseDate = v.PurchaseDate,
+                    DeliveryDate = v.DeliveryDate,
+                    UnitType = v.UnitType,
+                    Currency = v.Currency,
+                    UnitCost = v.UnitCost,
+                    Quantity = v.Quantity,
+                    TotalCost = v.UnitCost * v.Quantity,
+                    ApplyDepreciation = v.ApplyDepreciation,
+                    CurrentQuantity = v.Quantity - (v.PurchaseOrders != null ? v.PurchaseOrders.Sum(q => q.IssuedQuantity) : 0),
+                    PurchasedBy = v.PurchasedById,
+                    ImageFileName = v.ImageFileName,
+                    ItemType = v.StoreInventoryItem.ItemType // TODO: Please test if this will return the item type object
+                    //ItemType = v.StoreInventoryItem.ItemTypes.TypeName // TODO: Please test if this will return the item type object
+                }).ToList();
+                response.data.StoreItemsPurchaseViewList = purchasesModel;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+            return response;
+        }
 
-		#endregion
+        public async Task<APIResponse> GetSerialNumber(string serialNumber)
+        {
+            var response = new APIResponse();
+            try
+            {
+                var checkSerialNumber = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.SerialNo == serialNumber);
+                if (checkSerialNumber != null)
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Serial Number already exits";
+                    return response;
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+            return response;
+        }
+
+        #endregion
 
 
-		#region "Store Item Order"
-		// Purchase orders
+        #region "Store Item Order"
+        // Purchase orders
 
         // TODO: ReadMe
         // When ordering MotorFuel item, a MotorFuel object must be created and then assigned to
@@ -810,10 +814,148 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-		#endregion
+        #endregion
 
 
-		// Depreciation
+        #region "Purchase Unit Type"
+
+        public async Task<APIResponse> AddPurchaseUnitType(PurchaseUnitType model)
+        {
+            var response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    //PurchaseUnitType obj = _mapper.Map<PurchaseUnitType>(model);
+                    await _uow.PurchaseUnitTypeRepository.AddAsyn(model);
+                    await _uow.SaveAsync();
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Please add Unit type details";
+                    return response;
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + e.Message;
+                return response;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> EditPurchaseUnitType(PurchaseUnitType model)
+        {
+            var response = new APIResponse();
+            try
+            {
+                var editUnitType = await _uow.PurchaseUnitTypeRepository.FindAsync(x => x.UnitTypeId == model.UnitTypeId);
+                if (editUnitType != null)
+                {
+                    //_mapper.Map(model, editUnitType);
+                    editUnitType.UnitTypeName = model.UnitTypeName;
+
+                    await _uow.PurchaseUnitTypeRepository.UpdateAsyn(editUnitType);
+                    await _uow.SaveAsync();
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeletePurchaseUnitType(PurchaseUnitType model)
+        {
+            var response = new APIResponse();
+            try
+            {
+                var deletePurchaseUnitType = await _uow.PurchaseUnitTypeRepository.FindAsync(x => x.UnitTypeId == model.UnitTypeId);
+                if (deletePurchaseUnitType != null)
+                {
+                    deletePurchaseUnitType.IsDeleted = true;
+                    await _uow.PurchaseUnitTypeRepository.UpdateAsyn(deletePurchaseUnitType);
+                    await _uow.SaveAsync();
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> GetAllPurchaseUnitType()
+        {
+            var response = new APIResponse();
+            try
+            {
+                //var inventoryItemsList = await Task.Run(() =>
+                //	_uow.GetDbContext().InventoryItemType
+                //		.Where(c => c.IsDeleted == false )
+                //		.OrderByDescending(c => c.CreatedDate));
+
+                var purchaseUnitTypeList = await _uow.PurchaseUnitTypeRepository.FindAllAsync(x => x.IsDeleted == false);
+
+                var invModelList = purchaseUnitTypeList.Select(v => new PurchaseUnitType
+                {
+                    UnitTypeName = v.UnitTypeName,
+                    UnitTypeId = v.UnitTypeId
+                }).ToList();
+                response.data.PurchaseUnitTypeList = invModelList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+
+            return response;
+        }
+
+        #endregion
+
+
+
+
+
+
+
+
+        // Depreciation
 
         // Must filter on store name, inventory, item, and purchase
         //public async Task<APIResponse> GetAllDepreciationByFilter()

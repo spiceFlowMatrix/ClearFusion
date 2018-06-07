@@ -92,167 +92,178 @@ namespace DataAccess
         private IGenericRepository<UserDetailOffices> _userOfficesRepository;
         private IGenericRepository<StrongandWeakPoints> _strongandWeakPointsRepository;
         private IGenericRepository<EmployeeEvaluationTraining> _employeeEvaluationTrainingRepository;
-		private IGenericRepository<LoggerDetails> _loggerDetailsRepository;
-		private IGenericRepository<EmployeeAppraisalTeamMember> _employeeAppraisalTeamMemberRepository;
-		private IGenericRepository<RatingBasedCriteria> _ratingBasedCriteriaRepository;
-		private IGenericRepository<CategoryPopulator> _categoryPopulatorRepository;
+        private IGenericRepository<LoggerDetails> _loggerDetailsRepository;
+        private IGenericRepository<EmployeeAppraisalTeamMember> _employeeAppraisalTeamMemberRepository;
+        private IGenericRepository<RatingBasedCriteria> _ratingBasedCriteriaRepository;
+        private IGenericRepository<CategoryPopulator> _categoryPopulatorRepository;
 
-		// Store repos
-		private IGenericRepository<StoreInventory> _storeInventoryRepository;
-		private IGenericRepository<StoreInventoryItem> _storeInventoryItemRepository;
-		private IGenericRepository<StoreItemPurchase> _storeItemPurchaseRepository;
-		private IGenericRepository<ItemPurchaseDocument> _itemPurchaseDocumentRepository;
-		private IGenericRepository<PurchaseVehicle> _purchaseVehicleRepository;
-		private IGenericRepository<StorePurchaseOrder> _purchaseOrderRepository;
-		private IGenericRepository<PurchaseOrderDocument> _purchaseOrderDocumentRepository;
-		private IGenericRepository<MotorFuel> _storeFuelRepository;
-		private IGenericRepository<VehicleLocation> _vehicleLocationRepository;
-		private IGenericRepository<VehicleMileage> _vehicleMileageRepository;
-		private IGenericRepository<PurchaseGenerator> _purchaseGeneratorRepository;
-		private IGenericRepository<MotorMaintenance> _motorMaintenanceRepository;
-		private IGenericRepository<MotorSparePart> _motorSparePartsRepository;
-		private IGenericRepository<InventoryItemType> _inventoryItemTypeRepository;
+        // Store repos
+        private IGenericRepository<StoreInventory> _storeInventoryRepository;
+        private IGenericRepository<StoreInventoryItem> _storeInventoryItemRepository;
+        private IGenericRepository<StoreItemPurchase> _storeItemPurchaseRepository;
+        private IGenericRepository<ItemPurchaseDocument> _itemPurchaseDocumentRepository;
+        private IGenericRepository<PurchaseVehicle> _purchaseVehicleRepository;
+        private IGenericRepository<StorePurchaseOrder> _purchaseOrderRepository;
+        private IGenericRepository<PurchaseOrderDocument> _purchaseOrderDocumentRepository;
+        private IGenericRepository<MotorFuel> _storeFuelRepository;
+        private IGenericRepository<VehicleLocation> _vehicleLocationRepository;
+        private IGenericRepository<VehicleMileage> _vehicleMileageRepository;
+        private IGenericRepository<PurchaseGenerator> _purchaseGeneratorRepository;
+        private IGenericRepository<MotorMaintenance> _motorMaintenanceRepository;
+        private IGenericRepository<MotorSparePart> _motorSparePartsRepository;
+        private IGenericRepository<InventoryItemType> _inventoryItemTypeRepository;
+        private IGenericRepository<PurchaseUnitType> _purchaseUnitTypeRepository;
 
-		public UnitOfWork(ApplicationDbContext mschaContext)
+
+
+        public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
 
-		// Store
-		public IGenericRepository<InventoryItemType> InventoryItemTypeRepository
-		{
-			get
-			{
-				return _inventoryItemTypeRepository =
-					_inventoryItemTypeRepository ?? new GenericRepository<InventoryItemType>(_mschaContext);
-			}
-		}
+        // Store
+        public IGenericRepository<PurchaseUnitType> PurchaseUnitTypeRepository
+        {
+            get
+            {
+                return _purchaseUnitTypeRepository =
+                    _purchaseUnitTypeRepository ?? new GenericRepository<PurchaseUnitType>(_mschaContext);
+            }
+        }
+        public IGenericRepository<InventoryItemType> InventoryItemTypeRepository
+        {
+            get
+            {
+                return _inventoryItemTypeRepository =
+                    _inventoryItemTypeRepository ?? new GenericRepository<InventoryItemType>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<StoreInventory> StoreInventoryRepository
-		{
-			get
-			{
-				return _storeInventoryRepository =
-					_storeInventoryRepository ?? new GenericRepository<StoreInventory>(_mschaContext);
-			}
-		}
+        public IGenericRepository<StoreInventory> StoreInventoryRepository
+        {
+            get
+            {
+                return _storeInventoryRepository =
+                    _storeInventoryRepository ?? new GenericRepository<StoreInventory>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<StoreInventoryItem> StoreInventoryItemRepository
-		{
-			get
-			{
-				return _storeInventoryItemRepository =
-					_storeInventoryItemRepository ?? new GenericRepository<StoreInventoryItem>(_mschaContext);
-			}
-		}
+        public IGenericRepository<StoreInventoryItem> StoreInventoryItemRepository
+        {
+            get
+            {
+                return _storeInventoryItemRepository =
+                    _storeInventoryItemRepository ?? new GenericRepository<StoreInventoryItem>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<StoreItemPurchase> StoreItemPurchaseRepository
-		{
-			get
-			{
-				return _storeItemPurchaseRepository =
-					_storeItemPurchaseRepository ?? new GenericRepository<StoreItemPurchase>(_mschaContext);
-			}
-		}
+        public IGenericRepository<StoreItemPurchase> StoreItemPurchaseRepository
+        {
+            get
+            {
+                return _storeItemPurchaseRepository =
+                    _storeItemPurchaseRepository ?? new GenericRepository<StoreItemPurchase>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<ItemPurchaseDocument> ItemPurchaseDocumentRepository
-		{
-			get
-			{
-				return _itemPurchaseDocumentRepository = _itemPurchaseDocumentRepository ??
-														 new GenericRepository<ItemPurchaseDocument>(_mschaContext);
-			}
-		}
+        public IGenericRepository<ItemPurchaseDocument> ItemPurchaseDocumentRepository
+        {
+            get
+            {
+                return _itemPurchaseDocumentRepository = _itemPurchaseDocumentRepository ??
+                                                         new GenericRepository<ItemPurchaseDocument>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<PurchaseVehicle> PurchaseVehicleRepository
-		{
-			get
-			{
-				return _purchaseVehicleRepository =
-					_purchaseVehicleRepository ?? new GenericRepository<PurchaseVehicle>(_mschaContext);
-			}
-		}
+        public IGenericRepository<PurchaseVehicle> PurchaseVehicleRepository
+        {
+            get
+            {
+                return _purchaseVehicleRepository =
+                    _purchaseVehicleRepository ?? new GenericRepository<PurchaseVehicle>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<StorePurchaseOrder> PurchaseOrderRepository
-		{
-			get
-			{
-				return _purchaseOrderRepository =
-					_purchaseOrderRepository ?? new GenericRepository<StorePurchaseOrder>(_mschaContext);
-			}
-		}
+        public IGenericRepository<StorePurchaseOrder> PurchaseOrderRepository
+        {
+            get
+            {
+                return _purchaseOrderRepository =
+                    _purchaseOrderRepository ?? new GenericRepository<StorePurchaseOrder>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<PurchaseOrderDocument> PurchaseOrderDocumentRepository
-		{
-			get
-			{
-				return _purchaseOrderDocumentRepository = _purchaseOrderDocumentRepository ??
-														  new GenericRepository<PurchaseOrderDocument>(_mschaContext);
-			}
-		}
+        public IGenericRepository<PurchaseOrderDocument> PurchaseOrderDocumentRepository
+        {
+            get
+            {
+                return _purchaseOrderDocumentRepository = _purchaseOrderDocumentRepository ??
+                                                          new GenericRepository<PurchaseOrderDocument>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<MotorFuel> StoreFuelRepository
-		{
-			get
-			{
-				return _storeFuelRepository = _storeFuelRepository ?? new GenericRepository<MotorFuel>(_mschaContext);
-			}
-		}
+        public IGenericRepository<MotorFuel> StoreFuelRepository
+        {
+            get
+            {
+                return _storeFuelRepository = _storeFuelRepository ?? new GenericRepository<MotorFuel>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<VehicleLocation> VehicleLocationRepository
-		{
-			get
-			{
-				return _vehicleLocationRepository =
-					_vehicleLocationRepository ?? new GenericRepository<VehicleLocation>(_mschaContext);
-			}
-		}
+        public IGenericRepository<VehicleLocation> VehicleLocationRepository
+        {
+            get
+            {
+                return _vehicleLocationRepository =
+                    _vehicleLocationRepository ?? new GenericRepository<VehicleLocation>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<VehicleMileage> VehicleMileageRepository
-		{
-			get
-			{
-				return _vehicleMileageRepository =
-					_vehicleMileageRepository ?? new GenericRepository<VehicleMileage>(_mschaContext);
-			}
-		}
+        public IGenericRepository<VehicleMileage> VehicleMileageRepository
+        {
+            get
+            {
+                return _vehicleMileageRepository =
+                    _vehicleMileageRepository ?? new GenericRepository<VehicleMileage>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<PurchaseGenerator> PurchaseGeneratorRepository
-		{
-			get
-			{
-				return _purchaseGeneratorRepository =
-					_purchaseGeneratorRepository ?? new GenericRepository<PurchaseGenerator>(_mschaContext);
-			}
-		}
+        public IGenericRepository<PurchaseGenerator> PurchaseGeneratorRepository
+        {
+            get
+            {
+                return _purchaseGeneratorRepository =
+                    _purchaseGeneratorRepository ?? new GenericRepository<PurchaseGenerator>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<MotorMaintenance> MotorMaintenanceRepository
-		{
-			get
-			{
-				return _motorMaintenanceRepository =
-					_motorMaintenanceRepository ?? new GenericRepository<MotorMaintenance>(_mschaContext);
-			}
-		}
+        public IGenericRepository<MotorMaintenance> MotorMaintenanceRepository
+        {
+            get
+            {
+                return _motorMaintenanceRepository =
+                    _motorMaintenanceRepository ?? new GenericRepository<MotorMaintenance>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<MotorSparePart> MotorSparePartsRepository
-		{
-			get
-			{
-				return _motorSparePartsRepository =
-					_motorSparePartsRepository ?? new GenericRepository<MotorSparePart>(_mschaContext);
-			}
-		}
-		//
+        public IGenericRepository<MotorSparePart> MotorSparePartsRepository
+        {
+            get
+            {
+                return _motorSparePartsRepository =
+                    _motorSparePartsRepository ?? new GenericRepository<MotorSparePart>(_mschaContext);
+            }
+        }
+        //
 
-		public IGenericRepository<CategoryPopulator> CategoryPopulatorRepository
-		{
-			get
-			{
-				return _categoryPopulatorRepository = _categoryPopulatorRepository ?? new GenericRepository<CategoryPopulator>(_mschaContext);
-			}
-		}
-		public IGenericRepository<RatingBasedCriteria> RatingBasedCriteriaRepository
+        public IGenericRepository<CategoryPopulator> CategoryPopulatorRepository
+        {
+            get
+            {
+                return _categoryPopulatorRepository = _categoryPopulatorRepository ?? new GenericRepository<CategoryPopulator>(_mschaContext);
+            }
+        }
+        public IGenericRepository<RatingBasedCriteria> RatingBasedCriteriaRepository
         {
             get
             {
@@ -275,7 +286,7 @@ namespace DataAccess
         }
 
         public IGenericRepository<LoggerDetails> LoggerDetailsRepository
-		{
+        {
             get
             {
                 return _loggerDetailsRepository = _loggerDetailsRepository ?? new GenericRepository<LoggerDetails>(_mschaContext);

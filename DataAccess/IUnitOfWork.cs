@@ -93,29 +93,29 @@ namespace DataAccess
         IGenericRepository<UserDetailOffices> UserOfficesRepository { get; }
         IGenericRepository<StrongandWeakPoints> StrongandWeakPointsRepository { get; }
         IGenericRepository<EmployeeEvaluationTraining> EmployeeEvaluationTrainingRepository { get; }
-		IGenericRepository<LoggerDetails> LoggerDetailsRepository { get; }
-		IGenericRepository<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMemberRepository { get; }
+        IGenericRepository<LoggerDetails> LoggerDetailsRepository { get; }
+        IGenericRepository<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMemberRepository { get; }
         IGenericRepository<RatingBasedCriteria> RatingBasedCriteriaRepository { get; }
-		IGenericRepository<CategoryPopulator> CategoryPopulatorRepository { get; }
+        IGenericRepository<CategoryPopulator> CategoryPopulatorRepository { get; }
 
-		// Store repositories
-		IGenericRepository<StoreInventory> StoreInventoryRepository { get; }
-		IGenericRepository<StoreInventoryItem> StoreInventoryItemRepository { get; }
-		IGenericRepository<StoreItemPurchase> StoreItemPurchaseRepository { get; }
-		IGenericRepository<ItemPurchaseDocument> ItemPurchaseDocumentRepository { get; }
-		IGenericRepository<PurchaseVehicle> PurchaseVehicleRepository { get; }
-		IGenericRepository<StorePurchaseOrder> PurchaseOrderRepository { get; }
-		IGenericRepository<PurchaseOrderDocument> PurchaseOrderDocumentRepository { get; }
-		IGenericRepository<MotorFuel> StoreFuelRepository { get; }
-		IGenericRepository<VehicleLocation> VehicleLocationRepository { get; }
-		IGenericRepository<VehicleMileage> VehicleMileageRepository { get; }
-		IGenericRepository<PurchaseGenerator> PurchaseGeneratorRepository { get; }
-		IGenericRepository<MotorMaintenance> MotorMaintenanceRepository { get; }
-		IGenericRepository<MotorSparePart> MotorSparePartsRepository { get; }
-		IGenericRepository<InventoryItemType> InventoryItemTypeRepository { get; }
-		
+        // Store repositories
+        IGenericRepository<StoreInventory> StoreInventoryRepository { get; }
+        IGenericRepository<StoreInventoryItem> StoreInventoryItemRepository { get; }
+        IGenericRepository<StoreItemPurchase> StoreItemPurchaseRepository { get; }
+        IGenericRepository<ItemPurchaseDocument> ItemPurchaseDocumentRepository { get; }
+        IGenericRepository<PurchaseVehicle> PurchaseVehicleRepository { get; }
+        IGenericRepository<StorePurchaseOrder> PurchaseOrderRepository { get; }
+        IGenericRepository<PurchaseOrderDocument> PurchaseOrderDocumentRepository { get; }
+        IGenericRepository<MotorFuel> StoreFuelRepository { get; }
+        IGenericRepository<VehicleLocation> VehicleLocationRepository { get; }
+        IGenericRepository<VehicleMileage> VehicleMileageRepository { get; }
+        IGenericRepository<PurchaseGenerator> PurchaseGeneratorRepository { get; }
+        IGenericRepository<MotorMaintenance> MotorMaintenanceRepository { get; }
+        IGenericRepository<MotorSparePart> MotorSparePartsRepository { get; }
+        IGenericRepository<InventoryItemType> InventoryItemTypeRepository { get; }
+        IGenericRepository<PurchaseUnitType> PurchaseUnitTypeRepository { get; }
 
-		void Save();
+        void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
 

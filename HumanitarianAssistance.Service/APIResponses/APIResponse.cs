@@ -1,4 +1,5 @@
 ﻿using DataAccess.DbEntities;
+using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.Store;
@@ -30,8 +31,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public string UserId { get; set; }
         public string LoggedDetail { get; set; }
         public DateTime CreatedDate { get; set; }
-		public string NotificationPath { get; set; }
-	}
+        public string NotificationPath { get; set; }
+    }
 
     public class Parent
     {
@@ -70,7 +71,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<int> UserOfficeList { get; set; }
         public List<ExitInterviewModel> ExitInterviewList { get; set; }
         public List<InterviewDetailModel> InterviewDetailList { get; set; }
-		public List<LoggerModel> LoggerDetailsModelList { get; set; }
+        public List<LoggerModel> LoggerDetailsModelList { get; set; }
         public List<AdvanceModel> AdvanceList { get; set; }
         public List<InterviewTechnicalQuestions> InterviewTechnicalQuestionsList { get; set; }
         public List<EmployeeDetailList> EmployeeDetailListData { get; set; }
@@ -198,14 +199,16 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<EmployeePayrollModel> EmployeePayrollList { get; set; }
         public EmployeePensionModel EmployeePensionModel { get; set; }
 
-		// Store classes
-		public List<StoreInventoryModel> InventoryList { get; set; }
-		public List<StoreInventoryItemModel> InventoryItemList { get; set; }
-		public List<InventoryItemTypeModel> InventoryItemTypeList { get; set; }
-		public List<StoreItemPurchaseViewModel> StoreItemsPurchaseViewList { get; set; }
+        // Store classes
+        public List<StoreInventoryModel> InventoryList { get; set; }
+        public List<StoreInventoryItemModel> InventoryItemList { get; set; }
+        public List<InventoryItemTypeModel> InventoryItemTypeList { get; set; }
+        public List<StoreItemPurchaseViewModel> StoreItemsPurchaseViewList { get; set; }
+
+        public List<PurchaseUnitType> PurchaseUnitTypeList { get; set; }
 
 
-	}
+    }
 
     public class Roles
     {

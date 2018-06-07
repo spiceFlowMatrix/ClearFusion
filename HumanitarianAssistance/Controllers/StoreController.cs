@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.DbEntities;
+using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models.Store;
@@ -264,6 +265,65 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     #endregion
+
+
+    #region "Purchase Unit Type"
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddPurchaseUnitType([FromBody]PurchaseUnitType model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.CreatedById = user.Id;
+        model.CreatedDate = DateTime.Now;
+        apiRespone = await _iStore.AddPurchaseUnitType(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditPurchaseUnitType([FromBody] PurchaseUnitType model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+        apiRespone = await _iStore.EditPurchaseUnitType(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeletePurchaseUnitType([FromBody] PurchaseUnitType model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+        apiRespone = await _iStore.DeletePurchaseUnitType(model);
+      }
+      return apiRespone;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllPurchaseUnitType()
+    {
+      APIResponse apiresponse = await _iStore.GetAllPurchaseUnitType();
+      return apiresponse;
+    }
+
+    #endregion
+
 
 
   }
