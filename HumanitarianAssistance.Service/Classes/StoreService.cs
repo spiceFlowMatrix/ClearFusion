@@ -513,7 +513,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     // For Image 
 
-                    if (model.ImageFileName != null)
+                    if (model.ImageFileName != null && model.ImageFileName != "")
                     {
                         string[] str = model.ImageFileName.Split(",");
                         byte[] filepath = Convert.FromBase64String(str[1]);
@@ -534,7 +534,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     // For invoice 
 
-                    if (model.Invoice != null)
+                    if (model.Invoice != null && model.Invoice != "")
                     {
                         string[] str = model.Invoice.Split(",");
                         byte[] filepath = Convert.FromBase64String(str[1]);
@@ -589,7 +589,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                         // For Image 
 
-                        if (model.ImageFileName != null)
+                        if (model.ImageFileName != null && model.ImageFileName != "")
                         {
                             string[] str = model.ImageFileName.Split(",");
                             byte[] filepath = Convert.FromBase64String(str[1]);
@@ -602,15 +602,15 @@ namespace HumanitarianAssistance.Service.Classes
                             purchaseRecord.ImageFileName = guidname;
                             purchaseRecord.ImageFileType = "." + ex;
                         }
-                        else
-                        {
-                            purchaseRecord.ImageFileName = null;
-                            purchaseRecord.ImageFileType = null;
-                        }
+                        //else
+                        //{
+                        //    purchaseRecord.ImageFileName = null;
+                        //    purchaseRecord.ImageFileType = null;
+                        //}
 
                         // For invoice 
 
-                        if (model.Invoice != null)
+                        if (model.Invoice != null && model.Invoice != "")
                         {
                             string[] str = model.Invoice.Split(",");
                             byte[] filepath = Convert.FromBase64String(str[1]);
@@ -623,14 +623,18 @@ namespace HumanitarianAssistance.Service.Classes
                             purchaseRecord.InvoiceFileName = guidname;
                             purchaseRecord.InvoiceFileType = "." + ex;
                         }
-                        else
-                        {
-                            purchaseRecord.InvoiceFileName = null;
-                            purchaseRecord.InvoiceFileType = null;
-                        }
+                        //else
+                        //{
+                        //    purchaseRecord.InvoiceFileName = null;
+                        //    purchaseRecord.InvoiceFileType = null;
+                        //}
 
                         await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
                         await _uow.SaveAsync();
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
+
                     }
                     else
                     {
@@ -668,6 +672,9 @@ namespace HumanitarianAssistance.Service.Classes
                         purchaseRecord.IsDeleted = true;
                         await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
                         await _uow.SaveAsync();
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
                     }
                     else
                     {
@@ -706,8 +713,16 @@ namespace HumanitarianAssistance.Service.Classes
                     UnitCost = v.UnitCost,
                     Quantity = v.Quantity,
                     TotalCost = v.UnitCost * v.Quantity,
+                    UnitType = v.UnitType,
                     CurrentQuantity = v.Quantity - (v.PurchaseOrders != null ? v.PurchaseOrders.Sum(q => q.IssuedQuantity) : 0),
                     ImageFileName = v.ImageFileName,
+                    Invoice = v.InvoiceFileName,
+                    PurchaseDate = v.PurchaseDate,
+                    DeliveryDate = v.DeliveryDate,
+                    ApplyDepreciation = v.ApplyDepreciation,
+                    DepreciationRate = v.DepreciationRate,
+                    PurchasedById = v.PurchasedById,
+                    InventoryItem = v.InventoryItem
 
                 }).ToList();
                 response.data.StoreItemsPurchaseViewList = purchasesModel;
