@@ -164,13 +164,13 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (AssetType != null)
                 {
-                    inventoryList = await Task.Run(() =>
-                       _uow.GetDbContext().StoreInventories
-                           //.Include(c => c.ChartAccountDetails)
-                           //.Include(c => c.CreatedBy)
-                           .Where(c => c.IsDeleted == false && c.AssetType == AssetType)
-                           .OrderBy(c => c.CreatedDate).ToList());
-                }
+					inventoryList = await Task.Run(() =>
+					   _uow.GetDbContext().StoreInventories
+						   //.Include(c => c.ChartAccountDetails)
+						   //.Include(c => c.CreatedBy)
+						   .Where(c => c.IsDeleted == false && c.AssetType == AssetType)
+						   .OrderBy(c => c.CreatedDate).ToList());
+				}
                 else
                 {
                     inventoryList = await Task.Run(() =>
@@ -184,13 +184,13 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     InventoryId = v.InventoryId,
                     InventoryCode = v.InventoryCode,
-                    InventoryName = v.InventoryName,
-                    InventoryDescription = v.InventoryDescription,
+					InventoryName = v.InventoryName,
+					InventoryDescription = v.InventoryDescription,
                     //InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
                     InventoryCreditAccount = v.InventoryCreditAccount,
                     InventoryDebitAccount = v.InventoryDebitAccount,
-                    AssetType = v.AssetType
-                }).ToList();
+					AssetType = v.AssetType
+				}).ToList();
                 response.data.InventoryList = invModelList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

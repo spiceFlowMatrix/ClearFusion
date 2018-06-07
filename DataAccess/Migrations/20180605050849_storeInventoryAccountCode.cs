@@ -10,9 +10,9 @@ namespace DataAccess.Migrations
                 name: "FK_StoreInventories_ChartAccountDetail_InventoryAccount",
                 table: "StoreInventories");
 
-            migrationBuilder.DropColumn(
-                name: "InventoryChartOfAccount",
-                table: "StoreInventories");
+            //migrationBuilder.DropColumn(
+            //    name: "InventoryChartOfAccount",
+            //    table: "StoreInventories");
 
             migrationBuilder.AlterColumn<int>(
                 name: "InventoryAccount",
@@ -42,11 +42,11 @@ namespace DataAccess.Migrations
                 nullable: true,
                 oldClrType: typeof(int));
 
-            migrationBuilder.AddColumn<long>(
-                name: "InventoryChartOfAccount",
-                table: "StoreInventories",
-                nullable: false,
-                defaultValue: 0L);
+            //migrationBuilder.AddColumn<long>(
+            //    name: "InventoryChartOfAccount",
+            //    table: "StoreInventories",
+            //    nullable: false,
+            //    defaultValue: 0L);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_StoreInventories_ChartAccountDetail_InventoryAccount",
