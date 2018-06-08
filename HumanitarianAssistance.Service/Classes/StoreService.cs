@@ -1079,11 +1079,13 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				int? procuredAmount, spentAmount;
-				procuredAmount = await _uow.GetDbContext().StoreItemPurchases.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).SumAsync(x=>x.Quantity);
-				spentAmount = await _uow.GetDbContext().StorePurchaseOrders.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).SumAsync(x => x.IssuedQuantity);
-				response.ItemAmount.ProcuredAmount = procuredAmount ?? 0;
-				response.ItemAmount.SpentAmount = spentAmount ?? 0;
+				//int procuredAmount, spentAmount;
+				var procuredAmount = await _uow.GetDbContext().StoreItemPurchases.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
+				var spentAmount = await _uow.GetDbContext().StorePurchaseOrders.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
+
+				
+				response.ItemAmount.ProcuredAmount = procuredAmount != null ? procuredAmount.Sum(x=>x.Quantity) : 0;
+				response.ItemAmount.SpentAmount = spentAmount!= null ? spentAmount.Sum(x=>x.IssuedQuantity) : 0;
 				response.ItemAmount.CurrentAmount = response.ItemAmount.ProcuredAmount - response.ItemAmount.SpentAmount;
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
