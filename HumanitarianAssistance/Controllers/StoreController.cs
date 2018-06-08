@@ -267,6 +267,46 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
 
+
+    #region "Store Order"
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddItemOrder([FromBody] ItemOrderModel model)
+    {
+      APIResponse apiresponse = await _iStore.AddItemOrder(model);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditItemOrder([FromBody] ItemOrderModel model)
+    {
+      APIResponse apiresponse = await _iStore.EditItemOrder(model);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteItemOrder([FromBody] ItemOrderModel model)
+    {
+      APIResponse apiresponse = await _iStore.DeleteItemOrder(model);
+      return apiresponse;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllItemsOrder(string ItemId)
+    {
+      APIResponse apiresponse = await _iStore.GetAllItemsOrder(ItemId);
+      return apiresponse;
+    }
+    
+    #endregion
+
+
+
+
     #region "Purchase Unit Type"
 
     [HttpPost]

@@ -39,5 +39,13 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeletePurchaseUnitType(PurchaseUnitType model);
         Task<APIResponse> GetAllPurchaseUnitType();
 
+
+
+        Task<APIResponse> AddItemOrder(ItemOrderModel model);
+        Task<APIResponse> EditItemOrder(ItemOrderModel model);
+        Task<APIResponse> DeleteItemOrder(ItemOrderModel model);
+        Task<APIResponse> GetAllItemsOrder(string ItemId);
+
+
     }
 }
