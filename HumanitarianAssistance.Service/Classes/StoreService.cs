@@ -1069,22 +1069,47 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        #endregion
+		#endregion
+
+
+		#region "Item Amount"
+
+		public async Task<APIResponse> GetItemAmounts(string ItemId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				int? procuredAmount, spentAmount;
+				procuredAmount = await _uow.GetDbContext().StoreItemPurchases.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).SumAsync(x=>x.Quantity);
+				spentAmount = await _uow.GetDbContext().StorePurchaseOrders.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).SumAsync(x => x.IssuedQuantity);
+				response.ItemAmount.ProcuredAmount = procuredAmount ?? 0;
+				response.ItemAmount.SpentAmount = spentAmount ?? 0;
+				response.ItemAmount.CurrentAmount = response.ItemAmount.ProcuredAmount - response.ItemAmount.SpentAmount;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+				return response;
+			}
+			return response;
+		}
+
+		#endregion
 
 
 
 
 
+		// Depreciation
 
-
-
-        // Depreciation
-
-        // Must filter on store name, inventory, item, and purchase
-        //public async Task<APIResponse> GetAllDepreciationByFilter()
-        //{
-        //	var response = new APIResponse();
-        //	return response;
-        //}
-    }
+		// Must filter on store name, inventory, item, and purchase
+		//public async Task<APIResponse> GetAllDepreciationByFilter()
+		//{
+		//	var response = new APIResponse();
+		//	return response;
+		//}
+	}
 }
