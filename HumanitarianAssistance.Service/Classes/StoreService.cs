@@ -41,9 +41,9 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var inventoryAccount =
-                    await _uow.ChartAccountDetailRepository.FindAsync(x =>
-                        x.AccountCode == model.InventoryDebitAccount && x.AccountCode == model.InventoryCreditAccount);
-                if (inventoryAccount != null)
+                   _uow.GetDbContext().ChartAccountDetail.Where(x =>
+                      x.AccountCode == model.InventoryCreditAccount || x.AccountCode == model.InventoryDebitAccount).ToList();
+                if (inventoryAccount.Count == 2)
                 {
                     StoreInventory inventory = _mapper.Map<StoreInventory>(model);
                     await _uow.StoreInventoryRepository.AddAsyn(inventory);
@@ -74,9 +74,9 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var edInv = await _uow.StoreInventoryRepository.FindAsync(c => c.InventoryId == model.InventoryId);
                 var inventoryAccount =
-                    await _uow.ChartAccountDetailRepository.FindAsync(x =>
-                        x.AccountCode == model.InventoryCreditAccount && x.AccountCode == model.InventoryDebitAccount);
-                if (edInv != null && inventoryAccount != null)
+                     _uow.GetDbContext().ChartAccountDetail.Where(x =>
+                        x.AccountCode == model.InventoryCreditAccount || x.AccountCode == model.InventoryDebitAccount).ToList();
+                if (edInv != null && inventoryAccount.Count == 2)
                 {
                     //edInv.InventoryCode = model.InventoryCode;
                     //edInv.InventoryName = model.InventoryName;
@@ -164,13 +164,13 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (AssetType != null)
                 {
-					inventoryList = await Task.Run(() =>
-					   _uow.GetDbContext().StoreInventories
-						   //.Include(c => c.ChartAccountDetails)
-						   //.Include(c => c.CreatedBy)
-						   .Where(c => c.IsDeleted == false && c.AssetType == AssetType)
-						   .OrderBy(c => c.CreatedDate).ToList());
-				}
+                    inventoryList = await Task.Run(() =>
+                       _uow.GetDbContext().StoreInventories
+                           //.Include(c => c.ChartAccountDetails)
+                           //.Include(c => c.CreatedBy)
+                           .Where(c => c.IsDeleted == false && c.AssetType == AssetType)
+                           .OrderBy(c => c.CreatedDate).ToList());
+                }
                 else
                 {
                     inventoryList = await Task.Run(() =>
@@ -184,13 +184,13 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     InventoryId = v.InventoryId,
                     InventoryCode = v.InventoryCode,
-					InventoryName = v.InventoryName,
-					InventoryDescription = v.InventoryDescription,
+                    InventoryName = v.InventoryName,
+                    InventoryDescription = v.InventoryDescription,
                     //InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
                     InventoryCreditAccount = v.InventoryCreditAccount,
                     InventoryDebitAccount = v.InventoryDebitAccount,
-					AssetType = v.AssetType
-				}).ToList();
+                    AssetType = v.AssetType
+                }).ToList();
                 response.data.InventoryList = invModelList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -823,126 +823,126 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-		public async Task<APIResponse> AddItemOrder(ItemOrderModel model)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				if (model != null)
-				{
-					StorePurchaseOrder obj = _mapper.Map<StorePurchaseOrder>(model);
-					await _uow.PurchaseOrderRepository.AddAsyn(obj);
-					await _uow.SaveAsync();
-					response.StatusCode = StaticResource.successStatusCode;
-					response.Message = "Success";
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Model value inappropriate";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-			}
-			return response;
-		}
+        public async Task<APIResponse> AddItemOrder(ItemOrderModel model)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    StorePurchaseOrder obj = _mapper.Map<StorePurchaseOrder>(model);
+                    await _uow.PurchaseOrderRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model value inappropriate";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
-		public async Task<APIResponse> EditItemOrder(ItemOrderModel model)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				if (model != null)
-				{
-					var recordExits = await _uow.PurchaseOrderRepository.FindAsync(x=>x.OrderId == model.OrderId && x.IsDeleted == false);
-					_mapper.Map(model, recordExits);
-					await _uow.PurchaseOrderRepository.UpdateAsyn(recordExits);
-					await _uow.SaveAsync();
-					response.StatusCode = StaticResource.successStatusCode;
-					response.Message = "Success";
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Record cannot be updated";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-			}
-			return response;
-		}
-
-
-		public async Task<APIResponse> DeleteItemOrder(ItemOrderModel model)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				if (model != null)
-				{
-					var recordExits = await _uow.PurchaseOrderRepository.FindAsync(x => x.OrderId == model.OrderId && x.IsDeleted == false);
-					recordExits.IsDeleted = true;
-					await _uow.PurchaseOrderRepository.UpdateAsyn(recordExits);
-					await _uow.SaveAsync();
-					response.StatusCode = StaticResource.successStatusCode;
-					response.Message = "Success";
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Record cannot be deleted";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-			}
-			return response;
-		}
-
-		public async Task<APIResponse> GetAllItemsOrder(string ItemId)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				var orders = await _uow.PurchaseOrderRepository.FindAllAsync(x=>x.InventoryItem == ItemId && x.IsDeleted == false);
-				var ordersList = orders.Select(x => new ItemOrderModel
-				{
-					InventoryItem = x.InventoryItem,
-					IssueDate = x.IssueDate,
-					IssuedQuantity = x.IssuedQuantity,
-					IssuedToEmployeeId = x.IssuedToEmployeeId,
-					MustReturn = x.MustReturn,
-					OrderId = x.OrderId,
-					Purchase = x.Purchase,
-					ReturnedDate = x.ReturnedDate
-				}).ToList();
-
-				response.data.ItemOrderModelList = ordersList;
-				response.StatusCode = StaticResource.successStatusCode;
-				response.Message = "Success";
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-			}
-			return response;
-		}
-
-		#endregion
+        public async Task<APIResponse> EditItemOrder(ItemOrderModel model)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    var recordExits = await _uow.PurchaseOrderRepository.FindAsync(x => x.OrderId == model.OrderId && x.IsDeleted == false);
+                    _mapper.Map(model, recordExits);
+                    await _uow.PurchaseOrderRepository.UpdateAsyn(recordExits);
+                    await _uow.SaveAsync();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Record cannot be updated";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
 
-		#region "Purchase Unit Type"
+        public async Task<APIResponse> DeleteItemOrder(ItemOrderModel model)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    var recordExits = await _uow.PurchaseOrderRepository.FindAsync(x => x.OrderId == model.OrderId && x.IsDeleted == false);
+                    recordExits.IsDeleted = true;
+                    await _uow.PurchaseOrderRepository.UpdateAsyn(recordExits);
+                    await _uow.SaveAsync();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Record cannot be deleted";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
-		public async Task<APIResponse> AddPurchaseUnitType(PurchaseUnitType model)
+        public async Task<APIResponse> GetAllItemsOrder(string ItemId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var orders = await _uow.PurchaseOrderRepository.FindAllAsync(x => x.InventoryItem == ItemId && x.IsDeleted == false);
+                var ordersList = orders.Select(x => new ItemOrderModel
+                {
+                    InventoryItem = x.InventoryItem,
+                    IssueDate = x.IssueDate,
+                    IssuedQuantity = x.IssuedQuantity,
+                    IssuedToEmployeeId = x.IssuedToEmployeeId,
+                    MustReturn = x.MustReturn,
+                    OrderId = x.OrderId,
+                    Purchase = x.Purchase,
+                    ReturnedDate = x.ReturnedDate
+                }).ToList();
+
+                response.data.ItemOrderModelList = ordersList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
+
+        #region "Purchase Unit Type"
+
+        public async Task<APIResponse> AddPurchaseUnitType(PurchaseUnitType model)
         {
             var response = new APIResponse();
             try
