@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public bool MustReturn { get; set; }                                // CheckBox
         public int IssuedToEmployeeId { get; set; }                         // EmployeeID DropDown
         public DateTime IssueDate { get; set; }
-        public DateTime ReturnedDate { get; set; }
+        public DateTime? ReturnedDate { get; set; }
 
         //TODo: For get
         //public string InventoryName { get; set; }
