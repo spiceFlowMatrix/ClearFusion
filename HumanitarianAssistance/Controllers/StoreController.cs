@@ -365,6 +365,15 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetItemAmounts(string ItemId)
+    {
+      APIResponse apiresponse = await _iStore.GetItemAmounts(ItemId);
+      return apiresponse;
+    }
 
+
+   
   }
 }
