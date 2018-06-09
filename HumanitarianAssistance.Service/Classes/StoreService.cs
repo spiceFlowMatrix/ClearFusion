@@ -1101,7 +1101,27 @@ namespace HumanitarianAssistance.Service.Classes
 
 		#endregion
 
+		#region "Employee Procurement Summary"
 
+		public async Task<APIResponse> GetProcurementSummary()
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+				return response;
+			}
+			return response;
+		}
+
+		#endregion
 
 
 
