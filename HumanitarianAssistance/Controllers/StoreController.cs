@@ -374,6 +374,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
 
-   
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetProcurementSummary(int EmployeeId)
+    {
+      APIResponse apiresponse = await _iStore.GetProcurementSummary(EmployeeId);
+      return apiresponse;
+    }
+
+
   }
 }

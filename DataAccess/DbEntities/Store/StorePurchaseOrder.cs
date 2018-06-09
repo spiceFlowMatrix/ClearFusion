@@ -16,13 +16,13 @@ namespace DataAccess.DbEntities.Store
         public bool MustReturn { get; set; }
         public int IssuedToEmployeeId { get; set; }
         public DateTime IssueDate { get; set; }
-        public DateTime ReturnedDate { get; set; }
+        public DateTime? ReturnedDate { get; set; }
 
         [ForeignKey("Purchase")]
         public StoreItemPurchase StoreItemPurchase { get; set; }
         [ForeignKey("InventoryItem")]
         public StoreInventoryItem StoreInventoryItem { get; set; }
-        [ForeignKey("EmployeeId")]
+        [ForeignKey("IssuedToEmployeeId")]
         public EmployeeDetail EmployeeDetail { get; set; }
     }
 }

@@ -48,6 +48,6 @@ namespace HumanitarianAssistance.Service.interfaces
 
 
 		Task<APIResponse> GetItemAmounts(string ItemId);
-
+		Task<APIResponse> GetProcurementSummary(int EmployeeId);
 	}
 }
