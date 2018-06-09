@@ -1131,8 +1131,8 @@ namespace HumanitarianAssistance.Service.Classes
 						obj.Store = item.StoreInventoryItem?.Inventory?.AssetType ?? 0;
 						obj.Inventory = item.StoreInventoryItem?.Inventory?.InventoryName ?? null;
 						obj.Item = item.StoreInventoryItem?.ItemName ?? null;
-						obj.TotalCost = item.StoreItemPurchase?.Quantity ?? 0 * item.StoreItemPurchase?.UnitCost ?? 0;
-						obj.MustReturn = item.MustReturn == true ? "Yes" : "No";
+                        obj.TotalCost = (item.StoreItemPurchase?.Quantity ?? 0) * (item.StoreItemPurchase?.UnitCost ?? 0);
+                        obj.MustReturn = item.MustReturn == true ? "Yes" : "No";
 						obj.Returned = item.ReturnedDate == null ? "No" : "Yes";
 						obj.TotalCostDetails.UnitType = item.StoreItemPurchase?.PurchaseUnitType?.UnitTypeName ?? null;
 						obj.TotalCostDetails.Amount = item.StoreItemPurchase?.Quantity ?? 0;
