@@ -912,7 +912,9 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var orders = await _uow.PurchaseOrderRepository.FindAllAsync(x => x.InventoryItem == ItemId && x.IsDeleted == false);
+                //var orders = await _uow.PurchaseOrderRepository.FindAllAsync(x => x.InventoryItem == ItemId && x.IsDeleted == false);
+                var orders = await _uow.GetDbContext().StorePurchaseOrders.Include(x => x.StoreInventoryItem).Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
+
                 var ordersList = orders.Select(x => new ItemOrderModel
                 {
                     InventoryItem = x.InventoryItem,
@@ -922,7 +924,9 @@ namespace HumanitarianAssistance.Service.Classes
                     MustReturn = x.MustReturn,
                     OrderId = x.OrderId,
                     Purchase = x.Purchase,
-                    ReturnedDate = x.ReturnedDate
+                    ReturnedDate = x.ReturnedDate,
+                    //InventoryName = x.StoreInventoryItem.Inventory.InventoryName,
+                    //InventoryItemName = x.StoreInventoryItem.ItemName,
                 }).ToList();
 
                 response.data.ItemOrderModelList = ordersList;
