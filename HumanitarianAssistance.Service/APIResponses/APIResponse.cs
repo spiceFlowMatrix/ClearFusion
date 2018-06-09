@@ -15,14 +15,24 @@ namespace HumanitarianAssistance.Service.APIResponses
         public APIResponse()
         {
             data = new data();
-        }
+			ItemAmount = new ItemAmount();
+
+		}
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public data data { get; set; }
         public LoggerDetailsModel LoggerDetailsModel { get; set; }
-    }
+		public ItemAmount ItemAmount { get; set; }
+	}
 
-    public class LoggerDetailsModel
+	public class ItemAmount
+	{
+		public int ProcuredAmount { get; set; }
+		public int SpentAmount { get; set; }
+		public int CurrentAmount { get; set; }
+	}
+
+	public class LoggerDetailsModel
     {
         public int LoggerDetailsId { get; set; }
         public int NotificationId { get; set; }
