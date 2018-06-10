@@ -47,7 +47,7 @@ namespace DataAccess.Data
 
         private static async Task CreateDefaultUserAndRoleForApplication(UserManager<AppUser> um, RoleManager<IdentityRole> rm, ApplicationDbContext context, ILogger<DbInitializer> logger)
         {
-            const string administratorRole = "Administrator";
+            const string administratorRole = "SuperAdmin";
             const string email = "hamza@yopmail.com";
 
             await CreateDefaultAdministratorRole(rm, administratorRole, logger);
@@ -61,12 +61,14 @@ namespace DataAccess.Data
             var s4 = AddEmailType(context);
             var s5 = AddDefaultPermission(context);
 			var s6 = AddEmployeeContractType(context);
+			var s7 = AddAccountType(context);
             await s;
             await s2;
             await s3;
             await s4;
             await s5;
 			await s6;
+			await s7;
             await AddProvinceDetails(context);
         }
 
@@ -345,6 +347,34 @@ namespace DataAccess.Data
 					new EmployeeContractType { EmployeeContractTypeId = 3, EmployeeContractTypeName= "Permanent"}
 				};
 				await context.EmployeeContractType.AddRangeAsync(employeetypelist);
+				context.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				var errormessage = ex.Message;
+			}
+		}
+
+		public static async Task AddAccountType(ApplicationDbContext context)
+		{
+			try
+			{
+				List<AccountType> employeetypelist = new List<AccountType>
+				{
+					new AccountType { AccountTypeId = 1, AccountTypeName= "Capital Assets Written Off", AccountCategory = 1},
+					new AccountType { AccountTypeId = 2, AccountTypeName= "Current Assets", AccountCategory = 1},
+					new AccountType { AccountTypeId = 3, AccountTypeName= "Funds", AccountCategory = 1},
+					new AccountType { AccountTypeId = 4, AccountTypeName= "Endownment Fund", AccountCategory = 1},
+					new AccountType { AccountTypeId = 5, AccountTypeName= "Reserve Account Adjustment", AccountCategory = 1},
+					new AccountType { AccountTypeId = 6, AccountTypeName= "Long term Liability", AccountCategory = 1},
+					new AccountType { AccountTypeId = 7, AccountTypeName= "Current Liability", AccountCategory = 1},
+					new AccountType { AccountTypeId = 8, AccountTypeName= "Reserve Account", AccountCategory = 1},
+					new AccountType { AccountTypeId = 9, AccountTypeName= "Income From Donor", AccountCategory = 2},
+					new AccountType { AccountTypeId = 10, AccountTypeName= "Income From Projects", AccountCategory = 2},
+					new AccountType { AccountTypeId = 11, AccountTypeName= "Profit On Bank Deposits", AccountCategory = 2},
+					new AccountType { AccountTypeId = 12, AccountTypeName= "Income Expenditure Fund", AccountCategory = 2}
+				};
+				await context.AccountType.AddRangeAsync(employeetypelist);
 				context.SaveChanges();
 			}
 			catch (Exception ex)

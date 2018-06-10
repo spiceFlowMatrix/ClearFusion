@@ -38,4 +38,5 @@ D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.RazorTargetAssemblyInfo.cache
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.dll
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.pdb
-D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.csprojResolveAssemblyReference.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.csprojAssemblyReference.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\obj\Debug\netcoreapp2.1\HumanitarianAssistance.WebAPI.csproj.CopyComplete
