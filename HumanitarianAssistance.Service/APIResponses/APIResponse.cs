@@ -218,6 +218,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<StoreItemPurchaseViewModel> StoreItemsPurchaseViewList { get; set; }
 
         public List<PurchaseUnitType> PurchaseUnitTypeList { get; set; }
+        public List<DepreciationReportModel> DepreciationReportList { get; set; }
+
+        
 
 
     }
