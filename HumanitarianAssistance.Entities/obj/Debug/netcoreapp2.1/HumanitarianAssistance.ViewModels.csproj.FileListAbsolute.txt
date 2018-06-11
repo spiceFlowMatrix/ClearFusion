@@ -19,3 +19,4 @@ D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\n
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.dll
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.pdb
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.csprojAssemblyReference.cache
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.csprojResolveAssemblyReference.cache
