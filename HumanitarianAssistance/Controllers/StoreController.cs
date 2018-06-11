@@ -301,7 +301,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       APIResponse apiresponse = await _iStore.GetAllItemsOrder(ItemId);
       return apiresponse;
     }
-    
+
     #endregion
 
 
@@ -381,6 +381,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       APIResponse apiresponse = await _iStore.GetProcurementSummary(EmployeeId);
       return apiresponse;
     }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllDepreciationByFilter([FromBody]DepreciationReportFilter depretiationFilter)
+    {
+      APIResponse apiresponse = await _iStore.GetAllDepreciationByFilter(depretiationFilter);
+      return apiresponse;
+    }
+
+
+
 
 
   }

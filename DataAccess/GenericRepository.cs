@@ -164,6 +164,7 @@ namespace DataAccess
         private bool disposed = false;
         protected virtual void Dispose(bool disposing)
         {
+            Console.Write("Dispose");
             if (!this.disposed)
             {
                 if (disposing)

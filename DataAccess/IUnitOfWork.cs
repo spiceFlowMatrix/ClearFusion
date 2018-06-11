@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork:IDisposable
     {
         IGenericRepository<AccountNoteDetail> AccountNoteDetailRepository { get; }
         IGenericRepository<Permissions> PermissionRepository { get; }

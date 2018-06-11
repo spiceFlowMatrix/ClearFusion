@@ -121,6 +121,24 @@ namespace DataAccess
             _mschaContext = mschaContext;
         }
 
+        private bool disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _mschaContext.Dispose();
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
         // Store
         public IGenericRepository<PurchaseUnitType> PurchaseUnitTypeRepository
         {
