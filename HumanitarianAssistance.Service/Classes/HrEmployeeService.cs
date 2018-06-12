@@ -67,17 +67,17 @@ namespace HumanitarianAssistance.Service.Classes
 				await _uow.EmployeeProfessionalDetailRepository.AddAsyn(obj1);
 				await _uow.SaveAsync();
 
-				var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
+                var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
 
-				LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-				loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeCreated;
-				loggerObj.IsRead = false;
-				loggerObj.UserName = user.FirstName + " " + user.LastName;
-				loggerObj.UserId = model.CreatedById;
-				loggerObj.LoggedDetail = "Employee " + obj.EmployeeName + " Created";
-				loggerObj.CreatedDate = model.CreatedDate;
+                LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeCreated;
+                loggerObj.IsRead = false;
+                loggerObj.UserName = user.FirstName + " " + user.LastName;
+                loggerObj.UserId = model.CreatedById;
+                loggerObj.LoggedDetail = "Employee " + obj.EmployeeName + " Created";
+                loggerObj.CreatedDate = model.CreatedDate;
 
-				response.LoggerDetailsModel = loggerObj;
+                response.LoggerDetailsModel = loggerObj;
 
 				await _uow.SaveAsync();
 				response.StatusCode = StaticResource.successStatusCode;
@@ -165,7 +165,7 @@ namespace HumanitarianAssistance.Service.Classes
 					employeeinfo.IssuePlace = model.IssuePlace;
 					await _uow.EmployeeDetailRepository.UpdateAsyn(employeeinfo);
 
-					var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.ModifiedById);
+                    var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.ModifiedById);
 
 					LoggerDetailsModel loggerObj = new LoggerDetailsModel();
 					loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeUpdate;
@@ -175,9 +175,9 @@ namespace HumanitarianAssistance.Service.Classes
 					loggerObj.LoggedDetail = "Employee " + employeeinfo.EmployeeName + " Updated";
 					loggerObj.CreatedDate = model.CreatedDate;
 
-					response.LoggerDetailsModel = loggerObj;
+                    response.LoggerDetailsModel = loggerObj;
 
-					await _uow.SaveAsync();
+                    await _uow.SaveAsync();
 
 					response.StatusCode = StaticResource.successStatusCode;
 					response.Message = "Success";
@@ -347,19 +347,21 @@ namespace HumanitarianAssistance.Service.Classes
 					//SalaryType = x.SalaryType,
 					IsActive = x.IsActive,
 
-					//StartDate = x.StartDate,
-					//EndDate = x.EndDate
-				}).ToList();
-				response.data.JobHiringDetailsList = jobhiringdetailslist;
-				response.Message = "Success";
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-			}
-			return response;
-		}
+                    ApprovedInterviews = _uow.InterviewDetailsRepository.FindAll(i => i.JobId == x.JobId && i.InterviewStatus == "approved").Count()
+
+                    //StartDate = x.StartDate,
+                    //EndDate = x.EndDate
+                }).ToList();
+                response.data.JobHiringDetailsList = jobhiringdetailslist;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
 		public async Task<APIResponse> GetEmployeeDetailsByEmployeeId(int EmployeeId)
 		{
@@ -1809,10 +1811,10 @@ namespace HumanitarianAssistance.Service.Classes
 						defaulthours = DefaultHourDetail.Hours;
 					}
 
-					OfficeHoursDifference = DefaultHourDetail.OutTime - DefaultHourDetail.InTime;
-					OfficeInTime = new DateTime(model.InTime.Value.Year, model.InTime.Value.Month, model.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
-					//OfficeOutTime = new DateTime(model.OutTime.Value.Year, model.OutTime.Value.Month, model.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
-					OfficeOutTime = OfficeInTime.AddHours(OfficeHoursDifference.Value.Hours);
+                    OfficeHoursDifference = DefaultHourDetail.OutTime - DefaultHourDetail.InTime;
+                    OfficeInTime = new DateTime(model.InTime.Value.Year, model.InTime.Value.Month, model.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
+                    //OfficeOutTime = new DateTime(model.OutTime.Value.Year, model.OutTime.Value.Month, model.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
+                    OfficeOutTime = OfficeInTime.AddHours(OfficeHoursDifference.Value.Hours);
 
 					if (model.InTime < OfficeInTime)
 					{
@@ -1849,19 +1851,19 @@ namespace HumanitarianAssistance.Service.Classes
 						}
 					}
 
-					if (model.InTime >= OfficeOutTime)
-					{
-						workingHours = 0;
-						totalovertime = model.OutTime - model.InTime;
-						overtime += totalovertime.Value.Hours;
-					}
+                    if (model.InTime >= OfficeOutTime)
+                    {
+                        workingHours = 0;
+                        totalovertime = model.OutTime - model.InTime;
+                        overtime += totalovertime.Value.Hours;
+                    }
 
-					if (model.OutTime <= OfficeInTime)
-					{
-						workingHours = 0;
-						totalovertime = model.OutTime - model.InTime;
-						overtime += totalovertime.Value.Hours;
-					}
+                    if (model.OutTime <= OfficeInTime)
+                    {
+                        workingHours = 0;
+                        totalovertime = model.OutTime - model.InTime;
+                        overtime += totalovertime.Value.Hours;
+                    }
 
 
 					totalworkhour = model.OutTime - model.InTime;
@@ -5085,7 +5087,7 @@ namespace HumanitarianAssistance.Service.Classes
 					List<InterviewTechQuesModel> technicalList = new List<InterviewTechQuesModel>();
 					List<InterviewTrainingModel> trainingList = new List<InterviewTrainingModel>();
 
-					//ratingCriteriaRecordList = _mapper.Map<List<RatingBasedCriteriaModel>, RatingBasedCriteria>(
+                    //ratingCriteriaRecordList = _mapper.Map<List<RatingBasedCriteriaModel>, RatingBasedCriteria>(
 
 					//rating based criteria
 					foreach (var item in ratingCriteriaRecord)

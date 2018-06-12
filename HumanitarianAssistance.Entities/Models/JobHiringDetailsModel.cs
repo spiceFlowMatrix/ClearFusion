@@ -16,5 +16,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? GradeId { get; set; }
         public string GradeName { get; set; }
         public bool IsActive { get; set; }
+
+        public int? ApprovedInterviews { get; set; }
     }
 }
