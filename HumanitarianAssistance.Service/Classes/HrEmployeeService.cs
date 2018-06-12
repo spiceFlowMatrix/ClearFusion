@@ -67,20 +67,20 @@ namespace HumanitarianAssistance.Service.Classes
                 await _uow.EmployeeProfessionalDetailRepository.AddAsyn(obj1);
                 await _uow.SaveAsync();
 
-				var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
+                var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
 
-				LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-				loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeCreated;
-				loggerObj.IsRead = false;
-				loggerObj.UserName = user.FirstName + " " + user.LastName;
-				loggerObj.UserId = model.CreatedById;
-				loggerObj.LoggedDetail = "Employee " + obj.EmployeeName + " Created";
-				loggerObj.CreatedDate = model.CreatedDate;
+                LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeCreated;
+                loggerObj.IsRead = false;
+                loggerObj.UserName = user.FirstName + " " + user.LastName;
+                loggerObj.UserId = model.CreatedById;
+                loggerObj.LoggedDetail = "Employee " + obj.EmployeeName + " Created";
+                loggerObj.CreatedDate = model.CreatedDate;
 
-				response.LoggerDetailsModel = loggerObj;
+                response.LoggerDetailsModel = loggerObj;
 
-				await _uow.SaveAsync();
-				response.StatusCode = StaticResource.successStatusCode;
+                await _uow.SaveAsync();
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -158,28 +158,28 @@ namespace HumanitarianAssistance.Service.Classes
                     employeeinfo.ExperienceYear = model.ExperienceYear;
                     employeeinfo.ExperienceMonth = model.ExperienceMonth;
                     employeeinfo.EmployeePhoto = model.EmployeePhoto;
-					employeeinfo.MaritalStatus = model.MaritalStatus;
-					employeeinfo.University = model.University;
-					employeeinfo.PassportNo = model.PassportNo;
-					employeeinfo.BirthPlace = model.BirthPlace;
-					employeeinfo.IssuePlace = model.IssuePlace;
+                    employeeinfo.MaritalStatus = model.MaritalStatus;
+                    employeeinfo.University = model.University;
+                    employeeinfo.PassportNo = model.PassportNo;
+                    employeeinfo.BirthPlace = model.BirthPlace;
+                    employeeinfo.IssuePlace = model.IssuePlace;
                     await _uow.EmployeeDetailRepository.UpdateAsyn(employeeinfo);
 
-					var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.ModifiedById);
+                    var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.ModifiedById);
 
-					LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-					loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeUpdate;
-					loggerObj.IsRead = false;
-					loggerObj.UserName = user.FirstName + " " + user.LastName;
-					loggerObj.UserId = model.ModifiedById;
-					loggerObj.LoggedDetail = "Employee "+ employeeinfo.EmployeeName +" Updated";
-					loggerObj.CreatedDate = model.CreatedDate;
+                    LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                    loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeUpdate;
+                    loggerObj.IsRead = false;
+                    loggerObj.UserName = user.FirstName + " " + user.LastName;
+                    loggerObj.UserId = model.ModifiedById;
+                    loggerObj.LoggedDetail = "Employee " + employeeinfo.EmployeeName + " Updated";
+                    loggerObj.CreatedDate = model.CreatedDate;
 
-					response.LoggerDetailsModel = loggerObj;
+                    response.LoggerDetailsModel = loggerObj;
 
-					await _uow.SaveAsync();
+                    await _uow.SaveAsync();
 
-					response.StatusCode = StaticResource.successStatusCode;
+                    response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
             }
@@ -293,11 +293,11 @@ namespace HumanitarianAssistance.Service.Classes
                     DesignationId = x.EmployeeProfessionalDetail.DesignationId,
                     ExperienceYear = x.ExperienceYear,
                     ExperienceMonth = x.ExperienceMonth,
-					MaritalStatus = x.MaritalStatus,
-					PassportNo = x.PassportNo,
-					University = x.University,
-					BirthPlace = x.BirthPlace,
-					IssuePlace = x.IssuePlace
+                    MaritalStatus = x.MaritalStatus,
+                    PassportNo = x.PassportNo,
+                    University = x.University,
+                    BirthPlace = x.BirthPlace,
+                    IssuePlace = x.IssuePlace
                 }).ToList();
 
                 response.data.EmployeeDetailsList = employeedetaillist;
@@ -346,6 +346,8 @@ namespace HumanitarianAssistance.Service.Classes
                     //Budget = x.Budget,
                     //SalaryType = x.SalaryType,
                     IsActive = x.IsActive,
+
+                    ApprovedInterviews = _uow.InterviewDetailsRepository.FindAll(i => i.JobId == x.JobId && i.InterviewStatus == "approved").Count()
 
                     //StartDate = x.StartDate,
                     //EndDate = x.EndDate
@@ -440,12 +442,12 @@ namespace HumanitarianAssistance.Service.Classes
                     Resume = x.Resume,
                     EmployeePhoto = x.EmployeePhoto,
                     DocumentGUID = x.DocumentGUID + x.Extension,
-					MaritalStatus = x.MaritalStatus,
-					University = x.University,
-					BirthPlace = x.BirthPlace,
-					IssuePlace = x.IssuePlace,
-					PassportNo = x.PassportNo
-				}).ToList();
+                    MaritalStatus = x.MaritalStatus,
+                    University = x.University,
+                    BirthPlace = x.BirthPlace,
+                    IssuePlace = x.IssuePlace,
+                    PassportNo = x.PassportNo
+                }).ToList();
 
 
                 //Get EmployeeProfessional Details
@@ -629,11 +631,11 @@ namespace HumanitarianAssistance.Service.Classes
                     ExperienceMonth = x.ExperienceMonth,
                     //Resume = x.Resume,
                     EmployeePhoto = x.EmployeePhoto,
-					MaritalStatus = x.MaritalStatus,
-					University = x.University,
-					BirthPlace = x.BirthPlace,
-					IssuePlace = x.IssuePlace,
-					PassportNo = x.PassportNo
+                    MaritalStatus = x.MaritalStatus,
+                    University = x.University,
+                    BirthPlace = x.BirthPlace,
+                    IssuePlace = x.IssuePlace,
+                    PassportNo = x.PassportNo
                 }).ToList();
                 response.data.EmployeeDetailList = employeedetaillist;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -1791,13 +1793,13 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-				TimeSpan? OfficeHoursDifference;
-				TimeSpan? totalworkhour;
-				TimeSpan? totalovertime;
-				int? overtime = 0, workingHours = 0;
-				DateTime OfficeInTime = new DateTime();
-				DateTime OfficeOutTime = new DateTime();
-				var existrecord = await _uow.EmployeeAttendanceRepository.FindAsync(x => x.AttendanceId == model.AttendanceId);
+                TimeSpan? OfficeHoursDifference;
+                TimeSpan? totalworkhour;
+                TimeSpan? totalovertime;
+                int? overtime = 0, workingHours = 0;
+                DateTime OfficeInTime = new DateTime();
+                DateTime OfficeOutTime = new DateTime();
+                var existrecord = await _uow.EmployeeAttendanceRepository.FindAsync(x => x.AttendanceId == model.AttendanceId);
                 if (existrecord != null)
                 {
                     //var userdetails = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == userid);
@@ -1809,10 +1811,10 @@ namespace HumanitarianAssistance.Service.Classes
                         defaulthours = DefaultHourDetail.Hours;
                     }
 
-					OfficeHoursDifference = DefaultHourDetail.OutTime - DefaultHourDetail.InTime;
-					OfficeInTime = new DateTime(model.InTime.Value.Year, model.InTime.Value.Month, model.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
-					//OfficeOutTime = new DateTime(model.OutTime.Value.Year, model.OutTime.Value.Month, model.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
-					OfficeOutTime = OfficeInTime.AddHours(OfficeHoursDifference.Value.Hours);
+                    OfficeHoursDifference = DefaultHourDetail.OutTime - DefaultHourDetail.InTime;
+                    OfficeInTime = new DateTime(model.InTime.Value.Year, model.InTime.Value.Month, model.InTime.Value.Day, DefaultHourDetail.InTime.Value.Hour, DefaultHourDetail.InTime.Value.Minute, DefaultHourDetail.InTime.Value.Second);
+                    //OfficeOutTime = new DateTime(model.OutTime.Value.Year, model.OutTime.Value.Month, model.OutTime.Value.Day, DefaultHourDetail.OutTime.Value.Hour, DefaultHourDetail.OutTime.Value.Minute, DefaultHourDetail.OutTime.Value.Second);
+                    OfficeOutTime = OfficeInTime.AddHours(OfficeHoursDifference.Value.Hours);
 
                     if (model.InTime < OfficeInTime)
                     {
@@ -1849,22 +1851,22 @@ namespace HumanitarianAssistance.Service.Classes
                         }
                     }
 
-					if (model.InTime >= OfficeOutTime)
-					{
-						workingHours = 0;
-						totalovertime = model.OutTime - model.InTime;
-						overtime += totalovertime.Value.Hours;
-					}
+                    if (model.InTime >= OfficeOutTime)
+                    {
+                        workingHours = 0;
+                        totalovertime = model.OutTime - model.InTime;
+                        overtime += totalovertime.Value.Hours;
+                    }
 
-					if (model.OutTime <= OfficeInTime)
-					{
-						workingHours = 0;
-						totalovertime = model.OutTime - model.InTime;
-						overtime += totalovertime.Value.Hours;
-					}
+                    if (model.OutTime <= OfficeInTime)
+                    {
+                        workingHours = 0;
+                        totalovertime = model.OutTime - model.InTime;
+                        overtime += totalovertime.Value.Hours;
+                    }
 
 
-					totalworkhour = model.OutTime - model.InTime;
+                    totalworkhour = model.OutTime - model.InTime;
                     if (totalworkhour.ToString() == "00:00:00" || existrecord.AttendanceTypeId == (int)AttendanceType.A)
                     {
                         existrecord.AttendanceTypeId = 2;
@@ -1934,8 +1936,8 @@ namespace HumanitarianAssistance.Service.Classes
 
                     foreach (var list in modellist)
                     {
-						//list.
-						//var leaveRecord = await _uow.EmployeeApplyLeaveRepository.FindAsync()
+                        //list.
+                        //var leaveRecord = await _uow.EmployeeApplyLeaveRepository.FindAsync()
 
                         var isemprecord = existrecord.Where(x => x.EmployeeId == list.EmployeeId && x.Date.Date == list.Date.Date).ToList();
                         if (isemprecord.Count == 0)
@@ -3219,7 +3221,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 //Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction + Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)
                                 //* pensionrateamount) - SalaryCalculate(Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), 1), 2))), 2),
                                 // Net Salary End
-                                IsApproved = false,				 // Field for salary approved for the particular month
+                                IsApproved = false,              // Field for salary approved for the particular month
                                 AdvanceAmount = advance,
                                 IsDeductionApproved = advanceAmount.Count > 0 ? advanceAmount.FirstOrDefault().IsDeducted : false,
                                 IsAdvanceRecovery = advanceRecovery > 0 ? true : false,
@@ -5081,10 +5083,10 @@ namespace HumanitarianAssistance.Service.Classes
                     List<InterviewTechQuesModel> technicalList = new List<InterviewTechQuesModel>();
                     List<InterviewTrainingModel> trainingList = new List<InterviewTrainingModel>();
 
-					//ratingCriteriaRecordList = _mapper.Map<List<RatingBasedCriteriaModel>, RatingBasedCriteria>(
+                    //ratingCriteriaRecordList = _mapper.Map<List<RatingBasedCriteriaModel>, RatingBasedCriteria>(
 
-					//rating based criteria
-					foreach (var item in ratingCriteriaRecord)
+                    //rating based criteria
+                    foreach (var item in ratingCriteriaRecord)
                     {
                         RatingBasedCriteriaModel criteriaModel = new RatingBasedCriteriaModel();
                         //technicalModel.TechnicalQuestionId = item.TechnicalQuestionId;
