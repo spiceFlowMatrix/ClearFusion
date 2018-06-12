@@ -114,8 +114,12 @@ namespace DataAccess
         IGenericRepository<MotorSparePart> MotorSparePartsRepository { get; }
         IGenericRepository<InventoryItemType> InventoryItemTypeRepository { get; }
         IGenericRepository<PurchaseUnitType> PurchaseUnitTypeRepository { get; }
+		IGenericRepository<EmployeePayrollForMonth> EmployeePayrollForMonthRepository { get; }
+		IGenericRepository<EmployeePayrollMonth> EmployeePayrollMonthRepository { get; }
+		
 
-        void Save();
+
+		void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
 

@@ -242,6 +242,9 @@ namespace HumanitarianAssistance.Entities
 		public DbSet<MotorSparePart> MotorSpareParts { get; set; }
 		//
 
+		public DbSet<EmployeePayrollForMonth> EmployeePayrollForMonth { get; set; }
+		public DbSet<EmployeePayrollMonth> EmployeePayrollMonth { get; set; }
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
