@@ -721,6 +721,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllEmployeeMonthlyPayrollListApproved(int officeid, int currencyid, int month, int year, int paymentType)
+    {
+      APIResponse response = await _iHREmployee.GetAllEmployeeMonthlyPayrollListApproved(officeid, currencyid, month, year, paymentType);
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType)
     {
       APIResponse response = await _iHREmployee.GetAllEmployeeMonthlyPayrollList(officeid, currencyid, month, year, paymentType);
@@ -886,6 +894,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       if (user != null)
       {
         response = await _iHREmployee.EmployeePaymentTypeReport(model, user.Id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> EmployeePaymentTypeReportForSaveOnly([FromBody]List<EmployeePaymentTypeModel> model)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iHREmployee.EmployeePaymentTypeReportForSaveOnly(model, user.Id);
       }
       return response;
     }

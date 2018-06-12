@@ -74,8 +74,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteApplyEmployeeLeave(int applyleaveid, string userid);
 
         Task<APIResponse> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType);
+		Task<APIResponse> GetAllEmployeeMonthlyPayrollListApproved(int officeid, int currencyid, int month, int year, int paymentType);
 
-        Task<APIResponse> AddHolidayDetails(HolidayDetailsModel model);
+
+		Task<APIResponse> AddHolidayDetails(HolidayDetailsModel model);
         Task<APIResponse> EditHolidayDetails(HolidayDetailsModel model);
         Task<APIResponse> GetAllHolidayDetails(int officeid);
 
@@ -97,6 +99,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> OnPostExport();
 		Task<APIResponse> EmployeesSalarySummary(EmployeeSummaryModel model);
 		Task<APIResponse> EmployeePaymentTypeReport(List<EmployeePaymentTypeModel> model, string userid);
+		Task<APIResponse> EmployeePaymentTypeReportForSaveOnly(List<EmployeePaymentTypeModel> model, string userid);
 		Task<APIResponse> RemoveApprovedList(RemoveApprovedEmployee model, string userid);
 		Task<APIResponse> EmployeePensionReport(PensionReportModel model);
 		Task<APIResponse> GetAllEmployeeProjects(int EmployeeId);
