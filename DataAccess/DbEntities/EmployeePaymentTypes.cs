@@ -41,5 +41,7 @@ namespace DataAccess.DbEntities
 		public double? NetSalary { get; set; }
 		public double AdvanceAmount { get; set; }
 		public bool IsAdvanceApproved { get; set; }
+		public bool IsAdvanceRecovery { get; set; }
+		public double AdvanceRecoveryAmount { get; set; }
 	}
 }

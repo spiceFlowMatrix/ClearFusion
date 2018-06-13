@@ -4080,6 +4080,8 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+	
+
         public async Task<APIResponse> EmployeePaymentTypeReport(List<EmployeePaymentTypeModel> model, string userid)
         {
             APIResponse response = new APIResponse();
@@ -4280,24 +4282,30 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> RemoveApprovedList(RemoveApprovedEmployee model, string userid)
+        public async Task<APIResponse> RemoveApprovedList(List<EmployeePaymentTypeModel> model, string userid)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var isexistrecord = _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.OfficeId == model.OfficeId && x.FinancialYearDate.Date.Month == model.FinancialYearDate.Date.Month && x.FinancialYearDate.Date.Year == model.FinancialYearDate.Date.Year && x.PaymentType == model.PaymentType).Result.ToList();
-                _uow.GetDbContext().EmployeePaymentTypes.RemoveRange(isexistrecord);
-                await _uow.SaveAsync();
-                foreach (var item in isexistrecord)
-                {
-                    var isrecordexist = _uow.EmployeeMonthlyPayrollRepository.FindAllAsync(x => x.EmployeeID == item.EmployeeID && x.Date.Date.Month == model.FinancialYearDate.Date.Month && x.Date.Date.Year == model.FinancialYearDate.Date.Year).Result.ToList();
-                    if (isrecordexist.Count != 0)
-                    {
-                        _uow.GetDbContext().EmployeeMonthlyPayroll.RemoveRange(isrecordexist);
-                        await _uow.SaveAsync();
-                    }
-                }
-                response.StatusCode = StaticResource.successStatusCode;
+				//var isexistrecord = _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.OfficeId == model.OfficeId && x.FinancialYearDate.Date.Month == model.FinancialYearDate.Date.Month && x.FinancialYearDate.Date.Year == model.FinancialYearDate.Date.Year && x.PaymentType == model.PaymentType).Result.ToList();
+				//_uow.GetDbContext().EmployeePaymentTypes.RemoveRange(isexistrecord);
+				//await _uow.SaveAsync();
+				//foreach (var item in isexistrecord)
+				//{
+				//    var isrecordexist = _uow.EmployeeMonthlyPayrollRepository.FindAllAsync(x => x.EmployeeID == item.EmployeeID && x.Date.Date.Month == model.FinancialYearDate.Date.Month && x.Date.Date.Year == model.FinancialYearDate.Date.Year).Result.ToList();
+				//    if (isrecordexist.Count != 0)
+				//    {
+				//        _uow.GetDbContext().EmployeeMonthlyPayroll.RemoveRange(isrecordexist);
+				//        await _uow.SaveAsync();
+				//    }
+				//}
+				foreach (var item in model)
+				{
+					var record = await _uow.EmployeePaymentTypeRepository.FindAsync(x => x.EmployeeID == item.EmployeeId && x.FinancialYearDate.Date.Month == item.FinancialYearDate.Date.Month && x.FinancialYearDate.Date.Year == item.FinancialYearDate.Date.Year );
+
+				}
+				//var records = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x=>x.EmployeeID == );
+				response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
