@@ -3099,48 +3099,48 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-		public async Task<APIResponse> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				var approvedList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x=>x.OfficeId == officeid && x.FinancialYearDate.Date.Month == month && x.FinancialYearDate.Date.Year == year);
+        public async Task<APIResponse> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var approvedList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.OfficeId == officeid && x.FinancialYearDate.Date.Month == month && x.FinancialYearDate.Date.Year == year);
 
-				var userdetailslist = (from ept in await _uow.EmployeePayrollForMonthRepository.GetAllAsyn()
-									   join emp in await _uow.EmployeePayrollMonthRepository.GetAllAsyn() on ept.EmployeeID equals emp.EmployeeID
-									   join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId
-									   where ept.FinancialYearDate.Date.Month == month && ept.FinancialYearDate.Date.Year == year && emp.Date.Date.Month == month && emp.Date.Date.Year == year && ept.OfficeId == officeid && ept.PaymentType == paymentType
-									   select new EmployeeMonthlyPayrollModel
-									   {
-										   EmployeeId = ept.EmployeeID,
-										   EmployeeName = ept.EmployeeName,
-										   PaymentType = ept.PaymentType,
-										   WorkingDays = ept.WorkingDays,
-										   PresentDays = ept.PresentDays,
-										   AbsentDays = ept.AbsentDays,
-										   LeaveDays = ept.LeaveDays,
-										   TotalWorkHours = ept.TotalWorkHours,
-										   HourlyRate = ept.HourlyRate,
-										   TotalGeneralAmount = ept.TotalGeneralAmount,
-										   TotalAllowance = ept.TotalAllowance,
-										   TotalDeduction = ept.TotalDeduction,
-										   GrossSalary = ept.GrossSalary,
-										   OverTimeHours = ept.OverTimeHours,
-										   SalaryHeadId = emp.SalaryHeadId,
-										   MonthlyAmount = emp.MonthlyAmount,
-										   CurrencyId = emp.CurrencyId,
-										   SalaryHead = es.HeadName,
-										   HeadTypeId = es.HeadTypeId,
-										   SalaryHeadType = es.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : es.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : es.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
-										   PayrollId = emp.MonthlyPayrollId,
-										   IsApproved = ept.IsApproved,
-										   PensionRate = ept.PensionRate,
-										   SalaryTax = ept.SalaryTax,
-										   PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
-										   NetSalary = ept.GrossSalary - ept.TotalDeduction,
-										   AdvanceAmount = ept.AdvanceAmount,
-										   IsAdvanceApproved = ept.IsAdvanceApproved
-									   }).ToList();
+                var userdetailslist = (from ept in await _uow.EmployeePayrollForMonthRepository.GetAllAsyn()
+                                       join emp in await _uow.EmployeePayrollMonthRepository.GetAllAsyn() on ept.EmployeeID equals emp.EmployeeID
+                                       join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId
+                                       where ept.FinancialYearDate.Date.Month == month && ept.FinancialYearDate.Date.Year == year && emp.Date.Date.Month == month && emp.Date.Date.Year == year && ept.OfficeId == officeid && ept.PaymentType == paymentType
+                                       select new EmployeeMonthlyPayrollModel
+                                       {
+                                           EmployeeId = ept.EmployeeID,
+                                           EmployeeName = ept.EmployeeName,
+                                           PaymentType = ept.PaymentType,
+                                           WorkingDays = ept.WorkingDays,
+                                           PresentDays = ept.PresentDays,
+                                           AbsentDays = ept.AbsentDays,
+                                           LeaveDays = ept.LeaveDays,
+                                           TotalWorkHours = ept.TotalWorkHours,
+                                           HourlyRate = ept.HourlyRate,
+                                           TotalGeneralAmount = ept.TotalGeneralAmount,
+                                           TotalAllowance = ept.TotalAllowance,
+                                           TotalDeduction = ept.TotalDeduction,
+                                           GrossSalary = ept.GrossSalary,
+                                           OverTimeHours = ept.OverTimeHours,
+                                           SalaryHeadId = emp.SalaryHeadId,
+                                           MonthlyAmount = emp.MonthlyAmount,
+                                           CurrencyId = emp.CurrencyId,
+                                           SalaryHead = es.HeadName,
+                                           HeadTypeId = es.HeadTypeId,
+                                           SalaryHeadType = es.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : es.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : es.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
+                                           PayrollId = emp.MonthlyPayrollId,
+                                           IsApproved = ept.IsApproved,
+                                           PensionRate = ept.PensionRate,
+                                           SalaryTax = ept.SalaryTax,
+                                           PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
+                                           NetSalary = ept.NetSalary,
+                                           AdvanceAmount = ept.AdvanceAmount,
+                                           IsAdvanceApproved = ept.IsAdvanceApproved
+                                       }).ToList();
 
 
 
@@ -3161,39 +3161,39 @@ namespace HumanitarianAssistance.Service.Classes
                     }).ToList(),
                     CurrencyId = x.FirstOrDefault().CurrencyId,
 
-					EmployeeId = x.FirstOrDefault().EmployeeId,
-					EmployeeName = x.FirstOrDefault().EmployeeName,
-					PaymentType = x.FirstOrDefault().PaymentType,
-					WorkingDays = x.FirstOrDefault().WorkingDays,
-					PresentDays = x.FirstOrDefault().PresentDays,
-					AbsentDays = x.FirstOrDefault().AbsentDays,
-					LeaveDays = x.FirstOrDefault().LeaveDays,
-					TotalWorkHours = x.FirstOrDefault().TotalWorkHours,
-					OverTimeHours = x.FirstOrDefault().OverTimeHours,
-					TotalGeneralAmount = x.FirstOrDefault().TotalGeneralAmount,
-					TotalAllowance = x.FirstOrDefault().TotalAllowance,
-					TotalDeduction = x.FirstOrDefault().TotalDeduction,
-					GrossSalary = x.FirstOrDefault().GrossSalary,
-					NetSalary = x.FirstOrDefault().GrossSalary - x.FirstOrDefault().TotalDeduction,
-					PensionAmount = x.FirstOrDefault().PensionAmount,
-					SalaryTax = x.FirstOrDefault().SalaryTax,
-					IsApproved = x.FirstOrDefault().IsApproved,
-					AdvanceAmount = x.FirstOrDefault().AdvanceAmount,
-					IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved,
-					IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved
-				}).ToList();
-				
-				if (userdetailslist.Count == 0)
-				{
-					var queryResult = EF.CompileAsyncQuery(
-					(ApplicationDbContext ctx) => ctx.EmployeeAttendance
-					.Include(e => e.EmployeeDetails).Include(e => e.EmployeeDetails.EmployeeProfessionalDetail).Where(x => x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == officeid)
-					.Include(e => e.EmployeeDetails.EmployeeSalaryDetails)
-					//.Include(e=> e.EmployeeDetails.Advances).Where(x=>x.EmployeeDetails.Advances.AdvanceDate.Date.Month <month && x.EmployeeDetails.Advances.AdvanceDate.Date.Year == year && x.EmployeeDetails.Advances.IsApproved == true && x.EmployeeDetails.Advances.IsDeducted == false)
-					.Where(x => x.Date.Month == month && x.Date.Year == year).GroupBy(x => x.EmployeeId));
-					var payrolllist = await Task.Run(() =>
-						queryResult(_uow.GetDbContext()).ToListAsync().Result
-					);
+                    EmployeeId = x.FirstOrDefault().EmployeeId,
+                    EmployeeName = x.FirstOrDefault().EmployeeName,
+                    PaymentType = x.FirstOrDefault().PaymentType,
+                    WorkingDays = x.FirstOrDefault().WorkingDays,
+                    PresentDays = x.FirstOrDefault().PresentDays,
+                    AbsentDays = x.FirstOrDefault().AbsentDays,
+                    LeaveDays = x.FirstOrDefault().LeaveDays,
+                    TotalWorkHours = x.FirstOrDefault().TotalWorkHours,
+                    OverTimeHours = x.FirstOrDefault().OverTimeHours,
+                    TotalGeneralAmount = x.FirstOrDefault().TotalGeneralAmount,
+                    TotalAllowance = x.FirstOrDefault().TotalAllowance,
+                    TotalDeduction = x.FirstOrDefault().TotalDeduction,
+                    GrossSalary = Math.Round(Convert.ToDouble(x.FirstOrDefault().GrossSalary), 2),
+                    NetSalary = Math.Round(Convert.ToDouble(x.FirstOrDefault().NetSalary), 2),
+                    PensionAmount = Math.Round(Convert.ToDouble(x.FirstOrDefault().PensionAmount), 2),
+                    SalaryTax = Math.Round(Convert.ToDouble(x.FirstOrDefault().SalaryTax), 2),
+                    IsApproved = x.FirstOrDefault().IsApproved,
+                    AdvanceAmount = Math.Round(Convert.ToDouble(x.FirstOrDefault().AdvanceAmount), 2),
+                    IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved,
+                    IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved
+                }).ToList();
+
+                if (userdetailslist.Count == 0)
+                {
+                    var queryResult = EF.CompileAsyncQuery(
+                    (ApplicationDbContext ctx) => ctx.EmployeeAttendance
+                    .Include(e => e.EmployeeDetails).Include(e => e.EmployeeDetails.EmployeeProfessionalDetail).Where(x => x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == officeid)
+                    .Include(e => e.EmployeeDetails.EmployeeSalaryDetails)
+                    //.Include(e=> e.EmployeeDetails.Advances).Where(x=>x.EmployeeDetails.Advances.AdvanceDate.Date.Month <month && x.EmployeeDetails.Advances.AdvanceDate.Date.Year == year && x.EmployeeDetails.Advances.IsApproved == true && x.EmployeeDetails.Advances.IsDeducted == false)
+                    .Where(x => x.Date.Month == month && x.Date.Year == year).GroupBy(x => x.EmployeeId));
+                    var payrolllist = await Task.Run(() =>
+                        queryResult(_uow.GetDbContext()).ToListAsync().Result
+                    );
 
                     //var payrolllist = await _uow.GetDbContext().EmployeeAttendance.Include(x=>x.EmployeeDetails).ThenInclude(x=>x.EmployeeProfessionalDetail)
                     //	.Include(x=>x.EmployeeDetails).ThenInclude(x=>x.EmployeeSalaryDetails)
@@ -3396,28 +3396,28 @@ namespace HumanitarianAssistance.Service.Classes
 
                     }
 
-					response.data.EmployeeMonthlyPayrolllist = monthlypayrolllist.OrderBy(x => x.EmployeeId).ToList();
-				}
+                    response.data.EmployeeMonthlyPayrolllist = monthlypayrolllist.OrderBy(x => x.EmployeeId).ToList();
+                }
 
-				if (approvedList.Count > 0)
-				{
-					foreach (var elements in approvedList)
-					{
-						var itemToRemove = response.data.EmployeeMonthlyPayrolllist.FirstOrDefault(r => r.EmployeeId == elements.EmployeeID);
-						if (itemToRemove != null)
-							response.data.EmployeeMonthlyPayrolllist.Remove(itemToRemove);
-					}
-				}
-				response.StatusCode = StaticResource.successStatusCode;
-				response.Message = "Success";
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
+                if (approvedList.Count > 0)
+                {
+                    foreach (var elements in approvedList)
+                    {
+                        var itemToRemove = response.data.EmployeeMonthlyPayrolllist.FirstOrDefault(r => r.EmployeeId == elements.EmployeeID);
+                        if (itemToRemove != null)
+                            response.data.EmployeeMonthlyPayrolllist.Remove(itemToRemove);
+                    }
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
         public double SalaryCalculate(double grossSalary, double exchangeRate)
         {
@@ -4087,18 +4087,18 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var isexistrecord = _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.OfficeId == model[0].OfficeId && x.FinancialYearDate.Date.Month == model[0].FinancialYearDate.Date.Month && x.FinancialYearDate.Date.Year == model[0].FinancialYearDate.Date.Year && x.PaymentType == model[0].PaymentType).Result.ToList();
-                _uow.GetDbContext().EmployeePaymentTypes.RemoveRange(isexistrecord);
-                await _uow.SaveAsync();
-                foreach (var item in isexistrecord)
-                {
-                    var isrecordexist = _uow.EmployeeMonthlyPayrollRepository.FindAllAsync(x => x.EmployeeID == item.EmployeeID && x.Date.Date.Month == model[0].FinancialYearDate.Date.Month && x.Date.Date.Year == model[0].FinancialYearDate.Date.Year).Result.ToList();
-                    if (isrecordexist.Count != 0)
-                    {
-                        _uow.GetDbContext().EmployeeMonthlyPayroll.RemoveRange(isrecordexist);
-                        await _uow.SaveAsync();
-                    }
-                }
+                //var isexistrecord = _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.OfficeId == model[0].OfficeId && x.FinancialYearDate.Date.Month == model[0].FinancialYearDate.Date.Month && x.FinancialYearDate.Date.Year == model[0].FinancialYearDate.Date.Year && x.PaymentType == model[0].PaymentType).Result.ToList();
+                //_uow.GetDbContext().EmployeePaymentTypes.RemoveRange(isexistrecord);
+                //await _uow.SaveAsync();
+                //foreach (var item in isexistrecord)
+                //{
+                //    var isrecordexist = _uow.EmployeeMonthlyPayrollRepository.FindAllAsync(x => x.EmployeeID == item.EmployeeID && x.Date.Date.Month == model[0].FinancialYearDate.Date.Month && x.Date.Date.Year == model[0].FinancialYearDate.Date.Year).Result.ToList();
+                //    if (isrecordexist.Count != 0)
+                //    {
+                //        _uow.GetDbContext().EmployeeMonthlyPayroll.RemoveRange(isrecordexist);
+                //        await _uow.SaveAsync();
+                //    }
+                //}
                 List<EmployeePaymentTypes> list = new List<EmployeePaymentTypes>();
                 List<EmployeeMonthlyPayroll> listMonthlyPayroll = new List<EmployeeMonthlyPayroll>();
                 foreach (var item in model)
@@ -4193,7 +4193,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     if (item.AdvanceAmount > 0)
                     {
-                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);
+                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false);
                         foreach (var element in advancesRecords)
                         {
                             var updateRecord = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == element.AdvancesId);
@@ -4205,7 +4205,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     if (item.AdvanceRecoveryAmount > 0)
                     {
-                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);
+                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsAdvanceRecovery == false);
                         foreach (var element in advancesRecords)
                         {
                             var updateRecord = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == element.AdvancesId);
