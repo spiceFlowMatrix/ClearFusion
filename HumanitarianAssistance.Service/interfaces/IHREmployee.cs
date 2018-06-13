@@ -100,7 +100,8 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> EmployeesSalarySummary(EmployeeSummaryModel model);
 		Task<APIResponse> EmployeePaymentTypeReport(List<EmployeePaymentTypeModel> model, string userid);
 		Task<APIResponse> EmployeePaymentTypeReportForSaveOnly(List<EmployeePaymentTypeModel> model, string userid);
-		Task<APIResponse> RemoveApprovedList(RemoveApprovedEmployee model, string userid);
+		//Task<APIResponse> RemoveApprovedList(RemoveApprovedEmployee model, string userid);
+		Task<APIResponse> RemoveApprovedList(List<EmployeePaymentTypeModel> model, string userid);
 		Task<APIResponse> EmployeePensionReport(PensionReportModel model);
 		Task<APIResponse> GetAllEmployeeProjects(int EmployeeId);
 		Task<APIResponse> AssignEmployeeProjectPercentage(List<EmployeeProjectModel> model, string userid);
