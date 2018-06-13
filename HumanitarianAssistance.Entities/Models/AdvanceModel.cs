@@ -12,10 +12,10 @@ namespace HumanitarianAssistance.ViewModels.Models
 		//public EmployeeDetail EmployeeDetail { get; set; }
 		public string EmployeeCode { get; set; }
 		public int CurrencyId { get; set; }
-		public string VoucherReferenceNo { get; set; }
+		public long VoucherReferenceNo { get; set; }
 		public string Description { get; set; }
 		public string ModeOfReturn { get; set; }
-		public string ApprovedBy { get; set; }
+		public int ApprovedBy { get; set; }
 		public double RequestAmount { get; set; }
 		public double AdvanceAmount { get; set; }
 		public int OfficeId { get; set; }

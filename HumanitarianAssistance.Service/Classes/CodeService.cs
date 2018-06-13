@@ -931,7 +931,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
-                var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false);
+                var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.AppraisalStatus == false && x.IsDeleted == false);
                 foreach (var item in emplst)
                 {
                     EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
@@ -1010,6 +1010,45 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+
+        public async Task<APIResponse> RejectEmployeeAppraisalRequest(int EmployeeAppraisalDetailsId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
+                var emplst = await _uow.EmployeeAppraisalDetailsRepository.FindAsync(x => x.EmployeeAppraisalDetailsId == EmployeeAppraisalDetailsId && x.AppraisalStatus == false);
+                emplst.AppraisalStatus = false;
+                emplst.ModifiedById = UserId;
+                emplst.ModifiedDate = DateTime.Now;
+                emplst.IsDeleted = true;
+                await _uow.EmployeeAppraisalDetailsRepository.UpdateAsyn(emplst);
+
+                EmployeeEvaluation evaluationModel = new EmployeeEvaluation();
+                evaluationModel.CreatedById = UserId;
+                evaluationModel.CreatedDate = DateTime.Now;
+                evaluationModel.EmployeeId = emplst.EmployeeId;
+                evaluationModel.CurrentAppraisalDate = emplst.CurrentAppraisalDate;
+                evaluationModel.IsDeleted = true;
+                evaluationModel.EvaluationStatus = null;
+                evaluationModel.EmployeeAppraisalDetailsId = emplst.EmployeeAppraisalDetailsId;
+                await _uow.EmployeeEvaluationRepository.AddAsyn(evaluationModel);
+                await _uow.SaveAsync();
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+
+
+
         public async Task<APIResponse> AddEmployeeAppraisalMoreDetails(EmployeeAppraisalDetailsModel model, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -1035,10 +1074,10 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.FinalResultQues3 = model.FinalResultQues3;
                     obj.FinalResultQues4 = model.FinalResultQues4;
                     obj.FinalResultQues5 = model.FinalResultQues5;
-					obj.DirectSupervisor = model.DirectSupervisor;
-					//obj.AppraisalTeamMember1 = model.AppraisalTeamMember1;
-					//obj.AppraisalTeamMember2 = model.AppraisalTeamMember2;
-					obj.CommentsByEmployee = model.CommentsByEmployee;
+                    obj.DirectSupervisor = model.DirectSupervisor;
+                    //obj.AppraisalTeamMember1 = model.AppraisalTeamMember1;
+                    //obj.AppraisalTeamMember2 = model.AppraisalTeamMember2;
+                    obj.CommentsByEmployee = model.CommentsByEmployee;
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.Now;
                     obj.CurrentAppraisalDate = DateTime.Now;
@@ -1146,10 +1185,10 @@ namespace HumanitarianAssistance.Service.Classes
                     recordList.FinalResultQues3 = model.FinalResultQues3;
                     recordList.FinalResultQues4 = model.FinalResultQues4;
                     recordList.FinalResultQues5 = model.FinalResultQues5;
-					recordList.DirectSupervisor = model.DirectSupervisor;
-					//recordList.AppraisalTeamMember1 = model.AppraisalTeamMember1;
-					//recordList.AppraisalTeamMember2 = model.AppraisalTeamMember2;
-					recordList.CommentsByEmployee = model.CommentsByEmployee;
+                    recordList.DirectSupervisor = model.DirectSupervisor;
+                    //recordList.AppraisalTeamMember1 = model.AppraisalTeamMember1;
+                    //recordList.AppraisalTeamMember2 = model.AppraisalTeamMember2;
+                    recordList.CommentsByEmployee = model.CommentsByEmployee;
                     recordList.CurrentAppraisalDate = model.CurrentAppraisalDate;
                     recordList.EmployeeId = model.EmployeeId;
 
@@ -1276,10 +1315,10 @@ namespace HumanitarianAssistance.Service.Classes
                         objAppraisal.FinalResultQues3 = elements.FinalResultQues3;
                         objAppraisal.FinalResultQues4 = elements.FinalResultQues4;
                         objAppraisal.FinalResultQues5 = elements.FinalResultQues5;
-						objAppraisal.DirectSupervisor = elements.DirectSupervisor;
-						//objAppraisal.AppraisalTeamMember1 = elements.AppraisalTeamMember1;
-						//objAppraisal.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
-						objAppraisal.CommentsByEmployee = elements.CommentsByEmployee;
+                        objAppraisal.DirectSupervisor = elements.DirectSupervisor;
+                        //objAppraisal.AppraisalTeamMember1 = elements.AppraisalTeamMember1;
+                        //objAppraisal.AppraisalTeamMember2 = elements.AppraisalTeamMember2;
+                        objAppraisal.CommentsByEmployee = elements.CommentsByEmployee;
                         objAppraisal.CurrentAppraisalDate = elements.CurrentAppraisalDate;
                         objAppraisal.EvaluationStatus = elements.EvaluationStatus;
                         objAppraisal.EmployeeEvaluationModelList = trainingList;
