@@ -4191,7 +4191,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     if (item.AdvanceAmount > 0)
                     {
-                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);
+                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false);
                         foreach (var element in advancesRecords)
                         {
                             var updateRecord = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == element.AdvancesId);
@@ -4203,7 +4203,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     if (item.AdvanceRecoveryAmount > 0)
                     {
-                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);
+                        var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsAdvanceRecovery == false);
                         foreach (var element in advancesRecords)
                         {
                             var updateRecord = await _uow.AdvancesRepository.FindAsync(x => x.AdvancesId == element.AdvancesId);
