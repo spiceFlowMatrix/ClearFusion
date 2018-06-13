@@ -913,7 +913,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> RemoveApprovedList([FromBody]RemoveApprovedEmployee model)
+    public async Task<object> RemoveApprovedList([FromBody]List<EmployeePaymentTypeModel> model)
     {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
