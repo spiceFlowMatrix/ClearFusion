@@ -3102,6 +3102,8 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
+				var approvedList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x=>x.OfficeId == officeid && x.FinancialYearDate.Date.Month == month && x.FinancialYearDate.Date.Year == year);
+
 				var userdetailslist = (from ept in await _uow.EmployeePayrollForMonthRepository.GetAllAsyn()
 									   join emp in await _uow.EmployeePayrollMonthRepository.GetAllAsyn() on ept.EmployeeID equals emp.EmployeeID
 									   join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId
@@ -3178,9 +3180,8 @@ namespace HumanitarianAssistance.Service.Classes
 					IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved,
 					IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved
 				}).ToList();
-
-
-				if (userdetailslist.Count > 0)
+				
+				if (userdetailslist.Count == 0)
 				{
 					var queryResult = EF.CompileAsyncQuery(
 					(ApplicationDbContext ctx) => ctx.EmployeeAttendance
@@ -3394,6 +3395,16 @@ namespace HumanitarianAssistance.Service.Classes
 					}
 
 					response.data.EmployeeMonthlyPayrolllist = monthlypayrolllist.OrderBy(x => x.EmployeeId).ToList();
+				}
+
+				if (approvedList.Count > 0)
+				{
+					foreach (var elements in approvedList)
+					{
+						var itemToRemove = response.data.EmployeeMonthlyPayrolllist.FirstOrDefault(r => r.EmployeeId == elements.EmployeeID);
+						if (itemToRemove != null)
+							response.data.EmployeeMonthlyPayrolllist.Remove(itemToRemove);
+					}
 				}
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";

@@ -42,7 +42,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string FinalResultQues3 { get; set; }
 		public string FinalResultQues4 { get; set; }
 		public string FinalResultQues5 { get; set; }
-		public string DirectSupervisor { get; set; }
+		public int DirectSupervisor { get; set; }
 		//public string AppraisalTeamMember1 { get; set; }
 		//public string AppraisalTeamMember2 { get; set; }
 
