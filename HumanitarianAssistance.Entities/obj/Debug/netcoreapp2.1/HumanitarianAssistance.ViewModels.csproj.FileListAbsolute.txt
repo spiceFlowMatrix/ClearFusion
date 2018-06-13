@@ -19,14 +19,4 @@ D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\n
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.AssemblyInfo.cs
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.dll
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.deps.json
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.runtimeconfig.json
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.runtimeconfig.dev.json
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.csproj.CoreCompileInputs.cache
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.AssemblyInfoInputs.cache
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.AssemblyInfo.cs
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.pdb
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.csprojResolveAssemblyReference.cache
