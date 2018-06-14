@@ -3012,41 +3012,43 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var userdetailslist = (from ept in await _uow.EmployeePaymentTypeRepository.GetAllAsyn()
-                                       join emp in await _uow.EmployeeMonthlyPayrollRepository.GetAllAsyn() on ept.EmployeeID equals emp.EmployeeID
-                                       join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId
-                                       where ept.FinancialYearDate.Date.Month == month && ept.FinancialYearDate.Date.Year == year && emp.Date.Date.Month == month && emp.Date.Date.Year == year && ept.OfficeId == officeid && ept.PaymentType == paymentType
-                                       select new EmployeeMonthlyPayrollModel
-                                       {
-                                           EmployeeId = ept.EmployeeID,
-                                           EmployeeName = ept.EmployeeName,
-                                           PaymentType = ept.PaymentType,
-                                           WorkingDays = ept.WorkingDays,
-                                           PresentDays = ept.PresentDays,
-                                           AbsentDays = ept.AbsentDays,
-                                           LeaveDays = ept.LeaveDays,
-                                           TotalWorkHours = ept.TotalWorkHours,
-                                           HourlyRate = ept.HourlyRate,
-                                           TotalGeneralAmount = ept.TotalGeneralAmount,
-                                           TotalAllowance = ept.TotalAllowance,
-                                           TotalDeduction = ept.TotalDeduction,
-                                           GrossSalary = ept.GrossSalary,
-                                           OverTimeHours = ept.OverTimeHours,
-                                           SalaryHeadId = emp.SalaryHeadId,
-                                           MonthlyAmount = emp.MonthlyAmount,
-                                           CurrencyId = emp.CurrencyId,
-                                           SalaryHead = es.HeadName,
-                                           HeadTypeId = es.HeadTypeId,
-                                           SalaryHeadType = es.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : es.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : es.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
-                                           PayrollId = emp.MonthlyPayrollId,
-                                           IsApproved = ept.IsApproved,
-                                           PensionRate = ept.PensionRate,
-                                           SalaryTax = ept.SalaryTax,
-                                           PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
-                                           NetSalary = ept.GrossSalary - ept.TotalDeduction,
-                                           AdvanceAmount = ept.AdvanceAmount,
-                                           IsAdvanceApproved = ept.IsAdvanceApproved
-                                       }).ToList();
+				var userdetailslist = (from ept in await _uow.EmployeePaymentTypeRepository.GetAllAsyn()
+									   join emp in await _uow.EmployeeMonthlyPayrollRepository.GetAllAsyn() on ept.EmployeeID equals emp.EmployeeID
+									   join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId
+									   where ept.FinancialYearDate.Date.Month == month && ept.FinancialYearDate.Date.Year == year && emp.Date.Date.Month == month && emp.Date.Date.Year == year && ept.OfficeId == officeid && ept.PaymentType == paymentType
+									   select new EmployeeMonthlyPayrollModel
+									   {
+										   EmployeeId = ept.EmployeeID,
+										   EmployeeName = ept.EmployeeName,
+										   PaymentType = ept.PaymentType,
+										   WorkingDays = ept.WorkingDays,
+										   PresentDays = ept.PresentDays,
+										   AbsentDays = ept.AbsentDays,
+										   LeaveDays = ept.LeaveDays,
+										   TotalWorkHours = ept.TotalWorkHours,
+										   HourlyRate = ept.HourlyRate,
+										   TotalGeneralAmount = ept.TotalGeneralAmount,
+										   TotalAllowance = ept.TotalAllowance,
+										   TotalDeduction = ept.TotalDeduction,
+										   GrossSalary = ept.GrossSalary,
+										   OverTimeHours = ept.OverTimeHours,
+										   SalaryHeadId = emp.SalaryHeadId,
+										   MonthlyAmount = emp.MonthlyAmount,
+										   CurrencyId = emp.CurrencyId,
+										   SalaryHead = es.HeadName,
+										   HeadTypeId = es.HeadTypeId,
+										   SalaryHeadType = es.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : es.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : es.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
+										   PayrollId = emp.MonthlyPayrollId,
+										   IsApproved = ept.IsApproved,
+										   PensionRate = ept.PensionRate,
+										   SalaryTax = ept.SalaryTax,
+										   PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
+										   NetSalary = ept.GrossSalary - ept.TotalDeduction,
+										   AdvanceAmount = ept.AdvanceAmount,
+										   IsAdvanceApproved = ept.IsAdvanceApproved,
+										   AdvanceRecoveryAmount = ept.AdvanceRecoveryAmount,
+										   IsAdvanceRecovery = ept.IsAdvanceRecovery == true ? false : true
+									   }).ToList();
 
 
 
@@ -3086,8 +3088,10 @@ namespace HumanitarianAssistance.Service.Classes
                     IsApproved = x.FirstOrDefault().IsApproved,
                     AdvanceAmount = x.FirstOrDefault().AdvanceAmount,
                     IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved,
-                    IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved
-                }).ToList();
+                    IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved,
+					AdvanceRecoveryAmount = x.FirstOrDefault().AdvanceRecoveryAmount,
+					IsAdvanceRecovery = x.FirstOrDefault().IsAdvanceRecovery
+				}).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -3100,7 +3104,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
         public async Task<APIResponse> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType)
-        {
+         {
             APIResponse response = new APIResponse();
             try
             {
@@ -3139,7 +3143,9 @@ namespace HumanitarianAssistance.Service.Classes
                                            PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
                                            NetSalary = ept.NetSalary,
                                            AdvanceAmount = ept.AdvanceAmount,
-                                           IsAdvanceApproved = ept.IsAdvanceApproved
+                                           IsAdvanceApproved = ept.IsAdvanceApproved,
+										   AdvanceRecoveryAmount = ept.AdvanceRecoveryAmount,
+										   IsAdvanceRecovery = ept.IsAdvanceRecovery
                                        }).ToList();
 
 
@@ -3180,8 +3186,10 @@ namespace HumanitarianAssistance.Service.Classes
                     IsApproved = x.FirstOrDefault().IsApproved,
                     AdvanceAmount = Math.Round(Convert.ToDouble(x.FirstOrDefault().AdvanceAmount), 2),
                     IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved,
-                    IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved
-                }).ToList();
+                    IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved,
+					AdvanceRecoveryAmount = x.FirstOrDefault().AdvanceRecoveryAmount,
+					IsAdvanceRecovery = x.FirstOrDefault().IsAdvanceRecovery
+				}).ToList();
 
                 if (userdetailslist.Count == 0)
                 {
@@ -3398,6 +3406,70 @@ namespace HumanitarianAssistance.Service.Classes
 
                     response.data.EmployeeMonthlyPayrolllist = monthlypayrolllist.OrderBy(x => x.EmployeeId).ToList();
                 }
+
+				foreach (var item in response.data.EmployeeMonthlyPayrolllist)
+				{
+					var advanceAmount = await _uow.AdvancesRepository.FindAllAsync(x => x.AppraisalApprovedDate.Date.Month <= month && x.AppraisalApprovedDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false && x.EmployeeId == item.EmployeeId);
+					double advance = 0;
+					foreach (var element in advanceAmount)
+					{
+						if (element.CurrencyId != currencyid)
+						{
+							var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == item.employeepayrolllist[0].CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+							advance += element.AdvanceAmount * conversionRate.Rate;
+						}
+						else
+						{
+							advance += element.AdvanceAmount;
+						}
+					}
+
+					if (item.AdvanceAmount > 0 && advance == 0)
+					{
+						item.IsAdvanceApproved = true;
+					}
+					else if (item.AdvanceAmount > 0 && advance > 0)
+					{
+						item.IsAdvanceApproved = false;
+						item.AdvanceAmount = advance;
+					}
+					else
+					{
+						item.IsAdvanceApproved = false;
+						item.AdvanceAmount += advance;
+					}
+
+					var advanceDeductionApproved = await _uow.AdvancesRepository.FindAllAsync(x => x.AppraisalApprovedDate.Date.Month <= month && x.AppraisalApprovedDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == true && x.IsAdvanceRecovery == false && x.EmployeeId == item.EmployeeId);
+					double advanceRecovery = 0;
+					foreach (var element in advanceDeductionApproved)
+					{
+						if (element.CurrencyId != currencyid)
+						{
+							var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == item.employeepayrolllist[0].CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+							advanceRecovery += element.AdvanceAmount * conversionRate.Rate;
+						}
+						else
+						{
+							advanceRecovery += element.AdvanceAmount;
+						}
+					}
+
+					if (item.AdvanceRecoveryAmount > 0 && advanceRecovery == 0)
+					{
+						item.IsAdvanceRecovery = false;
+					}
+					else if (item.AdvanceRecoveryAmount > 0 && advanceRecovery > 0)
+					{
+						item.IsAdvanceRecovery = true;
+						item.AdvanceRecoveryAmount = advanceRecovery;
+					}
+					else
+					{
+						item.IsAdvanceRecovery = true;
+						item.AdvanceRecoveryAmount += advanceRecovery;
+					}
+
+				}
 
                 if (approvedList.Count > 0)
                 {
@@ -4103,7 +4175,7 @@ namespace HumanitarianAssistance.Service.Classes
                 List<EmployeeMonthlyPayroll> listMonthlyPayroll = new List<EmployeeMonthlyPayroll>();
                 foreach (var item in model)
                 {
-                    if (item.AdvanceAmount > 0)
+                    if (item.AdvanceAmount > 0 && item.IsAdvanceApproved == false)
                     {
                         var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);
                         foreach (var element in advancesRecords)
@@ -4115,7 +4187,7 @@ namespace HumanitarianAssistance.Service.Classes
                         }
                     }
 
-                    if (item.AdvanceRecoveryAmount > 0)
+                    if (item.AdvanceRecoveryAmount > 0 && item.IsAdvanceRecovery == false)
                     {
                         var advancesRecords = await _uow.AdvancesRepository.FindAllAsync(x => x.EmployeeId == item.EmployeeId && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false);
                         foreach (var element in advancesRecords)
@@ -4154,7 +4226,9 @@ namespace HumanitarianAssistance.Service.Classes
                     emp.PensionRate = item.employeepayrolllist[0].PensionRate;
                     emp.AdvanceAmount = item.AdvanceAmount;
                     emp.IsAdvanceApproved = item.AdvanceAmount > 0 ? true : false;
-                    list.Add(emp);
+					emp.AdvanceRecoveryAmount = item.AdvanceRecoveryAmount;
+					emp.IsAdvanceRecovery = item.AdvanceRecoveryAmount > 0 ? true : false;
+					list.Add(emp);
                     foreach (var element in item.employeepayrolllist)
                     {
                         EmployeeMonthlyPayroll obj = new EmployeeMonthlyPayroll();
@@ -4251,6 +4325,8 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.PensionRate = item.employeepayrolllist[0].PensionRate;
                     obj.AdvanceAmount = item.AdvanceAmount;
                     obj.IsAdvanceApproved = item.AdvanceAmount > 0 ? true : false;
+					obj.AdvanceRecoveryAmount = item.AdvanceRecoveryAmount;
+					obj.IsAdvanceRecovery = item.AdvanceRecoveryAmount > 0 ? true : false;
                     list.Add(obj);
 
                     var empList = await _uow.EmployeePayrollMonthRepository.FindAllAsync(x => x.EmployeeID == item.EmployeeId && x.Date.Date.Month == item.FinancialYearDate.Date.Month && x.Date.Date.Year == item.FinancialYearDate.Date.Year);
