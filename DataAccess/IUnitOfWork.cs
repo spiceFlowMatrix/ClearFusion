@@ -116,10 +116,11 @@ namespace DataAccess
         IGenericRepository<PurchaseUnitType> PurchaseUnitTypeRepository { get; }
 		IGenericRepository<EmployeePayrollForMonth> EmployeePayrollForMonthRepository { get; }
 		IGenericRepository<EmployeePayrollMonth> EmployeePayrollMonthRepository { get; }
-		
+		IGenericRepository<EmployeeContract> EmployeeContractRepository { get; }
 
+        
 
-		void Save();
+        void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
 

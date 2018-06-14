@@ -96,10 +96,10 @@ namespace DataAccess
         private IGenericRepository<EmployeeAppraisalTeamMember> _employeeAppraisalTeamMemberRepository;
         private IGenericRepository<RatingBasedCriteria> _ratingBasedCriteriaRepository;
         private IGenericRepository<CategoryPopulator> _categoryPopulatorRepository;
-		private IGenericRepository<EmployeePayrollForMonth> _employeePayrollForMonthRepository;
+        private IGenericRepository<EmployeePayrollForMonth> _employeePayrollForMonthRepository;
 
-		// Store repos
-		private IGenericRepository<StoreInventory> _storeInventoryRepository;
+        // Store repos
+        private IGenericRepository<StoreInventory> _storeInventoryRepository;
         private IGenericRepository<StoreInventoryItem> _storeInventoryItemRepository;
         private IGenericRepository<StoreItemPurchase> _storeItemPurchaseRepository;
         private IGenericRepository<ItemPurchaseDocument> _itemPurchaseDocumentRepository;
@@ -114,11 +114,11 @@ namespace DataAccess
         private IGenericRepository<MotorSparePart> _motorSparePartsRepository;
         private IGenericRepository<InventoryItemType> _inventoryItemTypeRepository;
         private IGenericRepository<PurchaseUnitType> _purchaseUnitTypeRepository;
-		private IGenericRepository<EmployeePayrollMonth> _employeePayrollMonthRepository;
+        private IGenericRepository<EmployeePayrollMonth> _employeePayrollMonthRepository;
 
+        private IGenericRepository<EmployeeContract> _employeeContractRepository;
 
-
-		public UnitOfWork(ApplicationDbContext mschaContext)
+        public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
@@ -142,25 +142,33 @@ namespace DataAccess
             GC.SuppressFinalize(this);
         }
 
-		public IGenericRepository<EmployeePayrollMonth> EmployeePayrollMonthRepository
-		{
-			get
-			{
-				return _employeePayrollMonthRepository =
-					_employeePayrollMonthRepository ?? new GenericRepository<EmployeePayrollMonth>(_mschaContext);
-			}
-		}
-		public IGenericRepository<EmployeePayrollForMonth> EmployeePayrollForMonthRepository
-		{
-			get
-			{
-				return _employeePayrollForMonthRepository =
-					_employeePayrollForMonthRepository ?? new GenericRepository<EmployeePayrollForMonth>(_mschaContext);
-			}
-		}
+        public IGenericRepository<EmployeeContract> EmployeeContractRepository
+        {
+            get
+            {
+                return _employeeContractRepository =
+                    _employeeContractRepository ?? new GenericRepository<EmployeeContract>(_mschaContext);
+            }
+        }
+        public IGenericRepository<EmployeePayrollMonth> EmployeePayrollMonthRepository
+        {
+            get
+            {
+                return _employeePayrollMonthRepository =
+                    _employeePayrollMonthRepository ?? new GenericRepository<EmployeePayrollMonth>(_mschaContext);
+            }
+        }
+        public IGenericRepository<EmployeePayrollForMonth> EmployeePayrollForMonthRepository
+        {
+            get
+            {
+                return _employeePayrollForMonthRepository =
+                    _employeePayrollForMonthRepository ?? new GenericRepository<EmployeePayrollForMonth>(_mschaContext);
+            }
+        }
 
-		// Store
-		public IGenericRepository<PurchaseUnitType> PurchaseUnitTypeRepository
+        // Store
+        public IGenericRepository<PurchaseUnitType> PurchaseUnitTypeRepository
         {
             get
             {

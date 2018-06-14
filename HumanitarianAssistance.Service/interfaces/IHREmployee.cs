@@ -122,6 +122,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditInterviewDetails(InterviewDetailModel model, string UserId);
         Task<APIResponse> GetAllInterviewDetails();
         Task<APIResponse> AddTechnicalQuestions(InterviewTechnicalQuestionsModel model, string UserId);
+        Task<APIResponse> AddEmployeeContractDetails(EmployeeContract model, string UserId);
+
+
+        
 
     }
 }

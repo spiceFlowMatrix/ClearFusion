@@ -4080,7 +4080,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-	
+
 
         public async Task<APIResponse> EmployeePaymentTypeReport(List<EmployeePaymentTypeModel> model, string userid)
         {
@@ -4287,25 +4287,25 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-				//var isexistrecord = _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.OfficeId == model.OfficeId && x.FinancialYearDate.Date.Month == model.FinancialYearDate.Date.Month && x.FinancialYearDate.Date.Year == model.FinancialYearDate.Date.Year && x.PaymentType == model.PaymentType).Result.ToList();
-				//_uow.GetDbContext().EmployeePaymentTypes.RemoveRange(isexistrecord);
-				//await _uow.SaveAsync();
-				//foreach (var item in isexistrecord)
-				//{
-				//    var isrecordexist = _uow.EmployeeMonthlyPayrollRepository.FindAllAsync(x => x.EmployeeID == item.EmployeeID && x.Date.Date.Month == model.FinancialYearDate.Date.Month && x.Date.Date.Year == model.FinancialYearDate.Date.Year).Result.ToList();
-				//    if (isrecordexist.Count != 0)
-				//    {
-				//        _uow.GetDbContext().EmployeeMonthlyPayroll.RemoveRange(isrecordexist);
-				//        await _uow.SaveAsync();
-				//    }
-				//}
-				foreach (var item in model)
-				{
-					var record = await _uow.EmployeePaymentTypeRepository.FindAsync(x => x.EmployeeID == item.EmployeeId && x.FinancialYearDate.Date.Month == item.FinancialYearDate.Date.Month && x.FinancialYearDate.Date.Year == item.FinancialYearDate.Date.Year );
+                //var isexistrecord = _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.OfficeId == model.OfficeId && x.FinancialYearDate.Date.Month == model.FinancialYearDate.Date.Month && x.FinancialYearDate.Date.Year == model.FinancialYearDate.Date.Year && x.PaymentType == model.PaymentType).Result.ToList();
+                //_uow.GetDbContext().EmployeePaymentTypes.RemoveRange(isexistrecord);
+                //await _uow.SaveAsync();
+                //foreach (var item in isexistrecord)
+                //{
+                //    var isrecordexist = _uow.EmployeeMonthlyPayrollRepository.FindAllAsync(x => x.EmployeeID == item.EmployeeID && x.Date.Date.Month == model.FinancialYearDate.Date.Month && x.Date.Date.Year == model.FinancialYearDate.Date.Year).Result.ToList();
+                //    if (isrecordexist.Count != 0)
+                //    {
+                //        _uow.GetDbContext().EmployeeMonthlyPayroll.RemoveRange(isrecordexist);
+                //        await _uow.SaveAsync();
+                //    }
+                //}
+                foreach (var item in model)
+                {
+                    var record = await _uow.EmployeePaymentTypeRepository.FindAsync(x => x.EmployeeID == item.EmployeeId && x.FinancialYearDate.Date.Month == item.FinancialYearDate.Date.Month && x.FinancialYearDate.Date.Year == item.FinancialYearDate.Date.Year);
 
-				}
-				//var records = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x=>x.EmployeeID == );
-				response.StatusCode = StaticResource.successStatusCode;
+                }
+                //var records = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x=>x.EmployeeID == );
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -4497,7 +4497,42 @@ namespace HumanitarianAssistance.Service.Classes
                 response.Message = ex.Message;
             }
             return response;
+
         }
+
+
+        public async Task<APIResponse> AddEmployeeContractDetails(EmployeeContract model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    model.CreatedById = UserId;
+                    model.CreatedDate = DateTime.Now;
+                    await _uow.EmployeeContractRepository.AddAsyn(model);
+                    await _uow.SaveAsync();
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model Not Valid";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+
+
 
         public async Task<APIResponse> GetSelectedEmployeeContract(int OfficeId, int ProjectId, int BudgetLineId, int EmployeeId)
         {
