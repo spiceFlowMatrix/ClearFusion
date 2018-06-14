@@ -93,6 +93,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public EmployeeTaxReport EmployeeTaxReport { get; set; }
         public List<EmployeeSalarySlipModel> EmployeeSalarySlipModelList { get; set; }
         public List<EmployeeContractModel> EmployeeContractModellst { get; set; }
+        public EmployeeContractModel EmployeeContractDetails { get; set; }
         public ContractTypeContent ContractTypeContentList { get; set; }
         public List<EmployeeContractType> EmployeeContractTypeList { get; set; }
         public List<EmployeePensionRateModel> EmployeePensionRateList { get; set; }

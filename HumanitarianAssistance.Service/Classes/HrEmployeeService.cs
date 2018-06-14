@@ -3012,43 +3012,43 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-				var userdetailslist = (from ept in await _uow.EmployeePaymentTypeRepository.GetAllAsyn()
-									   join emp in await _uow.EmployeeMonthlyPayrollRepository.GetAllAsyn() on ept.EmployeeID equals emp.EmployeeID
-									   join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId
-									   where ept.FinancialYearDate.Date.Month == month && ept.FinancialYearDate.Date.Year == year && emp.Date.Date.Month == month && emp.Date.Date.Year == year && ept.OfficeId == officeid && ept.PaymentType == paymentType
-									   select new EmployeeMonthlyPayrollModel
-									   {
-										   EmployeeId = ept.EmployeeID,
-										   EmployeeName = ept.EmployeeName,
-										   PaymentType = ept.PaymentType,
-										   WorkingDays = ept.WorkingDays,
-										   PresentDays = ept.PresentDays,
-										   AbsentDays = ept.AbsentDays,
-										   LeaveDays = ept.LeaveDays,
-										   TotalWorkHours = ept.TotalWorkHours,
-										   HourlyRate = ept.HourlyRate,
-										   TotalGeneralAmount = ept.TotalGeneralAmount,
-										   TotalAllowance = ept.TotalAllowance,
-										   TotalDeduction = ept.TotalDeduction,
-										   GrossSalary = ept.GrossSalary,
-										   OverTimeHours = ept.OverTimeHours,
-										   SalaryHeadId = emp.SalaryHeadId,
-										   MonthlyAmount = emp.MonthlyAmount,
-										   CurrencyId = emp.CurrencyId,
-										   SalaryHead = es.HeadName,
-										   HeadTypeId = es.HeadTypeId,
-										   SalaryHeadType = es.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : es.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : es.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
-										   PayrollId = emp.MonthlyPayrollId,
-										   IsApproved = ept.IsApproved,
-										   PensionRate = ept.PensionRate,
-										   SalaryTax = ept.SalaryTax,
-										   PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
-										   NetSalary = ept.GrossSalary - ept.TotalDeduction,
-										   AdvanceAmount = ept.AdvanceAmount,
-										   IsAdvanceApproved = ept.IsAdvanceApproved,
-										   AdvanceRecoveryAmount = ept.AdvanceRecoveryAmount,
-										   IsAdvanceRecovery = ept.IsAdvanceRecovery == true ? false : true
-									   }).ToList();
+                var userdetailslist = (from ept in await _uow.EmployeePaymentTypeRepository.GetAllAsyn()
+                                       join emp in await _uow.EmployeeMonthlyPayrollRepository.GetAllAsyn() on ept.EmployeeID equals emp.EmployeeID
+                                       join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId
+                                       where ept.FinancialYearDate.Date.Month == month && ept.FinancialYearDate.Date.Year == year && emp.Date.Date.Month == month && emp.Date.Date.Year == year && ept.OfficeId == officeid && ept.PaymentType == paymentType
+                                       select new EmployeeMonthlyPayrollModel
+                                       {
+                                           EmployeeId = ept.EmployeeID,
+                                           EmployeeName = ept.EmployeeName,
+                                           PaymentType = ept.PaymentType,
+                                           WorkingDays = ept.WorkingDays,
+                                           PresentDays = ept.PresentDays,
+                                           AbsentDays = ept.AbsentDays,
+                                           LeaveDays = ept.LeaveDays,
+                                           TotalWorkHours = ept.TotalWorkHours,
+                                           HourlyRate = ept.HourlyRate,
+                                           TotalGeneralAmount = ept.TotalGeneralAmount,
+                                           TotalAllowance = ept.TotalAllowance,
+                                           TotalDeduction = ept.TotalDeduction,
+                                           GrossSalary = ept.GrossSalary,
+                                           OverTimeHours = ept.OverTimeHours,
+                                           SalaryHeadId = emp.SalaryHeadId,
+                                           MonthlyAmount = emp.MonthlyAmount,
+                                           CurrencyId = emp.CurrencyId,
+                                           SalaryHead = es.HeadName,
+                                           HeadTypeId = es.HeadTypeId,
+                                           SalaryHeadType = es.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : es.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : es.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
+                                           PayrollId = emp.MonthlyPayrollId,
+                                           IsApproved = ept.IsApproved,
+                                           PensionRate = ept.PensionRate,
+                                           SalaryTax = ept.SalaryTax,
+                                           PensionAmount = Math.Round(Convert.ToDouble(ept.PensionAmount), 2),
+                                           NetSalary = ept.GrossSalary - ept.TotalDeduction,
+                                           AdvanceAmount = ept.AdvanceAmount,
+                                           IsAdvanceApproved = ept.IsAdvanceApproved,
+                                           AdvanceRecoveryAmount = ept.AdvanceRecoveryAmount,
+                                           IsAdvanceRecovery = ept.IsAdvanceRecovery == true ? false : true
+                                       }).ToList();
 
 
 
@@ -3089,9 +3089,9 @@ namespace HumanitarianAssistance.Service.Classes
                     AdvanceAmount = x.FirstOrDefault().AdvanceAmount,
                     IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved,
                     IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved,
-					AdvanceRecoveryAmount = x.FirstOrDefault().AdvanceRecoveryAmount,
-					IsAdvanceRecovery = x.FirstOrDefault().IsAdvanceRecovery
-				}).ToList();
+                    AdvanceRecoveryAmount = x.FirstOrDefault().AdvanceRecoveryAmount,
+                    IsAdvanceRecovery = x.FirstOrDefault().IsAdvanceRecovery
+                }).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -3104,7 +3104,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
         public async Task<APIResponse> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType)
-         {
+        {
             APIResponse response = new APIResponse();
             try
             {
@@ -3144,8 +3144,8 @@ namespace HumanitarianAssistance.Service.Classes
                                            NetSalary = ept.NetSalary,
                                            AdvanceAmount = ept.AdvanceAmount,
                                            IsAdvanceApproved = ept.IsAdvanceApproved,
-										   AdvanceRecoveryAmount = ept.AdvanceRecoveryAmount,
-										   IsAdvanceRecovery = ept.IsAdvanceRecovery
+                                           AdvanceRecoveryAmount = ept.AdvanceRecoveryAmount,
+                                           IsAdvanceRecovery = ept.IsAdvanceRecovery
                                        }).ToList();
 
 
@@ -3187,9 +3187,9 @@ namespace HumanitarianAssistance.Service.Classes
                     AdvanceAmount = Math.Round(Convert.ToDouble(x.FirstOrDefault().AdvanceAmount), 2),
                     IsDeductionApproved = x.FirstOrDefault().IsDeductionApproved,
                     IsAdvanceApproved = x.FirstOrDefault().IsAdvanceApproved,
-					AdvanceRecoveryAmount = x.FirstOrDefault().AdvanceRecoveryAmount,
-					IsAdvanceRecovery = x.FirstOrDefault().IsAdvanceRecovery
-				}).ToList();
+                    AdvanceRecoveryAmount = x.FirstOrDefault().AdvanceRecoveryAmount,
+                    IsAdvanceRecovery = x.FirstOrDefault().IsAdvanceRecovery
+                }).ToList();
 
                 if (userdetailslist.Count == 0)
                 {
@@ -3407,69 +3407,69 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.EmployeeMonthlyPayrolllist = monthlypayrolllist.OrderBy(x => x.EmployeeId).ToList();
                 }
 
-				foreach (var item in response.data.EmployeeMonthlyPayrolllist)
-				{
-					var advanceAmount = await _uow.AdvancesRepository.FindAllAsync(x => x.AppraisalApprovedDate.Date.Month <= month && x.AppraisalApprovedDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false && x.EmployeeId == item.EmployeeId);
-					double advance = 0;
-					foreach (var element in advanceAmount)
-					{
-						if (element.CurrencyId != currencyid)
-						{
-							var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == item.employeepayrolllist[0].CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
-							advance += element.AdvanceAmount * conversionRate.Rate;
-						}
-						else
-						{
-							advance += element.AdvanceAmount;
-						}
-					}
+                foreach (var item in response.data.EmployeeMonthlyPayrolllist)
+                {
+                    var advanceAmount = await _uow.AdvancesRepository.FindAllAsync(x => x.AppraisalApprovedDate.Date.Month <= month && x.AppraisalApprovedDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == false && x.IsAdvanceRecovery == false && x.EmployeeId == item.EmployeeId);
+                    double advance = 0;
+                    foreach (var element in advanceAmount)
+                    {
+                        if (element.CurrencyId != currencyid)
+                        {
+                            var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == item.employeepayrolllist[0].CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+                            advance += element.AdvanceAmount * conversionRate.Rate;
+                        }
+                        else
+                        {
+                            advance += element.AdvanceAmount;
+                        }
+                    }
 
-					if (item.AdvanceAmount > 0 && advance == 0)
-					{
-						item.IsAdvanceApproved = true;
-					}
-					else if (item.AdvanceAmount > 0 && advance > 0)
-					{
-						item.IsAdvanceApproved = false;
-						item.AdvanceAmount = advance;
-					}
-					else
-					{
-						item.IsAdvanceApproved = false;
-						item.AdvanceAmount += advance;
-					}
+                    if (item.AdvanceAmount > 0 && advance == 0)
+                    {
+                        item.IsAdvanceApproved = true;
+                    }
+                    else if (item.AdvanceAmount > 0 && advance > 0)
+                    {
+                        item.IsAdvanceApproved = false;
+                        item.AdvanceAmount = advance;
+                    }
+                    else
+                    {
+                        item.IsAdvanceApproved = false;
+                        item.AdvanceAmount += advance;
+                    }
 
-					var advanceDeductionApproved = await _uow.AdvancesRepository.FindAllAsync(x => x.AppraisalApprovedDate.Date.Month <= month && x.AppraisalApprovedDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == true && x.IsAdvanceRecovery == false && x.EmployeeId == item.EmployeeId);
-					double advanceRecovery = 0;
-					foreach (var element in advanceDeductionApproved)
-					{
-						if (element.CurrencyId != currencyid)
-						{
-							var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == item.employeepayrolllist[0].CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
-							advanceRecovery += element.AdvanceAmount * conversionRate.Rate;
-						}
-						else
-						{
-							advanceRecovery += element.AdvanceAmount;
-						}
-					}
+                    var advanceDeductionApproved = await _uow.AdvancesRepository.FindAllAsync(x => x.AppraisalApprovedDate.Date.Month <= month && x.AppraisalApprovedDate.Date.Year == year && x.IsApproved == true && x.IsDeducted == true && x.IsAdvanceRecovery == false && x.EmployeeId == item.EmployeeId);
+                    double advanceRecovery = 0;
+                    foreach (var element in advanceDeductionApproved)
+                    {
+                        if (element.CurrencyId != currencyid)
+                        {
+                            var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == item.employeepayrolllist[0].CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+                            advanceRecovery += element.AdvanceAmount * conversionRate.Rate;
+                        }
+                        else
+                        {
+                            advanceRecovery += element.AdvanceAmount;
+                        }
+                    }
 
-					if (item.AdvanceRecoveryAmount > 0 && advanceRecovery == 0)
-					{
-						item.IsAdvanceRecovery = false;
-					}
-					else if (item.AdvanceRecoveryAmount > 0 && advanceRecovery > 0)
-					{
-						item.IsAdvanceRecovery = true;
-						item.AdvanceRecoveryAmount = advanceRecovery;
-					}
-					else
-					{
-						item.IsAdvanceRecovery = true;
-						item.AdvanceRecoveryAmount += advanceRecovery;
-					}
+                    if (item.AdvanceRecoveryAmount > 0 && advanceRecovery == 0)
+                    {
+                        item.IsAdvanceRecovery = false;
+                    }
+                    else if (item.AdvanceRecoveryAmount > 0 && advanceRecovery > 0)
+                    {
+                        item.IsAdvanceRecovery = true;
+                        item.AdvanceRecoveryAmount = advanceRecovery;
+                    }
+                    else
+                    {
+                        item.IsAdvanceRecovery = true;
+                        item.AdvanceRecoveryAmount += advanceRecovery;
+                    }
 
-				}
+                }
 
                 if (approvedList.Count > 0)
                 {
@@ -4226,9 +4226,9 @@ namespace HumanitarianAssistance.Service.Classes
                     emp.PensionRate = item.employeepayrolllist[0].PensionRate;
                     emp.AdvanceAmount = item.AdvanceAmount;
                     emp.IsAdvanceApproved = item.AdvanceAmount > 0 ? true : false;
-					emp.AdvanceRecoveryAmount = item.AdvanceRecoveryAmount;
-					emp.IsAdvanceRecovery = item.AdvanceRecoveryAmount > 0 ? true : false;
-					list.Add(emp);
+                    emp.AdvanceRecoveryAmount = item.AdvanceRecoveryAmount;
+                    emp.IsAdvanceRecovery = item.AdvanceRecoveryAmount > 0 ? true : false;
+                    list.Add(emp);
                     foreach (var element in item.employeepayrolllist)
                     {
                         EmployeeMonthlyPayroll obj = new EmployeeMonthlyPayroll();
@@ -4325,8 +4325,8 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.PensionRate = item.employeepayrolllist[0].PensionRate;
                     obj.AdvanceAmount = item.AdvanceAmount;
                     obj.IsAdvanceApproved = item.AdvanceAmount > 0 ? true : false;
-					obj.AdvanceRecoveryAmount = item.AdvanceRecoveryAmount;
-					obj.IsAdvanceRecovery = item.AdvanceRecoveryAmount > 0 ? true : false;
+                    obj.AdvanceRecoveryAmount = item.AdvanceRecoveryAmount;
+                    obj.IsAdvanceRecovery = item.AdvanceRecoveryAmount > 0 ? true : false;
                     list.Add(obj);
 
                     var empList = await _uow.EmployeePayrollMonthRepository.FindAllAsync(x => x.EmployeeID == item.EmployeeId && x.Date.Date.Month == item.FinancialYearDate.Date.Month && x.Date.Date.Year == item.FinancialYearDate.Date.Year);
@@ -4667,6 +4667,148 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+        public async Task<APIResponse> GetSelectedEmployeeContractByEmployeeId(int EmployeeId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                if (EmployeeId != 0)
+                {
+                    EmployeeContractModel EmployeeContractModel = new EmployeeContractModel();
+
+                    var dataModel = await _uow.GetDbContext().EmployeeContract
+                                    .Include(x => x.EmployeeDetail)
+                                    .Include(x => x.DesignationDetail)
+                                    .Include(x => x.EmployeeDetail.ProvinceDetails)
+                                    .Include(x => x.OfficeDetail)
+                                    .Include(x => x.ProjectBudgetLine)
+                                    .Include(x => x.ProjectBudgetLine.ProjectDetails)
+                                    .Include(x => x.EmployeeDetail.EmployeeProfessionalDetail)
+                                    .FirstOrDefaultAsync(x => x.EmployeeId == EmployeeId);
+
+                    if (dataModel != null)
+                    {
+                        var dariTextModel = _uow.ContractTypeContentRepository.Find(x => x.EmployeeContractTypeId == dataModel.EmployeeDetail.EmployeeProfessionalDetail.EmployeeContractTypeId);
+
+                        if (dariTextModel != null)
+                        {
+
+                            EmployeeContractModel.EmployeeName = dataModel.EmployeeDetail.EmployeeName;
+                            EmployeeContractModel.FatherName = dataModel.EmployeeDetail.FatherName;
+                            EmployeeContractModel.EmployeeCode = dataModel.EmployeeDetail.EmployeeCode;
+                            EmployeeContractModel.Designation = dataModel.DesignationDetail.Designation;
+                            EmployeeContractModel.ContractStartDate = dataModel.ContractEndDate;
+                            EmployeeContractModel.ContractEndDate = dataModel.ContractEndDate;
+                            EmployeeContractModel.DurationOfContract = dataModel.DurationOfContract;
+                            EmployeeContractModel.Salary = dataModel.Salary;
+                            EmployeeContractModel.Grade = dataModel.Grade;
+                            EmployeeContractModel.ProjectName = dataModel.ProjectBudgetLine.ProjectDetails.ProjectName;
+                            EmployeeContractModel.ProjectCode = dataModel.ProjectBudgetLine.ProjectDetails.ProjectId;
+                            EmployeeContractModel.DutyStation = dataModel.OfficeDetail.OfficeName;
+                            EmployeeContractModel.Province = dataModel.EmployeeDetail.ProvinceDetails.ProvinceName;
+                            EmployeeContractModel.BudgetLine = dataModel.ProjectBudgetLine.Description;
+                            EmployeeContractModel.JobId = null;
+                            EmployeeContractModel.WorkTime = dataModel.WorkTime;
+                            EmployeeContractModel.WorkDayHours = dataModel.WorkDayHours;
+                            EmployeeContractModel.ContentEnglish = dariTextModel.ContentEnglish;
+                            EmployeeContractModel.ContentDari = dariTextModel.ContentDari;
+                            EmployeeContractModel.EmployeeImage = dataModel.EmployeeDetail.EmployeePhoto;
+
+                            response.data.EmployeeContractDetails = EmployeeContractModel;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Success";
+                        }
+                        else
+                        {
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = "Dari Text cannot be generate";
+                        }
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Contract Report cannot be generate";
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Employee Id Cannot be 0";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        //public async Task<APIResponse> GetSelectedEmployeeContractByEmployeeId(int EmployeeId)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        List<EmployeeContractModel> EmployeeContractModellst = new List<EmployeeContractModel>();
+
+        //        var lst = await _uow.EmployeeContractRepository.FindAllAsync(x => x.EmployeeId == EmployeeId);
+
+        //        if (lst != null)
+        //        {
+        //            var records = (from edd in await _uow.DesignationDetailRepository.GetAllAsyn()
+        //                           join epr in await _uow.EmployeeProfessionalDetailRepository.GetAllAsyn() on edd.DesignationId equals epr.DesignationId
+        //                           join edr in await _uow.EmployeeDetailRepository.GetAllAsyn() on epr.EmployeeId equals edr.EmployeeID
+        //                           join esd in await _uow.EmployeeSalaryDetailsRepository.GetAllAsyn() on edr.EmployeeID equals esd.EmployeeId
+        //                           join ble in await _uow.BudgetLineEmployeesRepository.GetAllAsyn() on edr.EmployeeID equals ble.EmployeeId
+        //                           join pbl in await _uow.ProjectBudgetLineRepository.GetAllAsyn() on ble.BudgetLineId equals pbl.BudgetLineId
+        //                           join pdr in await _uow.ProjectDetailRepository.GetAllAsyn() on pbl.ProjectId equals pdr.ProjectId
+        //                           join ofd in await _uow.OfficeDetailRepository.GetAllAsyn() on epr.OfficeId equals ofd.OfficeId
+        //                           join str in await _uow.ProvinceDetailsRepository.GetAllAsyn() on edr.ProvinceId equals str.ProvinceId
+        //                           join mph in await _uow.PayrollMonthlyHourDetailRepository.GetAllAsyn() on epr.OfficeId equals mph.OfficeId
+        //                           join cct in await _uow.ContractTypeContentRepository.GetAllAsyn() on epr.EmployeeContractTypeId equals cct.EmployeeContractTypeId
+        //                           where ble.EmployeeId == EmployeeId
+        //                           select new EmployeeContractModel
+        //                           {
+        //                               EmployeeName = ble.EmployeeName,
+        //                               FatherName = edr.FatherName,
+        //                               EmployeeCode = edr.EmployeeCode,
+        //                               Designation = edd.Designation,
+        //                               ContractStartDate = pbl.StartDate,
+        //                               ContractEndDate = pbl.EndDate,
+        //                               DurationOfContract = (pbl.EndDate - pbl.StartDate).Days,
+        //                               Salary = Math.Round(Convert.ToDouble((esd.TotalGeneralAmount + esd.TotalAllowance - esd.Totalduduction) * ble.ProjectPercentage), 2),
+        //                               Grade = null,
+        //                               ProjectName = pdr.ProjectName,
+        //                               ProjectCode = pdr.ProjectId,
+        //                               DutyStation = ofd.OfficeName,
+        //                               Province = str.ProvinceName,
+        //                               BudgetLine = pbl.Description,
+        //                               JobId = null,
+        //                               WorkTime = mph.InTime.Value.Hour,
+        //                               WorkDayHours = (mph.OutTime - mph.InTime).Value.Days,
+        //                               ContentEnglish = cct.ContentEnglish,
+        //                               ContentDari = cct.ContentDari,
+        //                               EmployeeImage = edr.DocumentGUID + edr.Extension
+        //                           }).ToList();
+        //            EmployeeContractModellst.AddRange(records);
+
+        //            EmployeeContractModellst.AddRange(records);
+        //        }
+        //        response.data.EmployeeContractModellst = EmployeeContractModellst;
+        //        response.StatusCode = StaticResource.successStatusCode;
+        //        response.Message = "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = ex.Message;
+        //    }
+        //    return response;
+        //}
+
 
         public async Task<APIResponse> GetEmployeeSalaryDetails(int OfficeId, int year, int month, int EmployeeId)
         {

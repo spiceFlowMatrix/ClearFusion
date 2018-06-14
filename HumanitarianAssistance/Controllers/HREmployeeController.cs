@@ -208,7 +208,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       if (user != null)
       {
         var id = user.Id;
-        response = await _iHREmployee.EditEmployeeSalaryDetail(model,id);
+        response = await _iHREmployee.EditEmployeeSalaryDetail(model, id);
       }
       return response;
     }
@@ -1027,6 +1027,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return response;
     }
+
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetSelectedEmployeeContractByEmployeeId([FromQuery]int EmployeeId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iHREmployee.GetSelectedEmployeeContractByEmployeeId(EmployeeId);
+      }
+      return response;
+    }
+
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
