@@ -1231,9 +1231,7 @@ namespace HumanitarianAssistance.Service.Classes
 							obj.PurchasedCost = item.UnitCost;
 
 							depreciationList.Add(obj);
-						}
-
-					}
+						}				
 					response.data.DepreciationReportList = depreciationList.ToList();
 					response.StatusCode = StaticResource.successStatusCode;
 					response.Message = "Success";
