@@ -1131,40 +1131,40 @@ namespace HumanitarianAssistance.Service.Classes
                     .Include(x => x.StoreItemPurchase.StoreInventoryItem).ThenInclude(x => x.Inventory)
                     .Where(x => x.IssuedToEmployeeId == EmployeeId).ToListAsync();
 
-				List<ProcurmentSummaryModel> lst = new List<ProcurmentSummaryModel>();
-				if (ProcurmentData != null)
-				{					
-					foreach (var item in ProcurmentData)
-					{
-						ProcurmentSummaryModel obj = new ProcurmentSummaryModel();
-						obj.ProcurementId = item.OrderId;
-						obj.ProcurementDate = item.IssueDate;
-						obj.EmployeeName = item.EmployeeDetail?.EmployeeName;
-						obj.Store = item.StoreInventoryItem?.Inventory?.AssetType ?? 0;
-						obj.Inventory = item.StoreInventoryItem?.Inventory?.InventoryName ?? null;
-						obj.Item = item.StoreInventoryItem?.ItemName ?? null;
-						obj.TotalCost = (item.StoreItemPurchase?.Quantity ?? 0 )* (item.StoreItemPurchase?.UnitCost ?? 0);
-						obj.MustReturn = item.MustReturn == true ? "Yes" : "No";
-						obj.Returned = item.ReturnedDate == null ? "No" : "Yes";
-						obj.TotalCostDetails.UnitType = item.StoreItemPurchase?.PurchaseUnitType?.UnitTypeName ?? null;
-						obj.TotalCostDetails.Amount = item.StoreItemPurchase?.Quantity ?? 0;
-						obj.TotalCostDetails.UnitCost = item.StoreItemPurchase?.UnitCost ?? 0;
-						obj.TotalCostDetails.Currency = item.StoreItemPurchase?.CurrencyDetails?.CurrencyName ?? null;
-						lst.Add(obj);
-					}
-				}
-				response.data.ProcurmentSummaryModelList = lst;
-				response.StatusCode = StaticResource.successStatusCode;
-				response.Message = "Success";
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = StaticResource.SomethingWrong + ex.Message;
-				return response;
-			}
-			return response;
-		}
+                List<ProcurmentSummaryModel> lst = new List<ProcurmentSummaryModel>();
+                if (ProcurmentData != null)
+                {
+                    foreach (var item in ProcurmentData)
+                    {
+                        ProcurmentSummaryModel obj = new ProcurmentSummaryModel();
+                        obj.ProcurementId = item.OrderId;
+                        obj.ProcurementDate = item.IssueDate;
+                        obj.EmployeeName = item.EmployeeDetail?.EmployeeName;
+                        obj.Store = item.StoreInventoryItem?.Inventory?.AssetType ?? 0;
+                        obj.Inventory = item.StoreInventoryItem?.Inventory?.InventoryName ?? null;
+                        obj.Item = item.StoreInventoryItem?.ItemName ?? null;
+                        obj.TotalCost = (item.StoreItemPurchase?.Quantity ?? 0) * (item.StoreItemPurchase?.UnitCost ?? 0);
+                        obj.MustReturn = item.MustReturn == true ? "Yes" : "No";
+                        obj.Returned = item.ReturnedDate == null ? "No" : "Yes";
+                        obj.TotalCostDetails.UnitType = item.StoreItemPurchase?.PurchaseUnitType?.UnitTypeName ?? null;
+                        obj.TotalCostDetails.Amount = item.StoreItemPurchase?.Quantity ?? 0;
+                        obj.TotalCostDetails.UnitCost = item.StoreItemPurchase?.UnitCost ?? 0;
+                        obj.TotalCostDetails.Currency = item.StoreItemPurchase?.CurrencyDetails?.CurrencyName ?? null;
+                        lst.Add(obj);
+                    }
+                }
+                response.data.ProcurmentSummaryModelList = lst;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+            return response;
+        }
 
         #endregion
 
@@ -1194,22 +1194,22 @@ namespace HumanitarianAssistance.Service.Classes
 
                     if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId != null)
                     {
-                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId && x.StoreInventoryItem.ItemId == depretiationFilter.ItemId).ToListAsync();
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId && x.StoreInventoryItem.ItemId == depretiationFilter.ItemId).ToListAsync();
 
                     }
                     if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId == null)
                     {
-                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId).ToListAsync();
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId).ToListAsync();
 
                     }
                     if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
                     {
-                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId).ToListAsync();
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId).ToListAsync();
 
                     }
                     if (depretiationFilter.StoreId == null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
                     {
-                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false).ToListAsync();
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true).ToListAsync();
                     }
                     foreach (var item in storeItemPurchased)
                     {
