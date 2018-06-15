@@ -1192,30 +1192,28 @@ namespace HumanitarianAssistance.Service.Classes
 
 
 
-					if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId != null)
-					{
-						storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId && x.StoreInventoryItem.ItemId == depretiationFilter.ItemId).ToListAsync();
+                    if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId != null)
+                    {
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId && x.StoreInventoryItem.ItemId == depretiationFilter.ItemId).ToListAsync();
 
-					}
-					if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId == null)
-					{
-						storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId).ToListAsync();
+                    }
+                    if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId == null)
+                    {
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId).ToListAsync();
 
-					}
-					if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
-					{
-						storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId).ToListAsync();
+                    }
+                    if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
+                    {
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId).ToListAsync();
 
-					}
-					if (depretiationFilter.StoreId == null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
-					{
-						storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false).ToListAsync();
-					}
-					foreach (var item in storeItemPurchased)
-					{
-						if (item.ApplyDepreciation == true)
-						{
-							DepreciationReportModel obj = new DepreciationReportModel();
+                    }
+                    if (depretiationFilter.StoreId == null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
+                    {
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true).ToListAsync();
+                    }
+                    foreach (var item in storeItemPurchased)
+                    {
+                        DepreciationReportModel obj = new DepreciationReportModel();
 
 							//double hoursSincePurchase;
 							//double depreciationAmount;

@@ -24,7 +24,7 @@ namespace DataAccess.DbEntities.Store
         public int Quantity { get; set; }
 
         public bool ApplyDepreciation { get; set; }
-        public long DepreciationRate { get; set; }
+        public double DepreciationRate { get; set; }
 
         public string ImageFileType { get; set; }
         public string ImageFileName { get; set; }

@@ -38,7 +38,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public long UnitCost { get; set; }
         public int Quantity { get; set; }
         public bool ApplyDepreciation { get; set; }
-        public long DepreciationRate { get; set; }
+        public double DepreciationRate { get; set; }
         public string ImageFileName { get; set; }               // Image String
         public string Invoice { get; set; }                     // Invoice String
         public int PurchasedById { get; set; }
