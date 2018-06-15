@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180614121817_EmployeeContractTable")]
-    partial class EmployeeContractTable
+    [Migration("20180615061528_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1327,7 +1327,7 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<int>("BudgetLine");
+                    b.Property<long>("BudgetLine");
 
                     b.Property<DateTime?>("ContractEndDate");
 
@@ -1373,7 +1373,15 @@ namespace DataAccess.Migrations
 
                     b.HasKey("EmployeeContractId");
 
+                    b.HasIndex("BudgetLine");
+
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("Designation");
+
+                    b.HasIndex("DutyStation");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("ModifiedById");
 
@@ -4976,9 +4984,29 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeContract", b =>
                 {
+                    b.HasOne("DataAccess.DbEntities.ProjectBudgetLine", "ProjectBudgetLine")
+                        .WithMany()
+                        .HasForeignKey("BudgetLine")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.DesignationDetail", "DesignationDetail")
+                        .WithMany()
+                        .HasForeignKey("Designation")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetail")
+                        .WithMany()
+                        .HasForeignKey("DutyStation")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
