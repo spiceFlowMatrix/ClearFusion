@@ -362,16 +362,6 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                //var documentlist = (from v in await _uow.VoucherDocumentDetailRepository.FindAllAsync(v => v.VoucherNo == VoucherNo)
-                //                    where v.IsDeleted == false
-                //                    select new VoucherDocumentDetailModel
-                //                    {
-                //                        DocumentGUID = v.DocumentGUID + v.Extension,
-                //                        DocumentName = v.DocumentName,
-                //                        //FilePath = Encoding.UTF8.GetString(v.FilePath)
-                //                    }).ToList();
-
-
                 var queryResult = EF.CompileAsyncQuery(
                 (ApplicationDbContext ctx) => ctx.VoucherDocumentDetail.Where(x => x.VoucherNo == VoucherNo));
                 var list = await Task.Run(() =>
@@ -476,51 +466,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var journalcodeList = await Task.Run(() =>
                   _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(e => e.VoucherTransactionDetails).ThenInclude(e => e.CreditAccountDetails).ToList()
                     );
-                //var journalcodeList1 = await Task.Run(() =>
-                //  _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(e => e.VoucherTransactionDetails).ThenInclude(e => e.DebitAccountDetails).ToList()
-                //    );
-                //var journalcodeList = _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(e => e.VoucherTransactionDetails).ToList();
-
                 List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
-                //foreach (var j in journalcodeList)
-                //{
-                //    foreach (var v in j.VoucherDetails)
-                //    {
-                //        foreach (var t in v.VoucherTransactionDetails)
-                //        {
-                //            JournalVoucherViewModel vModel = new JournalVoucherViewModel();
-                //            JournalVoucherViewModel vModel1 = new JournalVoucherViewModel();
-                //            vModel.JournalCode = j.JournalName;
-                //            vModel1.JournalCode = j.JournalName;
-
-                //            vModel.VoucherNo = v.ReferenceNo;
-                //            vModel1.VoucherNo = v.ReferenceNo;
-                //            //var tran=journalcodeList1.Where(x => x.JournalCode == j.JournalCode).
-                //            //    FirstOrDefault().
-                //            //    VoucherDetails.Where(x => x.VoucherNo == v.VoucherNo).
-                //            //    FirstOrDefault().VoucherTransactionDetails.Where(x => x.TransactionId == t.TransactionId).FirstOrDefault();
-                //            vModel.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                //            vModel.TransactionDate = t.TransactionDate.ToShortDateString();
-                //            vModel.Amount = t.Amount;
-                //            vModel.TransactionType = "Debit";
-                //            vModel.AccountCode = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == t.DebitAccount).Result.AccountName;
-                //            vModel1.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                //            vModel1.TransactionDate = t.TransactionDate.ToShortDateString();
-                //            vModel1.Amount = t.Amount;
-                //            vModel1.TransactionType = "Credit";
-                //            vModel1.AccountCode = t.CreditAccountDetails.AccountName;
-                //            listJournalView.Add(vModel);
-                //            listJournalView.Add(vModel1);
-
-                //        }
-
-
-
-                //    }
-
-
-                //}
-
                 response.data.JournalVoucherViewList = listJournalView;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -535,17 +481,13 @@ namespace HumanitarianAssistance.Service.Classes
 
         public async Task<APIResponse> GetJouranlVoucherDetailsByCondition(JournalViewModel model)
         {
-            //int JournalCode = 4;
-            //List<int> OfficesList = new List<int>();
-            //OfficesList.Add(12);
-            //OfficesList.Add(13);
-            //OfficesList.Add(14);
             APIResponse response = new APIResponse();
             try
             {
-                var journalcodeList = await Task.Run(() =>
-                  _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(p => p.VoucherTransactionDetails).ThenInclude(p => p.CreditAccountDetails).Include(e => e.VoucherDetails).ThenInclude(c => c.ProjectBudgetLine).ThenInclude(c => c.ProjectDetails).Where(x => x.IsDeleted == false && x.JournalCode == model.JournalCode).ToList()
-                    );
+				List<JournalDetail> list = new List<JournalDetail>();
+				var journalcodeList = await Task.Run(() =>
+				  _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(p => p.VoucherTransactionDetails).ThenInclude(p => p.CreditAccountDetails).Include(e => e.VoucherDetails).ThenInclude(c => c.ProjectBudgetLine).ThenInclude(c => c.ProjectDetails).Where(x => x.IsDeleted == false && model.JournalCode.Contains(x.JournalCode)).ToList()
+					);
                 List<ExchangeRate> exchangeratelist = new List<ExchangeRate>();
                 if (model.fromdate == null && model.todate == null)
                 {
@@ -554,7 +496,6 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 exchangeratelist = await _uow.GetDbContext().ExchangeRates.Where(x => x.Date.Date >= model.fromdate.Date && x.Date.Date <= model.todate.Date).ToListAsync();
 
-                //double exchangerate = 0, amount = 0;
                 List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
                 foreach (var j in journalcodeList)
                 {
@@ -670,84 +611,6 @@ namespace HumanitarianAssistance.Service.Classes
                                 }
                             }
                         }
-
-
-
-                        //if (RecordType == 1)
-                        //{
-                        //    v.VoucherTransactionDetails = v.VoucherTransactionDetails.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate && x.CurrencyId == CurrencyId).ToList();
-                        //}
-                        //else
-                        //{
-                        //    v.VoucherTransactionDetails = v.VoucherTransactionDetails.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate).ToList();
-                        //}
-                        //if (officeid != null)
-                        //{
-                        //    v.VoucherTransactionDetails = v.VoucherTransactionDetails.Where(x => x.OfficeId == officeid).ToList();
-                        //}
-
-                        //if (RecordType == 1)
-                        //{
-                        //    foreach (var t in v.VoucherTransactionDetails)
-                        //    {
-                        //        JournalVoucherViewModel vModel = new JournalVoucherViewModel();
-                        //        JournalVoucherViewModel vModel1 = new JournalVoucherViewModel();
-                        //        vModel.JournalCode = j.JournalName;
-                        //        vModel1.JournalCode = j.JournalName;
-
-                        //        vModel.VoucherNo = v.ReferenceNo;
-                        //        vModel1.VoucherNo = v.ReferenceNo;
-                        //        vModel.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                        //        vModel.TransactionDate = t.TransactionDate.ToShortDateString();
-                        //        vModel.Amount = t.Amount;
-                        //        vModel.TransactionType = "Debit";
-                        //        vModel.AccountCode = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == t.DebitAccount).Result.AccountName;
-                        //        vModel1.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                        //        vModel1.TransactionDate = t.TransactionDate.ToShortDateString();
-                        //        vModel1.Amount = t.Amount;
-                        //        vModel1.TransactionType = "Credit";
-                        //        vModel1.AccountCode = t.CreditAccountDetails.AccountName;
-                        //        listJournalView.Add(vModel);
-                        //        listJournalView.Add(vModel1);
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    foreach (var t in v.VoucherTransactionDetails)
-                        //    {
-                        //        exchangerate = 0; amount = 0;
-                        //        if (t.CurrencyId != CurrencyId)
-                        //        {
-                        //            var list = exchangeratelist.Where(x => x.FromCurrency == t.CurrencyId && x.ToCurrency == CurrencyId && x.Date.Date == t.TransactionDate.Date).OrderByDescending(o => o.ExchangeRateId).FirstOrDefault();
-                        //            exchangerate = list?.Rate ?? 0;
-                        //            amount = t.Amount * exchangerate;
-                        //        }
-                        //        else
-                        //        {
-                        //            amount = t.Amount;
-                        //        }
-
-                        //        JournalVoucherViewModel vModel = new JournalVoucherViewModel();
-                        //        JournalVoucherViewModel vModel1 = new JournalVoucherViewModel();
-                        //        vModel.JournalCode = j.JournalName;
-                        //        vModel1.JournalCode = j.JournalName;
-
-                        //        vModel.VoucherNo = v.ReferenceNo;
-                        //        vModel1.VoucherNo = v.ReferenceNo;
-                        //        vModel.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                        //        vModel.TransactionDate = t.TransactionDate.ToShortDateString();
-                        //        vModel.Amount = amount;
-                        //        vModel.TransactionType = "Debit";
-                        //        vModel.AccountCode = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == t.DebitAccount).Result.AccountName;
-                        //        vModel1.TransactionNo = v.ReferenceNo + "-" + t.TransactionId;
-                        //        vModel1.TransactionDate = t.TransactionDate.ToShortDateString();
-                        //        vModel1.Amount = amount;
-                        //        vModel1.TransactionType = "Credit";
-                        //        vModel1.AccountCode = t.CreditAccountDetails.AccountName;
-                        //        listJournalView.Add(vModel);
-                        //        listJournalView.Add(vModel1);
-                        //    }
-                        //}
                     }
                 }
 
@@ -775,7 +638,7 @@ namespace HumanitarianAssistance.Service.Classes
                                            AccountCode = c.AccountCode,
                                            AccountName = c.ChartOfAccountCode + " - " + c.AccountName,
                                            ChartOfAccountCode = c.ChartOfAccountCode
-                                       }).ToList();
+                                       }).OrderBy(x=>x.ChartOfAccountCode).ToList();
                 response.data.AccountDetailList = accountcodelist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -788,7 +651,32 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllVoucherTransactionDetailByBudgetLine(long projectId, long budgetLineId)
+		public async Task<APIResponse> GetAllControlLevelAccountCode()
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var accountcodelist = (from c in await _uow.ChartAccountDetailRepository.FindAllAsync(x=>x.AccountLevelId == 2)
+									   where c.IsDeleted == false
+									   select new AccountDetailModel
+									   {
+										   AccountCode = c.AccountCode,
+										   AccountName = c.ChartOfAccountCode + " - " + c.AccountName,
+										   ChartOfAccountCode = c.ChartOfAccountCode
+									   }).OrderBy(x=>x.ChartOfAccountCode).ToList();
+				response.data.AccountDetailList = accountcodelist;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = StaticResource.SomethingWrong + ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetAllVoucherTransactionDetailByBudgetLine(long projectId, long budgetLineId)
         {
             APIResponse response = new APIResponse();
             try
@@ -824,28 +712,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj1.Amount = debit.Amount;
                     tranlist.Add(obj1);
                 }
-
-
-
-
-                //var vouchertransactionlist = (from t in await _uow.VoucherTransactionDetailsRepository.FindAllAsync(v => v.VoucherNo == VoucherNo)
-                //							  where t.IsDeleted == false orderby t.TransactionDate ascending
-                //							  select new VoucherTransactionModel
-                //							  {
-                //								  TransactionId = t.TransactionId,
-                //								  DebitAccount = t.DebitAccount,
-                //								  CreditAccount = t.CreditAccount,
-                //								  Amount = t.Amount,
-                //								  Description = t.Description,
-                //								  TransactionDate = t.TransactionDate,
-                //								  VoucherNo = t.VoucherNo
-                //							  }).ToList();
-
-                //var list= await PaginatedList<VoucherTransactionModel>.CreateAsync(tranlist.AsQueryable<VoucherTransactionModel>(), 1, 10);
-
                 response.data.VoucherTransactionList = tranlist;
-                //response.data.VoucherTransactionList = list;
-
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -879,43 +746,9 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreatedDate = item.CreatedDate;
                     obj.ModifiedDate = item.ModifiedDate;
                     tranlist.Add(obj);
-
-                    //obj.DebitAccountName = debit.DebitAccountDetails?.ChartOfAccountCode + " - " + debit.DebitAccountDetails?.AccountName ?? null;
-                    //obj.CreditAccountName = debit.CreditAccountDetails?.ChartOfAccountCode + " - " + debit.CreditAccountDetails?.AccountName ?? null;
-
-                    //VoucherTransactionModel obj1 = new VoucherTransactionModel();
-                    //obj1.TransactionId = debit.TransactionId;
-                    //obj1.TransactionDate = debit.TransactionDate.ToLocalTime().Date;
-                    //obj1.VoucherNo = debit.VoucherNo;
-                    //obj1.Description = debit?.Description;
-                    //obj1.AccountName = debit.CreditAccountDetails?.ChartOfAccountCode + " - " + debit.CreditAccountDetails?.AccountName ?? null;
-                    //obj1.CreditAmount = debit?.Amount;
-                    //obj1.CreditAccount = debit?.CreditAccount;
-                    //obj1.Amount = debit.Amount;
-                    //tranlist.Add(obj1);
                 }
 
-
-
-
-                //var vouchertransactionlist = (from t in await _uow.VoucherTransactionDetailsRepository.FindAllAsync(v => v.VoucherNo == VoucherNo)
-                //							  where t.IsDeleted == false orderby t.TransactionDate ascending
-                //							  select new VoucherTransactionModel
-                //							  {
-                //								  TransactionId = t.TransactionId,
-                //								  DebitAccount = t.DebitAccount,
-                //								  CreditAccount = t.CreditAccount,
-                //								  Amount = t.Amount,
-                //								  Description = t.Description,
-                //								  TransactionDate = t.TransactionDate,
-                //								  VoucherNo = t.VoucherNo
-                //							  }).ToList();
-
-                //var list= await PaginatedList<VoucherTransactionModel>.CreateAsync(tranlist.AsQueryable<VoucherTransactionModel>(), 1, 10);
-
                 response.data.VoucherTransactionList = tranlist.OrderByDescending(x => x.CreatedDate).ThenBy(x => x.ModifiedDate).ToList();
-                //response.data.VoucherTransactionList = list;
-
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -928,43 +761,6 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         }
-
-        //public async Task<APIResponse> AddVoucherTransactionDetail(List<VoucherTransactionModel> model, string userId)
-        //{
-        //    APIResponse response = new APIResponse();
-        //    try
-        //    {
-        //        List<VoucherTransactionDetails> voucherTransactionList = new List<VoucherTransactionDetails>();
-        //        foreach (var item in model)
-        //        {
-        //            VoucherTransactionDetails obj = new VoucherTransactionDetails();
-        //            obj.TransactionId = item.TransactionId;
-        //            obj.TransactionDate = item.TransactionDate.ToLocalTime().Date;
-        //            obj.VoucherNo = item.VoucherNo;
-        //            obj.Description = item.Description;
-        //            obj.DebitAccount = item.DebitAccount;
-        //            obj.CreditAccount = item?.CreditAccount;
-        //            obj.Amount = item.Amount;
-        //            obj.CreatedById = userId;
-        //            obj.CreatedDate = DateTime.UtcNow;
-        //            obj.IsDeleted = false;
-
-        //            voucherTransactionList.Add(obj);
-        //        }
-        //        await _uow.GetDbContext().VoucherTransactionDetails.AddRangeAsync(voucherTransactionList);
-        //        await _uow.SaveAsync();
-
-        //        response.StatusCode = StaticResource.successStatusCode;
-        //        response.Message = "Success";
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.StatusCode = StaticResource.failStatusCode;
-        //        response.Message = StaticResource.SomethingWrong + ex.Message;
-        //    }
-        //    return response;
-        //}
-
 
         public async Task<APIResponse> AddVoucherTransactionDetail(VoucherTransactionModel model)
         {
@@ -1051,171 +847,8 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-
-
-        //public async Task<APIResponse> GetAllLedgerDetails()
-        //{
-        //    APIResponse response = new APIResponse();
-        //    try
-        //    {
-        //        var ledgerList = await Task.Run(() =>
-        //          _uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).ToList()
-        //            );
-
-        //        List<LedgerModel> list = new List<LedgerModel>();
-
-
-        //        foreach (var i in ledgerList)
-        //        {
-        //            LedgerModel ledgerModel = new LedgerModel();
-        //            ledgerModel.Transactionlist = new List<Transaction>();
-        //            ledgerModel.AccountCode = i.AccountCode;
-        //            ledgerModel.ChartAccountName = i.AccountName;
-        //            if (i.DebitAccountlist.Count > 0)
-        //            {
-        //                var currency = await Task.Run(() =>
-        //                    _uow.GetDbContext().VoucherDetail.Include(e => e.CurrencyDetail).Where(v => v.VoucherNo == i.DebitAccountlist[0].VoucherNo).SingleOrDefault()
-        //                );
-        //                ledgerModel.CurrencyName = currency.CurrencyDetail.CurrencyName;
-        //            }
-        //            foreach (var debit in i.DebitAccountlist)
-        //            {
-        //                Transaction transaction = new Transaction();
-        //                transaction.TransactionNo = debit.TransactionId;
-        //                transaction.AccountName = debit.CreditAccountDetails.AccountName;
-        //                transaction.TransactionDate = debit.TransactionDate;
-        //                transaction.DebitAmount = debit.Amount;
-        //                transaction.VoucherNo = debit.VoucherNo;
-        //                transaction.Description = debit.Description;
-        //                ledgerModel.Transactionlist.Add(transaction);
-        //            }
-        //            foreach (var credit in i.CreditAccountlist)
-        //            {
-        //                Transaction transaction = new Transaction();
-        //                transaction.TransactionNo = credit.TransactionId;
-        //                transaction.AccountName = credit.DebitAccountDetails.AccountName;
-        //                transaction.TransactionDate = credit.TransactionDate;
-        //                transaction.CreditAmount = credit.Amount;
-        //                transaction.VoucherNo = credit.VoucherNo;
-        //                transaction.Description = credit.Description;
-        //                ledgerModel.Transactionlist.Add(transaction);
-        //            }
-        //            if (i.DebitAccountlist.Count > 0 || i.CreditAccountlist.Count > 0)
-        //            {
-        //                list.Add(ledgerModel);
-        //            }
-        //        }
-        //        response.data.LedgerList = list;
-        //        response.StatusCode = StaticResource.successStatusCode;
-        //        response.Message = "Success";
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.StatusCode = StaticResource.failStatusCode;
-        //        response.Message = StaticResource.SomethingWrong + ex.Message;
-        //    }
-        //    return response;
-        //}
-
         public async Task<APIResponse> GetAllLedgerDetails()
         {
-
-            //APIResponse response = new APIResponse();
-            //try
-            //{
-            //    var ledgerList = await Task.Run(() =>
-            //      _uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).ToList()
-            //        );
-
-            //    List<LedgerModel> list = new List<LedgerModel>();
-            //    foreach (var i in ledgerList)
-            //    {
-            //        LedgerModel ledgerModel = new LedgerModel();
-            //        ledgerModel.Transactionlist = new List<Transaction>();
-            //        ledgerModel.AccountCode = i.AccountCode;
-            //        ledgerModel.ChartAccountName = i.AccountName;
-            //        if (i.DebitAccountlist.Count > 0)
-            //        {
-            //            var currency = await Task.Run(() =>
-            //                _uow.GetDbContext().VoucherDetail.Include(e => e.CurrencyDetail).Where(v => v.VoucherNo == i.DebitAccountlist[0].VoucherNo).SingleOrDefault()
-            //            );
-            //            ledgerModel.CurrencyName = currency.CurrencyDetail.CurrencyName;
-            //        }
-
-            //        foreach (var debit in i.DebitAccountlist)
-            //        {
-            //            Transaction transaction = new Transaction();
-            //            transaction.TransactionNo = debit.TransactionId;
-            //            transaction.AccountName = debit.CreditAccountDetails.AccountName;
-            //            transaction.TransactionDate = debit.TransactionDate;
-            //            transaction.DebitAmount = debit.Amount;
-            //            transaction.VoucherNo = debit.VoucherNo;
-            //            transaction.AccountType = "Debit";
-            //            transaction.Description = debit.Description;
-            //            ledgerModel.Transactionlist.Add(transaction);
-            //        }
-            //        foreach (var credit in i.CreditAccountlist)
-            //        {
-            //            Transaction transaction = new Transaction();
-            //            transaction.TransactionNo = credit.TransactionId;
-            //            transaction.AccountName = credit.DebitAccountDetails.AccountName;
-            //            transaction.TransactionDate = credit.TransactionDate;
-            //            transaction.CreditAmount = credit.Amount;
-            //            transaction.VoucherNo = credit.VoucherNo;
-            //            transaction.Description = credit.Description;
-            //            transaction.AccountType = "Credit";
-            //            ledgerModel.Transactionlist.Add(transaction);
-            //        }
-            //        if (i.DebitAccountlist.Count > 0 || i.CreditAccountlist.Count > 0)
-            //        {
-            //            list.Add(ledgerModel);
-            //        }
-            //    }
-
-            //    List<LedgerModel> list1 = new List<LedgerModel>();
-            //    foreach(var acc in list)
-            //    {
-            //        var s = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == acc.AccountCode).Result.ParentID;
-            //        var sublevel = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == s).Result;
-            //        var controllevel = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == sublevel.ParentID).Result;
-            //        var mainLevel = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == controllevel.ParentID).Result;
-            //        foreach (var tr in acc.Transactionlist)
-            //        {
-            //            LedgerModel leg = new LedgerModel();   
-            //            leg.AccountCode = acc.AccountCode;
-            //            leg.ChartAccountName = acc.ChartAccountName;
-            //            leg.CurrencyName = acc.CurrencyName;
-            //            leg.MainLevel = mainLevel.AccountName;
-            //            leg.ControlLevel = controllevel.AccountName;
-            //            leg.SubLevel = sublevel.AccountName;
-            //            if (tr.AccountType == "Credit")
-            //            {
-            //                leg.Amount = tr.CreditAmount;
-            //                leg.TransactionType = "Credit";
-            //            }
-            //            else
-            //            {
-            //                leg.Amount = tr.DebitAmount;
-            //                leg.TransactionType = "Debit";
-            //            }
-            //            leg.AccountName = tr.AccountName;
-            //            leg.TransactionDate = tr.TransactionDate;
-            //            leg.VoucherNo = tr.VoucherNo;
-            //            leg.Description = tr.Description;
-            //            list1.Add(leg);
-            //        }    
-            //    }
-            //    response.data.LedgerList = list1;
-
-            //    response.StatusCode = StaticResource.successStatusCode;
-            //    response.Message = "Success";
-            //}
-            //catch (Exception ex)
-            //{
-            //    response.StatusCode = StaticResource.failStatusCode;
-            //    response.Message = StaticResource.SomethingWrong + ex.Message;
-            //}
-            //return response;
 
             APIResponse response = new APIResponse();
             try
@@ -1238,63 +871,9 @@ namespace HumanitarianAssistance.Service.Classes
                         mainlevel1 = mainLevel.AccountName;
                         controllevel1 = controllevel.AccountName;
                         sublevel1 = sublevel.AccountName;
-
-                        // if (i.DebitAccountlist.Count > 0)
-                        //     VoucherNo = i.DebitAccountlist[0].VoucherNo;
-                        // else
-                        //     VoucherNo = i.CreditAccountlist[0].VoucherNo;
-                        // var currencylist = await Task.Run(() =>
-                        //    _uow.GetDbContext().VoucherDetail.Include(e => e.CurrencyDetail).Where(v => v.VoucherNo == VoucherNo).SingleOrDefault()
-                        //);
-                        // currency = currencylist.CurrencyDetail.CurrencyName;
                     }
-
-                    //foreach (var debit in i.DebitAccountlist)
-                    //{
-                    //	var currencylist = await Task.Run(() =>
-                    //	   _uow.GetDbContext().VoucherDetail.Include(e => e.CurrencyDetail).Where(v => v.VoucherNo == debit.VoucherNo).FirstOrDefault()
-                    //   );
-                    //	currency = currencylist.CurrencyDetail.CurrencyName;
-                    //	LedgerModel leg = new LedgerModel();
-                    //	leg.AccountCode = i.AccountCode;
-                    //	leg.ChartAccountName = i.AccountName;
-                    //	leg.CurrencyName = currency;
-                    //	leg.MainLevel = mainlevel1;
-                    //	leg.ControlLevel = controllevel1;
-                    //	leg.SubLevel = sublevel1;
-                    //	leg.Amount = debit.Amount;
-                    //	leg.TransactionType = "Debit";
-                    //	leg.AccountName = debit.CreditAccountDetails.AccountName;
-                    //	leg.TransactionDate = debit.TransactionDate;
-                    //	leg.VoucherNo = debit.VoucherNo;
-                    //	leg.Description = debit.Description;
-                    //	list1.Add(leg);
-                    //}
-                    //foreach (var credit in i.CreditAccountlist)
-                    //{
-                    //	var currencylist = await Task.Run(() =>
-                    //	   _uow.GetDbContext().VoucherDetail.Include(e => e.CurrencyDetail).Where(v => v.VoucherNo == credit.VoucherNo).FirstOrDefault()
-                    //   );
-                    //	currency = currencylist.CurrencyDetail.CurrencyName;
-                    //	LedgerModel leg = new LedgerModel();
-                    //	leg.AccountCode = i.AccountCode;
-                    //	leg.ChartAccountName = i.AccountName;
-                    //	leg.CurrencyName = currency;
-                    //	leg.MainLevel = mainlevel1;
-                    //	leg.ControlLevel = controllevel1;
-                    //	leg.SubLevel = sublevel1;
-                    //	leg.Amount = credit.Amount;
-                    //	leg.TransactionType = "Credit";
-                    //	leg.AccountName = credit.DebitAccountDetails.AccountName;
-                    //	leg.TransactionDate = credit.TransactionDate;
-                    //	leg.VoucherNo = credit.VoucherNo;
-                    //	leg.Description = credit.Description;
-                    //	list1.Add(leg);
-                    //}
                 }
                 response.data.LedgerList = list1;
-
-
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1321,10 +900,6 @@ namespace HumanitarianAssistance.Service.Classes
                         if (obj.CreditAccountlist.Count > 0 || obj.DebitAccountlist.Count > 0)
                             ledgerList.Add(obj);
                     }
-                    //ledgerList = await Task.Run(() =>
-                    //			_uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).
-                    //			Include(d => d.DebitAccountlist).Where(x => x.AccountLevelId == 4 && x.AccountCode == AccountId).ToList()
-                    //);
                 }
 
                 DateTime defaultdate = new DateTime(DateTime.UtcNow.Year, 1, 1);
@@ -1342,8 +917,6 @@ namespace HumanitarianAssistance.Service.Classes
                     // CHecks for the previous transactions of a particular account before the date range (For OPENING BALANCE)
 
                     var accountData = await _uow.VoucherTransactionDetailsRepository.FindAllAsync(x => x.IsDeleted == false && (x.CreditAccount == items.AccountCode || x.DebitAccount == items.AccountCode) && x.TransactionDate.Date >= new DateTime(model.fromdate.Year, 1, 1).Date && x.TransactionDate.Date < model.fromdate.Date);
-                    //totalCredit = accountData.Where(x => x.CreditAccount == items.AccountCode).Sum(x => x.Amount);
-                    //totalDebit = accountData.Where(x => x.DebitAccount == items.AccountCode).Sum(x => x.Amount);
                     foreach (var elements in accountData)
                     {
 
@@ -1565,230 +1138,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 response.data.LedgerList = finalLedgerList;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-
-                //string balanceTypeClosing = string.Empty;
-                //string balanceTypeOpening = string.Empty;
-
-                //if (totalCredit > totalDebit)
-                //{
-                //	opendingbalance = totalCredit - totalDebit;
-                //	//balanceTypeOpening = "Credit";
-                //}
-                //else
-                //{
-                //	opendingbalance = totalDebit - totalCredit;
-                //	//balanceTypeOpening = "Debit";
-                //}
-
-
-                //if (totalCredit > totalDebit)
-                //{
-                //	closingbalance = totalCredit - totalDebit;
-                //	//balanceTypeClosing = "Credit";
-                //}
-                //else
-                //{
-                //	closingbalance = totalDebit - totalCredit;
-                //	//balanceTypeClosing = "Debit";
-                //}
-
-                //response.data.AccountOpendingAndClosingBL = new AccountOpendingAndClosingBL
-                //{
-                //	OpenningBalance = opendingbalance,
-                //	ClosingBalance = closingbalance,
-                //	//OpenningBalanceType = balanceTypeOpening,
-                //	//ClosingBalanceType = balanceTypeClosing
-                //};				
-
-                //string mainlevel1 = null, controllevel1 = null, sublevel1 = null, currency = null;
-                //double totalDebit = 0, totalCredit = 0;
-                //List<VoucherTransactionDetails> openingdebitlist = null;
-                //List<VoucherTransactionDetails> openingcreditlist = null;
-                //var exchangeratelist = await _uow.ExchangeRateRepository.GetAllAsyn();
-                //var currencylist = await _uow.CurrencyDetailsRepository.GetAllAsyn();
-                //foreach (var i in ledgerList)
-                //{
-
-                //	if (offceId != null)
-                //	{
-                //		if (RecordType != 1)
-                //		{
-
-                //			if (AccountId != null)
-                //			{
-                //				openingdebitlist = i.DebitAccountlist.Where(x => x.TransactionDate >= defaultdate && x.TransactionDate <= fromdate && x.OfficeId == offceId).ToList();
-                //				openingcreditlist = i.CreditAccountlist.Where(x => x.TransactionDate >= defaultdate && x.TransactionDate <= fromdate && x.OfficeId == offceId).ToList();
-                //			}
-
-                //			i.DebitAccountlist = i.DebitAccountlist.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate && x.OfficeId == offceId).ToList();
-                //			i.CreditAccountlist = i.CreditAccountlist.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate && x.OfficeId == offceId).ToList();
-                //		}
-                //		else
-                //		{
-                //			if (AccountId != null)
-                //			{
-                //				openingdebitlist = i.DebitAccountlist.Where(x => x.TransactionDate >= defaultdate && x.TransactionDate <= fromdate && x.OfficeId == offceId && x.CurrencyId == CurrencyId).ToList();
-                //				openingcreditlist = i.CreditAccountlist.Where(x => x.TransactionDate >= defaultdate && x.TransactionDate <= fromdate && x.OfficeId == offceId && x.CurrencyId == CurrencyId).ToList();
-                //			}
-                //			i.DebitAccountlist = i.DebitAccountlist.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate && x.OfficeId == offceId && x.CurrencyId == CurrencyId).ToList();
-                //			i.CreditAccountlist = i.CreditAccountlist.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate && x.OfficeId == offceId && x.CurrencyId == CurrencyId).ToList();
-                //		}
-                //	}
-                //	else
-                //	{
-                //		if (RecordType != 1)
-                //		{
-                //			if (AccountId != null)
-                //			{
-                //				openingdebitlist = i.DebitAccountlist.Where(x => x.TransactionDate >= defaultdate && x.TransactionDate <= fromdate).ToList();
-                //				openingcreditlist = i.CreditAccountlist.Where(x => x.TransactionDate >= defaultdate && x.TransactionDate <= fromdate).ToList();
-                //			}
-                //			i.DebitAccountlist = i.DebitAccountlist.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate).ToList();
-                //			i.CreditAccountlist = i.CreditAccountlist.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate).ToList();
-                //		}
-                //		else
-                //		{
-                //			if (AccountId != null)
-                //			{
-                //				openingdebitlist = i.DebitAccountlist.Where(x => x.TransactionDate >= defaultdate && x.TransactionDate <= fromdate && x.CurrencyId == CurrencyId).ToList();
-                //				openingcreditlist = i.CreditAccountlist.Where(x => x.TransactionDate >= defaultdate && x.TransactionDate <= fromdate && x.CurrencyId == CurrencyId).ToList();
-                //			}
-                //			i.DebitAccountlist = i.DebitAccountlist.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate && x.CurrencyId == CurrencyId).ToList();
-                //			i.CreditAccountlist = i.CreditAccountlist.Where(x => x.TransactionDate >= fromdate && x.TransactionDate <= todate && x.CurrencyId == CurrencyId).ToList();
-                //		}
-                //	}
-
-                //	if (i.DebitAccountlist.Count > 0 || i.CreditAccountlist.Count > 0)
-                //	{
-                //		var s = chartofAccountlist.FirstOrDefault(x => x.AccountCode == i.AccountCode).ParentID;
-                //		var sublevel = chartofAccountlist.Where(x => x.AccountCode == s).FirstOrDefault();
-                //		var controllevel = chartofAccountlist.Where(x => x.AccountCode == sublevel.ParentID).FirstOrDefault();
-                //		var mainLevel = chartofAccountlist.Where(x => x.AccountCode == controllevel.ParentID).FirstOrDefault();
-
-                //		//var s = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == i.AccountCode).Result.ParentID;
-                //		//var sublevel = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == s).Result;
-                //		//var controllevel = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == sublevel.ParentID).Result;
-                //		//var mainLevel = _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == controllevel.ParentID).Result;
-                //		mainlevel1 = mainLevel.AccountName;
-                //		controllevel1 = controllevel.AccountName;
-                //		sublevel1 = sublevel.AccountName;
-                //	}
-                //	double debitamount = 0, creditamount = 0, exchangerate = 0;
-                //	foreach (var debit in i.DebitAccountlist)
-                //	{
-                //		currency = currencylist.Where(x => x.CurrencyId == debit.CurrencyId).FirstOrDefault().CurrencyCode;
-                //		if (debit.CurrencyId != CurrencyId)
-                //		{
-                //			var list = exchangeratelist.Where(x => x.FromCurrency == debit.CurrencyId && x.ToCurrency == CurrencyId && x.Date.Date == debit.TransactionDate.Date).OrderByDescending(o => o.ExchangeRateId).FirstOrDefault();
-                //			exchangerate = list?.Rate ?? 0;
-                //			debitamount = debit.Amount * exchangerate;
-                //		}
-                //		else
-                //		{
-                //			debitamount = debit.Amount;
-                //		}
-                //		totalDebit += debitamount;
-
-                //		var accountname = chartofAccountlist.FirstOrDefault(x => x.AccountCode == debit.CreditAccount).AccountName;
-
-                //		LedgerModel leg = new LedgerModel();
-                //		leg.AccountCode = i.AccountCode;
-                //		leg.ChartAccountName = i.AccountName;
-                //		leg.CurrencyName = currency;
-                //		leg.MainLevel = mainlevel1;
-                //		leg.ControlLevel = controllevel1;
-                //		leg.SubLevel = sublevel1;
-                //		leg.Amount = debitamount;
-                //		leg.TransactionType = "Debit";
-                //		leg.AccountName = accountname;
-                //		leg.TransactionDate = debit.TransactionDate;
-                //		leg.VoucherNo = debit.VoucherNo;
-                //		leg.Description = debit.Description;
-                //		list1.Add(leg);
-                //	}
-                //	foreach (var credit in i.CreditAccountlist)
-                //	{
-                //		currency = currencylist.Where(x => x.CurrencyId == credit.CurrencyId).FirstOrDefault().CurrencyCode;
-                //		if (credit.CurrencyId != CurrencyId)
-                //		{
-                //			var list = exchangeratelist.Where(x => x.FromCurrency == credit.CurrencyId && x.ToCurrency == CurrencyId && x.Date.Date == credit.TransactionDate.Date).OrderByDescending(o => o.ExchangeRateId).FirstOrDefault();
-                //			exchangerate = list?.Rate ?? 0;
-                //			creditamount = credit.Amount * exchangerate;
-                //		}
-                //		else
-                //		{
-                //			creditamount = credit.Amount;
-                //		}
-                //		totalCredit += creditamount;
-                //		var accountname = chartofAccountlist.FirstOrDefault(x => x.AccountCode == credit.DebitAccount).AccountName;
-
-                //		LedgerModel leg = new LedgerModel();
-                //		leg.AccountCode = i.AccountCode;
-                //		leg.ChartAccountName = i.AccountName;
-                //		leg.CurrencyName = currency;
-                //		leg.MainLevel = mainlevel1;
-                //		leg.ControlLevel = controllevel1;
-                //		leg.SubLevel = sublevel1;
-                //		leg.Amount = creditamount;
-                //		leg.TransactionType = "Credit";
-                //		leg.AccountName = accountname;
-                //		leg.TransactionDate = credit.TransactionDate;
-                //		leg.VoucherNo = credit.VoucherNo;
-                //		leg.Description = credit.Description;
-                //		list1.Add(leg);
-                //	}
-                //}
-
-                //if (AccountId != null)
-                //{
-                //	double totaldebitopeing = 0, totalcreditopeing = 0, opendingbalance = 0, closingbalance = 0;
-                //	if (openingdebitlist != null)
-                //	{
-                //		totaldebitopeing = openingdebitlist.Sum(x => x.Amount);
-                //	}
-                //	if (openingcreditlist != null)
-                //	{
-                //		totalcreditopeing = openingcreditlist.Sum(x => x.Amount);
-                //	}
-
-                //	string balanceTypeClosing = string.Empty;
-                //	string balanceTypeOpening = string.Empty;
-
-                //	if (totalcreditopeing > totaldebitopeing)
-                //	{
-                //		opendingbalance = totalcreditopeing - totaldebitopeing;
-                //		balanceTypeOpening = "Credit";
-                //	}
-                //	else
-                //	{
-                //		opendingbalance = totaldebitopeing - totalcreditopeing;
-                //		balanceTypeOpening = "Debit";
-                //	}
-
-
-                //	if (totalCredit > totalDebit)
-                //	{
-                //		closingbalance = totalCredit - totalDebit;
-                //		balanceTypeClosing = "Credit";
-                //	}
-                //	else
-                //	{
-                //		closingbalance = totalDebit - totalCredit;
-                //		balanceTypeClosing = "Debit";
-                //	}
-
-                //	response.data.AccountOpendingAndClosingBL = new AccountOpendingAndClosingBL
-                //	{
-                //		OpenningBalance = opendingbalance,
-                //		ClosingBalance = closingbalance,
-                //		OpenningBalanceType = balanceTypeOpening,
-                //		ClosingBalanceType = balanceTypeClosing
-                //	};
-                //}
-                //response.data.LedgerList = list1;
-                //response.StatusCode = StaticResource.successStatusCode;
-                //response.Message = "Success";
+                response.Message = "Success";                
             }
             catch (Exception ex)
             {
@@ -1856,11 +1206,6 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                //List<int> accountLists = new List<int>();
-                //accountLists.Add(19);
-                //accountLists.Add(23);
-                //accountLists.Add(24);
-                //accountLists.Add(25);
                 List<ChartAccountDetail> ledgerList = new List<ChartAccountDetail>();
                 foreach (var account in model.accountLists)
                 {
@@ -2011,115 +1356,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 }
                             }
                         }
-                    }
-
-                    // For opening And Closing Amount Calculation
-                    //double? creditSum = 0, debitSum = 0, balance = 0;
-                    //foreach (var element in lst)
-                    //{
-                    //    creditSum = finalLedgerList.Where(x => x.AccountCode == element.AccountCode && x.CreditAmount != 0).Sum(x => x.CreditAmount);
-                    //    debitSum = finalLedgerList.Where(x => x.AccountCode == element.AccountCode && x.DebitAmount != 0).Sum(x => x.DebitAmount);
-                    //    balance += creditSum - debitSum + element.ClosingBalance;             // element.ClosingBalance - for previous transaction amount 
-                    //}
-
-                    //response.data.AccountOpendingAndClosingBL = new AccountOpendingAndClosingBL
-                    //{
-                    //    OpeningBalance = lst.Sum(x => x.TotalCredits) - lst.Sum(x => x.TotalDebits),
-                    //    ClosingBalance = balance
-                    //};
-
-                    //var exchangeratelist = await _uow.ExchangeRateRepository.GetAllAsyn();
-                    ////var currencylist = await _uow.CurrencyDetailsRepository.GetAllAsyn();
-
-                    //var ledgerList = await Task.Run(() =>
-                    //  _uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).Where(x => x.AccountLevelId == 4).ToList()
-                    //	);
-
-                    //if (Fromdate == null && Todate == null)
-                    //{
-                    //	Fromdate = new DateTime(DateTime.UtcNow.Year, 1, 1);
-                    //	Todate = DateTime.UtcNow;
-                    //}
-                    //List<TrailBlance> list = new List<TrailBlance>();
-                    //double debitamount = 0, creditamount = 0, exchangerate = 0, totaldebitamount = 0, totalcreditamount = 0;
-                    //foreach (var i in ledgerList)
-                    //{
-                    //	TrailBlance trailBlance = new TrailBlance();
-
-                    //	if (RecordType == 1)
-                    //	{
-                    //		i.CreditAccountlist = i.CreditAccountlist.Where(x => x.TransactionDate >= Fromdate && x.TransactionDate <= Todate && x.CurrencyId == CurrencyId).ToList();
-                    //		i.DebitAccountlist = i.DebitAccountlist.Where(x => x.TransactionDate >= Fromdate && x.TransactionDate <= Todate && x.CurrencyId == CurrencyId).ToList();
-                    //	}
-                    //	else
-                    //	{
-                    //		i.CreditAccountlist = i.CreditAccountlist.Where(x => x.TransactionDate >= Fromdate && x.TransactionDate <= Todate).ToList();
-                    //		i.DebitAccountlist = i.DebitAccountlist.Where(x => x.TransactionDate >= Fromdate && x.TransactionDate <= Todate).ToList();
-                    //	}
-
-                    //	if (i.DebitAccountlist.Count > 0 || i.CreditAccountlist.Count > 0)
-                    //	{
-                    //		if (OfficeId != null)
-                    //		{
-                    //			i.CreditAccountlist = i.CreditAccountlist.Where(x => x.OfficeId == OfficeId).ToList();
-                    //			i.DebitAccountlist = i.DebitAccountlist.Where(x => x.OfficeId == OfficeId).ToList();
-                    //		}
-
-                    //		if (i.DebitAccountlist.Count > 0 || i.CreditAccountlist.Count > 0)
-                    //		{
-                    //			//trailBlance.CurrencyName = currencylist.Where(x => x.CurrencyId == CurrencyId).FirstOrDefault().CurrencyCode;
-                    //			trailBlance.AccountName = i.AccountName;
-                    //			debitamount = 0; creditamount = 0; totaldebitamount = 0; totalcreditamount = 0; exchangerate = 0;
-                    //			if (RecordType != 1)
-                    //			{
-                    //				foreach (var debit in i.DebitAccountlist)
-                    //				{
-                    //					if (debit.CurrencyId != CurrencyId)
-                    //					{
-                    //						var ratelist = exchangeratelist.Where(x => x.FromCurrency == debit.CurrencyId && x.ToCurrency == CurrencyId && x.Date.Date == debit.TransactionDate.Date).OrderByDescending(o => o.ExchangeRateId).FirstOrDefault();
-                    //						exchangerate = ratelist?.Rate ?? 0;
-                    //						debitamount = debit.Amount * exchangerate;
-                    //					}
-                    //					else
-                    //					{
-                    //						debitamount = debit.Amount;
-                    //					}
-
-                    //					totaldebitamount += debitamount;
-                    //				}
-                    //				foreach (var credit in i.CreditAccountlist)
-                    //				{
-                    //					if (credit.CurrencyId != CurrencyId)
-                    //					{
-                    //						var ratelist = exchangeratelist.Where(x => x.FromCurrency == credit.CurrencyId && x.ToCurrency == CurrencyId && x.Date.Date == credit.TransactionDate.Date).FirstOrDefault();
-                    //						exchangerate = ratelist?.Rate ?? 0;
-                    //						creditamount = credit.Amount * exchangerate;
-                    //					}
-                    //					else
-                    //					{
-                    //						creditamount = credit.Amount;
-                    //					}
-
-                    //					totalcreditamount += creditamount;
-                    //				}
-                    //			}
-                    //			else
-                    //			{
-                    //				if (i.DebitAccountlist != null)
-                    //				{
-                    //					totaldebitamount = i.DebitAccountlist.Sum(x => x.Amount);
-                    //				}
-                    //				if (i.CreditAccountlist != null)
-                    //				{
-                    //					totalcreditamount = i.CreditAccountlist.Sum(x => x.Amount);
-                    //				}
-                    //			}
-                    //			trailBlance.DebitAmount = totaldebitamount;
-                    //			trailBlance.CreditAmount = totalcreditamount;
-                    //			list.Add(trailBlance);
-                    //		}
-                    //	}
-                    //}
+                    }                    
 
                 }
                 response.data.TrailBlanceList = finalLedgerList;
@@ -2910,72 +2147,6 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-
-        //public async Task<APIResponse> GetDetailsOfNotes(int? accountType, int? financialyearid, int? currencyid)
-        //{
-        //	APIResponse response = new APIResponse();
-        //	try
-        //	{
-        //		if (financialyearid != null && currencyid != null)
-        //		{
-        //			var list = await Task.Run(() =>
-        //						_uow.GetDbContext().NotesMaster.Include(c => c.ChartAccountDetails)
-        //						.Include(c => c.ChartAccountDetails.CreditAccountlist)
-        //						.Include(c => c.ChartAccountDetails.DebitAccountlist)
-        //						.Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1).ToListAsync()
-        //					   );
-        //			list = list.Where(x => x.ChartAccountDetails.AccountLevelId == 4).ToList();
-
-
-        //			if (accountType != null)
-        //			{
-        //				list = list.Where(x => x.ChartAccountDetails.AccountTypeId == accountType).ToList();
-        //			}
-
-        //			List<DetailsOfNotesModel> detailsofnoteList = new List<DetailsOfNotesModel>();
-        //			double creditAmount = 0, debitAmount = 0, balanceAmount = 0;
-        //			foreach (var l in list)
-        //			{
-        //				if (l.BlanceType == (int)BalanceType.SUM)
-        //				{
-        //					creditAmount = l.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-        //					debitAmount = l.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-        //					balanceAmount = debitAmount - creditAmount;
-        //				}
-        //				if (l.BlanceType == (int)BalanceType.DR)
-        //				{
-        //					debitAmount = l.ChartAccountDetails.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-        //					balanceAmount = debitAmount;
-        //				}
-        //				if (l.BlanceType == (int)BalanceType.CR)
-        //				{
-        //					creditAmount = l.ChartAccountDetails.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-        //					balanceAmount = creditAmount;
-        //				}
-
-        //				DetailsOfNotesModel obj = new DetailsOfNotesModel();
-        //				obj.ChartOfAccountCode = l.ChartAccountDetails?.ChartOfAccountCode ?? null;
-        //				obj.AccountName = l.ChartAccountDetails?.AccountName ?? null;
-        //				obj.Notes = l.Notes;
-        //				obj.BalanceAmount = balanceAmount;
-        //				detailsofnoteList.Add(obj);
-        //			}
-        //			response.data.DetailsOfNotesList = detailsofnoteList.OrderBy(x => x.Notes).ToList();
-        //		}
-
-
-
-        //		response.StatusCode = StaticResource.successStatusCode;
-        //		response.Message = "Success";
-        //	}
-        //	catch (Exception ex)
-        //	{
-        //		response.StatusCode = StaticResource.failStatusCode;
-        //		response.Message = ex.Message;
-        //	}
-        //	return response;
-        //}
-
 
         public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
         {

@@ -11,6 +11,6 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public DateTime todate { get; set; }
 		public List<int> OfficesList { get; set; }
 		public int RecordType { get; set; }
-		public int JournalCode { get; set; }
+		public List<int> JournalCode { get; set; }
 	}
 }

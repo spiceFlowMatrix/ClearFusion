@@ -89,7 +89,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<InterviewTechnicalQuestions> InterviewTechnicalQuestionsList { get; set; }
         public List<EmployeeDetailList> EmployeeDetailListData { get; set; }
         public List<EmployeeAppraisalDetailsModel> EmployeeAppraisalDetailsModelLst { get; set; }
-        public List<IGrouping<int, EmployeeAppraisalDetailsModel>> EmployeeEvaluationDetailsModelLst { get; set; }
+		public EmployeeAppraisalDetailsModel EmployeeAppraisalDetailsModel { get; set; }
+		public List<IGrouping<int, EmployeeAppraisalDetailsModel>> EmployeeEvaluationDetailsModelLst { get; set; }
         public List<AppraisalGeneralQuestions> AppraisalList { get; set; }
         public EmployeeTaxReport EmployeeTaxReport { get; set; }
         public List<EmployeeSalarySlipModel> EmployeeSalarySlipModelList { get; set; }

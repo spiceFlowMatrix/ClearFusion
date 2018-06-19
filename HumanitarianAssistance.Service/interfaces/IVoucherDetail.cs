@@ -22,7 +22,9 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> GetJouranlVoucherDetails();
         Task<APIResponse> GetAllAccountCode();
-        Task<APIResponse> GetAllVoucherTransactionDetailByVoucherNo(int VoucherNo);
+		Task<APIResponse> GetAllControlLevelAccountCode();
+
+		Task<APIResponse> GetAllVoucherTransactionDetailByVoucherNo(int VoucherNo);
         //Task<APIResponse> AddVoucherTransactionDetail(List<VoucherTransactionModel> model, string userId);
         Task<APIResponse> AddVoucherTransactionDetail(VoucherTransactionModel model);
 

@@ -546,11 +546,13 @@ namespace HumanitarianAssistance.Service.Classes
 
 					// For invoice 
 
-					if (model.Invoice != null && model.Invoice != "")
+					if (model.InvoiceFileName != null && model.InvoiceFileName != "")
 					{
-						string[] str = model.Invoice.Split(",");
+						string[] str = model.InvoiceFileName.Split(",");
 						byte[] filepath = Convert.FromBase64String(str[1]);
 						string ex = str[0].Split("/")[1].Split(";")[0];
+						if (ex == "plain")
+							ex = "txt";
 						string guidname = Guid.NewGuid().ToString();
 						string filename = guidname + "." + ex;
 						var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
@@ -622,9 +624,9 @@ namespace HumanitarianAssistance.Service.Classes
 
 						// For invoice 
 
-						if (model.Invoice != null && model.Invoice != "")
+						if (model.InvoiceFileName != null && model.InvoiceFileName != "")
 						{
-							string[] str = model.Invoice.Split(",");
+							string[] str = model.InvoiceFileName.Split(",");
 							byte[] filepath = Convert.FromBase64String(str[1]);
 							string ex = str[0].Split("/")[1].Split(";")[0];
 							string guidname = Guid.NewGuid().ToString();

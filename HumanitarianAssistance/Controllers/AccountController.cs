@@ -593,6 +593,14 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllControlLevelAccountCode()
+    {
+      APIResponse response = await _ivoucherDetail.GetAllControlLevelAccountCode();
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllVoucherTransactionDetailByVoucherNo(int VoucherNo)
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherTransactionDetailByVoucherNo(VoucherNo);
