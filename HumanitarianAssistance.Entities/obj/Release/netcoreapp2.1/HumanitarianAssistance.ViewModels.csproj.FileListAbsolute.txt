@@ -9,3 +9,14 @@ D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\Humanit
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.AssemblyInfo.cs
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance.Entities\obj\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.pdb
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\bin\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.deps.json
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\bin\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.runtimeconfig.json
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\bin\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.runtimeconfig.dev.json
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\bin\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.dll
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\bin\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.pdb
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.csprojResolveAssemblyReference.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.csproj.CoreCompileInputs.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.AssemblyInfoInputs.cache
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.AssemblyInfo.cs
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.dll
+D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance.Entities\obj\Release\netcoreapp2.1\HumanitarianAssistance.ViewModels.pdb

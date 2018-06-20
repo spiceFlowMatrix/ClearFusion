@@ -65,5 +65,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> RejectEmployeeInterviewRequest(int InterviewDetailsId, string UserId);
 
         Task<APIResponse> DeleteExitInterview(int existInterviewDetailsId, string UserId);
-    }
+		Task<APIResponse> GetAllEmployeeAppraisalDetailsByEmployeeId(int EmployeeId);
+
+	}
 }

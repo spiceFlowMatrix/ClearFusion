@@ -63,14 +63,14 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var officeInfo = await _uow.OfficeDetailRepository.FindAsync(c => c.OfficeId == model.OfficeId);
-                //officeInfo.OfficeCode = model.OfficeCode;
-                officeInfo.OfficeName = model.OfficeName;
+				officeInfo.OfficeCode = model.OfficeCode;
+				officeInfo.OfficeName = model.OfficeName;
                 officeInfo.SupervisorName = model.SupervisorName;
                 officeInfo.PhoneNo = model.PhoneNo;
                 officeInfo.FaxNo = model.FaxNo;
-                //officeInfo.ModifiedById = model.ModifiedById;
-                //officeInfo.ModifiedDate = model.ModifiedDate;
-                await _uow.OfficeDetailRepository.UpdateAsyn(officeInfo, officeInfo.OfficeId, officeInfo.OfficeCode);
+				officeInfo.ModifiedById = model.ModifiedById;
+				officeInfo.ModifiedDate = model.ModifiedDate;
+				await _uow.OfficeDetailRepository.UpdateAsyn(officeInfo, officeInfo.OfficeId, officeInfo.OfficeCode);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
