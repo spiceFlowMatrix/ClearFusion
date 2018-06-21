@@ -15,24 +15,24 @@ namespace HumanitarianAssistance.Service.APIResponses
         public APIResponse()
         {
             data = new data();
-			ItemAmount = new ItemAmount();
+            ItemAmount = new ItemAmount();
 
-		}
+        }
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public data data { get; set; }
         public LoggerDetailsModel LoggerDetailsModel { get; set; }
-		public ItemAmount ItemAmount { get; set; }
-	}
+        public ItemAmount ItemAmount { get; set; }
+    }
 
-	public class ItemAmount
-	{
-		public int ProcuredAmount { get; set; }
-		public int SpentAmount { get; set; }
-		public int CurrentAmount { get; set; }
-	}
+    public class ItemAmount
+    {
+        public int ProcuredAmount { get; set; }
+        public int SpentAmount { get; set; }
+        public int CurrentAmount { get; set; }
+    }
 
-	public class LoggerDetailsModel
+    public class LoggerDetailsModel
     {
         public int LoggerDetailsId { get; set; }
         public int NotificationId { get; set; }
@@ -76,11 +76,11 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double? TotalGrossSalary { get; set; }
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
-		public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
-		public List<ProcurmentSummaryModel> ProcurmentSummaryModelList { get; set; }
-		public List<ItemOrderModel> ItemOrderModelList { get; set; }
-	    //public List<IGrouping<int, CategoryPopulator>> CategoryPopulatorLst { get; set; }
-		public List<CategoryPopulator> CategoryPopulatorLst { get; set; }
+        public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
+        public List<ProcurmentSummaryModel> ProcurmentSummaryModelList { get; set; }
+        public List<ItemOrderModel> ItemOrderModelList { get; set; }
+        //public List<IGrouping<int, CategoryPopulator>> CategoryPopulatorLst { get; set; }
+        public List<CategoryPopulator> CategoryPopulatorLst { get; set; }
         public List<int> UserOfficeList { get; set; }
         public List<ExitInterviewModel> ExitInterviewList { get; set; }
         public List<InterviewDetailModel> InterviewDetailList { get; set; }
@@ -89,8 +89,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<InterviewTechnicalQuestions> InterviewTechnicalQuestionsList { get; set; }
         public List<EmployeeDetailList> EmployeeDetailListData { get; set; }
         public List<EmployeeAppraisalDetailsModel> EmployeeAppraisalDetailsModelLst { get; set; }
-		public EmployeeAppraisalDetailsModel EmployeeAppraisalDetailsModel { get; set; }
-		public List<IGrouping<int, EmployeeAppraisalDetailsModel>> EmployeeEvaluationDetailsModelLst { get; set; }
+        public EmployeeAppraisalDetailsModel EmployeeAppraisalDetailsModel { get; set; }
+        public List<IGrouping<int, EmployeeAppraisalDetailsModel>> EmployeeEvaluationDetailsModelLst { get; set; }
         public List<AppraisalGeneralQuestions> AppraisalList { get; set; }
         public EmployeeTaxReport EmployeeTaxReport { get; set; }
         public List<EmployeeSalarySlipModel> EmployeeSalarySlipModelList { get; set; }
@@ -223,15 +223,15 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<PurchaseUnitType> PurchaseUnitTypeList { get; set; }
         public List<DepreciationReportModel> DepreciationReportList { get; set; }
 
-        
 
+        public int notificationIsReadCount{get; set;}
 
-    }
+}
 
-    public class Roles
-    {
-        public string RoleName { get; set; }
-        public string Id { get; set; }
-        public IList<PermissionsModel> PermissionsList { get; set; }
-    }
+public class Roles
+{
+    public string RoleName { get; set; }
+    public string Id { get; set; }
+    public IList<PermissionsModel> PermissionsList { get; set; }
+}
 }

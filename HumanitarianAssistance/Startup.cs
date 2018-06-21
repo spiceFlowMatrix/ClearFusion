@@ -127,6 +127,7 @@ namespace HumanitarianAssistance
       services.AddTransient<ITaskAndActivity, TaskAndActivityService>();
       services.AddTransient<IProjectPipeLining, ProjectPipeLiningService>();
       services.AddTransient<IStore, StoreService>();
+      services.AddTransient<INotificationManager, NotificationManagerService>();
 
       //services.AddTransient<UserManager<AppUser>>();
 

@@ -2605,6 +2605,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.userId = item.CreatedById;
                     obj.createdDate = DateTime.Now;
                     obj.notificationId = item.NotificationId;
+                    obj.loggerDetailsId = item.LoggerDetailsId;
                     obj.isRead = item.IsRead;
                     obj.userName = item.UserName;
                     obj.loggedDetail = item.LoggedDetail;
