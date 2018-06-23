@@ -2660,7 +2660,7 @@ namespace HumanitarianAssistance.Service.Classes
 					obj.OriginalAmount = accountTransactionTotal;
 					obj.CurrentAmount = accountCurrentTotal;
 					obj.Balance = accountCurrentTotal - accountTransactionTotal;
-					obj.ChartOfAccountCode = items.ChartOfAccountCode;
+					obj.ChartOfAccountCode = items.AccountCode;
 					lst.Add(obj);
 				}
 				responseModel.TransactionsModel = lst;
