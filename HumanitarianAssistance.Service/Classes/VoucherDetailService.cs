@@ -2636,8 +2636,9 @@ namespace HumanitarianAssistance.Service.Classes
 				List<TransactionsModel> lst = new List<TransactionsModel>();
 				var records = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.DebitAccountlist).Where(x => x.IsDeleted == false && model.AccountCodes.Contains(x.AccountCode)).ToListAsync();
 				foreach (var items in records)
-				{					
-					var DebitTransactionForEachAccount = items.DebitAccountlist.Where(x => x.TransactionDate.Date.Month >= model.StartDate.Date.Month && x.TransactionDate.Date.Year == model.StartDate.Date.Year && x.TransactionDate.Date.Month <= model.EndDate.Date.Month && x.TransactionDate.Date.Year == model.EndDate.Date.Year).ToList();
+				{
+					//var DebitTransactionForEachAccount = items.DebitAccountlist.Where(x => x.TransactionDate.Date.Month >= model.StartDate.Date.Month && x.TransactionDate.Date.Year >= model.StartDate.Date.Year && x.TransactionDate.Date.Month <= model.EndDate.Date.Month && x.TransactionDate.Date.Year <= model.EndDate.Date.Year).ToList();
+					var DebitTransactionForEachAccount = items.DebitAccountlist.Where(x => x.TransactionDate.Date >= model.StartDate.Date && x.TransactionDate.Date <= model.EndDate.Date).ToList();
 					double accountTransactionTotal = 0, accountCurrentTotal = 0;					
 					foreach (var elements in DebitTransactionForEachAccount)
 					{						
@@ -2648,7 +2649,7 @@ namespace HumanitarianAssistance.Service.Classes
 						}
 						else
 						{
-							var exchangeRateOfTransaction = exchangeRateList.Where(x => x.IsDeleted == false && x.FromCurrency == elements.CurrencyId && x.ToCurrency == baseCurrency.CurrencyId && x.Date.Date.Month <= elements.TransactionDate.Date.Month && x.Date.Date.Year == elements.TransactionDate.Date.Year).OrderByDescending(x=>x.Date).FirstOrDefault();
+							var exchangeRateOfTransaction = exchangeRateList.Where(x => x.IsDeleted == false && x.FromCurrency == elements.CurrencyId && x.ToCurrency == baseCurrency.CurrencyId && x.Date.Date.Month <= elements.TransactionDate.Date.Month && x.Date.Date.Year <= elements.TransactionDate.Date.Year).OrderByDescending(x=>x.Date).FirstOrDefault();
 							var exchangeRateForCurrentDate = exchangeRateList.Where(x => x.IsDeleted == false && x.FromCurrency == elements.CurrencyId && x.ToCurrency == baseCurrency.CurrencyId && x.Date.Date.Month <= DateTime.Now.Date.Month && x.Date.Date.Year == DateTime.Now.Date.Year).OrderByDescending(x => x.Date).FirstOrDefault();
 
 							accountTransactionTotal += elements.Amount * (exchangeRateOfTransaction?.Rate ?? 0);
