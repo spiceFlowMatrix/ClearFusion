@@ -2637,7 +2637,7 @@ namespace HumanitarianAssistance.Service.Classes
 				var records = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.DebitAccountlist).Where(x => x.IsDeleted == false && model.AccountCodes.Contains(x.AccountCode)).ToListAsync();
 				foreach (var items in records)
 				{					
-					var DebitTransactionForEachAccount = items.DebitAccountlist.Where(x => x.TransactionDate.Date.Month >= model.StartDate.Date.Month && x.TransactionDate.Date.Year == model.StartDate.Date.Year && x.TransactionDate.Date.Month <= model.EndDate.Date.Month && x.TransactionDate.Date.Year == model.EndDate.Date.Year);
+					var DebitTransactionForEachAccount = items.DebitAccountlist.Where(x => x.TransactionDate.Date.Month >= model.StartDate.Date.Month && x.TransactionDate.Date.Year == model.StartDate.Date.Year && x.TransactionDate.Date.Month <= model.EndDate.Date.Month && x.TransactionDate.Date.Year == model.EndDate.Date.Year).ToList();
 					double accountTransactionTotal = 0, accountCurrentTotal = 0;					
 					foreach (var elements in DebitTransactionForEachAccount)
 					{						
