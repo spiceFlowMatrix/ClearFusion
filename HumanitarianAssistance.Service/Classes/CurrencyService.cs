@@ -66,6 +66,7 @@ namespace HumanitarianAssistance.Service.Classes
                 currencyInfo.CurrencyRate = model.CurrencyRate;
                 currencyInfo.ModifiedById = model.ModifiedById;
                 currencyInfo.ModifiedDate = model.ModifiedDate;
+				currencyInfo.Status = model.Status;
                 await _uow.CurrencyDetailsRepository.UpdateAsyn(currencyInfo, currencyInfo.CurrencyCode);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -93,7 +94,8 @@ namespace HumanitarianAssistance.Service.Classes
                                            CreatedById = c.CreatedById,
                                            CreatedDate = c.CreatedDate,
                                            ModifiedById = c.ModifiedById,
-                                           ModifiedDate = c.ModifiedDate
+                                           ModifiedDate = c.ModifiedDate,
+										   Status = c.Status
                                        }).ToList();
                 response.data.CurrencyList = currencylist;
                 response.StatusCode = StaticResource.successStatusCode;
