@@ -9,6 +9,6 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public List<int> AccountCodes { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
-		public int AccountCode { get; set; }
+		public int? AccountCode { get; set; }
 	}
 }

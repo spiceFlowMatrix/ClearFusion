@@ -813,7 +813,7 @@ namespace HumanitarianAssistance.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
     {
-      APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData( financialyearid, currencyid);
+      APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData(financialyearid, currencyid);
       return response;
     }
 
@@ -875,7 +875,7 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetExchangeGainOrLossAmount(ExchangeGainOrLossFilterModel model)
+    public async Task<APIResponse> GetExchangeGainOrLossAmount([FromBody] ExchangeGainOrLossFilterModel model)
     {
       APIResponse response = await _ivoucherDetail.GetExchangeGainOrLossAmount(model);
       return response;
