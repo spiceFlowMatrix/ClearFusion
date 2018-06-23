@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class ExchangeGainOrLossModel
     {
-		public TransactionsModel TransactionsModel { get; set; }	
+		public List<TransactionsModel> TransactionsModel { get; set; }	
 		public double Total { get; set; }
 	}
 

@@ -2629,27 +2629,43 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
-				List<TransactionsModel> lst = new List<TransactionsModel>();
 				var baseCurrency = await _uow.CurrencyDetailsRepository.FindAsync(x=>x.Status == true);
 				var exchangeRateList = await _uow.ExchangeRateRepository.GetAllAsyn();
 
+				ExchangeGainOrLossModel responseModel = new ExchangeGainOrLossModel();
+				List<TransactionsModel> lst = new List<TransactionsModel>();
 				var records = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.DebitAccountlist).Where(x => x.IsDeleted == false && model.AccountCodes.Contains(x.AccountCode)).ToListAsync();
 				foreach (var items in records)
-				{
-					//var CreditTransactionForEachAccount = items.CreditAccountlist.Where(x => x.TransactionDate.Date.Month >= model.StartDate.Date.Month && x.TransactionDate.Date.Year == model.StartDate.Date.Year && x.TransactionDate.Date.Month <= model.EndDate.Date.Month && x.TransactionDate.Date.Year == model.EndDate.Date.Year);
+				{					
 					var DebitTransactionForEachAccount = items.DebitAccountlist.Where(x => x.TransactionDate.Date.Month >= model.StartDate.Date.Month && x.TransactionDate.Date.Year == model.StartDate.Date.Year && x.TransactionDate.Date.Month <= model.EndDate.Date.Month && x.TransactionDate.Date.Year == model.EndDate.Date.Year);
+					double accountTransactionTotal = 0, accountCurrentTotal = 0;					
 					foreach (var elements in DebitTransactionForEachAccount)
-					{
+					{						
 						if (elements.CurrencyId == baseCurrency.CurrencyId)
 						{
-
+							accountTransactionTotal += elements.Amount;
+							accountCurrentTotal += elements.Amount;
 						}
 						else
 						{
+							var exchangeRateOfTransaction = exchangeRateList.Where(x => x.IsDeleted == false && x.FromCurrency == elements.CurrencyId && x.ToCurrency == baseCurrency.CurrencyId && x.Date.Date.Month <= elements.TransactionDate.Date.Month && x.Date.Date.Year == elements.TransactionDate.Date.Year).OrderByDescending(x=>x.Date).FirstOrDefault();
+							var exchangeRateForCurrentDate = exchangeRateList.Where(x => x.IsDeleted == false && x.FromCurrency == elements.CurrencyId && x.ToCurrency == baseCurrency.CurrencyId && x.Date.Date.Month <= DateTime.Now.Date.Month && x.Date.Date.Year == DateTime.Now.Date.Year).OrderByDescending(x => x.Date).FirstOrDefault();
 
+							accountTransactionTotal += elements.Amount * (exchangeRateOfTransaction?.Rate ?? 0);
+							accountCurrentTotal += elements.Amount * (exchangeRateForCurrentDate?.Rate ?? 0);
 						}
 					}
+
+					TransactionsModel obj = new TransactionsModel();
+					obj.OriginalAmount = accountTransactionTotal;
+					obj.CurrentAmount = accountCurrentTotal;
+					obj.Balance = accountCurrentTotal - accountTransactionTotal;
+					obj.ChartOfAccountCode = items.ChartOfAccountCode;
+					lst.Add(obj);
 				}
+				responseModel.TransactionsModel = lst;
+				responseModel.Total = lst.Sum(x=>x.Balance);
+				response.data.ExchangeGainOrLossModel = responseModel;
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}
