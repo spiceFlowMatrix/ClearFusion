@@ -46,9 +46,9 @@ namespace HumanitarianAssistance
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://*:5000")
-                //.UseUrls("http://*:5001")
-                //.UseUrls("http://*:5002")
+                .UseUrls("http://*:5000")     // 8080
+                //.UseUrls("http://*:5001")     // 9090
+                //.UseUrls("http://*:5002")       // PORT 7070
                 .Build();
     }
 }
