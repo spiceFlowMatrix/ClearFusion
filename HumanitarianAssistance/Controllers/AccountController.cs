@@ -875,7 +875,7 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetExchangeGainOrLossAmount([FromBody] ExchangeGainOrLossFilterModel model)
+    public async Task<APIResponse> GetExchangeGainOrLossAmount([FromBody]ExchangeGainOrLossFilterModel model)
     {
       APIResponse response = await _ivoucherDetail.GetExchangeGainOrLossAmount(model);
       return response;
