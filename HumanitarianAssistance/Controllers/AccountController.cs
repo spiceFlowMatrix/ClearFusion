@@ -873,6 +873,14 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetExchangeGainOrLossAmount(ExchangeGainOrLossFilterModel model)
+    {
+      APIResponse response = await _ivoucherDetail.GetExchangeGainOrLossAmount(model);
+      return response;
+    }
+
   }
 
 

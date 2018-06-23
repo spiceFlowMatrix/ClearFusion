@@ -62,5 +62,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteCategoryPopulator(int categoryPopulatorId, string modifiedById);
 
         Task<APIResponse> GetAllCategoryPopulator();
-    }
+		Task<APIResponse> GetExchangeGainOrLossAmount(ExchangeGainOrLossFilterModel model);
+
+	}
 }
