@@ -1345,8 +1345,10 @@ namespace HumanitarianAssistance.Service.Classes
 			try
 			{
 				var Invoices = await _uow.StoreItemPurchaseRepository.FindAsync(x=>x.PurchaseId == PurchaseId);
-				response.data.UpdatePurchaseInvoiceModel.PurchaseId = Invoices.PurchaseId;
-				response.data.UpdatePurchaseInvoiceModel.Invoice = Invoices.InvoiceFileName + Invoices.InvoiceFileType;
+				UpdatePurchaseInvoiceModel obj = new UpdatePurchaseInvoiceModel();
+				obj.PurchaseId = Invoices.PurchaseId;
+				obj.Invoice = Invoices.InvoiceFileName + Invoices.InvoiceFileType;
+				response.data.UpdatePurchaseInvoiceModel = obj;
 				response.StatusCode = StaticResource.successStatusCode;
 				response.Message = "Success";
 			}			
