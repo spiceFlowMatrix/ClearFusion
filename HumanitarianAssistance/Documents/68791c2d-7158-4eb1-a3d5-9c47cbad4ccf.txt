@@ -1,0 +1,17 @@
+I think I should have just called it depreciation rate per hour
+This is pretty much only used for depreciation report
+
+
+It’s a report showing the amount a purchase has depreciated in value since the purchase date
+. 
+In that report, for each item we will be having:
+ 	1. Purchase date, 
+	2. Depreciation rate,
+	3. Current Date
+
+ and we have the current date.
+
+We can use the purchase date to identify how many hours it has been since the purchase date. 
+Once we have the hours since purchase, we can now get the depreciated amount by multiplying the hours since purchase by the depreciation rate and the original price of the purchase. Once we have the depreciated amount, we simply subtract that from the original value to get the current value (edited)
+And with a few simple steps we have the depreciation report. We can just use a simple grid for that
+The grid must at least show the item name, purchase Id, hours since purchase, depreciation rate, depreciated amount, and finally the current value
