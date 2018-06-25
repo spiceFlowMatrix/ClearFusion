@@ -1,5 +1,6 @@
 ﻿using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Service.APIResponses;
+using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.Store;
 using System;
 using System.Collections.Generic;
@@ -51,5 +52,9 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetProcurementSummary(int EmployeeId);
         Task<APIResponse> GetAllDepreciationByFilter(DepreciationReportFilter depretiationFilter);
 
-    }
+		Task<APIResponse> UpdateInvoice(UpdatePurchaseInvoiceModel model, string UserId);
+		Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId);
+
+
+	}
 }

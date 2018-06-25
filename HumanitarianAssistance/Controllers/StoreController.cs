@@ -8,6 +8,7 @@ using DataAccess.DbEntities;
 using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
+using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.Store;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -390,9 +391,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> UpdateInvoice([FromBody]UpdatePurchaseInvoiceModel model, string UserId)
+    {
+      APIResponse apiresponse = await _iStore.UpdateInvoice(model, UserId);
+      return apiresponse;
+    }
 
-
-
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId)
+    {
+      APIResponse apiresponse = await _iStore.GetAllPurchaseInvoices(PurchaseId);
+      return apiresponse;
+    }
 
   }
 }
