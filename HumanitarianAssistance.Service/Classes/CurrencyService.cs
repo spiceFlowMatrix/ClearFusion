@@ -32,6 +32,19 @@ namespace HumanitarianAssistance.Service.Classes
                 var existcurrency = await _uow.CurrencyDetailsRepository.FindAsync(c => c.CurrencyCode == model.CurrencyCode);
                 if (existcurrency == null)
                 {
+                    if (model.Status == true)
+                    {
+                        var currencylist = await _uow.CurrencyDetailsRepository.GetAllAsyn();
+                        foreach (var i in currencylist)
+                        {
+                            var existrecord1 = await _uow.CurrencyDetailsRepository.FindAsync(x => x.CurrencyId == i.CurrencyId);
+                            existrecord1.Status = false;
+                            await _uow.CurrencyDetailsRepository.UpdateAsyn(existrecord1);
+                        }
+                    }
+
+
+
                     CurrencyDetails obj = _mapper.Map<CurrencyDetails>(model);
                     obj.CreatedById = model.CreatedById;
                     obj.CreatedDate = DateTime.UtcNow;
@@ -61,15 +74,29 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var currencyInfo = await _uow.CurrencyDetailsRepository.FindAsync(c => c.CurrencyId == model.CurrencyId);
-                currencyInfo.CurrencyCode = model.CurrencyCode;
-                currencyInfo.CurrencyName = model.CurrencyName;
-                currencyInfo.CurrencyRate = model.CurrencyRate;
-                currencyInfo.ModifiedById = model.ModifiedById;
-                currencyInfo.ModifiedDate = model.ModifiedDate;
-				currencyInfo.Status = model.Status;
-                await _uow.CurrencyDetailsRepository.UpdateAsyn(currencyInfo, currencyInfo.CurrencyCode);
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+
+                if (currencyInfo != null)
+                {
+                    if (model.Status == true)
+                    {
+                        var currencylist = await _uow.CurrencyDetailsRepository.GetAllAsyn();
+                        foreach (var i in currencylist)
+                        {
+                            var existrecord1 = await _uow.CurrencyDetailsRepository.FindAsync(x => x.CurrencyId == i.CurrencyId);
+                            existrecord1.Status = false;
+                            await _uow.CurrencyDetailsRepository.UpdateAsyn(existrecord1);
+                        }
+                    }
+                    currencyInfo.CurrencyCode = model.CurrencyCode;
+                    currencyInfo.CurrencyName = model.CurrencyName;
+                    currencyInfo.CurrencyRate = model.CurrencyRate;
+                    currencyInfo.ModifiedById = model.ModifiedById;
+                    currencyInfo.ModifiedDate = model.ModifiedDate;
+                    currencyInfo.Status = model.Status;
+                    await _uow.CurrencyDetailsRepository.UpdateAsyn(currencyInfo, currencyInfo.CurrencyCode);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
             }
             catch (Exception ex)
             {
@@ -84,19 +111,20 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var currencylist = (from c in await _uow.CurrencyDetailsRepository.GetAllAsyn() orderby c.CurrencyName ascending
-                                       select new CurrencyModel
-                                       {
-                                           CurrencyId = c.CurrencyId,
-                                           CurrencyCode = c.CurrencyCode,
-                                           CurrencyName = c.CurrencyName,
-                                           CurrencyRate = c.CurrencyRate,
-                                           CreatedById = c.CreatedById,
-                                           CreatedDate = c.CreatedDate,
-                                           ModifiedById = c.ModifiedById,
-                                           ModifiedDate = c.ModifiedDate,
-										   Status = c.Status
-                                       }).ToList();
+                var currencylist = (from c in await _uow.CurrencyDetailsRepository.GetAllAsyn()
+                                    orderby c.CurrencyName ascending
+                                    select new CurrencyModel
+                                    {
+                                        CurrencyId = c.CurrencyId,
+                                        CurrencyCode = c.CurrencyCode,
+                                        CurrencyName = c.CurrencyName,
+                                        CurrencyRate = c.CurrencyRate,
+                                        CreatedById = c.CreatedById,
+                                        CreatedDate = c.CreatedDate,
+                                        ModifiedById = c.ModifiedById,
+                                        ModifiedDate = c.ModifiedDate,
+                                        Status = c.Status
+                                    }).ToList();
                 response.data.CurrencyList = currencylist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

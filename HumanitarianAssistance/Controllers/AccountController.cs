@@ -813,7 +813,7 @@ namespace HumanitarianAssistance.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
     {
-      APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData( financialyearid, currencyid);
+      APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData(financialyearid, currencyid);
       return response;
     }
 

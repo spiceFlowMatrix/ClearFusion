@@ -1100,7 +1100,9 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 //int procuredAmount, spentAmount;
                 var procuredAmount = await _uow.GetDbContext().StoreItemPurchases.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
-                var spentAmount = await _uow.GetDbContext().StorePurchaseOrders.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
+
+                //NOTE: x.MustReturn == false --> Use to keep track if Employee Returned the Item or not.
+                var spentAmount = await _uow.GetDbContext().StorePurchaseOrders.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false && x.MustReturn == false).ToListAsync();
 
 
                 response.ItemAmount.ProcuredAmount = procuredAmount != null ? procuredAmount.Sum(x => x.Quantity) : 0;
@@ -1254,90 +1256,90 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-		//public async Task<APIResponse> GetAllDepreciationByFilter(DateTime currentDate)
-		//{
-		//    var response = new APIResponse();
-		//    try
-		//    {
-		//        var depData = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false).ToListAsync();
+        //public async Task<APIResponse> GetAllDepreciationByFilter(DateTime currentDate)
+        //{
+        //    var response = new APIResponse();
+        //    try
+        //    {
+        //        var depData = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false).ToListAsync();
 
-		//        List<DepreciationReportModel> depreciationList = new List<DepreciationReportModel>();
+        //        List<DepreciationReportModel> depreciationList = new List<DepreciationReportModel>();
 
-		//        foreach (var item in depData)
-		//        {
-		//            DepreciationReportModel obj = new DepreciationReportModel();
+        //        foreach (var item in depData)
+        //        {
+        //            DepreciationReportModel obj = new DepreciationReportModel();
 
-		//            //double hoursSincePurchase;
-		//            //double depreciationAmount;
-		//            //double currentValue;
+        //            //double hoursSincePurchase;
+        //            //double depreciationAmount;
+        //            //double currentValue;
 
-		//            obj.ItemName = item.StoreInventoryItem.ItemName;
-		//            obj.PurchaseId = item.PurchaseId;
-		//            obj.PurchaseDate = item.PurchaseDate;
+        //            obj.ItemName = item.StoreInventoryItem.ItemName;
+        //            obj.PurchaseId = item.PurchaseId;
+        //            obj.PurchaseDate = item.PurchaseDate;
 
-		//            obj.HoursSincePurchase = currentDate.Date.Subtract(item.PurchaseDate.Date).TotalHours;
-		//            obj.DepreciationRate = item.DepreciationRate;
-		//            obj.DepreciationAmount = (obj.HoursSincePurchase * item.DepreciationRate * item.UnitCost) / 100;
-		//            obj.CurrentValue = item.UnitCost - obj.DepreciationAmount;
+        //            obj.HoursSincePurchase = currentDate.Date.Subtract(item.PurchaseDate.Date).TotalHours;
+        //            obj.DepreciationRate = item.DepreciationRate;
+        //            obj.DepreciationAmount = (obj.HoursSincePurchase * item.DepreciationRate * item.UnitCost) / 100;
+        //            obj.CurrentValue = item.UnitCost - obj.DepreciationAmount;
 
-		//            obj.PurchasedCost = item.UnitCost;
+        //            obj.PurchasedCost = item.UnitCost;
 
-		//            depreciationList.Add(obj);
+        //            depreciationList.Add(obj);
 
-		//        }
-		//        response.data.DepreciationReportList = depreciationList.ToList();
-		//        response.StatusCode = StaticResource.successStatusCode;
-		//        response.Message = "Success";
-		//    }
-		//    catch (Exception ex)
-		//    {
-		//        response.StatusCode = StaticResource.failStatusCode;
-		//        response.Message = StaticResource.SomethingWrong + ex.Message;
-		//        return response;
-		//    }
-		//    return response;
-		//}
+        //        }
+        //        response.data.DepreciationReportList = depreciationList.ToList();
+        //        response.StatusCode = StaticResource.successStatusCode;
+        //        response.Message = "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //        return response;
+        //    }
+        //    return response;
+        //}
 
-		#region "Update Invoice"
+        #region "Update Invoice"
 
-		public async Task<APIResponse> UpdateInvoice(UpdatePurchaseInvoiceModel model, string UserId)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				//byte[] filepathBase64 = Encoding.UTF8.GetBytes(model.EmployeeImage);
-				string[] str = model.Invoice.Split(",");
-				byte[] filepath = Convert.FromBase64String(str[1]);
+        public async Task<APIResponse> UpdateInvoice(UpdatePurchaseInvoiceModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                //byte[] filepathBase64 = Encoding.UTF8.GetBytes(model.EmployeeImage);
+                string[] str = model.Invoice.Split(",");
+                byte[] filepath = Convert.FromBase64String(str[1]);
 
-				string ex = str[0].Split("/")[1].Split(";")[0];
-				if (ex == "plain")
-					ex = "txt";
-				string guidname = Guid.NewGuid().ToString();
-				//byte[] filepath = Encoding.UTF8.GetBytes(str[1]);
-				string filename = guidname + "." + ex;
-				var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-				File.WriteAllBytes(@"Documents/" + filename, filepath);
+                string ex = str[0].Split("/")[1].Split(";")[0];
+                if (ex == "plain")
+                    ex = "txt";
+                string guidname = Guid.NewGuid().ToString();
+                //byte[] filepath = Encoding.UTF8.GetBytes(str[1]);
+                string filename = guidname + "." + ex;
+                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                File.WriteAllBytes(@"Documents/" + filename, filepath);
 
-				var employeeinfo = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.IsDeleted == false && x.PurchaseId == model.PurchaseId);
-				if (employeeinfo != null)
-				{
-					employeeinfo.InvoiceFileName = guidname;
-					employeeinfo.InvoiceFileType = "." + ex;
-					employeeinfo.ModifiedById = UserId;
-					employeeinfo.ModifiedDate = DateTime.Now;
-					employeeinfo.IsDeleted = false;
-					await _uow.StoreItemPurchaseRepository.UpdateAsyn(employeeinfo);
-					response.StatusCode = StaticResource.successStatusCode;
-					response.Message = "Success";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
+                var employeeinfo = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.IsDeleted == false && x.PurchaseId == model.PurchaseId);
+                if (employeeinfo != null)
+                {
+                    employeeinfo.InvoiceFileName = guidname;
+                    employeeinfo.InvoiceFileType = "." + ex;
+                    employeeinfo.ModifiedById = UserId;
+                    employeeinfo.ModifiedDate = DateTime.Now;
+                    employeeinfo.IsDeleted = false;
+                    await _uow.StoreItemPurchaseRepository.UpdateAsyn(employeeinfo);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
 		public async Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId)
 		{
@@ -1360,7 +1362,7 @@ namespace HumanitarianAssistance.Service.Classes
 			return response;
 		}
 
-		#endregion
+        #endregion
 
-	}
+    }
 }
