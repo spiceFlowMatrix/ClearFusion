@@ -14,6 +14,7 @@ namespace DataAccess.DbEntities.Store
 
         public int IssuedQuantity { get; set; }
         public bool MustReturn { get; set; }
+        public bool Returned { get; set; }
         public int IssuedToEmployeeId { get; set; }
         public DateTime IssueDate { get; set; }
         public DateTime? ReturnedDate { get; set; }

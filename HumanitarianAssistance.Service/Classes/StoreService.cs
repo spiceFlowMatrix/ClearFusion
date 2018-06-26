@@ -937,6 +937,7 @@ namespace HumanitarianAssistance.Service.Classes
                     IssuedQuantity = x.IssuedQuantity,
                     IssuedToEmployeeId = x.IssuedToEmployeeId,
                     MustReturn = x.MustReturn,
+                    Returned = x.Returned,
                     OrderId = x.OrderId,
                     Purchase = x.Purchase,
                     ReturnedDate = x.ReturnedDate,
@@ -1102,7 +1103,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var procuredAmount = await _uow.GetDbContext().StoreItemPurchases.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
 
                 //NOTE: x.MustReturn == false --> Use to keep track if Employee Returned the Item or not.
-                var spentAmount = await _uow.GetDbContext().StorePurchaseOrders.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false && x.MustReturn == false).ToListAsync();
+                var spentAmount = await _uow.GetDbContext().StorePurchaseOrders.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false && x.Returned == false).ToListAsync();
 
 
                 response.ItemAmount.ProcuredAmount = procuredAmount != null ? procuredAmount.Sum(x => x.Quantity) : 0;
@@ -1150,7 +1151,7 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.Item = item.StoreInventoryItem?.ItemName ?? null;
                         obj.TotalCost = (item.IssuedQuantity) * (item.StoreItemPurchase?.UnitCost ?? 0);
                         obj.MustReturn = item.MustReturn == true ? "Yes" : "No";
-                        obj.Returned = item.ReturnedDate == null ? "No" : "Yes";
+                        obj.Returned = item.Returned == true ? "Yes" : "No";
                         obj.TotalCostDetails.UnitType = item.StoreItemPurchase?.PurchaseUnitType?.UnitTypeName ?? null;
                         obj.TotalCostDetails.Amount = item.IssuedQuantity; //item.StoreItemPurchase?.Quantity ?? 0;
                         obj.TotalCostDetails.UnitCost = item.StoreItemPurchase?.UnitCost ?? 0;
