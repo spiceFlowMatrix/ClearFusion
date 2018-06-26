@@ -1342,24 +1342,26 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var Invoices = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == PurchaseId);
-                response.data.UpdatePurchaseInvoiceModel.PurchaseId = Invoices.PurchaseId;
-                response.data.UpdatePurchaseInvoiceModel.Invoice = Invoices.InvoiceFileName + Invoices.InvoiceFileType;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
+		public async Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var Invoices = await _uow.StoreItemPurchaseRepository.FindAsync(x=>x.PurchaseId == PurchaseId);
+				UpdatePurchaseInvoiceModel obj = new UpdatePurchaseInvoiceModel();
+				obj.PurchaseId = Invoices.PurchaseId;
+				obj.Invoice = Invoices.InvoiceFileName + Invoices.InvoiceFileType;
+				response.data.UpdatePurchaseInvoiceModel = obj;
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
+			}			
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
 
         #endregion
 

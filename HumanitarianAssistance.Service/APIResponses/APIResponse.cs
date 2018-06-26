@@ -15,9 +15,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public APIResponse()
         {
             data = new data();
-            ItemAmount = new ItemAmount();
-
-        }
+            ItemAmount = new ItemAmount();			
+		}
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public data data { get; set; }

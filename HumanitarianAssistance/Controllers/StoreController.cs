@@ -393,15 +393,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> UpdateInvoice([FromBody]UpdatePurchaseInvoiceModel model, string UserId)
+    public async Task<APIResponse> UpdateInvoice([FromBody]UpdatePurchaseInvoiceModel model)
     {
-      APIResponse apiresponse = await _iStore.UpdateInvoice(model, UserId);
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iStore.UpdateInvoice(model, user.Id);
+      }
       return apiresponse;
     }
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId)
+    public async Task<APIResponse> GetAllPurchaseInvoices([FromQuery]string PurchaseId)
     {
       APIResponse apiresponse = await _iStore.GetAllPurchaseInvoices(PurchaseId);
       return apiresponse;
