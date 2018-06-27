@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-    public interface IUnitOfWork:IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         IGenericRepository<AccountNoteDetail> AccountNoteDetailRepository { get; }
         IGenericRepository<Permissions> PermissionRepository { get; }
@@ -114,11 +114,12 @@ namespace DataAccess
         IGenericRepository<MotorSparePart> MotorSparePartsRepository { get; }
         IGenericRepository<InventoryItemType> InventoryItemTypeRepository { get; }
         IGenericRepository<PurchaseUnitType> PurchaseUnitTypeRepository { get; }
-		IGenericRepository<EmployeePayrollForMonth> EmployeePayrollForMonthRepository { get; }
-		IGenericRepository<EmployeePayrollMonth> EmployeePayrollMonthRepository { get; }
-		IGenericRepository<EmployeeContract> EmployeeContractRepository { get; }
+        IGenericRepository<EmployeePayrollForMonth> EmployeePayrollForMonthRepository { get; }
+        IGenericRepository<EmployeePayrollMonth> EmployeePayrollMonthRepository { get; }
+        IGenericRepository<EmployeeContract> EmployeeContractRepository { get; }
+        IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository { get; }
 
-        
+
 
         void Save();
         Task<int> SaveAsync();

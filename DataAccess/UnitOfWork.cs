@@ -118,6 +118,10 @@ namespace DataAccess
 
         private IGenericRepository<EmployeeContract> _employeeContractRepository;
 
+        private IGenericRepository<SalaryTaxReportContent> _salaryTaxReportContentRepository;
+
+
+
         public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
@@ -142,6 +146,14 @@ namespace DataAccess
             GC.SuppressFinalize(this);
         }
 
+        public IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository
+        {
+            get
+            {
+                return _salaryTaxReportContentRepository =
+                    _salaryTaxReportContentRepository ?? new GenericRepository<SalaryTaxReportContent>(_mschaContext);
+            }
+        }
         public IGenericRepository<EmployeeContract> EmployeeContractRepository
         {
             get

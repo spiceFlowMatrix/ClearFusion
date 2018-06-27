@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180626144029_SalaryTaxContentModelAdded")]
+    partial class SalaryTaxContentModelAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3463,7 +3465,7 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<string>("EmployerAuthorizedOfficerName");
+                    b.Property<int>("EmployerAuthorizedOfficerName");
 
                     b.Property<bool>("IsDeleted");
 
@@ -3473,7 +3475,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("OfficeId");
 
-                    b.Property<string>("PositionAuthorizedOfficer");
+                    b.Property<int>("PositionAuthorizedOfficer");
 
                     b.HasKey("SalaryTaxReportContentId");
 

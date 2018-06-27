@@ -944,6 +944,22 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> DeleteSalaryHead([FromBody]SalaryHeadModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        model.ModifiedById = id;
+        model.ModifiedDate = DateTime.UtcNow;
+      }
+      APIResponse response = await _icode.DeleteSalaryHead(model);
+      return response;
+    }
+
+
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllSalaryHead()
@@ -1343,5 +1359,52 @@ namespace HumanitarianAssistance.Controllers
       }
       return response;
     }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetSalaryTaxReportContentDetails(int officeId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetSalaryTaxReportContentDetails(officeId);
+      }
+      return response;
+    }
+
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddSalaryTaxReportContentDetails([FromBody]SalaryTaxReportContent model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.AddSalaryTaxReportContentDetails(model, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditSalaryTaxReportContentDetails([FromBody]SalaryTaxReportContent model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.EditSalaryTaxReportContentDetails(model, id);
+      }
+      return response;
+    }
+
+
+
+
   }
 }
