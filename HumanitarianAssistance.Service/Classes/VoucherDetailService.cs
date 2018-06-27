@@ -891,16 +891,19 @@ namespace HumanitarianAssistance.Service.Classes
 			try
 			{
 				List<ChartAccountDetail> ledgerList = new List<ChartAccountDetail>();
-				foreach (var account in model.accountLists)
-				{
-					ChartAccountDetail obj = new ChartAccountDetail();
-					obj = await _uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).Where(x => x.AccountLevelId == 4 && x.AccountCode == account).FirstOrDefaultAsync();
-					if (obj != null)
-					{
-						if (obj.CreditAccountlist.Count > 0 || obj.DebitAccountlist.Count > 0)
-							ledgerList.Add(obj);
-					}
-				}
+
+				ledgerList = await _uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).Where(x => x.AccountLevelId == 4 && model.accountLists.Contains(x.AccountCode)).ToListAsync();
+
+				//foreach (var account in model.accountLists)
+				//{
+				//	ChartAccountDetail obj = new ChartAccountDetail();
+				//	obj = await _uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).Where(x => x.AccountLevelId == 4 && x.AccountCode == account).FirstOrDefaultAsync();
+				//	if (obj != null)
+				//	{
+				//		if (obj.CreditAccountlist.Count > 0 || obj.DebitAccountlist.Count > 0)
+				//			ledgerList.Add(obj);
+				//	}
+				//}
 
 				DateTime defaultdate = new DateTime(DateTime.UtcNow.Year, 1, 1);
 				if (model.fromdate == null && model.todate == null)
@@ -1207,16 +1210,17 @@ namespace HumanitarianAssistance.Service.Classes
 			try
 			{
 				List<ChartAccountDetail> ledgerList = new List<ChartAccountDetail>();
-				foreach (var account in model.accountLists)
-				{
-					ChartAccountDetail obj = new ChartAccountDetail();
-					obj = await _uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).Where(x => x.AccountLevelId == 4 && x.AccountCode == account).FirstOrDefaultAsync();
-					if (obj != null)
-					{
-						if (obj.CreditAccountlist.Count > 0 || obj.DebitAccountlist.Count > 0)
-							ledgerList.Add(obj);
-					}
-				}
+				ledgerList = await _uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).Where(x => x.AccountLevelId == 4 && model.accountLists.Contains(x.AccountCode)).ToListAsync();
+				//foreach (var account in model.accountLists)
+				//{
+				//	ChartAccountDetail obj = new ChartAccountDetail();
+				//	obj = await _uow.GetDbContext().ChartAccountDetail.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).Where(x => x.AccountLevelId == 4 && x.AccountCode == account).FirstOrDefaultAsync();
+				//	if (obj != null)
+				//	{
+				//		if (obj.CreditAccountlist.Count > 0 || obj.DebitAccountlist.Count > 0)
+				//			ledgerList.Add(obj);
+				//	}
+				//}
 
 				DateTime defaultdate = new DateTime(DateTime.UtcNow.Year, 1, 1);
 				if (model.fromdate == null && model.todate == null)
