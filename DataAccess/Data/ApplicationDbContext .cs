@@ -154,12 +154,12 @@ namespace HumanitarianAssistance.Entities
         public DbSet<CurrencyDetails> CurrencyDetails { get; set; }
         //public DbSet<AccountLevel> AccountLevel { get; set; }
         public DbSet<ChartAccountDetail> ChartAccountDetail { get; set; }
-		public DbSet<AccountType> AccountType { get; set; }
-		public DbSet<VoucherType> VoucherType { get; set; }
+        public DbSet<AccountType> AccountType { get; set; }
+        public DbSet<VoucherType> VoucherType { get; set; }
         public DbSet<VoucherTransactionDetails> VoucherTransactionDetails { get; set; }
-		//public DbSet<AnalyticalType> AnalyticalType { get; set; }
-		public DbSet<AnalyticalDetail> AnalyticalDetail { get; set; }
-		public DbSet<ExchangeRate> ExchangeRates { get; set; }
+        //public DbSet<AnalyticalType> AnalyticalType { get; set; }
+        public DbSet<AnalyticalDetail> AnalyticalDetail { get; set; }
+        public DbSet<ExchangeRate> ExchangeRates { get; set; }
         public DbSet<ProjectDetails> ProjectDetails { get; set; }
         public DbSet<ProjectBudget> ProjectBudget { get; set; }
         public DbSet<ProjectBudgetLine> ProjectBudgetLine { get; set; }
@@ -224,29 +224,30 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeeEvaluationTraining> EmployeeEvaluationTraining { get; set; }
         public DbSet<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMember { get; set; }
         public DbSet<RatingBasedCriteria> RatingBasedCriteria { get; set; }
-		public DbSet<CategoryPopulator> CategoryPopulator { get; set; }
-		public DbSet<LoggerDetails> LoggerDetails { get; set; }
+        public DbSet<CategoryPopulator> CategoryPopulator { get; set; }
+        public DbSet<LoggerDetails> LoggerDetails { get; set; }
 
-		// Store
-		public DbSet<StoreInventory> StoreInventories { get; set; }
-		public DbSet<StoreInventoryItem> InventoryItems { get; set; }
-		public DbSet<StoreItemPurchase> StoreItemPurchases { get; set; }
-		public DbSet<StorePurchaseOrder> StorePurchaseOrders { get; set; }
-		public DbSet<ItemPurchaseDocument> ItemPurchaseDocuments { get; set; }
-		public DbSet<PurchaseVehicle> PurchaseVehicles { get; set; }
-		public DbSet<MotorFuel> VehicleFuel { get; set; }
-		public DbSet<VehicleLocation> VehicleLocations { get; set; }
-		public DbSet<VehicleMileage> VehicleMileages { get; set; }
-		public DbSet<PurchaseGenerator> PurchaseGenerators { get; set; }
-		public DbSet<MotorMaintenance> MotorMaintenances { get; set; }
-		public DbSet<MotorSparePart> MotorSpareParts { get; set; }
-		//
+        // Store
+        public DbSet<StoreInventory> StoreInventories { get; set; }
+        public DbSet<StoreInventoryItem> InventoryItems { get; set; }
+        public DbSet<StoreItemPurchase> StoreItemPurchases { get; set; }
+        public DbSet<StorePurchaseOrder> StorePurchaseOrders { get; set; }
+        public DbSet<ItemPurchaseDocument> ItemPurchaseDocuments { get; set; }
+        public DbSet<PurchaseVehicle> PurchaseVehicles { get; set; }
+        public DbSet<MotorFuel> VehicleFuel { get; set; }
+        public DbSet<VehicleLocation> VehicleLocations { get; set; }
+        public DbSet<VehicleMileage> VehicleMileages { get; set; }
+        public DbSet<PurchaseGenerator> PurchaseGenerators { get; set; }
+        public DbSet<MotorMaintenance> MotorMaintenances { get; set; }
+        public DbSet<MotorSparePart> MotorSpareParts { get; set; }
+        //
 
-		public DbSet<EmployeePayrollForMonth> EmployeePayrollForMonth { get; set; }
-		public DbSet<EmployeePayrollMonth> EmployeePayrollMonth { get; set; }
-		public DbSet<EmployeeContract> EmployeeContract { get; set; }
+        public DbSet<EmployeePayrollForMonth> EmployeePayrollForMonth { get; set; }
+        public DbSet<EmployeePayrollMonth> EmployeePayrollMonth { get; set; }
+        public DbSet<EmployeeContract> EmployeeContract { get; set; }
+        public DbSet<SalaryTaxReportContent> SalaryTaxReportContent { get; set; }
 
-        
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

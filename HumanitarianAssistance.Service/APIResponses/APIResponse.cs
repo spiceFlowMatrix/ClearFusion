@@ -15,8 +15,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public APIResponse()
         {
             data = new data();
-            ItemAmount = new ItemAmount();			
-		}
+            ItemAmount = new ItemAmount();
+        }
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public data data { get; set; }
@@ -75,9 +75,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double? TotalGrossSalary { get; set; }
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
-		public UpdatePurchaseInvoiceModel UpdatePurchaseInvoiceModel { get; set; }
-		public ExchangeGainOrLossModel ExchangeGainOrLossModel { get; set; }
-		public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
+        public UpdatePurchaseInvoiceModel UpdatePurchaseInvoiceModel { get; set; }
+        public ExchangeGainOrLossModel ExchangeGainOrLossModel { get; set; }
+        public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
         public List<ProcurmentSummaryModel> ProcurmentSummaryModelList { get; set; }
         public List<ItemOrderModel> ItemOrderModelList { get; set; }
         //public List<IGrouping<int, CategoryPopulator>> CategoryPopulatorLst { get; set; }
@@ -225,14 +225,17 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<DepreciationReportModel> DepreciationReportList { get; set; }
 
 
-        public int notificationIsReadCount{get; set;}
+        public int notificationIsReadCount { get; set; }
+        public SalaryTaxReportContent SalaryTaxReportContentDetails { get; set; }
 
-}
 
-public class Roles
-{
-    public string RoleName { get; set; }
-    public string Id { get; set; }
-    public IList<PermissionsModel> PermissionsList { get; set; }
-}
+
+    }
+
+    public class Roles
+    {
+        public string RoleName { get; set; }
+        public string Id { get; set; }
+        public IList<PermissionsModel> PermissionsList { get; set; }
+    }
 }

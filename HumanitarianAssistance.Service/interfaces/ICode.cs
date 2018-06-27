@@ -36,6 +36,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditQualifactionDetails(QualificationDetailsModel model);
         Task<APIResponse> AddSalaryHead(SalaryHeadModel model);
         Task<APIResponse> EditSalaryHead(SalaryHeadModel model);
+        Task<APIResponse> DeleteSalaryHead(SalaryHeadModel model);
         Task<APIResponse> GetAllSalaryHead();
         Task<APIResponse> GetAllPensionRate();
         Task<APIResponse> AddPensionRate(EmployeePensionRateModel model, string UserId);
@@ -65,7 +66,13 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> RejectEmployeeInterviewRequest(int InterviewDetailsId, string UserId);
 
         Task<APIResponse> DeleteExitInterview(int existInterviewDetailsId, string UserId);
-		Task<APIResponse> GetAllEmployeeAppraisalDetailsByEmployeeId(int EmployeeId);
+        Task<APIResponse> GetAllEmployeeAppraisalDetailsByEmployeeId(int EmployeeId);
 
-	}
+        Task<APIResponse> GetSalaryTaxReportContentDetails(int officeId);
+        Task<APIResponse> AddSalaryTaxReportContentDetails(SalaryTaxReportContent model, string UserId);
+        Task<APIResponse> EditSalaryTaxReportContentDetails(SalaryTaxReportContent model, string UserId);
+
+
+
+    }
 }
