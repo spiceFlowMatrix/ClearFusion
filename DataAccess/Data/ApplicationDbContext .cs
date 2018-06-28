@@ -280,7 +280,7 @@ namespace HumanitarianAssistance.Entities
             modelBuilder.Entity<QualificationDetails>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<HolidayDetails>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<FinancialYearDetail>().HasQueryFilter(x => x.IsDeleted == false);
-            modelBuilder.Entity<SalaryHeadDetails>().HasQueryFilter(x => x.IsDeleted == false);
+            //modelBuilder.Entity<SalaryHeadDetails>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<EmployeePayroll>().HasQueryFilter(x => x.IsDeleted == false);
             base.OnModelCreating(modelBuilder);
         }

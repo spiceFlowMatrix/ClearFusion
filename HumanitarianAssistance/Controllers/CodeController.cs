@@ -1091,14 +1091,14 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllEmployeeAppraisalDetailsByEmployeeId([FromQuery] int EmployeeId)
+    public async Task<APIResponse> GetAllEmployeeAppraisalDetailsByEmployeeId([FromQuery] int EmployeeId, DateTime CurrentAppraisalDate)
     {
       APIResponse response = new APIResponse();
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-        response = await _icode.GetAllEmployeeAppraisalDetailsByEmployeeId(EmployeeId);
+        response = await _icode.GetAllEmployeeAppraisalDetailsByEmployeeId(EmployeeId, CurrentAppraisalDate);
       }
       return response;
     }

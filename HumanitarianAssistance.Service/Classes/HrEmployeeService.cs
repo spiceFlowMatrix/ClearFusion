@@ -915,6 +915,7 @@ namespace HumanitarianAssistance.Service.Classes
 										   join emppayroll in await _uow.EmployeePayrollRepository.FindAllAsync(x => x.EmployeeID == EmployeeId) on salaryhead.SalaryHeadId equals emppayroll.SalaryHeadId
 										   into employeepayrollinfo
 										   from employeepayrolls in employeepayrollinfo.DefaultIfEmpty()
+										   where(salaryhead.IsDeleted == false)
 										   select new EmployeePayrollModel
 										   {
 											   PayrollId = employeepayrolls?.PayrollId ?? 0,
@@ -3021,6 +3022,9 @@ namespace HumanitarianAssistance.Service.Classes
 			APIResponse response = new APIResponse();
 			try
 			{
+				var salaryheads = await _uow.SalaryHeadDetailsRepository.GetAllAsyn();
+
+
 				var userdetailslist = (from ept in await _uow.EmployeePaymentTypeRepository.GetAllAsyn()
 									   join emp in await _uow.EmployeeMonthlyPayrollRepository.GetAllAsyn() on ept.EmployeeID equals emp.EmployeeID
 									   join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId
@@ -3134,7 +3138,7 @@ namespace HumanitarianAssistance.Service.Classes
 				var userdetailslist = (from ept in await _uow.EmployeePayrollForMonthRepository.GetAllAsyn()
 									   join emp in await _uow.EmployeePayrollMonthRepository.GetAllAsyn() on ept.EmployeeID equals emp.EmployeeID
 									   join es in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on emp.SalaryHeadId equals es.SalaryHeadId
-									   where ept.FinancialYearDate.Date.Month == month && ept.FinancialYearDate.Date.Year == year && emp.Date.Date.Month == month && emp.Date.Date.Year == year && ept.OfficeId == officeid && ept.PaymentType == paymentType
+									   where ept.FinancialYearDate.Date.Month == month && ept.FinancialYearDate.Date.Year == year && emp.Date.Date.Month == month && emp.Date.Date.Year == year && ept.OfficeId == officeid && ept.PaymentType == paymentType && es.IsDeleted == false
 									   select new EmployeeMonthlyPayrollModel
 									   {
 										   EmployeeId = ept.EmployeeID,
@@ -3360,7 +3364,7 @@ namespace HumanitarianAssistance.Service.Classes
 						{
 							payrollmodel = payrolllist[i].Select(x => new EmployeeMonthlyPayrollModel
 							{
-								employeepayrolllist = _uow.GetDbContext().EmployeePayroll.Include(o => o.SalaryHeadDetails).Where(c => c.EmployeeID == x.EmployeeId).ToList().Select(e => new EmployeePayrollModel
+								employeepayrolllist = _uow.GetDbContext().EmployeePayroll.Include(o => o.SalaryHeadDetails).Where(c => c.EmployeeID == x.EmployeeId && c.SalaryHeadDetails.IsDeleted == false).ToList().Select(e => new EmployeePayrollModel
 								{
 									PayrollId = e.PayrollId,
 									SalaryHeadId = e.SalaryHeadId,
@@ -3430,7 +3434,7 @@ namespace HumanitarianAssistance.Service.Classes
 							var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
 							payrollmodel = payrolllist[i].Select(x => new EmployeeMonthlyPayrollModel
 							{
-								employeepayrolllist = _uow.GetDbContext().EmployeePayroll.Include(o => o.SalaryHeadDetails).Where(c => c.EmployeeID == x.EmployeeId).ToList().Select(e => new EmployeePayrollModel
+								employeepayrolllist = _uow.GetDbContext().EmployeePayroll.Include(o => o.SalaryHeadDetails).Where(c => c.EmployeeID == x.EmployeeId && c.SalaryHeadDetails.IsDeleted == false).ToList().Select(e => new EmployeePayrollModel
 								{
 									PayrollId = e.PayrollId,
 									SalaryHeadId = e.SalaryHeadId,

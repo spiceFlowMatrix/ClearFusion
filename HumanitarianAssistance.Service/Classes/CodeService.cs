@@ -1007,16 +1007,16 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllEmployeeAppraisalDetailsByEmployeeId(int EmployeeId)
+        public async Task<APIResponse> GetAllEmployeeAppraisalDetailsByEmployeeId(int EmployeeId, DateTime CurrentAppraisalDate)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var empAppraisalDetails = await _uow.GetDbContext().EmployeeAppraisalDetails.Where(x => x.EmployeeId == EmployeeId && x.IsDeleted == false && x.AppraisalStatus == true).OrderByDescending(x => x.CurrentAppraisalDate).FirstOrDefaultAsync();
+                var empAppraisalDetails = await _uow.GetDbContext().EmployeeAppraisalDetails.Where(x => x.EmployeeId == EmployeeId && x.CurrentAppraisalDate.Date.Day == CurrentAppraisalDate.Date.Day && x.CurrentAppraisalDate.Date.Month == CurrentAppraisalDate.Date.Month && x.CurrentAppraisalDate.Date.Year == CurrentAppraisalDate.Date.Year && x.IsDeleted == false && x.AppraisalStatus == true).OrderByDescending(x => x.CurrentAppraisalDate).FirstOrDefaultAsync();
                 if (empAppraisalDetails != null)
                 {
                     EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
-                    var quesLst = await _uow.GetDbContext().EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == empAppraisalDetails.EmployeeId && x.CurrentAppraisalDate == empAppraisalDetails.CurrentAppraisalDate).ToListAsync();
+                    var quesLst = await _uow.GetDbContext().EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == empAppraisalDetails.EmployeeId && x.CurrentAppraisalDate.Date.Day == CurrentAppraisalDate.Date.Day && x.CurrentAppraisalDate.Date.Month == CurrentAppraisalDate.Date.Month && x.CurrentAppraisalDate.Date.Year == CurrentAppraisalDate.Date.Year).ToListAsync();
                     model.EmployeeAppraisalDetailsId = empAppraisalDetails.EmployeeAppraisalDetailsId;
                     model.EmployeeId = empAppraisalDetails.EmployeeId;
                     model.EmployeeCode = empAppraisalDetails.EmployeeCode;
@@ -1798,13 +1798,14 @@ namespace HumanitarianAssistance.Service.Classes
                 var existrecord = await _uow.SalaryTaxReportContentRepository.FindAsync(x => x.SalaryTaxReportContentId == model.SalaryTaxReportContentId);
                 if (existrecord != null)
                 {
-                    existrecord.PositionAuthorizedOfficer = model.PositionAuthorizedOfficer;
-                    existrecord.OfficeId = model.OfficeId;
-                    existrecord.ModifiedById = model.ModifiedById;
-                    existrecord.ModifiedDate = model.ModifiedDate;
-                    existrecord.IsDeleted = model.IsDeleted;
+					existrecord.EmployerAuthorizedOfficerName = model.EmployerAuthorizedOfficerName;
+					existrecord.PositionAuthorizedOfficer = model.PositionAuthorizedOfficer;
+					existrecord.OfficeId = model.OfficeId;
+					existrecord.ModifiedById = model.ModifiedById;
+					existrecord.ModifiedDate = model.ModifiedDate;
+					existrecord.IsDeleted = model.IsDeleted;
 
-                    await _uow.SalaryTaxReportContentRepository.UpdateAsyn(existrecord);
+					await _uow.SalaryTaxReportContentRepository.UpdateAsyn(existrecord);
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
