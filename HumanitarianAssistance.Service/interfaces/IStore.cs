@@ -59,7 +59,9 @@ namespace HumanitarianAssistance.Service.interfaces
 
 		Task<APIResponse> AddItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId);
 		Task<APIResponse> EditItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId);
+		Task<APIResponse> GetAllItemSpecificationsDetails(string ItemId, int ItemTypeId);
 		Task<APIResponse> AddItemSpecificationsMaster(ItemSpecificationMasterModel model, string UserId);
 		Task<APIResponse> EditItemSpecificationsMaster(ItemSpecificationMasterModel model, string UserId);
+		Task<APIResponse> GetItemSpecificationsMaster(int ItemTypeId, int OfficeId);
 	}
 }

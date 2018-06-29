@@ -1423,10 +1423,13 @@ namespace HumanitarianAssistance.Service.Classes
 					{
 						x.CreatedById = UserId;
 						x.CreatedDate = DateTime.Now;
+						x.IsDeleted = false;
 						return x;
 					}).ToList();
 					await _uow.GetDbContext().ItemSpecificationDetails.AddRangeAsync(obj);
 					await _uow.SaveAsync();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
 				}
 				else
 				{
@@ -1459,16 +1462,42 @@ namespace HumanitarianAssistance.Service.Classes
 					{
 						x.CreatedById = UserId;
 						x.CreatedDate = DateTime.Now;
+						x.IsDeleted = false;
 						return x;
 					}).ToList();
 					await _uow.GetDbContext().ItemSpecificationDetails.AddRangeAsync(obj);
 					await _uow.SaveAsync();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
 				}
 				else
 				{
 					response.StatusCode = StaticResource.failStatusCode;
 					response.Message = "Model is invalid";
 				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetAllItemSpecificationsDetails(string ItemId, int ItemTypeId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var list = await _uow.GetDbContext().ItemSpecificationDetails.Include(x => x.ItemSpecificationMaster).Where(x => x.ItemId == ItemId && x.ItemSpecificationMaster.ItemTypeId == ItemTypeId && x.IsDeleted == false).ToListAsync();
+				response.data.ItemSpecificationDetailList = list.Select(x => new ItemSpecificationDetailModel {
+					ItemSpecificationMasterId = x.ItemSpecificationMasterId,
+					ItemId = x.ItemId,
+					ItemSpecificationValue = x.ItemSpecificationValue,
+					ItemSpecificationField = x.ItemSpecificationMaster.ItemSpecificationField
+				}).ToList();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
 			}
 			catch (Exception ex)
 			{
@@ -1493,8 +1522,11 @@ namespace HumanitarianAssistance.Service.Classes
 					ItemSpecificationMaster obj = _mapper.Map<ItemSpecificationMaster>(model);
 					obj.CreatedById = UserId;
 					obj.CreatedDate = DateTime.Now;
+					obj.IsDeleted = false;
 					await _uow.GetDbContext().ItemSpecificationMaster.AddAsync(obj);
 					await _uow.SaveAsync();
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
 				}
 				else
 				{
@@ -1519,13 +1551,39 @@ namespace HumanitarianAssistance.Service.Classes
 				{
 					var existRecord = await _uow.ItemSpecificationMasterRepository.FindAsync(x => x.IsDeleted == false && x.ItemSpecificationMasterId == model.ItemSpecificationMasterId);
 					_mapper.Map(model, existRecord);
-					await _uow.ItemSpecificationMasterRepository.UpdateAsyn(existRecord);					
+					existRecord.IsDeleted = false;
+					existRecord.ModifiedById = UserId;
+					existRecord.ModifiedDate = DateTime.Now;
+					await _uow.ItemSpecificationMasterRepository.UpdateAsyn(existRecord);
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
 				}
 				else
 				{
 					response.StatusCode = StaticResource.failStatusCode;
 					response.Message = "Model is invalid";
 				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> GetItemSpecificationsMaster(int ItemTypeId, int OfficeId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				var list = await _uow.ItemSpecificationMasterRepository.FindAllAsync(x=>x.IsDeleted ==false && x.ItemTypeId == ItemTypeId && x.OfficeId == OfficeId);
+				response.data.ItemSpecificationMasterList = list.Select(x => new ItemSpecificationMasterModel {
+					ItemSpecificationMasterId = x.ItemSpecificationMasterId,
+					ItemSpecificationField = x.ItemSpecificationField			
+				}).ToList();
+				response.StatusCode = StaticResource.successStatusCode;
+				response.Message = "Success";
 			}
 			catch (Exception ex)
 			{

@@ -451,6 +451,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllItemSpecificationsDetails([FromQuery]string ItemId, int ItemTypeId)
+    {
+      APIResponse apiresponse = await _iStore.GetAllItemSpecificationsDetails(ItemId, ItemTypeId);
+      return apiresponse;
+    }
+
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddItemSpecificationsMaster([FromBody]ItemSpecificationMasterModel model)
@@ -474,6 +482,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         apiresponse = await _iStore.EditItemSpecificationsMaster(model, user.Id);
       }
+      return apiresponse;
+    }
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetItemSpecificationsMaster([FromQuery]int ItemTypeId, int OfficeId)
+    {
+      APIResponse apiresponse = await _iStore.GetItemSpecificationsMaster(ItemTypeId, OfficeId);
       return apiresponse;
     }
 
