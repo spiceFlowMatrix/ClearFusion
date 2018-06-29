@@ -1363,7 +1363,49 @@ namespace HumanitarianAssistance.Service.Classes
 			return response;
 		}
 
-        #endregion
+		#endregion
 
-    }
+		#region "Update Purchase Image"
+
+		public async Task<APIResponse> UpdatePurchaseImage(UpdatePurchaseInvoiceModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				//byte[] filepathBase64 = Encoding.UTF8.GetBytes(model.EmployeeImage);
+				string[] str = model.Invoice.Split(",");
+				byte[] filepath = Convert.FromBase64String(str[1]);
+
+				string ex = str[0].Split("/")[1].Split(";")[0];
+				if (ex == "plain")
+					ex = "txt";
+				string guidname = Guid.NewGuid().ToString();
+				//byte[] filepath = Encoding.UTF8.GetBytes(str[1]);
+				string filename = guidname + "." + ex;
+				var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+				File.WriteAllBytes(@"Documents/" + filename, filepath);
+
+				var employeeinfo = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.IsDeleted == false && x.PurchaseId == model.PurchaseId);
+				if (employeeinfo != null)
+				{
+					employeeinfo.ImageFileName= guidname;
+					employeeinfo.ImageFileType = "." + ex;
+					employeeinfo.ModifiedById = UserId;
+					employeeinfo.ModifiedDate = DateTime.Now;
+					employeeinfo.IsDeleted = false;
+					await _uow.StoreItemPurchaseRepository.UpdateAsyn(employeeinfo);
+					response.StatusCode = StaticResource.successStatusCode;
+					response.Message = "Success";
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		#endregion
+	}
 }

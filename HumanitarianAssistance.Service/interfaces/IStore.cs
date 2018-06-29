@@ -55,6 +55,6 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> UpdateInvoice(UpdatePurchaseInvoiceModel model, string UserId);
 		Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId);
 
-
+		Task<APIResponse> UpdatePurchaseImage(UpdatePurchaseInvoiceModel model, string UserId);
 	}
 }
