@@ -312,5 +312,9 @@ namespace HumanitarianAssistance.Common.Helpers
     public const string TemplateCreated = "Template Created";
     public const string TemplateUpdated = "Template Updated";
 
+    //Store
+    public const string DeleteProcurementsFirst = "Please Delete Procurements First";
+
+
   }
 }

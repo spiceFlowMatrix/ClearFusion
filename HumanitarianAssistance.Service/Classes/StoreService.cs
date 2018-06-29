@@ -684,12 +684,24 @@ namespace HumanitarianAssistance.Service.Classes
                     var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
                     if (purchaseRecord != null)
                     {
-                        purchaseRecord.IsDeleted = true;
-                        await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
-                        await _uow.SaveAsync();
 
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Success";
+                        var isOrderExist = _uow.GetDbContext().StorePurchaseOrders.Where(x => x.Purchase == model.PurchaseId && x.IsDeleted == false).Count();
+
+                        if (isOrderExist > 0)
+                        {
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = StaticResource.DeleteProcurementsFirst;
+                            return response;
+                        }
+                        else
+                        {
+                            purchaseRecord.IsDeleted = true;
+                            await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
+                            await _uow.SaveAsync();
+
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Success";
+                        }
                     }
                     else
                     {
@@ -1342,26 +1354,26 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-		public async Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				var Invoices = await _uow.StoreItemPurchaseRepository.FindAsync(x=>x.PurchaseId == PurchaseId);
-				UpdatePurchaseInvoiceModel obj = new UpdatePurchaseInvoiceModel();
-				obj.PurchaseId = Invoices.PurchaseId;
-				obj.Invoice = Invoices.InvoiceFileName + Invoices.InvoiceFileType;
-				response.data.UpdatePurchaseInvoiceModel = obj;
-				response.StatusCode = StaticResource.successStatusCode;
-				response.Message = "Success";
-			}			
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
+        public async Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var Invoices = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == PurchaseId);
+                UpdatePurchaseInvoiceModel obj = new UpdatePurchaseInvoiceModel();
+                obj.PurchaseId = Invoices.PurchaseId;
+                obj.Invoice = Invoices.InvoiceFileName + Invoices.InvoiceFileType;
+                response.data.UpdatePurchaseInvoiceModel = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
         #endregion
 
