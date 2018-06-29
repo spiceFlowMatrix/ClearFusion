@@ -412,5 +412,70 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> UpdatePurchaseImage([FromBody]UpdatePurchaseInvoiceModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iStore.UpdatePurchaseImage(model, user.Id);
+      }
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddItemSpecificationsDetails([FromBody]List<ItemSpecificationDetailModel> model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iStore.AddItemSpecificationsDetails(model, user.Id);
+      }
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditItemSpecificationsDetails([FromBody]List<ItemSpecificationDetailModel> model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iStore.EditItemSpecificationsDetails(model, user.Id);
+      }
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddItemSpecificationsMaster([FromBody]ItemSpecificationMasterModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iStore.AddItemSpecificationsMaster(model, user.Id);
+      }
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditItemSpecificationsMaster([FromBody]ItemSpecificationMasterModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iStore.EditItemSpecificationsMaster(model, user.Id);
+      }
+      return apiresponse;
+    }
+
   }
 }

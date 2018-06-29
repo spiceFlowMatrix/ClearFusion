@@ -118,10 +118,11 @@ namespace DataAccess
         IGenericRepository<EmployeePayrollMonth> EmployeePayrollMonthRepository { get; }
         IGenericRepository<EmployeeContract> EmployeeContractRepository { get; }
         IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository { get; }
+		IGenericRepository<ItemSpecificationMaster> ItemSpecificationMasterRepository { get; }
+		IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository { get; }
 
 
-
-        void Save();
+		void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
 
