@@ -453,9 +453,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllItemSpecificationsDetails([FromQuery]string ItemId, int ItemTypeId)
+    public async Task<APIResponse> GetAllItemSpecificationsDetails([FromQuery]string ItemId, int ItemTypeId, int OfficeId)
     {
-      APIResponse apiresponse = await _iStore.GetAllItemSpecificationsDetails(ItemId, ItemTypeId);
+      APIResponse apiresponse = await _iStore.GetAllItemSpecificationsDetails(ItemId, ItemTypeId, OfficeId);
       return apiresponse;
     }
 
