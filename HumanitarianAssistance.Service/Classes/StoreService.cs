@@ -1375,178 +1375,190 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-		#endregion
+        #endregion
 
-		#region "Update Purchase Image"
+        #region "Update Purchase Image"
 
-		public async Task<APIResponse> UpdatePurchaseImage(UpdatePurchaseInvoiceModel model, string UserId)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				//byte[] filepathBase64 = Encoding.UTF8.GetBytes(model.EmployeeImage);
-				string[] str = model.Invoice.Split(",");
-				byte[] filepath = Convert.FromBase64String(str[1]);
+        public async Task<APIResponse> UpdatePurchaseImage(UpdatePurchaseInvoiceModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                //byte[] filepathBase64 = Encoding.UTF8.GetBytes(model.EmployeeImage);
+                string[] str = model.Invoice.Split(",");
+                byte[] filepath = Convert.FromBase64String(str[1]);
 
-				string ex = str[0].Split("/")[1].Split(";")[0];
-				if (ex == "plain")
-					ex = "txt";
-				string guidname = Guid.NewGuid().ToString();
-				//byte[] filepath = Encoding.UTF8.GetBytes(str[1]);
-				string filename = guidname + "." + ex;
-				var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-				File.WriteAllBytes(@"Documents/" + filename, filepath);
+                string ex = str[0].Split("/")[1].Split(";")[0];
+                if (ex == "plain")
+                    ex = "txt";
+                string guidname = Guid.NewGuid().ToString();
+                //byte[] filepath = Encoding.UTF8.GetBytes(str[1]);
+                string filename = guidname + "." + ex;
+                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                File.WriteAllBytes(@"Documents/" + filename, filepath);
 
-				var employeeinfo = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.IsDeleted == false && x.PurchaseId == model.PurchaseId);
-				if (employeeinfo != null)
-				{
-					employeeinfo.ImageFileName= guidname;
-					employeeinfo.ImageFileType = "." + ex;
-					employeeinfo.ModifiedById = UserId;
-					employeeinfo.ModifiedDate = DateTime.Now;
-					employeeinfo.IsDeleted = false;
-					await _uow.StoreItemPurchaseRepository.UpdateAsyn(employeeinfo);
-					response.StatusCode = StaticResource.successStatusCode;
-					response.Message = "Success";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
+                var employeeinfo = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.IsDeleted == false && x.PurchaseId == model.PurchaseId);
+                if (employeeinfo != null)
+                {
+                    employeeinfo.ImageFileName = guidname;
+                    employeeinfo.ImageFileType = "." + ex;
+                    employeeinfo.ModifiedById = UserId;
+                    employeeinfo.ModifiedDate = DateTime.Now;
+                    employeeinfo.IsDeleted = false;
+                    await _uow.StoreItemPurchaseRepository.UpdateAsyn(employeeinfo);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
-		#endregion
-
-
-		#region "Store Item Type Specifications"
-
-		public async Task<APIResponse> AddItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				if (model.Count > 0)
-				{
-					List<ItemSpecificationDetails> obj = _mapper.Map<List<ItemSpecificationDetails>>(model);
-					obj = obj.Select(x =>
-					{
-						x.CreatedById = UserId;
-						x.CreatedDate = DateTime.Now;
-						return x;
-					}).ToList();
-					await _uow.GetDbContext().ItemSpecificationDetails.AddRangeAsync(obj);
-					await _uow.SaveAsync();
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Model is invalid";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
-
-		public async Task<APIResponse> EditItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				if (model.Count > 0)
-				{
-					var existRecord = await _uow.ItemSpecificationDetailsRepository.FindAllAsync(x => x.IsDeleted == false && x.ItemId == model.FirstOrDefault().ItemId);
-					if (existRecord.Count > 0)
-					{
-						_uow.GetDbContext().ItemSpecificationDetails.RemoveRange(existRecord);
-					}
-					List<ItemSpecificationDetails> obj = _mapper.Map<List<ItemSpecificationDetails>>(model);
-					obj = obj.Select(x =>
-					{
-						x.CreatedById = UserId;
-						x.CreatedDate = DateTime.Now;
-						return x;
-					}).ToList();
-					await _uow.GetDbContext().ItemSpecificationDetails.AddRangeAsync(obj);
-					await _uow.SaveAsync();
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Model is invalid";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
-
-		#endregion
+        #endregion
 
 
-		#region "Store Item Type Specifications Master"
+        #region "Store Item Type Specifications"
 
-		public async Task<APIResponse> AddItemSpecificationsMaster(ItemSpecificationMasterModel model, string UserId)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				if (model != null)
-				{
-					ItemSpecificationMaster obj = _mapper.Map<ItemSpecificationMaster>(model);
-					obj.CreatedById = UserId;
-					obj.CreatedDate = DateTime.Now;
-					await _uow.GetDbContext().ItemSpecificationMaster.AddAsync(obj);
-					await _uow.SaveAsync();
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Model is invalid";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
+        public async Task<APIResponse> AddItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model.Count > 0)
+                {
+                    List<ItemSpecificationDetails> obj = _mapper.Map<List<ItemSpecificationDetails>>(model);
+                    obj = obj.Select(x =>
+                    {
+                        x.CreatedById = UserId;
+                        x.CreatedDate = DateTime.Now;
+                        return x;
+                    }).ToList();
+                    await _uow.GetDbContext().ItemSpecificationDetails.AddRangeAsync(obj);
+                    await _uow.SaveAsync();
 
-		public async Task<APIResponse> EditItemSpecificationsMaster(ItemSpecificationMasterModel model, string UserId)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				if (model != null)
-				{
-					var existRecord = await _uow.ItemSpecificationMasterRepository.FindAsync(x => x.IsDeleted == false && x.ItemSpecificationMasterId == model.ItemSpecificationMasterId);
-					_mapper.Map(model, existRecord);
-					await _uow.ItemSpecificationMasterRepository.UpdateAsyn(existRecord);					
-				}
-				else
-				{
-					response.StatusCode = StaticResource.failStatusCode;
-					response.Message = "Model is invalid";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model is invalid";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
-		#endregion
-	}
+        public async Task<APIResponse> EditItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model.Count > 0)
+                {
+                    var existRecord = await _uow.ItemSpecificationDetailsRepository.FindAllAsync(x => x.IsDeleted == false && x.ItemId == model.FirstOrDefault().ItemId);
+                    if (existRecord.Count > 0)
+                    {
+                        _uow.GetDbContext().ItemSpecificationDetails.RemoveRange(existRecord);
+                    }
+                    List<ItemSpecificationDetails> obj = _mapper.Map<List<ItemSpecificationDetails>>(model);
+                    obj = obj.Select(x =>
+                    {
+                        x.CreatedById = UserId;
+                        x.CreatedDate = DateTime.Now;
+                        return x;
+                    }).ToList();
+                    await _uow.GetDbContext().ItemSpecificationDetails.AddRangeAsync(obj);
+                    await _uow.SaveAsync();
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model is invalid";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
+
+        #region "Store Item Type Specifications Master"
+
+        public async Task<APIResponse> AddItemSpecificationsMaster(ItemSpecificationMasterModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    ItemSpecificationMaster obj = _mapper.Map<ItemSpecificationMaster>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    await _uow.GetDbContext().ItemSpecificationMaster.AddAsync(obj);
+                    await _uow.SaveAsync();
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model is invalid";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> EditItemSpecificationsMaster(ItemSpecificationMasterModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    var existRecord = await _uow.ItemSpecificationMasterRepository.FindAsync(x => x.IsDeleted == false && x.ItemSpecificationMasterId == model.ItemSpecificationMasterId);
+                    _mapper.Map(model, existRecord);
+                    await _uow.ItemSpecificationMasterRepository.UpdateAsyn(existRecord);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model is invalid";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+    }
 }
