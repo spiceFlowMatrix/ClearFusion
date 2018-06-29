@@ -246,10 +246,11 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeePayrollMonth> EmployeePayrollMonth { get; set; }
         public DbSet<EmployeeContract> EmployeeContract { get; set; }
         public DbSet<SalaryTaxReportContent> SalaryTaxReportContent { get; set; }
+		public DbSet<ItemSpecificationMaster> ItemSpecificationMaster { get; set; }
+		public DbSet<ItemSpecificationDetails> ItemSpecificationDetails { get; set; }
 
 
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
             modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);

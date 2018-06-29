@@ -1407,5 +1407,134 @@ namespace HumanitarianAssistance.Service.Classes
 		}
 
 		#endregion
+
+
+		#region "Store Item Type Specifications"
+
+		public async Task<APIResponse> AddItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				if (model.Count > 0)
+				{
+					List<ItemSpecificationDetails> obj = _mapper.Map<List<ItemSpecificationDetails>>(model);
+					obj = obj.Select(x =>
+					{
+						x.CreatedById = UserId;
+						x.CreatedDate = DateTime.Now;
+						return x;
+					}).ToList();
+					await _uow.GetDbContext().ItemSpecificationDetails.AddRangeAsync(obj);
+					await _uow.SaveAsync();
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = "Model is invalid";
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> EditItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				if (model.Count > 0)
+				{
+					var existRecord = await _uow.ItemSpecificationDetailsRepository.FindAllAsync(x => x.IsDeleted == false && x.ItemId == model.FirstOrDefault().ItemId);
+					if (existRecord.Count > 0)
+					{
+						_uow.GetDbContext().ItemSpecificationDetails.RemoveRange(existRecord);
+					}
+					List<ItemSpecificationDetails> obj = _mapper.Map<List<ItemSpecificationDetails>>(model);
+					obj = obj.Select(x =>
+					{
+						x.CreatedById = UserId;
+						x.CreatedDate = DateTime.Now;
+						return x;
+					}).ToList();
+					await _uow.GetDbContext().ItemSpecificationDetails.AddRangeAsync(obj);
+					await _uow.SaveAsync();
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = "Model is invalid";
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		#endregion
+
+
+		#region "Store Item Type Specifications Master"
+
+		public async Task<APIResponse> AddItemSpecificationsMaster(ItemSpecificationMasterModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				if (model != null)
+				{
+					ItemSpecificationMaster obj = _mapper.Map<ItemSpecificationMaster>(model);
+					obj.CreatedById = UserId;
+					obj.CreatedDate = DateTime.Now;
+					await _uow.GetDbContext().ItemSpecificationMaster.AddAsync(obj);
+					await _uow.SaveAsync();
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = "Model is invalid";
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		public async Task<APIResponse> EditItemSpecificationsMaster(ItemSpecificationMasterModel model, string UserId)
+		{
+			APIResponse response = new APIResponse();
+			try
+			{
+				if (model != null)
+				{
+					var existRecord = await _uow.ItemSpecificationMasterRepository.FindAsync(x => x.IsDeleted == false && x.ItemSpecificationMasterId == model.ItemSpecificationMasterId);
+					_mapper.Map(model, existRecord);
+					await _uow.ItemSpecificationMasterRepository.UpdateAsyn(existRecord);					
+				}
+				else
+				{
+					response.StatusCode = StaticResource.failStatusCode;
+					response.Message = "Model is invalid";
+				}
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = StaticResource.failStatusCode;
+				response.Message = ex.Message;
+			}
+			return response;
+		}
+
+		#endregion
 	}
 }
