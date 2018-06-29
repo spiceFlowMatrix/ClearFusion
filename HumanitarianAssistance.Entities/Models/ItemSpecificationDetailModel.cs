@@ -9,9 +9,6 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public int ItemSpecificationMasterId { get; set; }
 		public string ItemId { get; set; }
 		public string ItemSpecificationValue { get; set; }
-		public string CreatedById { get; set; }
-		public DateTime? CreatedDate { get; set; }
-		public string ModifiedById { get; set; }
-		public DateTime? ModifiedDate { get; set; }
+		public string ItemSpecificationField { get; set; }
 	}
 }
