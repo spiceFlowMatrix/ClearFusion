@@ -953,6 +953,11 @@ namespace HumanitarianAssistance.Service.Classes
                     OrderId = x.OrderId,
                     Purchase = x.Purchase,
                     ReturnedDate = x.ReturnedDate,
+                    IssedToLocation = x.IssedToLocation,
+                    IssueVoucherNo = x.IssueVoucherNo,
+                    Project = x.Project,
+                    Remarks = x.Remarks,
+                    StatusAtTimeOfIssue = x.StatusAtTimeOfIssue
                     //InventoryName = x.StoreInventoryItem.Inventory.InventoryName,
                     //InventoryItemName = x.StoreInventoryItem.ItemName,
                 }).ToList();

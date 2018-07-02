@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace HumanitarianAssistance.ViewModels.Models.Store
@@ -15,6 +16,12 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public int IssuedToEmployeeId { get; set; }                         // EmployeeID DropDown
         public DateTime IssueDate { get; set; }
         public DateTime? ReturnedDate { get; set; }
+
+        public long IssueVoucherNo { get; set; }
+        public string Remarks { get; set; }
+        public long Project { get; set; }
+        public string IssedToLocation { get; set; }
+        public int StatusAtTimeOfIssue { get; set; }
 
         //TODo: For get
         //public string InventoryName { get; set; }
