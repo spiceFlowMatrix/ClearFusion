@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180629135142_ItemSpecificationModelChange")]
+    partial class ItemSpecificationModelChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3925,11 +3927,7 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<string>("IssedToLocation");
-
                     b.Property<DateTime>("IssueDate");
-
-                    b.Property<long>("IssueVoucherNo");
 
                     b.Property<int>("IssuedQuantity");
 
@@ -3941,17 +3939,11 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("MustReturn");
 
-                    b.Property<long>("Project");
-
                     b.Property<string>("Purchase");
-
-                    b.Property<string>("Remarks");
 
                     b.Property<bool>("Returned");
 
                     b.Property<DateTime?>("ReturnedDate");
-
-                    b.Property<int>("StatusAtTimeOfIssue");
 
                     b.HasKey("OrderId");
 
