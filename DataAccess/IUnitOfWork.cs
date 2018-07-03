@@ -120,9 +120,11 @@ namespace DataAccess
         IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository { get; }
 		IGenericRepository<ItemSpecificationMaster> ItemSpecificationMasterRepository { get; }
 		IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository { get; }
+		IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository { get; }
+		IGenericRepository<ReceiptType> ReceiptTypeRepository { get; }
 
-
-		void Save();
+        
+        void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
 

@@ -119,12 +119,14 @@ namespace DataAccess
         private IGenericRepository<EmployeeContract> _employeeContractRepository;
 
         private IGenericRepository<SalaryTaxReportContent> _salaryTaxReportContentRepository;
-		private IGenericRepository<ItemSpecificationMaster> _itemSpecificationMasterRepository;
+        private IGenericRepository<ItemSpecificationMaster> _itemSpecificationMasterRepository;
 
-		private IGenericRepository<ItemSpecificationDetails> _itemSpecificationDetailsRepository;
+        private IGenericRepository<ItemSpecificationDetails> _itemSpecificationDetailsRepository;
+        private IGenericRepository<StatusAtTimeOfIssue> _statusAtTimeOfIssueRepository;
+        private IGenericRepository<ReceiptType> _receiptTypeRepository;
 
 
-		public UnitOfWork(ApplicationDbContext mschaContext)
+        public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
@@ -148,25 +150,45 @@ namespace DataAccess
             GC.SuppressFinalize(this);
         }
 
-		public IGenericRepository<ItemSpecificationMaster> ItemSpecificationMasterRepository
-		{
-			get
-			{
-				return _itemSpecificationMasterRepository =
-					_itemSpecificationMasterRepository ?? new GenericRepository<ItemSpecificationMaster>(_mschaContext);
-			}
-		}
+        public IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository
+        {
+            get
+            {
+                return _statusAtTimeOfIssueRepository =
+                    _statusAtTimeOfIssueRepository ?? new GenericRepository<StatusAtTimeOfIssue>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository
-		{
-			get
-			{
-				return _itemSpecificationDetailsRepository =
-					_itemSpecificationDetailsRepository ?? new GenericRepository<ItemSpecificationDetails>(_mschaContext);
-			}
-		}
 
-		public IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository
+        public IGenericRepository<ReceiptType> ReceiptTypeRepository
+        {
+            get
+            {
+                return _receiptTypeRepository =
+                    _receiptTypeRepository ?? new GenericRepository<ReceiptType>(_mschaContext);
+            }
+        }
+
+
+        public IGenericRepository<ItemSpecificationMaster> ItemSpecificationMasterRepository
+        {
+            get
+            {
+                return _itemSpecificationMasterRepository =
+                    _itemSpecificationMasterRepository ?? new GenericRepository<ItemSpecificationMaster>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository
+        {
+            get
+            {
+                return _itemSpecificationDetailsRepository =
+                    _itemSpecificationDetailsRepository ?? new GenericRepository<ItemSpecificationDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository
         {
             get
             {

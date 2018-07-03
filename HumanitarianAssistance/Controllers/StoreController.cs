@@ -492,5 +492,26 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllStatusAtTimeOfIssue()
+    {
+      APIResponse apiresponse = await _iStore.GetAllStatusAtTimeOfIssue();
+      return apiresponse;
+    }
+
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllReceiptType()
+    {
+      APIResponse apiresponse = await _iStore.GetAllReceiptType();
+      return apiresponse;
+    }
+
+
+
+
   }
 }

@@ -75,9 +75,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double? TotalGrossSalary { get; set; }
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
-		public List<ItemSpecificationMasterModel> ItemSpecificationMasterList { get; set; }
-		public List<ItemSpecificationDetailModel> ItemSpecificationDetailList { get; set; }
-		public UpdatePurchaseInvoiceModel UpdatePurchaseInvoiceModel { get; set; }
+        public List<ItemSpecificationMasterModel> ItemSpecificationMasterList { get; set; }
+        public List<ItemSpecificationDetailModel> ItemSpecificationDetailList { get; set; }
+        public UpdatePurchaseInvoiceModel UpdatePurchaseInvoiceModel { get; set; }
         public ExchangeGainOrLossModel ExchangeGainOrLossModel { get; set; }
         public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
         public List<ProcurmentSummaryModel> ProcurmentSummaryModelList { get; set; }
@@ -225,6 +225,8 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public List<PurchaseUnitType> PurchaseUnitTypeList { get; set; }
         public List<DepreciationReportModel> DepreciationReportList { get; set; }
+        public List<StatusAtTimeOfIssue> StatusAtTimeOfIssueList { get; set; }
+        public List<ReceiptType> ReceiptTypeList { get; set; }
 
 
         public int notificationIsReadCount { get; set; }

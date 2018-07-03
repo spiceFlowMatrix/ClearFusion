@@ -749,7 +749,19 @@ namespace HumanitarianAssistance.Service.Classes
                     ApplyDepreciation = v.ApplyDepreciation,
                     DepreciationRate = v.DepreciationRate,
                     PurchasedById = v.PurchasedById,
-                    InventoryItem = v.InventoryItem
+                    InventoryItem = v.InventoryItem,
+
+                    //Newly added fields
+                    VoucherId = v.VoucherId,
+                    VoucherDate = v.VoucherDate,
+                    AssetTypeId = v.AssetTypeId,
+                    InvoiceNo = v.InvoiceNo,
+                    InvoiceDate = v.InvoiceDate,
+                    Status = v.Status,
+                    ReceiptTypeId = v.ReceiptTypeId,
+                    ReceivedFromLocation = v.ReceivedFromLocation,
+                    ProjectId = v.ProjectId,
+                    BudgetLineId = v.BudgetLineId
 
                 }).ToList();
                 response.data.StoreItemsPurchaseViewList = purchasesModel;
@@ -1634,5 +1646,52 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
         #endregion
+
+
+
+        #region "Dropdown Fields"
+
+        public async Task<APIResponse> GetAllStatusAtTimeOfIssue()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var statusAtTimeOfIssueList = await _uow.StatusAtTimeOfIssueRepository.GetAllAsyn();
+
+                response.data.StatusAtTimeOfIssueList = statusAtTimeOfIssueList.ToList();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetAllReceiptType()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var receiptTypeList = await _uow.ReceiptTypeRepository.GetAllAsyn();
+
+                response.data.ReceiptTypeList = receiptTypeList.ToList();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        #endregion
+
+
     }
 }
