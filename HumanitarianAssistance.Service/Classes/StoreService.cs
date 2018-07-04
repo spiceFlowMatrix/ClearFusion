@@ -683,9 +683,8 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
                     if (purchaseRecord != null)
-                    {
-
-                        var isOrderExist = _uow.GetDbContext().StorePurchaseOrders.Where(x => x.Purchase == model.PurchaseId && x.IsDeleted == false).Count();
+                    {						
+						var isOrderExist = _uow.GetDbContext().StorePurchaseOrders.Where(x => x.Purchase == model.PurchaseId && x.IsDeleted == false).Count();
 
                         if (isOrderExist > 0)
                         {
@@ -1116,8 +1115,8 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                //int procuredAmount, spentAmount;
-                var procuredAmount = await _uow.GetDbContext().StoreItemPurchases.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
+				//int procuredAmount, spentAmount;
+				var procuredAmount = await _uow.GetDbContext().StoreItemPurchases.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
 
                 //NOTE: x.MustReturn == false --> Use to keep track if Employee Returned the Item or not.
                 var spentAmount = await _uow.GetDbContext().StorePurchaseOrders.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false && x.Returned == false).ToListAsync();

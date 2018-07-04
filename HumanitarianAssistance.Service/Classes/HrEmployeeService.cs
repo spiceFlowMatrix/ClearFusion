@@ -51,7 +51,7 @@ namespace HumanitarianAssistance.Service.Classes
 				await _uow.EmployeeDetailRepository.AddAsyn(obj);
 				await _uow.SaveAsync();
 
-				var OfficeDetail = await _uow.OfficeDetailRepository.FindAsync(x => x.OfficeId == model.OfficeId);
+				var OfficeDetail = await _uow.OfficeDetailRepository.FindAsync(x => x.OfficeId == model.OfficeId);			
 				var emp = await _uow.EmployeeDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeID == obj.EmployeeID);
 				emp.EmployeeCode = OfficeDetail.OfficeCode + obj.EmployeeID;
 				await _uow.EmployeeDetailRepository.UpdateAsyn(emp);
@@ -5609,9 +5609,6 @@ namespace HumanitarianAssistance.Service.Classes
 			}
 			return response;
 		}
-
-
-
 
 	}
 }

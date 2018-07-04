@@ -75,6 +75,11 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double? TotalGrossSalary { get; set; }
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
+		public List<EmployeeEducationsModel> EmployeeEducationsList { get; set; }
+		public List<EmployeeSalaryBudgetModel> EmployeeSalaryBudgetList { get; set; }
+		public List<EmployeeOtherSkillsModel> EmployeeOtherSkillsList { get; set; }
+		public List<EmployeeRelativeInfoModel> EmployeeRelativeInfoList { get; set; }
+		public List<EmployeeHistoryOutsideOrganizationModel> EmployeeHistoryOutsideOrganizationList { get; set; }
 		public List<ItemSpecificationMasterModel> ItemSpecificationMasterList { get; set; }
 		public List<ItemSpecificationDetailModel> ItemSpecificationDetailList { get; set; }
 		public UpdatePurchaseInvoiceModel UpdatePurchaseInvoiceModel { get; set; }
