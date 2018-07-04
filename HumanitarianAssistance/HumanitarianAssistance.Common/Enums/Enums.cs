@@ -7,9 +7,9 @@ namespace HumanitarianAssistance.Common.Enums
 
   public enum BalanceType
   {
-    SUM=1,
-    DR=2,
-    CR=3
+    SUM = 1,
+    DR = 2,
+    CR = 3
   }
   public enum AccountType
   {
@@ -97,5 +97,9 @@ namespace HumanitarianAssistance.Common.Enums
     EmployeeUpdate = 5,
     EmployeeDeleted = 6
   }
-
+  public enum AssetType
+  {
+    Cash = 1,
+    InKind = 2
+  }
 }

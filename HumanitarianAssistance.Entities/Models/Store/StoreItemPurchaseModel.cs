@@ -47,6 +47,18 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public int CurrentQuantity { get; set; }
         public int ItemType { get; set; }
         public int PurchasedBy { get; set; }
+
+        //Newly Added Fields
+        public long? VoucherId { get; set; }
+        public DateTime VoucherDate { get; set; }
+        public int? AssetTypeId { get; set; } // 1. Cash , 2. In Kind
+        public string InvoiceNo { get; set; }
+        public DateTime? InvoiceDate { get; set; }
+        public int? Status { get; set; }
+        public int? ReceiptTypeId { get; set; }
+        public string ReceivedFromLocation { get; set; }
+        public long? ProjectId { get; set; }
+        public long? BudgetLineId { get; set; }
     }
 
     public class ItemPurchaseWithDataModel

@@ -29,10 +29,29 @@ namespace DataAccess.DbEntities.Store
         public string ImageFileType { get; set; }
         public string ImageFileName { get; set; }
 
-		public string InvoiceFileType { get; set; }
-		public string InvoiceFileName { get; set; }
+        public string InvoiceFileType { get; set; }
+        public string InvoiceFileName { get; set; }
 
-		public int PurchasedById { get; set; }
+        public int PurchasedById { get; set; }
+
+
+
+
+
+        public long? VoucherId { get; set; }
+        public DateTime VoucherDate { get; set; }
+        public int? AssetTypeId { get; set; } // 1. Cash , 2. In Kind
+        public string InvoiceNo { get; set; }
+        public DateTime? InvoiceDate { get; set; }
+        public int? Status { get; set; }
+        public int? ReceiptTypeId { get; set; }
+        public string ReceivedFromLocation { get; set; }
+        public long? ProjectId { get; set; }
+
+        public long? BudgetLineId { get; set; }
+        public ProjectBudgetLine ProjectBudgetLine { get; set; }
+
+
 
         [ForeignKey("InventoryItem")]
         public StoreInventoryItem StoreInventoryItem { get; set; }
@@ -42,6 +61,23 @@ namespace DataAccess.DbEntities.Store
         public EmployeeDetail EmployeeDetail { get; set; }
         [ForeignKey("UnitType")]
         public PurchaseUnitType PurchaseUnitType { get; set; }
+
+
+
+        [ForeignKey("VoucherId")]
+        public VoucherDetail VoucherDetail { get; set; }
+
+        [ForeignKey("Status")]
+        public StatusAtTimeOfIssue StatusAtTimeOfIssue { get; set; }
+
+        [ForeignKey("ReceiptTypeId")]
+        public ReceiptType ReceiptType { get; set; }
+
+        [ForeignKey("ProjectId")]
+        public ProjectDetails ProjectDetails { get; set; }
+
+
+
 
         public List<StorePurchaseOrder> PurchaseOrders { get; set; }
     }

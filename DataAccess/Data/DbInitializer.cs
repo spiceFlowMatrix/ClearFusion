@@ -3,8 +3,8 @@ using HumanitarianAssistance.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;  
-using System.Web;  
+using System.Linq;
+using System.Web;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using System.Collections;
 using System.Data.SqlClient;
+using DataAccess.DbEntities.Store;
 
 namespace DataAccess.Data
 {
@@ -35,9 +36,9 @@ namespace DataAccess.Data
                     return; // DB has been seeded
                 }
 
-                await CreateDefaultUserAndRoleForApplication(userManager, roleManager, context,logger);                
+                await CreateDefaultUserAndRoleForApplication(userManager, roleManager, context, logger);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -60,15 +61,20 @@ namespace DataAccess.Data
             var s3 = AddCountry(context);
             var s4 = AddEmailType(context);
             var s5 = AddDefaultPermission(context);
-			var s6 = AddEmployeeContractType(context);
-			var s7 = AddAccountType(context);
+            var s6 = AddEmployeeContractType(context);
+            var s7 = AddAccountType(context);
+            var s8 = AddStatusAtTimeOfIssue(context);
+            var s9 = AddReceiptType(context);
+
             await s;
             await s2;
             await s3;
             await s4;
             await s5;
-			await s6;
-			await s7;
+            await s6;
+            await s7;
+            await s8;
+            await s9;
             await AddProvinceDetails(context);
         }
 
@@ -210,7 +216,7 @@ namespace DataAccess.Data
 
                 await context.CountryDetails.AddRangeAsync(countrylist);
                 context.SaveChanges();
-               
+
             }
             catch (Exception ex)
             {
@@ -308,7 +314,7 @@ namespace DataAccess.Data
                     new ProvinceDetails { CountryId=2,ProvinceName="Wisconsin"},
                     new ProvinceDetails { CountryId=2,ProvinceName="Wyoming"}
                 };
-                await context.ProvinceDetails.AddRangeAsync(list);   
+                await context.ProvinceDetails.AddRangeAsync(list);
                 context.SaveChanges();
             }
             catch (Exception ex)
@@ -336,54 +342,54 @@ namespace DataAccess.Data
             }
         }
 
-		public static async Task AddEmployeeContractType(ApplicationDbContext context)
-		{
-			try
-			{
-				List<EmployeeContractType> employeetypelist = new List<EmployeeContractType>
-				{
-					new EmployeeContractType { EmployeeContractTypeId = 1, EmployeeContractTypeName= "Probationary"},
-					new EmployeeContractType { EmployeeContractTypeId = 2, EmployeeContractTypeName= "PartTime"},
-					new EmployeeContractType { EmployeeContractTypeId = 3, EmployeeContractTypeName= "Permanent"}
-				};
-				await context.EmployeeContractType.AddRangeAsync(employeetypelist);
-				context.SaveChanges();
-			}
-			catch (Exception ex)
-			{
-				var errormessage = ex.Message;
-			}
-		}
+        public static async Task AddEmployeeContractType(ApplicationDbContext context)
+        {
+            try
+            {
+                List<EmployeeContractType> employeetypelist = new List<EmployeeContractType>
+                {
+                    new EmployeeContractType { EmployeeContractTypeId = 1, EmployeeContractTypeName= "Probationary"},
+                    new EmployeeContractType { EmployeeContractTypeId = 2, EmployeeContractTypeName= "PartTime"},
+                    new EmployeeContractType { EmployeeContractTypeId = 3, EmployeeContractTypeName= "Permanent"}
+                };
+                await context.EmployeeContractType.AddRangeAsync(employeetypelist);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                var errormessage = ex.Message;
+            }
+        }
 
-		public static async Task AddAccountType(ApplicationDbContext context)
-		{
-			try
-			{
-				List<AccountType> employeetypelist = new List<AccountType>
-				{
-					new AccountType { AccountTypeId = 1, AccountTypeName= "Capital Assets Written Off", AccountCategory = 1},
-					new AccountType { AccountTypeId = 2, AccountTypeName= "Current Assets", AccountCategory = 1},
-					new AccountType { AccountTypeId = 3, AccountTypeName= "Funds", AccountCategory = 1},
-					new AccountType { AccountTypeId = 4, AccountTypeName= "Endownment Fund", AccountCategory = 1},
-					new AccountType { AccountTypeId = 5, AccountTypeName= "Reserve Account Adjustment", AccountCategory = 1},
-					new AccountType { AccountTypeId = 6, AccountTypeName= "Long term Liability", AccountCategory = 1},
-					new AccountType { AccountTypeId = 7, AccountTypeName= "Current Liability", AccountCategory = 1},
-					new AccountType { AccountTypeId = 8, AccountTypeName= "Reserve Account", AccountCategory = 1},
-					new AccountType { AccountTypeId = 9, AccountTypeName= "Income From Donor", AccountCategory = 2},
-					new AccountType { AccountTypeId = 10, AccountTypeName= "Income From Projects", AccountCategory = 2},
-					new AccountType { AccountTypeId = 11, AccountTypeName= "Profit On Bank Deposits", AccountCategory = 2},
-					new AccountType { AccountTypeId = 12, AccountTypeName= "Income Expenditure Fund", AccountCategory = 2}
-				};
-				await context.AccountType.AddRangeAsync(employeetypelist);
-				context.SaveChanges();
-			}
-			catch (Exception ex)
-			{
-				var errormessage = ex.Message;
-			}
-		}
+        public static async Task AddAccountType(ApplicationDbContext context)
+        {
+            try
+            {
+                List<AccountType> employeetypelist = new List<AccountType>
+                {
+                    new AccountType { AccountTypeId = 1, AccountTypeName= "Capital Assets Written Off", AccountCategory = 1},
+                    new AccountType { AccountTypeId = 2, AccountTypeName= "Current Assets", AccountCategory = 1},
+                    new AccountType { AccountTypeId = 3, AccountTypeName= "Funds", AccountCategory = 1},
+                    new AccountType { AccountTypeId = 4, AccountTypeName= "Endownment Fund", AccountCategory = 1},
+                    new AccountType { AccountTypeId = 5, AccountTypeName= "Reserve Account Adjustment", AccountCategory = 1},
+                    new AccountType { AccountTypeId = 6, AccountTypeName= "Long term Liability", AccountCategory = 1},
+                    new AccountType { AccountTypeId = 7, AccountTypeName= "Current Liability", AccountCategory = 1},
+                    new AccountType { AccountTypeId = 8, AccountTypeName= "Reserve Account", AccountCategory = 1},
+                    new AccountType { AccountTypeId = 9, AccountTypeName= "Income From Donor", AccountCategory = 2},
+                    new AccountType { AccountTypeId = 10, AccountTypeName= "Income From Projects", AccountCategory = 2},
+                    new AccountType { AccountTypeId = 11, AccountTypeName= "Profit On Bank Deposits", AccountCategory = 2},
+                    new AccountType { AccountTypeId = 12, AccountTypeName= "Income Expenditure Fund", AccountCategory = 2}
+                };
+                await context.AccountType.AddRangeAsync(employeetypelist);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                var errormessage = ex.Message;
+            }
+        }
 
-		public static async Task AddVoucherType(ApplicationDbContext context)
+        public static async Task AddVoucherType(ApplicationDbContext context)
         {
             try
             {
@@ -440,6 +446,62 @@ namespace DataAccess.Data
                 var errormessage = ex.Message;
             }
         }
+
+
+
+        private static async Task AddStatusAtTimeOfIssue(ApplicationDbContext context)
+        {
+            try
+            {
+                List<StatusAtTimeOfIssue> statusAtTimeOfIssuelist = new List<StatusAtTimeOfIssue>
+                {
+                    new StatusAtTimeOfIssue { StatusAtTimeOfIssueId = 1, StatusName = "New"},
+                    new StatusAtTimeOfIssue { StatusAtTimeOfIssueId = 2, StatusName = "Useable"},
+                    new StatusAtTimeOfIssue { StatusAtTimeOfIssueId = 3, StatusName = "To Repair"},
+                    new StatusAtTimeOfIssue { StatusAtTimeOfIssueId = 4, StatusName = "Damage"},
+                    new StatusAtTimeOfIssue { StatusAtTimeOfIssueId = 5, StatusName = "Sold"},
+                    new StatusAtTimeOfIssue { StatusAtTimeOfIssueId = 6, StatusName = "Stolen"},
+                    new StatusAtTimeOfIssue { StatusAtTimeOfIssueId = 7, StatusName = "Handover"},
+                    new StatusAtTimeOfIssue { StatusAtTimeOfIssueId = 8, StatusName = "Demolished"},
+                    new StatusAtTimeOfIssue { StatusAtTimeOfIssueId = 9, StatusName = "Broken"},
+                };
+
+                await context.StatusAtTimeOfIssue.AddRangeAsync(statusAtTimeOfIssuelist);
+                context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                var errormessage = ex.Message;
+            }
+        }
+
+        private static async Task AddReceiptType(ApplicationDbContext context)
+        {
+            try
+            {
+                List<ReceiptType> receiptTypeList = new List<ReceiptType>
+                {
+                    new ReceiptType { ReceiptTypeId = 1, ReceiptTypeName = "Purchased"},
+                    new ReceiptType { ReceiptTypeId = 2, ReceiptTypeName = "Transfers"},
+                    new ReceiptType { ReceiptTypeId = 3, ReceiptTypeName = "Donation"},
+                    new ReceiptType { ReceiptTypeId = 4, ReceiptTypeName = "Take Over"},
+                    new ReceiptType { ReceiptTypeId = 5, ReceiptTypeName = "Loan"},
+                    new ReceiptType { ReceiptTypeId = 6, ReceiptTypeName = "Return"},
+                    new ReceiptType { ReceiptTypeId = 7, ReceiptTypeName = "Other"}
+                };
+
+                await context.ReceiptType.AddRangeAsync(receiptTypeList);
+                context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                var errormessage = ex.Message;
+            }
+        }
+
+
 
         private static string GetIdentiryErrorsInCommaSeperatedList(IdentityResult ir)
         {

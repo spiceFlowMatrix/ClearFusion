@@ -119,8 +119,14 @@ namespace DataAccess
         private IGenericRepository<EmployeeContract> _employeeContractRepository;
 
         private IGenericRepository<SalaryTaxReportContent> _salaryTaxReportContentRepository;
-		private IGenericRepository<ItemSpecificationMaster> _itemSpecificationMasterRepository;
+        private IGenericRepository<ItemSpecificationMaster> _itemSpecificationMasterRepository;
 
+        private IGenericRepository<ItemSpecificationDetails> _itemSpecificationDetailsRepository;
+        private IGenericRepository<StatusAtTimeOfIssue> _statusAtTimeOfIssueRepository;
+        private IGenericRepository<ReceiptType> _receiptTypeRepository;
+
+
+        public UnitOfWork(ApplicationDbContext mschaContext)
 		private IGenericRepository<ItemSpecificationDetails> _itemSpecificationDetailsRepository;
 		private IGenericRepository<EmployeeHistoryOutsideOrganization> _employeeHistoryOutsideOrganizationRepository;
 		private IGenericRepository<EmployeeHistoryOutsideCountry> _employeeHistoryOutsideCountryRepository;
@@ -152,6 +158,15 @@ namespace DataAccess
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository
+        {
+            get
+            {
+                return _statusAtTimeOfIssueRepository =
+                    _statusAtTimeOfIssueRepository ?? new GenericRepository<StatusAtTimeOfIssue>(_mschaContext);
+            }
         }
 
 		public IGenericRepository<EmployeeEducations> EmployeeEducationsRepository
@@ -226,16 +241,16 @@ namespace DataAccess
 			}
 		}
 
-		public IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository
-		{
-			get
-			{
-				return _itemSpecificationDetailsRepository =
-					_itemSpecificationDetailsRepository ?? new GenericRepository<ItemSpecificationDetails>(_mschaContext);
-			}
-		}
+        public IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository
+        {
+            get
+            {
+                return _itemSpecificationDetailsRepository =
+                    _itemSpecificationDetailsRepository ?? new GenericRepository<ItemSpecificationDetails>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository
+        public IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository
         {
             get
             {
