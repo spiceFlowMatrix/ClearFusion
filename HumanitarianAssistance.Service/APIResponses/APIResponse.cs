@@ -78,6 +78,11 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ItemSpecificationMasterModel> ItemSpecificationMasterList { get; set; }
         public List<ItemSpecificationDetailModel> ItemSpecificationDetailList { get; set; }
         public UpdatePurchaseInvoiceModel UpdatePurchaseInvoiceModel { get; set; }
+		public List<EmployeeEducationsModel> EmployeeEducationsList { get; set; }
+		public List<EmployeeSalaryBudgetModel> EmployeeSalaryBudgetList { get; set; }
+		public List<EmployeeOtherSkillsModel> EmployeeOtherSkillsList { get; set; }
+		public List<EmployeeRelativeInfoModel> EmployeeRelativeInfoList { get; set; }
+		public List<EmployeeHistoryOutsideOrganizationModel> EmployeeHistoryOutsideOrganizationList { get; set; }						
         public ExchangeGainOrLossModel ExchangeGainOrLossModel { get; set; }
         public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
         public List<ProcurmentSummaryModel> ProcurmentSummaryModelList { get; set; }

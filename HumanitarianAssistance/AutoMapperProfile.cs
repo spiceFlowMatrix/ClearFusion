@@ -88,7 +88,13 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<StorePurchaseOrder, ItemOrderModel>().ReverseMap();
       CreateMap<ItemSpecificationDetails, ItemSpecificationDetailModel>().ReverseMap();
       CreateMap<ItemSpecificationMaster, ItemSpecificationMasterModel>().ReverseMap();
-      
+      CreateMap<EmployeeHistoryOutsideOrganization, EmployeeHistoryOutsideOrganizationModel>().ReverseMap();
+      CreateMap<EmployeeHistoryOutsideCountry, EmployeeHistoryOutsideOrganizationModel>().ReverseMap();
+      CreateMap<EmployeeRelativeInfo, EmployeeRelativeInfoModel>().ReverseMap();
+      CreateMap<EmployeeInfoReferences, EmployeeRelativeInfoModel>().ReverseMap();
+      CreateMap<EmployeeOtherSkills, EmployeeOtherSkillsModel>().ReverseMap();
+      CreateMap<EmployeeSalaryBudget, EmployeeSalaryBudgetModel>().ReverseMap();
+      CreateMap<EmployeeEducations, EmployeeEducationsModel>().ReverseMap();
     }
   }
 }

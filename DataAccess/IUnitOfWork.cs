@@ -123,8 +123,16 @@ namespace DataAccess
 		IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository { get; }
 		IGenericRepository<ReceiptType> ReceiptTypeRepository { get; }
 
-        
-        void Save();
+                
+		IGenericRepository<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganizationRepository { get; }
+		IGenericRepository<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountryRepository { get; }
+		IGenericRepository<EmployeeRelativeInfo> EmployeeRelativeInfoRepository { get; }
+		IGenericRepository<EmployeeInfoReferences> EmployeeInfoReferencesRepository { get; }
+		IGenericRepository<EmployeeOtherSkills> EmployeeOtherSkillsRepository { get; }
+		IGenericRepository<EmployeeSalaryBudget> EmployeeSalaryBudgetRepository { get; }
+		IGenericRepository<EmployeeEducations> EmployeeEducationsRepository { get; }
+		
+		void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
 

@@ -124,9 +124,16 @@ namespace DataAccess
         private IGenericRepository<ItemSpecificationDetails> _itemSpecificationDetailsRepository;
         private IGenericRepository<StatusAtTimeOfIssue> _statusAtTimeOfIssueRepository;
         private IGenericRepository<ReceiptType> _receiptTypeRepository;
-
-
-        public UnitOfWork(ApplicationDbContext mschaContext)
+		
+		private IGenericRepository<EmployeeHistoryOutsideOrganization> _employeeHistoryOutsideOrganizationRepository;
+		private IGenericRepository<EmployeeHistoryOutsideCountry> _employeeHistoryOutsideCountryRepository;
+		private IGenericRepository<EmployeeRelativeInfo> _employeeRelativeInfoRepository;
+		private IGenericRepository<EmployeeInfoReferences> _employeeInfoReferencesRepository;
+		private IGenericRepository<EmployeeOtherSkills> _employeeOtherSkillsRepository;
+		private IGenericRepository<EmployeeSalaryBudget> _employeeSalaryBudgetRepository;
+		private IGenericRepository<EmployeeEducations> _employeeEducationsRepository;
+		
+		public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
@@ -150,7 +157,16 @@ namespace DataAccess
             GC.SuppressFinalize(this);
         }
 
-        public IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository
+		public IGenericRepository<ReceiptType> ReceiptTypeRepository
+		{
+			get
+			{
+				return _receiptTypeRepository =
+					_receiptTypeRepository ?? new GenericRepository<ReceiptType>(_mschaContext);
+			}
+		}
+
+		public IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository
         {
             get
             {
@@ -159,25 +175,77 @@ namespace DataAccess
             }
         }
 
+		public IGenericRepository<EmployeeEducations> EmployeeEducationsRepository
+		{
+			get
+			{
+				return _employeeEducationsRepository =
+					_employeeEducationsRepository ?? new GenericRepository<EmployeeEducations>(_mschaContext);
+			}
+		}
 
-        public IGenericRepository<ReceiptType> ReceiptTypeRepository
-        {
-            get
-            {
-                return _receiptTypeRepository =
-                    _receiptTypeRepository ?? new GenericRepository<ReceiptType>(_mschaContext);
-            }
-        }
+		public IGenericRepository<EmployeeSalaryBudget> EmployeeSalaryBudgetRepository
+		{
+			get
+			{
+				return _employeeSalaryBudgetRepository =
+					_employeeSalaryBudgetRepository ?? new GenericRepository<EmployeeSalaryBudget>(_mschaContext);
+			}
+		}
 
+		public IGenericRepository<EmployeeOtherSkills> EmployeeOtherSkillsRepository
+		{
+			get
+			{
+				return _employeeOtherSkillsRepository =
+					_employeeOtherSkillsRepository ?? new GenericRepository<EmployeeOtherSkills>(_mschaContext);
+			}
+		}
 
-        public IGenericRepository<ItemSpecificationMaster> ItemSpecificationMasterRepository
-        {
-            get
-            {
-                return _itemSpecificationMasterRepository =
-                    _itemSpecificationMasterRepository ?? new GenericRepository<ItemSpecificationMaster>(_mschaContext);
-            }
-        }
+		public IGenericRepository<EmployeeInfoReferences> EmployeeInfoReferencesRepository
+		{
+			get
+			{
+				return _employeeInfoReferencesRepository =
+					_employeeInfoReferencesRepository ?? new GenericRepository<EmployeeInfoReferences>(_mschaContext);
+			}
+		}
+
+		public IGenericRepository<EmployeeRelativeInfo> EmployeeRelativeInfoRepository
+		{
+			get
+			{
+				return _employeeRelativeInfoRepository =
+					_employeeRelativeInfoRepository ?? new GenericRepository<EmployeeRelativeInfo>(_mschaContext);
+			}
+		}
+
+		public IGenericRepository<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountryRepository
+		{
+			get
+			{
+				return _employeeHistoryOutsideCountryRepository =
+					_employeeHistoryOutsideCountryRepository ?? new GenericRepository<EmployeeHistoryOutsideCountry>(_mschaContext);
+			}
+		}
+
+		public IGenericRepository<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganizationRepository
+		{
+			get
+			{
+				return _employeeHistoryOutsideOrganizationRepository =
+					_employeeHistoryOutsideOrganizationRepository ?? new GenericRepository<EmployeeHistoryOutsideOrganization>(_mschaContext);
+			}
+		}
+
+		public IGenericRepository<ItemSpecificationMaster> ItemSpecificationMasterRepository
+		{
+			get
+			{
+				return _itemSpecificationMasterRepository =
+					_itemSpecificationMasterRepository ?? new GenericRepository<ItemSpecificationMaster>(_mschaContext);
+			}
+		}
 
         public IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository
         {
