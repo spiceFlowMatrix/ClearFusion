@@ -147,8 +147,6 @@ namespace HumanitarianAssistance.Entities
         public DbSet<StatusAtTimeOfIssue> StatusAtTimeOfIssue { get; set; }
         public DbSet<ReceiptType> ReceiptType { get; set; }
 
-		public DbSet<ItemSpecificationMaster> ItemSpecificationMaster { get; set; }
-		public DbSet<ItemSpecificationDetails> ItemSpecificationDetails { get; set; }
 		public DbSet<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganization { get; set; }
 		public DbSet<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountry { get; set; }
 		public DbSet<EmployeeRelativeInfo> EmployeeRelativeInfo { get; set; }

@@ -124,10 +124,7 @@ namespace DataAccess
         private IGenericRepository<ItemSpecificationDetails> _itemSpecificationDetailsRepository;
         private IGenericRepository<StatusAtTimeOfIssue> _statusAtTimeOfIssueRepository;
         private IGenericRepository<ReceiptType> _receiptTypeRepository;
-
-
-        public UnitOfWork(ApplicationDbContext mschaContext)
-		private IGenericRepository<ItemSpecificationDetails> _itemSpecificationDetailsRepository;
+		
 		private IGenericRepository<EmployeeHistoryOutsideOrganization> _employeeHistoryOutsideOrganizationRepository;
 		private IGenericRepository<EmployeeHistoryOutsideCountry> _employeeHistoryOutsideCountryRepository;
 		private IGenericRepository<EmployeeRelativeInfo> _employeeRelativeInfoRepository;
@@ -160,7 +157,16 @@ namespace DataAccess
             GC.SuppressFinalize(this);
         }
 
-        public IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository
+		public IGenericRepository<ReceiptType> ReceiptTypeRepository
+		{
+			get
+			{
+				return _receiptTypeRepository =
+					_receiptTypeRepository ?? new GenericRepository<ReceiptType>(_mschaContext);
+			}
+		}
+
+		public IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository
         {
             get
             {
