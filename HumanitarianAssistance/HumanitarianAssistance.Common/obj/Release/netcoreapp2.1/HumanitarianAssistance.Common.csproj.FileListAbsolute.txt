@@ -15,3 +15,4 @@ D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistan
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.1\HumanitarianAssistance.Common.AssemblyInfo.cs
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.1\HumanitarianAssistance.Common.dll
 D:\Dayuser\clear-fusion\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.1\HumanitarianAssistance.Common.pdb
+D:\Alpit\Project\Humanitarian Assistance\GCloudHumanitarian\clear-fusion\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.1\HumanitarianAssistance.Common.csprojResolveAssemblyReference.cache
