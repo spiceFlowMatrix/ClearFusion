@@ -153,9 +153,11 @@ namespace HumanitarianAssistance.Entities
 		public DbSet<EmployeeInfoReferences> EmployeeInfoReferences { get; set; }
 		public DbSet<EmployeeOtherSkills> EmployeeOtherSkills { get; set; }
 		public DbSet<EmployeeSalaryBudget> EmployeeSalaryBudget { get; set; }
-		public DbSet<EmployeeEducations> EmployeeEducations { get; set; }		
+		public DbSet<EmployeeEducations> EmployeeEducations { get; set; }
+		public DbSet<EmployeeSalaryAnalyticalInfo> EmployeeSalaryAnalyticalInfo { get; set; }
+		
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
             modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);

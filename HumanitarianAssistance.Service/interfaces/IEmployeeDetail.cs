@@ -37,5 +37,9 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> AddEmployeeEducations(EmployeeEducationsModel model, string UserId);
 		Task<APIResponse> EditEmployeeEducations(EmployeeEducationsModel model, string UserId);
 		Task<APIResponse> DeleteEmployeeEducations(EmployeeEducationsModel model, string UserId);
+		Task<APIResponse> GetAllEmployeeSalaryAnalyticalInfo(int EmployeeId);
+		Task<APIResponse> AddEmployeeSalaryAnalyticalInfo(EmployeeSalaryAnalyticalInfoModel model, string UserId);
+		Task<APIResponse> EditEmployeeSalaryAnalyticalInfo(EmployeeSalaryAnalyticalInfoModel model, string UserId);
+		Task<APIResponse> DeleteEmployeeSalaryAnalyticalInfo(EmployeeSalaryAnalyticalInfoModel model, string UserId);
 	}
 }

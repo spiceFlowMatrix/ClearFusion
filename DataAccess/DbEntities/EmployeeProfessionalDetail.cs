@@ -31,6 +31,7 @@ namespace DataAccess.DbEntities
         public string ResignationReason { get; set; }
         public string JobDescription { get; set; }
         public string TrainingBenefits { get; set; }
+		public string MembershipSupportInPoliticalParty { get; set; }			// New field added
 
 		public int? EmployeeContractTypeId { get; set; }
 		public EmployeeContractType EmployeeContractType { get; set; }

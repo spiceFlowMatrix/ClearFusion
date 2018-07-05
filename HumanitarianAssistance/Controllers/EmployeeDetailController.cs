@@ -416,5 +416,59 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     #endregion
+
+    #region "Employee Salary Analytical Info"
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllEmployeeSalaryAnalyticalInfo([FromQuery]int EmployeeId)
+    {
+      APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeSalaryAnalyticalInfo(EmployeeId);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEmployeeSalaryAnalyticalInfo([FromBody]EmployeeSalaryAnalyticalInfoModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.AddEmployeeSalaryAnalyticalInfo(model, id);
+      }
+      return apiResponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditEmployeeSalaryAnalyticalInfo([FromBody]EmployeeSalaryAnalyticalInfoModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.EditEmployeeSalaryAnalyticalInfo(model, id);
+      }
+      return apiResponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteEmployeeSalaryAnalyticalInfo([FromBody]EmployeeSalaryAnalyticalInfoModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.DeleteEmployeeSalaryAnalyticalInfo(model, id);
+      }
+      return apiResponse;
+    }
+
+    #endregion
   }
 }

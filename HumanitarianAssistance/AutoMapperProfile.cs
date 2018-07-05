@@ -95,6 +95,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<EmployeeOtherSkills, EmployeeOtherSkillsModel>().ReverseMap();
       CreateMap<EmployeeSalaryBudget, EmployeeSalaryBudgetModel>().ReverseMap();
       CreateMap<EmployeeEducations, EmployeeEducationsModel>().ReverseMap();
+      CreateMap<EmployeeSalaryAnalyticalInfo, EmployeeSalaryAnalyticalInfoModel>().ReverseMap();
     }
   }
 }
