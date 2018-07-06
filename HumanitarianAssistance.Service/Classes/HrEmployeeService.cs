@@ -1318,6 +1318,7 @@ namespace HumanitarianAssistance.Service.Classes
 					existrecord.TrainingBenefits = model.TrainingBenefits;
 					existrecord.JobDescription = model.JobDescription;
 					existrecord.ResignationReason = model.ResignationReason;
+					existrecord.MembershipSupportInPoliticalParty = model.MembershipSupportInPoliticalParty;
 					existrecord.ModifiedById = model.ModifiedById;
 					existrecord.ModifiedDate = model.ModifiedDate;
 					await _uow.EmployeeProfessionalDetailRepository.UpdateAsyn(existrecord);

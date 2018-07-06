@@ -132,7 +132,9 @@ namespace DataAccess
 		private IGenericRepository<EmployeeOtherSkills> _employeeOtherSkillsRepository;
 		private IGenericRepository<EmployeeSalaryBudget> _employeeSalaryBudgetRepository;
 		private IGenericRepository<EmployeeEducations> _employeeEducationsRepository;
+		private IGenericRepository<EmployeeSalaryAnalyticalInfo> _employeeSalaryAnalyticalInfoRepository;
 		
+
 		public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
@@ -156,6 +158,15 @@ namespace DataAccess
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+		public IGenericRepository<EmployeeSalaryAnalyticalInfo> EmployeeSalaryAnalyticalInfoRepository
+		{
+			get
+			{
+				return _employeeSalaryAnalyticalInfoRepository =
+					_employeeSalaryAnalyticalInfoRepository ?? new GenericRepository<EmployeeSalaryAnalyticalInfo>(_mschaContext);
+			}
+		}
 
 		public IGenericRepository<ReceiptType> ReceiptTypeRepository
 		{

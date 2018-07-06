@@ -130,6 +130,7 @@ namespace HumanitarianAssistance
       services.AddTransient<INotificationManager, NotificationManagerService>();
       services.AddTransient<IEmployeeDetail, EmployeeDetailService>();
 
+
       //services.AddTransient<UserManager<AppUser>>();
 
       var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));

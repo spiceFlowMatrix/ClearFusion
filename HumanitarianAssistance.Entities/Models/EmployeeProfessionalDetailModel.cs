@@ -25,5 +25,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string JobDescription { get; set; }
         public string TrainingBenefits { get; set; }
 		public int? EmployeeContractTypeId { get; set; }
+		public string MembershipSupportInPoliticalParty { get; set; }           // New field added
 	}
 }
