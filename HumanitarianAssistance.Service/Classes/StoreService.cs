@@ -1518,8 +1518,8 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 bool flag = await _uow.GetDbContext().ItemSpecificationDetails.AnyAsync(x => x.ItemId == ItemId && x.IsDeleted == false);
-
-                if (flag == true)
+				var masterList = await _uow.ItemSpecificationMasterRepository.FindAllAsync(x => x.IsDeleted == false && x.ItemTypeId == ItemTypeId && x.OfficeId == OfficeId);
+				if (flag == true)
                 {
 
                     var list = await _uow.GetDbContext().ItemSpecificationDetails.Include(x => x.ItemSpecificationMaster).Where(x => x.ItemId == ItemId && x.ItemSpecificationMaster.ItemTypeId == ItemTypeId && x.IsDeleted == false).ToListAsync();
@@ -1530,10 +1530,23 @@ namespace HumanitarianAssistance.Service.Classes
                         ItemSpecificationValue = x.ItemSpecificationValue,
                         ItemSpecificationField = x.ItemSpecificationMaster.ItemSpecificationField
                     }).ToList();
-                }
+
+					foreach (var item in masterList)
+					{
+						var recordExist = list.Where(x => x.ItemSpecificationMasterId == item.ItemSpecificationMasterId).FirstOrDefault();
+						if (recordExist == null)
+						{
+							ItemSpecificationDetailModel obj = new ItemSpecificationDetailModel();
+							obj.ItemSpecificationMasterId = item.ItemSpecificationMasterId;
+							obj.ItemId = ItemId;
+							obj.ItemSpecificationValue = null;
+							obj.ItemSpecificationField = item.ItemSpecificationField;
+							response.data.ItemSpecificationDetailList.Add(obj);
+						}
+					}
+				}
                 else
-                {
-                    var masterList = await _uow.ItemSpecificationMasterRepository.FindAllAsync(x => x.IsDeleted == false && x.ItemTypeId == ItemTypeId && x.OfficeId == OfficeId);
+                {                    
 
                     response.data.ItemSpecificationDetailList = masterList.Select(x => new ItemSpecificationDetailModel
                     {
