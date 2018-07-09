@@ -185,6 +185,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<EmployeeAttendanceModel> EmployeeAttendanceList { get; set; }
         public IList<DisplayEmployeeAttendanceModel> DisEmployeeAttendanceList { get; set; }
         public IList<EmployeeHealthInformationModel> EmployeeHealthInfoList { get; set; }
+        public EmployeeHealthInformationModel EmployeeHealthInfo { get; set; }
 
         public ProjectBudgetLinesModel ProjectBudgetLinesModel { get; set; }
         public IList<ProjectDocumentModel> ProjectDocumentList { get; set; }

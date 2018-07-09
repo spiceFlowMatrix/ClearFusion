@@ -14,7 +14,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
 		public string ItemCode { get; set; }
 		public string Description { get; set; }
 
-		public long Voucher { get; set; }
+		//public long Voucher { get; set; }
 		public int ItemType { get; set; }
 	}
 }

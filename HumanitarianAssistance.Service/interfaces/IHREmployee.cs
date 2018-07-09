@@ -46,9 +46,9 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetEmployeeProfessionalDetail(int EmployeeId);
         Task<APIResponse> GetAllEmployeeDetail(int EmployeeType, int officeid);
         Task<APIResponse> GetEmployeeAttendanceDetails(int employeeid);
-        Task<APIResponse> AddEmployeeHealthDetail(EmployeeHealthInformationModel model);
-        Task<APIResponse> EditEmployeeHealthDetail(EmployeeHealthInformationModel model);
-        Task<APIResponse> GetAllEmployeeHealthDetailByEmployeeId(int employeeid);
+        //Task<APIResponse> AddEmployeeHealthDetail(EmployeeHealthInformationModel model);
+        //Task<APIResponse> EditEmployeeHealthDetail(EmployeeHealthInformationModel model);
+        //Task<APIResponse> GetAllEmployeeHealthDetailByEmployeeId(int employeeid);
         Task<APIResponse> ChangeEmployeeImage(ChangeEmployeeImage model);
         //Task<APIResponse> GetAllActiveEmployeeForAttendance();
         Task<APIResponse> GetAllEmployeesAttendanceByDate(string SelectedDate, int officeid, bool attendancestatus);

@@ -2198,77 +2198,77 @@ namespace HumanitarianAssistance.Service.Classes
 			return response;
 		}
 
-		public async Task<APIResponse> EditEmployeeHealthDetail(EmployeeHealthInformationModel model)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				var existrecord = await _uow.EmployeeHealthDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeId == model.EmployeeId);
-				if (existrecord != null)
-				{
-					existrecord.BloodGroup = model.BloodGroup;
-					existrecord.MedicalHistory = model.MedicalHistory;
-					existrecord.SmokeAndDrink = model.SmokeAndDrink;
-					existrecord.Insurance = model.Insurance;
-					existrecord.MedicalInsurance = model.MedicalInsurance;
-					existrecord.AllergicSubstance = model.AllergicSubstance;
-					existrecord.MeasureDiseases = model.MeasureDieases;
-					existrecord.FamilyHistory = model.FamilyHistory;
-					existrecord.ModifiedById = model.ModifiedById;
-					existrecord.ModifiedDate = model.ModifiedDate;
-					existrecord.IsDeleted = model.IsDeleted;
-					await _uow.EmployeeHealthDetailRepository.UpdateAsyn(existrecord);
-					response.StatusCode = StaticResource.successStatusCode;
-					response.Message = "Success";
-				}
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
+		//public async Task<APIResponse> EditEmployeeHealthDetail(EmployeeHealthInformationModel model)
+		//{
+		//	APIResponse response = new APIResponse();
+		//	try
+		//	{
+		//		var existrecord = await _uow.EmployeeHealthDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeId == model.EmployeeId);
+		//		if (existrecord != null)
+		//		{
+		//			existrecord.BloodGroup = model.BloodGroup;
+		//			existrecord.MedicalHistory = model.MedicalHistory;
+		//			existrecord.SmokeAndDrink = model.SmokeAndDrink;
+		//			existrecord.Insurance = model.Insurance;
+		//			existrecord.MedicalInsurance = model.MedicalInsurance;
+		//			existrecord.AllergicSubstance = model.AllergicSubstance;
+		//			existrecord.MeasureDiseases = model.MeasureDieases;
+		//			existrecord.FamilyHistory = model.FamilyHistory;
+		//			existrecord.ModifiedById = model.ModifiedById;
+		//			existrecord.ModifiedDate = model.ModifiedDate;
+		//			existrecord.IsDeleted = model.IsDeleted;
+		//			await _uow.EmployeeHealthDetailRepository.UpdateAsyn(existrecord);
+		//			response.StatusCode = StaticResource.successStatusCode;
+		//			response.Message = "Success";
+		//		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		response.StatusCode = StaticResource.failStatusCode;
+		//		response.Message = ex.Message;
+		//	}
+		//	return response;
+		//}
 
-		public async Task<APIResponse> GetAllEmployeeHealthDetailByEmployeeId(int employeeid)
-		{
-			APIResponse response = new APIResponse();
-			try
-			{
-				//var list = await Task.Run(() =>
-				//    _uow.EmployeeHealthDetailRepository.FindAllAsync(x => x.IsDeleted == false && x.EmployeeId == employeeid).Result.ToList()
-				//);
+		//public async Task<APIResponse> GetAllEmployeeHealthDetailByEmployeeId(int employeeid)
+		//{
+		//	APIResponse response = new APIResponse();
+		//	try
+		//	{
+		//		//var list = await Task.Run(() =>
+		//		//    _uow.EmployeeHealthDetailRepository.FindAllAsync(x => x.IsDeleted == false && x.EmployeeId == employeeid).Result.ToList()
+		//		//);
 
-				var queryResult = EF.CompileAsyncQuery(
-				  (ApplicationDbContext ctx) => ctx.EmployeeHealthDetail.Where(x => x.EmployeeId == employeeid));
-				var list = await Task.Run(() =>
-					queryResult(_uow.GetDbContext()).ToListAsync().Result
-				);
+		//		var queryResult = EF.CompileAsyncQuery(
+		//		  (ApplicationDbContext ctx) => ctx.EmployeeHealthDetail.Where(x => x.EmployeeId == employeeid));
+		//		var list = await Task.Run(() =>
+		//			queryResult(_uow.GetDbContext()).ToListAsync().Result
+		//		);
 
-				var emphealthlist = list.Select(x => new EmployeeHealthInformationModel
-				{
-					HealthInfoId = x.HealthInfoId,
-					EmployeeId = x.EmployeeId,
-					BloodGroup = x.BloodGroup,
-					MedicalHistory = x.MedicalHistory,
-					SmokeAndDrink = x.SmokeAndDrink,
-					Insurance = x.Insurance,
-					MedicalInsurance = x.MedicalInsurance,
-					MeasureDieases = x.MeasureDiseases,
-					AllergicSubstance = x.AllergicSubstance,
-					FamilyHistory = x.FamilyHistory
-				}).ToList();
-				response.data.EmployeeHealthInfoList = emphealthlist;
-				response.StatusCode = StaticResource.successStatusCode;
-				response.Message = "Success";
-			}
-			catch (Exception ex)
-			{
-				response.StatusCode = StaticResource.failStatusCode;
-				response.Message = ex.Message;
-			}
-			return response;
-		}
+		//		var emphealthlist = list.Select(x => new EmployeeHealthInformationModel
+		//		{
+		//			HealthInfoId = x.HealthInfoId,
+		//			EmployeeId = x.EmployeeId,
+		//			BloodGroup = x.BloodGroup,
+		//			MedicalHistory = x.MedicalHistory,
+		//			SmokeAndDrink = x.SmokeAndDrink,
+		//			Insurance = x.Insurance,
+		//			MedicalInsurance = x.MedicalInsurance,
+		//			MeasureDieases = x.MeasureDiseases,
+		//			AllergicSubstance = x.AllergicSubstance,
+		//			FamilyHistory = x.FamilyHistory
+		//		}).ToList();
+		//		response.data.EmployeeHealthInfoList = emphealthlist;
+		//		response.StatusCode = StaticResource.successStatusCode;
+		//		response.Message = "Success";
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		response.StatusCode = StaticResource.failStatusCode;
+		//		response.Message = ex.Message;
+		//	}
+		//	return response;
+		//}
 
 		public async Task<APIResponse> ChangeEmployeeImage(ChangeEmployeeImage model)
 		{

@@ -132,8 +132,10 @@ namespace DataAccess
 		IGenericRepository<EmployeeSalaryBudget> EmployeeSalaryBudgetRepository { get; }
 		IGenericRepository<EmployeeEducations> EmployeeEducationsRepository { get; }
 		IGenericRepository<EmployeeSalaryAnalyticalInfo> EmployeeSalaryAnalyticalInfoRepository { get; }
-		
-		void Save();
+
+		IGenericRepository<EmployeeHealthInfo> EmployeeHealthInfoRepository { get; }
+
+        void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
 

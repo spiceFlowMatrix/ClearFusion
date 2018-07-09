@@ -229,22 +229,22 @@ namespace HumanitarianAssistance.Service.Classes
             var response = new APIResponse();
             try
             {
-                var addItem = await _uow.VoucherDetailRepository.FindAsync(x => x.VoucherNo == model.Voucher);
-                if (addItem != null)
-                {
-                    StoreInventoryItem obj = _mapper.Map<StoreInventoryItem>(model);
-                    await _uow.StoreInventoryItemRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
+                //var addItem = await _uow.VoucherDetailRepository.FindAsync(x => x.VoucherNo == model.Voucher);
+                //if (addItem != null)
+                //{
+                StoreInventoryItem obj = _mapper.Map<StoreInventoryItem>(model);
+                await _uow.StoreInventoryItemRepository.AddAsyn(obj);
+                await _uow.SaveAsync();
 
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "Please add voucher first";
-                    return response;
-                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+                //}
+                //else
+                //{
+                //    response.StatusCode = StaticResource.failStatusCode;
+                //    response.Message = "Please add voucher first";
+                //    return response;
+                //}
             }
             catch (Exception e)
             {
@@ -352,7 +352,7 @@ namespace HumanitarianAssistance.Service.Classes
                     ItemName = v.ItemName,
                     ItemCode = v.ItemCode,
                     Description = v.Description,
-                    Voucher = v.Voucher,
+                    //Voucher = v.Voucher,
                     ItemType = v.ItemType
                 }).ToList();
                 response.data.InventoryItemList = invModelList;
@@ -683,8 +683,8 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
                     if (purchaseRecord != null)
-                    {						
-						var isOrderExist = _uow.GetDbContext().StorePurchaseOrders.Where(x => x.Purchase == model.PurchaseId && x.IsDeleted == false).Count();
+                    {
+                        var isOrderExist = _uow.GetDbContext().StorePurchaseOrders.Where(x => x.Purchase == model.PurchaseId && x.IsDeleted == false).Count();
 
                         if (isOrderExist > 0)
                         {
@@ -1127,8 +1127,8 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-				//int procuredAmount, spentAmount;
-				var procuredAmount = await _uow.GetDbContext().StoreItemPurchases.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
+                //int procuredAmount, spentAmount;
+                var procuredAmount = await _uow.GetDbContext().StoreItemPurchases.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
 
                 //NOTE: x.MustReturn == false --> Use to keep track if Employee Returned the Item or not.
                 var spentAmount = await _uow.GetDbContext().StorePurchaseOrders.Where(x => x.InventoryItem == ItemId && x.IsDeleted == false && x.Returned == false).ToListAsync();

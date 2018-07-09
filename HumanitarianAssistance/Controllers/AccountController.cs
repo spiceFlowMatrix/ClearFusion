@@ -201,44 +201,56 @@ namespace HumanitarianAssistance.Controllers
     {
       try
       {
+        response = new APIResponse();
+
         if (!ModelState.IsValid) return BadRequest("Could not create token");
         var user = await _userManager.FindByNameAsync(model.UserName);
-        if (user == null) return BadRequest("Could not create token");
-        var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-        //Comment
-        if (!result.Succeeded) return BadRequest("Could not create token");
-
-        var userClaims = await _userManager.GetClaimsAsync(user);
-
-        //var officedetais = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
-
-        var roles = await _userManager.GetRolesAsync(user);
-        userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
-        userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+        //if (user == null) return BadRequest("Could not create token");
+        if (user != null)
+        {
 
 
-        string k = _configuration["JwtKey"];
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(k));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
+          var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+          //Comment
+          if (!result.Succeeded) return BadRequest("Could not create token");
 
-        var token = new JwtSecurityToken(
-          issuer: _configuration.GetSection("JwtIssuerOptions:Issuer").Value,
-          audience: _configuration.GetSection("JwtIssuerOptions:Audience").Value,
-          claims: userClaims,
-          expires: DateTime.Now.AddYears(1),
-          signingCredentials: creds
-        );
-        response = new APIResponse();
-        var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == user.Id).Select(x => x.UserID).FirstOrDefault();
-        var Offices = _uow.GetDbContext().UserDetailOffices.Where(x => x.IsDeleted == false && x.UserId == User).Select(x => x.OfficeId).ToList();
-        response.data.AspNetUserId = user.Id;
-        response.StatusCode = 200;
-        response.Message = "Success";
-        response.data.Token = new JwtSecurityTokenHandler().WriteToken(token);
-        response.data.Roles = roles.ToList();
-        //response.data.OfficeId = officedetais?.OfficeId ?? 0;
-        response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
+          var userClaims = await _userManager.GetClaimsAsync(user);
+
+          //var officedetais = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
+
+          var roles = await _userManager.GetRolesAsync(user);
+          userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
+          userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+
+
+          string k = _configuration["JwtKey"];
+          var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(k));
+          var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+          var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
+
+          var token = new JwtSecurityToken(
+            issuer: _configuration.GetSection("JwtIssuerOptions:Issuer").Value,
+            audience: _configuration.GetSection("JwtIssuerOptions:Audience").Value,
+            claims: userClaims,
+            expires: DateTime.Now.AddYears(1),
+            signingCredentials: creds
+          );
+          //response = new APIResponse();
+          var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == user.Id).Select(x => x.UserID).FirstOrDefault();
+          var Offices = _uow.GetDbContext().UserDetailOffices.Where(x => x.IsDeleted == false && x.UserId == User).Select(x => x.OfficeId).ToList();
+          response.data.AspNetUserId = user.Id;
+          response.StatusCode = 200;
+          response.Message = "Success";
+          response.data.Token = new JwtSecurityTokenHandler().WriteToken(token);
+          response.data.Roles = roles.ToList();
+          //response.data.OfficeId = officedetais?.OfficeId ?? 0;
+          response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
+        }
+        else
+        {
+          response.StatusCode = StaticResource.failStatusCode;
+          response.Message = StaticResource.InvalidUserCredentials;
+        }
       }
       catch (Exception ex)
       {

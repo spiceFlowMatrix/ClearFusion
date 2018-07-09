@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180706062746_InventoryItemColumnModified")]
+    partial class InventoryItemColumnModified
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1711,14 +1713,15 @@ namespace DataAccess.Migrations
                     b.ToTable("EmployeeEvaluationTraining");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.EmployeeHealthInfo", b =>
+            modelBuilder.Entity("DataAccess.DbEntities.EmployeeHealthDetail", b =>
                 {
-                    b.Property<long>("EmployeeHealthInfoId")
+                    b.Property<long>("HealthInfoId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("BloodGroup");
+                    b.Property<bool>("AllergicSubstance");
 
-                    b.Property<float?>("BloodPressure");
+                    b.Property<string>("BloodGroup")
+                        .HasMaxLength(20);
 
                     b.Property<string>("CreatedById");
 
@@ -1726,51 +1729,25 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<int?>("Hbs");
+                    b.Property<bool>("FamilyHistory");
 
-                    b.Property<int?>("Hcv");
-
-                    b.Property<string>("HealthPresentCondition");
-
-                    b.Property<float?>("HearingL");
-
-                    b.Property<int?>("HearingLType");
-
-                    b.Property<float?>("HearingR");
-
-                    b.Property<int?>("HearingRType");
-
-                    b.Property<float?>("Height");
-
-                    b.Property<string>("HistoryOfPastIllness");
-
-                    b.Property<string>("HospitalAddress");
-
-                    b.Property<string>("HospitalName");
+                    b.Property<bool>("Insurance");
 
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("MeasureDiseases");
+
+                    b.Property<string>("MedicalHistory");
+
+                    b.Property<string>("MedicalInsurance");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int?>("OverallHealthCondition");
+                    b.Property<bool>("SmokeAndDrink");
 
-                    b.Property<string>("PhysicanName");
-
-                    b.Property<string>("ResultOfChestXRay");
-
-                    b.Property<float?>("VisualWithGlassesL");
-
-                    b.Property<float?>("VisualWithGlassesR");
-
-                    b.Property<float?>("VisualWithoutGlassesL");
-
-                    b.Property<float?>("VisualWithoutGlassesR");
-
-                    b.Property<float?>("Weight");
-
-                    b.HasKey("EmployeeHealthInfoId");
+                    b.HasKey("HealthInfoId");
 
                     b.HasIndex("CreatedById");
 
@@ -1778,7 +1755,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ModifiedById");
 
-                    b.ToTable("EmployeeHealthInfo");
+                    b.ToTable("EmployeeHealthDetail");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeHistoryDetail", b =>
@@ -5628,7 +5605,7 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.EmployeeHealthInfo", b =>
+            modelBuilder.Entity("DataAccess.DbEntities.EmployeeHealthDetail", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()

@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace HumanitarianAssistance.ViewModels.Models
+namespace DataAccess.DbEntities
 {
-    public class EmployeeHealthInformationModel : BaseModel
-    {
-        //public long EmployeeHealthDetailId { get; set; }
-        public long EmployeeHealthInfoId { get; set; }
 
+    public partial class EmployeeHealthInfo : BaseEntityWithoutId
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1)]
+        public long EmployeeHealthInfoId { get; set; }
         public int EmployeeId { get; set; }
+        public EmployeeDetail EmployeeDetails { get; set; }
 
         //HealthDetails
         public string PhysicanName { get; set; }
@@ -40,14 +45,15 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? OverallHealthCondition { get; set; }
 
 
-        //public long HealthInfoId { get; set; }
-        //public int EmployeeId { get; set; }
+
+
+        //[StringLength(20)]
         //public string BloodGroup { get; set; }
         //public string MedicalHistory { get; set; }
         //public bool SmokeAndDrink { get; set; }
         //public bool Insurance { get; set; }
         //public string MedicalInsurance { get; set; }
-        //public bool MeasureDieases { get; set; }
+        //public bool MeasureDiseases { get; set; }
         //public bool AllergicSubstance { get; set; }
         //public bool FamilyHistory { get; set; }
     }

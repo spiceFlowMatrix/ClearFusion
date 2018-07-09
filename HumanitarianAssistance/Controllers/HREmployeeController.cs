@@ -472,47 +472,47 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> AddEmployeeHealthDetail([FromBody] EmployeeHealthInformationModel model)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        model.CreatedById = id;
-        model.CreatedDate = DateTime.UtcNow;
-        model.IsDeleted = false;
-        response = await _iHREmployee.AddEmployeeHealthDetail(model);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<object> AddEmployeeHealthDetail([FromBody] EmployeeHealthInformationModel model)
+    //{
+    //  APIResponse response = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    model.CreatedById = id;
+    //    model.CreatedDate = DateTime.UtcNow;
+    //    model.IsDeleted = false;
+    //    response = await _iHREmployee.AddEmployeeHealthDetail(model);
+    //  }
+    //  return response;
+    //}
 
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> EditEmployeeHealthDetail([FromBody] EmployeeHealthInformationModel model)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        model.ModifiedById = id;
-        model.ModifiedDate = DateTime.UtcNow;
-        model.IsDeleted = false;
-        response = await _iHREmployee.EditEmployeeHealthDetail(model);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<object> EditEmployeeHealthDetail([FromBody] EmployeeHealthInformationModel model)
+    //{
+    //  APIResponse response = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    model.ModifiedById = id;
+    //    model.ModifiedDate = DateTime.UtcNow;
+    //    model.IsDeleted = false;
+    //    response = await _iHREmployee.EditEmployeeHealthDetail(model);
+    //  }
+    //  return response;
+    //}
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> GetAllEmployeeHealthDetailByEmployeeId(int employeeid)
-    {
-      APIResponse response = await _iHREmployee.GetAllEmployeeHealthDetailByEmployeeId(employeeid);
-      return response;
-    }
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<object> GetAllEmployeeHealthDetailByEmployeeId(int employeeid)
+    //{
+    //  APIResponse response = await _iHREmployee.GetAllEmployeeHealthDetailByEmployeeId(employeeid);
+    //  return response;
+    //}
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]

@@ -90,7 +90,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeeProfessionalDetail> EmployeeProfessionalDetail { get; set; }
         public DbSet<EmployeeAttendance> EmployeeAttendance { get; set; }
         public DbSet<EmployeeApplyLeave> EmployeeApplyLeave { get; set; }
-        public DbSet<EmployeeHealthDetail> EmployeeHealthDetail { get; set; }
+        //public DbSet<EmployeeHealthDetail> EmployeeHealthDetail { get; set; }
         public DbSet<NotesMaster> NotesMaster { get; set; }
         public DbSet<JobGrade> JobGrade { get; set; }
         public DbSet<HolidayDetails> HolidayDetails { get; set; }
@@ -147,17 +147,18 @@ namespace HumanitarianAssistance.Entities
         public DbSet<StatusAtTimeOfIssue> StatusAtTimeOfIssue { get; set; }
         public DbSet<ReceiptType> ReceiptType { get; set; }
 
-		public DbSet<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganization { get; set; }
-		public DbSet<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountry { get; set; }
-		public DbSet<EmployeeRelativeInfo> EmployeeRelativeInfo { get; set; }
-		public DbSet<EmployeeInfoReferences> EmployeeInfoReferences { get; set; }
-		public DbSet<EmployeeOtherSkills> EmployeeOtherSkills { get; set; }
-		public DbSet<EmployeeSalaryBudget> EmployeeSalaryBudget { get; set; }
-		public DbSet<EmployeeEducations> EmployeeEducations { get; set; }
-		public DbSet<EmployeeSalaryAnalyticalInfo> EmployeeSalaryAnalyticalInfo { get; set; }
-		
+        public DbSet<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganization { get; set; }
+        public DbSet<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountry { get; set; }
+        public DbSet<EmployeeRelativeInfo> EmployeeRelativeInfo { get; set; }
+        public DbSet<EmployeeInfoReferences> EmployeeInfoReferences { get; set; }
+        public DbSet<EmployeeOtherSkills> EmployeeOtherSkills { get; set; }
+        public DbSet<EmployeeSalaryBudget> EmployeeSalaryBudget { get; set; }
+        public DbSet<EmployeeEducations> EmployeeEducations { get; set; }
+        public DbSet<EmployeeSalaryAnalyticalInfo> EmployeeSalaryAnalyticalInfo { get; set; }
+        public DbSet<EmployeeHealthInfo> EmployeeHealthInfo { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
             modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);
@@ -181,7 +182,7 @@ namespace HumanitarianAssistance.Entities
             modelBuilder.Entity<EmployeeProfessionalDetail>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<PayrollMonthlyHourDetail>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<EmployeeAttendance>().HasQueryFilter(x => x.IsDeleted == false);
-            modelBuilder.Entity<EmployeeHealthDetail>().HasQueryFilter(x => x.IsDeleted == false);
+            //modelBuilder.Entity<EmployeeHealthDetail>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<EmployeeApplyLeave>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<JobGrade>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<InterviewScheduleDetails>().HasQueryFilter(x => x.IsDeleted == false);

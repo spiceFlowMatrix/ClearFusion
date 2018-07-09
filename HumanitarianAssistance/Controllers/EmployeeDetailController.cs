@@ -470,5 +470,47 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     #endregion
+
+    #region "Employee Health"
+
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllEmployeeHealthInfo([FromQuery]int EmployeeId)
+    {
+      APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeHealthInfo(EmployeeId);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEmployeeHealthInfo([FromBody]EmployeeHealthInformationModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.AddEmployeeHealthInfo(model, id);
+      }
+      return apiResponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditEmployeeHealthInfo([FromBody]EmployeeHealthInformationModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.EditEmployeeHealthInfo(model, id);
+      }
+      return apiResponse;
+    }
+
+    #endregion
+
   }
 }
