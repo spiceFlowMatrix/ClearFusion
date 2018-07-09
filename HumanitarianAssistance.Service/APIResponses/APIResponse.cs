@@ -74,16 +74,16 @@ namespace HumanitarianAssistance.Service.APIResponses
         public int? TotalEmployees { get; set; }
         public double? TotalGrossSalary { get; set; }
         public double? TotalDeductions { get; set; }
-        public double? TotalAllowances { get; set; }		
-		public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
-		public List<ItemSpecificationMasterModel> ItemSpecificationMasterList { get; set; }
+        public double? TotalAllowances { get; set; }
+        public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
+        public List<ItemSpecificationMasterModel> ItemSpecificationMasterList { get; set; }
         public List<ItemSpecificationDetailModel> ItemSpecificationDetailList { get; set; }
         public UpdatePurchaseInvoiceModel UpdatePurchaseInvoiceModel { get; set; }
-		public List<EmployeeEducationsModel> EmployeeEducationsList { get; set; }
-		public List<EmployeeSalaryBudgetModel> EmployeeSalaryBudgetList { get; set; }
-		public List<EmployeeOtherSkillsModel> EmployeeOtherSkillsList { get; set; }
-		public List<EmployeeRelativeInfoModel> EmployeeRelativeInfoList { get; set; }
-		public List<EmployeeHistoryOutsideOrganizationModel> EmployeeHistoryOutsideOrganizationList { get; set; }						
+        public List<EmployeeEducationsModel> EmployeeEducationsList { get; set; }
+        public List<EmployeeSalaryBudgetModel> EmployeeSalaryBudgetList { get; set; }
+        public List<EmployeeOtherSkillsModel> EmployeeOtherSkillsList { get; set; }
+        public List<EmployeeRelativeInfoModel> EmployeeRelativeInfoList { get; set; }
+        public List<EmployeeHistoryOutsideOrganizationModel> EmployeeHistoryOutsideOrganizationList { get; set; }
         public ExchangeGainOrLossModel ExchangeGainOrLossModel { get; set; }
         public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
         public List<ProcurmentSummaryModel> ProcurmentSummaryModelList { get; set; }
@@ -186,6 +186,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<DisplayEmployeeAttendanceModel> DisEmployeeAttendanceList { get; set; }
         public IList<EmployeeHealthInformationModel> EmployeeHealthInfoList { get; set; }
         public EmployeeHealthInformationModel EmployeeHealthInfo { get; set; }
+        public List<EmployeeHealthQuestion> EmployeeHealthQuestionList { get; set; }
+
 
         public ProjectBudgetLinesModel ProjectBudgetLinesModel { get; set; }
         public IList<ProjectDocumentModel> ProjectDocumentList { get; set; }

@@ -118,22 +118,23 @@ namespace DataAccess
         IGenericRepository<EmployeePayrollMonth> EmployeePayrollMonthRepository { get; }
         IGenericRepository<EmployeeContract> EmployeeContractRepository { get; }
         IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository { get; }
-		IGenericRepository<ItemSpecificationMaster> ItemSpecificationMasterRepository { get; }
-		IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository { get; }
-		IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository { get; }
-		IGenericRepository<ReceiptType> ReceiptTypeRepository { get; }
+        IGenericRepository<ItemSpecificationMaster> ItemSpecificationMasterRepository { get; }
+        IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository { get; }
+        IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository { get; }
+        IGenericRepository<ReceiptType> ReceiptTypeRepository { get; }
 
-                
-		IGenericRepository<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganizationRepository { get; }
-		IGenericRepository<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountryRepository { get; }
-		IGenericRepository<EmployeeRelativeInfo> EmployeeRelativeInfoRepository { get; }
-		IGenericRepository<EmployeeInfoReferences> EmployeeInfoReferencesRepository { get; }
-		IGenericRepository<EmployeeOtherSkills> EmployeeOtherSkillsRepository { get; }
-		IGenericRepository<EmployeeSalaryBudget> EmployeeSalaryBudgetRepository { get; }
-		IGenericRepository<EmployeeEducations> EmployeeEducationsRepository { get; }
-		IGenericRepository<EmployeeSalaryAnalyticalInfo> EmployeeSalaryAnalyticalInfoRepository { get; }
 
-		IGenericRepository<EmployeeHealthInfo> EmployeeHealthInfoRepository { get; }
+        IGenericRepository<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganizationRepository { get; }
+        IGenericRepository<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountryRepository { get; }
+        IGenericRepository<EmployeeRelativeInfo> EmployeeRelativeInfoRepository { get; }
+        IGenericRepository<EmployeeInfoReferences> EmployeeInfoReferencesRepository { get; }
+        IGenericRepository<EmployeeOtherSkills> EmployeeOtherSkillsRepository { get; }
+        IGenericRepository<EmployeeSalaryBudget> EmployeeSalaryBudgetRepository { get; }
+        IGenericRepository<EmployeeEducations> EmployeeEducationsRepository { get; }
+        IGenericRepository<EmployeeSalaryAnalyticalInfo> EmployeeSalaryAnalyticalInfoRepository { get; }
+
+        IGenericRepository<EmployeeHealthInfo> EmployeeHealthInfoRepository { get; }
+        IGenericRepository<EmployeeHealthQuestion> EmployeeHealthQuestionRepository { get; }
 
         void Save();
         Task<int> SaveAsync();

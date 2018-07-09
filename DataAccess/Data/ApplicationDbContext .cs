@@ -156,6 +156,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeeEducations> EmployeeEducations { get; set; }
         public DbSet<EmployeeSalaryAnalyticalInfo> EmployeeSalaryAnalyticalInfo { get; set; }
         public DbSet<EmployeeHealthInfo> EmployeeHealthInfo { get; set; }
+        public DbSet<EmployeeHealthQuestion> EmployeeHealthQuestion { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

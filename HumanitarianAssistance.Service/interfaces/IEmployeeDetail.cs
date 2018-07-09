@@ -1,4 +1,5 @@
-﻿using HumanitarianAssistance.Service.APIResponses;
+﻿using DataAccess.DbEntities;
+using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,11 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllEmployeeHealthInfo(int EmployeeId);
         Task<APIResponse> AddEmployeeHealthInfo(EmployeeHealthInformationModel model, string UserId);
         Task<APIResponse> EditEmployeeHealthInfo(EmployeeHealthInformationModel model, string UserId);
+
+        Task<APIResponse> GetEmployeeHealthQuestion(int EmployeeId);
+        Task<APIResponse> AddEmployeeHealthQuestion(EmployeeHealthQuestion model, string UserId);
+        Task<APIResponse> EditEmployeeHealthQuestion(EmployeeHealthQuestion model, string UserId);
+        Task<APIResponse> DeleteEmployeeHealthQuestion(EmployeeHealthQuestion model, string UserId);
 
 
 

@@ -57,7 +57,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
-        var id = user.Id;        
+        var id = user.Id;
         apiResponse = await _iEmployeeDetail.AddEmployeeHistoryOutsideOrganization(model, id);
       }
       return apiResponse;
@@ -506,6 +506,60 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         var id = user.Id;
         apiResponse = await _iEmployeeDetail.EditEmployeeHealthInfo(model, id);
+      }
+      return apiResponse;
+    }
+
+
+
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetEmployeeHealthQuestion([FromQuery]int EmployeeId)
+    {
+      APIResponse apiresponse = await _iEmployeeDetail.GetEmployeeHealthQuestion(EmployeeId);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEmployeeHealthQuestion([FromBody]EmployeeHealthQuestion model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.AddEmployeeHealthQuestion(model, id);
+      }
+      return apiResponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditEmployeeHealthQuestion([FromBody]EmployeeHealthQuestion model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.EditEmployeeHealthQuestion(model, id);
+      }
+      return apiResponse;
+    }
+
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteEmployeeHealthQuestion([FromBody]EmployeeHealthQuestion model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.DeleteEmployeeHealthQuestion(model, id);
       }
       return apiResponse;
     }

@@ -135,6 +135,7 @@ namespace DataAccess
         private IGenericRepository<EmployeeSalaryAnalyticalInfo> _employeeSalaryAnalyticalInfoRepository;
 
         private IGenericRepository<EmployeeHealthInfo> _employeeHealthInfoRepository;
+        private IGenericRepository<EmployeeHealthQuestion> _employeeHealthQuestionRepository;
 
 
         public UnitOfWork(ApplicationDbContext mschaContext)
@@ -159,6 +160,16 @@ namespace DataAccess
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+
+        public IGenericRepository<EmployeeHealthQuestion> EmployeeHealthQuestionRepository
+        {
+            get
+            {
+                return _employeeHealthQuestionRepository =
+                    _employeeHealthQuestionRepository ?? new GenericRepository<EmployeeHealthQuestion>(_mschaContext);
+            }
         }
 
 

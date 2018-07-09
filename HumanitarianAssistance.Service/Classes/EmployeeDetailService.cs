@@ -1061,6 +1061,136 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+
+        //Grid health info
+        public async Task<APIResponse> GetEmployeeHealthQuestion(int EmployeeId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var employeeRecord = await _uow.EmployeeHealthQuestionRepository.FindAllAsync(x => x.EmployeeId == EmployeeId && x.IsDeleted == false);
+
+                //EmployeeHealthQuestion obj = _mapper.Map<EmployeeHealthQuestion>(employeeRecord);
+
+                if (employeeRecord.Count > 0)
+                {
+                    response.data.EmployeeHealthQuestionList = employeeRecord.ToList();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "No Record Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddEmployeeHealthQuestion(EmployeeHealthQuestion model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                //EmployeeHealthQuestion obj = _mapper.Map<EmployeeHealthQuestion>(model);
+                EmployeeHealthQuestion obj = new EmployeeHealthQuestion();
+
+                obj.EmployeeId = model.EmployeeId;
+                obj.Question = model.Question;
+                obj.Answer = model.Answer;
+
+                obj.IsDeleted = false;
+                obj.CreatedById = UserId;
+                obj.CreatedDate = DateTime.Now;
+
+
+                await _uow.EmployeeHealthQuestionRepository.AddAsyn(obj);
+                await _uow.SaveAsync();
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> EditEmployeeHealthQuestion(EmployeeHealthQuestion model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var existRecord = await _uow.EmployeeHealthQuestionRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeHealthQuestionId == model.EmployeeHealthQuestionId);
+                if (existRecord != null)
+                {
+                    //existRecord.EmployeeId = model.EmployeeId;
+                    existRecord.Question = model.Question;
+                    existRecord.Answer = model.Answer;
+
+                    existRecord.IsDeleted = false;
+                    existRecord.ModifiedById = UserId;
+                    existRecord.ModifiedDate = DateTime.Now;
+
+                    //_mapper.Map(model, existRecord);
+
+                    await _uow.EmployeeHealthQuestionRepository.UpdateAsyn(existRecord);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Record not found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteEmployeeHealthQuestion(EmployeeHealthQuestion model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var existRecord = await _uow.EmployeeHealthQuestionRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeHealthQuestionId == model.EmployeeHealthQuestionId);
+                if (existRecord != null)
+                {
+                    existRecord.IsDeleted = true;
+                    existRecord.ModifiedById = UserId;
+                    existRecord.ModifiedDate = DateTime.Now;
+                    //_mapper.Map(model, existRecord);
+                    await _uow.EmployeeHealthQuestionRepository.UpdateAsyn(existRecord);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Record not found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
         #endregion
 
 
