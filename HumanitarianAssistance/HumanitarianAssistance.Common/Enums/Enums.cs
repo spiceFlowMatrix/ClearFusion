@@ -102,4 +102,26 @@ namespace HumanitarianAssistance.Common.Enums
     Cash = 1,
     InKind = 2
   }
+
+  public enum Currency
+  {
+    AFG = 1,
+    EUR = 2,
+    PKR = 3,
+    USD = 4
+  }
+
+  public enum AccountLevels
+  {
+    MainLevel = 1,
+    ControlLevel = 2,
+    SubLevel = 3,
+    InputLevel = 4
+  }
+  public enum TransactionType
+  {
+    Credit=1,
+    Debit=2
+  }
+
 }

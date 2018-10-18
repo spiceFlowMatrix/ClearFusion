@@ -13,7 +13,7 @@ namespace DataAccess.DbEntities
             Id = GUIDGenerator.Generate();
         }
         public Guid Id { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string CreatedById { get; set; }
         //public AppUser CreatedBy { get; set; }

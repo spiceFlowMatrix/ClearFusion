@@ -27,8 +27,9 @@ namespace DataAccess
         IGenericRepository<VoucherType> VoucherTypeRepository { get; }
         IGenericRepository<VoucherDetail> VoucherDetailRepository { get; }
         IGenericRepository<VoucherDocumentDetail> VoucherDocumentDetailRepository { get; }
-        IGenericRepository<VoucherTransactionDetails> VoucherTransactionDetailsRepository { get; }
-        IGenericRepository<AnalyticalType> AnalyticalTypeRepository { get; }
+		//IGenericRepository<VoucherTransactionDetails> VoucherTransactionDetailsRepository { get; }
+		IGenericRepository<VoucherTransactions> VoucherTransactionsRepository { get; }
+		IGenericRepository<AnalyticalType> AnalyticalTypeRepository { get; }
         IGenericRepository<AnalyticalDetail> AnalyticalDetailRepository { get; }
         IGenericRepository<ExchangeRate> ExchangeRateRepository { get; }
         IGenericRepository<StoreSourceCodeDetail> StoreSourceCodeRepository { get; }
@@ -135,6 +136,10 @@ namespace DataAccess
 
         IGenericRepository<EmployeeHealthInfo> EmployeeHealthInfoRepository { get; }
         IGenericRepository<EmployeeHealthQuestion> EmployeeHealthQuestionRepository { get; }
+        IGenericRepository<EmployeeMonthlyAttendance> EmployeeMonthlyAttendanceRepository { get; }
+        IGenericRepository<PensionPaymentHistory> PensionPaymentHistoryRepository { get; }
+        IGenericRepository<PayrollAccountHead> PayrollAccountHeadRepository { get; }
+        IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository { get; }
 
         void Save();
         Task<int> SaveAsync();

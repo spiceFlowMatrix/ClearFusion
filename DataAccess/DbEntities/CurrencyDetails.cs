@@ -17,9 +17,7 @@ namespace DataAccess.DbEntities
         [StringLength(50)]
         public string CurrencyName { get; set; }
         public float? CurrencyRate { get; set; }
-        public List<ExchangeRate> ExchangeRateListFrom { get; set; }
-        public List<ExchangeRate> ExchangeRateListTo { get; set; }
-		public bool Status { get; set; }
-
-	}
+		public bool? Status { get; set; }
+        public bool? SalaryTaxFlag { get; set; }
+    }
 }

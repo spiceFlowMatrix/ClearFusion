@@ -64,10 +64,10 @@ namespace DataAccess.DbEntities.Store
 
 
 
-        [ForeignKey("VoucherId")]
-        public VoucherDetail VoucherDetail { get; set; }
+		[ForeignKey("VoucherId")]
+		public VoucherDetail VoucherDetail { get; set; }
 
-        [ForeignKey("Status")]
+		[ForeignKey("Status")]
         public StatusAtTimeOfIssue StatusAtTimeOfIssue { get; set; }
 
         [ForeignKey("ReceiptTypeId")]

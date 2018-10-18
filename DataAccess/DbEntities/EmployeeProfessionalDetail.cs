@@ -13,14 +13,17 @@ namespace DataAccess.DbEntities
         [Column(Order = 1, TypeName = "serial")]
         public long EmployeeProfessionalId { get; set; }
         public int? EmployeeId { get; set; }
-        public EmployeeDetail EmployeeDetails { get; set; }
+        [ForeignKey("EmployeeId")]
+        //public EmployeeDetail EmployeeDetails { get; set; }
         public int? EmployeeTypeId { get; set; }
         public EmployeeType EmployeeType { get; set; }
         [StringLength(20)]
         public string Status { get; set; }
         public int? OfficeId { get; set; }
+        [ForeignKey("OfficeId")]
         public OfficeDetail OfficeDetail { get; set; }
         public int? DesignationId { get; set; }
+        [ForeignKey("DesignationId")]
         public DesignationDetail DesignationDetails { get; set; }
         public int? DepartmentId { get; set; }
         public Department Department { get; set; }
@@ -34,6 +37,17 @@ namespace DataAccess.DbEntities
 		public string MembershipSupportInPoliticalParty { get; set; }			// New field added
 
 		public int? EmployeeContractTypeId { get; set; }
+        [ForeignKey("EmployeeContractTypeId")]
 		public EmployeeContractType EmployeeContractType { get; set; }
-	}
+        public string Designation { get; set; }
+        public string Profession { get; set; }
+        public string Departments { get; set; }
+        public string WorkType { get; set; }
+        public long? ProjectId { get; set; }
+        public string RegCode { get; set; }
+        public string ContractStatus { get; set; }
+        public int? ProfessionId { get; set; }
+        [ForeignKey("ProfessionId")]
+        public ProfessionDetails professionDetails { get; set; }
+    }
 }

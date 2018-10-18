@@ -28,8 +28,9 @@ namespace DataAccess
         private IGenericRepository<VoucherType> _vouchertypeRepository;
         private IGenericRepository<VoucherDetail> _voucherdetailsRepository;
         private IGenericRepository<VoucherDocumentDetail> _voucherdocumentdetailRepository;
-        private IGenericRepository<VoucherTransactionDetails> _vouchertransactiondetailsRepository;
-        private IGenericRepository<AnalyticalType> _analyticaltypeRepository;
+		//private IGenericRepository<VoucherTransactionDetails> _vouchertransactiondetailsRepository;
+		private IGenericRepository<VoucherTransactions> _voucherTransactionsRepository;
+		private IGenericRepository<AnalyticalType> _analyticaltypeRepository;
         private IGenericRepository<AnalyticalDetail> _analyticaldetailRepository;
         private IGenericRepository<ExchangeRate> _exchangerateRepository;
         private IGenericRepository<StoreSourceCodeDetail> _storesourcecodeRepository;
@@ -136,7 +137,10 @@ namespace DataAccess
 
         private IGenericRepository<EmployeeHealthInfo> _employeeHealthInfoRepository;
         private IGenericRepository<EmployeeHealthQuestion> _employeeHealthQuestionRepository;
-
+        private IGenericRepository<EmployeeMonthlyAttendance> _employeeMonthlyAttendanceRepository;
+        private IGenericRepository<PensionPaymentHistory> _pensionPaymentHistoryRepository;
+        private IGenericRepository<PayrollAccountHead> _payrollAccountHeadRepository;
+        private IGenericRepository<EmployeePayrollAccountHead> _employeePayrollAccountHeadRepository;
 
         public UnitOfWork(ApplicationDbContext mschaContext)
         {
@@ -786,15 +790,23 @@ namespace DataAccess
             }
         }
 
-        public IGenericRepository<VoucherTransactionDetails> VoucherTransactionDetailsRepository
-        {
-            get
-            {
-                return _vouchertransactiondetailsRepository = _vouchertransactiondetailsRepository ?? new GenericRepository<VoucherTransactionDetails>(_mschaContext);
-            }
-        }
+        //public IGenericRepository<VoucherTransactionDetails> VoucherTransactionDetailsRepository
+        //{
+        //    get
+        //    {
+        //        return _vouchertransactiondetailsRepository = _vouchertransactiondetailsRepository ?? new GenericRepository<VoucherTransactionDetails>(_mschaContext);
+        //    }
+        //}
 
-        public IGenericRepository<AnalyticalType> AnalyticalTypeRepository
+		public IGenericRepository<VoucherTransactions> VoucherTransactionsRepository
+		{
+			get
+			{
+				return _voucherTransactionsRepository = _voucherTransactionsRepository ?? new GenericRepository<VoucherTransactions>(_mschaContext);
+			}
+		}
+
+		public IGenericRepository<AnalyticalType> AnalyticalTypeRepository
         {
             get
             {
@@ -1111,6 +1123,38 @@ namespace DataAccess
             get
             {
                 return _employeepayrollRepository = _employeepayrollRepository ?? new GenericRepository<EmployeePayroll>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeMonthlyAttendance> EmployeeMonthlyAttendanceRepository
+        {
+            get
+            {
+                return _employeeMonthlyAttendanceRepository = _employeeMonthlyAttendanceRepository ?? new GenericRepository<EmployeeMonthlyAttendance>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<PensionPaymentHistory> PensionPaymentHistoryRepository
+        {
+            get
+            {
+                return _pensionPaymentHistoryRepository = _pensionPaymentHistoryRepository ?? new GenericRepository<PensionPaymentHistory>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<PayrollAccountHead> PayrollAccountHeadRepository
+        {
+            get
+            {
+                return _payrollAccountHeadRepository = _payrollAccountHeadRepository ?? new GenericRepository<PayrollAccountHead>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository
+        {
+            get
+            {
+                return _employeePayrollAccountHeadRepository = _employeePayrollAccountHeadRepository ?? new GenericRepository<EmployeePayrollAccountHead>(_mschaContext);
             }
         }
 

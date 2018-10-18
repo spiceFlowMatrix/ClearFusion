@@ -13,5 +13,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string Position { get; set; }
 		public string Organization { get; set; }
 		public int EmployeeID { get; set; }
-	}
+        public long PhoneNo { get; set; }
+        public string Email { get; set; }
+    }
 }

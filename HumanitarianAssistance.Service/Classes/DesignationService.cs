@@ -32,8 +32,8 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 DesignationDetail obj = _mapper.Map<DesignationDetail>(model);
+                obj.IsDeleted = false;
                 await _uow.DesignationDetailRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

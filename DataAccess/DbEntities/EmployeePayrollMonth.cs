@@ -18,7 +18,11 @@ namespace DataAccess.DbEntities
 		public SalaryHeadDetails SalaryHeadDetails { get; set; }
 		public double MonthlyAmount { get; set; }
 		public int CurrencyId { get; set; }
-		public CurrencyDetails CurrencyDetails { get; set; }
+        public int? PaymentType { get; set; }
+        public int? HeadTypeId { get; set; }
+        public CurrencyDetails CurrencyDetails { get; set; }
 		public DateTime Date { get; set; }
-	}
+        public long? AccountNo { get; set; }
+        public int? TransactionTypeId { get; set; }
+    }
 }

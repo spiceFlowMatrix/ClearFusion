@@ -17,6 +17,8 @@ namespace DataAccess.DbEntities
 		public string Position { get; set; }
 		public string Organization { get; set; }
 		public int EmployeeID { get; set; }
-		public EmployeeDetail EmployeeDetail { get; set; }
+        public long PhoneNo { get; set; }
+        public string Email { get; set; }
+        public EmployeeDetail EmployeeDetail { get; set; }
 	}
 }

@@ -134,6 +134,7 @@ namespace HumanitarianAssistance.Service.Classes
                 if (existrecord == null)
                 {
                     QualificationDetails obj = _mapper.Map<QualificationDetails>(model);
+                    obj.IsDeleted = false;
                     await _uow.QualificationDetailsRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -218,6 +219,7 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model != null)
                 {
                     LeaveReasonDetail obj = _mapper.Map<LeaveReasonDetail>(model);
+                    obj.IsDeleted = false;
                     await _uow.LeaveReasonDetailRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
                 }
@@ -291,11 +293,14 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var yearlist = await _uow.FinancialYearDetailRepository.GetAllAsyn();
-                foreach (var i in yearlist)
+                if (model.IsDefault == true)
                 {
-                    var existrecord1 = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDeleted == false && x.FinancialYearId == i.FinancialYearId);
-                    existrecord1.IsDefault = false;
-                    await _uow.FinancialYearDetailRepository.UpdateAsyn(existrecord1);
+                    foreach (var i in yearlist)
+                    {
+                        var existrecord1 = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDeleted == false && x.FinancialYearId == i.FinancialYearId);
+                        existrecord1.IsDefault = false;
+                        await _uow.FinancialYearDetailRepository.UpdateAsyn(existrecord1);
+                    }
                 }
                 FinancialYearDetail obj = _mapper.Map<FinancialYearDetail>(model);
                 if (yearlist == null)
@@ -318,11 +323,12 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                int? recordexist = _uow.HolidayDetailsRepository.FindAllAsync(x => x.FinancialYearId == model.FinancialYearId).Result.FirstOrDefault().FinancialYearId;
-                if (recordexist > 0)
-                {
+                //int? recordexist = _uow.HolidayDetailsRepository.FindAllAsync(x => x.FinancialYearId == model.FinancialYearId).Result.FirstOrDefault().FinancialYearId;
 
-                }
+                //if (recordexist > 0)
+                //{
+
+                //}
 
                 var existrecord = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDeleted == false && x.FinancialYearId == model.FinancialYearId);
                 if (existrecord != null)
@@ -423,6 +429,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 BudgetLineType obj = _mapper.Map<BudgetLineType>(model);
+                obj.IsDeleted = false;
                 await _uow.GetDbContext().BudgetLineType.AddAsync(obj);
                 await _uow.GetDbContext().SaveChangesAsync();
                 response.Message = "Add BudgetType Successfully!";
@@ -522,6 +529,7 @@ namespace HumanitarianAssistance.Service.Classes
                 if (existrecord == null)
                 {
                     Department obj = _mapper.Map<Department>(model);
+                    obj.IsDeleted = false;
                     await _uow.DepartmentRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -610,6 +618,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 SalaryHeadDetails obj = _mapper.Map<SalaryHeadDetails>(model);
+                obj.IsDeleted = false;
                 await _uow.SalaryHeadDetailsRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
                 response.StatusCode = StaticResource.successStatusCode;
@@ -632,11 +641,13 @@ namespace HumanitarianAssistance.Service.Classes
                 if (existrecord != null)
                 {
                     existrecord.HeadName = model.HeadName;
+                    existrecord.AccountNo = model.AccountNo;
+                    existrecord.TransactionTypeId = model.TransactionTypeId;
                     existrecord.Description = model.Description;
                     existrecord.HeadTypeId = model.HeadTypeId;
                     existrecord.ModifiedById = model.ModifiedById;
                     existrecord.ModifiedDate = model.ModifiedDate;
-                    existrecord.IsDeleted = model.IsDeleted;
+                    existrecord.IsDeleted = false;
                     await _uow.SalaryHeadDetailsRepository.UpdateAsyn(existrecord);
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -697,7 +708,9 @@ namespace HumanitarianAssistance.Service.Classes
                     SalaryHeadId = x.SalaryHeadId,
                     HeadTypeId = x.HeadTypeId,
                     HeadName = x.HeadName,
-                    Description = x.Description
+                    Description = x.Description,
+                    AccountNo= x?.AccountNo??0,
+                    TransactionTypeId=x?.TransactionTypeId??0
                 }).OrderBy(x => x.HeadName).ToList();
 
                 response.data.SalaryHeadList = salaryheadlist;
@@ -737,6 +750,8 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.IsDefault = (model.IsDefault == false && lst == null) ? true : model.IsDefault;
                         obj.CreatedById = UserId;
                         obj.CreatedDate = DateTime.Now;
+                        obj.IsDeleted = false;
+
                         await _uow.EmployeePensionRateRepository.AddAsyn(obj);
                         await _uow.SaveAsync();
                         response.StatusCode = StaticResource.successStatusCode;
@@ -832,6 +847,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 AppraisalGeneralQuestions obj = _mapper.Map<AppraisalGeneralQuestions>(model);
                 obj.CreatedById = UserId;
+                obj.IsDeleted = false;
                 obj.CreatedDate = DateTime.Now;
                 await _uow.AppraisalGeneralQuestionsRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
@@ -898,6 +914,7 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.CreatedById = UserId;
                 obj.CreatedDate = DateTime.Now;
                 obj.TotalScore = model.TotalScore;
+                obj.IsDeleted = false;
                 await _uow.EmployeeAppraisalDetailsRepository.AddAsyn(obj);
                 List<EmployeeAppraisalQuestions> lst = new List<EmployeeAppraisalQuestions>();
                 foreach (var item in model.EmployeeAppraisalQuestionList)
@@ -987,7 +1004,7 @@ namespace HumanitarianAssistance.Service.Classes
                         EmployeeAppraisalQuestionModel questions = new EmployeeAppraisalQuestionModel();
                         questions.QuestionEnglish = element.AppraisalGeneralQuestions.Question;
                         questions.QuestionDari = element.AppraisalGeneralQuestions.DariQuestion;
-                        questions.SequenceNo = element.AppraisalGeneralQuestions.SequenceNo;
+                        questions.SequenceNo = element.AppraisalGeneralQuestions.SequenceNo.Value;
                         questions.AppraisalGeneralQuestionsId = element.AppraisalGeneralQuestionsId;
                         questions.Score = element.Score;
                         questions.Remarks = element.Remarks;
@@ -1037,7 +1054,7 @@ namespace HumanitarianAssistance.Service.Classes
                         EmployeeAppraisalQuestionModel questions = new EmployeeAppraisalQuestionModel();
                         questions.QuestionEnglish = element.AppraisalGeneralQuestions.Question;
                         questions.QuestionDari = element.AppraisalGeneralQuestions.DariQuestion;
-                        questions.SequenceNo = element.AppraisalGeneralQuestions.SequenceNo;
+                        questions.SequenceNo = element.AppraisalGeneralQuestions.SequenceNo.Value;
                         questions.AppraisalGeneralQuestionsId = element.AppraisalGeneralQuestionsId;
                         questions.Score = element.Score;
                         questions.Remarks = element.Remarks;
@@ -1511,6 +1528,25 @@ namespace HumanitarianAssistance.Service.Classes
                     TenureWithCHA = (DateTime.Now.Date - x.EmployeeProfessionalDetail.HiredOn.Value.Date).Days.ToString() + " Days",
                     Gender = x.SexId == 1 ? "Male" : x.SexId == 2 ? "Female" : "Other"
                 }).ToListAsync();
+
+
+                //response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeContract.Where(x => x.EmployeeId == EmployeeId).Select(x => new EmployeeDetailList /*Include(x=> x.Employee).Include(x => x.Employee.EmployeeProfessionalDetail).Include(x => x.Employee.EmployeeProfessionalDetail.OfficeDetail).Include(x => x.Employee.EmployeeProfessionalDetail.Department).Include(x => x.Employee.QualificationDetails).Include(x => x.Employee.EmployeeProfessionalDetail.DesignationDetails)*/
+                //{
+                //    EmployeeId = x.Employee.EmployeeID,
+                //    EmployeeName = x.Employee.EmployeeName,
+                //    EmployeeCode = x.Employee.EmployeeCode,
+                //    FathersName = x.Employee.FatherName,
+                //    Position = x.Employee.EmployeeProfessionalDetail.DesignationDetails.Designation,
+                //    Department = x.Employee.EmployeeProfessionalDetail.Department.DepartmentName,
+                //    Qualification = x.Employee.QualificationDetails.QualificationName,
+                //    DutyStation = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
+                //    OfficeId= x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeId,
+                //    RecruitmentDate = x.Employee.EmployeeProfessionalDetail.HiredOn,
+                //    ContractStartDate= x.ContractStartDate,
+                //    ContractEndDate= x.ContractEndDate,
+                //    TenureWithCHA = (DateTime.Now.Date - x.Employee.EmployeeProfessionalDetail.HiredOn.Value.Date).Days.ToString() + " Days",
+                //    Gender = x.Employee.SexId == 1 ? "Male" : x.Employee.SexId == 2 ? "Female" : "Other"
+                //}).ToListAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1596,6 +1632,7 @@ namespace HumanitarianAssistance.Service.Classes
                 ExistInterviewDetails obj = _mapper.Map<ExistInterviewDetails>(model);
                 obj.CreatedById = UserId;
                 obj.CreatedDate = DateTime.Now;
+                obj.IsDeleted = false;
                 await _uow.ExistInterviewDetailsRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
                 response.StatusCode = StaticResource.successStatusCode;
@@ -1772,15 +1809,13 @@ namespace HumanitarianAssistance.Service.Classes
 
                     model.CreatedDate = DateTime.Now;
                     model.CreatedById = UserId;
+                    model.IsDeleted = false;
 
                     await _uow.SalaryTaxReportContentRepository.AddAsyn(model);
-                    await _uow.SalaryTaxReportContentRepository.SaveAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
-
                 }
-
             }
             catch (Exception ex)
             {
@@ -1798,18 +1833,166 @@ namespace HumanitarianAssistance.Service.Classes
                 var existrecord = await _uow.SalaryTaxReportContentRepository.FindAsync(x => x.SalaryTaxReportContentId == model.SalaryTaxReportContentId);
                 if (existrecord != null)
                 {
-					existrecord.EmployerAuthorizedOfficerName = model.EmployerAuthorizedOfficerName;
-					existrecord.PositionAuthorizedOfficer = model.PositionAuthorizedOfficer;
-					existrecord.OfficeId = model.OfficeId;
-					existrecord.ModifiedById = model.ModifiedById;
-					existrecord.ModifiedDate = model.ModifiedDate;
-					existrecord.IsDeleted = model.IsDeleted;
+                    existrecord.EmployerAuthorizedOfficerName = model.EmployerAuthorizedOfficerName;
+                    existrecord.PositionAuthorizedOfficer = model.PositionAuthorizedOfficer;
+                    existrecord.OfficeId = model.OfficeId;
+                    existrecord.ModifiedById = model.ModifiedById;
+                    existrecord.ModifiedDate = model.ModifiedDate;
+                    existrecord.IsDeleted = model.IsDeleted;
 
-					await _uow.SalaryTaxReportContentRepository.UpdateAsyn(existrecord);
+                    await _uow.SalaryTaxReportContentRepository.UpdateAsyn(existrecord);
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Get Employee Advance History Detail
+        /// </summary>
+        /// <param name="AdvanceID"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> GetEmployeeAdvanceHistoryDetail(long AdvanceID)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var advances =  await _uow.GetDbContext().EmployeePaymentTypes.Where(x => x.IsDeleted==false && x.AdvanceId== AdvanceID).ToListAsync();
+
+                if (advances.Any())
+                {
+
+                    List<AdvancesHistoryModel> advancesHistory = advances.Select(x => new AdvancesHistoryModel
+                    {
+                        AdvanceId = x.AdvanceId,
+                        BalanceAmount = x.AdvanceAmount.Value,
+                        InstallmentPaid = x.AdvanceRecoveryAmount.Value,
+                        PaymentDate = x.PaymentDate.Value.Date
+                    }).ToList();
+
+                    response.data.AdvanceHistory = advancesHistory;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+
+        }
+
+        /// <summary>
+        /// Get All Payroll Head Details
+        /// </summary>
+        /// <returns>List of Payroll Heads</returns>
+        public async Task<APIResponse> GetAllPayrollHead()
+        {
+
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                ICollection<PayrollAccountHead> PayrollAccountHeadList = await _uow.PayrollAccountHeadRepository.FindAllAsync(x=> x.IsDeleted== false);
+
+                response.data.PayrollAccountHead = PayrollAccountHeadList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Adding Payroll Heads to PayrollAccountHead Table
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> AddPayrollAccountHead(PayrollHeadModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                PayrollAccountHead obj = _mapper.Map<PayrollAccountHead>(model);
+                obj.IsDeleted = false;
+                await _uow.PayrollAccountHeadRepository.AddAsyn(obj);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Update Payroll Account Head
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> UpdatePayrollAccountHead(PayrollHeadModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                PayrollAccountHead xPayrollAccountHead = _uow.GetDbContext().PayrollAccountHead.FirstOrDefault(x => x.PayrollHeadId == model.PayrollHeadId);
+
+                xPayrollAccountHead.AccountNo = model.AccountNo;
+                xPayrollAccountHead.Description = model.Description;
+                xPayrollAccountHead.PayrollHeadId = model.PayrollHeadId;
+                xPayrollAccountHead.PayrollHeadName = model.PayrollHeadName;
+                xPayrollAccountHead.PayrollHeadTypeId = model.PayrollHeadTypeId;
+                xPayrollAccountHead.TransactionTypeId = model.TransactionTypeId;
+                xPayrollAccountHead.IsDeleted = false;
+
+                await _uow.PayrollAccountHeadRepository.UpdateAsyn(xPayrollAccountHead);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Delete Payroll Account Head
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Boolean</returns>
+        public async Task<APIResponse> DeletePayrollAccountHead(PayrollHeadModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                PayrollAccountHead xPayrollAccountHead = _uow.GetDbContext().PayrollAccountHead.FirstOrDefault(x => x.PayrollHeadId == model.PayrollHeadId);
+                xPayrollAccountHead.IsDeleted = true;
+
+                await _uow.PayrollAccountHeadRepository.UpdateAsyn(xPayrollAccountHead);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {

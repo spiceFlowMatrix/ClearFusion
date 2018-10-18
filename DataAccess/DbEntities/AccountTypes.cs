@@ -14,8 +14,9 @@ namespace DataAccess.DbEntities
         public int AccountTypeId { get; set; }
         [StringLength(100)]
         public string AccountTypeName { get; set; }
-
-        public int AccountCategory { get; set; }
-        //public ChartAccountDetail ChartAccountDetail { get; set; }
-    }
+        public int? AccountCategory { get; set; }
+		public int AccountNote { get; set; }
+		public string BalanceType { get; set; }
+		//public ChartAccountDetail ChartAccountDetail { get; set; }
+	}
 }

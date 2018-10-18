@@ -7,7 +7,7 @@ namespace HumanitarianAssistance.ViewModels.Models
     public class EmployeePaymentTypeModel : BaseModel
     {
 		public int OfficeId { get; set; }
-		public int CurrencyId { get; set; }
+		public int? CurrencyId { get; set; }
 		public DateTime FinancialYearDate { get; set; }
 		public int EmployeeId { get; set; }
 		public string EmployeeName { get; set; }
@@ -31,10 +31,14 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public double? PensionAmount { get; set; }
 
         public bool IsApproved { get; set; }
-		public double AdvanceAmount { get; set; }
+		public double? AdvanceAmount { get; set; }
 		public bool IsAdvanceApproved { get; set; }
 		public bool IsAdvanceRecovery { get; set; }
-		public double AdvanceRecoveryAmount { get; set; }
-		public List<EmployeePayrollModel> employeepayrolllist { get; set; }
+		public double? AdvanceRecoveryAmount { get; set; }
+        public double? PensionRate { get; set; }
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public int LeaveHours { get; set; }
+        public List<EmployeePayrollModel> employeepayrolllist { get; set; }
 	}
 }

@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
-  [Route("api/[controller]")]
+  [Produces("application/json")]
   [Route("api/EmployeeDetail/[Action]")]
   public class EmployeeDetailController : Controller
   {

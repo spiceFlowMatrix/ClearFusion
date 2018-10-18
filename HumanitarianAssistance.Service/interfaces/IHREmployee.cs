@@ -16,7 +16,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllEmployeeDetail();
         Task<APIResponse> AddJobHiringDetail(JobHiringDetailsModel model);
         Task<APIResponse> EditJobHiringDetail(JobHiringDetailsModel model);
-        Task<APIResponse> GetAllJobHiringDetails();
+        Task<APIResponse> GetAllJobHiringDetails(int OfficeId);
         Task<APIResponse> AddInterviewScheduleDetails(List<InterviewScheduleModel> model, string CreatedById);
         //Task<APIResponse> GetAllProspectiveEmployee();
         Task<APIResponse> GetEmployeeDetailsByEmployeeId(int EmployeeId);
@@ -45,10 +45,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddEmployeeAttendanceDetails(List<EmployeeAttendanceModel> modellist, string UserId);
         Task<APIResponse> GetEmployeeProfessionalDetail(int EmployeeId);
         Task<APIResponse> GetAllEmployeeDetail(int EmployeeType, int officeid);
-        Task<APIResponse> GetEmployeeAttendanceDetails(int employeeid);
+        Task<APIResponse> GetEmployeeAttendanceDetails(EmployeeAttendanceFilterModel employeeFilter);
         //Task<APIResponse> AddEmployeeHealthDetail(EmployeeHealthInformationModel model);
         //Task<APIResponse> EditEmployeeHealthDetail(EmployeeHealthInformationModel model);
-        //Task<APIResponse> GetAllEmployeeHealthDetailByEmployeeId(int employeeid);
+        Task<APIResponse> GetAllEmployeeHealthDetailByEmployeeId(int employeeid);
         Task<APIResponse> ChangeEmployeeImage(ChangeEmployeeImage model);
         //Task<APIResponse> GetAllActiveEmployeeForAttendance();
         Task<APIResponse> GetAllEmployeesAttendanceByDate(string SelectedDate, int officeid, bool attendancestatus);

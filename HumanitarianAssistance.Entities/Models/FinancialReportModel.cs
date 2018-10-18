@@ -10,6 +10,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public int? financialreporttype { get; set; }
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
-
+		public int SelectType { get; set; }
+		public List<int?> OfficeList { get; set; }
 	}
 }

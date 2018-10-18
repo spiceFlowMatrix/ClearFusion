@@ -126,7 +126,7 @@ namespace HumanitarianAssistance.Service.Classes
                     ChartAccountDetail obj = _mapper.Map<ChartAccountDetail>(model);
                     obj.CreatedById = model.CreatedById;
                     obj.CreatedDate = DateTime.UtcNow;
-                    obj.IsDeleted = false;
+                    obj.IsDeleted = false;				
                     await _uow.ChartAccountDetailRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
 

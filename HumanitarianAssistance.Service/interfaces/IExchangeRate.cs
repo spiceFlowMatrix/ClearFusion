@@ -13,5 +13,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditExchangeRate(ExchangeRateModel model);
         Task<APIResponse> GetAllExchangeRate();
         //Task<APIResponse> GetExchangeRateByDate(int currencyFromCode, int currenctToCode, DateTime? date);
+        Task<APIResponse> GetExchangeGainOrLossAmount(ExchangeGainOrLossFilterModel model);
+        Task<APIResponse> GetExchangeGainOrLossTransactionAmount(ExchangeGainOrLossTransactionFilterModel model);
+
     }
 }

@@ -67,7 +67,6 @@ namespace HumanitarianAssistance
       string DefaultCorsPolicyUrl = Configuration["DefaultCorsPolicyName:PolicyUrl"];
       string connectionString = Configuration.GetConnectionString("linuxdb");
 
-      //string str = "shubham karnwal";
 
       services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
@@ -129,6 +128,7 @@ namespace HumanitarianAssistance
       services.AddTransient<IStore, StoreService>();
       services.AddTransient<INotificationManager, NotificationManagerService>();
       services.AddTransient<IEmployeeDetail, EmployeeDetailService>();
+      services.AddTransient<IEmployeeHR, EmployeeHRService>();
 
 
       //services.AddTransient<UserManager<AppUser>>();

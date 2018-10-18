@@ -23,6 +23,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public string IssedToLocation { get; set; }
         public int StatusAtTimeOfIssue { get; set; }
 
+        public string CreatedBy { get; set; }
+
         //TODo: For get
         //public string InventoryName { get; set; }
         //public string InventoryItemName { get; set; }

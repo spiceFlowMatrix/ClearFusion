@@ -10,13 +10,13 @@ namespace HumanitarianAssistance.ViewModels.Models
         {
             
         }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string CreatedById { get; set; }
        
         public string ModifiedById { get; set; }
        
-        public bool IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; }
 
 
     }

@@ -48,13 +48,26 @@ namespace HumanitarianAssistance.Service.Classes
                         var inventoryAccount =
                            _uow.GetDbContext().ChartAccountDetail.Where(x =>
                               x.AccountCode == model.InventoryCreditAccount || x.AccountCode == model.InventoryDebitAccount).ToList();
+
                         if (inventoryAccount.Count == 2)
                         {
-                            StoreInventory inventory = _mapper.Map<StoreInventory>(model);
-                            await _uow.StoreInventoryRepository.AddAsyn(inventory);
-                            await _uow.SaveAsync();
-                            response.StatusCode = StaticResource.successStatusCode;
-                            response.Message = "Success";
+                            bool inventoryCode = await _uow.GetDbContext().StoreInventories.AnyAsync(x => x.InventoryCode == model.InventoryCode);
+
+                            if (!inventoryCode)
+                            {
+                                StoreInventory inventory = _mapper.Map<StoreInventory>(model);
+                                inventory.IsDeleted = false;
+
+                                await _uow.StoreInventoryRepository.AddAsyn(inventory);
+
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Success";
+                            }
+                            else
+                            {
+                                response.StatusCode = StaticResource.failStatusCode;
+                                response.Message = StaticResource.InventoryCodeAlreadyExists;
+                            }
                         }
                         else
                         {
@@ -97,13 +110,26 @@ namespace HumanitarianAssistance.Service.Classes
                     //edInv.InventoryChartOfAccount = inventoryAccount.ChartOfAccountCode;
                     //edInv.AssetType = model.AssetType;
 
-                    _mapper.Map(model, edInv);
+                    bool inventoryCode = await _uow.GetDbContext().StoreInventories.AnyAsync(x => x.InventoryCode == model.InventoryCode && x.InventoryId != model.InventoryId);
 
-                    await _uow.StoreInventoryRepository.UpdateAsyn(edInv);
-                    await _uow.SaveAsync();
+                    if (!inventoryCode)
+                    {
+                        _mapper.Map(model, edInv);
 
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                        edInv.IsDeleted = false;
+
+                        await _uow.StoreInventoryRepository.UpdateAsyn(edInv);
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.InventoryCodeAlreadyExists;
+                    }
+
+
                 }
                 else
                 {
@@ -140,7 +166,6 @@ namespace HumanitarianAssistance.Service.Classes
                         toDeleteInv.ModifiedDate = model.ModifiedDate;
 
                         await _uow.StoreInventoryRepository.UpdateAsyn(toDeleteInv);
-                        await _uow.SaveAsync();
 
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = "Success";
@@ -179,27 +204,23 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     inventoryList = await Task.Run(() =>
                        _uow.GetDbContext().StoreInventories
-                           //.Include(c => c.ChartAccountDetails)
-                           //.Include(c => c.CreatedBy)
                            .Where(c => c.IsDeleted == false && c.AssetType == AssetType)
-                           .OrderBy(c => c.CreatedDate).ToList());
+                           .OrderByDescending(c => c.CreatedDate).ToList());
                 }
                 else
                 {
                     inventoryList = await Task.Run(() =>
                        _uow.GetDbContext().StoreInventories
                            .Where(c => c.IsDeleted == false)
-                           .OrderBy(c => c.CreatedDate).ToList());
+                           .OrderByDescending(c => c.CreatedDate).ToList());
                 }
 
-
-                var invModelList = inventoryList.Select(v => new StoreInventoryModel
+                List<StoreInventoryModel> invModelList = inventoryList.Select(v => new StoreInventoryModel
                 {
                     InventoryId = v.InventoryId,
                     InventoryCode = v.InventoryCode,
                     InventoryName = v.InventoryName,
                     InventoryDescription = v.InventoryDescription,
-                    //InventoryChartOfAccount = v.ChartAccountDetails.ChartOfAccountCode,
                     InventoryCreditAccount = v.InventoryCreditAccount,
                     InventoryDebitAccount = v.InventoryDebitAccount,
                     AssetType = v.AssetType
@@ -233,8 +254,9 @@ namespace HumanitarianAssistance.Service.Classes
                 //if (addItem != null)
                 //{
                 StoreInventoryItem obj = _mapper.Map<StoreInventoryItem>(model);
+                obj.IsDeleted = false;
+
                 await _uow.StoreInventoryItemRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -265,8 +287,9 @@ namespace HumanitarianAssistance.Service.Classes
                 if (editItem != null)
                 {
                     _mapper.Map(model, editItem);
+                    editItem.IsDeleted = false;
+
                     await _uow.StoreInventoryItemRepository.UpdateAsyn(editItem);
-                    await _uow.SaveAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -298,7 +321,6 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     deleteItem.IsDeleted = true;
                     await _uow.StoreInventoryItemRepository.UpdateAsyn(deleteItem);
-                    await _uow.SaveAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -382,8 +404,9 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model != null)
                 {
                     InventoryItemType obj = _mapper.Map<InventoryItemType>(model);
+                    obj.IsDeleted = false;
+
                     await _uow.InventoryItemTypeRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -414,8 +437,9 @@ namespace HumanitarianAssistance.Service.Classes
                 if (editItemType != null)
                 {
                     _mapper.Map(model, editItemType);
+                    editItemType.IsDeleted = false;
+
                     await _uow.InventoryItemTypeRepository.UpdateAsyn(editItemType);
-                    await _uow.SaveAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -568,8 +592,10 @@ namespace HumanitarianAssistance.Service.Classes
                         purchase.InvoiceFileType = null;
                     }
 
+                    purchase.IsDeleted = false;
+
                     await _uow.StoreItemPurchaseRepository.AddAsyn(purchase);
-                    await _uow.SaveAsync();
+                    //await _uow.SaveAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -644,8 +670,10 @@ namespace HumanitarianAssistance.Service.Classes
                         //    purchaseRecord.InvoiceFileType = null;
                         //}
 
+                        purchaseRecord.IsDeleted = false;
+
                         await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
-                        await _uow.SaveAsync();
+                        //await _uow.SaveAsync();
 
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = "Success";
@@ -696,7 +724,7 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             purchaseRecord.IsDeleted = true;
                             await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
-                            await _uow.SaveAsync();
+                            //await _uow.SaveAsync();
 
                             response.StatusCode = StaticResource.successStatusCode;
                             response.Message = "Success";
@@ -845,10 +873,10 @@ namespace HumanitarianAssistance.Service.Classes
                 doc.FileType = ex;
                 doc.FileName = fileName;
                 doc.Purchase = model.PurchaseId;
-
+                doc.IsDeleted = false;
 
                 await _uow.ItemPurchaseDocumentRepository.AddAsyn(doc);
-                await _uow.SaveAsync();
+                //await _uow.SaveAsync();
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -869,8 +897,11 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model != null)
                 {
                     StorePurchaseOrder obj = _mapper.Map<StorePurchaseOrder>(model);
+
+                    obj.IsDeleted = false;
+
                     await _uow.PurchaseOrderRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
+                    //await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
@@ -897,8 +928,11 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     var recordExits = await _uow.PurchaseOrderRepository.FindAsync(x => x.OrderId == model.OrderId && x.IsDeleted == false);
                     _mapper.Map(model, recordExits);
+
+                    recordExits.IsDeleted = false;
+
                     await _uow.PurchaseOrderRepository.UpdateAsyn(recordExits);
-                    await _uow.SaveAsync();
+                    //await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
@@ -927,7 +961,7 @@ namespace HumanitarianAssistance.Service.Classes
                     var recordExits = await _uow.PurchaseOrderRepository.FindAsync(x => x.OrderId == model.OrderId && x.IsDeleted == false);
                     recordExits.IsDeleted = true;
                     await _uow.PurchaseOrderRepository.UpdateAsyn(recordExits);
-                    await _uow.SaveAsync();
+                    //await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
@@ -952,6 +986,12 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 //var orders = await _uow.PurchaseOrderRepository.FindAllAsync(x => x.InventoryItem == ItemId && x.IsDeleted == false);
                 var orders = await _uow.GetDbContext().StorePurchaseOrders.Include(x => x.StoreInventoryItem).Where(x => x.InventoryItem == ItemId && x.IsDeleted == false).ToListAsync();
+
+                //var user = await _userManager.
+                //var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+
+
 
                 var ordersList = orders.Select(x => new ItemOrderModel
                 {
@@ -988,8 +1028,7 @@ namespace HumanitarianAssistance.Service.Classes
         #endregion
 
 
-        #region "Purchase Unit Type"
-
+        #region "Unit Type"
         public async Task<APIResponse> AddPurchaseUnitType(PurchaseUnitType model)
         {
             var response = new APIResponse();
@@ -997,9 +1036,10 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 if (model != null)
                 {
-                    //PurchaseUnitType obj = _mapper.Map<PurchaseUnitType>(model);
+                    PurchaseUnitType obj = _mapper.Map<PurchaseUnitType>(model);
+                    obj.IsDeleted = false;
+
                     await _uow.PurchaseUnitTypeRepository.AddAsyn(model);
-                    await _uow.SaveAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -1031,9 +1071,9 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     //_mapper.Map(model, editUnitType);
                     editUnitType.UnitTypeName = model.UnitTypeName;
+                    editUnitType.IsDeleted = false;
 
                     await _uow.PurchaseUnitTypeRepository.UpdateAsyn(editUnitType);
-                    await _uow.SaveAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -1518,8 +1558,8 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 bool flag = await _uow.GetDbContext().ItemSpecificationDetails.AnyAsync(x => x.ItemId == ItemId && x.IsDeleted == false);
-				var masterList = await _uow.ItemSpecificationMasterRepository.FindAllAsync(x => x.IsDeleted == false && x.ItemTypeId == ItemTypeId && x.OfficeId == OfficeId);
-				if (flag == true)
+                var masterList = await _uow.ItemSpecificationMasterRepository.FindAllAsync(x => x.IsDeleted == false && x.ItemTypeId == ItemTypeId && x.OfficeId == OfficeId);
+                if (flag == true)
                 {
 
                     var list = await _uow.GetDbContext().ItemSpecificationDetails.Include(x => x.ItemSpecificationMaster).Where(x => x.ItemId == ItemId && x.ItemSpecificationMaster.ItemTypeId == ItemTypeId && x.IsDeleted == false).ToListAsync();
@@ -1531,22 +1571,22 @@ namespace HumanitarianAssistance.Service.Classes
                         ItemSpecificationField = x.ItemSpecificationMaster.ItemSpecificationField
                     }).ToList();
 
-					foreach (var item in masterList)
-					{
-						var recordExist = list.Where(x => x.ItemSpecificationMasterId == item.ItemSpecificationMasterId).FirstOrDefault();
-						if (recordExist == null)
-						{
-							ItemSpecificationDetailModel obj = new ItemSpecificationDetailModel();
-							obj.ItemSpecificationMasterId = item.ItemSpecificationMasterId;
-							obj.ItemId = ItemId;
-							obj.ItemSpecificationValue = null;
-							obj.ItemSpecificationField = item.ItemSpecificationField;
-							response.data.ItemSpecificationDetailList.Add(obj);
-						}
-					}
-				}
+                    foreach (var item in masterList)
+                    {
+                        var recordExist = list.Where(x => x.ItemSpecificationMasterId == item.ItemSpecificationMasterId).FirstOrDefault();
+                        if (recordExist == null)
+                        {
+                            ItemSpecificationDetailModel obj = new ItemSpecificationDetailModel();
+                            obj.ItemSpecificationMasterId = item.ItemSpecificationMasterId;
+                            obj.ItemId = ItemId;
+                            obj.ItemSpecificationValue = null;
+                            obj.ItemSpecificationField = item.ItemSpecificationField;
+                            response.data.ItemSpecificationDetailList.Add(obj);
+                        }
+                    }
+                }
                 else
-                {                    
+                {
 
                     response.data.ItemSpecificationDetailList = masterList.Select(x => new ItemSpecificationDetailModel
                     {

@@ -1403,8 +1403,77 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetEmployeeAdvanceHistoryDetail(long AdvanceID)
+    {
+      APIResponse response = new APIResponse();
 
+        response = await _icode.GetEmployeeAdvanceHistoryDetail(AdvanceID);
+     
+      return response;
+    }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllPayrollHead()
+    {
+      APIResponse response = new APIResponse();
+
+      response = await _icode.GetAllPayrollHead();
+
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> AddPayrollAccountHead([FromBody] PayrollHeadModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+
+      APIResponse response = await _icode.AddPayrollAccountHead(model);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> UpdatePayrollAccountHead([FromBody] PayrollHeadModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+
+      APIResponse response = await _icode.UpdatePayrollAccountHead(model);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> DeletePayrollAccountHead([FromBody] PayrollHeadModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+
+      APIResponse response = await _icode.DeletePayrollAccountHead(model);
+      return response;
+    }
 
   }
 }

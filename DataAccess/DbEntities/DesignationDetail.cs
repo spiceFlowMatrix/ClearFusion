@@ -14,5 +14,7 @@ namespace DataAccess.DbEntities
         public int DesignationId { get; set; }
         [StringLength(100)]
         public string Designation { get; set; }
+        public string DesignationDari { get; set; }
+        
     }
 }

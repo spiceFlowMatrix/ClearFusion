@@ -41,6 +41,7 @@ namespace HumanitarianAssistance.Controllers
     private IUserDetails _iuserDetails;
     private IPermissionsInRoles _ipermissionsInRoles;
     private IVoucherDetail _ivoucherDetail;
+    private IExchangeRate _iExchangeRate;
     IUnitOfWork _uow;
 
 
@@ -54,6 +55,7 @@ namespace HumanitarianAssistance.Controllers
             IUserDetails iuserDetails,
             IPermissionsInRoles ipermissionsInRoles,
             IVoucherDetail ivoucherDetail,
+            IExchangeRate iExchangeRate,
             IUnitOfWork uow
             )
     {
@@ -65,6 +67,7 @@ namespace HumanitarianAssistance.Controllers
       _iuserDetails = iuserDetails;
       _ipermissionsInRoles = ipermissionsInRoles;
       _ivoucherDetail = ivoucherDetail;
+      _iExchangeRate = iExchangeRate;
       _uow = uow;
       _serializerSettings = new JsonSerializerSettings
       {
@@ -196,7 +199,9 @@ namespace HumanitarianAssistance.Controllers
       return Ok("SDFF");
       //throw new ApplicationException("UNKNOWN_ERROR");
     }
+
     [HttpPost]
+    [AllowAnonymous]
     public async Task<object> Login([FromBody]LoginUserModel model)
     {
       try
@@ -204,7 +209,7 @@ namespace HumanitarianAssistance.Controllers
         response = new APIResponse();
 
         if (!ModelState.IsValid) return BadRequest("Could not create token");
-        var user = await _userManager.FindByNameAsync(model.UserName);
+        var user = await _userManager.FindByNameAsync(model.UserName.Trim());
         //if (user == null) return BadRequest("Could not create token");
         if (user != null)
         {
@@ -219,9 +224,11 @@ namespace HumanitarianAssistance.Controllers
           //var officedetais = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
 
           var roles = await _userManager.GetRolesAsync(user);
+
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
+          //_ipermissions.GetPermissionsByRoleId()
 
           string k = _configuration["JwtKey"];
           var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(k));
@@ -518,6 +525,15 @@ namespace HumanitarianAssistance.Controllers
     public async Task<object> GetAllVoucherDetails()
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherDetails();
+      return response;
+    }
+
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllVouchersByOfficeId(int officeid)
+    {
+      APIResponse response = await _ivoucherDetail.GetAllVouchersByOfficeId(officeid);
       return response;
     }
 
@@ -889,12 +905,96 @@ namespace HumanitarianAssistance.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetExchangeGainOrLossAmount([FromBody]ExchangeGainOrLossFilterModel model)
     {
-      APIResponse response = await _ivoucherDetail.GetExchangeGainOrLossAmount(model);
+      APIResponse response = await _iExchangeRate.GetExchangeGainOrLossAmount(model);
       return response;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllVoucherByJouranlId([FromBody]JournalVoucherFilterModel JournalVoucherFilter)
+    {
+      APIResponse response = await _ivoucherDetail.GetAllVoucherByJouranlId(JournalVoucherFilter);
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetLevelFourAccountCode()
+    {
+      APIResponse response = await _ivoucherDetail.GetLevelFourAccountCode();
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetExchangeGainOrLossTransactionAmount([FromBody]ExchangeGainOrLossTransactionFilterModel model)
+    {
+      APIResponse response = await _iExchangeRate.GetExchangeGainOrLossTransactionAmount(model);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> AddExchangeGainLossVoucher([FromBody] ExchangeGainLossVoucher model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.IsDeleted = false;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+      APIResponse response = await _ivoucherDetail.AddExchangeGainLossVoucher(model);
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetExchangeGainLossVoucherList(int OfficeId)
+    {
+      APIResponse response = await _ivoucherDetail.GetExchangeGainLossVoucherList(OfficeId);
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> DeleteExchangeGainLossVoucher(long VoucherNo, string UserId)
+    {
+      APIResponse response = await _ivoucherDetail.DeleteExchangeGainLossVoucher(VoucherNo, UserId);
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllInputLevelAccountCode()
+    {
+      APIResponse response = await _ivoucherDetail.GetAllInputLevelAccountCode();
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> AddEmployeePensionPayment([FromBody]EmployeePensionPaymentModel model)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.CreatedById = user.Id;
+        response = await _ivoucherDetail.AddEmployeePensionPayment(model);
+      }
+      return response;
+    }
+
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<object> GetAllAccountCodeByVoucherNo(ExchangeGainOrLossFilterModel ExchangeGainLossFilter)
+    //{
+    //  APIResponse response = await _ivoucherDetail.GetAllAccountCodeByVoucherNo(ExchangeGainLossFilter);
+    //  return response;
+    //}
+
   }
-
-
-
 }

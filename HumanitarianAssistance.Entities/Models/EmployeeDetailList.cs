@@ -15,10 +15,11 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string Qualification { get; set; }
 		public string DutyStation { get; set; }
 		public DateTime? RecruitmentDate { get; set; }
-
-
+        public DateTime? ContractStartDate { get; set; }
+        public DateTime? ContractEndDate { get; set; }
         public string CodeEmployeeName { get; set; }
         public string TenureWithCHA { get; set; }
 		public string Gender { get; set; }
-	}
+        public int? OfficeId { get; set; }
+    }
 }

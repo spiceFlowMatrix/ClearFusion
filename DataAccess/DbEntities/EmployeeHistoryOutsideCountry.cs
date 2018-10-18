@@ -12,12 +12,12 @@ namespace DataAccess.DbEntities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column(Order = 1, TypeName = "serial")]
 		public int EmployeeHistoryOutsideCountryId { get; set; }
-		public DateTime EmploymentFrom { get; set; }
-		public DateTime EmploymentTo { get; set; }
+		public DateTime? EmploymentFrom { get; set; }
+		public DateTime? EmploymentTo { get; set; }
 		public string Organization { get; set; }
-		public double MonthlySalary { get; set; }
+		public string MonthlySalary { get; set; }
 		public string ReasonForLeaving { get; set; }
-		public int EmployeeID { get; set; }
+		public int? EmployeeID { get; set; }
 		public EmployeeDetail EmployeeDetail { get; set; }
 	}
 }

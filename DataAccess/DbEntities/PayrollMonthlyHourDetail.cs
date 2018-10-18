@@ -20,5 +20,7 @@ namespace DataAccess.DbEntities
         public int? Hours { get; set; }
 		public DateTime? InTime { get; set; }
 		public DateTime? OutTime { get; set; }
-	}
+        public int? WorkingTime { get; set; }
+        public int? WorkingDay { get; set; }
+    }
 }

@@ -10,7 +10,7 @@ namespace HumanitarianAssistance.Service.interfaces
     public interface IVoucherDetail
     {
         Task<APIResponse> GetAllVoucherDetails();
-
+        Task<APIResponse> GetAllVouchersByOfficeId(int officeId);
         Task<APIResponse> GetAllVoucherDetailsByFilter(VoucherFilterModel filterModel);
 
         Task<APIResponse> GetAllVoucherType();
@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditVoucherTransactionDetail(VoucherTransactionModel model);
         Task<APIResponse> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo);
         Task<APIResponse> AddVoucherDocumentDetail(VoucherDocumentDetailModel model);
-        Task<APIResponse> DeleteVoucherDocumentDetail(int DocumentId, string ModifiedById);
+        Task<APIResponse> DeleteVoucherDocumentDetail(int DocumentId, string ModifiedById);	
         Task<APIResponse> GetAllLedgerDetails();
         Task<APIResponse> GetTrailBlanceDetails();
         Task<APIResponse> GetTrailBlanceDetailsByCondition(LedgerModels model);
@@ -62,7 +62,14 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteCategoryPopulator(int categoryPopulatorId, string modifiedById);
 
         Task<APIResponse> GetAllCategoryPopulator();
-		Task<APIResponse> GetExchangeGainOrLossAmount(ExchangeGainOrLossFilterModel model);
-
-	}
+		//Task<APIResponse> GetExchangeGainOrLossAmount(ExchangeGainOrLossFilterModel model);
+        Task<APIResponse> GetAllVoucherByJouranlId(JournalVoucherFilterModel JournalVoucherFilter);
+        Task<APIResponse> GetLevelFourAccountCode();
+        Task<APIResponse> AddExchangeGainLossVoucher(ExchangeGainLossVoucher model);
+        Task<APIResponse> GetExchangeGainLossVoucherList(int OfficeId);
+        Task<APIResponse> DeleteExchangeGainLossVoucher(long VoucherNo, string UserId);
+        //Task<APIResponse> GetAllAccountCodeByVoucherNo(ExchangeGainOrLossFilterModel ExchangeGainOrLossFilter);
+        Task<APIResponse> AddEmployeePensionPayment(EmployeePensionPaymentModel EmployeePensionPayment);
+        Task<APIResponse> GetAllInputLevelAccountCode();
+    }
 }

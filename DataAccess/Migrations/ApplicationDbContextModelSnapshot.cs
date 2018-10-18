@@ -38,10 +38,14 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<int>("AccountCategory");
+                    b.Property<int?>("AccountCategory");
+
+                    b.Property<int>("AccountNote");
 
                     b.Property<string>("AccountTypeName")
                         .HasMaxLength(100);
+
+                    b.Property<string>("BalanceType");
 
                     b.HasKey("AccountTypeId");
 
@@ -58,11 +62,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Description");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -105,7 +109,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("CurrencyId");
 
@@ -123,7 +127,7 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("IsDeducted");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModeOfReturn");
 
@@ -131,7 +135,11 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
+                    b.Property<int?>("NumberOfInstallments");
+
                     b.Property<int>("OfficeId");
+
+                    b.Property<double>("RecoveredAmount");
 
                     b.Property<double>("RequestAmount");
 
@@ -143,8 +151,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("ModifiedById");
 
@@ -162,7 +169,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("Attachment")
                         .HasMaxLength(100);
 
-                    b.Property<float>("BLAmount");
+                    b.Property<float?>("BLAmount");
 
                     b.Property<string>("BLCurrCode")
                         .HasMaxLength(5);
@@ -174,14 +181,14 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("DonorCode")
                         .HasMaxLength(50);
 
                     b.Property<DateTime>("EndDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("Job")
                         .HasMaxLength(10);
@@ -207,7 +214,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("Project")
                         .HasMaxLength(10);
 
-                    b.Property<float>("ReceivedAmount");
+                    b.Property<float?>("ReceivedAmount");
 
                     b.Property<string>("Sector")
                         .HasMaxLength(10);
@@ -233,21 +240,21 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("DariQuestion");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int>("OfficeId");
+                    b.Property<int?>("OfficeId");
 
                     b.Property<string>("Question");
 
-                    b.Property<int>("SequenceNo");
+                    b.Property<int?>("SequenceNo");
 
                     b.HasKey("AppraisalGeneralQuestionsId");
 
@@ -331,9 +338,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -405,13 +412,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("Date");
 
                     b.Property<string>("Feedback");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -442,7 +449,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Description");
 
@@ -450,7 +457,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("FinancialYearId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int>("LeaveReasonId");
 
@@ -488,7 +495,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("EmployeeId");
 
@@ -498,7 +505,7 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -538,9 +545,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -566,11 +573,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("ExpectedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -606,9 +613,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -640,11 +647,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("ExpectedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -676,9 +683,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -712,9 +719,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -746,23 +753,36 @@ namespace DataAccess.Migrations
                     b.Property<string>("AccountName")
                         .HasMaxLength(100);
 
+                    b.Property<int?>("AccountNote");
+
                     b.Property<int?>("AccountTypeId");
 
                     b.Property<long>("ChartOfAccountCode");
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<string>("DepMethod");
+
+                    b.Property<float>("DepRate");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("MDCode");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int?>("ParentID");
+                    b.Property<long>("ParentID");
+
+                    b.Property<bool>("Show");
 
                     b.HasKey("AccountCode");
+
+                    b.HasIndex("AccountCode")
+                        .IsUnique();
 
                     b.HasIndex("AccountLevelId");
 
@@ -771,8 +791,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ParentID");
 
                     b.ToTable("ChartAccountDetail");
                 });
@@ -801,11 +819,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("EmployeeContractTypeId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -835,9 +853,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -859,7 +877,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("CurrencyCode")
                         .HasMaxLength(5);
@@ -869,13 +887,15 @@ namespace DataAccess.Migrations
 
                     b.Property<float?>("CurrencyRate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<bool>("Status");
+                    b.Property<bool?>("SalaryTaxFlag");
+
+                    b.Property<bool?>("Status");
 
                     b.HasKey("CurrencyId");
 
@@ -894,11 +914,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("DepartmentName");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -926,12 +946,14 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Designation")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<string>("DesignationDari");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -954,12 +976,12 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("District")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -984,13 +1006,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int?>("EmailTypeId");
 
                     b.Property<bool?>("EnableSSL");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1026,12 +1048,12 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("EmailTypeName")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1063,14 +1085,14 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Donor")
                         .HasMaxLength(10);
 
                     b.Property<int>("EmployeeID");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("Job")
                         .HasMaxLength(10);
@@ -1109,15 +1131,15 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("EmployeeId");
+                    b.Property<int?>("EmployeeId");
 
                     b.Property<int?>("FinancialYearId");
 
                     b.Property<DateTime>("FromDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int>("LeaveReasonId");
 
@@ -1156,7 +1178,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("CurrentAppraisalDate");
 
@@ -1172,7 +1194,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("FatherName");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1209,13 +1231,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("CurrentAppraisalDate");
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1244,13 +1266,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("EmployeeAppraisalDetailsId");
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1274,7 +1296,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("Date");
 
@@ -1288,7 +1310,7 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("InTime");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int?>("LeaveReasonId");
 
@@ -1325,23 +1347,29 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<long>("BudgetLine");
+                    b.Property<long?>("BudgetLine");
 
                     b.Property<DateTime?>("ContractEndDate");
 
+                    b.Property<float?>("ContractNumber");
+
+                    b.Property<float?>("ContractPeriod");
+
                     b.Property<DateTime?>("ContractStartDate");
 
-                    b.Property<int>("Country");
+                    b.Property<string>("ContractStatus");
+
+                    b.Property<int?>("Country");
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("Designation");
+                    b.Property<int?>("Designation");
 
-                    b.Property<int>("DurationOfContract");
+                    b.Property<int?>("DurationOfContract");
 
-                    b.Property<int>("DutyStation");
+                    b.Property<int?>("DutyStation");
 
                     b.Property<string>("EmployeeCode");
 
@@ -1351,7 +1379,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("Grade");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("Job");
 
@@ -1359,25 +1387,21 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int>("Project");
+                    b.Property<string>("PeriodType");
 
-                    b.Property<int>("Province");
+                    b.Property<int?>("Project");
+
+                    b.Property<int?>("Province");
 
                     b.Property<double?>("Salary");
 
                     b.Property<int?>("WorkDayHours");
 
-                    b.Property<int>("WorkTime");
+                    b.Property<int?>("WorkTime");
 
                     b.HasKey("EmployeeContractId");
 
-                    b.HasIndex("BudgetLine");
-
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("Designation");
-
-                    b.HasIndex("DutyStation");
 
                     b.HasIndex("EmployeeId");
 
@@ -1405,117 +1429,127 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<int?>("Age")
-                        .HasMaxLength(50);
+                    b.Property<int?>("Age");
 
                     b.Property<string>("BirthPlace");
 
-                    b.Property<string>("City")
-                        .HasMaxLength(50);
+                    b.Property<string>("City");
 
-                    b.Property<int?>("CountryId")
-                        .HasMaxLength(50);
+                    b.Property<string>("CloseRelativeList");
+
+                    b.Property<string>("Country");
+
+                    b.Property<int?>("CountryId");
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<string>("CurrentAddress")
-                        .HasMaxLength(200);
+                    b.Property<string>("CurrentAddress");
 
-                    b.Property<string>("DateOfBirth")
-                        .HasMaxLength(30);
+                    b.Property<DateTime?>("DateOfBirth");
 
-                    b.Property<string>("District")
-                        .HasMaxLength(50);
+                    b.Property<string>("District");
 
                     b.Property<string>("DocumentGUID");
 
                     b.Property<int?>("DocumentType");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(100);
+                    b.Property<string>("EducationList");
 
-                    b.Property<string>("EmployeeCode")
-                        .HasMaxLength(20);
+                    b.Property<string>("Email");
 
-                    b.Property<string>("EmployeeName")
-                        .HasMaxLength(100);
+                    b.Property<string>("EmployeeCode");
 
-                    b.Property<int?>("EmployeePensionRateId");
+                    b.Property<string>("EmployeeName");
 
                     b.Property<string>("EmployeePhoto");
 
                     b.Property<int?>("EmployeeTypeId");
 
+                    b.Property<string>("Experience");
+
                     b.Property<int?>("ExperienceMonth");
 
-                    b.Property<int?>("ExperienceYear")
-                        .HasMaxLength(200);
+                    b.Property<int?>("ExperienceYear");
 
                     b.Property<string>("Extension");
 
-                    b.Property<string>("FatherName")
-                        .HasMaxLength(100);
+                    b.Property<string>("FatherName");
 
-                    b.Property<string>("Fax")
-                        .HasMaxLength(20);
+                    b.Property<string>("Fax");
+
+                    b.Property<string>("Grade");
 
                     b.Property<int?>("GradeId");
 
-                    b.Property<int?>("HigherQualificationId")
-                        .HasMaxLength(50);
+                    b.Property<int?>("HigherQualificationId");
 
-                    b.Property<string>("IDCard")
-                        .HasMaxLength(20);
+                    b.Property<string>("IDCard");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<string>("InternationalEmploymentList");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("IssuePlace");
 
-                    b.Property<string>("Language")
-                        .HasMaxLength(30);
+                    b.Property<string>("Language");
 
-                    b.Property<int>("MaritalStatus");
+                    b.Property<string>("MaritalStatus");
+
+                    b.Property<int?>("MaritalStatusId");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int?>("NationalityId")
-                        .HasMaxLength(50);
+                    b.Property<string>("NationalEmploymentList");
 
-                    b.Property<string>("Passport")
-                        .HasMaxLength(50);
+                    b.Property<string>("Nationality");
+
+                    b.Property<int?>("NationalityId");
+
+                    b.Property<int?>("NoOfChildren");
+
+                    b.Property<string>("OtherSkillList");
+
+                    b.Property<string>("Passport");
 
                     b.Property<string>("PassportNo");
 
-                    b.Property<string>("PermanentAddress")
-                        .HasMaxLength(200);
+                    b.Property<string>("PermanentAddress");
 
-                    b.Property<string>("Phone")
-                        .HasMaxLength(50);
+                    b.Property<string>("Phone");
 
                     b.Property<string>("PlaceOfBirth");
 
-                    b.Property<string>("PreviousWork")
-                        .HasMaxLength(50);
+                    b.Property<string>("PreviousWork");
 
-                    b.Property<int?>("ProfessionId")
-                        .HasMaxLength(50);
+                    b.Property<string>("Profession");
 
-                    b.Property<int?>("ProvinceId")
-                        .HasMaxLength(50);
+                    b.Property<long?>("ProjectId");
 
-                    b.Property<string>("ReferBy")
-                        .HasMaxLength(50);
+                    b.Property<string>("Province");
+
+                    b.Property<int?>("ProvinceId");
+
+                    b.Property<string>("Qualification");
+
+                    b.Property<string>("ReferBy");
+
+                    b.Property<string>("RefereeList");
+
+                    b.Property<string>("RegCode");
 
                     b.Property<string>("Remarks");
 
                     b.Property<string>("Resume");
 
-                    b.Property<int?>("SexId")
-                        .HasMaxLength(5);
+                    b.Property<string>("Sex");
+
+                    b.Property<int?>("SexId");
+
+                    b.Property<string>("SpeakLanguageList");
 
                     b.Property<string>("University");
 
@@ -1525,8 +1559,6 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("EmployeePensionRateId");
-
                     b.HasIndex("EmployeeTypeId");
 
                     b.HasIndex("HigherQualificationId");
@@ -1534,8 +1566,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("NationalityId");
-
-                    b.HasIndex("ProfessionId");
 
                     b.HasIndex("ProvinceId");
 
@@ -1550,22 +1580,26 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime?>("DocumentDate");
+
+                    b.Property<string>("DocumentFilePath");
 
                     b.Property<string>("DocumentGUID");
 
                     b.Property<string>("DocumentName")
                         .HasMaxLength(100);
 
-                    b.Property<int>("EmployeeID");
+                    b.Property<int?>("DocumentType");
+
+                    b.Property<int?>("EmployeeID");
 
                     b.Property<string>("Extension");
 
                     b.Property<byte[]>("FilePath");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1590,21 +1624,21 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Degree");
 
-                    b.Property<DateTime>("EducationFrom");
+                    b.Property<DateTime?>("EducationFrom");
 
-                    b.Property<DateTime>("EducationTo");
+                    b.Property<DateTime?>("EducationTo");
 
-                    b.Property<int>("EmployeeID");
+                    b.Property<int?>("EmployeeID");
 
                     b.Property<string>("FieldOfStudy");
 
                     b.Property<string>("Institute");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1635,7 +1669,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("CurrentAppraisalDate");
 
@@ -1657,7 +1691,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("FinalResultQues5");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1682,11 +1716,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("EmployeeAppraisalDetailsId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1716,29 +1750,29 @@ namespace DataAccess.Migrations
                     b.Property<long>("EmployeeHealthInfoId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("BloodGroup");
+                    b.Property<string>("BloodGroup");
 
                     b.Property<float?>("BloodPressure");
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("EmployeeId");
+                    b.Property<int?>("EmployeeId");
 
-                    b.Property<int?>("Hbs");
+                    b.Property<string>("Hbs");
 
-                    b.Property<int?>("Hcv");
+                    b.Property<string>("Hcv");
 
                     b.Property<string>("HealthPresentCondition");
 
                     b.Property<float?>("HearingL");
 
-                    b.Property<int?>("HearingLType");
+                    b.Property<string>("HearingLType");
 
                     b.Property<float?>("HearingR");
 
-                    b.Property<int?>("HearingRType");
+                    b.Property<string>("HearingRType");
 
                     b.Property<float?>("Height");
 
@@ -1748,13 +1782,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("HospitalName");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int?>("OverallHealthCondition");
+                    b.Property<string>("OverallHealthCondition");
 
                     b.Property<string>("PhysicanName");
 
@@ -1791,11 +1825,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1820,7 +1854,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Description")
                         .HasMaxLength(200);
@@ -1829,7 +1863,7 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("HistoryDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1854,21 +1888,21 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("EmployeeID");
+                    b.Property<int?>("EmployeeID");
 
-                    b.Property<DateTime>("EmploymentFrom");
+                    b.Property<DateTime?>("EmploymentFrom");
 
-                    b.Property<DateTime>("EmploymentTo");
+                    b.Property<DateTime?>("EmploymentTo");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<double>("MonthlySalary");
+                    b.Property<string>("MonthlySalary");
 
                     b.Property<string>("Organization");
 
@@ -1893,21 +1927,21 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("EmployeeID");
+                    b.Property<int?>("EmployeeID");
 
-                    b.Property<DateTime>("EmploymentFrom");
+                    b.Property<DateTime?>("EmploymentFrom");
 
-                    b.Property<DateTime>("EmploymentTo");
+                    b.Property<DateTime?>("EmploymentTo");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<double>("MonthlySalary");
+                    b.Property<string>("MonthlySalary");
 
                     b.Property<string>("Organization");
 
@@ -1932,11 +1966,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<string>("Email");
 
                     b.Property<int>("EmployeeID");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -1945,6 +1981,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("Name");
 
                     b.Property<string>("Organization");
+
+                    b.Property<long>("PhoneNo");
 
                     b.Property<string>("Position");
 
@@ -1959,6 +1997,93 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("EmployeeInfoReferences");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.EmployeeMonthlyAttendance", b =>
+                {
+                    b.Property<int>("MonthlyAttendanceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<int?>("AbsentHours");
+
+                    b.Property<double>("AdvanceAmount");
+
+                    b.Property<int?>("AdvanceId");
+
+                    b.Property<double>("AdvanceRecoveryAmount");
+
+                    b.Property<int?>("AttendanceHours");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int?>("CurrencyId");
+
+                    b.Property<int?>("DeputationHours");
+
+                    b.Property<int?>("EmployeeId");
+
+                    b.Property<double?>("GrossSalary");
+
+                    b.Property<double?>("HourlyRate");
+
+                    b.Property<bool>("IsAdvanceApproved");
+
+                    b.Property<bool>("IsAdvanceRecovery");
+
+                    b.Property<bool>("IsApproved");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<int?>("LeaveHours");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int?>("Month");
+
+                    b.Property<double?>("NetSalary");
+
+                    b.Property<int?>("OfficeId");
+
+                    b.Property<int?>("OvertimeHours");
+
+                    b.Property<int?>("PaymentType");
+
+                    b.Property<double?>("PensionAmount");
+
+                    b.Property<double?>("PensionRate");
+
+                    b.Property<double?>("SalaryTax");
+
+                    b.Property<bool?>("Sent");
+
+                    b.Property<bool?>("Status");
+
+                    b.Property<double?>("TotalAllowance");
+
+                    b.Property<double?>("TotalDeduction");
+
+                    b.Property<int?>("TotalDuration");
+
+                    b.Property<double?>("TotalGeneralAmount");
+
+                    b.Property<int?>("Year");
+
+                    b.HasKey("MonthlyAttendanceId");
+
+                    b.HasIndex("AdvanceId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("EmployeeMonthlyAttendance");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeMonthlyPayroll", b =>
@@ -1998,13 +2123,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("EmployeeID");
 
                     b.Property<string>("Experience");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2031,37 +2156,47 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<int>("AbsentDays");
+                    b.Property<int?>("Absent");
 
-                    b.Property<double>("AdvanceAmount");
+                    b.Property<int?>("AbsentDays");
 
-                    b.Property<double>("AdvanceRecoveryAmount");
+                    b.Property<double?>("AdvanceAmount");
+
+                    b.Property<int?>("AdvanceId");
+
+                    b.Property<double?>("AdvanceRecoveryAmount");
+
+                    b.Property<int?>("Attendance");
+
+                    b.Property<float?>("BasicPay");
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("CurrencyId");
+                    b.Property<string>("CurrencyCode");
 
-                    b.Property<int>("EmployeeID");
+                    b.Property<int?>("CurrencyId");
+
+                    b.Property<int?>("EmployeeID");
 
                     b.Property<string>("EmployeeName");
 
-                    b.Property<DateTime>("FinancialYearDate");
+                    b.Property<DateTime?>("FinancialYearDate");
 
                     b.Property<double?>("GrossSalary");
 
                     b.Property<double?>("HourlyRate");
 
-                    b.Property<bool>("IsAdvanceApproved");
+                    b.Property<bool?>("IsAdvanceApproved");
 
-                    b.Property<bool>("IsAdvanceRecovery");
+                    b.Property<bool?>("IsAdvanceRecovery");
 
-                    b.Property<bool>("IsApproved");
+                    b.Property<bool?>("IsApproved");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
-                    b.Property<int>("LeaveDays");
+                    b.Property<int?>("LeaveDays");
 
                     b.Property<string>("ModifiedById");
 
@@ -2069,17 +2204,25 @@ namespace DataAccess.Migrations
 
                     b.Property<double?>("NetSalary");
 
-                    b.Property<int>("OfficeId");
+                    b.Property<string>("OfficeCode");
+
+                    b.Property<int?>("OfficeId");
 
                     b.Property<double?>("OverTimeHours");
 
-                    b.Property<int>("PaymentType");
+                    b.Property<DateTime?>("PaymentDate");
+
+                    b.Property<int?>("PaymentType");
+
+                    b.Property<int?>("PayrollMonth");
+
+                    b.Property<int?>("PayrollYear");
 
                     b.Property<double?>("PensionAmount");
 
                     b.Property<double?>("PensionRate");
 
-                    b.Property<int>("PresentDays");
+                    b.Property<int?>("PresentDays");
 
                     b.Property<double?>("SalaryTax");
 
@@ -2087,13 +2230,17 @@ namespace DataAccess.Migrations
 
                     b.Property<double?>("TotalDeduction");
 
+                    b.Property<int?>("TotalDuration");
+
                     b.Property<double?>("TotalGeneralAmount");
 
-                    b.Property<int>("TotalWorkHours");
+                    b.Property<int?>("TotalWorkHours");
 
-                    b.Property<int>("WorkingDays");
+                    b.Property<int?>("WorkingDays");
 
                     b.HasKey("EmployeePaymentTypesId");
+
+                    b.HasIndex("AdvanceId");
 
                     b.HasIndex("CreatedById");
 
@@ -2110,29 +2257,39 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
+                    b.Property<long?>("AccountNo");
+
+                    b.Property<int?>("AllowDeductionFlag");
+
+                    b.Property<double?>("BasicPay");
+
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("CurrencyId");
+                    b.Property<string>("CurrencyCode");
+
+                    b.Property<int?>("CurrencyId");
 
                     b.Property<int>("EmployeeID");
 
-                    b.Property<int>("HeadTypeId");
+                    b.Property<int?>("HeadTypeId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<double>("MonthlyAmount");
+                    b.Property<double?>("MonthlyAmount");
 
-                    b.Property<int>("PaymentType");
+                    b.Property<int?>("PaymentType");
 
                     b.Property<double?>("PensionRate");
 
-                    b.Property<int>("SalaryHeadId");
+                    b.Property<int?>("SalaryHeadId");
+
+                    b.Property<int?>("TransactionTypeId");
 
                     b.HasKey("PayrollId");
 
@@ -2149,6 +2306,126 @@ namespace DataAccess.Migrations
                     b.ToTable("EmployeePayroll");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.EmployeePayrollAccountHead", b =>
+                {
+                    b.Property<int>("EmployeePayrollAccountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<long?>("AccountNo");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<int>("EmployeeId");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("PayrollHeadId");
+
+                    b.Property<string>("PayrollHeadName");
+
+                    b.Property<int>("PayrollHeadTypeId");
+
+                    b.Property<int?>("TransactionTypeId");
+
+                    b.HasKey("EmployeePayrollAccountId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("PayrollHeadId");
+
+                    b.ToTable("EmployeePayrollAccountHead");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.EmployeePayrollDetailTest", b =>
+                {
+                    b.Property<int>("PayrollId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<int?>("Absent");
+
+                    b.Property<float?>("AdvanceDeduction");
+
+                    b.Property<int?>("Attendance");
+
+                    b.Property<float?>("CapacityBuildingDeductibles");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int?>("EmployeeId");
+
+                    b.Property<float?>("FineDeduction");
+
+                    b.Property<float?>("FoodAllowance");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<float?>("Medical");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<float?>("Other1");
+
+                    b.Property<float?>("Other2");
+
+                    b.Property<float?>("OtherAllowance");
+
+                    b.Property<float?>("OtherDeduction");
+
+                    b.Property<float?>("PensionDeduction");
+
+                    b.Property<float?>("SalaryTaxDeduction");
+
+                    b.Property<float?>("SecurityDeduction");
+
+                    b.Property<bool?>("Sent");
+
+                    b.Property<bool?>("Status");
+
+                    b.Property<float?>("TRAllowance");
+
+                    b.Property<double?>("TotalAllowance");
+
+                    b.Property<double?>("TotalDeduction");
+
+                    b.Property<int?>("TotalDuration");
+
+                    b.Property<double?>("basicpay");
+
+                    b.Property<string>("currencycode");
+
+                    b.Property<int?>("payrollmonth");
+
+                    b.Property<int?>("payrollyear");
+
+                    b.Property<string>("regcode");
+
+                    b.HasKey("PayrollId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("EmployeePayrollDetailTest");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.EmployeePayrollForMonth", b =>
                 {
                     b.Property<int>("EmployeePaymentTypesId")
@@ -2163,7 +2440,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("CurrencyId");
 
@@ -2183,7 +2460,7 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("IsApproved");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int>("LeaveDays");
 
@@ -2234,9 +2511,11 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
+                    b.Property<long?>("AccountNo");
+
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("CurrencyId");
 
@@ -2244,7 +2523,9 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("EmployeeID");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<int?>("HeadTypeId");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2252,7 +2533,11 @@ namespace DataAccess.Migrations
 
                     b.Property<double>("MonthlyAmount");
 
+                    b.Property<int?>("PaymentType");
+
                     b.Property<int>("SalaryHeadId");
+
+                    b.Property<int?>("TransactionTypeId");
 
                     b.HasKey("MonthlyPayrollId");
 
@@ -2277,13 +2562,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("FinancialYearId");
 
                     b.Property<bool>("IsDefault");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2308,11 +2593,17 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
+                    b.Property<string>("ContractStatus");
+
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int?>("DepartmentId");
+
+                    b.Property<string>("Departments");
+
+                    b.Property<string>("Designation");
 
                     b.Property<int?>("DesignationId");
 
@@ -2328,7 +2619,7 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("HiredOn");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("JobDescription");
 
@@ -2340,6 +2631,14 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("OfficeId");
 
+                    b.Property<string>("Profession");
+
+                    b.Property<int?>("ProfessionId");
+
+                    b.Property<long?>("ProjectId");
+
+                    b.Property<string>("RegCode");
+
                     b.Property<DateTime?>("ResignationOn");
 
                     b.Property<string>("ResignationReason");
@@ -2348,6 +2647,8 @@ namespace DataAccess.Migrations
                         .HasMaxLength(20);
 
                     b.Property<string>("TrainingBenefits");
+
+                    b.Property<string>("WorkType");
 
                     b.HasKey("EmployeeProfessionalId");
 
@@ -2368,6 +2669,8 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("OfficeId");
 
+                    b.HasIndex("ProfessionId");
+
                     b.ToTable("EmployeeProfessionalDetail");
                 });
 
@@ -2379,11 +2682,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<string>("Email");
 
                     b.Property<int>("EmployeeID");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2392,6 +2697,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("Name");
 
                     b.Property<string>("Organization");
+
+                    b.Property<long>("PhoneNo");
 
                     b.Property<string>("Position");
 
@@ -2420,11 +2727,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("EmployeeID");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2459,13 +2766,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("CurrencyId");
 
                     b.Property<int>("EmployeeID");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2494,7 +2801,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("CurrencyId");
 
@@ -2502,7 +2809,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2540,12 +2847,12 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("EmployeeTypeName")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2568,29 +2875,39 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<string>("CurrencyCode");
 
-                    b.Property<int>("FromCurrency");
+                    b.Property<DateTime?>("Date");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<int?>("FromCurrency");
+
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<double>("Rate");
+                    b.Property<string>("OfficeCode");
 
-                    b.Property<int>("ToCurrency");
+                    b.Property<int?>("OfficeId");
+
+                    b.Property<double?>("Rate");
+
+                    b.Property<int?>("ToCurrency");
 
                     b.HasKey("ExchangeRateId");
 
                     b.HasIndex("CreatedById");
 
+                    b.HasIndex("Date");
+
                     b.HasIndex("FromCurrency");
 
                     b.HasIndex("ModifiedById");
+
+                    b.HasIndex("OfficeId");
 
                     b.HasIndex("ToCurrency");
 
@@ -2623,7 +2940,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("DutiesOfJob");
 
@@ -2653,7 +2970,7 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("HealthIssue");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("JobOrientation");
 
@@ -2736,7 +3053,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Description");
 
@@ -2747,7 +3064,7 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("IsDefault");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2772,7 +3089,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("Date");
 
@@ -2783,7 +3100,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("HolidayType");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2814,14 +3131,14 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Day")
                         .HasMaxLength(30);
 
                     b.Property<int>("FinancialYearId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -2850,7 +3167,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<long>("CurrentBase");
 
@@ -2882,7 +3199,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Interviewer4");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<long>("JobId");
 
@@ -2939,11 +3256,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("InterviewDetailsId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<int?>("LanguageId");
 
@@ -2988,7 +3305,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("Date");
 
@@ -2999,7 +3316,7 @@ namespace DataAccess.Migrations
                     b.Property<int?>("InterviewStatus")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<long>("JobId");
 
@@ -3032,11 +3349,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("InterviewDetailsId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3063,9 +3380,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3092,13 +3409,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("EndDate");
 
                     b.Property<int>("InterviewDetailsId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3131,9 +3448,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ItemId");
 
@@ -3164,9 +3481,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ItemSpecificationField");
 
@@ -3199,11 +3516,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("GradeName");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3226,13 +3543,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int?>("GradeId");
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("JobCode")
                         .HasMaxLength(50);
@@ -3259,8 +3576,6 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("OfficeId");
 
-                    b.HasIndex("ProfessionId");
-
                     b.ToTable("JobHiringDetails");
                 });
 
@@ -3272,9 +3587,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("JournalName")
                         .HasMaxLength(100);
@@ -3302,9 +3617,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3331,9 +3646,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<bool>("IsRead");
 
@@ -3364,9 +3679,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3398,11 +3713,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("FinancialReportTypeId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3432,12 +3747,12 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("FaxNo")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3466,6 +3781,305 @@ namespace DataAccess.Migrations
                     b.ToTable("OfficeDetail");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.OnlyForDT.EmployeeDetailDT", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<int>("Age");
+
+                    b.Property<string>("BankAccount")
+                        .HasMaxLength(100);
+
+                    b.Property<float?>("BasicPay");
+
+                    b.Property<double?>("CapacityBuildingDeductibles");
+
+                    b.Property<int?>("CasualLeaveAllowance");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("CityDari")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("CloseRelativeList");
+
+                    b.Property<string>("Comments");
+
+                    b.Property<DateTime?>("ContractEndDate");
+
+                    b.Property<string>("ContractEndDateDari")
+                        .HasMaxLength(50);
+
+                    b.Property<double?>("ContractNumber");
+
+                    b.Property<double?>("ContractPeriod");
+
+                    b.Property<double?>("ContractPeriodDari");
+
+                    b.Property<DateTime?>("ContractStartDate");
+
+                    b.Property<string>("ContractStartDateDari")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("ContractStatus")
+                        .HasMaxLength(5);
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<string>("CurrencyCode");
+
+                    b.Property<string>("CurrentAddress")
+                        .HasMaxLength(200);
+
+                    b.Property<DateTime?>("DateOfBirth");
+
+                    b.Property<string>("Department")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Designation")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("DesignationDari")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("District")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("ETN")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("EducationList");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100);
+
+                    b.Property<int?>("EmergencyLeaveAllowance");
+
+                    b.Property<string>("EmployeeCode");
+
+                    b.Property<string>("EmployeeCodeDari")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("EmployeeName")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("EmployeeNameDari")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("EmployeePhoto");
+
+                    b.Property<string>("Experience")
+                        .HasMaxLength(50);
+
+                    b.Property<bool?>("Extended");
+
+                    b.Property<string>("FatherName")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("FatherNameDari")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Fax")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("FineReason")
+                        .HasMaxLength(200);
+
+                    b.Property<double?>("FinesDeductibles");
+
+                    b.Property<DateTime?>("FireOn");
+
+                    b.Property<string>("FireReason")
+                        .HasMaxLength(200);
+
+                    b.Property<double?>("FoodAllowance");
+
+                    b.Property<DateTime?>("HireOn");
+
+                    b.Property<string>("IdCard")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("InternationalEmploymentList");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("JobDescription");
+
+                    b.Property<string>("Language")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("MaritalStatus")
+                        .HasMaxLength(15);
+
+                    b.Property<int?>("MaternityLeaveAllowance");
+
+                    b.Property<double?>("MedicalAllowance");
+
+                    b.Property<int?>("MedicalLeaveAllowance");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<double?>("MonthlyBasicPay");
+
+                    b.Property<string>("NationalEmploymentList");
+
+                    b.Property<string>("Nationality")
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("NoOfChildren");
+
+                    b.Property<double?>("Other1Allowance");
+
+                    b.Property<string>("Other1Description");
+
+                    b.Property<double?>("Other2Allowance");
+
+                    b.Property<string>("Other2Description");
+
+                    b.Property<double?>("OtherAllowance");
+
+                    b.Property<double?>("OtherDeductibles");
+
+                    b.Property<string>("OtherSkillList");
+
+                    b.Property<string>("Passport")
+                        .HasMaxLength(50);
+
+                    b.Property<double?>("PensionDeductibles");
+
+                    b.Property<string>("PeriodType")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("PeriodTypeDari")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("PermanentAddress")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("PlaceOfBirth")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("PoliticalPartyMembership");
+
+                    b.Property<string>("PreviousExperience")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("PreviousWork")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Profession")
+                        .HasMaxLength(50);
+
+                    b.Property<long?>("ProjectId");
+
+                    b.Property<string>("Province")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("ProvinceDari")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Qualification")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("ReferBy")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("RefereeList");
+
+                    b.Property<string>("RegCode");
+
+                    b.Property<string>("Remarks");
+
+                    b.Property<DateTime?>("ResignedOn");
+
+                    b.Property<string>("ResignedReason")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("SECT")
+                        .HasMaxLength(10);
+
+                    b.Property<double?>("SecurityDeductibles");
+
+                    b.Property<string>("SpeakLanguageList");
+
+                    b.Property<string>("TinNo")
+                        .HasMaxLength(20);
+
+                    b.Property<DateTime?>("TingenerateDate");
+
+                    b.Property<double?>("TrAllowance");
+
+                    b.Property<string>("Training");
+
+                    b.Property<string>("Village")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("WorkType")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("grade")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("sex")
+                        .HasMaxLength(5);
+
+                    b.HasKey("EmployeeId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("EmployeeDetailDT");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.PayrollAccountHead", b =>
+                {
+                    b.Property<int>("PayrollHeadId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<long?>("AccountNo");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("PayrollHeadName");
+
+                    b.Property<int>("PayrollHeadTypeId");
+
+                    b.Property<int?>("TransactionTypeId");
+
+                    b.HasKey("PayrollHeadId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("PayrollAccountHead");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.PayrollMonthlyHourDetail", b =>
                 {
                     b.Property<int>("PayrollMonthlyHourID")
@@ -3474,13 +4088,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int?>("Hours");
 
                     b.Property<DateTime?>("InTime");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3494,6 +4108,10 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("PayrollYear");
 
+                    b.Property<int?>("WorkingDay");
+
+                    b.Property<int?>("WorkingTime");
+
                     b.HasKey("PayrollMonthlyHourID");
 
                     b.HasIndex("CreatedById");
@@ -3503,6 +4121,45 @@ namespace DataAccess.Migrations
                     b.HasIndex("OfficeId");
 
                     b.ToTable("PayrollMonthlyHourDetail");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.PensionPaymentHistory", b =>
+                {
+                    b.Property<int>("PensionPaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("EmployeeId");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<decimal>("PaymentAmount");
+
+                    b.Property<DateTime>("PaymentDate");
+
+                    b.Property<long>("VoucherNo");
+
+                    b.Property<string>("VoucherReferenceNo");
+
+                    b.HasKey("PensionPaymentId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("VoucherNo");
+
+                    b.ToTable("PensionPaymentHistory");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Permissions", b =>
@@ -3541,11 +4198,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("CurrentPermissionId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<bool>("IsGrant");
 
@@ -3576,13 +4233,15 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("ProfessionDari");
 
                     b.Property<string>("ProfessionName")
                         .HasMaxLength(100);
@@ -3603,13 +4262,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<double>("CurrentBalance");
 
                     b.Property<DateTime>("EndDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3647,13 +4306,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Description");
 
                     b.Property<DateTime>("EndDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3685,7 +4344,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int?>("CurrencyId");
 
@@ -3695,7 +4354,7 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime>("EndDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3729,7 +4388,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("DocumentDate");
 
@@ -3743,7 +4402,7 @@ namespace DataAccess.Migrations
                     b.Property<byte[]>("FilePath")
                         .IsRequired();
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3772,9 +4431,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3802,9 +4461,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3830,13 +4489,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("CriteriaQuestion");
 
                     b.Property<int>("InterviewDetailsId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3859,9 +4518,11 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
+                    b.Property<long?>("AccountNo");
+
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Description");
 
@@ -3870,11 +4531,13 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("HeadTypeId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int?>("TransactionTypeId");
 
                     b.HasKey("SalaryHeadId");
 
@@ -3893,11 +4556,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("EmployerAuthorizedOfficerName");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3923,9 +4586,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3950,7 +4613,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("DocumentGuid");
 
@@ -3962,7 +4625,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("FileType");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -3988,13 +4651,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<long>("FuelQuantity");
 
                     b.Property<int>("Generator");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4026,13 +4689,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Description");
 
                     b.Property<int>("Generator");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4067,11 +4730,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("Generator");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4109,13 +4772,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("GeneratorBrand");
 
                     b.Property<string>("GeneratorModel");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("MakeYear");
 
@@ -4146,9 +4809,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4173,9 +4836,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4220,9 +4883,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4247,9 +4910,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4279,7 +4942,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("Currency");
 
@@ -4302,7 +4965,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("InvoiceNo");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4367,11 +5030,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("InventoryItem");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("IssedToLocation");
 
@@ -4423,7 +5086,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<bool>("IsDeleted");
 
@@ -4453,7 +5116,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<bool>("IsDeleted");
 
@@ -4483,7 +5146,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("InventoryCode");
 
@@ -4495,7 +5158,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("InventoryName");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4521,11 +5184,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Description");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ItemCode");
 
@@ -4560,7 +5223,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime>("CurrentAppraisalDate");
 
@@ -4568,7 +5231,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4595,11 +5258,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("Description");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4634,9 +5297,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4661,9 +5324,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4692,7 +5355,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("DepartmentId");
 
@@ -4745,21 +5408,27 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("CurrencyId");
+                    b.Property<string>("CurrencyCode");
+
+                    b.Property<int?>("CurrencyId");
 
                     b.Property<string>("Description");
 
                     b.Property<int?>("FinancialYearId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<bool>("IsExchangeGainLossVoucher");
 
                     b.Property<int?>("JournalCode");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("OfficeCode");
 
                     b.Property<int?>("OfficeId");
 
@@ -4769,6 +5438,10 @@ namespace DataAccess.Migrations
                         .HasMaxLength(20);
 
                     b.Property<DateTime?>("VoucherDate");
+
+                    b.Property<string>("VoucherMode");
+
+                    b.Property<string>("VoucherType");
 
                     b.Property<int?>("VoucherTypeId");
 
@@ -4792,6 +5465,9 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProjectId");
 
+                    b.HasIndex("VoucherNo")
+                        .IsUnique();
+
                     b.HasIndex("VoucherTypeId");
 
                     b.ToTable("VoucherDetail");
@@ -4805,9 +5481,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<DateTime?>("DocumentDate");
+
+                    b.Property<string>("DocumentFilePath");
 
                     b.Property<string>("DocumentGUID");
 
@@ -4820,7 +5498,7 @@ namespace DataAccess.Migrations
 
                     b.Property<byte[]>("FilePath");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
@@ -4839,29 +5517,49 @@ namespace DataAccess.Migrations
                     b.ToTable("VoucherDocumentDetail");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactionDetails", b =>
+            modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactions", b =>
                 {
                     b.Property<int>("TransactionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<double>("Amount");
+                    b.Property<double?>("AFGAmount");
+
+                    b.Property<int?>("AccountNo");
+
+                    b.Property<double?>("Amount");
+
+                    b.Property<string>("Area");
+
+                    b.Property<int?>("ChartAccountDetailAccountCode");
+
+                    b.Property<string>("CostBook");
 
                     b.Property<string>("CreatedById");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<double?>("Credit");
 
                     b.Property<int?>("CreditAccount");
 
                     b.Property<int?>("CurrencyId");
 
+                    b.Property<double?>("Debit");
+
                     b.Property<int?>("DebitAccount");
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("Donor");
+
+                    b.Property<double?>("EURAmount");
+
                     b.Property<int?>("FinancialYearId");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("Job");
 
                     b.Property<string>("ModifiedById");
 
@@ -4869,29 +5567,42 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("OfficeId");
 
-                    b.Property<DateTime>("TransactionDate");
+                    b.Property<double?>("PKRAmount");
 
-                    b.Property<long>("VoucherNo");
+                    b.Property<string>("Program");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("Sector");
+
+                    b.Property<DateTime?>("TransactionDate");
+
+                    b.Property<double?>("USDAmount");
+
+                    b.Property<long?>("VoucherNo");
 
                     b.HasKey("TransactionId");
 
+                    b.HasIndex("AccountNo");
+
+                    b.HasIndex("ChartAccountDetailAccountCode");
+
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("CreditAccount");
-
                     b.HasIndex("CurrencyId");
-
-                    b.HasIndex("DebitAccount");
-
-                    b.HasIndex("FinancialYearId");
 
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("OfficeId");
 
+                    b.HasIndex("TransactionId")
+                        .IsUnique();
+
                     b.HasIndex("VoucherNo");
 
-                    b.ToTable("VoucherTransactionDetails");
+                    b.HasIndex("TransactionDate", "AccountNo");
+
+                    b.ToTable("VoucherTransactions");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.VoucherType", b =>
@@ -5058,9 +5769,9 @@ namespace DataAccess.Migrations
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DataAccess.DbEntities.EmployeeDetail")
-                        .WithOne("Advances")
-                        .HasForeignKey("DataAccess.DbEntities.Advances", "EmployeeId")
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
@@ -5321,10 +6032,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail", "CreditAccountDetails")
-                        .WithMany()
-                        .HasForeignKey("ParentID");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.ContractTypeContent", b =>
@@ -5447,8 +6154,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetails")
                         .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("DataAccess.DbEntities.FinancialYearDetail", "FinancialYearDetail")
                         .WithMany()
@@ -5537,26 +6243,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeContract", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.ProjectBudgetLine", "ProjectBudgetLine")
-                        .WithMany()
-                        .HasForeignKey("BudgetLine")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("DataAccess.DbEntities.DesignationDetail", "DesignationDetail")
-                        .WithMany()
-                        .HasForeignKey("Designation")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetail")
-                        .WithMany()
-                        .HasForeignKey("DutyStation")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -5576,10 +6267,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("DataAccess.DbEntities.EmployeePensionRate", "EmployeePensionRate")
-                        .WithMany()
-                        .HasForeignKey("EmployeePensionRateId");
-
                     b.HasOne("DataAccess.DbEntities.EmployeeType", "EmployeeType")
                         .WithMany()
                         .HasForeignKey("EmployeeTypeId");
@@ -5596,10 +6283,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("NationalityId");
 
-                    b.HasOne("DataAccess.DbEntities.ProfessionDetails", "ProfessionDetails")
-                        .WithMany()
-                        .HasForeignKey("ProfessionId");
-
                     b.HasOne("DataAccess.DbEntities.ProvinceDetails", "ProvinceDetails")
                         .WithMany()
                         .HasForeignKey("ProvinceId");
@@ -5613,8 +6296,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeID");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -5629,8 +6311,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeID");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -5667,8 +6348,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetails")
                         .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -5709,8 +6389,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeID");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -5725,8 +6404,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeID");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -5743,6 +6421,25 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.EmployeeMonthlyAttendance", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.Advances", "Advance")
+                        .WithMany()
+                        .HasForeignKey("AdvanceId");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetails")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -5785,14 +6482,17 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeePaymentTypes", b =>
                 {
+                    b.HasOne("DataAccess.DbEntities.Advances", "AdvanceDetail")
+                        .WithMany()
+                        .HasForeignKey("AdvanceId");
+
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
                     b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeID");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -5807,8 +6507,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.CurrencyDetails", "CurrencyDetails")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CurrencyId");
 
                     b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetails")
                         .WithMany("EmployeePayrollList")
@@ -5821,8 +6520,39 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.SalaryHeadDetails", "SalaryHeadDetails")
                         .WithMany()
-                        .HasForeignKey("SalaryHeadId")
+                        .HasForeignKey("SalaryHeadId");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.EmployeePayrollAccountHead", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.PayrollAccountHead", "PayrollAccountHead")
+                        .WithMany()
+                        .HasForeignKey("PayrollHeadId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.EmployeePayrollDetailTest", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeePayrollForMonth", b =>
@@ -5901,7 +6631,7 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeContractTypeId");
 
-                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetails")
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail")
                         .WithOne("EmployeeProfessionalDetail")
                         .HasForeignKey("DataAccess.DbEntities.EmployeeProfessionalDetail", "EmployeeId");
 
@@ -5916,6 +6646,10 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetail")
                         .WithMany()
                         .HasForeignKey("OfficeId");
+
+                    b.HasOne("DataAccess.DbEntities.ProfessionDetails", "professionDetails")
+                        .WithMany()
+                        .HasForeignKey("ProfessionId");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeRelativeInfo", b =>
@@ -6015,18 +6749,20 @@ namespace DataAccess.Migrations
                         .HasForeignKey("CreatedById");
 
                     b.HasOne("DataAccess.DbEntities.CurrencyDetails", "CurrencyFrom")
-                        .WithMany("ExchangeRateListFrom")
-                        .HasForeignKey("FromCurrency")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("FromCurrency");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
+                    b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetail")
+                        .WithMany()
+                        .HasForeignKey("OfficeId");
+
                     b.HasOne("DataAccess.DbEntities.CurrencyDetails", "CurrencyTo")
-                        .WithMany("ExchangeRateListTo")
-                        .HasForeignKey("ToCurrency")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("ToCurrency");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.ExistInterviewDetails", b =>
@@ -6257,10 +6993,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("OfficeId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.ProfessionDetails", "ProfessionDetails")
-                        .WithMany()
-                        .HasForeignKey("ProfessionId");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.JournalDetail", b =>
@@ -6337,6 +7069,28 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.OnlyForDT.EmployeeDetailDT", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.PayrollAccountHead", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.PayrollMonthlyHourDetail", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -6350,6 +7104,27 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetails")
                         .WithMany()
                         .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.PensionPaymentHistory", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.VoucherDetail", "VoucherDetail")
+                        .WithMany()
+                        .HasForeignKey("VoucherNo")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -6868,8 +7643,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.CurrencyDetails", "CurrencyDetail")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CurrencyId");
 
                     b.HasOne("DataAccess.DbEntities.FinancialYearDetail", "FinancialYearDetails")
                         .WithMany()
@@ -6912,27 +7686,23 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactionDetails", b =>
+            modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactions", b =>
                 {
+                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail", "CreditAccountDetails")
+                        .WithMany("CreditAccountlist")
+                        .HasForeignKey("AccountNo");
+
+                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail")
+                        .WithMany("DebitAccountlist")
+                        .HasForeignKey("ChartAccountDetailAccountCode");
+
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail", "CreditAccountDetails")
-                        .WithMany("CreditAccountlist")
-                        .HasForeignKey("CreditAccount");
-
                     b.HasOne("DataAccess.DbEntities.CurrencyDetails", "CurrencyDetails")
                         .WithMany()
                         .HasForeignKey("CurrencyId");
-
-                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail", "DebitAccountDetails")
-                        .WithMany("DebitAccountlist")
-                        .HasForeignKey("DebitAccount");
-
-                    b.HasOne("DataAccess.DbEntities.FinancialYearDetail", "FinancialYearDetails")
-                        .WithMany()
-                        .HasForeignKey("FinancialYearId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -6944,8 +7714,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.VoucherDetail", "VoucherDetails")
                         .WithMany("VoucherTransactionDetails")
-                        .HasForeignKey("VoucherNo")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("VoucherNo");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

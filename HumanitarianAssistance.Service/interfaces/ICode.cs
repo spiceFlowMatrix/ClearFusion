@@ -71,8 +71,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetSalaryTaxReportContentDetails(int officeId);
         Task<APIResponse> AddSalaryTaxReportContentDetails(SalaryTaxReportContent model, string UserId);
         Task<APIResponse> EditSalaryTaxReportContentDetails(SalaryTaxReportContent model, string UserId);
-
-
-
+        Task<APIResponse> GetEmployeeAdvanceHistoryDetail(long AdvanceID);
+        Task<APIResponse> AddPayrollAccountHead(PayrollHeadModel model);
+        Task<APIResponse> GetAllPayrollHead();
+        Task<APIResponse> UpdatePayrollAccountHead(PayrollHeadModel model);
+        Task<APIResponse> DeletePayrollAccountHead(PayrollHeadModel model);
     }
 }

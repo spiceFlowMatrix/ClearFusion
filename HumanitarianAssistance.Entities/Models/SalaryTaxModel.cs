@@ -9,5 +9,6 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public int OfficeId { get; set; }
 		public int EmployeeId { get; set; }
 		public int FinancialYearId { get; set; }
-	}
+        public int? CurrencyId { get; set; }
+    }
 }

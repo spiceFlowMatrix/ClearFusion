@@ -29,9 +29,9 @@ namespace DataAccess.Data
         RoleManager<IdentityRole> roleManager, ILogger<DbInitializer> logger)
         {
             try
-            {
-                // Look for any users.
-                if (context.Users.Any())
+            {				
+				// Look for any users.
+				if (context.Users.Any())
                 {
                     return; // DB has been seeded
                 }
@@ -65,8 +65,10 @@ namespace DataAccess.Data
             var s7 = AddAccountType(context);
             var s8 = AddStatusAtTimeOfIssue(context);
             var s9 = AddReceiptType(context);
+            var s10 = AddCurrency(context);
+			var s11 = AddDefaultRoles(context, rm);
 
-            await s;
+			await s;
             await s2;
             await s3;
             await s4;
@@ -75,6 +77,8 @@ namespace DataAccess.Data
             await s7;
             await s8;
             await s9;
+            await s10;
+			await s11;
             await AddProvinceDetails(context);
         }
 
@@ -447,9 +451,33 @@ namespace DataAccess.Data
             }
         }
 
+		public static async Task AddDefaultRoles(ApplicationDbContext context, RoleManager<IdentityRole> rm)
+		{
+			try
+			{
+				List<string> rolesList = new List<string>() { "Administrator" , "Accounting Manager", "HR Manager", "Project Manager" };
+				foreach (var items in rolesList)
+				{
+					var roleExists = await rm.FindByNameAsync(items);
+					if (roleExists == null)
+					{
+						var role = new IdentityRole();
+						role.Name = items;
+						await rm.CreateAsync(role);
+					}
+				}				
+
+				context.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				var errormessage = ex.Message;
+			}
+		}
 
 
-        private static async Task AddStatusAtTimeOfIssue(ApplicationDbContext context)
+
+		private static async Task AddStatusAtTimeOfIssue(ApplicationDbContext context)
         {
             try
             {
@@ -500,6 +528,72 @@ namespace DataAccess.Data
                 var errormessage = ex.Message;
             }
         }
+
+        private static async Task AddCurrency(ApplicationDbContext context)
+        {
+            try
+            {
+                List<CurrencyDetails> currencyDetailList = new List<CurrencyDetails>
+                {
+                    new CurrencyDetails { CurrencyId = 1, CurrencyName = "Afghanistan", CurrencyCode ="AFG", IsDeleted= false , Status =  false, SalaryTaxFlag= true},
+                    new CurrencyDetails { CurrencyId = 2, CurrencyName = "European Curency", CurrencyCode ="EUR", IsDeleted= false , Status =  false, SalaryTaxFlag= false},
+                    new CurrencyDetails { CurrencyId = 3, CurrencyName = "Pakistani Rupees", CurrencyCode ="PKR", IsDeleted= false , Status =  true, SalaryTaxFlag= false}, //base currency :  Status = true
+                    new CurrencyDetails { CurrencyId = 4, CurrencyName = "US Dollars", CurrencyCode ="USD", IsDeleted= false , Status =  false, SalaryTaxFlag= false}
+                };
+
+                await context.CurrencyDetails.AddRangeAsync(currencyDetailList);
+                context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                var errormessage = ex.Message;
+            }
+        }
+
+        private static async Task CreateDefaultEmployeePayrollHead(ApplicationDbContext context)
+        {
+            try
+            {
+                List<PayrollAccountHead> payrollAccountHeadList = new List<PayrollAccountHead>
+                {
+                    new PayrollAccountHead{AccountNo=null, IsDeleted= false, Description=null, PayrollHeadName="Net Salary", PayrollHeadTypeId=3, TransactionTypeId= 1},
+                    new PayrollAccountHead{AccountNo=null, IsDeleted= false, Description=null, PayrollHeadName="Advance Deduction", PayrollHeadTypeId=3, TransactionTypeId= 2},
+                    new PayrollAccountHead{AccountNo=null, IsDeleted= false, Description=null, PayrollHeadName="Salary Tax", PayrollHeadTypeId=3, TransactionTypeId= 2},
+                    new PayrollAccountHead{AccountNo=null, IsDeleted= false, Description=null, PayrollHeadName="Gross Salary", PayrollHeadTypeId=3, TransactionTypeId= 2},
+                    new PayrollAccountHead{AccountNo=null, IsDeleted= false, Description=null, PayrollHeadName="Pension", PayrollHeadTypeId=3, TransactionTypeId= 2}
+                };
+                await context.PayrollAccountHead.AddRangeAsync(payrollAccountHeadList);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                var errormesage = ex.Message;
+            }
+        }
+
+
+        //private static async Task AddAspNetRoles(ApplicationDbContext context)
+        //{
+        //    try
+        //    {
+        //        List<AspNetRoles> aspNetRolesList = new List<AspNetRoles>
+        //        {
+        //            new AspNetRoles { CurrencyId = 1, CurrencyName = "Afghanistan", CurrencyCode ="AFG", IsDeleted= false , Status =  false, SalaryTaxFlag= true},
+        //            new CurrencyDetails { CurrencyId = 2, CurrencyName = "European Curency", CurrencyCode ="EUR", IsDeleted= false , Status =  false, SalaryTaxFlag= false},
+        //            new CurrencyDetails { CurrencyId = 3, CurrencyName = "Pakistani Rupees", CurrencyCode ="PKR", IsDeleted= false , Status =  true, SalaryTaxFlag= false}, //base currency :  Status = true
+        //            new CurrencyDetails { CurrencyId = 4, CurrencyName = "US Dollars", CurrencyCode ="USD", IsDeleted= false , Status =  false, SalaryTaxFlag= false}
+        //        };
+
+        //        await context.CurrencyDetails.AddRangeAsync(currencyDetailList);
+        //        context.SaveChanges();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var errormessage = ex.Message;
+        //    }
+        //}
 
 
 

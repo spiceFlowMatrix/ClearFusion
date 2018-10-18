@@ -15,6 +15,6 @@ namespace DataAccess.DbEntities
         [StringLength(100)]
         public string JournalName { get; set; }
         public byte? JournalType { get; set; }
-        public List<VoucherDetail> VoucherDetails { get; set; }
-    }
+		public List<VoucherDetail> VoucherDetails { get; set; }
+	}
 }

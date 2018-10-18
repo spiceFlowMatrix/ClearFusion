@@ -43,9 +43,9 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.EmployeeHistoryOutsideOrganizationList = employeeHistoryRecord.Select(x => new EmployeeHistoryOutsideOrganizationModel
                     {
                         EmployeeHistoryOutsideOrganizationId = x.EmployeeHistoryOutsideOrganizationId,
-                        EmployeeID = x.EmployeeID,
-                        EmploymentFrom = x.EmploymentFrom,
-                        EmploymentTo = x.EmploymentTo,
+                        EmployeeID = Convert.ToInt32(x.EmployeeID),
+                        EmploymentFrom = x.EmploymentFrom==null? null: (DateTime?)Convert.ToDateTime(x.EmploymentFrom),
+                        EmploymentTo = x.EmploymentTo == null ? null : (DateTime?)Convert.ToDateTime(x.EmploymentTo),
                         MonthlySalary = x.MonthlySalary,
                         Organization = x.Organization,
                         ReasonForLeaving = x.ReasonForLeaving
@@ -159,10 +159,10 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.EmployeeHistoryOutsideOrganizationList = employeeHistoryRecord.Select(x => new EmployeeHistoryOutsideOrganizationModel
                     {
                         EmployeeHistoryOutsideCountryId = x.EmployeeHistoryOutsideCountryId,
-                        EmployeeID = x.EmployeeID,
-                        EmploymentFrom = x.EmploymentFrom,
-                        EmploymentTo = x.EmploymentTo,
-                        MonthlySalary = x.MonthlySalary,
+                        EmployeeID = Convert.ToInt32(x.EmployeeID),
+                        EmploymentFrom = x.EmploymentFrom == null ? null : (DateTime?)Convert.ToDateTime(x.EmploymentFrom),
+                        EmploymentTo = x.EmploymentTo == null ? null : (DateTime?)Convert.ToDateTime(x.EmploymentTo),
+                        MonthlySalary = x.MonthlySalary.ToString(),
                         Organization = x.Organization,
                         ReasonForLeaving = x.ReasonForLeaving
                     }).ToList();
@@ -280,7 +280,9 @@ namespace HumanitarianAssistance.Service.Classes
                         Organization = x.Organization,
                         Position = x.Position,
                         Relationship = x.Relationship,
-                        EmployeeID = x.EmployeeID
+                        EmployeeID = x.EmployeeID,
+                        Email= x.Email,
+                        PhoneNo= x.PhoneNo
                     }).ToList();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -396,7 +398,9 @@ namespace HumanitarianAssistance.Service.Classes
                         Organization = x.Organization,
                         Position = x.Position,
                         Relationship = x.Relationship,
-                        EmployeeID = x.EmployeeID
+                        EmployeeID = x.EmployeeID,
+                        Email= x.Email,
+                        PhoneNo= x.PhoneNo
                     }).ToList();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -740,10 +744,10 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.EmployeeEducationsList = employeeHistoryRecord.Select(x => new EmployeeEducationsModel
                     {
                         EmployeeEducationsId = x.EmployeeEducationsId,
-                        EmployeeID = x.EmployeeID,
+                        EmployeeID = Convert.ToInt32(x.EmployeeID),
                         Degree = x.Degree,
-                        EducationFrom = x.EducationFrom,
-                        EducationTo = x.EducationTo,
+                        EducationFrom = Convert.ToDateTime(x.EducationFrom),
+                        EducationTo = Convert.ToDateTime(x.EducationTo),
                         FieldOfStudy = x.FieldOfStudy,
                         Institute = x.Institute
                     }).ToList();
@@ -845,24 +849,56 @@ namespace HumanitarianAssistance.Service.Classes
 
         #region "Employee Salary Analytical Info"
 
+        //public async Task<APIResponse> GetAllEmployeeSalaryAnalyticalInfo(int EmployeeId)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        var employeeHistoryRecord = await _uow.GetDbContext().EmployeeSalaryAnalyticalInfo.Include(x => x.ProjectBudgetLine).Where(x => x.IsDeleted == false && x.EmployeeID == EmployeeId).ToListAsync();
+
+        //        if (employeeHistoryRecord.Count > 0)
+        //        {
+        //            response.data.EmployeeSalaryAnalyticalInfoList = employeeHistoryRecord.Select(x => new EmployeeSalaryAnalyticalInfoModel
+        //            {
+        //                EmployeeSalaryAnalyticalInfoId = x.EmployeeSalaryAnalyticalInfoId,
+        //                AccountCode = x.AccountCode,
+        //                BudgetLineId = x.BudgetLineId,
+        //                EmployeeID = x.EmployeeID,
+        //                ProjectId = x.ProjectId,
+        //                SalaryPercentage = x.SalaryPercentage,
+        //                BudgetLineName = x.ProjectBudgetLine?.Description
+
+        //            }).ToList();
+        //            response.StatusCode = StaticResource.successStatusCode;
+        //            response.Message = "Success";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //    }
+        //    return response;
+        //}
+
         public async Task<APIResponse> GetAllEmployeeSalaryAnalyticalInfo(int EmployeeId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var employeeHistoryRecord = await _uow.GetDbContext().EmployeeSalaryAnalyticalInfo.Include(x => x.ProjectBudgetLine).Where(x => x.IsDeleted == false && x.EmployeeID == EmployeeId).ToListAsync();
+                var employeeHistoryRecord = await _uow.GetDbContext().EmployeeAnalyticalDetail.Where(x => x.IsDeleted == false && x.EmployeeID == EmployeeId).ToListAsync();
 
                 if (employeeHistoryRecord.Count > 0)
                 {
                     response.data.EmployeeSalaryAnalyticalInfoList = employeeHistoryRecord.Select(x => new EmployeeSalaryAnalyticalInfoModel
                     {
-                        EmployeeSalaryAnalyticalInfoId = x.EmployeeSalaryAnalyticalInfoId,
-                        AccountCode = x.AccountCode,
-                        BudgetLineId = x.BudgetLineId,
+                        EmployeeSalaryAnalyticalInfoId = x.AnalyticalID,
+                        AccountCode = Convert.ToInt32(x.AccountCode),
+                        //BudgetLineId = x.BudgetLineId,
                         EmployeeID = x.EmployeeID,
-                        ProjectId = x.ProjectId,
-                        SalaryPercentage = x.SalaryPercentage,
-                        BudgetLineName = x.ProjectBudgetLine?.Description
+                        ProjectId = Convert.ToInt64(x.Project),
+                        SalaryPercentage = Convert.ToDouble(x.SalaryPercentage),
+                        //BudgetLineName = x.ProjectBudgetLine?.Description
 
                     }).ToList();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -978,7 +1014,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var employeeRecord = await _uow.EmployeeHealthInfoRepository.FindAsync(x => x.EmployeeId == EmployeeId);
+                var employeeRecord = await _uow.EmployeeHealthInfoRepository.FindAsync(x => x.EmployeeId == EmployeeId && x.IsDeleted== false);
 
                 EmployeeHealthInformationModel obj = _mapper.Map<EmployeeHealthInformationModel>(employeeRecord);
 
@@ -1036,11 +1072,10 @@ namespace HumanitarianAssistance.Service.Classes
                 var existRecord = await _uow.EmployeeHealthInfoRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeHealthInfoId == model.EmployeeHealthInfoId);
                 if (existRecord != null)
                 {
+                    _mapper.Map(model, existRecord);
                     existRecord.IsDeleted = false;
                     existRecord.ModifiedById = UserId;
                     existRecord.ModifiedDate = DateTime.Now;
-
-                    _mapper.Map(model, existRecord);
 
                     await _uow.EmployeeHealthInfoRepository.UpdateAsyn(existRecord);
 

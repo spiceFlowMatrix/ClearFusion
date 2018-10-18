@@ -53,19 +53,29 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int TransactionId { get; set; }
         public int? DebitAccount { get; set; }
         public int? CreditAccount { get; set; }
-        public double Amount { get; set; }
+        public double? Amount { get; set; }
         public string Description { get; set; }
-        public DateTime TransactionDate { get; set; }
-        public long VoucherNo { get; set; }
+        public DateTime? TransactionDate { get; set; }
+        public long? VoucherNo { get; set; }
         public int? CurrencyId { get; set; }
         public int? OfficeId { get; set; }
         public int? FinancialYearId { get; set; }
 
         public string AccountName { get; set; }
-
         public double? DebitAmount { get; set; }
         public double? CreditAmount { get; set; }
-    }
+
+        //In Use
+        public int? AccountNo { get; set; }
+        public double? Debit { get; set; }
+        public double? Credit { get; set; }
+
+		public double? AFGAmount { get; set; }
+		public double? EURAmount { get; set; }
+		public double? USDAmount { get; set; }
+		public double? PKRAmount { get; set; }
+
+	}
 
     //public class LedgerModel
     //{
@@ -114,7 +124,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 
         public int TransactionNo { get; set; }
         public string AccountName { get; set; }
-        public DateTime TransactionDate { get; set; }
+        public DateTime? TransactionDate { get; set; }
         public double? DebitAmount { get; set; }
         public double? CreditAmount { get; set; }
         public string VoucherNo { get; set; }
@@ -129,9 +139,9 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public long AccountCode { get; set; }
 		public long ChartAccountCode { get; set; }
 		public int? CurrencyId { get; set; }
-		public double TotalCredits { get; set; }
-		public double TotalDebits { get; set; }
-		public double ClosingBalance { get; set; }
+		public double? TotalCredits { get; set; }
+		public double? TotalDebits { get; set; }
+		public double? ClosingBalance { get; set; }
 	}
 
 	public class Transaction
@@ -151,13 +161,13 @@ namespace HumanitarianAssistance.ViewModels.Models
     {
         public string CurrencyName { get; set; }
         public string AccountName { get; set; }
-        public double DebitAmount { get; set; }
-        public double CreditAmount { get; set; }
+        public double? DebitAmount { get; set; }
+        public double? CreditAmount { get; set; }
     }
     public class AccountOpendingAndClosingBL
     {
         public double? ClosingBalance { get; set; }
-        public double OpeningBalance { get; set; }
+        public double? OpeningBalance { get; set; }
         public string OpenningBalanceType { get; set; }
         public string ClosingBalanceType { get; set; }
     }
@@ -193,6 +203,33 @@ namespace HumanitarianAssistance.ViewModels.Models
         //public int? AccountId { get; set; }
 		public List<int> accountLists { get; set; }
 
-
+       
 	}
+    public class ExchangeGainLossVoucher : BaseModel
+    {
+        public long? BudgetLineId { get; set; }
+        public string ChequeNo { get; set; }
+        public string CurrencyCode { get; set; }
+        public int CurrencyId { get; set; }
+        public string Description { get; set; }
+        public int? FinancialYearId { get; set; }
+        public string FinancialYearName { get; set; }
+        public int? JournalCode { get; set; }
+        public string JournalName { get; set; }
+        public int OfficeId { get; set; }
+        public string OfficeName { get; set; }
+        public int? ProjectId { get; set; }
+        public string ReferenceNo { get; set; }
+        public DateTime VoucherDate { get; set; }
+        public long? VoucherNo { get; set; }
+        public string VoucherMode { get; set; }
+        public int? VoucherTypeId { get; set; }
+        public string VoucherType { get; set; }
+        public long? AccountCode { get; set; }
+        public double ExchangeGainLossAmount { get; set; }
+        public string AccountName { get; set; }
+        public int AccountCodeCredit { get; set; }
+        public int AccountCodeDebit { get; set; }
+        public string OfficeCode { get; set; }
+    }
 }

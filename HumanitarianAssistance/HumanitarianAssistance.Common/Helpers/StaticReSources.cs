@@ -64,7 +64,6 @@ namespace HumanitarianAssistance.Common.Helpers
     public const string CompanyContactUpdated = "Contact details has been updated successfully";
     public const string AccountStatusUpdated = "Account Status Updated";
     public const string InvalidCompanyId = "Invalid CompanyId";
-    public const string AccountNoteNotExists = "Account doesn't exists";
     public const string AccountAlreadyExists = "Account Code already exists";
     public const string AccountCantAddToSameAccount = "Credit and Debit account are same !";
 
@@ -315,7 +314,17 @@ namespace HumanitarianAssistance.Common.Helpers
 
     //Store
     public const string DeleteProcurementsFirst = "Please Delete Procurements First";
+    public const string AccountNoteNotExists = "Account doesn't exists";
+    public const string InventoryCodeAlreadyExists = "Inventory Code already exists";
 
+    //ExchangeRate
+    public const string ExchagneRateNotDefined = "Exchange rate is not defined !";
 
+    public const string HoursAlreadySet = "Hours are already assigned for this Month";
+    public const string CannotAddAdvance = "Cannot Add Advance for {0}-{1} as an uncleared Advance already exists";
+
+    //HR
+    public const string PensionPaymentCreated = "Pension Payment Done On {0} for {1}";
+    public const string JobCodeExist = "Job Code Already Exist";
   }
 }

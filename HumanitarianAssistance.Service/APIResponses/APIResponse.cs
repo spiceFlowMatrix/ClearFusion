@@ -39,7 +39,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public string UserName { get; set; }
         public string UserId { get; set; }
         public string LoggedDetail { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public string NotificationPath { get; set; }
     }
 
@@ -55,7 +55,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public string Token { get; set; }
         public IList<string> Roles { get; set; }
         public string RoleName { get; set; }
-        public double CurrenctExchangeRate { get; set; }
+        public double? CurrenctExchangeRate { get; set; }
         public double TotalExpenditure { get; set; }
 
         public double TotalRecivable { get; set; }
@@ -84,12 +84,20 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<EmployeeOtherSkillsModel> EmployeeOtherSkillsList { get; set; }
         public List<EmployeeRelativeInfoModel> EmployeeRelativeInfoList { get; set; }
         public List<EmployeeHistoryOutsideOrganizationModel> EmployeeHistoryOutsideOrganizationList { get; set; }
-        public ExchangeGainOrLossModel ExchangeGainOrLossModel { get; set; }
+
+        //public ExchangeGainOrLossModel ExchangeGainOrLossModel { get; set; }
+        public List<TransactionsModel> ExchangeGainOrLossModel { get; set; }
+
+
+
         public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
         public List<ProcurmentSummaryModel> ProcurmentSummaryModelList { get; set; }
         public List<ItemOrderModel> ItemOrderModelList { get; set; }
         //public List<IGrouping<int, CategoryPopulator>> CategoryPopulatorLst { get; set; }
         public List<CategoryPopulator> CategoryPopulatorLst { get; set; }
+
+        public ICollection<VoucherDetail> VouchersList { get; set; }
+
         public List<int> UserOfficeList { get; set; }
         public List<ExitInterviewModel> ExitInterviewList { get; set; }
         public List<InterviewDetailModel> InterviewDetailList { get; set; }
@@ -104,7 +112,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public EmployeeTaxReport EmployeeTaxReport { get; set; }
         public List<EmployeeSalarySlipModel> EmployeeSalarySlipModelList { get; set; }
         public List<EmployeeContractModel> EmployeeContractModellst { get; set; }
-        public EmployeeContractModel EmployeeContractDetails { get; set; }
+        public List<EmployeeContractModel> EmployeeContractDetails { get; set; }
         public ContractTypeContent ContractTypeContentList { get; set; }
         public List<EmployeeContractType> EmployeeContractTypeList { get; set; }
         public List<EmployeePensionRateModel> EmployeePensionRateList { get; set; }
@@ -135,9 +143,11 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<VoucherDocumentDetailModel> VoucherDocumentDetailList { get; set; }
 
         public IList<JournalVoucherViewModel> JournalVoucherViewList { get; set; }
+        public IList<JournalReportViewModel> JournalReportList { get; set; }
         public IList<AccountDetailModel> AccountDetailList { get; set; }
         public IList<VoucherTransactionModel> VoucherTransactionList { get; set; }
         public IList<LedgerModel> LedgerList { get; set; }
+        public IList<LedgerReportViewModel> ledgerReportFinal { get; set; }
         public IList<LedgerModel> TrailBlanceList { get; set; }
 
         public IList<ExchangeRateModel> ExchangeRateList { get; set; }
@@ -224,6 +234,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
 
         public IList<EmployeePayrollModel> EmployeePayrollList { get; set; }
+        public IList<EmployeePayrollAccountModel> EmployeePayrollAccountHeadList { get; set; }
         public EmployeePensionModel EmployeePensionModel { get; set; }
 
         // Store classes
@@ -236,11 +247,20 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<DepreciationReportModel> DepreciationReportList { get; set; }
         public List<StatusAtTimeOfIssue> StatusAtTimeOfIssueList { get; set; }
         public List<ReceiptType> ReceiptTypeList { get; set; }
+        public List<EmployeeMonthlyPayrollModelApproved> EmployeeMonthlyPayrollApprovedList { get; set; }
 
 
         public int notificationIsReadCount { get; set; }
         public SalaryTaxReportContent SalaryTaxReportContentDetails { get; set; }
+        public List<AdvancesHistoryModel> AdvanceHistory { get; set; }
+        public List<PensionPaymentModel> PensionPayment { get; set; }
+        public List<PensionPaymentHistoryModel> PensionPaymentHistory { get; set; }
+        public List<PayrollHeadModel> PayrollHeadModelList { get; set; }
+        public ICollection<PayrollAccountHead> PayrollAccountHead{ get; set; }
 
+        public int TotalCount { get; set; }
+        //public double SummaryTotalDebit { get; set; }
+        //public double SummaryTotalCredit { get; set; }
 
 
     }

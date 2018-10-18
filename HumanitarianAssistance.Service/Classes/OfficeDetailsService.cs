@@ -31,13 +31,16 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var existoffice = await _uow.OfficeDetailRepository.FindAsync(o => o.OfficeCode == model.OfficeCode || o.OfficeKey == model.OfficeKey);
+                //var existoffice = await _uow.OfficeDetailRepository.FindAsync(o => o.OfficeCode == model.OfficeCode || o.OfficeKey == model.OfficeKey);
+
+                var existoffice = await _uow.OfficeDetailRepository.FindAsync(o => o.OfficeCode == model.OfficeCode); //use only OfficeCode
+
                 if (existoffice == null)
                 {
                     OfficeDetail obj = _mapper.Map<OfficeDetail>(model);
                     //obj.CreatedById = model.CreatedById;
                     //obj.CreatedDate = DateTime.UtcNow;
-                    //obj.IsDeleted = false;
+                    obj.IsDeleted = false;
                     await _uow.OfficeDetailRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -62,17 +65,26 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var officeInfo = await _uow.OfficeDetailRepository.FindAsync(c => c.OfficeId == model.OfficeId);
-				officeInfo.OfficeCode = model.OfficeCode;
-				officeInfo.OfficeName = model.OfficeName;
-                officeInfo.SupervisorName = model.SupervisorName;
-                officeInfo.PhoneNo = model.PhoneNo;
-                officeInfo.FaxNo = model.FaxNo;
-				officeInfo.ModifiedById = model.ModifiedById;
-				officeInfo.ModifiedDate = model.ModifiedDate;
-				await _uow.OfficeDetailRepository.UpdateAsyn(officeInfo, officeInfo.OfficeId, officeInfo.OfficeCode);
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                var existoffice = await _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId != model.OfficeId && o.OfficeCode == model.OfficeCode); //use only OfficeCode
+                if (existoffice == null)
+                {
+                    var officeInfo = await _uow.OfficeDetailRepository.FindAsync(c => c.OfficeId == model.OfficeId);
+                    officeInfo.OfficeCode = model.OfficeCode;
+                    officeInfo.OfficeName = model.OfficeName;
+                    officeInfo.SupervisorName = model.SupervisorName;
+                    officeInfo.PhoneNo = model.PhoneNo;
+                    officeInfo.FaxNo = model.FaxNo;
+                    officeInfo.ModifiedById = model.ModifiedById;
+                    officeInfo.ModifiedDate = model.ModifiedDate;
+                    await _uow.OfficeDetailRepository.UpdateAsyn(officeInfo, officeInfo.OfficeId, officeInfo.OfficeCode);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.MandateNameAlreadyExistCode;
+                    response.Message = StaticResource.MandateNameAlreadyExist;
+                }
             }
             catch (Exception ex)
             {
@@ -111,20 +123,20 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var officelist = (from o in await _uow.OfficeDetailRepository.GetAllAsyn()
                                   where o.IsDeleted == false
-                                    select new OfficeDetailModel
-                                    {  
-                                        OfficeId = o.OfficeId,
-                                        OfficeCode = o.OfficeCode,
-                                        OfficeName = o.OfficeName,
-                                        SupervisorName = o.SupervisorName,
-                                        PhoneNo = o.PhoneNo,
-                                        FaxNo = o.FaxNo,
-                                        OfficeKey = o.OfficeKey,
-                                        CreatedById = o.CreatedById,
-                                        CreatedDate = o.CreatedDate,
-                                        ModifiedById = o.ModifiedById,
-                                        ModifiedDate = o.ModifiedDate
-                                    }).ToList();
+                                  select new OfficeDetailModel
+                                  {
+                                      OfficeId = o.OfficeId,
+                                      OfficeCode = o.OfficeCode,
+                                      OfficeName = o.OfficeName,
+                                      SupervisorName = o.SupervisorName,
+                                      PhoneNo = o.PhoneNo,
+                                      FaxNo = o.FaxNo,
+                                      OfficeKey = o.OfficeKey,
+                                      CreatedById = o.CreatedById,
+                                      CreatedDate = o.CreatedDate,
+                                      ModifiedById = o.ModifiedById,
+                                      ModifiedDate = o.ModifiedDate
+                                  }).OrderBy(x => x.OfficeCode).ToList();
                 response.data.OfficeDetailsList = officelist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

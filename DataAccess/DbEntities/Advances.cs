@@ -14,7 +14,8 @@ namespace DataAccess.DbEntities
         public int AdvancesId { get; set; }
         public DateTime AdvanceDate { get; set; }
         public int EmployeeId { get; set; }
-        //public EmployeeDetail EmployeeDetail { get; set; }
+        [ForeignKey("EmployeeId")]
+        public EmployeeDetail EmployeeDetail { get; set; }
         public string EmployeeCode { get; set; }
         public int CurrencyId { get; set; }
         public CurrencyDetails CurrencyDetails { get; set; }
@@ -31,5 +32,7 @@ namespace DataAccess.DbEntities
         public DateTime DeductedDate { get; set; }
         public bool IsAdvanceRecovery { get; set; }
         public DateTime AdvanceRecoveryDate { get; set; }
+        public int? NumberOfInstallments { get; set; }
+        public double RecoveredAmount { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public long? ChartOfAccountCode { get; set; }
         public string AccountName { get; set; }
         public int Notes { get; set; }
-        public double BalanceAmount { get; set; }
+        public double? BalanceAmount { get; set; }
         public double? CreditAmount { get; set; }
         public double? DebitAmount { get; set; }		
 	}

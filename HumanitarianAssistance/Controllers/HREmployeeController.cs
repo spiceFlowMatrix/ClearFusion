@@ -124,9 +124,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> GetAllJobHiringDetails()
+    public async Task<object> GetAllJobHiringDetails(int OfficeId)
     {
-      APIResponse apiresponse = await _iHREmployee.GetAllJobHiringDetails();
+      APIResponse apiresponse = await _iHREmployee.GetAllJobHiringDetails(OfficeId);
       return apiresponse;
     }
 
@@ -464,11 +464,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> GetEmployeeAttendanceDetails(int employeeid)
+    public async Task<object> GetEmployeeAttendanceDetails([FromBody]EmployeeAttendanceFilterModel employeeFilter)
     {
-      APIResponse response = await _iHREmployee.GetEmployeeAttendanceDetails(employeeid);
+      APIResponse response = await _iHREmployee.GetEmployeeAttendanceDetails(employeeFilter);
       return response;
     }
 
@@ -506,13 +506,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     //  return response;
     //}
 
-    //[HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    //public async Task<object> GetAllEmployeeHealthDetailByEmployeeId(int employeeid)
-    //{
-    //  APIResponse response = await _iHREmployee.GetAllEmployeeHealthDetailByEmployeeId(employeeid);
-    //  return response;
-    //}
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllEmployeeHealthDetailByEmployeeId(int employeeid)
+    {
+      APIResponse response = await _iHREmployee.GetAllEmployeeHealthDetailByEmployeeId(employeeid);
+      return response;
+    }
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
