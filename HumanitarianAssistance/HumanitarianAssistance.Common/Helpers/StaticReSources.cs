@@ -17,6 +17,7 @@ namespace HumanitarianAssistance.Common.Helpers
     public const int ParticipationApprovedCode = 600;
     public const int ParticipationNotApprovedCode = 700;
     public const int ParticipationRejectionCode = 300;
+    public const int AccountAlreadyExistsCode = 520;
     public const string ClaimAddedToRole = "Claim added to a role";
     public const string NoCompanyTypeFound = "No CompanyType Found";
     public const string NoCountryFound = "No Country found";
@@ -27,6 +28,7 @@ namespace HumanitarianAssistance.Common.Helpers
     public const string RoleCreated = "Role Created";
     public const string RoleAlreadyExist = "Role already exists";
     public const string InvalidUser = "Invalid User";
+    public const string InvalidUserCredentials = "Invalid User credentials";
     public const string RoleAssignedToUser = "Role assigned to user";
     public const string CompanyCreated = "Company Account Created";
     public const string CompanyContactNotCreated = "Company contact not created";
@@ -62,6 +64,8 @@ namespace HumanitarianAssistance.Common.Helpers
     public const string CompanyContactUpdated = "Contact details has been updated successfully";
     public const string AccountStatusUpdated = "Account Status Updated";
     public const string InvalidCompanyId = "Invalid CompanyId";
+    public const string AccountAlreadyExists = "Account Code already exists";
+    public const string AccountCantAddToSameAccount = "Credit and Debit account are same !";
 
 
     public const string TaskTypeAdded = "Task Type has added";
@@ -308,5 +312,19 @@ namespace HumanitarianAssistance.Common.Helpers
     public const string TemplateCreated = "Template Created";
     public const string TemplateUpdated = "Template Updated";
 
+    //Store
+    public const string DeleteProcurementsFirst = "Please Delete Procurements First";
+    public const string AccountNoteNotExists = "Account doesn't exists";
+    public const string InventoryCodeAlreadyExists = "Inventory Code already exists";
+
+    //ExchangeRate
+    public const string ExchagneRateNotDefined = "Exchange rate is not defined !";
+
+    public const string HoursAlreadySet = "Hours are already assigned for this Month";
+    public const string CannotAddAdvance = "Cannot Add Advance for {0}-{1} as an uncleared Advance already exists";
+
+    //HR
+    public const string PensionPaymentCreated = "Pension Payment Done On {0} for {1}";
+    public const string JobCodeExist = "Job Code Already Exist";
   }
 }

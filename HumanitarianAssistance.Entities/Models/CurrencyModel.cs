@@ -12,5 +12,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         [Required]
         public string CurrencyName { get; set; }
         public float? CurrencyRate { get; set; }
-    }
+		public bool? Status { get; set; }
+	}
 }

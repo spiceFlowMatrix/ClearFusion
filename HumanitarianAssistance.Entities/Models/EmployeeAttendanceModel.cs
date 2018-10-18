@@ -9,6 +9,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public long? AttendanceId { get; set; }
         public int EmployeeId { get; set; }
         public string EmployeeName { get; set; }
+        public string EmployeeCode { get; set; }
         public DateTime? InTime { get; set; }
         public DateTime? OutTime { get; set; }
         public string TotalWorkTime { get; set; }

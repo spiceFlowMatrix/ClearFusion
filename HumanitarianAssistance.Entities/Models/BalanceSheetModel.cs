@@ -9,23 +9,25 @@ namespace HumanitarianAssistance.ViewModels.Models
         //public string AccountType { get; set; }
         public string Narration { get; set; }
         public int Note { get; set; }
-        public double Balance { get; set; }
-    }
+        public double? Balance { get; set; }
+		public int AccountTypeId { get; set; }
+	}
 
     public class BalanceSheet
     {
-        public IList<BalanceSheetModel> CurrentAssest { get; set; }
-        public IList<BalanceSheetModel> Libility { get; set; }
-        public IList<BalanceSheetModel> Equity { get; set; }
-        public IList<BalanceSheetModel> Revenue { get; set; }
-        public IList<BalanceSheetModel> Expense { get; set; }
-        public IList<BalanceSheetModel> Income { get; set; }
+        public IList<BalanceSheetModel> CapitalAssetsWrittenOff { get; set; }
+        public IList<BalanceSheetModel> CurrentAssets { get; set; }
         public IList<BalanceSheetModel> Funds { get; set; }
-        public IList<BalanceSheetModel> Reserve_Account_Adjustment { get; set; }
-        public IList<BalanceSheetModel> Long_Term_Libility { get; set; }
-        public IList<BalanceSheetModel> Current_Libility { get; set; }
-        public IList<BalanceSheetModel> Reserve_Account { get; set; }
-    }
+        public IList<BalanceSheetModel> EndownmentFund { get; set; }
+        public IList<BalanceSheetModel> ReserveAccountAdjustment { get; set; }
+        public IList<BalanceSheetModel> LongtermLiability { get; set; }
+        public IList<BalanceSheetModel> CurrentLiability { get; set; }
+        public IList<BalanceSheetModel> ReserveAccount { get; set; }
+        public IList<BalanceSheetModel> IncomeFromDonor { get; set; }
+        public IList<BalanceSheetModel> IncomeFromProjects { get; set; }
+        public IList<BalanceSheetModel> ProfitOnBankDeposits { get; set; }
+		public IList<BalanceSheetModel> IncomeExpenditureFund { get; set; }
+	}
 
 
 }

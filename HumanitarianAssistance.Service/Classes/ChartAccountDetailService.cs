@@ -32,23 +32,23 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var charlist =  await Task.Run(()=>
-                   _uow.GetDbContext().ChartAccountDetail.Include(c => c.AccountTypes).Where(a => a.IsDeleted == false).ToList()
+                var charlist = await Task.Run(() =>
+                  _uow.GetDbContext().ChartAccountDetail.Include(c => c.AccountType).Where(a => a.IsDeleted == false).ToList()
                     );
                 var chartaccountlist = charlist.Select(blog => new ChartAccountDetailModel
-                    {
-                        AccountCode = blog.AccountCode,
-                        AccountName = blog.AccountName,
-                        AccountLevelId = blog.AccountLevelId,
-                        AccountTypeName = blog.AccountTypes.AccountTypeName,
-                        AccountTypeId = blog.AccountTypes.AccountTypeId,
-                        ParentID = blog.ParentID,
-                        ChartOfAccountCode = blog.ChartOfAccountCode
-                        //DepRate = blog.DepRate,
-                        //DepMethod = blog.DepMethod,
-                        //MDCode = blog.MDCode,
-                        //Show = blog.Show
-                    }).ToList();
+                {
+                    AccountCode = blog.AccountCode,
+                    AccountName = blog.AccountName,
+                    AccountLevelId = blog.AccountLevelId,
+                    AccountTypeName = blog.AccountType.AccountTypeName,
+                    AccountTypeId = blog.AccountType.AccountTypeId,
+                    ParentID = blog.ParentID,
+                    ChartOfAccountCode = blog.ChartOfAccountCode
+                    //DepRate = blog.DepRate,
+                    //DepMethod = blog.DepMethod,
+                    //MDCode = blog.MDCode,
+                    //Show = blog.Show
+                }).ToList();
                 response.data.ChartAccountList = chartaccountlist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -66,7 +66,8 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var accountlevellist = (from a in await _uow.AccountLevelRepository.GetAllAsyn() orderby a.AccountLevelId ascending
+                var accountlevellist = (from a in await _uow.AccountLevelRepository.GetAllAsyn()
+                                        orderby a.AccountLevelId ascending
                                         select new AccountLevelModel
                                         {
                                             AccountLevelId = a.AccountLevelId,
@@ -89,12 +90,13 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var accounttypelist = (from a in await _uow.AccountTypeRepository.GetAllAsyn() orderby a.AccountTypeId ascending
-                                        select new AccountTypeModel
-                                        {
-                                            AccountTypeId = a.AccountTypeId,
-                                            AccountTypeName = a.AccountTypeName
-                                        }).ToList();
+                var accounttypelist = (from a in await _uow.AccountTypeRepository.GetAllAsyn()
+                                       orderby a.AccountTypeId ascending
+                                       select new AccountTypeModel
+                                       {
+                                           AccountTypeId = a.AccountTypeId,
+                                           AccountTypeName = a.AccountTypeName
+                                       }).ToList();
                 response.data.AccountTypeList = accounttypelist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -112,37 +114,47 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                if (model.AccountName == null || model.AccountName == "")
+                var accountCodeExists = await _uow.ChartAccountDetailRepository.FindAsync(x => x.ChartOfAccountCode == model.ChartOfAccountCode);
+                if (accountCodeExists == null)
                 {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "Please enter Account Name.";
-                    return response;
-                }
-                ChartAccountDetail obj = _mapper.Map<ChartAccountDetail>(model);
-                obj.CreatedById = model.CreatedById;
-                obj.CreatedDate = DateTime.UtcNow;
-                obj.IsDeleted = false;
-                await _uow.ChartAccountDetailRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                var insertedaccountcode = obj.AccountCode;
+                    if (model.AccountName == null || model.AccountName == "")
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Please enter Account Name.";
+                        return response;
+                    }
+                    ChartAccountDetail obj = _mapper.Map<ChartAccountDetail>(model);
+                    obj.CreatedById = model.CreatedById;
+                    obj.CreatedDate = DateTime.UtcNow;
+                    obj.IsDeleted = false;				
+                    await _uow.ChartAccountDetailRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
 
-                if (model.AccountLevelId == 1)
-                {
-                    obj.ParentID = obj.AccountCode;
-                    obj.ChartOfAccountCode = obj.AccountCode;
-                    await _uow.ChartAccountDetailRepository.UpdateAsyn(obj);
+                    //var insertedaccountcode = obj.AccountCode;
+                    //if (model.AccountLevelId == 1)
+                    //{
+                    //	obj.ParentID = obj.AccountCode;
+                    //	obj.ChartOfAccountCode = obj.AccountCode;
+                    //	await _uow.ChartAccountDetailRepository.UpdateAsyn(obj);
+                    //}
+                    //else
+                    //{
+                    //	var existrecord = await _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == model.ParentID);
+                    //	if (existrecord != null)
+                    //	{
+                    //		obj.ChartOfAccountCode = Convert.ToInt64(existrecord.ChartOfAccountCode + "" + insertedaccountcode);
+                    //		await _uow.ChartAccountDetailRepository.UpdateAsyn(obj);
+                    //	}
+                    //}
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
                 }
                 else
                 {
-                    var existrecord = await _uow.ChartAccountDetailRepository.FindAsync(x => x.AccountCode == model.ParentID);
-                    if (existrecord != null)
-                    {
-                        obj.ChartOfAccountCode = Convert.ToInt64(existrecord.ChartOfAccountCode + "" + insertedaccountcode);
-                        await _uow.ChartAccountDetailRepository.UpdateAsyn(obj);
-                    }
+                    response.StatusCode = StaticResource.AccountAlreadyExistsCode;
+                    response.Message = StaticResource.AccountAlreadyExists;
                 }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
             }
             catch (Exception ex)
             {
@@ -160,9 +172,10 @@ namespace HumanitarianAssistance.Service.Classes
                 var chartaccountInfo = await _uow.ChartAccountDetailRepository.FindAsync(c => c.AccountCode == model.AccountCode);
                 if (chartaccountInfo != null)
                 {
+                    //chartaccountInfo.ChartOfAccountCode = model.ChartOfAccountCode;
                     //chartaccountInfo.ParentID = model.ParentID;
                     chartaccountInfo.AccountName = model.AccountName;
-                    chartaccountInfo.AccountTypeId = model.AccountTypeId;
+                    //chartaccountInfo.AccountTypeId = model.AccountTypeId;
                     //chartaccountInfo.Show = model.Show;
                     //chartaccountInfo.MDCode = model.MDCode;
                     //chartaccountInfo.DepMethod = model.DepMethod;
@@ -178,6 +191,7 @@ namespace HumanitarianAssistance.Service.Classes
                     response.StatusCode = StaticResource.failStatusCode;
                     response.Message = StaticResource.SomethingWrong;
                 }
+
             }
             catch (Exception ex)
             {
@@ -186,6 +200,6 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-                
+
     }
 }

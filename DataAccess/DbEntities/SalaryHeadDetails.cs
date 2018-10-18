@@ -16,5 +16,7 @@ namespace DataAccess.DbEntities
         [StringLength(50)]
         public string HeadName { get; set; }
         public string Description { get; set; }
+        public long? AccountNo { get; set; }
+        public int? TransactionTypeId { get; set; }
     }
 }

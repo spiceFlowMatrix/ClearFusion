@@ -15,11 +15,13 @@ namespace DataAccess.DbEntities
         [StringLength(100)]
         public string DocumentName { get; set; }
         public DateTime? DocumentDate { get; set; }
-	    public int EmployeeID { get; set; }
-        public EmployeeDetail EmployeeDetail { get; set; }
+	    public int? EmployeeID { get; set; }
+		public EmployeeDetail EmployeeDetail { get; set; }
 
-        public byte[] FilePath { get; set; }
+		public byte[] FilePath { get; set; }
         public string DocumentGUID { get; set; }
         public string Extension { get; set; }
-    }
+		public string DocumentFilePath { get; set; }
+		public int? DocumentType { get; set; }
+	}
 }

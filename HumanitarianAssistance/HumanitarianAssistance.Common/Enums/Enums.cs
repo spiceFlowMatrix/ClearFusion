@@ -7,24 +7,25 @@ namespace HumanitarianAssistance.Common.Enums
 
   public enum BalanceType
   {
-    SUM=1,
-    DR=2,
-    CR=3
+    SUM = 1,
+    DR = 2,
+    CR = 3
   }
   public enum AccountType
   {
-    
-    ASSET=1,
-    LIBILITY=2,
-    EQUITY=3,
-    REVENUE=4,
-    EXPENSE=5,
-    INCOME=6,
-    FUNDS=7,
-    RESERVE_ACCOUNT_ADJUSTMENT=8,
-    LONG_TERM_LIBILITY=9,
-    CURRENT_LIBILITY=10,
-    RESERVE_ACCOUNT =11,
+
+    CapitalAssetsWrittenOff = 1,
+    CurrentAssets = 2,
+    Funds = 3,
+    EndownmentFund = 4,
+    ReserveAccountAdjustment = 5,
+    LongtermLiability = 6,
+    CurrentLiability = 7,
+    ReserveAccount = 8,
+    IncomeFromDonor = 9,
+    IncomeFromProjects = 10,
+    ProfitOnBankDeposits = 11,
+    IncomeExpenditureFund = 12
   }
 
   public enum FinancialReportType
@@ -86,4 +87,41 @@ namespace HumanitarianAssistance.Common.Enums
     Female = 2,
     Other = 3
   }
+
+  public enum LoggerEnum
+  {
+    VoucherCreated = 1,
+    VoucherUpdate = 2,
+    VoucherDeleted = 3,
+    EmployeeCreated = 4,
+    EmployeeUpdate = 5,
+    EmployeeDeleted = 6
+  }
+  public enum AssetType
+  {
+    Cash = 1,
+    InKind = 2
+  }
+
+  public enum Currency
+  {
+    AFG = 1,
+    EUR = 2,
+    PKR = 3,
+    USD = 4
+  }
+
+  public enum AccountLevels
+  {
+    MainLevel = 1,
+    ControlLevel = 2,
+    SubLevel = 3,
+    InputLevel = 4
+  }
+  public enum TransactionType
+  {
+    Credit=1,
+    Debit=2
+  }
+
 }

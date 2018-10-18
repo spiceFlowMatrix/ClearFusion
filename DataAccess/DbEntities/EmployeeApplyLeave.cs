@@ -12,7 +12,8 @@ namespace DataAccess.DbEntities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public long ApplyLeaveId { get; set; }
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
+        [ForeignKey("EmployeeId")]
         public EmployeeDetail EmployeeDetails { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }

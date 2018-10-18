@@ -10,5 +10,6 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public int SequenceNo { get; set; }
 		public string Question { get; set; }
 		public string DariQuestion { get; set; }
+		public int OfficeId { get; set; }
 	}
 }

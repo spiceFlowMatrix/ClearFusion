@@ -12,8 +12,9 @@ namespace DataAccess.DbEntities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column(Order = 1, TypeName = "serial")]
 		public int AppraisalGeneralQuestionsId { get; set; }
-		public int SequenceNo { get; set; }
+		public int? SequenceNo { get; set; }
 		public string Question { get; set; }
 		public string DariQuestion { get; set; }
+		public int? OfficeId { get; set; }
 	}
 }

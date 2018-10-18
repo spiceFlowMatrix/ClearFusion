@@ -15,8 +15,8 @@ using Microsoft.Extensions.Logging;
 
 namespace HumanitarianAssistance
 {
-    public class Program
-    {
+  public class Program
+  {
     public static void Main(string[] args)
     {
       //BuildWebHost(args).Run();
@@ -43,10 +43,12 @@ namespace HumanitarianAssistance
       host.Run();
     }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseUrls("http://*:5000")                
-                .Build();
-    }
+    public static IWebHost BuildWebHost(string[] args) =>
+        WebHost.CreateDefaultBuilder(args)
+            .UseStartup<Startup>()
+            .UseUrls("http://*:5000")         // 8080        // LIVE  // chaservice, chaclient      // Port 80
+            //.UseUrls("http://*:5001")       // 9090       // chatestclient, chatestservice       // Port 9000
+            //.UseUrls("http://*:5002")       // 7070      // chaserviceclient, chaservicetest    // Port 7000
+            .Build();
+  }
 }

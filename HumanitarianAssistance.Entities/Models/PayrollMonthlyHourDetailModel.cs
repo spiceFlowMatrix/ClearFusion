@@ -12,7 +12,8 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? PayrollMonth { get; set; }
         public int? PayrollYear { get; set; }
         public int? Hours { get; set; }
-		public DateTime? InTime { get; set; }
+        public int? WorkingTime { get; set; }
+        public DateTime? InTime { get; set; }
 		public DateTime? OutTime { get; set; }
 	}
 }

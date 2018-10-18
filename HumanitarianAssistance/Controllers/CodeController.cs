@@ -585,7 +585,8 @@ namespace HumanitarianAssistance.Controllers
           return response;
         }
       }
-      catch (Exception ex) {
+      catch (Exception ex)
+      {
         throw ex;
       }
     }
@@ -798,8 +799,8 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-   
-    
+
+
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetBudgetLineTypes()
@@ -943,6 +944,22 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> DeleteSalaryHead([FromBody]SalaryHeadModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        model.ModifiedById = id;
+        model.ModifiedDate = DateTime.UtcNow;
+      }
+      APIResponse response = await _icode.DeleteSalaryHead(model);
+      return response;
+    }
+
+
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllSalaryHead()
@@ -970,7 +987,7 @@ namespace HumanitarianAssistance.Controllers
       {
         var id = user.Id;
         response = await _icode.AddPensionRate(model, id);
-      }      
+      }
       return response;
     }
 
@@ -983,8 +1000,8 @@ namespace HumanitarianAssistance.Controllers
       if (user != null)
       {
         var id = user.Id;
-        response = await _icode.EditPensionRate(model,id);
-      }      
+        response = await _icode.EditPensionRate(model, id);
+      }
       return response;
     }
 
@@ -1015,5 +1032,448 @@ namespace HumanitarianAssistance.Controllers
       }
       return response;
     }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAppraisalQuestions([FromQuery] int OfficeId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetAppraisalQuestions(OfficeId);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> AddEmployeeAppraisalDetails([FromBody] EmployeeAppraisalDetailsModel model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.AddEmployeeAppraisalDetails(model, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> EditEmployeeAppraisalDetails([FromBody] EmployeeAppraisalDetailsModel model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.EditEmployeeAppraisalDetails(model, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllEmployeeAppraisalDetails([FromQuery] int OfficeId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetAllEmployeeAppraisalDetails(OfficeId);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<APIResponse> GetAllEmployeeAppraisalDetailsByEmployeeId([FromQuery] int EmployeeId, DateTime CurrentAppraisalDate)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetAllEmployeeAppraisalDetailsByEmployeeId(EmployeeId, CurrentAppraisalDate);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> ApproveEmployeeAppraisalRequest([FromQuery] int EmployeeAppraisalDetailsId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.ApproveEmployeeAppraisalRequest(EmployeeAppraisalDetailsId, id);
+      }
+      return response;
+    }
+
+
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> RejectEmployeeAppraisalRequest([FromQuery] int EmployeeAppraisalDetailsId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.RejectEmployeeAppraisalRequest(EmployeeAppraisalDetailsId, id);
+      }
+      return response;
+    }
+
+
+
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> ApproveEmployeeEvaluationRequest([FromQuery] int EmployeeEvaluationId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.ApproveEmployeeEvaluationRequest(EmployeeEvaluationId, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> RejectEmployeeEvaluationRequest([FromQuery] int EmployeeEvaluationId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.RejectEmployeeEvaluationRequest(EmployeeEvaluationId, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> ApproveEmployeeInterviewRequest([FromQuery] int InterviewDetailsId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.ApproveEmployeeInterviewRequest(InterviewDetailsId, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> RejectEmployeeInterviewRequest([FromQuery] int InterviewDetailsId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.RejectEmployeeInterviewRequest(InterviewDetailsId, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> AddEmployeeAppraisalMoreDetails([FromBody] EmployeeAppraisalDetailsModel model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.AddEmployeeAppraisalMoreDetails(model, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> EditEmployeeAppraisalMoreDetails([FromBody] EmployeeAppraisalDetailsModel model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.EditEmployeeAppraisalMoreDetails(model, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllEmployeeAppraisalMoreDetails([FromQuery] int OfficeId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetAllEmployeeAppraisalMoreDetails(OfficeId);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetEmployeeDetailByOfficeId([FromQuery] int OfficeId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetEmployeeDetailByOfficeId(OfficeId);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetEmployeeDetailByEmployeeId([FromQuery] int EmployeeId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetEmployeeDetailByEmployeeId(EmployeeId);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> AddInterviewTechnicalQuestions([FromBody] InterviewTechnicalQuestions model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.AddInterviewTechnicalQuestions(model, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> EditInterviewTechnicalQuestions([FromBody] InterviewTechnicalQuestions model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.EditInterviewTechnicalQuestions(model, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllInterviewTechnicalQuestionsByOfficeId([FromQuery] int OfficeId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetAllInterviewTechnicalQuestionsByOfficeId(OfficeId);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddExitInterview([FromBody]ExitInterviewModel model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.AddExitInterview(model, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditExitInterview([FromBody]ExitInterviewModel model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.EditExitInterview(model, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteExitInterview(int existInterviewDetailsId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.DeleteExitInterview(existInterviewDetailsId, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllExitInterview()
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetAllExitInterview();
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetSalaryTaxReportContentDetails(int officeId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.GetSalaryTaxReportContentDetails(officeId);
+      }
+      return response;
+    }
+
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddSalaryTaxReportContentDetails([FromBody]SalaryTaxReportContent model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.AddSalaryTaxReportContentDetails(model, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditSalaryTaxReportContentDetails([FromBody]SalaryTaxReportContent model)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _icode.EditSalaryTaxReportContentDetails(model, id);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetEmployeeAdvanceHistoryDetail(long AdvanceID)
+    {
+      APIResponse response = new APIResponse();
+
+        response = await _icode.GetEmployeeAdvanceHistoryDetail(AdvanceID);
+     
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllPayrollHead()
+    {
+      APIResponse response = new APIResponse();
+
+      response = await _icode.GetAllPayrollHead();
+
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> AddPayrollAccountHead([FromBody] PayrollHeadModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+
+      APIResponse response = await _icode.AddPayrollAccountHead(model);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> UpdatePayrollAccountHead([FromBody] PayrollHeadModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+
+      APIResponse response = await _icode.UpdatePayrollAccountHead(model);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> DeletePayrollAccountHead([FromBody] PayrollHeadModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+
+      APIResponse response = await _icode.DeletePayrollAccountHead(model);
+      return response;
+    }
+
   }
 }

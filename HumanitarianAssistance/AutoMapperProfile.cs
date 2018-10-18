@@ -1,6 +1,10 @@
 using AutoMapper;
 using DataAccess.DbEntities;
+using DataAccess.DbEntities.Store;
+using HumanitarianAssistance.Service.APIResponses;
+using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +24,7 @@ namespace HumanitarianAssistance.WebAPI
     {
       CreateMap<Permissions, PermissionsModel>().ReverseMap();
       CreateMap<OfficeDetail, OfficeDetailModel>().ReverseMap();
-      CreateMap<UserDetails, UserDetailsModel>().ReverseMap();
+      CreateMap<UserDetails, UserDetailsModel>().ForMember(x=>x.OfficeId, opt=> opt.Ignore());
       CreateMap<Department, DepartmentModel>().ReverseMap();
       CreateMap<PermissionsInRoles, PermissionsInRolesModel>().ReverseMap();
       CreateMap<CurrencyDetails, CurrencyModel>().ReverseMap();
@@ -68,6 +72,35 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<EmployeePensionRate, EmployeePensionRateModel>().ReverseMap();
       CreateMap<ContractTypeContent, ContractTypeModel>().ReverseMap();
       CreateMap<AppraisalGeneralQuestions, AppraisalQuestionModel>().ReverseMap();
+      CreateMap<EmployeeAppraisalDetails, EmployeeAppraisalDetailsModel>().ReverseMap();
+      CreateMap<EmployeeAppraisalQuestions, EmployeeAppraisalQuestionModel>().ReverseMap();
+      CreateMap<Advances, AdvancesModel>().ReverseMap();
+      CreateMap<InterviewDetails, InterviewDetailModel>().ReverseMap();
+      CreateMap<InterviewTechnicalQuestion, InterviewTechQuesModel>().ReverseMap();
+      CreateMap<ExistInterviewDetails, ExitInterviewModel>().ReverseMap();
+      CreateMap<RatingBasedCriteriaModel, RatingBasedCriteria>().ReverseMap();
+      CreateMap<CategoryPopulator, CategoryPopulatorModel>().ReverseMap();
+      CreateMap<LoggerDetails, LoggerDetailsModel>().ReverseMap();
+      CreateMap<StoreInventory, StoreInventoryModel>().ReverseMap();
+      CreateMap<StoreInventoryItem, StoreInventoryItemModel>().ReverseMap();
+      CreateMap<InventoryItemType, InventoryItemTypeModel>().ReverseMap();
+      CreateMap<StoreItemPurchase, ItemPurchaseModel>().ReverseMap();
+      CreateMap<StorePurchaseOrder, ItemOrderModel>().ReverseMap();
+      CreateMap<ItemSpecificationDetails, ItemSpecificationDetailModel>().ReverseMap();
+      CreateMap<ItemSpecificationMaster, ItemSpecificationMasterModel>().ReverseMap();
+      CreateMap<EmployeeHistoryOutsideOrganization, EmployeeHistoryOutsideOrganizationModel>().ReverseMap();
+      CreateMap<EmployeeHistoryOutsideCountry, EmployeeHistoryOutsideOrganizationModel>().ReverseMap();
+      CreateMap<EmployeeRelativeInfo, EmployeeRelativeInfoModel>().ReverseMap();
+      CreateMap<EmployeeInfoReferences, EmployeeRelativeInfoModel>().ReverseMap();
+      CreateMap<EmployeeOtherSkills, EmployeeOtherSkillsModel>().ReverseMap();
+      CreateMap<EmployeeSalaryBudget, EmployeeSalaryBudgetModel>().ReverseMap();
+      CreateMap<EmployeeEducations, EmployeeEducationsModel>().ReverseMap();
+      CreateMap<EmployeeSalaryAnalyticalInfo, EmployeeSalaryAnalyticalInfoModel>().ReverseMap();
+      CreateMap<EmployeeHealthInfo, EmployeeHealthInformationModel>().ReverseMap();
+      CreateMap<VoucherTransactions, VoucherTransactionModel>().ReverseMap();
+      CreateMap<PayrollAccountHead, PayrollHeadModel>().ReverseMap();
     }
   }
 }
+
+

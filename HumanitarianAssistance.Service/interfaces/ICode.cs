@@ -1,4 +1,5 @@
-﻿using HumanitarianAssistance.Service.APIResponses;
+﻿using DataAccess.DbEntities;
+using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
 using System;
 using System.Collections.Generic;
@@ -35,12 +36,45 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditQualifactionDetails(QualificationDetailsModel model);
         Task<APIResponse> AddSalaryHead(SalaryHeadModel model);
         Task<APIResponse> EditSalaryHead(SalaryHeadModel model);
+        Task<APIResponse> DeleteSalaryHead(SalaryHeadModel model);
         Task<APIResponse> GetAllSalaryHead();
-		Task<APIResponse> GetAllPensionRate();
-		Task<APIResponse> AddPensionRate(EmployeePensionRateModel model, string UserId);
-		Task<APIResponse> EditPensionRate(EmployeePensionRateModel model, string UserId);
-		Task<APIResponse> AddAppraisalQuestion(AppraisalQuestionModel model, string UserId);
-		Task<APIResponse> EditAppraisalQuestion(AppraisalQuestionModel model, string UserId);
+        Task<APIResponse> GetAllPensionRate();
+        Task<APIResponse> AddPensionRate(EmployeePensionRateModel model, string UserId);
+        Task<APIResponse> EditPensionRate(EmployeePensionRateModel model, string UserId);
+        Task<APIResponse> AddAppraisalQuestion(AppraisalQuestionModel model, string UserId);
+        Task<APIResponse> EditAppraisalQuestion(AppraisalQuestionModel model, string UserId);
+        Task<APIResponse> GetAppraisalQuestions(int OfficeId);
+        Task<APIResponse> AddEmployeeAppraisalDetails(EmployeeAppraisalDetailsModel model, string UserId);
+        Task<APIResponse> EditEmployeeAppraisalDetails(EmployeeAppraisalDetailsModel model, string UserId);
+        Task<APIResponse> GetAllEmployeeAppraisalDetails(int OfficeId);
+        Task<APIResponse> AddEmployeeAppraisalMoreDetails(EmployeeAppraisalDetailsModel model, string UserId);
+        Task<APIResponse> EditEmployeeAppraisalMoreDetails(EmployeeAppraisalDetailsModel model, string UserId);
+        Task<APIResponse> GetEmployeeDetailByOfficeId(int OfficeId);
+        Task<APIResponse> GetEmployeeDetailByEmployeeId(int EmployeeId);
+        Task<APIResponse> GetAllEmployeeAppraisalMoreDetails(int OfficeId);
+        Task<APIResponse> AddInterviewTechnicalQuestions(InterviewTechnicalQuestions model, string UserId);
+        Task<APIResponse> EditInterviewTechnicalQuestions(InterviewTechnicalQuestions model, string UserId);
+        Task<APIResponse> GetAllInterviewTechnicalQuestionsByOfficeId(int OfficeId);
+        Task<APIResponse> AddExitInterview(ExitInterviewModel model, string UserId);
+        Task<APIResponse> EditExitInterview(ExitInterviewModel model, string UserId);
+        Task<APIResponse> GetAllExitInterview();
+        Task<APIResponse> ApproveEmployeeAppraisalRequest(int EmployeeAppraisalDetailsId, string UserId);
+        Task<APIResponse> RejectEmployeeAppraisalRequest(int EmployeeAppraisalDetailsId, string UserId);
+        Task<APIResponse> ApproveEmployeeEvaluationRequest(int EmployeeEvaluationId, string UserId);
+        Task<APIResponse> ApproveEmployeeInterviewRequest(int InterviewDetailsId, string UserId);
+        Task<APIResponse> RejectEmployeeEvaluationRequest(int EmployeeEvaluationId, string UserId);
+        Task<APIResponse> RejectEmployeeInterviewRequest(int InterviewDetailsId, string UserId);
 
-	}
+        Task<APIResponse> DeleteExitInterview(int existInterviewDetailsId, string UserId);
+        Task<APIResponse> GetAllEmployeeAppraisalDetailsByEmployeeId(int EmployeeId, DateTime CurrentAppraisalDate);
+
+        Task<APIResponse> GetSalaryTaxReportContentDetails(int officeId);
+        Task<APIResponse> AddSalaryTaxReportContentDetails(SalaryTaxReportContent model, string UserId);
+        Task<APIResponse> EditSalaryTaxReportContentDetails(SalaryTaxReportContent model, string UserId);
+        Task<APIResponse> GetEmployeeAdvanceHistoryDetail(long AdvanceID);
+        Task<APIResponse> AddPayrollAccountHead(PayrollHeadModel model);
+        Task<APIResponse> GetAllPayrollHead();
+        Task<APIResponse> UpdatePayrollAccountHead(PayrollHeadModel model);
+        Task<APIResponse> DeletePayrollAccountHead(PayrollHeadModel model);
+    }
 }

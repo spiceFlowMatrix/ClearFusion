@@ -14,5 +14,6 @@ namespace DataAccess.DbEntities
         public int ProfessionId { get; set; }
         [StringLength(100)]
         public string ProfessionName { get; set; }
+        public string ProfessionDari { get; set; }
     }
 }

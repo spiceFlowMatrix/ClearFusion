@@ -14,7 +14,7 @@ namespace DataAccess.DbEntities
         public long VoucherNo { get; set; }
         [StringLength(5)]
         public CurrencyDetails CurrencyDetail { get; set; }		
-		public int CurrencyId { get; set; }
+		public int? CurrencyId { get; set; }
         public DateTime? VoucherDate { get; set; }
         [StringLength(10)]
         public string ChequeNo { get; set; }
@@ -35,6 +35,12 @@ namespace DataAccess.DbEntities
         public int? FinancialYearId { get; set; }
         public FinancialYearDetail FinancialYearDetails { get; set; }
 
-        public List<VoucherTransactionDetails> VoucherTransactionDetails { get; set; }
-    }
+		//public List<VoucherTransactionDetails> VoucherTransactionDetails { get; set; }
+		public List<VoucherTransactions> VoucherTransactionDetails { get; set; }
+		public string CurrencyCode { get; set; }
+		public string VoucherType { get; set; }
+		public string VoucherMode { get; set; }
+		public string OfficeCode { get; set; }
+        public bool IsExchangeGainLossVoucher { get; set; } = false;
+	}
 }

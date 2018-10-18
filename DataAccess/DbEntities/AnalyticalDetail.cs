@@ -29,7 +29,7 @@ namespace DataAccess.DbEntities
         public string MDCode { get; set; }
         [StringLength(200)]
         public string MemoName { get; set; }
-        public float BLAmount { get; set; }
+        public float? BLAmount { get; set; }
         [StringLength(5)]
         public string BLCurrCode { get; set; }
         [StringLength(10)]
@@ -40,7 +40,7 @@ namespace DataAccess.DbEntities
         public byte BLType { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public float ReceivedAmount { get; set; }
+        public float? ReceivedAmount { get; set; }
         [StringLength(100)]
         public string Attachment { get; set; }
     }

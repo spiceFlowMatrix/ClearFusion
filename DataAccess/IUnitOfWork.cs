@@ -1,4 +1,5 @@
 ﻿using DataAccess.DbEntities;
+using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Entities;
 using HumanitarianAssistance.Entities.Models;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IGenericRepository<AccountNoteDetail> AccountNoteDetailRepository { get; }
         IGenericRepository<Permissions> PermissionRepository { get; }
@@ -26,8 +27,9 @@ namespace DataAccess
         IGenericRepository<VoucherType> VoucherTypeRepository { get; }
         IGenericRepository<VoucherDetail> VoucherDetailRepository { get; }
         IGenericRepository<VoucherDocumentDetail> VoucherDocumentDetailRepository { get; }
-        IGenericRepository<VoucherTransactionDetails> VoucherTransactionDetailsRepository { get; }
-        IGenericRepository<AnalyticalType> AnalyticalTypeRepository { get; }
+		//IGenericRepository<VoucherTransactionDetails> VoucherTransactionDetailsRepository { get; }
+		IGenericRepository<VoucherTransactions> VoucherTransactionsRepository { get; }
+		IGenericRepository<AnalyticalType> AnalyticalTypeRepository { get; }
         IGenericRepository<AnalyticalDetail> AnalyticalDetailRepository { get; }
         IGenericRepository<ExchangeRate> ExchangeRateRepository { get; }
         IGenericRepository<StoreSourceCodeDetail> StoreSourceCodeRepository { get; }
@@ -70,16 +72,79 @@ namespace DataAccess
         IGenericRepository<HolidayWeeklyDetails> HolidayWeeklyDetailRepository { get; }
         IGenericRepository<SalaryHeadDetails> SalaryHeadDetailsRepository { get; }
         IGenericRepository<EmployeePayroll> EmployeePayrollRepository { get; }
-		IGenericRepository<EmployeePaymentTypes> EmployeePaymentTypeRepository { get; }
-		IGenericRepository<EmployeeMonthlyPayroll> EmployeeMonthlyPayrollRepository { get; }
-		IGenericRepository<BudgetLineEmployees> BudgetLineEmployeesRepository { get; }
-		IGenericRepository<EmployeePensionRate> EmployeePensionRateRepository { get; }
-		IGenericRepository<EmployeeContractType> EmployeeContractTypeRepository { get; }
-		IGenericRepository<ContractTypeContent> ContractTypeContentRepository { get; }
-		IGenericRepository<AppraisalGeneralQuestions> AppraisalGeneralQuestionsRepository { get; }
-		void Save();
+        IGenericRepository<EmployeePaymentTypes> EmployeePaymentTypeRepository { get; }
+        IGenericRepository<EmployeeMonthlyPayroll> EmployeeMonthlyPayrollRepository { get; }
+        IGenericRepository<BudgetLineEmployees> BudgetLineEmployeesRepository { get; }
+        IGenericRepository<EmployeePensionRate> EmployeePensionRateRepository { get; }
+        IGenericRepository<EmployeeContractType> EmployeeContractTypeRepository { get; }
+        IGenericRepository<ContractTypeContent> ContractTypeContentRepository { get; }
+        IGenericRepository<AppraisalGeneralQuestions> AppraisalGeneralQuestionsRepository { get; }
+        IGenericRepository<EmployeeAppraisalDetails> EmployeeAppraisalDetailsRepository { get; }
+        IGenericRepository<EmployeeAppraisalQuestions> EmployeeAppraisalQuestionsRepository { get; }
+        IGenericRepository<EmployeeEvaluation> EmployeeEvaluationRepository { get; }
+        IGenericRepository<InterviewTechnicalQuestions> InterviewTechnicalQuestionsRepository { get; }
+        IGenericRepository<Advances> AdvancesRepository { get; }
+
+        IGenericRepository<InterviewDetails> InterviewDetailsRepository { get; }
+        IGenericRepository<InterviewLanguages> InterviewLanguagesRepository { get; }
+        IGenericRepository<InterviewTechnicalQuestion> InterviewTechnicalQuestionRepository { get; }
+        IGenericRepository<InterviewTrainings> InterviewTrainingsRepository { get; }
+        IGenericRepository<TechnicalQuestion> TechnicalQuestionRepository { get; }
+        IGenericRepository<ExistInterviewDetails> ExistInterviewDetailsRepository { get; }
+        IGenericRepository<UserDetailOffices> UserOfficesRepository { get; }
+        IGenericRepository<StrongandWeakPoints> StrongandWeakPointsRepository { get; }
+        IGenericRepository<EmployeeEvaluationTraining> EmployeeEvaluationTrainingRepository { get; }
+        IGenericRepository<LoggerDetails> LoggerDetailsRepository { get; }
+        IGenericRepository<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMemberRepository { get; }
+        IGenericRepository<RatingBasedCriteria> RatingBasedCriteriaRepository { get; }
+        IGenericRepository<CategoryPopulator> CategoryPopulatorRepository { get; }
+
+        // Store repositories
+        IGenericRepository<StoreInventory> StoreInventoryRepository { get; }
+        IGenericRepository<StoreInventoryItem> StoreInventoryItemRepository { get; }
+        IGenericRepository<StoreItemPurchase> StoreItemPurchaseRepository { get; }
+        IGenericRepository<ItemPurchaseDocument> ItemPurchaseDocumentRepository { get; }
+        IGenericRepository<PurchaseVehicle> PurchaseVehicleRepository { get; }
+        IGenericRepository<StorePurchaseOrder> PurchaseOrderRepository { get; }
+        IGenericRepository<PurchaseOrderDocument> PurchaseOrderDocumentRepository { get; }
+        IGenericRepository<MotorFuel> StoreFuelRepository { get; }
+        IGenericRepository<VehicleLocation> VehicleLocationRepository { get; }
+        IGenericRepository<VehicleMileage> VehicleMileageRepository { get; }
+        IGenericRepository<PurchaseGenerator> PurchaseGeneratorRepository { get; }
+        IGenericRepository<MotorMaintenance> MotorMaintenanceRepository { get; }
+        IGenericRepository<MotorSparePart> MotorSparePartsRepository { get; }
+        IGenericRepository<InventoryItemType> InventoryItemTypeRepository { get; }
+        IGenericRepository<PurchaseUnitType> PurchaseUnitTypeRepository { get; }
+        IGenericRepository<EmployeePayrollForMonth> EmployeePayrollForMonthRepository { get; }
+        IGenericRepository<EmployeePayrollMonth> EmployeePayrollMonthRepository { get; }
+        IGenericRepository<EmployeeContract> EmployeeContractRepository { get; }
+        IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository { get; }
+        IGenericRepository<ItemSpecificationMaster> ItemSpecificationMasterRepository { get; }
+        IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository { get; }
+        IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository { get; }
+        IGenericRepository<ReceiptType> ReceiptTypeRepository { get; }
+
+
+        IGenericRepository<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganizationRepository { get; }
+        IGenericRepository<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountryRepository { get; }
+        IGenericRepository<EmployeeRelativeInfo> EmployeeRelativeInfoRepository { get; }
+        IGenericRepository<EmployeeInfoReferences> EmployeeInfoReferencesRepository { get; }
+        IGenericRepository<EmployeeOtherSkills> EmployeeOtherSkillsRepository { get; }
+        IGenericRepository<EmployeeSalaryBudget> EmployeeSalaryBudgetRepository { get; }
+        IGenericRepository<EmployeeEducations> EmployeeEducationsRepository { get; }
+        IGenericRepository<EmployeeSalaryAnalyticalInfo> EmployeeSalaryAnalyticalInfoRepository { get; }
+
+        IGenericRepository<EmployeeHealthInfo> EmployeeHealthInfoRepository { get; }
+        IGenericRepository<EmployeeHealthQuestion> EmployeeHealthQuestionRepository { get; }
+        IGenericRepository<EmployeeMonthlyAttendance> EmployeeMonthlyAttendanceRepository { get; }
+        IGenericRepository<PensionPaymentHistory> PensionPaymentHistoryRepository { get; }
+        IGenericRepository<PayrollAccountHead> PayrollAccountHeadRepository { get; }
+        IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository { get; }
+
+        void Save();
         Task<int> SaveAsync();
         ApplicationDbContext GetDbContext();
-        
+
     }
 }
+

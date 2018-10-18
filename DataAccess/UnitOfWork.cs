@@ -5,6 +5,7 @@ using HumanitarianAssistance.Entities.Models;
 using HumanitarianAssistance.Entities;
 using DataAccess.DbEntities;
 using System.Threading.Tasks;
+using DataAccess.DbEntities.Store;
 
 namespace DataAccess
 {
@@ -27,15 +28,16 @@ namespace DataAccess
         private IGenericRepository<VoucherType> _vouchertypeRepository;
         private IGenericRepository<VoucherDetail> _voucherdetailsRepository;
         private IGenericRepository<VoucherDocumentDetail> _voucherdocumentdetailRepository;
-        private IGenericRepository<VoucherTransactionDetails> _vouchertransactiondetailsRepository;
-        private IGenericRepository<AnalyticalType> _analyticaltypeRepository;
+		//private IGenericRepository<VoucherTransactionDetails> _vouchertransactiondetailsRepository;
+		private IGenericRepository<VoucherTransactions> _voucherTransactionsRepository;
+		private IGenericRepository<AnalyticalType> _analyticaltypeRepository;
         private IGenericRepository<AnalyticalDetail> _analyticaldetailRepository;
         private IGenericRepository<ExchangeRate> _exchangerateRepository;
         private IGenericRepository<StoreSourceCodeDetail> _storesourcecodeRepository;
         private IGenericRepository<EmployeeDetail> _employeedetailRepository;
         private IGenericRepository<DesignationDetail> _designationdetailRepository;
-		private IGenericRepository<ProjectBudget> _projectBudgetRepository;
-		private IGenericRepository<ProjectDetails> _projectDetailRepository;
+        private IGenericRepository<ProjectBudget> _projectBudgetRepository;
+        private IGenericRepository<ProjectDetails> _projectDetailRepository;
         private IGenericRepository<JobHiringDetails> _jobhiringdetailsRepository;
         private IGenericRepository<ProfessionDetails> _professiondetailsRepository;
         private IGenericRepository<CountryDetails> _countrydetailsRepository;
@@ -70,86 +72,600 @@ namespace DataAccess
         private IGenericRepository<HolidayWeeklyDetails> _holidayweeklydetailRepository;
         private IGenericRepository<SalaryHeadDetails> _salaryheaddetailsRepository;
         private IGenericRepository<EmployeePayroll> _employeepayrollRepository;
-		private IGenericRepository<EmployeePaymentTypes> _employeePaymentTypeRepository;
-		private IGenericRepository<EmployeeMonthlyPayroll> _employeeMonthlyPayrollRepository;
-		private IGenericRepository<BudgetLineEmployees> _budgetLineEmployeesRepository;
-		private IGenericRepository<EmployeePensionRate> _employeePensionRateRepository;
-		private IGenericRepository<EmployeeContractType> _employeeContractTypeRepository;
-		private IGenericRepository<ContractTypeContent> _contractTypeContentRepository;
-		private IGenericRepository<AppraisalGeneralQuestions> _appraisalGeneralQuestionsRepository;
-		public UnitOfWork(ApplicationDbContext mschaContext)
+        private IGenericRepository<EmployeePaymentTypes> _employeePaymentTypeRepository;
+        private IGenericRepository<EmployeeMonthlyPayroll> _employeeMonthlyPayrollRepository;
+        private IGenericRepository<BudgetLineEmployees> _budgetLineEmployeesRepository;
+        private IGenericRepository<EmployeePensionRate> _employeePensionRateRepository;
+        private IGenericRepository<EmployeeContractType> _employeeContractTypeRepository;
+        private IGenericRepository<ContractTypeContent> _contractTypeContentRepository;
+        private IGenericRepository<AppraisalGeneralQuestions> _appraisalGeneralQuestionsRepository;
+        private IGenericRepository<EmployeeAppraisalDetails> _employeeAppraisalDetailsRepository;
+        private IGenericRepository<EmployeeAppraisalQuestions> _employeeAppraisalQuestionsRepository;
+        private IGenericRepository<EmployeeEvaluation> _employeeEvaluationRepository;
+        private IGenericRepository<InterviewTechnicalQuestions> _interviewTechnicalQuestionsRepository;
+        private IGenericRepository<Advances> _advancesRepository;
+        private IGenericRepository<InterviewDetails> _interviewDetailsRepository;
+        private IGenericRepository<InterviewLanguages> _interviewLanguagesRepository;
+        private IGenericRepository<InterviewTechnicalQuestion> _interviewTechnicalQuestionRepository;
+        private IGenericRepository<InterviewTrainings> _interviewTrainingsRepository;
+        private IGenericRepository<TechnicalQuestion> _technicalQuestionRepository;
+        private IGenericRepository<ExistInterviewDetails> _existInterviewDetailsRepository;
+        private IGenericRepository<UserDetailOffices> _userOfficesRepository;
+        private IGenericRepository<StrongandWeakPoints> _strongandWeakPointsRepository;
+        private IGenericRepository<EmployeeEvaluationTraining> _employeeEvaluationTrainingRepository;
+        private IGenericRepository<LoggerDetails> _loggerDetailsRepository;
+        private IGenericRepository<EmployeeAppraisalTeamMember> _employeeAppraisalTeamMemberRepository;
+        private IGenericRepository<RatingBasedCriteria> _ratingBasedCriteriaRepository;
+        private IGenericRepository<CategoryPopulator> _categoryPopulatorRepository;
+        private IGenericRepository<EmployeePayrollForMonth> _employeePayrollForMonthRepository;
+
+        // Store repos
+        private IGenericRepository<StoreInventory> _storeInventoryRepository;
+        private IGenericRepository<StoreInventoryItem> _storeInventoryItemRepository;
+        private IGenericRepository<StoreItemPurchase> _storeItemPurchaseRepository;
+        private IGenericRepository<ItemPurchaseDocument> _itemPurchaseDocumentRepository;
+        private IGenericRepository<PurchaseVehicle> _purchaseVehicleRepository;
+        private IGenericRepository<StorePurchaseOrder> _purchaseOrderRepository;
+        private IGenericRepository<PurchaseOrderDocument> _purchaseOrderDocumentRepository;
+        private IGenericRepository<MotorFuel> _storeFuelRepository;
+        private IGenericRepository<VehicleLocation> _vehicleLocationRepository;
+        private IGenericRepository<VehicleMileage> _vehicleMileageRepository;
+        private IGenericRepository<PurchaseGenerator> _purchaseGeneratorRepository;
+        private IGenericRepository<MotorMaintenance> _motorMaintenanceRepository;
+        private IGenericRepository<MotorSparePart> _motorSparePartsRepository;
+        private IGenericRepository<InventoryItemType> _inventoryItemTypeRepository;
+        private IGenericRepository<PurchaseUnitType> _purchaseUnitTypeRepository;
+        private IGenericRepository<EmployeePayrollMonth> _employeePayrollMonthRepository;
+
+        private IGenericRepository<EmployeeContract> _employeeContractRepository;
+
+        private IGenericRepository<SalaryTaxReportContent> _salaryTaxReportContentRepository;
+        private IGenericRepository<ItemSpecificationMaster> _itemSpecificationMasterRepository;
+
+        private IGenericRepository<ItemSpecificationDetails> _itemSpecificationDetailsRepository;
+        private IGenericRepository<StatusAtTimeOfIssue> _statusAtTimeOfIssueRepository;
+        private IGenericRepository<ReceiptType> _receiptTypeRepository;
+
+        private IGenericRepository<EmployeeHistoryOutsideOrganization> _employeeHistoryOutsideOrganizationRepository;
+        private IGenericRepository<EmployeeHistoryOutsideCountry> _employeeHistoryOutsideCountryRepository;
+        private IGenericRepository<EmployeeRelativeInfo> _employeeRelativeInfoRepository;
+        private IGenericRepository<EmployeeInfoReferences> _employeeInfoReferencesRepository;
+        private IGenericRepository<EmployeeOtherSkills> _employeeOtherSkillsRepository;
+        private IGenericRepository<EmployeeSalaryBudget> _employeeSalaryBudgetRepository;
+        private IGenericRepository<EmployeeEducations> _employeeEducationsRepository;
+        private IGenericRepository<EmployeeSalaryAnalyticalInfo> _employeeSalaryAnalyticalInfoRepository;
+
+        private IGenericRepository<EmployeeHealthInfo> _employeeHealthInfoRepository;
+        private IGenericRepository<EmployeeHealthQuestion> _employeeHealthQuestionRepository;
+        private IGenericRepository<EmployeeMonthlyAttendance> _employeeMonthlyAttendanceRepository;
+        private IGenericRepository<PensionPaymentHistory> _pensionPaymentHistoryRepository;
+        private IGenericRepository<PayrollAccountHead> _payrollAccountHeadRepository;
+        private IGenericRepository<EmployeePayrollAccountHead> _employeePayrollAccountHeadRepository;
+
+        public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
         }
 
-		public IGenericRepository<AppraisalGeneralQuestions> AppraisalGeneralQuestionsRepository
-		{
-			get
-			{
-				return _appraisalGeneralQuestionsRepository = _appraisalGeneralQuestionsRepository ?? new GenericRepository<AppraisalGeneralQuestions>(_mschaContext);
-			}
-		}
+        private bool disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _mschaContext.Dispose();
+                }
+                this.disposed = true;
+            }
+        }
 
-		public IGenericRepository<ContractTypeContent> ContractTypeContentRepository
-		{
-			get
-			{
-				return _contractTypeContentRepository = _contractTypeContentRepository ?? new GenericRepository<ContractTypeContent>(_mschaContext);
-			}
-		}
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-		public IGenericRepository<EmployeeContractType> EmployeeContractTypeRepository
-		{
-			get
-			{
-				return _employeeContractTypeRepository = _employeeContractTypeRepository ?? new GenericRepository<EmployeeContractType>(_mschaContext);
-			}
-		}
 
-		public IGenericRepository<EmployeePensionRate> EmployeePensionRateRepository
-		{
-			get
-			{
-				return _employeePensionRateRepository = _employeePensionRateRepository ?? new GenericRepository<EmployeePensionRate>(_mschaContext);
-			}
-		}
-		public IGenericRepository<BudgetLineEmployees> BudgetLineEmployeesRepository
-		{
-			get
-			{
-				return _budgetLineEmployeesRepository = _budgetLineEmployeesRepository ?? new GenericRepository<BudgetLineEmployees>(_mschaContext);
-			}
-		}
-		public IGenericRepository<EmployeeMonthlyPayroll> EmployeeMonthlyPayrollRepository
-		{
-			get
-			{
-				return _employeeMonthlyPayrollRepository = _employeeMonthlyPayrollRepository ?? new GenericRepository<EmployeeMonthlyPayroll>(_mschaContext);
-			}
-		}
-		public IGenericRepository<EmployeePaymentTypes> EmployeePaymentTypeRepository
-		{
-			get
-			{
-				return _employeePaymentTypeRepository = _employeePaymentTypeRepository ?? new GenericRepository<EmployeePaymentTypes>(_mschaContext);
-			}
-		}
-		public IGenericRepository<ProjectDetails> ProjectDetailRepository
-		{
-			get
-			{
-				return _projectDetailRepository = _projectDetailRepository ?? new GenericRepository<ProjectDetails>(_mschaContext);
-			}
-		}
+        public IGenericRepository<EmployeeHealthQuestion> EmployeeHealthQuestionRepository
+        {
+            get
+            {
+                return _employeeHealthQuestionRepository =
+                    _employeeHealthQuestionRepository ?? new GenericRepository<EmployeeHealthQuestion>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<ProjectBudget> ProjectBudgetRepository
-		{
-			get
-			{
-				return _projectBudgetRepository = _projectBudgetRepository ?? new GenericRepository<ProjectBudget>(_mschaContext);
-			}
-		}
-		public IGenericRepository<OfficeDetail> OfficeDetailRepository
+
+        public IGenericRepository<EmployeeHealthInfo> EmployeeHealthInfoRepository
+        {
+            get
+            {
+                return _employeeHealthInfoRepository =
+                    _employeeHealthInfoRepository ?? new GenericRepository<EmployeeHealthInfo>(_mschaContext);
+            }
+        }
+
+
+        public IGenericRepository<EmployeeSalaryAnalyticalInfo> EmployeeSalaryAnalyticalInfoRepository
+        {
+            get
+            {
+                return _employeeSalaryAnalyticalInfoRepository =
+                    _employeeSalaryAnalyticalInfoRepository ?? new GenericRepository<EmployeeSalaryAnalyticalInfo>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ReceiptType> ReceiptTypeRepository
+        {
+            get
+            {
+                return _receiptTypeRepository =
+                    _receiptTypeRepository ?? new GenericRepository<ReceiptType>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<StatusAtTimeOfIssue> StatusAtTimeOfIssueRepository
+        {
+            get
+            {
+                return _statusAtTimeOfIssueRepository =
+                    _statusAtTimeOfIssueRepository ?? new GenericRepository<StatusAtTimeOfIssue>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeEducations> EmployeeEducationsRepository
+        {
+            get
+            {
+                return _employeeEducationsRepository =
+                    _employeeEducationsRepository ?? new GenericRepository<EmployeeEducations>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeSalaryBudget> EmployeeSalaryBudgetRepository
+        {
+            get
+            {
+                return _employeeSalaryBudgetRepository =
+                    _employeeSalaryBudgetRepository ?? new GenericRepository<EmployeeSalaryBudget>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeOtherSkills> EmployeeOtherSkillsRepository
+        {
+            get
+            {
+                return _employeeOtherSkillsRepository =
+                    _employeeOtherSkillsRepository ?? new GenericRepository<EmployeeOtherSkills>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeInfoReferences> EmployeeInfoReferencesRepository
+        {
+            get
+            {
+                return _employeeInfoReferencesRepository =
+                    _employeeInfoReferencesRepository ?? new GenericRepository<EmployeeInfoReferences>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeRelativeInfo> EmployeeRelativeInfoRepository
+        {
+            get
+            {
+                return _employeeRelativeInfoRepository =
+                    _employeeRelativeInfoRepository ?? new GenericRepository<EmployeeRelativeInfo>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountryRepository
+        {
+            get
+            {
+                return _employeeHistoryOutsideCountryRepository =
+                    _employeeHistoryOutsideCountryRepository ?? new GenericRepository<EmployeeHistoryOutsideCountry>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganizationRepository
+        {
+            get
+            {
+                return _employeeHistoryOutsideOrganizationRepository =
+                    _employeeHistoryOutsideOrganizationRepository ?? new GenericRepository<EmployeeHistoryOutsideOrganization>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ItemSpecificationMaster> ItemSpecificationMasterRepository
+        {
+            get
+            {
+                return _itemSpecificationMasterRepository =
+                    _itemSpecificationMasterRepository ?? new GenericRepository<ItemSpecificationMaster>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ItemSpecificationDetails> ItemSpecificationDetailsRepository
+        {
+            get
+            {
+                return _itemSpecificationDetailsRepository =
+                    _itemSpecificationDetailsRepository ?? new GenericRepository<ItemSpecificationDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<SalaryTaxReportContent> SalaryTaxReportContentRepository
+        {
+            get
+            {
+                return _salaryTaxReportContentRepository =
+                    _salaryTaxReportContentRepository ?? new GenericRepository<SalaryTaxReportContent>(_mschaContext);
+            }
+        }
+        public IGenericRepository<EmployeeContract> EmployeeContractRepository
+        {
+            get
+            {
+                return _employeeContractRepository =
+                    _employeeContractRepository ?? new GenericRepository<EmployeeContract>(_mschaContext);
+            }
+        }
+        public IGenericRepository<EmployeePayrollMonth> EmployeePayrollMonthRepository
+        {
+            get
+            {
+                return _employeePayrollMonthRepository =
+                    _employeePayrollMonthRepository ?? new GenericRepository<EmployeePayrollMonth>(_mschaContext);
+            }
+        }
+        public IGenericRepository<EmployeePayrollForMonth> EmployeePayrollForMonthRepository
+        {
+            get
+            {
+                return _employeePayrollForMonthRepository =
+                    _employeePayrollForMonthRepository ?? new GenericRepository<EmployeePayrollForMonth>(_mschaContext);
+            }
+        }
+
+        // Store
+        public IGenericRepository<PurchaseUnitType> PurchaseUnitTypeRepository
+        {
+            get
+            {
+                return _purchaseUnitTypeRepository =
+                    _purchaseUnitTypeRepository ?? new GenericRepository<PurchaseUnitType>(_mschaContext);
+            }
+        }
+        public IGenericRepository<InventoryItemType> InventoryItemTypeRepository
+        {
+            get
+            {
+                return _inventoryItemTypeRepository =
+                    _inventoryItemTypeRepository ?? new GenericRepository<InventoryItemType>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<StoreInventory> StoreInventoryRepository
+        {
+            get
+            {
+                return _storeInventoryRepository =
+                    _storeInventoryRepository ?? new GenericRepository<StoreInventory>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<StoreInventoryItem> StoreInventoryItemRepository
+        {
+            get
+            {
+                return _storeInventoryItemRepository =
+                    _storeInventoryItemRepository ?? new GenericRepository<StoreInventoryItem>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<StoreItemPurchase> StoreItemPurchaseRepository
+        {
+            get
+            {
+                return _storeItemPurchaseRepository =
+                    _storeItemPurchaseRepository ?? new GenericRepository<StoreItemPurchase>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ItemPurchaseDocument> ItemPurchaseDocumentRepository
+        {
+            get
+            {
+                return _itemPurchaseDocumentRepository = _itemPurchaseDocumentRepository ??
+                                                         new GenericRepository<ItemPurchaseDocument>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<PurchaseVehicle> PurchaseVehicleRepository
+        {
+            get
+            {
+                return _purchaseVehicleRepository =
+                    _purchaseVehicleRepository ?? new GenericRepository<PurchaseVehicle>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<StorePurchaseOrder> PurchaseOrderRepository
+        {
+            get
+            {
+                return _purchaseOrderRepository =
+                    _purchaseOrderRepository ?? new GenericRepository<StorePurchaseOrder>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<PurchaseOrderDocument> PurchaseOrderDocumentRepository
+        {
+            get
+            {
+                return _purchaseOrderDocumentRepository = _purchaseOrderDocumentRepository ??
+                                                          new GenericRepository<PurchaseOrderDocument>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<MotorFuel> StoreFuelRepository
+        {
+            get
+            {
+                return _storeFuelRepository = _storeFuelRepository ?? new GenericRepository<MotorFuel>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<VehicleLocation> VehicleLocationRepository
+        {
+            get
+            {
+                return _vehicleLocationRepository =
+                    _vehicleLocationRepository ?? new GenericRepository<VehicleLocation>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<VehicleMileage> VehicleMileageRepository
+        {
+            get
+            {
+                return _vehicleMileageRepository =
+                    _vehicleMileageRepository ?? new GenericRepository<VehicleMileage>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<PurchaseGenerator> PurchaseGeneratorRepository
+        {
+            get
+            {
+                return _purchaseGeneratorRepository =
+                    _purchaseGeneratorRepository ?? new GenericRepository<PurchaseGenerator>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<MotorMaintenance> MotorMaintenanceRepository
+        {
+            get
+            {
+                return _motorMaintenanceRepository =
+                    _motorMaintenanceRepository ?? new GenericRepository<MotorMaintenance>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<MotorSparePart> MotorSparePartsRepository
+        {
+            get
+            {
+                return _motorSparePartsRepository =
+                    _motorSparePartsRepository ?? new GenericRepository<MotorSparePart>(_mschaContext);
+            }
+        }
+        //
+
+        public IGenericRepository<CategoryPopulator> CategoryPopulatorRepository
+        {
+            get
+            {
+                return _categoryPopulatorRepository = _categoryPopulatorRepository ?? new GenericRepository<CategoryPopulator>(_mschaContext);
+            }
+        }
+        public IGenericRepository<RatingBasedCriteria> RatingBasedCriteriaRepository
+        {
+            get
+            {
+                return _ratingBasedCriteriaRepository = _ratingBasedCriteriaRepository ?? new GenericRepository<RatingBasedCriteria>(_mschaContext);
+            }
+        }
+        public IGenericRepository<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMemberRepository
+        {
+            get
+            {
+                return _employeeAppraisalTeamMemberRepository = _employeeAppraisalTeamMemberRepository ?? new GenericRepository<EmployeeAppraisalTeamMember>(_mschaContext);
+            }
+        }
+        public IGenericRepository<EmployeeEvaluationTraining> EmployeeEvaluationTrainingRepository
+        {
+            get
+            {
+                return _employeeEvaluationTrainingRepository = _employeeEvaluationTrainingRepository ?? new GenericRepository<EmployeeEvaluationTraining>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<LoggerDetails> LoggerDetailsRepository
+        {
+            get
+            {
+                return _loggerDetailsRepository = _loggerDetailsRepository ?? new GenericRepository<LoggerDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<StrongandWeakPoints> StrongandWeakPointsRepository
+        {
+            get
+            {
+                return _strongandWeakPointsRepository = _strongandWeakPointsRepository ?? new GenericRepository<StrongandWeakPoints>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<UserDetailOffices> UserOfficesRepository
+        {
+            get
+            {
+                return _userOfficesRepository = _userOfficesRepository ?? new GenericRepository<UserDetailOffices>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ExistInterviewDetails> ExistInterviewDetailsRepository
+        {
+            get
+            {
+                return _existInterviewDetailsRepository = _existInterviewDetailsRepository ?? new GenericRepository<ExistInterviewDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<InterviewDetails> InterviewDetailsRepository
+        {
+            get
+            {
+                return _interviewDetailsRepository = _interviewDetailsRepository ?? new GenericRepository<InterviewDetails>(_mschaContext);
+            }
+        }
+        public IGenericRepository<InterviewLanguages> InterviewLanguagesRepository
+        {
+            get
+            {
+                return _interviewLanguagesRepository = _interviewLanguagesRepository ?? new GenericRepository<InterviewLanguages>(_mschaContext);
+            }
+        }
+        public IGenericRepository<InterviewTechnicalQuestion> InterviewTechnicalQuestionRepository
+        {
+            get
+            {
+                return _interviewTechnicalQuestionRepository = _interviewTechnicalQuestionRepository ?? new GenericRepository<InterviewTechnicalQuestion>(_mschaContext);
+            }
+        }
+        public IGenericRepository<InterviewTrainings> InterviewTrainingsRepository
+        {
+            get
+            {
+                return _interviewTrainingsRepository = _interviewTrainingsRepository ?? new GenericRepository<InterviewTrainings>(_mschaContext);
+            }
+        }
+        public IGenericRepository<TechnicalQuestion> TechnicalQuestionRepository
+        {
+            get
+            {
+                return _technicalQuestionRepository = _technicalQuestionRepository ?? new GenericRepository<TechnicalQuestion>(_mschaContext);
+            }
+        }
+        public IGenericRepository<Advances> AdvancesRepository
+        {
+            get
+            {
+                return _advancesRepository = _advancesRepository ?? new GenericRepository<Advances>(_mschaContext);
+            }
+        }
+        public IGenericRepository<InterviewTechnicalQuestions> InterviewTechnicalQuestionsRepository
+        {
+            get
+            {
+                return _interviewTechnicalQuestionsRepository = _interviewTechnicalQuestionsRepository ?? new GenericRepository<InterviewTechnicalQuestions>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeEvaluation> EmployeeEvaluationRepository
+        {
+            get
+            {
+                return _employeeEvaluationRepository = _employeeEvaluationRepository ?? new GenericRepository<EmployeeEvaluation>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeAppraisalQuestions> EmployeeAppraisalQuestionsRepository
+        {
+            get
+            {
+                return _employeeAppraisalQuestionsRepository = _employeeAppraisalQuestionsRepository ?? new GenericRepository<EmployeeAppraisalQuestions>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeAppraisalDetails> EmployeeAppraisalDetailsRepository
+        {
+            get
+            {
+                return _employeeAppraisalDetailsRepository = _employeeAppraisalDetailsRepository ?? new GenericRepository<EmployeeAppraisalDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<AppraisalGeneralQuestions> AppraisalGeneralQuestionsRepository
+        {
+            get
+            {
+                return _appraisalGeneralQuestionsRepository = _appraisalGeneralQuestionsRepository ?? new GenericRepository<AppraisalGeneralQuestions>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ContractTypeContent> ContractTypeContentRepository
+        {
+            get
+            {
+                return _contractTypeContentRepository = _contractTypeContentRepository ?? new GenericRepository<ContractTypeContent>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeContractType> EmployeeContractTypeRepository
+        {
+            get
+            {
+                return _employeeContractTypeRepository = _employeeContractTypeRepository ?? new GenericRepository<EmployeeContractType>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeePensionRate> EmployeePensionRateRepository
+        {
+            get
+            {
+                return _employeePensionRateRepository = _employeePensionRateRepository ?? new GenericRepository<EmployeePensionRate>(_mschaContext);
+            }
+        }
+        public IGenericRepository<BudgetLineEmployees> BudgetLineEmployeesRepository
+        {
+            get
+            {
+                return _budgetLineEmployeesRepository = _budgetLineEmployeesRepository ?? new GenericRepository<BudgetLineEmployees>(_mschaContext);
+            }
+        }
+        public IGenericRepository<EmployeeMonthlyPayroll> EmployeeMonthlyPayrollRepository
+        {
+            get
+            {
+                return _employeeMonthlyPayrollRepository = _employeeMonthlyPayrollRepository ?? new GenericRepository<EmployeeMonthlyPayroll>(_mschaContext);
+            }
+        }
+        public IGenericRepository<EmployeePaymentTypes> EmployeePaymentTypeRepository
+        {
+            get
+            {
+                return _employeePaymentTypeRepository = _employeePaymentTypeRepository ?? new GenericRepository<EmployeePaymentTypes>(_mschaContext);
+            }
+        }
+        public IGenericRepository<ProjectDetails> ProjectDetailRepository
+        {
+            get
+            {
+                return _projectDetailRepository = _projectDetailRepository ?? new GenericRepository<ProjectDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectBudget> ProjectBudgetRepository
+        {
+            get
+            {
+                return _projectBudgetRepository = _projectBudgetRepository ?? new GenericRepository<ProjectBudget>(_mschaContext);
+            }
+        }
+        public IGenericRepository<OfficeDetail> OfficeDetailRepository
         {
             get
             {
@@ -183,7 +699,7 @@ namespace DataAccess
         {
             get
             {
-                return _deparmentRepository= _deparmentRepository?? new GenericRepository<Department>(_mschaContext);
+                return _deparmentRepository = _deparmentRepository ?? new GenericRepository<Department>(_mschaContext);
             }
         }
 
@@ -224,8 +740,8 @@ namespace DataAccess
             {
                 return _emailsettingdetailRepository = _emailsettingdetailRepository ?? new GenericRepository<EmailSettingDetail>(_mschaContext);
             }
-        } 
-        
+        }
+
         public IGenericRepository<AccountType> AccountTypeRepository
         {
             get
@@ -274,15 +790,23 @@ namespace DataAccess
             }
         }
 
-        public IGenericRepository<VoucherTransactionDetails> VoucherTransactionDetailsRepository
-        {
-            get
-            {
-                return _vouchertransactiondetailsRepository = _vouchertransactiondetailsRepository ?? new GenericRepository<VoucherTransactionDetails>(_mschaContext);
-            }
-        }
+        //public IGenericRepository<VoucherTransactionDetails> VoucherTransactionDetailsRepository
+        //{
+        //    get
+        //    {
+        //        return _vouchertransactiondetailsRepository = _vouchertransactiondetailsRepository ?? new GenericRepository<VoucherTransactionDetails>(_mschaContext);
+        //    }
+        //}
 
-        public IGenericRepository<AnalyticalType> AnalyticalTypeRepository
+		public IGenericRepository<VoucherTransactions> VoucherTransactionsRepository
+		{
+			get
+			{
+				return _voucherTransactionsRepository = _voucherTransactionsRepository ?? new GenericRepository<VoucherTransactions>(_mschaContext);
+			}
+		}
+
+		public IGenericRepository<AnalyticalType> AnalyticalTypeRepository
         {
             get
             {
@@ -592,13 +1116,45 @@ namespace DataAccess
             {
                 return _salaryheaddetailsRepository = _salaryheaddetailsRepository ?? new GenericRepository<SalaryHeadDetails>(_mschaContext);
             }
-        }  
-        
+        }
+
         public IGenericRepository<EmployeePayroll> EmployeePayrollRepository
         {
             get
             {
                 return _employeepayrollRepository = _employeepayrollRepository ?? new GenericRepository<EmployeePayroll>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeMonthlyAttendance> EmployeeMonthlyAttendanceRepository
+        {
+            get
+            {
+                return _employeeMonthlyAttendanceRepository = _employeeMonthlyAttendanceRepository ?? new GenericRepository<EmployeeMonthlyAttendance>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<PensionPaymentHistory> PensionPaymentHistoryRepository
+        {
+            get
+            {
+                return _pensionPaymentHistoryRepository = _pensionPaymentHistoryRepository ?? new GenericRepository<PensionPaymentHistory>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<PayrollAccountHead> PayrollAccountHeadRepository
+        {
+            get
+            {
+                return _payrollAccountHeadRepository = _payrollAccountHeadRepository ?? new GenericRepository<PayrollAccountHead>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository
+        {
+            get
+            {
+                return _employeePayrollAccountHeadRepository = _employeePayrollAccountHeadRepository ?? new GenericRepository<EmployeePayrollAccountHead>(_mschaContext);
             }
         }
 
@@ -612,7 +1168,7 @@ namespace DataAccess
         }
         public ApplicationDbContext GetDbContext()
         {
-            
+
             return this._mschaContext;
         }
     }

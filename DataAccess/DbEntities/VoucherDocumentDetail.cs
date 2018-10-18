@@ -18,10 +18,12 @@ namespace DataAccess.DbEntities
         //public byte[] DocumentFilePath { get; set; }
         public byte[] FilePath { get; set; }
         public DateTime? DocumentDate { get; set; }
-        public VoucherDetail VoucherDetails { get; set; }
-        public long VoucherNo { get; set; }
-		public string Extension { get; set; }
-		public string DocumentGUID { get; set; }
-		public int? DocumentType { get; set; }
-	}
+		public VoucherDetail VoucherDetails { get; set; }
+		public long VoucherNo { get; set; }
+        public string Extension { get; set; }
+        public string DocumentGUID { get; set; }
+        public int? DocumentType { get; set; }
+
+        public string DocumentFilePath { get; set; }
+    }
 }

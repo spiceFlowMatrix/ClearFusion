@@ -12,9 +12,9 @@ namespace DataAccess.DbEntities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
         public long HistoryID { get; set; }        
-        public int? EmployeeID { get; set; }        
-        public EmployeeDetail EmployeeDetail { get; set; }
-        public DateTime? HistoryDate { get; set; }
+        public int? EmployeeID { get; set; }
+		public EmployeeDetail EmployeeDetail { get; set; }
+		public DateTime? HistoryDate { get; set; }
         [StringLength(200)]
         public string Description { get; set; }
     }

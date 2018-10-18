@@ -14,5 +14,6 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public double? PreviousPensionDeduction { get; set; }
 		public double? PensionDeductionTotal { get; set; }
 		public double? PensionProfitTotal { get; set; }
+        public string EmployeeCode { get; set; }
     }
 }

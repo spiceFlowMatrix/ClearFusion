@@ -16,8 +16,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllEmployeeDetail();
         Task<APIResponse> AddJobHiringDetail(JobHiringDetailsModel model);
         Task<APIResponse> EditJobHiringDetail(JobHiringDetailsModel model);
-        Task<APIResponse> GetAllJobHiringDetails();
-        Task<APIResponse> AddInterviewScheduleDetails(List<InterviewScheduleModel> model,string CreatedById);
+        Task<APIResponse> GetAllJobHiringDetails(int OfficeId);
+        Task<APIResponse> AddInterviewScheduleDetails(List<InterviewScheduleModel> model, string CreatedById);
         //Task<APIResponse> GetAllProspectiveEmployee();
         Task<APIResponse> GetEmployeeDetailsByEmployeeId(int EmployeeId);
         Task<APIResponse> GetEmployeeGeneralInformationById(int employeeid);
@@ -45,17 +45,17 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddEmployeeAttendanceDetails(List<EmployeeAttendanceModel> modellist, string UserId);
         Task<APIResponse> GetEmployeeProfessionalDetail(int EmployeeId);
         Task<APIResponse> GetAllEmployeeDetail(int EmployeeType, int officeid);
-        Task<APIResponse> GetEmployeeAttendanceDetails(int employeeid);
-        Task<APIResponse> AddEmployeeHealthDetail(EmployeeHealthInformationModel model);
-        Task<APIResponse> EditEmployeeHealthDetail(EmployeeHealthInformationModel model);
+        Task<APIResponse> GetEmployeeAttendanceDetails(EmployeeAttendanceFilterModel employeeFilter);
+        //Task<APIResponse> AddEmployeeHealthDetail(EmployeeHealthInformationModel model);
+        //Task<APIResponse> EditEmployeeHealthDetail(EmployeeHealthInformationModel model);
         Task<APIResponse> GetAllEmployeeHealthDetailByEmployeeId(int employeeid);
         Task<APIResponse> ChangeEmployeeImage(ChangeEmployeeImage model);
         //Task<APIResponse> GetAllActiveEmployeeForAttendance();
-		Task<APIResponse> GetAllEmployeesAttendanceByDate(string SelectedDate, int officeid, bool attendancestatus);
-		Task<APIResponse> EditEmployeeAttendanceByDate(EmployeeAttendanceModel model, string userid);
+        Task<APIResponse> GetAllEmployeesAttendanceByDate(string SelectedDate, int officeid, bool attendancestatus);
+        Task<APIResponse> EditEmployeeAttendanceByDate(EmployeeAttendanceModel model, string userid);
 
-		//Alpit
-		Task<APIResponse> GetProspectiveEmployeesByProfessionId(int ProfessionId);
+        //Alpit
+        Task<APIResponse> GetProspectiveEmployeesByProfessionId(int ProfessionId);
         Task<APIResponse> GetAllScheduledProspectiveEmployee();
 
         Task<APIResponse> GetAllJobGrade();
@@ -69,11 +69,13 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> GetAllEmployeeApplyLeaveList(int officeid);
         //Task<APIResponse> ApproveEmployeeLeave(int applyleaveid, string userid);
-		Task<APIResponse> ApproveEmployeeLeave(List<ApproveLeaveModel> model, string userid);
-		Task<APIResponse> RejectEmployeeLeave(List<ApproveLeaveModel> model, string userid);
+        Task<APIResponse> ApproveEmployeeLeave(List<ApproveLeaveModel> model, string userid);
+        Task<APIResponse> RejectEmployeeLeave(List<ApproveLeaveModel> model, string userid);
         Task<APIResponse> DeleteApplyEmployeeLeave(int applyleaveid, string userid);
 
         Task<APIResponse> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType);
+        Task<APIResponse> GetAllEmployeeMonthlyPayrollListApproved(int officeid, int currencyid, int month, int year, int paymentType);
+
 
         Task<APIResponse> AddHolidayDetails(HolidayDetailsModel model);
         Task<APIResponse> EditHolidayDetails(HolidayDetailsModel model);
@@ -87,26 +89,45 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteHolidayDetails(long holidayId, string userid);
         Task<APIResponse> GetAllDisableCalanderDate(int employeeid, int OfficeId);
 
-		//Task<APIResponse> MonthlyEmployeeAttendanceReport(int employeeid, int year, int month, int OfficeId);
-		Task<APIResponse> MonthlyEmployeeAttendanceReport(MonthlyEmployeeAttendanceReportModel model);
+        //Task<APIResponse> MonthlyEmployeeAttendanceReport(int employeeid, int year, int month, int OfficeId);
+        Task<APIResponse> MonthlyEmployeeAttendanceReport(MonthlyEmployeeAttendanceReportModel model);
 
-		Task<APIResponse> GetAllDateforDisableCalenderDate(int OfficeId);
+        Task<APIResponse> GetAllDateforDisableCalenderDate(int OfficeId);
 
         Task<APIResponse> GetAllHolidayWeeklyDetails(int officeid);
 
         Task<APIResponse> OnPostExport();
-		Task<APIResponse> EmployeesSalarySummary(EmployeeSummaryModel model);
-		Task<APIResponse> EmployeePaymentTypeReport(List<EmployeePaymentTypeModel> model, string userid);
-		Task<APIResponse> RemoveApprovedList(RemoveApprovedEmployee model, string userid);
-		Task<APIResponse> EmployeePensionReport(PensionReportModel model);
-		Task<APIResponse> GetAllEmployeeProjects(int EmployeeId);
-		Task<APIResponse> AssignEmployeeProjectPercentage(List<EmployeeProjectModel> model, string userid);
-		Task<APIResponse> GetExchangeRate(ExchangeRateModel model);
-		Task<APIResponse> GetAllEmployeeContractType();
-		Task<APIResponse> SaveContractContent(ContractTypeModel model, string userid);
-		Task<APIResponse> GetAllContractTypeContent(int OfficeId, int EmployeeContractTypeId);
-		Task<APIResponse> GetSelectedEmployeeContract(int OfficeId, int ProjectId, int BudgetLineId, int EmployeeId);
-		Task<APIResponse> GetEmployeeSalaryDetails(int OfficeId, int year, int month, int EmployeeId);
-		Task<APIResponse> EmployeeTaxCalculation(int OfficeId, int EmployeeId, int Year);
-	}
+        Task<APIResponse> EmployeesSalarySummary(EmployeeSummaryModel model);
+        Task<APIResponse> EmployeePaymentTypeReport(List<EmployeePaymentTypeModel> model, string userid);
+        Task<APIResponse> EmployeePaymentTypeReportForSaveOnly(List<EmployeePaymentTypeModel> model, string userid);
+        //Task<APIResponse> RemoveApprovedList(RemoveApprovedEmployee model, string userid);
+        Task<APIResponse> RemoveApprovedList(List<EmployeePaymentTypeModel> model, string userid);
+        Task<APIResponse> EmployeePensionReport(PensionReportModel model);
+        Task<APIResponse> GetAllEmployeeProjects(int EmployeeId);
+        Task<APIResponse> AssignEmployeeProjectPercentage(List<EmployeeProjectModel> model, string userid);
+        Task<APIResponse> GetExchangeRate(ExchangeRateModel model);
+        Task<APIResponse> GetAllEmployeeContractType();
+        Task<APIResponse> SaveContractContent(ContractTypeModel model, string userid);
+        Task<APIResponse> GetAllContractTypeContent(int OfficeId, int EmployeeContractTypeId);
+        Task<APIResponse> GetSelectedEmployeeContract(int OfficeId, int ProjectId, int BudgetLineId, int EmployeeId);
+        Task<APIResponse> GetSelectedEmployeeContractByEmployeeId(int EmployeeId);
+
+        Task<APIResponse> GetEmployeeSalaryDetails(int OfficeId, int year, int month, int EmployeeId);
+        Task<APIResponse> EmployeeTaxCalculation(int OfficeId, int EmployeeId, int FinancialYearId);
+        Task<APIResponse> EmployeeSalaryTaxDetails(SalaryTaxModel model);
+        Task<APIResponse> GetAllAdvancesByOfficeId(int OfficeId, int month, int year);
+        Task<APIResponse> EditAdvances(AdvancesModel model, string UserId);
+        Task<APIResponse> AddAdvances(AdvancesModel model, string UserId);
+        Task<APIResponse> ApproveAdvances(AdvancesModel model, string UserId);
+        Task<APIResponse> RejectAdvances(AdvancesModel model, string UserId);
+        Task<APIResponse> AddInterviewDetails(InterviewDetailModel model, string UserId);
+        Task<APIResponse> EditInterviewDetails(InterviewDetailModel model, string UserId);
+        Task<APIResponse> GetAllInterviewDetails();
+        Task<APIResponse> AddTechnicalQuestions(InterviewTechnicalQuestionsModel model, string UserId);
+        Task<APIResponse> AddEmployeeContractDetails(EmployeeContract model, string UserId);
+
+
+
+
+    }
 }

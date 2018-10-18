@@ -1,8 +1,11 @@
 ﻿using DataAccess.DbEntities;
+using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Store;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace HumanitarianAssistance.Service.APIResponses
@@ -12,57 +15,120 @@ namespace HumanitarianAssistance.Service.APIResponses
         public APIResponse()
         {
             data = new data();
+            ItemAmount = new ItemAmount();
         }
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public data data { get; set; }
+        public LoggerDetailsModel LoggerDetailsModel { get; set; }
+        public ItemAmount ItemAmount { get; set; }
     }
 
-	public class data
-	{
-		public string AspNetUserId { get; set; }
-		public RoleViewModel RoleData { get; set; }
-		public string Token { get; set; }
-		public IList<string> Roles { get; set; }
-		public string RoleName { get; set; }
-		public double CurrenctExchangeRate { get; set; }
-		public double TotalExpenditure { get; set; }
+    public class ItemAmount
+    {
+        public int ProcuredAmount { get; set; }
+        public int SpentAmount { get; set; }
+        public int CurrentAmount { get; set; }
+    }
 
-		public double TotalRecivable { get; set; }
-		public double TotalPayable { get; set; }
-		public double Balance { get; set; }
+    public class LoggerDetailsModel
+    {
+        public int LoggerDetailsId { get; set; }
+        public int NotificationId { get; set; }
+        public bool IsRead { get; set; }
+        public string UserName { get; set; }
+        public string UserId { get; set; }
+        public string LoggedDetail { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string NotificationPath { get; set; }
+    }
+
+    public class Parent
+    {
+        public dynamic LoggerDetailsModel { get; set; }
+    }
+
+    public class data
+    {
+        public string AspNetUserId { get; set; }
+        public RoleViewModel RoleData { get; set; }
+        public string Token { get; set; }
+        public IList<string> Roles { get; set; }
+        public string RoleName { get; set; }
+        public double? CurrenctExchangeRate { get; set; }
+        public double TotalExpenditure { get; set; }
+
+        public double TotalRecivable { get; set; }
+        public double TotalPayable { get; set; }
+        public double Balance { get; set; }
 
 
-		public double TotalIncome { get; set; }
-		public int TotalPresentDays { get; set; }
-		public int TotalAbsentDays { get; set; }
+        public double TotalIncome { get; set; }
+        public int TotalPresentDays { get; set; }
+        public int TotalAbsentDays { get; set; }
 
-		public bool AttendanceStatus { get; set; }
+        public bool AttendanceStatus { get; set; }
 
-		public int? OfficeId { get; set; }
+        public int? OfficeId { get; set; }
 
-		public int? TotalEmployees { get; set; }
-		public double? TotalGrossSalary { get; set; }
-		public double? TotalDeductions { get; set; }
-		public double? TotalAllowances { get; set; }
-		public EmployeeTaxReport EmployeeTaxReport { get; set; }
-		public List<EmployeeSalarySlipModel> EmployeeSalarySlipModelList { get; set; }
-		public List<EmployeeContractModel> EmployeeContractModellst { get; set; }
-		public ContractTypeContent ContractTypeContentList { get; set; }
-		public List<EmployeeContractType> EmployeeContractTypeList { get; set; }
-		public List<EmployeePensionRateModel> EmployeePensionRateList { get; set; }
-		public List<BudgetLineEmployees> GetAllEmployeesInBudgetLine { get; set; }
-		public List<EmployeeProjectModel> EmployeeProjectList { get; set; }
-		public List<EmployeeSummaryDetails> EmployeeSummaryDetailsList { get; set;}
-		public ExchangeRate ExchangeRateLists { get; set; }
+        public int? TotalEmployees { get; set; }
+        public double? TotalGrossSalary { get; set; }
+        public double? TotalDeductions { get; set; }
+        public double? TotalAllowances { get; set; }
+        public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
+        public List<ItemSpecificationMasterModel> ItemSpecificationMasterList { get; set; }
+        public List<ItemSpecificationDetailModel> ItemSpecificationDetailList { get; set; }
+        public UpdatePurchaseInvoiceModel UpdatePurchaseInvoiceModel { get; set; }
+        public List<EmployeeEducationsModel> EmployeeEducationsList { get; set; }
+        public List<EmployeeSalaryBudgetModel> EmployeeSalaryBudgetList { get; set; }
+        public List<EmployeeOtherSkillsModel> EmployeeOtherSkillsList { get; set; }
+        public List<EmployeeRelativeInfoModel> EmployeeRelativeInfoList { get; set; }
+        public List<EmployeeHistoryOutsideOrganizationModel> EmployeeHistoryOutsideOrganizationList { get; set; }
 
-		public AccountOpendingAndClosingBL AccountOpendingAndClosingBL { get; set; }
+        //public ExchangeGainOrLossModel ExchangeGainOrLossModel { get; set; }
+        public List<TransactionsModel> ExchangeGainOrLossModel { get; set; }
+
+
+
+        public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
+        public List<ProcurmentSummaryModel> ProcurmentSummaryModelList { get; set; }
+        public List<ItemOrderModel> ItemOrderModelList { get; set; }
+        //public List<IGrouping<int, CategoryPopulator>> CategoryPopulatorLst { get; set; }
+        public List<CategoryPopulator> CategoryPopulatorLst { get; set; }
+
+        public ICollection<VoucherDetail> VouchersList { get; set; }
+
+        public List<int> UserOfficeList { get; set; }
+        public List<ExitInterviewModel> ExitInterviewList { get; set; }
+        public List<InterviewDetailModel> InterviewDetailList { get; set; }
+        public List<LoggerModel> LoggerDetailsModelList { get; set; }
+        public List<AdvanceModel> AdvanceList { get; set; }
+        public List<InterviewTechnicalQuestions> InterviewTechnicalQuestionsList { get; set; }
+        public List<EmployeeDetailList> EmployeeDetailListData { get; set; }
+        public List<EmployeeAppraisalDetailsModel> EmployeeAppraisalDetailsModelLst { get; set; }
+        public EmployeeAppraisalDetailsModel EmployeeAppraisalDetailsModel { get; set; }
+        public List<IGrouping<int, EmployeeAppraisalDetailsModel>> EmployeeEvaluationDetailsModelLst { get; set; }
+        public List<AppraisalGeneralQuestions> AppraisalList { get; set; }
+        public EmployeeTaxReport EmployeeTaxReport { get; set; }
+        public List<EmployeeSalarySlipModel> EmployeeSalarySlipModelList { get; set; }
+        public List<EmployeeContractModel> EmployeeContractModellst { get; set; }
+        public List<EmployeeContractModel> EmployeeContractDetails { get; set; }
+        public ContractTypeContent ContractTypeContentList { get; set; }
+        public List<EmployeeContractType> EmployeeContractTypeList { get; set; }
+        public List<EmployeePensionRateModel> EmployeePensionRateList { get; set; }
+        public List<BudgetLineEmployees> GetAllEmployeesInBudgetLine { get; set; }
+        public List<EmployeeProjectModel> EmployeeProjectList { get; set; }
+        public List<EmployeeSummaryDetails> EmployeeSummaryDetailsList { get; set; }
+        public ExchangeRate ExchangeRateLists { get; set; }
+
+        public AccountOpendingAndClosingBL AccountOpendingAndClosingBL { get; set; }
         //List Response result
         public List<Roles> RoleList { get; set; }
         //Get All Office
         public IList<OfficeDetailModel> OfficeDetailsList { get; set; }
         public IList<DepartmentModel> Departments { get; set; }
         public IList<UserDetailsModel> UserDetailsList { get; set; }
+        public UserDetailsModel UserDetails { get; set; }
         public IList<PermissionsInRolesModel> PermissionsInRolesList { get; set; }
         public IList<PermissionsModel> PermissionsList { get; set; }
         public IList<CurrencyModel> CurrencyList { get; set; }
@@ -77,10 +143,12 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<VoucherDocumentDetailModel> VoucherDocumentDetailList { get; set; }
 
         public IList<JournalVoucherViewModel> JournalVoucherViewList { get; set; }
+        public IList<JournalReportViewModel> JournalReportList { get; set; }
         public IList<AccountDetailModel> AccountDetailList { get; set; }
         public IList<VoucherTransactionModel> VoucherTransactionList { get; set; }
         public IList<LedgerModel> LedgerList { get; set; }
-        public IList<TrailBlance> TrailBlanceList { get; set; }
+        public IList<LedgerReportViewModel> ledgerReportFinal { get; set; }
+        public IList<LedgerModel> TrailBlanceList { get; set; }
 
         public IList<ExchangeRateModel> ExchangeRateList { get; set; }
         public IList<EmployeeDetailModel> EmployeeDetailList { get; set; }
@@ -127,6 +195,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<EmployeeAttendanceModel> EmployeeAttendanceList { get; set; }
         public IList<DisplayEmployeeAttendanceModel> DisEmployeeAttendanceList { get; set; }
         public IList<EmployeeHealthInformationModel> EmployeeHealthInfoList { get; set; }
+        public EmployeeHealthInformationModel EmployeeHealthInfo { get; set; }
+        public List<EmployeeHealthQuestion> EmployeeHealthQuestionList { get; set; }
+
 
         public ProjectBudgetLinesModel ProjectBudgetLinesModel { get; set; }
         public IList<ProjectDocumentModel> ProjectDocumentList { get; set; }
@@ -136,6 +207,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<CurrentFinancialYear> CurrentFinancialYearList { get; set; }
 
         public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
+        public List<DetailsOfNotesFinalModel> DetailsOfNotesFinalList { get; set; }
 
         //Alpit
         public IList<ScheduleCandidateModel> ScheduledProspectiveEmployee { get; set; }
@@ -160,12 +232,38 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<SalaryHeadModel> SalaryHeadList { get; set; }
 
 
-        
+
         public IList<EmployeePayrollModel> EmployeePayrollList { get; set; }
-		public EmployeePensionModel EmployeePensionModel { get; set; }
+        public IList<EmployeePayrollAccountModel> EmployeePayrollAccountHeadList { get; set; }
+        public EmployeePensionModel EmployeePensionModel { get; set; }
+
+        // Store classes
+        public List<StoreInventoryModel> InventoryList { get; set; }
+        public List<StoreInventoryItemModel> InventoryItemList { get; set; }
+        public List<InventoryItemTypeModel> InventoryItemTypeList { get; set; }
+        public List<StoreItemPurchaseViewModel> StoreItemsPurchaseViewList { get; set; }
+
+        public List<PurchaseUnitType> PurchaseUnitTypeList { get; set; }
+        public List<DepreciationReportModel> DepreciationReportList { get; set; }
+        public List<StatusAtTimeOfIssue> StatusAtTimeOfIssueList { get; set; }
+        public List<ReceiptType> ReceiptTypeList { get; set; }
+        public List<EmployeeMonthlyPayrollModelApproved> EmployeeMonthlyPayrollApprovedList { get; set; }
 
 
-	}
+        public int notificationIsReadCount { get; set; }
+        public SalaryTaxReportContent SalaryTaxReportContentDetails { get; set; }
+        public List<AdvancesHistoryModel> AdvanceHistory { get; set; }
+        public List<PensionPaymentModel> PensionPayment { get; set; }
+        public List<PensionPaymentHistoryModel> PensionPaymentHistory { get; set; }
+        public List<PayrollHeadModel> PayrollHeadModelList { get; set; }
+        public ICollection<PayrollAccountHead> PayrollAccountHead{ get; set; }
+
+        public int TotalCount { get; set; }
+        //public double SummaryTotalDebit { get; set; }
+        //public double SummaryTotalCredit { get; set; }
+
+
+    }
 
     public class Roles
     {
