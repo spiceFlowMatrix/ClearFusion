@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181026110323_EmployeeLanguagesTableAddition1")]
+    partial class EmployeeLanguagesTableAddition1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2008,8 +2010,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int>("EmployeeId");
 
                     b.Property<bool?>("IsDeleted");
 

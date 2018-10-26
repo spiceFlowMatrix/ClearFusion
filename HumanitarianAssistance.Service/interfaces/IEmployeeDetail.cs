@@ -53,7 +53,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditEmployeeHealthQuestion(EmployeeHealthQuestion model, string UserId);
         Task<APIResponse> DeleteEmployeeHealthQuestion(EmployeeHealthQuestion model, string UserId);
 
-
+        Task<APIResponse> GetAllEmployeeLanguages(int EmployeeId);
+        Task<APIResponse> AddEmployeeLanguages(EmployeeLanguages model, string UserId);
+        Task<APIResponse> EditEmployeeLanguages(EmployeeLanguages model, string UserId);
+        Task<APIResponse> RemoveEmployeeLanguages(EmployeeLanguages model, string UserId);
 
 
 

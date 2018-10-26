@@ -141,6 +141,7 @@ namespace DataAccess
         IGenericRepository<PayrollAccountHead> PayrollAccountHeadRepository { get; }
         IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository { get; }
         IGenericRepository<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistoryRepository { get; }
+        IGenericRepository<EmployeeLanguages> EmployeeLanguagesRepository { get; }
 
         void Save();
         Task<int> SaveAsync();

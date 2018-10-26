@@ -199,6 +199,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<EmployeeHealthInformationModel> EmployeeHealthInfoList { get; set; }
         public EmployeeHealthInformationModel EmployeeHealthInfo { get; set; }
         public List<EmployeeHealthQuestion> EmployeeHealthQuestionList { get; set; }
+        public List<EmployeeLanguages> EmployeeLanguagesList { get; set; }
 
 
         public ProjectBudgetLinesModel ProjectBudgetLinesModel { get; set; }

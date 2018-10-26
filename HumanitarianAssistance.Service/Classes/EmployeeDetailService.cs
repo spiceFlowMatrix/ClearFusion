@@ -1228,6 +1228,163 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
+        #region "Employee Languages"
+
+        /// <summary>
+        /// Get all languages that an employee can speak and understand
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <returns>List of languages that employee understands</returns>
+        public async Task<APIResponse> GetAllEmployeeLanguages(int EmployeeId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var employeeRecord = await _uow.EmployeeLanguagesRepository.FindAllAsync(x => x.EmployeeId == EmployeeId && x.IsDeleted == false);
+
+                //EmployeeLanguages obj = _mapper.Map<EmployeeLanguages>(employeeRecord);
+
+                if (employeeRecord.Any())
+                {
+                    response.data.EmployeeLanguagesList = employeeRecord.ToList();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "No Record Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Add Employee Language
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns>Boolean Status</returns>
+        public async Task<APIResponse> AddEmployeeLanguages(EmployeeLanguages model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                EmployeeLanguages employeeLanguages = new EmployeeLanguages();
+
+                employeeLanguages.EmployeeId = model.EmployeeId;
+                employeeLanguages.LanguageName = model.LanguageName;
+                employeeLanguages.Listening = model.Listening;
+                employeeLanguages.Reading = model.Reading;
+                employeeLanguages.Speaking = model.Speaking;
+                employeeLanguages.Writing = model.Writing;
+
+                employeeLanguages.IsDeleted = false;
+                employeeLanguages.CreatedById = UserId;
+                employeeLanguages.CreatedDate = DateTime.Now;
+
+                await _uow.EmployeeLanguagesRepository.AddAsyn(employeeLanguages);
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Update Employee Language
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns>Success</returns>
+        public async Task<APIResponse> EditEmployeeLanguages(EmployeeLanguages model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var existRecord = await _uow.EmployeeLanguagesRepository.FindAsync(x => x.IsDeleted == false && x.SpeakLanguageId == model.SpeakLanguageId);
+
+                if (existRecord != null)
+                {
+                    existRecord.LanguageName = model.LanguageName;
+                    existRecord.Listening = model.Listening;
+                    existRecord.Reading = model.Reading;
+                    existRecord.Speaking = model.Speaking;
+                    existRecord.Writing = model.Writing;
+
+                    existRecord.IsDeleted = false;
+                    existRecord.ModifiedById = UserId;
+                    existRecord.ModifiedDate = DateTime.Now;
+
+                    await _uow.EmployeeLanguagesRepository.UpdateAsyn(existRecord);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Record not found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Delete Employee Languages
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> RemoveEmployeeLanguages(EmployeeLanguages model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var existRecord = await _uow.EmployeeLanguagesRepository.FindAsync(x => x.IsDeleted == false && x.SpeakLanguageId == model.SpeakLanguageId);
+
+                if (existRecord != null)
+                {
+                    existRecord.IsDeleted = true;
+                    existRecord.ModifiedById = UserId;
+                    existRecord.ModifiedDate = DateTime.Now;
+                    await _uow.EmployeeLanguagesRepository.UpdateAsyn(existRecord);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Record not found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
 
 
     }

@@ -172,6 +172,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeePayrollAccountHead> EmployeePayrollAccountHead { get; set; }
         public DbSet<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistory { get; set; }
         public DbSet<AccountLevel> AccountLevel { get; set; }
+        public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
