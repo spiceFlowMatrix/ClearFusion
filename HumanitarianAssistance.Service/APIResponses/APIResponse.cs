@@ -70,6 +70,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public bool AttendanceStatus { get; set; }
 
         public int? OfficeId { get; set; }
+        public string VoucherReferenceNo { get; set; }
+        public long VoucherNo { get; set; }
 
         public int? TotalEmployees { get; set; }
         public double? TotalGrossSalary { get; set; }

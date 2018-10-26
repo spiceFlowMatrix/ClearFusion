@@ -124,4 +124,10 @@ namespace HumanitarianAssistance.Common.Enums
     Debit=2
   }
 
+  public enum VoucherTypes
+  {
+    Journal = 1,
+    Adjustment = 2
+  }
+
 }

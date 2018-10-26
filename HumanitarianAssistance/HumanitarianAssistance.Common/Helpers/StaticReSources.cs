@@ -325,6 +325,11 @@ namespace HumanitarianAssistance.Common.Helpers
 
     //HR
     public const string PensionPaymentCreated = "Pension Payment Done On {0} for {1}";
+
+    //Salary Payment
+    public const string SalaryPaymentDone = "Salary Payment Done On {0} for {1}";
+    public const string SalaryHeadAllowances = "{0} has been debited towards Gross Salary";
+    public const string SalaryHeadDeductions = "{0} has been credited towards Net Salary";
     public const string JobCodeExist = "Job Code Already Exist";
   }
 }

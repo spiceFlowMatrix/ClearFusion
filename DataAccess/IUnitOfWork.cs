@@ -140,6 +140,7 @@ namespace DataAccess
         IGenericRepository<PensionPaymentHistory> PensionPaymentHistoryRepository { get; }
         IGenericRepository<PayrollAccountHead> PayrollAccountHeadRepository { get; }
         IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository { get; }
+        IGenericRepository<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistoryRepository { get; }
 
         void Save();
         Task<int> SaveAsync();

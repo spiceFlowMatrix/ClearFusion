@@ -745,7 +745,13 @@ namespace HumanitarianAssistance.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllLedgerDetails([FromBody] LedgerModels model)
     {
-      APIResponse response = await _ivoucherDetail.GetAllLedgerDetailsByCondition(model);
+      APIResponse response = null;
+
+      if (model.OfficeIdList.Any())
+      {
+        response = await _ivoucherDetail.GetAllLedgerDetailsByCondition(model);
+      }
+
       return response;
     }
 
@@ -773,6 +779,7 @@ namespace HumanitarianAssistance.Controllers
       APIResponse response = await _ivoucherDetail.GetAllVoucherTransactionDetailByBudgetLine(projectId, budgetLineId);
       return response;
     }
+
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetProjectAndBudgetLine()
@@ -988,13 +995,53 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    //[HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    //public async Task<object> GetAllAccountCodeByVoucherNo(ExchangeGainOrLossFilterModel ExchangeGainLossFilter)
-    //{
-    //  APIResponse response = await _ivoucherDetail.GetAllAccountCodeByVoucherNo(ExchangeGainLossFilter);
-    //  return response;
-    //}
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GenerateSalaryVoucher([FromBody]EmployeeSalaryVoucherModel model)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.CreatedById = user.Id;
+        response = await _ivoucherDetail.GenerateSalaryVoucher(model);
+      }
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetEmployeeSalaryVoucher(int EmployeeId, int Month, int Year)
+    {
+      APIResponse response = await _ivoucherDetail.GetEmployeeSalaryVoucher(EmployeeId, Month, Year);
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> ReverseEmployeeSalaryVoucher(long VoucherNo)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _ivoucherDetail.ReverseEmployeeSalaryVoucher(VoucherNo, user.Id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> DisapproveEmployeeApprovedSalary([FromBody]DisapprovePayrollModel model)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _ivoucherDetail.DisapproveEmployeeApprovedSalary(model, user.Id);
+      }
+      return response;
+    }
 
   }
 }

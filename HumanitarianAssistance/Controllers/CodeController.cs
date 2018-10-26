@@ -1475,5 +1475,22 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> UpdatePayrollAccountHeadAllEmployees([FromBody] List<PayrollHeadModel> model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      string Id = string.Empty;
+
+      if (user != null)
+      {
+        Id = user.Id;
+      }
+
+      APIResponse response = await _icode.UpdatePayrollAccountHeadAllEmployees(model, Id);
+      return response;
+    }
+
   }
 }

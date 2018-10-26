@@ -53,7 +53,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 var OfficeDetail = await _uow.OfficeDetailRepository.FindAsync(x => x.OfficeId == model.OfficeId);
                 var emp = await _uow.EmployeeDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeID == obj.EmployeeID);
-                emp.EmployeeCode = OfficeDetail.OfficeCode + obj.EmployeeID;
+                emp.EmployeeCode = "E" + obj.EmployeeID;
                 await _uow.EmployeeDetailRepository.UpdateAsyn(emp);
 
                 EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel();
@@ -856,57 +856,11 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 await _uow.GetDbContext().EmployeePayroll.AddRangeAsync(employeepayrolllist);
                 await _uow.SaveAsync();
-
-
-                #region "Removed no"
-
-                //var recordexist = await _uow.EmployeeSalaryDetailsRepository.FindAsync(x => x.EmployeeId == model[0].EmployeeId);
-
-                //double totalgeneraamount = model.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).Sum(x => x.MonthlyAmount);
-                //double totalallowance = model.Where(x => x.HeadTypeId == (int)SalaryHeadType.ALLOWANCE).Sum(x => x.MonthlyAmount);
-                //double totaldeduction = model.Where(x => x.HeadTypeId == (int)SalaryHeadType.DEDUCTION).Sum(x => x.MonthlyAmount);
-
-                //if (recordexist != null)
-                //{
-                //    recordexist.TotalGeneralAmount = totalgeneraamount;
-                //    recordexist.TotalAllowance = totalallowance;
-                //    recordexist.Totalduduction = totaldeduction;
-                //    recordexist.CurrencyId = model[0].CurrencyId;
-                //    recordexist.PaymentType = model[0].PaymentType;
-                //    recordexist.PensionRate = model[0].PensionRate;
-                //    recordexist.ModifiedById = userid;
-                //    recordexist.ModifiedDate = DateTime.UtcNow;
-                //    recordexist.IsDeleted = false;
-                //    await _uow.EmployeeSalaryDetailsRepository.UpdateAsyn(recordexist);
-                //}
-                #endregion
+                
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
-
-                //var existrecord = await _uow.EmployeeSalaryDetailsRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeId == model.EmployeeId);
-                //if (existrecord != null)
-                //{
-                //	existrecord.CurrencyId = model.CurrencyId;
-                //	//existrecord.MonthlySalary = model.MonthlySalary;
-                //	//existrecord.FoodAllowance = model.FoodAllowance;
-                //	//existrecord.TRAllowance = model.TRAllowance;
-                //	//existrecord.MedicalAllowance = model.MedicalAllowance;
-                //	//existrecord.OtherAllowance = model.OtherAllowance;
-                //	existrecord.Description = model.Description;
-                //	//existrecord.TotalAllowance = model.TotalAllowance;
-                //	//existrecord.TotalEarning = model.TotalEarning;
-                //	//existrecord.ProvidentFund = model.ProvidentFund;
-                //	//existrecord.Otherdeduction = model.Otherdeduction;
-                //	existrecord.Totalduduction = model.Totalduduction;
-                //	//existrecord.NetAmount = model.NetAmount;
-                //	existrecord.PaymentType = model.PaymentType;
-                //	existrecord.ModifiedById = model.ModifiedById;
-                //	existrecord.ModifiedDate = model.ModifiedDate;
-                //	existrecord.IsDeleted = model.IsDeleted;
-                //	await _uow.EmployeeSalaryDetailsRepository.UpdateAsyn(existrecord);
-
-                //}
+               
             }
             catch (Exception ex)
             {
@@ -940,7 +894,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                CurrencyId = employeepayrolls?.CurrencyId ?? 0,
                                                PaymentType = employeepayrolls?.PaymentType ?? 0,
                                                PensionRate = employeepayrolls?.PensionRate ?? 0,
-                                               AccountNo = salaryhead.AccountNo,
+                                               AccountNo = employeepayrolls?.AccountNo==null? salaryhead.AccountNo: employeepayrolls?.AccountNo,
                                                TransactionTypeId = salaryhead.TransactionTypeId
                                            }).ToList();
 
@@ -981,9 +935,25 @@ namespace HumanitarianAssistance.Service.Classes
                 //    EmployeePayrollAccountModelList.AddRange(EmployeePayrollAccountModelList1);
                 //}
 
+                //List<EmployeePayrollAccountModel> EmployeePayrollAccountList = await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x => x.EmployeeId == EmployeeId)
+                //                                                                                        .Select(x=> new EmployeePayrollAccountModel{
+                //                                                                                            AccountNo= x.AccountNo,
+                //                                                                                            Description= x.Description,
+                //                                                                                            PayrollHeadId= x.PayrollHeadId,
+                //                                                                                            PayrollHeadName= x.PayrollHeadName,
+                //                                                                                            PayrollHeadTypeId= x.PayrollHeadTypeId,
+                //                                                                                            TransactionTypeId= x.TransactionTypeId,
+                //                                                                                            EmployeeId = EmployeeId,
+                //                                                                                            SalaryHeadType = x.PayrollHeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : x.PayrollHeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : x.PayrollHeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : ""
+                //                                                                                        })
+                //                                                                                        .ToListAsync();
 
-                var sdfrdf = await _uow.GetDbContext().PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
-                var asdfgfgf = await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x => x.EmployeeId == EmployeeId).ToListAsync();
+                //if (!EmployeePayrollAccountList.Any())
+                //{
+                //    EmployeePayrollAccountList= await _uow.GetDbContext().PayrollAccountHead
+
+
+                //}
 
 
                 var employeeAccountHeadPayroll = (from payrollHead in await _uow.GetDbContext().PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync()

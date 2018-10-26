@@ -189,8 +189,10 @@ ExchangeRates.Include(x => x.CurrencyFrom).Include(y => y.CurrencyTo).Where(x =>
                 {
                     var accountDetail = allAccounts.Find(x => x.ChartOfAccountCode == accounts);
 
-                    InputLevelAccounts.AddRange(CommonUtility.CommonFunctions.GetInputLevelAccountDetails(accountDetail, allAccounts));
-
+                    if (accountDetail != null)
+                    {
+                        InputLevelAccounts.AddRange(CommonUtility.CommonFunctions.GetInputLevelAccountDetails(accountDetail, allAccounts));
+                    }
                 }
 
                 //If VoucherList and AccountList
@@ -481,6 +483,12 @@ ExchangeRates.Include(x => x.CurrencyFrom).Include(y => y.CurrencyTo).Where(x =>
                                                                                                     .OrderByDescending(x => x.Date).ToListAsync();
 
 
+
+                    if (exchangeRate.Count == 0)// if exchange rate not found then find the recently updated Exchange rate within a year
+                    {
+                        exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false &&
+                                                                                                               (x.Date.Value.Year <= model.ToDate.Value.Year && x.Date.Value.Month <= model.ToDate.Value.Month)).OrderByDescending(x => x.Date).ToListAsync();
+                    }
 
                     foreach (long chartOfAccountCode in model.AccountList)
                     {

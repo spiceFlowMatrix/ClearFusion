@@ -1,26 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using HumanitarianAssistance.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using DataAccess;
 using HumanitarianAssistance.Service;
 using Microsoft.AspNetCore.Identity;
 using HumanitarianAssistance.Entities;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using AutoMapper;
-using Microsoft.AspNetCore.WebSockets.Internal;
-using Newtonsoft.Json.Serialization;
 using HumanitarianAssistance.WebAPI.Auth;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.Service.Classes;
@@ -30,7 +20,6 @@ using DataAccess.DbEntities;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using DataAccess.Data;
 using HumanitarianAssistance.WebAPI;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.FileProviders;
@@ -45,6 +34,7 @@ namespace HumanitarianAssistance
     private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
     private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
     public static IHostingEnvironment _Env;
+
     public Startup(IConfiguration configuration, IHostingEnvironment env)
     {
       Configuration = configuration;
@@ -81,6 +71,12 @@ namespace HumanitarianAssistance
           Type = "apiKey"
         });
       });
+
+
+      //services.AddDefaultIdentity<ApplicationUser>()
+      // .AddEntityFrameworkStores<ApplicationDbContext>()
+      // .AddDefaultTokenProviders();
+
       // ===== Add Identity ========
       services.AddIdentity<AppUser, IdentityRole>(o =>
       {
@@ -243,17 +239,17 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager)
     {
 
-
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
       }
-
-      app.UseExceptionHandler(
-           builder =>
-           {
-             builder.Run(
-                async context =>
+      else
+      {
+        app.UseExceptionHandler(
+            builder =>
+            {
+              builder.Run(
+                 async context =>
                  {
                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                    context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
@@ -266,10 +262,13 @@ namespace HumanitarianAssistance
                      await context.Response.WriteAsync(error.Error.Message).ConfigureAwait(false);
                    }
                  });
-           });
+            });
 
+        app.UseHsts();
+      }
 
-
+      app.UseHttpsRedirection();
+      app.UseCookiePolicy();
 
       app.UseCors(DefaultCorsPolicyName);
       app.UseAuthentication();

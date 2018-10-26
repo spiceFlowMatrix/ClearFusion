@@ -1,15 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using DataAccess.Data;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Entities;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -19,8 +14,7 @@ namespace HumanitarianAssistance
   {
     public static void Main(string[] args)
     {
-      //BuildWebHost(args).Run();
-      var host = BuildWebHost(args);
+      var host = CreateWebHostBuilder(args).Build();
 
       using (var scope = host.Services.CreateScope())
       {
@@ -43,12 +37,12 @@ namespace HumanitarianAssistance
       host.Run();
     }
 
-    public static IWebHost BuildWebHost(string[] args) =>
+    public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
         WebHost.CreateDefaultBuilder(args)
             .UseStartup<Startup>()
-            .UseUrls("http://*:5000")         // 8080        // LIVE  // chaservice, chaclient      // Port 80
-            //.UseUrls("http://*:5001")       // 9090       // chatestclient, chatestservice       // Port 9000
-            //.UseUrls("http://*:5002")       // 7070      // chaserviceclient, chaservicetest    // Port 7000
-            .Build();
+            .UseUrls("http://*:5000");        // 8080        // LIVE  // chaservice, chaclient      // Port 80
+            //.UseUrls("http://*:5001");       // 9090       // chatestclient, chatestservice       // Port 9000
+            //.UseUrls("http://*:5002");       // 7070      // chaserviceclient, chaservicetest    // Port 7000
+            //.UseUrls("http://*:5003"); // backend -> 1010 (chaapp1010Service) , frontend -> Port 1000 (chaapp1000Client) //Database=smomaindb
   }
 }

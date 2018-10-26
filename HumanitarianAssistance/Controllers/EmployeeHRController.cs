@@ -232,6 +232,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<object> DisapproveEmployeeApprovedSalary([FromBody]DisapprovePayrollModel model)
+    //{
+    //  APIResponse response = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    response = await _iEmployeeHR.DisapproveEmployeeApprovedSalary(model, user.Id);
+    //  }
+    //  return response;
+    //}
+
     #region"Data Transfer Api For Attendance"
     [HttpGet]
     public string TransferDataForAttendance()

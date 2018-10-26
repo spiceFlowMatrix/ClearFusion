@@ -11,7 +11,9 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string HeadName { get; set; }
         public string Description { get; set; }
         public long AccountNo { get; set; }
-        public int TransactionTypeId { get; set; }
+        public int? TransactionTypeId { get; set; }
+        public decimal? MonthlyAmount { get; set; }
+        public bool SaveForAll { get; set; }
     }
 
     public class PayrollHeadModel : BaseModel
@@ -22,6 +24,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string Description { get; set; }
         public long? AccountNo { get; set; }
         public int? TransactionTypeId { get; set; }
-        
+        public decimal? Amount { get; set; }
     }
 }

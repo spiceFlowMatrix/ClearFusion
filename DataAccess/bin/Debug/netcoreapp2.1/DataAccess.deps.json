@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "b5188de84d8fbecd662f33c082b1fb5ecce7c18c"
+    "signature": "0d618acea6d42eca9a0508434bd4da3a4724d149"
   },
   "compilationOptions": {},
   "targets": {
@@ -10,8 +10,9 @@
         "dependencies": {
           "HumanitarianAssistance.Common": "1.0.0",
           "HumanitarianAssistance.ViewModels": "1.0.0",
+          "Microsoft.EntityFrameworkCore.Tools": "2.1.4",
           "Microsoft.EntityFrameworkCore.Tools.DotNet": "2.0.0",
-          "Microsoft.NETCore.App": "2.1.0-rc1",
+          "Microsoft.NETCore.App": "2.1.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "2.0.2",
           "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.1"
         },
@@ -19,8 +20,56 @@
           "DataAccess.dll": {}
         }
       },
+      "Microsoft.EntityFrameworkCore/2.1.4": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Abstractions": "2.1.4",
+          "Microsoft.EntityFrameworkCore.Analyzers": "2.1.4",
+          "Remotion.Linq": "2.2.0",
+          "System.Collections.Immutable": "1.5.0",
+          "System.Diagnostics.DiagnosticSource": "4.5.1",
+          "System.Interactive.Async": "3.1.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.EntityFrameworkCore.dll": {
+            "assemblyVersion": "2.1.4.0",
+            "fileVersion": "2.1.4.18263"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Abstractions/2.1.4": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
+            "assemblyVersion": "2.1.4.0",
+            "fileVersion": "2.1.4.18263"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Analyzers/2.1.4": {},
+      "Microsoft.EntityFrameworkCore.Design/2.1.4": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Relational": "2.1.4"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Design.dll": {
+            "assemblyVersion": "2.1.4.0",
+            "fileVersion": "2.1.4.18263"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Relational/2.1.4": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "2.1.4"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Relational.dll": {
+            "assemblyVersion": "2.1.4.0",
+            "fileVersion": "2.1.4.18263"
+          }
+        }
+      },
       "Microsoft.EntityFrameworkCore.Relational.Design/1.1.2": {
         "dependencies": {
+          "Microsoft.EntityFrameworkCore.Relational": "2.1.4",
           "NETStandard.Library": "2.0.3"
         },
         "runtime": {
@@ -30,9 +79,14 @@
           }
         }
       },
+      "Microsoft.EntityFrameworkCore.Tools/2.1.4": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Design": "2.1.4"
+        }
+      },
       "Microsoft.EntityFrameworkCore.Tools.DotNet/2.0.0": {
         "dependencies": {
-          "Microsoft.NETCore.App": "2.1.0-rc1"
+          "Microsoft.NETCore.App": "2.1.0"
         },
         "runtime": {
           "lib/netcoreapp2.0/dotnet-ef.dll": {
@@ -41,30 +95,30 @@
           }
         }
       },
-      "Microsoft.NETCore.App/2.1.0-rc1": {
+      "Microsoft.NETCore.App/2.1.0": {
         "dependencies": {
-          "Microsoft.NETCore.DotNetHostPolicy": "2.1.0-rc1",
-          "Microsoft.NETCore.Platforms": "2.1.0-rc1",
-          "Microsoft.NETCore.Targets": "2.1.0-rc1",
+          "Microsoft.NETCore.DotNetHostPolicy": "2.1.0",
+          "Microsoft.NETCore.Platforms": "2.1.0",
+          "Microsoft.NETCore.Targets": "2.1.0",
           "NETStandard.Library": "2.0.3"
         }
       },
-      "Microsoft.NETCore.DotNetAppHost/2.1.0-rc1": {},
-      "Microsoft.NETCore.DotNetHostPolicy/2.1.0-rc1": {
+      "Microsoft.NETCore.DotNetAppHost/2.1.0": {},
+      "Microsoft.NETCore.DotNetHostPolicy/2.1.0": {
         "dependencies": {
-          "Microsoft.NETCore.DotNetHostResolver": "2.1.0-rc1"
+          "Microsoft.NETCore.DotNetHostResolver": "2.1.0"
         }
       },
-      "Microsoft.NETCore.DotNetHostResolver/2.1.0-rc1": {
+      "Microsoft.NETCore.DotNetHostResolver/2.1.0": {
         "dependencies": {
-          "Microsoft.NETCore.DotNetAppHost": "2.1.0-rc1"
+          "Microsoft.NETCore.DotNetAppHost": "2.1.0"
         }
       },
-      "Microsoft.NETCore.Platforms/2.1.0-rc1": {},
-      "Microsoft.NETCore.Targets/2.1.0-rc1": {},
+      "Microsoft.NETCore.Platforms/2.1.0": {},
+      "Microsoft.NETCore.Targets/2.1.0": {},
       "NETStandard.Library/2.0.3": {
         "dependencies": {
-          "Microsoft.NETCore.Platforms": "2.1.0-rc1"
+          "Microsoft.NETCore.Platforms": "2.1.0"
         }
       },
       "Npgsql/3.2.7": {
@@ -77,6 +131,8 @@
       },
       "Npgsql.EntityFrameworkCore.PostgreSQL/2.0.2": {
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": "2.1.4",
+          "Microsoft.EntityFrameworkCore.Relational": "2.1.4",
           "Npgsql": "3.2.7"
         },
         "runtime": {
@@ -88,6 +144,8 @@
       },
       "Npgsql.EntityFrameworkCore.PostgreSQL.Design/1.1.1": {
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": "2.1.4",
+          "Microsoft.EntityFrameworkCore.Relational": "2.1.4",
           "Microsoft.EntityFrameworkCore.Relational.Design": "1.1.2",
           "NETStandard.Library": "2.0.3",
           "Npgsql": "3.2.7",
@@ -100,6 +158,38 @@
           }
         }
       },
+      "Remotion.Linq/2.2.0": {
+        "dependencies": {
+          "System.Linq.Queryable": "4.0.1"
+        },
+        "runtime": {
+          "lib/netstandard1.0/Remotion.Linq.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.30000"
+          }
+        }
+      },
+      "System.Collections.Immutable/1.5.0": {},
+      "System.Diagnostics.DiagnosticSource/4.5.1": {
+        "runtime": {
+          "lib/netstandard1.3/System.Diagnostics.DiagnosticSource.dll": {
+            "assemblyVersion": "4.0.3.1",
+            "fileVersion": "4.6.26919.2"
+          }
+        }
+      },
+      "System.Interactive.Async/3.1.1": {
+        "dependencies": {
+          "NETStandard.Library": "2.0.3"
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.Interactive.Async.dll": {
+            "assemblyVersion": "3.0.3000.0",
+            "fileVersion": "3.1.1.0"
+          }
+        }
+      },
+      "System.Linq.Queryable/4.0.1": {},
       "HumanitarianAssistance.Common/1.0.0": {
         "runtime": {
           "HumanitarianAssistance.Common.dll": {}
@@ -107,7 +197,7 @@
       },
       "HumanitarianAssistance.ViewModels/1.0.0": {
         "dependencies": {
-          "Microsoft.NETCore.App": "2.1.0-rc1"
+          "Microsoft.NETCore.App": "2.1.0"
         },
         "runtime": {
           "HumanitarianAssistance.ViewModels.dll": {}
@@ -121,12 +211,54 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Microsoft.EntityFrameworkCore/2.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-72l8hbaJ5cXxZLCFeo46MDnvU8XJiDRNh1YQPzAlqVAlQrUwSVojYbJyOE7vbWqsb8rRqQYJ6NsmgPdUv/NKzw==",
+      "path": "microsoft.entityframeworkcore/2.1.4",
+      "hashPath": "microsoft.entityframeworkcore.2.1.4.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Abstractions/2.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-5Vc1zdCq7p+E/8ndJnTKHebJeqSC/1gb4hXDPi7UHdqURAxWl3lZV5+79x/dSfO/P6n/sEz5fURYGOMDoreXUA==",
+      "path": "microsoft.entityframeworkcore.abstractions/2.1.4",
+      "hashPath": "microsoft.entityframeworkcore.abstractions.2.1.4.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Analyzers/2.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cYjXickepORM4UmNdqdZ3l74xhG5OHWMDxsFlqHJGm0qxLAHv5GAI2dKkkGslrjyaPYnfRW3JhAWubBWBt0XUg==",
+      "path": "microsoft.entityframeworkcore.analyzers/2.1.4",
+      "hashPath": "microsoft.entityframeworkcore.analyzers.2.1.4.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Design/2.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oQ9riABU2UiAE0aj1/yRZx58dvyTsmmSL2tgASrhYxwHeAAEO9is1OavrdjC6hDc+t/M0/PsJ8GFyRp8cedlWg==",
+      "path": "microsoft.entityframeworkcore.design/2.1.4",
+      "hashPath": "microsoft.entityframeworkcore.design.2.1.4.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Relational/2.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cn/sEABCjVEp+Ji8LaDjGc7kjD2fJ9y46GL7rTnP1imWmdEYr3eL1oTNKOukMCNwjEGf1pZid0f0LKXaWBGbHw==",
+      "path": "microsoft.entityframeworkcore.relational/2.1.4",
+      "hashPath": "microsoft.entityframeworkcore.relational.2.1.4.nupkg.sha512"
+    },
     "Microsoft.EntityFrameworkCore.Relational.Design/1.1.2": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-pu2Jxndzv3slY6Ch9mdqVfL3AFhH5XzM02Rrnf9h5lKoViprYx1O+nNqT3BxmGrPkYadY9OddG2b9+sUO3Xuzw==",
       "path": "microsoft.entityframeworkcore.relational.design/1.1.2",
       "hashPath": "microsoft.entityframeworkcore.relational.design.1.1.2.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Tools/2.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+mMAfPku3xFvFgzEYtFYZ6yek8EJz6NJq6AhO/yaqW2RS+6INWS54dfhy3qOddX2EXqE1ZEhkz5L1Zf1F8rAdQ==",
+      "path": "microsoft.entityframeworkcore.tools/2.1.4",
+      "hashPath": "microsoft.entityframeworkcore.tools.2.1.4.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore.Tools.DotNet/2.0.0": {
       "type": "package",
@@ -135,47 +267,47 @@
       "path": "microsoft.entityframeworkcore.tools.dotnet/2.0.0",
       "hashPath": "microsoft.entityframeworkcore.tools.dotnet.2.0.0.nupkg.sha512"
     },
-    "Microsoft.NETCore.App/2.1.0-rc1": {
+    "Microsoft.NETCore.App/2.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Y76lrh4O4CqQrZNp4CYcmdC8BmlMj8w19TMxJGogBZgciIq/h0Ine/gFivf2Qc4Ko2/CYafOIYBqyVqLYUXf8g==",
-      "path": "microsoft.netcore.app/2.1.0-rc1",
-      "hashPath": "microsoft.netcore.app.2.1.0-rc1.nupkg.sha512"
+      "sha512": "sha512-AvT774nTFgU8cYcGO9j1EMwuayKslxqYTurg32HGpWa2hEYNuW2+XgYVVNcZe6Ndbr84QX6fwaOZfd5n+1m2OA==",
+      "path": "microsoft.netcore.app/2.1.0",
+      "hashPath": "microsoft.netcore.app.2.1.0.nupkg.sha512"
     },
-    "Microsoft.NETCore.DotNetAppHost/2.1.0-rc1": {
+    "Microsoft.NETCore.DotNetAppHost/2.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-pljoDMtc2ZDWu+v2RosjokXh+PLgEofF4/Fk0ZFED0eFDlc7Cf3S9W9WTV1lSg2P0QUUxl9N9gNNlX2dcnAY6w==",
-      "path": "microsoft.netcore.dotnetapphost/2.1.0-rc1",
-      "hashPath": "microsoft.netcore.dotnetapphost.2.1.0-rc1.nupkg.sha512"
+      "sha512": "sha512-f/47I60Wg3SrveTvnecCQhCZCAMYlUujWF15EQ/AZTqF/54qeEJjbCIAxKcZI8ToUYzSg6JdfrHggsgjCyCE9Q==",
+      "path": "microsoft.netcore.dotnetapphost/2.1.0",
+      "hashPath": "microsoft.netcore.dotnetapphost.2.1.0.nupkg.sha512"
     },
-    "Microsoft.NETCore.DotNetHostPolicy/2.1.0-rc1": {
+    "Microsoft.NETCore.DotNetHostPolicy/2.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-w60irQLvSJ/idAtGOm6yQPSrV8C8TEAPNyajjnw+e0cy00WTsM4c0412OVOLgBjnxSNUdSAh+552RzAGO6p0Pw==",
-      "path": "microsoft.netcore.dotnethostpolicy/2.1.0-rc1",
-      "hashPath": "microsoft.netcore.dotnethostpolicy.2.1.0-rc1.nupkg.sha512"
+      "sha512": "sha512-p50yZYKzhH64lmArJgoKjtvsNehECa+/sAuOQzZh5uDNBTbRKxjN8IXP1e517xdVsgrFcSNxSEVDKZIOWVjGcQ==",
+      "path": "microsoft.netcore.dotnethostpolicy/2.1.0",
+      "hashPath": "microsoft.netcore.dotnethostpolicy.2.1.0.nupkg.sha512"
     },
-    "Microsoft.NETCore.DotNetHostResolver/2.1.0-rc1": {
+    "Microsoft.NETCore.DotNetHostResolver/2.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-0desKuiIjUpcgmO1ViGKLTyhhO+CIRwN1Po/2DDQh9fHkXkxCHPKnZOKFjYMJSHohsliotAC99wZqYs9sKZkdQ==",
-      "path": "microsoft.netcore.dotnethostresolver/2.1.0-rc1",
-      "hashPath": "microsoft.netcore.dotnethostresolver.2.1.0-rc1.nupkg.sha512"
+      "sha512": "sha512-fS9D8a+y55n6mHMbNqgHXaPGkjmpVH9h97OyrBxsCuo3Z8aQaFMJ5xIfmzji2ntUd/3truhMbSgSfIelHOkQpg==",
+      "path": "microsoft.netcore.dotnethostresolver/2.1.0",
+      "hashPath": "microsoft.netcore.dotnethostresolver.2.1.0.nupkg.sha512"
     },
-    "Microsoft.NETCore.Platforms/2.1.0-rc1": {
+    "Microsoft.NETCore.Platforms/2.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-nsme5QrPBS8qq1FLFwbhhyOPMcQjhWd0pXCEIAnmtTacLdZZ+w54QiP7OaibGEyDdyhL/42ixsazNuP0irPKNw==",
-      "path": "microsoft.netcore.platforms/2.1.0-rc1",
-      "hashPath": "microsoft.netcore.platforms.2.1.0-rc1.nupkg.sha512"
+      "sha512": "sha512-TT+QCi9LcxGTjBssH7S7n5+8DVcwfG4DYgXX7Dk7+BfZ4oVHj8Q0CbYk9glzAlHLsSt3bYzol+fOdra2iu6GOw==",
+      "path": "microsoft.netcore.platforms/2.1.0",
+      "hashPath": "microsoft.netcore.platforms.2.1.0.nupkg.sha512"
     },
-    "Microsoft.NETCore.Targets/2.1.0-rc1": {
+    "Microsoft.NETCore.Targets/2.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-TmcnvHJlhTifhcw0C9ey85ag9xnRi4BLOZePCqfUnO3MS78ifKGBInIfQZxgKvGLjGhvwib4HCbagEtvQR2cEw==",
-      "path": "microsoft.netcore.targets/2.1.0-rc1",
-      "hashPath": "microsoft.netcore.targets.2.1.0-rc1.nupkg.sha512"
+      "sha512": "sha512-etaYwrLZQUS+b3UWTpCnUggd6SQ/ZIkZ5pHnoR7+dIWt/wp2Rv3CvMKOZISsrt7FYCHKwCxfcepuuyEWkQxADg==",
+      "path": "microsoft.netcore.targets/2.1.0",
+      "hashPath": "microsoft.netcore.targets.2.1.0.nupkg.sha512"
     },
     "NETStandard.Library/2.0.3": {
       "type": "package",
@@ -204,6 +336,41 @@
       "sha512": "sha512-UXgRNtmOIc/gw3bvdof4hZu4rL9xIUGeSWklasd+Oj9SF7EH+OTu43/Qsz6YYrqX2sem2qxd004LwtW/CWpVHg==",
       "path": "npgsql.entityframeworkcore.postgresql.design/1.1.1",
       "hashPath": "npgsql.entityframeworkcore.postgresql.design.1.1.1.nupkg.sha512"
+    },
+    "Remotion.Linq/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fK/76UmpC0FXBlGDFVPLJHQlDLYnGC+XY3eoDgCgbtrhi0vzbXDQ3n/IYHhqSKqXQfGw/u04A1drWs7rFVkRjw==",
+      "path": "remotion.linq/2.2.0",
+      "hashPath": "remotion.linq.2.2.0.nupkg.sha512"
+    },
+    "System.Collections.Immutable/1.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-RGxi2aQoXgZ5ge0zxrKqI4PU9LrYYoLC+cnEnWXKsSduCOUhE1GEAAoTexUVT8RZOILQyy1B27HC8Xw/XLGzdQ==",
+      "path": "system.collections.immutable/1.5.0",
+      "hashPath": "system.collections.immutable.1.5.0.nupkg.sha512"
+    },
+    "System.Diagnostics.DiagnosticSource/4.5.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-m86SgxAIi5j0iGzx2y1LrcMcopIYfinfcojyQ9CcNRy3MZvi0dVuDlMj2M7kV6MMGSunqZ+OnQ+rQbxWafFBaw==",
+      "path": "system.diagnostics.diagnosticsource/4.5.1",
+      "hashPath": "system.diagnostics.diagnosticsource.4.5.1.nupkg.sha512"
+    },
+    "System.Interactive.Async/3.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hZccYiIE5RS1/J9Tb/BNtosAGVggdlsJm4Ojdu+gDV0p4AIi+LUfUogMKkRacljQEJd2AG6vYzvcjhQFkqoZmw==",
+      "path": "system.interactive.async/3.1.1",
+      "hashPath": "system.interactive.async.3.1.1.nupkg.sha512"
+    },
+    "System.Linq.Queryable/4.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Yn/WfYe9RoRfmSLvUt2JerP0BTGGykCZkQPgojaxgzF2N0oPo+/AhB8TXOpdCcNlrG3VRtsamtK2uzsp3cqRVw==",
+      "path": "system.linq.queryable/4.0.1",
+      "hashPath": "system.linq.queryable.4.0.1.nupkg.sha512"
     },
     "HumanitarianAssistance.Common/1.0.0": {
       "type": "project",

@@ -76,5 +76,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllPayrollHead();
         Task<APIResponse> UpdatePayrollAccountHead(PayrollHeadModel model);
         Task<APIResponse> DeletePayrollAccountHead(PayrollHeadModel model);
+        Task<APIResponse> UpdatePayrollAccountHeadAllEmployees(List<PayrollHeadModel> model, string UserId);
     }
 }

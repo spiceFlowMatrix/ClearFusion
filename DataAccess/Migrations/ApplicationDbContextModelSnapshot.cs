@@ -2839,6 +2839,45 @@ namespace DataAccess.Migrations
                     b.ToTable("EmployeeSalaryDetails");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.EmployeeSalaryPaymentHistory", b =>
+                {
+                    b.Property<int>("SalaryPaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("EmployeeId");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<bool>("IsSalaryReverse");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("Month");
+
+                    b.Property<long>("VoucherNo");
+
+                    b.Property<int>("Year");
+
+                    b.HasKey("SalaryPaymentId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("VoucherNo");
+
+                    b.ToTable("EmployeeSalaryPaymentHistory");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeType", b =>
                 {
                     b.Property<int>("EmployeeTypeId")
@@ -6729,6 +6768,27 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.EmployeeSalaryPaymentHistory", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.VoucherDetail", "VoucherDetail")
+                        .WithMany()
+                        .HasForeignKey("VoucherNo")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeType", b =>

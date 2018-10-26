@@ -71,5 +71,9 @@ namespace HumanitarianAssistance.Service.interfaces
         //Task<APIResponse> GetAllAccountCodeByVoucherNo(ExchangeGainOrLossFilterModel ExchangeGainOrLossFilter);
         Task<APIResponse> AddEmployeePensionPayment(EmployeePensionPaymentModel EmployeePensionPayment);
         Task<APIResponse> GetAllInputLevelAccountCode();
+        Task<APIResponse> GenerateSalaryVoucher(EmployeeSalaryVoucherModel EmployeeSalaryVoucher);
+        Task<APIResponse> GetEmployeeSalaryVoucher(int EmployeeId, int Month, int Year);
+        Task<APIResponse> ReverseEmployeeSalaryVoucher(long VoucherNo, string UserId);
+        Task<APIResponse> DisapproveEmployeeApprovedSalary(DisapprovePayrollModel model, string UserId);
     }
 }

@@ -8,7 +8,7 @@ namespace HumanitarianAssistance.ViewModels.Models
     public class LedgerModels: PaginationModel
     {
         public List<int?> OfficesList { get; set; }
-        public int? OfficeId { get; set; }
+        public List<int> OfficeIdList { get; set; }
         public int CurrencyId { get; set; }
         public DateTime fromdate { get; set; }
         public DateTime todate { get; set; }

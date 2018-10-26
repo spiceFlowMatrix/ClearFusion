@@ -141,6 +141,7 @@ namespace DataAccess
         private IGenericRepository<PensionPaymentHistory> _pensionPaymentHistoryRepository;
         private IGenericRepository<PayrollAccountHead> _payrollAccountHeadRepository;
         private IGenericRepository<EmployeePayrollAccountHead> _employeePayrollAccountHeadRepository;
+        private IGenericRepository<EmployeeSalaryPaymentHistory> _employeeSalaryPaymentHistoryRepository;
 
         public UnitOfWork(ApplicationDbContext mschaContext)
         {
@@ -1155,6 +1156,14 @@ namespace DataAccess
             get
             {
                 return _employeePayrollAccountHeadRepository = _employeePayrollAccountHeadRepository ?? new GenericRepository<EmployeePayrollAccountHead>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistoryRepository
+        {
+            get
+            {
+                return _employeeSalaryPaymentHistoryRepository = _employeeSalaryPaymentHistoryRepository ?? new GenericRepository<EmployeeSalaryPaymentHistory>(_mschaContext);
             }
         }
 

@@ -7,7 +7,7 @@ namespace HumanitarianAssistance.ViewModels.Models
     public class JournalVoucherFilterModel : BaseModel
     {
         public int? JournalNo { get; set; }
-        public int? OfficeId { get; set; }
+        public List<int?> OfficeIdList { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
 
