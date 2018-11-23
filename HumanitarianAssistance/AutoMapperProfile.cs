@@ -1,9 +1,13 @@
 using AutoMapper;
 using DataAccess.DbEntities;
+using DataAccess.DbEntities.Marketing;
+using DataAccess.DbEntities.Project;
 using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Marketing;
+using HumanitarianAssistance.ViewModels.Models.Project;
 using HumanitarianAssistance.ViewModels.Models.Store;
 using System;
 using System.Collections.Generic;
@@ -37,7 +41,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<ExchangeRate, ExchangeRateModel>().ReverseMap();
       CreateMap<EmployeeDetail, EmployeeDetailModel>().ReverseMap();
       CreateMap<DesignationDetail, DesignationModel>().ReverseMap();
-      CreateMap<ProjectBudget, ProjectBudgetModel>().ReverseMap();
+      //CreateMap<ProjectBudget, ProjectBudgetModel>().ReverseMap();
       CreateMap<JobHiringDetails, JobHiringDetailsModel>().ReverseMap();
       CreateMap<ProfessionDetails, ProfessionModel>().ReverseMap();
       CreateMap<InterviewScheduleDetails, InterviewScheduleModel>().ReverseMap();
@@ -59,8 +63,8 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<PayrollMonthlyHourDetail, PayrollMonthlyHourDetailModel>().ReverseMap();
       CreateMap<AssignLeaveToEmployee, AssignLeaveToEmployeeModel>().ReverseMap();
       CreateMap<FinancialYearDetail, FinancialYearDetailModel>().ReverseMap();
-      CreateMap<BudgetPayable, BudgetPayableModel>().ReverseMap();
-      CreateMap<BudgetPayableAmount, BudgetPayableAmountModel>().ReverseMap();
+      //CreateMap<BudgetPayable, BudgetPayableModel>().ReverseMap();
+      //CreateMap<BudgetPayableAmount, BudgetPayableAmountModel>().ReverseMap();
       CreateMap<EmployeeAttendance, EmployeeAttendanceModel>().ReverseMap();
       CreateMap<EmployeeHealthDetail, EmployeeHealthInformationModel>().ReverseMap();
       CreateMap<EmployeeApplyLeave, EmployeeApplyLeaveModel>().ReverseMap();
@@ -99,6 +103,32 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<EmployeeHealthInfo, EmployeeHealthInformationModel>().ReverseMap();
       CreateMap<VoucherTransactions, VoucherTransactionModel>().ReverseMap();
       CreateMap<PayrollAccountHead, PayrollHeadModel>().ReverseMap();
+      CreateMap<StoreSourceCodeDetail, StoreSourceCodeDetailModel>().ReverseMap();
+      CreateMap<DonorModel, DonorDetail>().ReverseMap();
+      CreateMap<SectorModel, SectorDetails>().ReverseMap();
+      CreateMap<ProgramModel, ProgramDetail>().ReverseMap();
+      CreateMap<AreaModel, AreaDetail>().ReverseMap();
+      CreateMap<ProjectDetailNewModel, ProjectDetail>().ReverseMap();
+      CreateMap<ProjectAssignToModel, ProjectAssignTo>().ReverseMap();
+      CreateMap<ProjectProgramModel, ProgramDetail>().ReverseMap();
+      CreateMap<ProjectSectorModel, ProjectSector>().ReverseMap();
+      CreateMap<JobDetailsModel, JobDetails>().ReverseMap();
+      CreateMap<ActivityTypeModel, ActivityType>().ReverseMap();
+      CreateMap<JobPhaseModel, JobPhase>().ReverseMap();
+      CreateMap<JobPriceDetailsModel, JobPriceDetails>().ReverseMap();
+      CreateMap<LanguageModel, Language>().ReverseMap();
+      CreateMap<MediaCategoryModel, MediaCategory>().ReverseMap();
+      CreateMap<MediumModel, Medium>().ReverseMap();
+      CreateMap<ContractDetailsModel, ContractDetails>().ReverseMap();
+      CreateMap<NatureModel, Nature>().ReverseMap();
+      CreateMap<QualityModel, Quality>().ReverseMap();
+      CreateMap<UnitRateModel, UnitRate>().ReverseMap();
+      CreateMap<TimeCategoryModel, TimeCategory>().ReverseMap();
+      CreateMap<ProjectPhaseTimeModel, ProjectPhaseTime>().ReverseMap();
+      CreateMap<ClientDetailModel, ClientDetails>().ReverseMap();
+      CreateMap<CategoryModel, Category>().ReverseMap();
+      CreateMap<ApproveProjectDetailModel, ApproveProjectDetails>().ReverseMap();
+      CreateMap<WinApprovalProjectModel, WinProjectDetails>().ReverseMap();
     }
   }
 }

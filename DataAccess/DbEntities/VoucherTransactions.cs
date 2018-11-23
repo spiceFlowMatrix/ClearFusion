@@ -50,5 +50,7 @@ namespace DataAccess.DbEntities
 		public double? EURAmount { get; set; }
 		public double? USDAmount { get; set; }
 		public double? PKRAmount { get; set; }
-	}
+        public int? ProjectId { get; set; }
+        public int? BudgetLineId { get; set; }
+    }
 }

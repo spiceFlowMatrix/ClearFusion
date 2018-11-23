@@ -1,6 +1,7 @@
 ﻿using DataAccess.DbEntities;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Marketing;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -76,6 +77,14 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllPayrollHead();
         Task<APIResponse> UpdatePayrollAccountHead(PayrollHeadModel model);
         Task<APIResponse> DeletePayrollAccountHead(PayrollHeadModel model);
+        Task<APIResponse> GetAllDistrictDetailByProvinceId(List<int?> ProvinceId);
         Task<APIResponse> UpdatePayrollAccountHeadAllEmployees(List<PayrollHeadModel> model, string UserId);
+
+        #region Language
+        Task<APIResponse> EditLanguage(LanguageModel model, string UserId);
+        Task<APIResponse> AddLanguage(LanguageModel model, string UserId);
+        Task<APIResponse> DeleteLanguage(LanguageModel model, string UserId);
+        Task<APIResponse> GetAllLanguage();
+        #endregion
     }
 }

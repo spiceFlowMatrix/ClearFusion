@@ -15,6 +15,7 @@ using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models.Store;
 using Microsoft.EntityFrameworkCore;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -1005,7 +1006,7 @@ namespace HumanitarianAssistance.Service.Classes
                     Purchase = x.Purchase,
                     ReturnedDate = x.ReturnedDate,
                     IssedToLocation = x.IssedToLocation,
-                    IssueVoucherNo = x.IssueVoucherNo,
+                    IssueVoucherNo = x.IssueVoucherNo.ToString(),
                     Project = x.Project,
                     Remarks = x.Remarks,
                     StatusAtTimeOfIssue = x.StatusAtTimeOfIssue
@@ -1193,12 +1194,22 @@ namespace HumanitarianAssistance.Service.Classes
 
         #region "Employee Procurement Summary"
 
-        public async Task<APIResponse> GetProcurementSummary(int EmployeeId)
+        /// <summary>
+        /// Getting consolidated/single procurement summary details for employee 
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <param name="CurrencyId"></param>
+        /// <returns>Procurement summary list</returns>
+        public async Task<APIResponse> GetProcurementSummary(int EmployeeId, int CurrencyId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var ProcurmentData = await _uow.GetDbContext().StorePurchaseOrders
+                CurrencyDetails currencyDetails = _uow.GetDbContext().CurrencyDetails.FirstOrDefault(x => x.IsDeleted == false && x.CurrencyId== CurrencyId);
+
+                List<StorePurchaseOrder> ProcurmentData = new List<StorePurchaseOrder>();
+
+                     ProcurmentData = await _uow.GetDbContext().StorePurchaseOrders
                     .Include(x => x.StoreItemPurchase).ThenInclude(c => c.CurrencyDetails)
                     .Include(x => x.EmployeeDetail)
                     .Include(x => x.StoreItemPurchase.PurchaseUnitType)
@@ -1206,6 +1217,7 @@ namespace HumanitarianAssistance.Service.Classes
                     .Where(x => x.IssuedToEmployeeId == EmployeeId).ToListAsync();
 
                 List<ProcurmentSummaryModel> lst = new List<ProcurmentSummaryModel>();
+
                 if (ProcurmentData != null)
                 {
                     foreach (var item in ProcurmentData)
@@ -1224,9 +1236,38 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.TotalCostDetails.Amount = item.IssuedQuantity; //item.StoreItemPurchase?.Quantity ?? 0;
                         obj.TotalCostDetails.UnitCost = item.StoreItemPurchase?.UnitCost ?? 0;
                         obj.TotalCostDetails.Currency = item.StoreItemPurchase?.CurrencyDetails?.CurrencyName ?? null;
+                        obj.VoucherDate = item.StoreItemPurchase.VoucherDate;
+                        obj.VoucherNo = item.StoreItemPurchase.VoucherId;
+                        obj.CurrencyId = item.StoreItemPurchase.Currency;
                         lst.Add(obj);
                     }
+
+                    if (CurrencyId != 0)
+                    {
+
+                        var dates = lst.Select(y => y.VoucherDate.Date).ToList();
+
+                       List<ExchangeRateDetail> exchangeRateDetail = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.IsDeleted == false && x.ToCurrency== CurrencyId && dates.Contains(x.Date.Date)).ToList();
+
+                        //If Exchange rate is available on voucher date
+                        if (exchangeRateDetail.Any())
+                        {
+                            lst.ForEach(x => x.TotalCostDetails.UnitCost *= exchangeRateDetail.FirstOrDefault(y => y.Date.Date == x.VoucherDate.Date && y.FromCurrency == x.CurrencyId && y.ToCurrency == CurrencyId).Rate);
+                            lst.ForEach(x => x.TotalCost = x.TotalCostDetails.Amount * x.TotalCostDetails.UnitCost);
+                            lst.ForEach(x => x.TotalCostDetails.Currency = currencyDetails.CurrencyName);
+                        }
+                        else //If Exchange rate is not available on voucher date then take the latest exchange rate updated previously from voucher date
+                        {
+                            foreach (var obj in lst)
+                            {
+                              var  exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency== obj.CurrencyId && x.ToCurrency == CurrencyId && x.Date.Date <= obj.VoucherDate.Date);
+                                obj.TotalCostDetails.UnitCost *= exchangeRate.Rate;
+                                obj.TotalCost = obj.TotalCostDetails.Amount * obj.TotalCostDetails.UnitCost;
+                            }
+                        }
+                    }
                 }
+
                 response.data.ProcurmentSummaryModelList = lst;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1513,26 +1554,31 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> EditItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId)
+        public async Task<APIResponse> EditItemSpecificationsDetails(ItemSpecificationDetailModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                if (model.Count > 0)
+                if (model !=null)
                 {
-                    var existRecord = await _uow.ItemSpecificationDetailsRepository.FindAllAsync(x => x.IsDeleted == false && x.ItemId == model.FirstOrDefault().ItemId);
+                    var existRecord = await _uow.ItemSpecificationDetailsRepository.FindAllAsync(x => x.IsDeleted == false && x.ItemId == model.ItemId && x.ItemSpecificationMasterId== model.ItemSpecificationMasterId);
                     if (existRecord.Count > 0)
                     {
                         _uow.GetDbContext().ItemSpecificationDetails.RemoveRange(existRecord);
                     }
-                    List<ItemSpecificationDetails> obj = _mapper.Map<List<ItemSpecificationDetails>>(model);
-                    obj = obj.Select(x =>
-                    {
-                        x.CreatedById = UserId;
-                        x.CreatedDate = DateTime.Now;
-                        x.IsDeleted = false;
-                        return x;
-                    }).ToList();
+                     ItemSpecificationDetails obj = _mapper.Map<ItemSpecificationDetails>(model);
+                    //obj = obj.Select(x =>
+                    //{
+                    //    x.CreatedById = UserId;
+                    //    x.CreatedDate = DateTime.Now;
+                    //    x.IsDeleted = false;
+                    //    return x;
+                    //}).ToList();
+
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate= DateTime.Now;
+                    obj.IsDeleted = false;
+
                     await _uow.GetDbContext().ItemSpecificationDetails.AddRangeAsync(obj);
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -1743,6 +1789,366 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
+
+        public async Task<APIResponse> GetInventoryCode(int Id)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                StoreInventory storeInventories = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.AssetType == Id && x.IsDeleted== false);
+
+                if (storeInventories != null)
+                {
+                    int InventoryNumber = Convert.ToInt32(storeInventories.InventoryCode.Substring(1));
+
+                    if (Id == (int)InventoryMasterType.Consumables)
+                    {
+                        response.data.InventoryCode = "C" + String.Format("{0:D5}", ++InventoryNumber);
+                    }
+                    else if (Id == (int)InventoryMasterType.Expendables)
+                    {
+                        response.data.InventoryCode = "E" + String.Format("{0:D5}", ++InventoryNumber);
+                    }
+                    else
+                    {
+                        response.data.InventoryCode = "N" + String.Format("{0:D5}", ++InventoryNumber);
+                    }
+                }
+                else
+                {
+                    if (Id == (int)InventoryMasterType.Consumables)
+                    {
+                        response.data.InventoryCode = "C" + String.Format("{0:D5}", 1);
+                    }
+                    else if (Id == (int)InventoryMasterType.Expendables)
+                    {
+                        response.data.InventoryCode = "E" + String.Format("{0:D5}", 1);
+                    }
+                    else
+                    {
+                        response.data.InventoryCode = "N" + String.Format("{0:D5}", 1);
+                    }
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetInventoryItemCode(string InventoryId, int TypeId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                StoreInventoryItem storeInventoryItem = await _uow.GetDbContext().InventoryItems.Include(x => x.Inventory).OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.ItemInventory == InventoryId);
+
+                string inventoryItemCode = string.Empty;
+
+                if (storeInventoryItem != null)
+                {
+                    string InventoryCode = storeInventoryItem.Inventory.InventoryCode;
+
+                    int storeItemNumber = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(6));
+
+                    response.data.InventoryItemCode = InventoryCode + String.Format("{0:D5}", ++storeItemNumber);
+                }
+                else
+                {
+                    StoreInventory storeInventory = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.AssetType == TypeId);
+
+                    if (storeInventory != null)
+                    {
+                        response.data.InventoryItemCode = storeInventory.InventoryCode + "00001";
+                    }
+                    else
+                    {
+                        throw new Exception("No Master Invenmtory found");
+                    }
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Get All Store Source Types
+        /// </summary>
+        /// <returns>List of CodeType</returns>
+        public async Task<APIResponse> GetAllStoreSourceType()
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+
+                List<CodeType> CodeTypelist = await _uow.GetDbContext().CodeType.ToListAsync();
+
+                response.data.SourceCodeTypelist = CodeTypelist;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Get All Store Source Code
+        /// </summary>
+        /// <returns>List of Store Source Code</returns>
+        public async Task<APIResponse> GetAllStoreSourceCode(int? typeId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                List<StoreSourceCodeDetail> StoreSourceCodeDetailList = new List<StoreSourceCodeDetail>();
+
+                //Get Store Source Code Detail based on source code type selected
+                if (typeId != null)
+                {
+                   StoreSourceCodeDetailList = await _uow.GetDbContext().StoreSourceCodeDetail.Where(x => x.IsDeleted == false && x.CodeTypeId == typeId).ToListAsync();
+                }
+                else //Source Code Type is empty so Get all Store Source Code Detail
+                {
+                    StoreSourceCodeDetailList = await _uow.GetDbContext().StoreSourceCodeDetail.Where(x => x.IsDeleted == false).ToListAsync();
+                }
+
+                List<StoreSourceCodeDetailModel> obj = _mapper.Map<List<StoreSourceCodeDetailModel>>(StoreSourceCodeDetailList);
+                response.data.SourceCodeDatalist = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Add Store Source Code
+        /// </summary>
+        /// <param name="storeSourceCodeDetailModel"></param>
+        /// <param name="userId"></param>
+        /// <returns>list of StoreSourceCode</returns>
+        public async Task<APIResponse> AddStoreSourceCode(StoreSourceCodeDetailModel storeSourceCodeDetailModel, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                StoreSourceCodeDetail obj = _mapper.Map<StoreSourceCodeDetail>(storeSourceCodeDetailModel);
+
+                obj.IsDeleted = false;
+                obj.CreatedDate = DateTime.Now;
+                obj.CreatedById = userId;
+
+                await _uow.GetDbContext().StoreSourceCodeDetail.AddAsync(obj);
+                await _uow.SaveAsync();
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Get Store Type Code
+        /// </summary>
+        /// <param name="storeSourceCodeDetailModel"></param>
+        /// <param name="userId"></param>
+        /// <returns> Store Type Code </returns>
+        public async Task<APIResponse> GetStoreTypeCode(int CodeTypeId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                string storeCode = string.Empty;
+
+                int codeNumber = 0;
+
+                //Getting latest created record of StoreSourceCodeDetail based on source code type selected
+                StoreSourceCodeDetail storeSourceCodeDetail = await _uow.GetDbContext().StoreSourceCodeDetail.OrderByDescending(x => x.SourceCodeId).FirstOrDefaultAsync(x => x.IsDeleted == false && x.CodeTypeId == CodeTypeId);
+
+                //retreiving the number in code
+                if (int.TryParse(storeSourceCodeDetail.Code.Substring(1), out codeNumber))
+                {
+
+                    //generating a new code for new entry in StoreSourceCodeDetail table based on source code type selected
+                    switch (CodeTypeId)
+                    {
+                        case (int)SourceCode.Organizations:
+                            storeCode = "O" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                        case (int)SourceCode.Suppliers:
+                            storeCode = "S" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                        case (int)SourceCode.RepairShops:
+                            storeCode = "R" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                        case (int)SourceCode.LocationsStores:
+                            storeCode = "L" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                        case (int)SourceCode.IndividualOthers:
+                            storeCode = "I" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                        case (int)SourceCode.Test:
+                            storeCode = "T" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                    }
+
+                    response.data.StoreSourceCode = storeCode;
+                }
+                else//record is not present
+                {
+                    switch (CodeTypeId)
+                    {
+                        case (int)SourceCode.Organizations:
+                            storeCode = "O" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                        case (int)SourceCode.Suppliers:
+                            storeCode = "S" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                        case (int)SourceCode.RepairShops:
+                            storeCode = "R" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                        case (int)SourceCode.LocationsStores:
+                            storeCode = "L" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                        case (int)SourceCode.IndividualOthers:
+                            storeCode = "I" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                        case (int)SourceCode.Test:
+                            storeCode = "T" + String.Format("{0:D5}", ++codeNumber);
+                            break;
+                    }
+
+                    response.data.StoreSourceCode = storeCode;
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Edit Store Source Code
+        /// </summary>
+        /// <param name="storeSourceCodeDetailModel"></param>
+        /// <param name="userId"></param>
+        /// <returns>Success/Failure</returns>
+        public async Task<APIResponse> EditStoreSourceCode(StoreSourceCodeDetailModel storeSourceCodeDetailModel, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                //Retrieving the Old storeSourceCode record from  db
+                StoreSourceCodeDetail storeSourceCodeDetail = await _uow.GetDbContext().StoreSourceCodeDetail.FirstOrDefaultAsync(x=> x.IsDeleted== false && x.SourceCodeId== storeSourceCodeDetailModel.SourceCodeId);
+
+                //Mapping new values in old storeSourceCode record
+                storeSourceCodeDetail.Address = storeSourceCodeDetailModel.Address;
+                storeSourceCodeDetail.Code = storeSourceCodeDetailModel.Code;
+                storeSourceCodeDetail.CodeTypeId = storeSourceCodeDetailModel.CodeTypeId;
+                storeSourceCodeDetail.Description = storeSourceCodeDetailModel.Description;
+                storeSourceCodeDetail.EmailAddress = storeSourceCodeDetailModel.EmailAddress;
+                storeSourceCodeDetail.Fax = storeSourceCodeDetailModel.Fax;
+                storeSourceCodeDetail.Guarantor = storeSourceCodeDetailModel.Guarantor;
+                storeSourceCodeDetail.Phone = storeSourceCodeDetailModel.Phone;
+                storeSourceCodeDetail.IsDeleted = false;
+                storeSourceCodeDetail.ModifiedDate = DateTime.Now;
+                storeSourceCodeDetail.ModifiedById = userId;
+
+                //saving newly mapped object
+                _uow.GetDbContext().StoreSourceCodeDetail.Update(storeSourceCodeDetail);
+                _uow.Save();
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Delete Store Source Code
+        /// </summary>
+        /// <param name="storeSourceCodeDetailModel"></param>
+        /// <param name="userId"></param>
+        /// <returns>Success/Failure</returns>
+        public async Task<APIResponse> DeleteStoreSourceCode(int storeSourceCodeId, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                //Returning the storeSourceCodeDetail record based on storeSourceCodeId received
+                StoreSourceCodeDetail storeSourceCodeDetail = _uow.StoreSourceCodeRepository.Find(x=> x.SourceCodeId== storeSourceCodeId && x.IsDeleted== false);
+
+                //Deleting record
+                storeSourceCodeDetail.IsDeleted = true;
+                storeSourceCodeDetail.ModifiedDate = DateTime.Now;
+                storeSourceCodeDetail.ModifiedById = userId;
+
+                //updating to db
+                await _uow.StoreSourceCodeRepository.UpdateAsyn(storeSourceCodeDetail);
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
 
 
     }

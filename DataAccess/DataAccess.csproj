@@ -7,12 +7,9 @@
     <StartupObject />
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="DbEntities\EmpPayrollDetailTestTable.cs" />
-  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4"/>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
 

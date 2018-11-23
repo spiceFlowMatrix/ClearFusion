@@ -27,7 +27,7 @@ namespace DataAccess.DbEntities.Store
         public EmployeeDetail EmployeeDetail { get; set; }
 
 
-        public long IssueVoucherNo { get; set; }
+        public string IssueVoucherNo { get; set; }
         //[ForeignKey("IssueVoucherNo")]
         //public VoucherDetail VoucherDetail { get; set; }
 

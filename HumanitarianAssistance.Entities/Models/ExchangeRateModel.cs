@@ -13,5 +13,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public double? Rate { get; set; }
         public string FromCurrencyName { get; set; }
         public string ToCurrencyName { get; set; }
+        public int OfficeId { get; set; }
     }
 }

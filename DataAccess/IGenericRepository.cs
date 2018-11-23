@@ -31,5 +31,7 @@ namespace DataAccess
         Task<int> SaveAsync();
         T Update(T t, object key);
         Task<T> UpdateAsyn(T t, params object[] key);
+        Task<T> Get(long id);
+
     }
 }

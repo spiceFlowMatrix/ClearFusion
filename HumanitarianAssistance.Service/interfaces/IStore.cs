@@ -49,7 +49,7 @@ namespace HumanitarianAssistance.Service.interfaces
 
 
         Task<APIResponse> GetItemAmounts(string ItemId);
-        Task<APIResponse> GetProcurementSummary(int EmployeeId);
+        Task<APIResponse> GetProcurementSummary(int EmployeeId, int CurrencyId);
         Task<APIResponse> GetAllDepreciationByFilter(DepreciationReportFilter depretiationFilter);
 
         Task<APIResponse> UpdateInvoice(UpdatePurchaseInvoiceModel model, string UserId);
@@ -58,7 +58,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> UpdatePurchaseImage(UpdatePurchaseInvoiceModel model, string UserId);
 
         Task<APIResponse> AddItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId);
-        Task<APIResponse> EditItemSpecificationsDetails(List<ItemSpecificationDetailModel> model, string UserId);
+        Task<APIResponse> EditItemSpecificationsDetails(ItemSpecificationDetailModel model, string UserId);
         Task<APIResponse> GetAllItemSpecificationsDetails(string ItemId, int ItemTypeId, int OfficeId);
         Task<APIResponse> AddItemSpecificationsMaster(ItemSpecificationMasterModel model, string UserId);
         Task<APIResponse> EditItemSpecificationsMaster(ItemSpecificationMasterModel model, string UserId);
@@ -66,6 +66,13 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> GetAllReceiptType();
         Task<APIResponse> GetAllStatusAtTimeOfIssue();
-
+        Task<APIResponse> GetInventoryCode(int Id);
+        Task<APIResponse> GetInventoryItemCode(string InventoryId, int TypeId);
+        Task<APIResponse> GetAllStoreSourceType();
+        Task<APIResponse> GetAllStoreSourceCode(int? typeId);
+        Task<APIResponse> AddStoreSourceCode(StoreSourceCodeDetailModel storeSourceCodeDetailModel, string userId);
+        Task<APIResponse> GetStoreTypeCode(int CodeTypeId);
+        Task<APIResponse> EditStoreSourceCode(StoreSourceCodeDetailModel storeSourceCodeDetailModel, string userId);
+        Task<APIResponse> DeleteStoreSourceCode(int storeSourceCodeId, string userId);
     }
 }

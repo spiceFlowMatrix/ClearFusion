@@ -85,18 +85,15 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllAccountType()
+        public async Task<APIResponse> GetAllAccountTypeByCategory(int id)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var accounttypelist = (from a in await _uow.AccountTypeRepository.GetAllAsyn()
-                                       orderby a.AccountTypeId ascending
-                                       select new AccountTypeModel
-                                       {
-                                           AccountTypeId = a.AccountTypeId,
-                                           AccountTypeName = a.AccountTypeName
-                                       }).ToList();
+                List<AccountType> accounttypelist = await _uow.GetDbContext().AccountType
+                                                              .Where(x => !x.IsDeleted.Value && x.AccountCategory == id)
+                                                              .OrderBy(x => x.CreatedDate)
+                                                              .ToListAsync();
                 response.data.AccountTypeList = accounttypelist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -108,6 +105,83 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+        public async Task<APIResponse> AddAccountType(AccountTypeModel model)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                bool sameAccount = await _uow.GetDbContext().AccountType.AnyAsync(x => x.AccountTypeName.ToLower() == model.AccountTypeName.ToLower());
+                if (!sameAccount)
+                {
+                    AccountType obj = new AccountType();
+
+                    obj.AccountCategory = model.AccountCategory;
+                    obj.AccountHeadTypeId = model.AccountHeadTypeId.Value;
+                    obj.AccountTypeName = model.AccountTypeName;
+                    obj.CreatedById = model.CreatedById;
+                    obj.CreatedDate = model.CreatedDate;
+                    obj.IsDeleted = false;
+
+                    await _uow.AccountTypeRepository.AddAsyn(obj);
+
+                    response.CommonId.Id = obj.AccountTypeId;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.MandateNameAlreadyExist;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> EditAccountType(AccountTypeModel model)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var accountTypeDetail = await _uow.GetDbContext().AccountType.FirstOrDefaultAsync(x => x.AccountTypeId == model.AccountTypeId);
+
+                bool sameAccountName = await _uow.GetDbContext().AccountType.AnyAsync(x =>
+                                                                                x.AccountTypeName.ToLower() == model.AccountTypeName.ToLower() &&
+                                                                                x.AccountTypeId != model.AccountTypeId
+                                                                                );
+                if (!sameAccountName)
+                {
+                    accountTypeDetail.AccountTypeName = model.AccountTypeName;
+                    await _uow.AccountTypeRepository.UpdateAsyn(accountTypeDetail);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.NameExist;
+                }
+
+               
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
 
         public async Task<APIResponse> AddChartAccountDetail(ChartAccountDetailModel model)
         {
@@ -126,7 +200,7 @@ namespace HumanitarianAssistance.Service.Classes
                     ChartAccountDetail obj = _mapper.Map<ChartAccountDetail>(model);
                     obj.CreatedById = model.CreatedById;
                     obj.CreatedDate = DateTime.UtcNow;
-                    obj.IsDeleted = false;				
+                    obj.IsDeleted = false;
                     await _uow.ChartAccountDetailRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
 
@@ -175,7 +249,7 @@ namespace HumanitarianAssistance.Service.Classes
                     //chartaccountInfo.ChartOfAccountCode = model.ChartOfAccountCode;
                     //chartaccountInfo.ParentID = model.ParentID;
                     chartaccountInfo.AccountName = model.AccountName;
-                    //chartaccountInfo.AccountTypeId = model.AccountTypeId;
+                    chartaccountInfo.AccountTypeId = model.AccountTypeId;
                     //chartaccountInfo.Show = model.Show;
                     //chartaccountInfo.MDCode = model.MDCode;
                     //chartaccountInfo.DepMethod = model.DepMethod;

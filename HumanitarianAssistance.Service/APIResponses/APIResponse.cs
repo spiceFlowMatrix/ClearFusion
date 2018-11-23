@@ -1,12 +1,17 @@
 ﻿using DataAccess.DbEntities;
+using DataAccess.DbEntities.Marketing;
+using DataAccess.DbEntities.Project;
 using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Project;
+using HumanitarianAssistance.ViewModels.Models.Marketing;
 using HumanitarianAssistance.ViewModels.Models.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DataAccess.DbEntities.AccountingNew;
 
 namespace HumanitarianAssistance.Service.APIResponses
 {
@@ -16,12 +21,15 @@ namespace HumanitarianAssistance.Service.APIResponses
         {
             data = new data();
             ItemAmount = new ItemAmount();
+            CommonId = new CommonId();
         }
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public data data { get; set; }
         public LoggerDetailsModel LoggerDetailsModel { get; set; }
         public ItemAmount ItemAmount { get; set; }
+        public CommonId CommonId { get; set; }
+        
     }
 
     public class ItemAmount
@@ -77,6 +85,11 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double? TotalGrossSalary { get; set; }
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
+        public string InventoryCode { get; set; }
+        public string InventoryItemCode { get; set; }
+        public string StoreSourceCode { get; set; }
+        public bool isSalaryHeadSaved { get; set; }
+        public bool isPayrollHeadSaved { get; set; }
         public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
         public List<ItemSpecificationMasterModel> ItemSpecificationMasterList { get; set; }
         public List<ItemSpecificationDetailModel> ItemSpecificationDetailList { get; set; }
@@ -118,7 +131,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ContractTypeContent ContractTypeContentList { get; set; }
         public List<EmployeeContractType> EmployeeContractTypeList { get; set; }
         public List<EmployeePensionRateModel> EmployeePensionRateList { get; set; }
-        public List<BudgetLineEmployees> GetAllEmployeesInBudgetLine { get; set; }
+        //public List<BudgetLineEmployees> GetAllEmployeesInBudgetLine { get; set; }
         public List<EmployeeProjectModel> EmployeeProjectList { get; set; }
         public List<EmployeeSummaryDetails> EmployeeSummaryDetailsList { get; set; }
         public ExchangeRate ExchangeRateLists { get; set; }
@@ -139,7 +152,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<EmailTypeModel> EmailTypeList { get; set; }
         public IList<ChartAccountDetailModel> ChartAccountList { get; set; }
         public IList<AccountLevelModel> AccountLevelList { get; set; }
-        public IList<AccountTypeModel> AccountTypeList { get; set; }
+        public List<AccountType> AccountTypeList { get; set; }
         public IList<VoucherDetailModel> VoucherDetailList { get; set; }
         public IList<VoucherTypeModel> VoucherTypeList { get; set; }
         public IList<VoucherDocumentDetailModel> VoucherDocumentDetailList { get; set; }
@@ -154,7 +167,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public IList<ExchangeRateModel> ExchangeRateList { get; set; }
         public IList<EmployeeDetailModel> EmployeeDetailList { get; set; }
-        public IList<ProjectBudget> ProjectBudgetList { get; set; }
+        //public IList<ProjectBudget> ProjectBudgetList { get; set; }
         public IList<EmployeeDetailsAllModel> ActiveEmployeeDetailsList { get; set; }
         public IList<EmployeeDetailsAllModel> ProspectiveEmployeeDetailsList { get; set; }
         public IList<EmployeeDetailsAllModel> TerminatedEmployeeDetailsList { get; set; }
@@ -199,6 +212,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<EmployeeHealthInformationModel> EmployeeHealthInfoList { get; set; }
         public EmployeeHealthInformationModel EmployeeHealthInfo { get; set; }
         public List<EmployeeHealthQuestion> EmployeeHealthQuestionList { get; set; }
+        public List<EmployeeLanguages> EmployeeLanguagesList { get; set; }
 
 
         public ProjectBudgetLinesModel ProjectBudgetLinesModel { get; set; }
@@ -258,11 +272,69 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<PensionPaymentModel> PensionPayment { get; set; }
         public List<PensionPaymentHistoryModel> PensionPaymentHistory { get; set; }
         public List<PayrollHeadModel> PayrollHeadModelList { get; set; }
-        public ICollection<PayrollAccountHead> PayrollAccountHead{ get; set; }
-
+        public ICollection<PayrollAccountHead> PayrollAccountHead { get; set; }
+        public ICollection<DonorDetail> DonorDetail { get; set; }
+        public ICollection<ClientDetails> ClientDetails { get; set; }
+        public ICollection<Category> Categories { get; set; }
+        public ICollection<SectorDetails> sectorDetails { get; set; }
+        public ICollection<ProgramDetail> programDetails { get; set; }
+        public ICollection<AreaDetail> AreaDetail { get; set; }
+        //public ICollection<DistrictDetail> DistrictDetail { get; }
         public int TotalCount { get; set; }
-        //public double SummaryTotalDebit { get; set; }
-        //public double SummaryTotalCredit { get; set; }
+        public List<DistrictDetail> Districtlist { get; set; }
+        public ICollection<StrengthConsiderationDetail> StrengthConsiderationDetail { get; set; }
+        public ICollection<GenderConsiderationDetail> GenderConsiderationDetail { get; set; }
+        public ICollection<SecurityDetail> SecurityDetail { get; set; }
+        public ICollection<SecurityConsiderationDetail> SecurityConsiderationDetail { get; set; }
+
+        public ICollection<ProjectDetailNewModel> ProjectDetailModel { get; set; }
+        public ProjectDetailNewModel ProjectDetailModel1 { get; set; }
+        public ProjectDetail ProjectDetail { get; set; }
+        public DonorDetail DonorDetailById { get; set; }
+        public List<ProjectCommunicationModel> ProjectCommunicationModel { get; set; }
+        public ProjectProgram projectProgram { get; set; }
+        public ProjectArea projectArea { get; set; }
+        public ProjectSector projectSector { get; set; }
+        #region Marketing
+        public ICollection<JobDetails> JobDetails { get; set; }
+        public ICollection<Quality> Qualities { get; set; }
+        public ICollection<CurrencyDetails> Currencies { get; set; }
+        public ICollection<ContractDetails> ContractDetails { get; set; }
+        public ICollection<Language> Languages { get; set; }
+        public ICollection<Medium> Mediums { get; set; }
+        public ICollection<Nature> Natures { get; set; }
+        public ICollection<JobPhase> JobPhases { get; set; }
+        public ICollection<UnitRate> UnitRates { get; set; }
+        public UnitRate UnitRateByActivityId { get; set; }
+        public ICollection<JobPriceDetails> JobPriceDetails { get; set; }
+        public ICollection<ActivityType> ActivityTypes { get; set; }
+        public ICollection<MediaCategory> MediaCategories { get; set; }
+        public ICollection<TimeCategory> TimeCategories { get; set; }
+        public List<JobDetailsModel> JobDetailsModel { get; set; }
+        public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
+        public UnitRateModel unitRateDetails { get; set; }
+        public IQueryable<UnitRateDetailsModel> rateDetails { get; set; }
+        public UnitRateDetailsModel rateDetailsById { get; set; }
+        public IQueryable<ClientDetailModel> clientDetailsModel { get; set; }
+        public ClientDetails clientDetails { get; set; }
+        public ClientDetailModel clientDetailsById { get; set; }
+        public JobDetailsModel JobDetail { get; set; }
+        #endregion
+
+        public List<LanguageDetail> LanguageDetail { get; set; }
+        public List<CodeType> SourceCodeTypelist { get; set; }
+        public List<StoreSourceCodeDetailModel> SourceCodeDatalist { get; set; }
+
+
+
+        #region "Accounting New"
+        public ICollection<ChartOfAccountNew> AllAccountList { get; set; }
+        public ICollection<ChartOfAccountNew> MainLevelAccountList { get; set; }
+        public List<ChartOfAccountNew> ControlLevelAccountList { get; set; }
+        public List<ChartOfAccountNew> SubLevelAccountList { get; set; }
+        public List<ChartOfAccountNew> InputLevelAccountList { get; set; }
+
+        #endregion
 
 
     }
@@ -273,4 +345,14 @@ namespace HumanitarianAssistance.Service.APIResponses
         public string Id { get; set; }
         public IList<PermissionsModel> PermissionsList { get; set; }
     }
+    //Get common Id for Project
+    public class CommonId
+    {
+        public int Id { get; set; }
+        public bool IsApproved { get; set; }
+        public long LongId { get; set; }
+    }
+     //get Approval Value
+     
+
 }

@@ -377,9 +377,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetProcurementSummary(int EmployeeId)
+    public async Task<APIResponse> GetProcurementSummary(int EmployeeId, int CurrencyId)
     {
-      APIResponse apiresponse = await _iStore.GetProcurementSummary(EmployeeId);
+      APIResponse apiresponse = await _iStore.GetProcurementSummary(EmployeeId, CurrencyId);
       return apiresponse;
     }
 
@@ -440,7 +440,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> EditItemSpecificationsDetails([FromBody]List<ItemSpecificationDetailModel> model)
+    public async Task<APIResponse> EditItemSpecificationsDetails([FromBody]ItemSpecificationDetailModel model)
     {
       APIResponse apiresponse = new APIResponse();
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -510,8 +510,87 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetInventoryCode([FromQuery] int Id)
+    {
+      APIResponse apiresponse = await _iStore.GetInventoryCode(Id);
+      return apiresponse;
+    }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetInventoryItemCode([FromQuery] string Id, int TypeId)
+    {
+      APIResponse apiresponse = await _iStore.GetInventoryItemCode(Id, TypeId);
+      return apiresponse;
+    }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllStoreSourceType()
+    {
+      APIResponse apiresponse = await _iStore.GetAllStoreSourceType();
+      return apiresponse;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllStoreSourceCode(int? typeId)
+    {
+      APIResponse apiresponse = await _iStore.GetAllStoreSourceCode(typeId);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddStoreSourceCode([FromBody]StoreSourceCodeDetailModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iStore.AddStoreSourceCode(model, user.Id);
+      }
+      return apiresponse;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetStoreTypeCode([FromQuery] int CodeTypeId)
+    {
+      APIResponse apiresponse = await _iStore.GetStoreTypeCode(CodeTypeId);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditStoreSourceCode([FromBody]StoreSourceCodeDetailModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iStore.EditStoreSourceCode(model, user.Id);
+      }
+      return apiresponse;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteStoreSourceCode([FromQuery]int Id)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.DeleteStoreSourceCode(Id, user.Id);
+      }
+       
+      return apiresponse;
+    }
 
   }
 }

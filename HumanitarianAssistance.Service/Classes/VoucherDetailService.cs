@@ -93,6 +93,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                             {
                                                                 VoucherNo = v.VoucherNo,
                                                                 ReferenceNo = v.ReferenceNo,
+                                                                VoucherDate= v.VoucherDate
                                                             })
                                                             .ToListAsync();
 
@@ -499,6 +500,7 @@ namespace HumanitarianAssistance.Service.Classes
                                               join a in _uow.GetDbContext().ChartAccountDetail on t.AccountNo equals a.AccountCode
                                               where model.JournalCode.Contains(v.JournalCode) &&
                                                     model.OfficesList.Contains(v.OfficeId) &&
+                                                    model.AccountLists.Contains(t.AccountNo) &&
                                                     v.IsDeleted == false &&
                                                     v.CurrencyId == model.CurrencyId &&       // for particular currency
                                                     v.VoucherDate.Value.Date >= model.fromdate.Date &&
@@ -578,6 +580,7 @@ namespace HumanitarianAssistance.Service.Classes
                                               join a in _uow.GetDbContext().ChartAccountDetail on t.AccountNo equals a.AccountCode
                                               where model.JournalCode.Contains(v.JournalCode) &&
                                                     model.OfficesList.Contains(v.OfficeId) &&
+                                                    model.AccountLists.Contains(t.AccountNo) &&
                                                     v.IsDeleted == false &&
                                                     v.VoucherDate.Value.Date >= model.fromdate.Date &&
                                                     v.VoucherDate.Value.Date <= model.todate.Date
@@ -885,7 +888,8 @@ namespace HumanitarianAssistance.Service.Classes
                                        {
                                            AccountCode = c.AccountCode,
                                            AccountName = c.ChartOfAccountCode + " - " + c.AccountName,
-                                           ChartOfAccountCode = c.ChartOfAccountCode
+                                           ChartOfAccountCode = c.ChartOfAccountCode,
+                                           AccountLevelId= c.AccountLevelId
                                        }).OrderBy(x => x.ChartOfAccountCode).ToList();
                 response.data.AccountDetailList = accountcodelist;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -1023,6 +1027,8 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.AccountNo = item.AccountNo;
                     obj.Credit = item?.Credit;
                     obj.Debit = item?.Debit;
+                    obj.ProjectId = item?.ProjectId;
+                    obj.BudgetLineId = item.BudgetLineId;
 
                     obj.CreatedDate = item.CreatedDate;
                     obj.ModifiedDate = item.ModifiedDate;
@@ -1043,72 +1049,89 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
 
-        public async Task<APIResponse> AddVoucherTransactionDetail(VoucherTransactionModel model)
+        public async Task<APIResponse> AddVoucherTransactionDetail(List<VoucherTransactionModel> transactions, string UserId)
         {
             APIResponse response = new APIResponse();
+
             try
             {
-                var voucherDetail = await _uow.VoucherDetailRepository.FindAsync(x => x.VoucherNo == model.VoucherNo);
-                //var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.OfficeId == 16).OrderByDescending(x => x.Date).ToListAsync();
+                List<VoucherTransactions> xtransactions = await _uow.GetDbContext().VoucherTransactions.Where(x => x.VoucherNo == transactions.FirstOrDefault().VoucherNo).ToListAsync();
 
-                var exchangeRateAFG = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.AFG);
-                var exchangeRateEUR = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.EUR);
-                var exchangeRatePKR = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.PKR);
-                var exchangeRateUSD = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.USD);
+                xtransactions.ForEach(x => x.IsDeleted = true);
 
-                if (exchangeRateAFG != null && exchangeRateEUR != null && exchangeRatePKR != null && exchangeRateUSD != null)
+                _uow.GetDbContext().VoucherTransactions.UpdateRange(xtransactions);
+                _uow.GetDbContext().SaveChanges();
+
+                foreach (var model in transactions)
                 {
-                    //Note : These values are associated with Voucher and Transactions
-                    model.TransactionDate = voucherDetail.VoucherDate;
-                    model.FinancialYearId = voucherDetail.FinancialYearId;
-                    model.CurrencyId = voucherDetail.CurrencyId;
+                    var voucherDetail = await _uow.VoucherDetailRepository.FindAsync(x => x.VoucherNo == model.VoucherNo);
 
+                    var exchangeRateAFG = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.AFG);
+                    var exchangeRateEUR = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.EUR);
+                    var exchangeRatePKR = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.PKR);
+                    var exchangeRateUSD = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.USD);
 
-                    VoucherTransactions obj = _mapper.Map<VoucherTransactions>(model);
-
-                    if (obj.CurrencyId == (int)Currency.AFG)
+                    if (exchangeRateAFG != null && exchangeRateEUR != null && exchangeRatePKR != null && exchangeRateUSD != null)
                     {
-                        obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
-                        obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateAFG.Rate) / exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateAFG.Rate) / exchangeRateEUR.Rate), 4);
-                        obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateAFG.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateAFG.Rate)), 4);
-                        obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateAFG.Rate) / (exchangeRateUSD.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateAFG.Rate) / exchangeRateUSD.Rate), 4);
-                    }
-                    if (obj.CurrencyId == (int)Currency.EUR)
-                    {
-                        obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
-                        obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateEUR.Rate) / exchangeRateAFG.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateEUR.Rate) / exchangeRateUSD.Rate), 4);
-                        obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit * exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit * exchangeRateEUR.Rate), 4);
-                        obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateEUR.Rate) / exchangeRateUSD.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateEUR.Rate) / exchangeRateUSD.Rate), 4);
-                    }
-                    if (obj.CurrencyId == (int)Currency.PKR)
-                    {
+                        //Note : These values are associated with Voucher and Transactions
+                        model.TransactionDate = voucherDetail.VoucherDate;
+                        model.FinancialYearId = voucherDetail.FinancialYearId;
+                        model.CurrencyId = voucherDetail.CurrencyId;
 
-                        obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
-                        obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / exchangeRateAFG.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / exchangeRateAFG.Rate), 4);
-                        obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / exchangeRateEUR.Rate), 4);
-                        obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / exchangeRateUSD.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / exchangeRateUSD.Rate), 4);
+
+                        VoucherTransactions obj = _mapper.Map<VoucherTransactions>(model);
+
+                        obj.CreatedById = UserId;
+                        obj.IsDeleted = false;
+                        obj.CreatedDate = DateTime.Now;
+
+                        if (obj.CurrencyId == (int)Currency.AFG)
+                        {
+                            obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
+                            obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateAFG.Rate) / exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateAFG.Rate) / exchangeRateEUR.Rate), 4);
+                            obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateAFG.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateAFG.Rate)), 4);
+                            obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateAFG.Rate) / (exchangeRateUSD.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateAFG.Rate) / exchangeRateUSD.Rate), 4);
+                        }
+                        if (obj.CurrencyId == (int)Currency.EUR)
+                        {
+                            obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
+                            obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateEUR.Rate) / exchangeRateAFG.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateEUR.Rate) / exchangeRateUSD.Rate), 4);
+                            obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit * exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit * exchangeRateEUR.Rate), 4);
+                            obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateEUR.Rate) / exchangeRateUSD.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateEUR.Rate) / exchangeRateUSD.Rate), 4);
+                        }
+                        if (obj.CurrencyId == (int)Currency.PKR)
+                        {
+
+                            obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
+                            obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / exchangeRateAFG.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / exchangeRateAFG.Rate), 4);
+                            obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / exchangeRateEUR.Rate), 4);
+                            obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / exchangeRateUSD.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / exchangeRateUSD.Rate), 4);
+                        }
+                        if (obj.CurrencyId == (int)Currency.USD)
+                        {
+                            obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
+                            obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateUSD.Rate) / (exchangeRateAFG.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateUSD.Rate) / (exchangeRateAFG.Rate)), 4);
+                            obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateUSD.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateUSD.Rate)), 4);
+                            obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateUSD.Rate) / (exchangeRateEUR.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateUSD.Rate) / (exchangeRateEUR.Rate)), 4);
+                        }
+
+                        obj.ProjectId = model.ProjectId;
+                        obj.BudgetLineId = model.BudgetLineId;
+
+                        await _uow.GetDbContext().VoucherTransactions.AddAsync(obj);
+                        await _uow.SaveAsync();
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
+
                     }
-                    if (obj.CurrencyId == (int)Currency.USD)
+                    else
                     {
-                        obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
-                        obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateUSD.Rate) / (exchangeRateAFG.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateUSD.Rate) / (exchangeRateAFG.Rate)), 4);
-                        obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateUSD.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateUSD.Rate)), 4);
-                        obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateUSD.Rate) / (exchangeRateEUR.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateUSD.Rate) / (exchangeRateEUR.Rate)), 4);
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.ExchagneRateNotDefined;
                     }
-
-                    await _uow.GetDbContext().VoucherTransactions.AddAsync(obj);
-                    await _uow.SaveAsync();
-
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
 
                 }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.ExchagneRateNotDefined;
-                }
-
             }
             catch (Exception ex)
             {
@@ -1365,6 +1388,42 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> DeleteVoucherTransactions(int VoucherId, string modifiedById)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var transactionInfo = await _uow.GetDbContext().VoucherTransactions.Where(d => d.VoucherNo == VoucherId && d.IsDeleted== false).ToListAsync();
+
+                if (transactionInfo.Any())
+                {
+
+                    foreach (var obj in transactionInfo)
+                    {
+                        obj.ModifiedById = modifiedById;
+                        obj.ModifiedDate = DateTime.UtcNow;
+                        obj.IsDeleted = true;
+                    }
+                   
+                     _uow.GetDbContext().VoucherTransactions.RemoveRange(transactionInfo);
+                    _uow.GetDbContext().SaveChanges();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> GetAllLedgerDetails()
         {
 
@@ -1482,14 +1541,14 @@ namespace HumanitarianAssistance.Service.Classes
                         if (model.RecordType == 1)
                         {
 
-                            openingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(c=> c.CreditAccountDetails)
+                            openingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x=> x.VoucherDetails).Include(c=> c.CreditAccountDetails)
                                                        .Where(x => x.IsDeleted == false &&
                                                                         accountLevel4.Contains(x.AccountNo.Value) &&
                                                                         model.OfficeIdList.Contains(x.OfficeId.Value) &&
                                                                         x.CurrencyId == model.CurrencyId &&
                                                                         x.TransactionDate.Value.Date < model.fromdate.Date).ToListAsync();
 
-                                closingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(c=> c.CreditAccountDetails)
+                                closingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x=> x.VoucherDetails).Include(c=> c.CreditAccountDetails)
                                                        .Where(x => x.IsDeleted == false &&
                                                                         accountLevel4.Contains(x.AccountNo.Value) &&
                                                                         model.OfficeIdList.Contains(x.OfficeId.Value) &&
@@ -1509,7 +1568,8 @@ namespace HumanitarianAssistance.Service.Classes
                                         obj.AccountName = item.CreditAccountDetails.AccountName;
                                         obj.VoucherNo = item.VoucherNo.ToString();
                                         obj.ChartAccountName = item.CreditAccountDetails.AccountName;
-                                    obj.Description = item.Description;
+                                        obj.Description = item.Description;
+                                    obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
                                         obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
                                         obj.CreditAmount = Math.Round(Convert.ToDouble(item.Credit));
                                         obj.DebitAmount = Math.Round(Convert.ToDouble(item.Debit));
@@ -1532,7 +1592,8 @@ namespace HumanitarianAssistance.Service.Classes
                                     obj.VoucherNo = item.VoucherNo.ToString();
                                         obj.ChartAccountName = item.CreditAccountDetails.AccountName;
                                     obj.Description = item.Description;
-                                        obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
+                                    obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
+                                    obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
                                         obj.CreditAmount = Math.Round(Convert.ToDouble(item.Credit));
                                         obj.DebitAmount = Math.Round(Convert.ToDouble(item.Debit));
                                         obj.TransactionDate = item.TransactionDate;
@@ -1843,13 +1904,13 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             //Consolidate
 
-                            openingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x=> x.CreditAccountDetails)
+                            openingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x=> x.VoucherDetails).Include(x=> x.CreditAccountDetails)
                                                                         .Where(x => x.IsDeleted == false &&
                                                                         accountLevel4.Contains(x.AccountNo.Value) &&
                                                                         model.OfficeIdList.Contains(x.OfficeId.Value) &&
                                                                         x.TransactionDate.Value.Date < model.fromdate.Date).ToListAsync();
 
-                            closingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.CreditAccountDetails)
+                            closingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(x => x.CreditAccountDetails)
                                                                     .Where(x => x.IsDeleted == false &&
                                                                     accountLevel4.Contains(x.AccountNo.Value) &&
                                                                     model.OfficeIdList.Contains(x.OfficeId.Value) &&
@@ -1866,6 +1927,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 obj.VoucherNo = item.VoucherNo.ToString();
                                 obj.ChartAccountName = item.CreditAccountDetails.AccountName;
                                 obj.Description = item.Description;
+                                obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
                                 obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
                                 obj.TransactionDate = item.TransactionDate;
 
@@ -1905,6 +1967,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 obj.AccountCode = item.AccountNo.Value;
                                 obj.AccountName = item.CreditAccountDetails.AccountName;
                                 obj.VoucherNo = item.VoucherNo.ToString();
+                                obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
                                 obj.ChartAccountName = item.CreditAccountDetails.AccountName;
                                 obj.Description = item.Description;
                                 obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
@@ -2769,10 +2832,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     ICollection<ChartAccountDetail> accountDetail = await _uow.ChartAccountDetailRepository.FindAllAsync(x => model.accountLists.Contains(x.AccountCode));
 
-
                     List<long> accountLevel4 = new List<long>();     //level 4
-
-
 
                     foreach (var accountItem in accountDetail)
                     {
@@ -2923,7 +2983,7 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.AccountName = item.CreditAccountDetails.AccountName;
                             obj.ChartAccountName = item.CreditAccountDetails.AccountName;
                             obj.Description = item.Description;
-                            obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
+                            obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == model.CurrencyId)?.CurrencyName;
                             obj.TransactionDate = item.TransactionDate;
 
                             if (model.CurrencyId == (int)Currency.PKR)
@@ -2955,6 +3015,8 @@ namespace HumanitarianAssistance.Service.Classes
 
                         var accountGroup = trialBalanceList.GroupBy(x => x.AccountCode);
 
+                        var noTransactionAccounts = intAccountFourthLevel.Except(accountGroup.Select(x => Convert.ToInt32(x.Key)));
+
                         foreach (var item in accountGroup)
                         {
                             LedgerModel obj = new LedgerModel();
@@ -2982,6 +3044,23 @@ namespace HumanitarianAssistance.Service.Classes
 
                             finalTrialBalanceList.Add(obj);
 
+                        }
+
+                        foreach (var detail in noTransactionAccounts)
+                        {
+                            LedgerModel obj = new LedgerModel();
+                            var noTransactionAccount= _uow.ChartAccountDetailRepository.Find(x => x.AccountCode == detail);
+
+                            obj.AccountCode = noTransactionAccount.AccountCode;
+                            obj.AccountName = noTransactionAccount.AccountName;
+                            obj.ChartAccountName = noTransactionAccount.AccountName;
+                            obj.Description = "";
+                            obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == model.CurrencyId)?.CurrencyName;
+                            obj.TransactionDate = null;
+                            obj.DebitAmount = 0;
+                            obj.CreditAmount = 0;
+
+                            finalTrialBalanceList.Add(obj);
                         }
                     }
 
@@ -5218,6 +5297,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == model.OfficeId).Result.OfficeCode; //use OfficeCode
+                var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.OfficeId == 16).OrderByDescending(x => x.Date).ToListAsync();
 
                 VoucherDetail obj = new VoucherDetail();
                 obj.CreatedById = model.CreatedById;
@@ -5254,7 +5334,7 @@ namespace HumanitarianAssistance.Service.Classes
                 xVoucherTransactionModel.OfficeId = model.OfficeId;
 
                 //Transacting Credit
-                APIResponse xAPIResponse = await AddVoucherTransactionDetail(xVoucherTransactionModel);
+                APIResponse xAPIResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
 
                 //When Transaction for Credit is Successful the proceed with Debit
                 if (xAPIResponse.StatusCode == 200)
@@ -5267,7 +5347,7 @@ namespace HumanitarianAssistance.Service.Classes
                     xVoucherTransactionModel.CreditAccount = 0;
 
                     //Transacting Debit
-                    xAPIResponse = await AddVoucherTransactionDetail(xVoucherTransactionModel);
+                    xAPIResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
                 }
 
                 var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
@@ -5411,6 +5491,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == EmployeePensionPayment.OfficeId).Result.OfficeCode; //use OfficeCode
                 var financialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
                 var EmployeeDetails = _uow.GetDbContext().EmployeeDetail.FirstOrDefault(x => x.EmployeeID == EmployeePensionPayment.EmployeeId && x.IsDeleted == false);
+                var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.OfficeId == 16).OrderByDescending(x => x.Date).ToListAsync();
 
                 //Creating Voucher for Voucher transaction
                 VoucherDetail obj = new VoucherDetail();
@@ -5444,7 +5525,7 @@ namespace HumanitarianAssistance.Service.Classes
                 xVoucherTransactionModel.OfficeId = EmployeePensionPayment.OfficeId;
 
                 //Transacting Credit
-                APIResponse xAPIResponse = await AddVoucherTransactionDetail(xVoucherTransactionModel);
+                APIResponse xAPIResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
 
                 //When Transaction for Credit is Successful the proceed with Debit
                 if (xAPIResponse.StatusCode == 200)
@@ -5457,7 +5538,7 @@ namespace HumanitarianAssistance.Service.Classes
                     xVoucherTransactionModel.CreditAccount = 0;
 
                     //Transacting Debit
-                    xAPIResponse = await AddVoucherTransactionDetail(xVoucherTransactionModel);
+                    xAPIResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
                 }
 
                 //Adding details to Pension Payment History Table
@@ -5557,7 +5638,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 xVoucherTransactionModel.Debit = Convert.ToDouble(salaryhead.MonthlyAmount);
                                 xVoucherTransactionModel.Credit = 0;
 
-                                APIResponse apiResponse = await AddVoucherTransactionEmployeeSalaryPayments(xVoucherTransactionModel, exchangeRate);
+                                APIResponse apiResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
                             }//Include only salary heads in voucher that has transaction type as debit and salary head type is not general
                             else if (salaryhead.TransactionTypeId == (int)TransactionType.Credit && (salaryhead.MonthlyAmount != null && salaryhead.MonthlyAmount != 0) && salaryhead.HeadTypeId != (int)SalaryHeadType.GENERAL)
                             {
@@ -5567,7 +5648,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 xVoucherTransactionModel.Credit = Convert.ToDouble(salaryhead.MonthlyAmount);
                                 xVoucherTransactionModel.Debit = 0;
 
-                                APIResponse apiResponse = await AddVoucherTransactionEmployeeSalaryPayments(xVoucherTransactionModel, exchangeRate);
+                                APIResponse apiResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
                             }
                         }
 
@@ -5602,7 +5683,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 xVoucherTransactionModel.Debit = Convert.ToDouble(payrollHead.Amount);
                                 xVoucherTransactionModel.Credit = 0;
 
-                                APIResponse apiResponse = await AddVoucherTransactionEmployeeSalaryPayments(xVoucherTransactionModel, exchangeRate);
+                                APIResponse apiResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
                             }//Include only salary heads in voucher that has transaction type as debit
                             else if (payrollHead.TransactionTypeId == (int)TransactionType.Credit && (payrollHead.Amount != null && payrollHead.Amount != 0))
                             {
@@ -5621,7 +5702,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 xVoucherTransactionModel.Credit = Convert.ToDouble(payrollHead.Amount);
                                 xVoucherTransactionModel.Debit = 0;
 
-                                APIResponse apiResponse = await AddVoucherTransactionEmployeeSalaryPayments(xVoucherTransactionModel, exchangeRate);
+                                APIResponse apiResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
                             }
                         }
                     }
@@ -5636,11 +5717,11 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     xVoucherTransactionModel.AccountNo = Convert.ToInt32(EmployeeSalaryVoucher.EmployeePayrollLists.FirstOrDefault(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).AccountNo);
                     xVoucherTransactionModel.CreditAccount = xVoucherTransactionModel.AccountNo;
-                    xVoucherTransactionModel.Description = "Gross Salary Debited";
+                    xVoucherTransactionModel.Description = "Basic Pay Debited";
                     xVoucherTransactionModel.Debit = Convert.ToDouble(grossSalary);
                     xVoucherTransactionModel.Credit = 0;
 
-                    APIResponse apiResponse = await AddVoucherTransactionEmployeeSalaryPayments(xVoucherTransactionModel, exchangeRate);
+                    APIResponse apiResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
                 }
 
                 //Creating an entry in EmployeeSalaryPaymentHistory Table
@@ -5757,7 +5838,7 @@ namespace HumanitarianAssistance.Service.Classes
                         reverseTransactions.OfficeId = transaction.OfficeId;
                         reverseTransactions.VoucherNo = transaction.VoucherNo;
                         reverseTransactions.IsDeleted = false;
-                        APIResponse apiResponse = await AddVoucherTransactionEmployeeSalaryPayments(reverseTransactions, exchangeRate);
+                        APIResponse apiResponse = await AddVoucherTransactionConvertedToExchangeRate(reverseTransactions, exchangeRate);
                     }
                 }
 
@@ -5914,7 +5995,7 @@ namespace HumanitarianAssistance.Service.Classes
         /// <param name="model"></param>
         /// /// <param name="exchangeRate"></param>
         /// <returns></returns>
-        public async Task<APIResponse> AddVoucherTransactionEmployeeSalaryPayments(VoucherTransactionModel model , List<ExchangeRate> exchangeRate)
+        public async Task<APIResponse> AddVoucherTransactionConvertedToExchangeRate(VoucherTransactionModel model , List<ExchangeRate> exchangeRate)
         {
             APIResponse response = new APIResponse();
             try
@@ -6115,6 +6196,58 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+        public async Task<APIResponse> GetVoucherDetailByVoucherNo(long VoucherNo)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                    List<VoucherDetail> voucherList = new List<VoucherDetail>();
+                  
+                        voucherList = await _uow.GetDbContext().VoucherDetail
+                                                      .Include(o => o.OfficeDetails).Include(j => j.JournalDetails)
+                                                      .Include(c => c.CurrencyDetail)
+                                                      .Include(f => f.FinancialYearDetails)
+                                                      .Where(v => v.IsDeleted == false && v.VoucherNo== VoucherNo)
+                                                      .OrderByDescending(x => x.VoucherDate)
+                                                      .ToListAsync();
+
+                    List<VoucherDetailModel> voucherFilteredList = new List<VoucherDetailModel>();
+                    foreach (var i in voucherList)
+                    {
+                        VoucherDetailModel obj = new VoucherDetailModel();
+                        obj.VoucherNo = i.VoucherNo;
+                        obj.CurrencyCode = i.CurrencyDetail?.CurrencyCode ?? null;
+                        obj.CurrencyId = i.CurrencyDetail?.CurrencyId ?? 0;
+                        obj.VoucherDate = i.VoucherDate;
+                        obj.ChequeNo = i.ChequeNo;
+                        obj.ReferenceNo = i.ReferenceNo;
+                        obj.Description = i.Description;
+                        obj.JournalName = i.JournalDetails?.JournalName ?? null;
+                        obj.JournalCode = i.JournalDetails?.JournalCode ?? null;
+                        obj.VoucherTypeId = i.VoucherTypeId;
+                        obj.OfficeId = i.OfficeId;
+                        obj.ProjectId = i.ProjectId;
+                        obj.BudgetLineId = i.BudgetLineId;
+                        obj.OfficeName = i.OfficeDetails?.OfficeName ?? null;
+                        obj.FinancialYearId = i.FinancialYearId;
+                        obj.FinancialYearName = i.FinancialYearDetails?.FinancialYearName ?? null;
+                        voucherFilteredList.Add(obj);
+                    }
+
+                    response.data.VoucherDetailList = voucherFilteredList.OrderByDescending(v => v.VoucherDate).ToList();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
 
     }
 }

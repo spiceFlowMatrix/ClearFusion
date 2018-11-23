@@ -120,8 +120,8 @@ namespace HumanitarianAssistance.Common.Enums
   }
   public enum TransactionType
   {
-    Credit=1,
-    Debit=2
+    Credit = 1,
+    Debit = 2
   }
 
   public enum VoucherTypes
@@ -130,4 +130,41 @@ namespace HumanitarianAssistance.Common.Enums
     Adjustment = 2
   }
 
+  public enum InventoryMasterType
+  {
+    Consumables = 1,
+    Expendables = 2,
+    NonExpendables = 3
+  }
+
+  public enum SourceCode// start from here 
+  {
+    Organizations = 1,
+    Suppliers = 2,
+    RepairShops = 3,
+    IndividualOthers = 4,
+    LocationsStores = 5,
+    Test = 6,
+  }
+
+  public enum ProjectPhaseType
+  {
+    DataEntryPhase = 1,
+
+  }
+  public enum RoleName
+  {
+    HR = 1,
+    AM = 2,
+    SA = 3,
+    AD = 4,
+    PM = 5
+  }
+  public enum AccountLevelLimits
+  {
+    MainLevel = 9,
+    ControlLevel = 99,
+    SubLevel = 999,
+    InputLevel = 999999
+  }
 }

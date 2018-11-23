@@ -1,0 +1,674 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using DataAccess.DbEntities;
+using HumanitarianAssistance.Service.APIResponses;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using HumanitarianAssistance.Service.interfaces;
+using HumanitarianAssistance.ViewModels.Models.Project;
+using System.Security.Claims;
+using DataAccess.DbEntities.Project;
+
+namespace HumanitarianAssistance.WebAPI.Controllers
+{
+  [Produces("application/json")]
+  [Route("api/Project/[Action]")]
+  public class ProjectController : Controller
+  {
+    private readonly JsonSerializerSettings _serializerSettings;
+    private readonly UserManager<AppUser> _userManager;
+    private IProject _iProject;
+    public ProjectController(
+       UserManager<AppUser> userManager,
+      IProject iProject
+      )
+    {
+      _userManager = userManager;
+      _iProject = iProject;
+      _serializerSettings = new JsonSerializerSettings
+      {
+        Formatting = Formatting.Indented,
+        NullValueHandling = NullValueHandling.Ignore
+      };
+    }
+    #region Donor information
+    [HttpGet]
+    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllDonorList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllDonorList();
+      return apiresponse;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditDonorDetails([FromBody]DonorModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iProject.AddEditDonorDetails(model, id);
+      }
+      return apiResponse;
+    }
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<APIResponse> EditDonorDetails([FromBody]DonorModel model)
+    //{
+    //  APIResponse apiResponse = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    apiResponse = await _iProject.EditDonorDetails(model, id);
+    //  }
+    //  return apiResponse;
+    //}
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteDonorDetails([FromBody]long DonarId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+
+        apiRespone = await _iProject.DeleteDonorDetails(DonarId, id);
+      }
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetDonarListById([FromBody]long DonarId)
+    {
+      APIResponse apiresponse = await _iProject.GetDonarListById(DonarId);
+      return apiresponse;
+    }
+    #endregion
+
+    #region Sector Information
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllSectorList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllSectorList();
+      return apiresponse;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddSectorDetails([FromBody]SectorModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iProject.AddSectorDetails(model, id);
+      }
+      return apiResponse;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditSectorDetails([FromBody]SectorModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iProject.EditSectorDetails(model, id);
+      }
+      return apiResponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteSectorDetails([FromBody]SectorDetails model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        model.ModifiedById = id;
+        model.ModifiedDate = DateTime.UtcNow;
+        apiRespone = await _iProject.DeleteSectorDetails(model);
+      }
+      return apiRespone;
+    }
+    #endregion
+
+
+    #region Program Information
+
+
+
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllProgramList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllProgramList();
+      return apiresponse;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddProgramDetails([FromBody]ProgramModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iProject.AddProgramDetails(model, id);
+      }
+      return apiResponse;
+    }
+
+
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditProgramDetails([FromBody]ProgramModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iProject.EditProgramDetails(model, id);
+      }
+      return apiResponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteProgramDetails([FromBody]ProgramDetail model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        model.ModifiedById = id;
+        model.ModifiedDate = DateTime.UtcNow;
+        apiRespone = await _iProject.DeleteProgramDetails(model);
+      }
+      return apiRespone;
+    }
+
+    #endregion
+
+
+    #region Area Information
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllAreaList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllAreaList();
+      return apiresponse;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddAreaDetails([FromBody]AreaModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iProject.AddAreaDetails(model, id);
+      }
+      return apiResponse;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditAreaDetails([FromBody]AreaModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iProject.EditAreaDetails(model, id);
+      }
+      return apiResponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteAreaDetails([FromBody]AreaDetail model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        model.ModifiedById = id;
+        model.ModifiedDate = DateTime.UtcNow;
+        apiRespone = await _iProject.DeleteAreaDetails(model);
+      }
+      return apiRespone;
+    }
+    #endregion
+
+    #region GenderConsiderationList
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GenderConsiderationList()
+    {
+      APIResponse apiresponse = await _iProject.GenderConsiderationList();
+      return apiresponse;
+    }
+
+    #endregion
+
+    #region StrengthConsiderationDetailList
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> StrengthConsiderationDetailList()
+    {
+      APIResponse apiresponse = await _iProject.StrengthConsiderationDetailList();
+      return apiresponse;
+    }
+
+    #endregion
+
+    #region SecurityDetailList
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> SecurityDetailList()
+    {
+      APIResponse apiresponse = await _iProject.SecurityDetailList();
+      return apiresponse;
+    }
+
+    #endregion
+
+    #region SecurityConsiderationDetailList
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> SecurityConsiderationDetailList()
+    {
+      APIResponse apiresponse = await _iProject.SecurityConsiderationDetailList();
+      return apiresponse;
+    }
+    #endregion
+
+    #region Add/Edit/Delete Project Info
+
+    #region Project Details
+
+    /// <summary>
+    /// Add And Update New Project
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    ///
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditProjectDetail([FromBody]ProjectDetailNewModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone =  _iProject.AddEditProjectDetail(model, id);
+      }
+
+      return apiRespone;
+    }
+    /// <summary>
+    /// Delete Created Project 
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteProjectDetail([FromBody]long ProjectId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.DeleteProjectDetail(ProjectId, id);
+      }
+      return apiRespone;
+    }
+
+
+    [HttpGet]
+    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllProjectList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllProjectList();
+      return apiresponse;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public APIResponse GetProjectListById([FromBody]long Id)
+    {
+      APIResponse apiresponse =  _iProject.GetProjectListById(Id);
+       return apiresponse;
+    }
+
+
+
+    #endregion
+
+    #region Add/Update Assign Employee to Project
+    /// <summary>
+    /// Add Update Project Detail to Add/Update Assign Employee to Project
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditProjectAssignToEmployee([FromBody]ProjectAssignToModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddEditProjectAssignToEmployee(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteProjectAssignToEmployee([FromBody]ProjectAssignTo model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.DeleteProjectAssignToEmployee(model, id);
+      }
+      return apiRespone;
+    }
+    #endregion
+
+    #region Add/Edit Project Program to Current Project
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditProjectProgram([FromBody]ProjectProgramModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddEditProjectProgram(model, id);
+      }
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> getProjectProgramById([FromBody]long ProjectId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.getProjectProgramById(ProjectId);
+      }
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditProjectArea([FromBody]ProjectAreaModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddEditProjectArea(model, id);
+      }
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> getProjectAreaById([FromBody]long ProjectId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.getProjectAreaById(ProjectId);
+      }
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> getProjectSectorById([FromBody]long ProjectId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.getProjectSectorById(ProjectId);
+      }
+      return apiRespone;
+    }
+    
+
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteProjectProgram([FromBody]ProjectProgram model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.DeleteProjectProgram(model, id);
+      }
+      return apiRespone;
+    }
+    #endregion
+
+    #region Add/Edit Project Sector Area to Current Project
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditProjectSector([FromBody]ProjectSectorModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddEditProjectSector(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteProjectSector([FromBody]ProjectSector model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.DeleteProjectSector(model, id);
+      }
+      return apiRespone;
+    }
+
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteProjectArea([FromBody]ProjectArea model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.DeleteProjectArea(model, id);
+      }
+      return apiRespone;
+    }
+
+    #endregion
+
+
+    #endregion
+
+
+    #region Project Communication
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetChatByProjectId([FromBody]long ProjectId)
+    {
+      APIResponse apiresponse = await _iProject.GetChatByProjectId(ProjectId);
+      return apiresponse;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddProjectChat([FromBody]ProjectCommunicationModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddProjectChat(model, id);
+      }
+      return apiRespone;
+    }
+
+    #endregion
+
+    #region Other Details dropdown
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllProvinceDetails()
+    {
+      APIResponse response = await _iProject.GetAllProvinceDetails();
+      return response;
+    }
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllStrengthConsiderationDetails()
+    {
+      APIResponse response = await _iProject.GetAllStrengthConsiderationDetails();
+      return response;
+    }
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllGenderConsiderationDetails()
+    {
+      APIResponse response = await _iProject.GetAllGenderConsiderationDetails();
+      return response;
+    }
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllSecurityDetails()
+    {
+      APIResponse response = await _iProject.GetAllSecurityDetails();
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllSecurityConsiderationDetails()
+    {
+      APIResponse response = await _iProject.GetAllSecurityConsiderationDetails();
+      return response;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllDistrictvalueByProvinceId([FromBody]int[] ProvinceId)
+    {
+      APIResponse response = await _iProject.GetAllDistrictvalueByProvinceId(ProvinceId);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditProjectotherDetail([FromBody]ProjectOtherDetail OtherDetail)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+
+        apiRespone = await _iProject.AddEditProjectotherDetail(OtherDetail, id);
+      }
+      return apiRespone;      
+    }
+
+
+    #endregion
+
+
+
+
+    
+
+    #region projectApproval
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddApprovalProjectDetail([FromBody]ApproveProjectDetailModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddApprovalDetail(model, id);
+      }
+
+      return apiRespone;
+    }
+
+    #endregion
+
+    #region Win/loss project approval
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> WinApprovalProjectDetail([FromBody]WinApprovalProjectModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.WinApprovalDetail(model, id);
+      }
+
+      return apiRespone;
+    }
+
+    #endregion
+
+  }
+}

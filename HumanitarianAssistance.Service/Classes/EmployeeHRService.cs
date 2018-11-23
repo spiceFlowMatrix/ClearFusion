@@ -1751,6 +1751,31 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        /// <summary>
+        /// Get Languages List Spoken in Organisation
+        /// </summary>
+        /// <returns>Language List</returns>
+        public async Task<APIResponse> GetAllLanguages()
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                List<LanguageDetail> LanguageDetailList = await _uow.GetDbContext().LanguageDetail.Where(x => x.IsDeleted == false).ToListAsync();
+                                                                                       
+
+                response.data.LanguageDetail = LanguageDetailList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         #region reusable need to add them in utility file
         public double SalaryCalculate(double grossSalary, double exchangeRate)
         {
@@ -2487,5 +2512,117 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return "OK";
         }
+
+
+        public string TransformExchangeRatesToFromCurrency()
+        {
+            try
+            {
+                List<ExchangeRate> exchangeRates = _uow.GetDbContext().ExchangeRates.Where(x => x.OfficeCode == "KBL" && x.Date == new DateTime(2016, 10, 30)).OrderByDescending(x => x.Date).ToList();
+
+                foreach (ExchangeRate rate in exchangeRates)
+                {
+                    List<ExchangeRate> ExchangeRatesonDate = exchangeRates.Where(x => x.Date == rate.Date).ToList();
+
+                    List<ExchangeRateDetail> ExchangeRateDetailList = new List<ExchangeRateDetail>();
+
+                    for (int i = 1; i <= 4; i++)
+                    {
+                        ExchangeRateDetail exchangeRateDetail = new ExchangeRateDetail();
+
+                        exchangeRateDetail.Date = rate.Date.Value;
+                        exchangeRateDetail.OfficeId = rate.OfficeId.Value;
+                        exchangeRateDetail.IsDeleted = false;
+                        
+                        exchangeRateDetail.FromCurrency = rate.FromCurrency.Value;
+                        exchangeRateDetail.ToCurrency = i;
+                        exchangeRateDetail.Rate = Convert.ToDecimal(ExchangeRatesonDate.FirstOrDefault(x => x.FromCurrency == rate.FromCurrency.Value).Rate/ ExchangeRatesonDate.FirstOrDefault(x => x.FromCurrency == i).Rate);
+                        ExchangeRateDetailList.Add(exchangeRateDetail);
+                    }
+
+                    _uow.GetDbContext().ExchangeRateDetail.AddRange(ExchangeRateDetailList);
+                   _uow.GetDbContext().SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return "Exception occured " + ex.Message;
+
+            }
+
+            return "Conversion Done";
+
+        }
+
+
+
+        //public async Task<string> TransformExchangeRatesToFromCurrency()
+        //{
+        //    try
+        //    {
+        //        List<ExchangeRate> exchangeRates = await _uow.GetDbContext().ExchangeRates.Where(x => x.OfficeCode == "KBL" && x.Date==new DateTime(2016, 10, 30)).OrderByDescending(x => x.Date).ToListAsync();
+
+        //        foreach (ExchangeRate rate in exchangeRates)
+        //        {
+
+        //            List<ExchangeRate> ExchangeRatesonDate = exchangeRates.Where(x => x.Date == rate.Date).ToList();
+
+        //            if (rate.FromCurrency == (int)Currency.AFG)
+        //            {
+        //                ExchangeRateDetail ExchangeRateDetailAFG = new ExchangeRateDetail();
+        //                ExchangeRateDetail ExchangeRateDetailPKR = new ExchangeRateDetail();
+        //                ExchangeRateDetail ExchangeRateDetailUSD = new ExchangeRateDetail();
+        //                ExchangeRateDetail ExchangeRateDetailEUR = new ExchangeRateDetail();
+
+        //                ExchangeRateDetailAFG.Date = rate.Date.Value;
+        //                ExchangeRateDetailAFG.OfficeId = rate.OfficeId.Value;
+        //                ExchangeRateDetailAFG.IsDeleted = false;
+
+        //                ExchangeRateDetailPKR.Date = rate.Date.Value;
+        //                ExchangeRateDetailPKR.OfficeId = rate.OfficeId.Value;
+        //                ExchangeRateDetailPKR.IsDeleted = false;
+
+        //                ExchangeRateDetailUSD.Date = rate.Date.Value;
+        //                ExchangeRateDetailUSD.OfficeId = rate.OfficeId.Value;
+        //                ExchangeRateDetailUSD.IsDeleted = false;
+
+        //                ExchangeRateDetailEUR.Date = rate.Date.Value;
+        //                ExchangeRateDetailEUR.OfficeId = rate.OfficeId.Value;
+        //                ExchangeRateDetailEUR.IsDeleted = false;
+
+        //                if (rate.FromCurrency == (int)Currency.AFG)
+        //                {
+        //                    ExchangeRateDetailAFG.Rate = 1;
+        //                    ExchangeRateDetailAFG.FromCurrency = (int)Currency.AFG;
+        //                    ExchangeRateDetailAFG.ToCurrency = (int)Currency.AFG;
+        //                }
+        //                else
+        //                {
+
+        //                    ExchangeRateDetailAFG.Rate = ExchangeRatesonDate.FirstOrDefault(x=> x.FromCurrency== (int)Currency.EUR).Rate/ ExchangeRatesonDate.FirstOrDefault(x => x.FromCurrency == (int)Currency.EUR).Rate;
+        //                    ExchangeRateDetailAFG.FromCurrency = (int)Currency.AFG;
+        //                    ExchangeRateDetailAFG.ToCurrency = (int)Currency.AFG;
+        //                }
+
+        //            }
+
+
+
+
+
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return "Exception occured "+ ex.Message;
+
+        //    }
+
+        //    return "Conversion Done";
+
+        //}
+
     }
 }

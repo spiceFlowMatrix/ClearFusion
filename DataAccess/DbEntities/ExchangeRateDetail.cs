@@ -6,18 +6,16 @@ using System.Text;
 
 namespace DataAccess.DbEntities
 {
-    public partial class ExchangeRateDetail : BaseEntity
+    public class ExchangeRateDetail : BaseEntityWithoutId
     {
-        [Key, Column(Order = 0)]
-        [StringLength(10)]
-        public string RegCode { get; set; }
-        [Key, Column(Order = 1)]
-        public DateTime RateDate { get; set; }
-        [Key, Column(Order = 2)]
-        [StringLength(5)]
-	    public string CurrencyCode { get; set; }
-        public float? Rate { get; set; }
-        public Boolean? Sent { get; set; }
-        public Boolean? Status { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1, TypeName = "serial")]
+        public int ExchangeRateId { get; set; }
+        public int FromCurrency { get; set; }
+        public int ToCurrency { get; set; }
+        public DateTime Date { get; set; }
+        public decimal Rate { get; set; }
+        public int OfficeId { get; set; }
     }
 }

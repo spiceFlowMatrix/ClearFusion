@@ -46,6 +46,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int AccountCode { get; set; }
         public string AccountName { get; set; }
 		public long ChartOfAccountCode { get; set; }
+        public int AccountLevelId { get; set; }
     }
 
     public class VoucherTransactionModel : BaseModel
@@ -74,8 +75,10 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public double? EURAmount { get; set; }
 		public double? USDAmount { get; set; }
 		public double? PKRAmount { get; set; }
+        public int? ProjectId { get; set; }
+        public int? BudgetLineId { get; set; }
 
-	}
+    }
 
     //public class LedgerModel
     //{
@@ -121,7 +124,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public double Amount { get; set; }
 
         public string TransactionType { get; set; }
-
+        public string VoucherReferenceNo { get; set; }
         public int TransactionNo { get; set; }
         public string AccountName { get; set; }
         public DateTime? TransactionDate { get; set; }

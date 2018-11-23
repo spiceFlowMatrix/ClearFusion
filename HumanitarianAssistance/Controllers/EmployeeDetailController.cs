@@ -566,5 +566,69 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #endregion
 
+    #region "Employee Languages"
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllEmployeeLanguages([FromQuery]int EmployeeId)
+    {
+      APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeLanguages(EmployeeId);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEmployeeLanguages([FromBody]EmployeeLanguages model)
+    {
+      APIResponse apiResponse = null;
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.AddEmployeeLanguages(model, id);
+      }
+
+      return apiResponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditEmployeeLanguages([FromBody]EmployeeLanguages model)
+    {
+      APIResponse apiResponse = null;
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.EditEmployeeLanguages(model, id);
+      }
+
+      return apiResponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> RemoveEmployeeLanguages([FromBody]EmployeeLanguages model)
+    {
+      APIResponse apiResponse = null;
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iEmployeeDetail.RemoveEmployeeLanguages(model, id);
+      }
+      return apiResponse;
+    }
+
+    #endregion
+
   }
 }

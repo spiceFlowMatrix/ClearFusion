@@ -1,4 +1,7 @@
 ﻿using DataAccess.DbEntities;
+using DataAccess.DbEntities.AccountingNew;
+using DataAccess.DbEntities.Marketing;
+using DataAccess.DbEntities.Project;
 using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Entities;
 using HumanitarianAssistance.Entities.Models;
@@ -27,15 +30,14 @@ namespace DataAccess
         IGenericRepository<VoucherType> VoucherTypeRepository { get; }
         IGenericRepository<VoucherDetail> VoucherDetailRepository { get; }
         IGenericRepository<VoucherDocumentDetail> VoucherDocumentDetailRepository { get; }
-		//IGenericRepository<VoucherTransactionDetails> VoucherTransactionDetailsRepository { get; }
-		IGenericRepository<VoucherTransactions> VoucherTransactionsRepository { get; }
-		IGenericRepository<AnalyticalType> AnalyticalTypeRepository { get; }
+        IGenericRepository<VoucherTransactions> VoucherTransactionsRepository { get; }
+        IGenericRepository<AnalyticalType> AnalyticalTypeRepository { get; }
         IGenericRepository<AnalyticalDetail> AnalyticalDetailRepository { get; }
         IGenericRepository<ExchangeRate> ExchangeRateRepository { get; }
         IGenericRepository<StoreSourceCodeDetail> StoreSourceCodeRepository { get; }
         IGenericRepository<EmployeeDetail> EmployeeDetailRepository { get; }
         IGenericRepository<DesignationDetail> DesignationDetailRepository { get; }
-        IGenericRepository<ProjectBudget> ProjectBudgetRepository { get; }
+        //IGenericRepository<ProjectBudget> ProjectBudgetRepository { get; }
         IGenericRepository<ProjectDetails> ProjectDetailRepository { get; }
 
         IGenericRepository<JobHiringDetails> JobHiringDetailsRepository { get; }
@@ -65,7 +67,7 @@ namespace DataAccess
         IGenericRepository<EmployeeAttendance> EmployeeAttendanceRepository { get; }
         IGenericRepository<EmployeeHealthDetail> EmployeeHealthDetailRepository { get; }
         IGenericRepository<EmployeeApplyLeave> EmployeeApplyLeaveRepository { get; }
-        IGenericRepository<ProjectDocument> ProjectDocumentRepository { get; }
+        //IGenericRepository<ProjectDocument> ProjectDocumentRepository { get; }
         IGenericRepository<NotesMaster> NotesMasterRepository { get; }
         IGenericRepository<JobGrade> JobGradeRepository { get; }
         IGenericRepository<HolidayDetails> HolidayDetailsRepository { get; }
@@ -74,7 +76,7 @@ namespace DataAccess
         IGenericRepository<EmployeePayroll> EmployeePayrollRepository { get; }
         IGenericRepository<EmployeePaymentTypes> EmployeePaymentTypeRepository { get; }
         IGenericRepository<EmployeeMonthlyPayroll> EmployeeMonthlyPayrollRepository { get; }
-        IGenericRepository<BudgetLineEmployees> BudgetLineEmployeesRepository { get; }
+        //IGenericRepository<BudgetLineEmployees> BudgetLineEmployeesRepository { get; }
         IGenericRepository<EmployeePensionRate> EmployeePensionRateRepository { get; }
         IGenericRepository<EmployeeContractType> EmployeeContractTypeRepository { get; }
         IGenericRepository<ContractTypeContent> ContractTypeContentRepository { get; }
@@ -140,7 +142,59 @@ namespace DataAccess
         IGenericRepository<PensionPaymentHistory> PensionPaymentHistoryRepository { get; }
         IGenericRepository<PayrollAccountHead> PayrollAccountHeadRepository { get; }
         IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository { get; }
+        IGenericRepository<ExchangeRateDetail> ExchangeRateDetailRepository { get; }
+
+        #region Project
+        IGenericRepository<DonorDetail> DonorDetailRepository { get; }
+        IGenericRepository<SectorDetails> SectorDetailsRepository { get; }
+        IGenericRepository<ProgramDetail> ProgramDetailRepository { get; }
+        IGenericRepository<AreaDetail> AreaDetailRepository { get; }
+        IGenericRepository<DistrictDetail> DistrictDetailRepository { get; }
+        IGenericRepository<SecurityDetail> SecurityDetailRepository { get; }
+        IGenericRepository<GenderConsiderationDetail> GenderConsiderationRepository { get; }
+        IGenericRepository<StrengthConsiderationDetail> StrengthConsiderationRepository { get; }
+        IGenericRepository<SecurityConsiderationDetail> SecurityConsiderationDetailRepository { get; }
+        IGenericRepository<ProjectDetail> ProjectDetailNewRepository { get; }
+        IGenericRepository<ProjectPhaseDetails> ProjectPhaseDetailsRepository { get; }
+        IGenericRepository<ProjectOtherDetail> ProjectOtherDetailRepository { get; }
+        
+        IGenericRepository<ProjectAssignTo> ProjectAssignToRepository { get; }
+        IGenericRepository<ProjectProgram> ProjectProgramRepository { get; }
+        IGenericRepository<ProjectArea> ProjectAreaRepository { get; }
+        IGenericRepository<ProjectSector> ProjectSectorRepository { get; }
         IGenericRepository<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistoryRepository { get; }
+        IGenericRepository<EmployeeLanguages> EmployeeLanguagesRepository { get; }
+        IGenericRepository<ProjectPhaseTime> ProjectPhaseTimeRepository { get; }
+        IGenericRepository<ProjectCommunication> ProjectCommunicationRepository { get; }
+        IGenericRepository<ProjectCommunicationAttachment> ProjectCommunicationAttachmentRepository { get; }
+        IGenericRepository<ApproveProjectDetails> ApproveProjectDetailsRepository { get; }
+        IGenericRepository<WinProjectDetails> WinProjectDetailsRepository { get; }
+
+        #endregion 
+
+        #region Marketing
+        IGenericRepository<UnitRate> UnitRateRepository { get; }
+        IGenericRepository<ActivityType> ActivityTypeRepository { get; }
+        IGenericRepository<ContractDetails> ContractDetailsRepository { get; }
+        IGenericRepository<JobDetails> JobDetailsRepository { get; }
+        IGenericRepository<JobPhase> JobPhaseRepository { get; }
+        IGenericRepository<JobPriceDetails> JobPriceDetailsRepository { get; }
+        IGenericRepository<Language> LanguageRepository { get; }
+        IGenericRepository<MediaCategory> MediaCategoryRepository { get; }
+        IGenericRepository<Medium> MediumRepository { get; }
+        IGenericRepository<Quality> QualityRepository { get; }
+        IGenericRepository<Nature> NatureRepository { get; }
+        IGenericRepository<TimeCategory> TimeCategoryRepository { get; }
+        IGenericRepository<ClientDetails> ClientDetailsRepository { get; }
+        IGenericRepository<Category> CategoryRepository { get; }
+        #endregion
+
+        #region "Accounting New"
+        IGenericRepository<AccountFilterType> AccountFilterTypeRepository { get; }
+        IGenericRepository<ChartOfAccountNew> ChartOfAccountNewRepository { get; }
+
+        #endregion
+
 
         void Save();
         Task<int> SaveAsync();

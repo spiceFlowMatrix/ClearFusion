@@ -232,6 +232,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllLanguages()
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iEmployeeHR.GetAllLanguages();
+      }
+      return response;
+    }
+
     //[HttpPost]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     //public async Task<object> DisapproveEmployeeApprovedSalary([FromBody]DisapprovePayrollModel model)
@@ -269,6 +282,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return await _iEmployeeHR.TransferDataForVoucherTransaction2008();
     }
 
-#endregion
+    #endregion
+
+    #region Transform Exchange Rates To From
+
+    [HttpGet]
+    public string TransformExchangeRatesToFromCurrency()
+    {
+      
+        return _iEmployeeHR.TransformExchangeRatesToFromCurrency();
+    
+    }
+    #endregion
   }
 }
