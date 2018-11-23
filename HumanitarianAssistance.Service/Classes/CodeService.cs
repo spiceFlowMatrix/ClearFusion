@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using DataAccess;
 using DataAccess.DbEntities;
+using DataAccess.DbEntities.Marketing;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Entities;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Marketing;
+using HumanitarianAssistance.ViewModels.Models.Project;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -2044,6 +2047,9 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
+                //NOTE: Do not remove code for saving payroll heads for employees that do not exist in EmployeePayrollAccountHead table
+                //List<EmployeeProfessionalDetail> employeesNotInPayrollAccountHeadTable = new List<EmployeeProfessionalDetail>();
+                //List<EmployeeProfessionalDetail> employeeList = await _uow.GetDbContext().EmployeeProfessionalDetail.Where(x => x.IsDeleted == false).ToListAsync();
 
                 foreach (PayrollHeadModel payrollHead in model)
                 {
@@ -2073,6 +2079,37 @@ namespace HumanitarianAssistance.Service.Classes
                          _uow.GetDbContext().EmployeePayrollAccountHead.UpdateRange(xEmployeePayrollAccountHead);
                         _uow.Save();
                     }
+
+                    //NOTE: Do not remove code for saving payroll heads for employees that do not exist in EmployeePayrollAccountHead table
+
+                    //if (employeesNotInPayrollAccountHeadTable.Count == 0)
+                    //{
+
+                    //    employeesNotInPayrollAccountHeadTable = employeeList.Where(e => !xEmployeePayrollAccountHead.Any(p => p.EmployeeId == e.EmployeeId)).ToList();
+                    //}
+
+                    //List<EmployeePayrollAccountHead> newEmployeePayrollAccountHeadList = new List<EmployeePayrollAccountHead>();
+
+                    //foreach (var employee in employeesNotInPayrollAccountHeadTable)
+                    //{
+                    //    foreach (var obj in model)
+                    //    {
+                    //        EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
+                    //        employeePayrollAccountHead.AccountNo = obj.AccountNo;
+                    //        employeePayrollAccountHead.Description = obj.Description;
+                    //        employeePayrollAccountHead.IsDeleted = false;
+                    //        employeePayrollAccountHead.EmployeeId = employee.EmployeeId.Value;
+                    //        employeePayrollAccountHead.PayrollHeadId = obj.PayrollHeadId;
+                    //        employeePayrollAccountHead.PayrollHeadTypeId = obj.PayrollHeadTypeId;
+                    //        employeePayrollAccountHead.PayrollHeadName = obj.PayrollHeadName;
+                    //        employeePayrollAccountHead.TransactionTypeId = obj.TransactionTypeId;
+                    //        newEmployeePayrollAccountHeadList.Add(employeePayrollAccountHead);
+                    //    }
+                    //}
+
+                    //_uow.GetDbContext().EmployeePayrollAccountHead.AddRange(newEmployeePayrollAccountHeadList);
+                    //_uow.GetDbContext().SaveChanges();
+
                 }
 
                 response.StatusCode = StaticResource.successStatusCode;
@@ -2087,6 +2124,136 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
+
+        public async Task<APIResponse> GetAllDistrictDetailByProvinceId(List<int?> ProvinceId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                List<DistrictDetail> districtlist = _uow.GetDbContext().DistrictDetail.Where(x =>x.IsDeleted==false && ProvinceId.Contains(x.ProvinceID)).ToList();                
+                response.data.Districtlist = districtlist;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #region Language
+        /// <summary>
+        /// get Languages List
+        /// </summary>
+        /// <returns></returns>
+        public async Task<APIResponse> GetAllLanguage()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ICollection<Language> Languages = await _uow.LanguageRepository.FindAllAsync(x => x.IsDeleted == false);
+                response.data.Languages = Languages;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Delete Selected Language
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> DeleteLanguage(LanguageModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var languageDetails = await _uow.LanguageRepository.FindAsync(x => x.IsDeleted == false && x.LanguageId == model.LanguageId);
+                if (languageDetails != null)
+                {
+                    languageDetails.ModifiedById = UserId;
+                    languageDetails.ModifiedDate = DateTime.UtcNow;
+                    languageDetails.IsDeleted = true;
+                    await _uow.LanguageRepository.UpdateAsyn(languageDetails);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;            
+        }
+
+        /// <summary>
+        /// Edit Selected Language
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> EditLanguage(LanguageModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                Language obj = await _uow.LanguageRepository.FindAsync(x => x.LanguageId == model.LanguageId);
+                obj.ModifiedById = UserId;
+                obj.ModifiedDate = DateTime.Now;
+                _mapper.Map(model, obj);
+                await _uow.LanguageRepository.UpdateAsyn(obj);
+                await _uow.SaveAsync();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Add New Language
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> AddLanguage(LanguageModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                Language obj = _mapper.Map<LanguageModel,Language>(model);
+                obj.CreatedById = UserId;
+                obj.CreatedDate = DateTime.Now;
+                obj.IsDeleted = false;
+                obj.LanguageName = model.LanguageName;
+                await _uow.LanguageRepository.AddAsyn(obj);
+                await _uow.SaveAsync();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+        #endregion
 
     }
 }

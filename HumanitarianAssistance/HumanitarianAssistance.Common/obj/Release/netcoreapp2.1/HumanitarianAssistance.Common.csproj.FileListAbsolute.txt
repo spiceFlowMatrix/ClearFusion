@@ -1,9 +1,0 @@
-D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Release\netcoreapp2.1\HumanitarianAssistance.Common.deps.json
-D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Release\netcoreapp2.1\HumanitarianAssistance.Common.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Release\netcoreapp2.1\HumanitarianAssistance.Common.pdb
-D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.1\HumanitarianAssistance.Common.csprojAssemblyReference.cache
-D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.1\HumanitarianAssistance.Common.csproj.CoreCompileInputs.cache
-D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.1\HumanitarianAssistance.Common.AssemblyInfoInputs.cache
-D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.1\HumanitarianAssistance.Common.AssemblyInfo.cs
-D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.1\HumanitarianAssistance.Common.dll
-D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Release\netcoreapp2.1\HumanitarianAssistance.Common.pdb

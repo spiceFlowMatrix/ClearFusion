@@ -1278,7 +1278,7 @@ namespace HumanitarianAssistance.Service.Classes
                 EmployeeLanguages employeeLanguages = new EmployeeLanguages();
 
                 employeeLanguages.EmployeeId = model.EmployeeId;
-                employeeLanguages.LanguageName = model.LanguageName;
+                employeeLanguages.LanguageId = model.LanguageId;
                 employeeLanguages.Listening = model.Listening;
                 employeeLanguages.Reading = model.Reading;
                 employeeLanguages.Speaking = model.Speaking;
@@ -1317,7 +1317,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (existRecord != null)
                 {
-                    existRecord.LanguageName = model.LanguageName;
+                    existRecord.LanguageId = model.LanguageId;
                     existRecord.Listening = model.Listening;
                     existRecord.Reading = model.Reading;
                     existRecord.Speaking = model.Speaking;

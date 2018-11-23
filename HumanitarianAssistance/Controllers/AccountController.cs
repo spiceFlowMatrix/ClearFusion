@@ -23,6 +23,8 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using DataAccess;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Service.interfaces.AccountingNew;
+using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 
 namespace HumanitarianAssistance.Controllers
 {
@@ -42,6 +44,7 @@ namespace HumanitarianAssistance.Controllers
     private IPermissionsInRoles _ipermissionsInRoles;
     private IVoucherDetail _ivoucherDetail;
     private IExchangeRate _iExchangeRate;
+    private IChartOfAccountNewService _iChartOfAccountNewService;
     IUnitOfWork _uow;
 
 
@@ -56,6 +59,7 @@ namespace HumanitarianAssistance.Controllers
             IPermissionsInRoles ipermissionsInRoles,
             IVoucherDetail ivoucherDetail,
             IExchangeRate iExchangeRate,
+            IChartOfAccountNewService iChartOfAccountNew,
             IUnitOfWork uow
             )
     {
@@ -68,6 +72,7 @@ namespace HumanitarianAssistance.Controllers
       _ipermissionsInRoles = ipermissionsInRoles;
       _ivoucherDetail = ivoucherDetail;
       _iExchangeRate = iExchangeRate;
+      _iChartOfAccountNewService = iChartOfAccountNew;
       _uow = uow;
       _serializerSettings = new JsonSerializerSettings
       {
@@ -652,18 +657,17 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> AddVoucherTransactionDetail([FromBody] VoucherTransactionModel model)
+    public async Task<object> AddVoucherTransactionDetail([FromBody] List<VoucherTransactionModel> model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+      string id = string.Empty;
+
       if (user != null)
       {
-        var id = user.Id;
-        model.CreatedById = id;
-        model.IsDeleted = false;
-        model.CreatedDate = DateTime.UtcNow;
+        id = user.Id;
       }
-      APIResponse response = await _ivoucherDetail.AddVoucherTransactionDetail(model);
+      APIResponse response = await _ivoucherDetail.AddVoucherTransactionDetail(model, id);
       return response;
     }
 
@@ -687,18 +691,31 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> DeleteVoucherTransactionDetail(int transactionId)
+    public async Task<APIResponse> DeleteVoucherTransactionDetail(int Id)
     {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var userid = user.Id;
-        response = await _ivoucherDetail.DeleteVoucherTransactionDetail(transactionId, userid);
+        response = await _ivoucherDetail.DeleteVoucherTransactionDetail(Id, userid);
       }
       return response;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeleteVoucherTransactions(int Id)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var userid = user.Id;
+        response = await _ivoucherDetail.DeleteVoucherTransactions(Id, userid);
+      }
+      return response;
+    }
 
 
     [HttpGet]
@@ -1042,6 +1059,47 @@ namespace HumanitarianAssistance.Controllers
       }
       return response;
     }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetVoucherDetailByVoucherNo(int VoucherNo)
+    {
+      APIResponse response = await _ivoucherDetail.GetVoucherDetailByVoucherNo(VoucherNo);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetMainLevelAccount([FromBody]int id)
+    {
+      APIResponse response = await _iChartOfAccountNewService.GetMainLevelAccount(id);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllAccountsByParentId([FromBody]int id)
+    {
+      APIResponse response = await _iChartOfAccountNewService.GetAllAccountsByParentId(id);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> AddChartOfAccount([FromBody]ChartOfAccountNewModel model)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.CreatedById = user.Id;
+        model.CreatedDate = DateTime.Now;
+
+        response = await _iChartOfAccountNewService.AddChartOfAccount(model);
+      }
+      return response;
+    }
+
 
   }
 }

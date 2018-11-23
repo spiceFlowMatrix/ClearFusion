@@ -873,10 +873,14 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> GetEmployeeSalaryDetailsByEmployeeId(int EmployeeId)
         {
             APIResponse response = new APIResponse();
+
+            bool isSalaryHeadSaved = false;
+            bool isPayrollHeadSaved = false;
+
             try
             {
 
-                //var salaryHeadDetails = _uow.GetDbContext().SalaryHeadDetails.Where(x => x.IsDeleted == false).ToList();
+                var existrecord = await _uow.EmployeePayrollRepository.FindAllAsync(x => x.EmployeeID == EmployeeId);
 
                 var employeepayrolllist = (from salaryhead in await _uow.SalaryHeadDetailsRepository.GetAllAsyn()
                                            join emppayroll in await _uow.EmployeePayrollRepository.FindAllAsync(x => x.EmployeeID == EmployeeId) on salaryhead.SalaryHeadId equals emppayroll.SalaryHeadId
@@ -898,62 +902,10 @@ namespace HumanitarianAssistance.Service.Classes
                                                TransactionTypeId = salaryhead.TransactionTypeId
                                            }).ToList();
 
-                // var employeePayrollAccountHead = await _uow.EmployeePayrollAccountHeadRepository.FindAllAsync(x=> x.IsDeleted== false);
-
-                ////NOTE: Retreiving Employee Payroll Head details overriding the master page account and transaction type if fields present in Employee Payroll Head child table
-
-                //List<EmployeePayrollAccountModel> EmployeePayrollAccountModelList = await _uow.GetDbContext().EmployeePayrollAccountHead
-                //                                                                                             .Where(x => x.EmployeeId == EmployeeId && x.IsDeleted== false)
-                //                                                                                             .Select(x=> new EmployeePayrollAccountModel {
-                //                                                                                                 AccountNo= x.AccountNo,
-                //                                                                                                 Description= x.Description,
-                //                                                                                                 EmployeeId= x.EmployeeId,
-                //                                                                                                 PayrollHeadId= x.PayrollHeadId,
-                //                                                                                                 PayrollHeadName= x.PayrollHeadName,
-                //                                                                                                 PayrollHeadTypeId= x.PayrollHeadTypeId,
-                //                                                                                                 TransactionTypeId= x.TransactionTypeId,
-                //                                                                                                 SalaryHeadType= x.PayrollHeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : x.PayrollHeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : x.PayrollHeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : ""
-                //                                                                                             }).ToListAsync();
-                //List<EmployeePayrollAccountModel> EmployeePayrollAccountModelList1 = null;
-
-                //    EmployeePayrollAccountModelList1 = await _uow.GetDbContext().PayrollAccountHead.Where(x=> x.IsDeleted== false)
-                //                                                              .Select(x => new EmployeePayrollAccountModel
-                //                                                              {
-                //                                                              AccountNo = x.AccountNo,
-                //                                                              Description = x.Description,
-                //                                                              PayrollHeadId = x.PayrollHeadId,
-                //                                                              PayrollHeadName = x.PayrollHeadName,
-                //                                                              PayrollHeadTypeId = x.PayrollHeadTypeId,
-                //                                                              TransactionTypeId = x.TransactionTypeId,
-                //                                                              EmployeeId= EmployeeId,
-                //                                                              SalaryHeadType = x.PayrollHeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : x.PayrollHeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : x.PayrollHeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
-                //                                                              }).Except(EmployeePayrollAccountModelList).ToListAsync();
-
-
-                //if (EmployeePayrollAccountModelList1.Count != 0)
-                //{
-                //    EmployeePayrollAccountModelList.AddRange(EmployeePayrollAccountModelList1);
-                //}
-
-                //List<EmployeePayrollAccountModel> EmployeePayrollAccountList = await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x => x.EmployeeId == EmployeeId)
-                //                                                                                        .Select(x=> new EmployeePayrollAccountModel{
-                //                                                                                            AccountNo= x.AccountNo,
-                //                                                                                            Description= x.Description,
-                //                                                                                            PayrollHeadId= x.PayrollHeadId,
-                //                                                                                            PayrollHeadName= x.PayrollHeadName,
-                //                                                                                            PayrollHeadTypeId= x.PayrollHeadTypeId,
-                //                                                                                            TransactionTypeId= x.TransactionTypeId,
-                //                                                                                            EmployeeId = EmployeeId,
-                //                                                                                            SalaryHeadType = x.PayrollHeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : x.PayrollHeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : x.PayrollHeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : ""
-                //                                                                                        })
-                //                                                                                        .ToListAsync();
-
-                //if (!EmployeePayrollAccountList.Any())
-                //{
-                //    EmployeePayrollAccountList= await _uow.GetDbContext().PayrollAccountHead
-
-
-                //}
+                if (existrecord.Any())
+                {
+                    isSalaryHeadSaved = existrecord.Count == employeepayrolllist.Count ? true : false;
+                }
 
 
                 var employeeAccountHeadPayroll = (from payrollHead in await _uow.GetDbContext().PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync()
@@ -971,8 +923,17 @@ namespace HumanitarianAssistance.Service.Classes
                                                       EmployeeId = EmployeeId
                                                   }).ToList();
 
-                response.data.EmployeePayrollList = employeepayrolllist;
+                var existrecordPayrollHead = await _uow.EmployeePayrollAccountHeadRepository.FindAllAsync(x => x.EmployeeId == EmployeeId);
+
+                if (existrecordPayrollHead.Any())
+                {
+                    isPayrollHeadSaved = existrecordPayrollHead.Count == employeeAccountHeadPayroll.Count ? true : false;
+                }
+
+                response.data.EmployeePayrollList = employeepayrolllist.OrderBy(x=> x.TransactionTypeId).ThenBy(x=> x.SalaryHeadType).ToList();
                 response.data.EmployeePayrollAccountHeadList = employeeAccountHeadPayroll;
+                response.data.isSalaryHeadSaved = isSalaryHeadSaved;
+                response.data.isPayrollHeadSaved = isPayrollHeadSaved;
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1700,6 +1661,9 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
+
+                int month = Convert.ToDateTime(SelectedDate).Date.Month;
+
                 List<EmployeeAttendance> empattendancelist = _uow.EmployeeAttendanceRepository.FindAllAsync(x => x.Date.Date == DateTime.Parse(SelectedDate).Date).Result.ToList();  //marked or not
 
                 List<EmployeeDetail> activelist = await _uow.GetDbContext().EmployeeDetail
@@ -1745,7 +1709,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     //Get Default In-time and out-time for an office and for current year and current month
                     PayrollMonthlyHourDetail xPayrollMonthlyHourDetail = _uow.GetDbContext().PayrollMonthlyHourDetail.Where(x => x.IsDeleted == false && x.OfficeId == OfficeId && x.PayrollYear == DateTime.Now.Year
-                                                                                                                            && x.PayrollMonth == DateTime.Now.Month).FirstOrDefault();
+                                                                                                                            && x.PayrollMonth == month).FirstOrDefault();
                     if (xPayrollMonthlyHourDetail != null)
                     {
 
@@ -4770,16 +4734,16 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                response.data.EmployeeProjectList = await _uow.GetDbContext().BudgetLineEmployees.Include(x => x.ProjectBudgetLine).Where(x => x.EmployeeId == EmployeeId && x.IsActive == true)
-                    .Select(x => new EmployeeProjectModel
-                    {
-                        EmployeeId = x.EmployeeId,
-                        ProjectId = x.ProjectId,
-                        ProjectName = x.ProjectBudgetLine.ProjectDetails.ProjectName,
-                        BudgetLineId = x.BudgetLineId,
-                        BudgetLineName = x.ProjectBudgetLine.Description,
-                        ProjectPercentage = x.ProjectPercentage == null ? 0 : x.ProjectPercentage
-                    }).ToListAsync();
+                //response.data.EmployeeProjectList = await _uow.GetDbContext().BudgetLineEmployees.Include(x => x.ProjectBudgetLine).Where(x => x.EmployeeId == EmployeeId && x.IsActive == true)
+                //    .Select(x => new EmployeeProjectModel
+                //    {
+                //        EmployeeId = x.EmployeeId,
+                //        ProjectId = x.ProjectId,
+                //        ProjectName = x.ProjectBudgetLine.ProjectDetails.ProjectName,
+                //        BudgetLineId = x.BudgetLineId,
+                //        BudgetLineName = x.ProjectBudgetLine.Description,
+                //        ProjectPercentage = x.ProjectPercentage == null ? 0 : x.ProjectPercentage
+                //    }).ToListAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -4796,15 +4760,15 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                foreach (var item in model)
-                {
-                    var recordList = await _uow.BudgetLineEmployeesRepository.FindAsync(x => x.EmployeeId == item.EmployeeId && x.ProjectId == item.ProjectId && x.BudgetLineId == item.BudgetLineId && x.IsActive == true);
-                    recordList.ProjectPercentage = item.ProjectPercentage;
-                    recordList.ModifiedById = UserId;
-                    recordList.ModifiedDate = DateTime.Now;
-                    await _uow.BudgetLineEmployeesRepository.UpdateAsyn(recordList);
+                //foreach (var item in model)
+                //{
+                //    var recordList = await _uow.BudgetLineEmployeesRepository.FindAsync(x => x.EmployeeId == item.EmployeeId && x.ProjectId == item.ProjectId && x.BudgetLineId == item.BudgetLineId && x.IsActive == true);
+                //    recordList.ProjectPercentage = item.ProjectPercentage;
+                //    recordList.ModifiedById = UserId;
+                //    recordList.ModifiedDate = DateTime.Now;
+                //    await _uow.BudgetLineEmployeesRepository.UpdateAsyn(recordList);
 
-                }
+                //}
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -4945,48 +4909,48 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                List<EmployeeContractModel> EmployeeContractModellst = new List<EmployeeContractModel>();
-                var lst = await _uow.BudgetLineEmployeesRepository.FindAllAsync(x => x.ProjectId == ProjectId && x.BudgetLineId == BudgetLineId && x.EmployeeId == EmployeeId);
-                if (lst != null)
-                {
-                    var records = (from edd in await _uow.DesignationDetailRepository.GetAllAsyn()
-                                   join epr in await _uow.EmployeeProfessionalDetailRepository.GetAllAsyn() on edd.DesignationId equals epr.DesignationId
-                                   join edr in await _uow.EmployeeDetailRepository.GetAllAsyn() on epr.EmployeeId equals edr.EmployeeID
-                                   join esd in await _uow.EmployeeSalaryDetailsRepository.GetAllAsyn() on edr.EmployeeID equals esd.EmployeeId
-                                   join ble in await _uow.BudgetLineEmployeesRepository.GetAllAsyn() on edr.EmployeeID equals ble.EmployeeId
-                                   join pbl in await _uow.ProjectBudgetLineRepository.GetAllAsyn() on ble.BudgetLineId equals pbl.BudgetLineId
-                                   join pdr in await _uow.ProjectDetailRepository.GetAllAsyn() on pbl.ProjectId equals pdr.ProjectId
-                                   join ofd in await _uow.OfficeDetailRepository.GetAllAsyn() on epr.OfficeId equals ofd.OfficeId
-                                   join str in await _uow.ProvinceDetailsRepository.GetAllAsyn() on edr.ProvinceId equals str.ProvinceId
-                                   join mph in await _uow.PayrollMonthlyHourDetailRepository.GetAllAsyn() on epr.OfficeId equals mph.OfficeId
-                                   join cct in await _uow.ContractTypeContentRepository.GetAllAsyn() on epr.EmployeeContractTypeId equals cct.EmployeeContractTypeId
-                                   where ble.EmployeeId == EmployeeId
-                                   select new EmployeeContractModel
-                                   {
-                                       EmployeeName = ble.EmployeeName,
-                                       FatherName = edr.FatherName,
-                                       EmployeeCode = edr.EmployeeCode,
-                                       Designation = edd.Designation,
-                                       ContractStartDate = pbl.StartDate,
-                                       ContractEndDate = pbl.EndDate,
-                                       DurationOfContract = (pbl.EndDate - pbl.StartDate).Days,
-                                       Salary = Math.Round(Convert.ToDouble((esd.TotalGeneralAmount + esd.TotalAllowance - esd.Totalduduction) * ble.ProjectPercentage), 2),
-                                       Grade = null,
-                                       ProjectName = pdr.ProjectName,
-                                       ProjectCode = pdr.ProjectId,
-                                       DutyStation = ofd.OfficeName,
-                                       Province = str.ProvinceName,
-                                       BudgetLine = pbl.Description,
-                                       JobId = null,
-                                       WorkTime = mph.InTime.Value.Hour,
-                                       WorkDayHours = (mph.OutTime - mph.InTime).Value.Days,
-                                       ContentEnglish = cct.ContentEnglish,
-                                       ContentDari = cct.ContentDari,
-                                       EmployeeImage = edr.DocumentGUID + edr.Extension
-                                   }).ToList();
-                    EmployeeContractModellst.AddRange(records);
-                }
-                response.data.EmployeeContractModellst = EmployeeContractModellst;
+                //List<EmployeeContractModel> EmployeeContractModellst = new List<EmployeeContractModel>();
+                //var lst = await _uow.BudgetLineEmployeesRepository.FindAllAsync(x => x.ProjectId == ProjectId && x.BudgetLineId == BudgetLineId && x.EmployeeId == EmployeeId);
+                //if (lst != null)
+                //{
+                //    var records = (from edd in await _uow.DesignationDetailRepository.GetAllAsyn()
+                //                   join epr in await _uow.EmployeeProfessionalDetailRepository.GetAllAsyn() on edd.DesignationId equals epr.DesignationId
+                //                   join edr in await _uow.EmployeeDetailRepository.GetAllAsyn() on epr.EmployeeId equals edr.EmployeeID
+                //                   join esd in await _uow.EmployeeSalaryDetailsRepository.GetAllAsyn() on edr.EmployeeID equals esd.EmployeeId
+                //                   join ble in await _uow.BudgetLineEmployeesRepository.GetAllAsyn() on edr.EmployeeID equals ble.EmployeeId
+                //                   join pbl in await _uow.ProjectBudgetLineRepository.GetAllAsyn() on ble.BudgetLineId equals pbl.BudgetLineId
+                //                   join pdr in await _uow.ProjectDetailRepository.GetAllAsyn() on pbl.ProjectId equals pdr.ProjectId
+                //                   join ofd in await _uow.OfficeDetailRepository.GetAllAsyn() on epr.OfficeId equals ofd.OfficeId
+                //                   join str in await _uow.ProvinceDetailsRepository.GetAllAsyn() on edr.ProvinceId equals str.ProvinceId
+                //                   join mph in await _uow.PayrollMonthlyHourDetailRepository.GetAllAsyn() on epr.OfficeId equals mph.OfficeId
+                //                   join cct in await _uow.ContractTypeContentRepository.GetAllAsyn() on epr.EmployeeContractTypeId equals cct.EmployeeContractTypeId
+                //                   where ble.EmployeeId == EmployeeId
+                //                   select new EmployeeContractModel
+                //                   {
+                //                       EmployeeName = edr.EmployeeName,
+                //                       FatherName = edr.FatherName,
+                //                       EmployeeCode = edr.EmployeeCode,
+                //                       Designation = edd.Designation,
+                //                       ContractStartDate = pbl.StartDate,
+                //                       ContractEndDate = pbl.EndDate,
+                //                       DurationOfContract = (pbl.EndDate - pbl.StartDate).Days,
+                //                       Salary = Math.Round(Convert.ToDouble((esd.TotalGeneralAmount + esd.TotalAllowance - esd.Totalduduction) * ble.ProjectPercentage), 2),
+                //                       Grade = null,
+                //                       ProjectName = pdr.ProjectName,
+                //                       ProjectCode = pdr.ProjectId,
+                //                       DutyStation = ofd.OfficeName,
+                //                       Province = str.ProvinceName,
+                //                       BudgetLine = pbl.Description,
+                //                       JobId = null,
+                //                       WorkTime = mph.InTime.Value.Hour,
+                //                       WorkDayHours = (mph.OutTime - mph.InTime).Value.Days,
+                //                       ContentEnglish = cct.ContentEnglish,
+                //                       ContentDari = cct.ContentDari,
+                //                       EmployeeImage = edr.DocumentGUID + edr.Extension
+                //                   }).ToList();
+                //    EmployeeContractModellst.AddRange(records);
+                //}
+                //response.data.EmployeeContractModellst = EmployeeContractModellst;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -5203,7 +5167,7 @@ namespace HumanitarianAssistance.Service.Classes
                                join edr in await _uow.EmployeeDetailRepository.GetAllAsyn() on epr.EmployeeId equals edr.EmployeeID
                                join etr in await _uow.EmployeeTypeRepository.GetAllAsyn() on edr.EmployeeTypeId equals etr.EmployeeTypeId
                                join odr in await _uow.OfficeDetailRepository.GetAllAsyn() on epr.OfficeId equals odr.OfficeId
-                               join blr in await _uow.BudgetLineEmployeesRepository.GetAllAsyn() on edr.EmployeeID equals blr.EmployeeId
+                               //join blr in await _uow.BudgetLineEmployeesRepository.GetAllAsyn() on edr.EmployeeID equals blr.EmployeeId
                                join ear in await _uow.EmployeePaymentTypeRepository.GetAllAsyn() on edr.EmployeeID equals ear.EmployeeID
                                join epp in await _uow.EmployeeMonthlyPayrollRepository.FindAllAsync(x => x.EmployeeID == EmployeeId) on edr.EmployeeID equals epp.EmployeeID
                                join sdr in await _uow.SalaryHeadDetailsRepository.GetAllAsyn() on epp.SalaryHeadId equals sdr.SalaryHeadId
@@ -5217,14 +5181,14 @@ namespace HumanitarianAssistance.Service.Classes
                                    Type = etr.EmployeeTypeName,
                                    Office = odr.OfficeCode,
                                    Sex = edr.SexId == (int)Sex.Male ? "Male" : edr.SexId == (int)Sex.Female ? "Female" : "Other",
-                                   BudgetLine = blr.BudgetLineId,
+                                   //BudgetLine = blr.BudgetLineId,
                                    Program = null,
-                                   ProjectId = blr.ProjectId,
+                                   //ProjectId = blr.ProjectId,
                                    JobId = null,
                                    Sector = null,
                                    Area = null,
                                    Account = null,
-                                   SalaryPercentage = blr.ProjectPercentage,
+                                   //SalaryPercentage = blr.ProjectPercentage,
                                    Salary = ear.TotalGeneralAmount + ear.TotalAllowance - ear.TotalDeduction,
                                    BasicSalary = ear.TotalGeneralAmount,
                                    CurrencyCode = ccr.CurrencyCode,

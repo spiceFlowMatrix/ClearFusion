@@ -32,9 +32,16 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                ExchangeRate obj = _mapper.Map<ExchangeRate>(model);
+                ExchangeRateDetail obj = new ExchangeRateDetail();
+
+                obj.Date = model.Date.Value;
+                obj.FromCurrency = model.FromCurrency.Value;
+                obj.ToCurrency = model.ToCurrency.Value;
+                obj.Rate = Convert.ToDecimal(model.Rate.Value);
+                obj.OfficeId = model.OfficeId;
+
                 obj.IsDeleted = false;
-                await _uow.ExchangeRateRepository.AddAsyn(obj);
+                await _uow.ExchangeRateDetailRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -52,14 +59,16 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var exchangerateinfo = await _uow.ExchangeRateRepository.FindAsync(x => x.ExchangeRateId == model.ExchangeRateId && x.IsDeleted == false);
+                var exchangerateinfo = await _uow.GetDbContext().ExchangeRateDetail.FirstOrDefaultAsync(x => x.ExchangeRateId == model.ExchangeRateId && x.IsDeleted == false);
                 exchangerateinfo.ModifiedById = model.ModifiedById;
                 exchangerateinfo.ModifiedDate = DateTime.UtcNow;
-                exchangerateinfo.Date = model.Date;
-                exchangerateinfo.FromCurrency = model.FromCurrency;
-                exchangerateinfo.ToCurrency = model.ToCurrency;
-                exchangerateinfo.Rate = model.Rate;
-                await _uow.ExchangeRateRepository.UpdateAsyn(exchangerateinfo);
+                exchangerateinfo.Date = model.Date.Value;
+                exchangerateinfo.FromCurrency = model?.FromCurrency??0;
+                exchangerateinfo.ToCurrency = model?.ToCurrency??0;
+                exchangerateinfo.OfficeId = model.OfficeId;
+                exchangerateinfo.Rate = Convert.ToDecimal(model.Rate);
+                _uow.GetDbContext().ExchangeRateDetail.Update(exchangerateinfo);
+                _uow.GetDbContext().SaveChanges();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -71,22 +80,56 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        #region Exchangerate dependent on base currency
+
+        //public async Task<APIResponse> GetAllExchangeRate()
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //       var exchangeratelist = await _uow.GetDbContext().ExchangeRates.Include(x => x.CurrencyFrom).Include(y => y.CurrencyTo).Where(x => x.IsDeleted == false)
+        //            .Select(x => new ExchangeRateModel
+        //            {
+        //                ExchangeRateId = x.ExchangeRateId,
+        //                Date = x.Date.Value.Date.ToLocalTime(),
+        //                FromCurrencyName = x.CurrencyFrom.CurrencyCode,
+        //                ToCurrencyName = x.CurrencyTo.CurrencyCode,
+        //                Rate = x.Rate,
+        //                FromCurrency = x.FromCurrency,
+        //                ToCurrency = x.ToCurrency
+        //            }).ToListAsync();
+
+        //        response.data.ExchangeRateList = exchangeratelist;
+        //        response.StatusCode = StaticResource.successStatusCode;
+        //        response.Message = "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //    }
+        //    return response;
+        //}
+
+        #endregion
+
         public async Task<APIResponse> GetAllExchangeRate()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var exchangeratelist = await _uow.GetDbContext().ExchangeRates.Include(x => x.CurrencyFrom).Include(y => y.CurrencyTo).Where(x => x.IsDeleted == false)
-                    .Select(x => new ExchangeRateModel
-                    {
-                        ExchangeRateId = x.ExchangeRateId,
-                        Date = x.Date.Value.Date.ToLocalTime(),
-                        FromCurrencyName = x.CurrencyFrom.CurrencyCode,
-                        ToCurrencyName = x.CurrencyTo.CurrencyCode,
-                        Rate = x.Rate,
-                        FromCurrency = x.FromCurrency,
-                        ToCurrency = x.ToCurrency
-                    }).ToListAsync();
+                var exchangeratelist = await _uow.GetDbContext().ExchangeRateDetail.Where(x => x.IsDeleted == false)
+                                                                                    .Select(x => new ExchangeRateModel
+                                                                                    {
+                                                                                        ExchangeRateId = x.ExchangeRateId,
+                                                                                        Date = x.Date,
+                                                                                        //FromCurrencyName = x.FromCurrency,
+                                                                                        //ToCurrencyName = x.ToCurrency,
+                                                                                        Rate = Convert.ToDouble(x.Rate),
+                                                                                        FromCurrency = x.FromCurrency,
+                                                                                        ToCurrency = x.ToCurrency,
+                                                                                        OfficeId= x.OfficeId
+                                                                                    }).ToListAsync();
 
                 response.data.ExchangeRateList = exchangeratelist;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -107,7 +150,8 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var exchangerate = await Task.Run(() =>
                     _uow.GetDbContext().
-ExchangeRates.Include(x => x.CurrencyFrom).Include(y => y.CurrencyTo).Where(x => x.ToCurrency == currenctToCode && x.FromCurrency == currencyFromCode && x.IsDeleted == false).FirstOrDefault()
+                    ExchangeRates.Include(x => x.CurrencyFrom).Include(y => y.CurrencyTo)
+                                 .Where(x => x.ToCurrency == currenctToCode && x.FromCurrency == currencyFromCode && x.IsDeleted == false).FirstOrDefault()
                 );
 
 

@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Common.Helpers
     public const int MandateNameAlreadyExistCode = 900;
     public const string NoDataFound = "No Data Found";
     public const int IdAlreadyUsedInOtherTable = 500;
-
+    public const int NameAlreadyExist = 420;
     public const int ParticipationApprovedCode = 600;
     public const int ParticipationNotApprovedCode = 700;
     public const int ParticipationRejectionCode = 300;
@@ -331,5 +331,17 @@ namespace HumanitarianAssistance.Common.Helpers
     public const string SalaryHeadAllowances = "{0} has been debited towards Gross Salary";
     public const string SalaryHeadDeductions = "{0} has been credited towards Net Salary";
     public const string JobCodeExist = "Job Code Already Exist";
+
+    public const string NameExist = "Name Already Exist";
+    public const string SuccessText = "Success";
+
+
+    #region "Accounting New"
+    public const string ExceedLevelCount = "You have reached Maximum Limit";
+    public const string ParentIdNotPresent = "Account does not exist";
+
+
+    #endregion
+
   }
 }

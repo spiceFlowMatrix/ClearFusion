@@ -17,7 +17,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public DateTime IssueDate { get; set; }
         public DateTime? ReturnedDate { get; set; }
 
-        public long IssueVoucherNo { get; set; }
+        public string IssueVoucherNo { get; set; }
         public string Remarks { get; set; }
         public long Project { get; set; }
         public string IssedToLocation { get; set; }

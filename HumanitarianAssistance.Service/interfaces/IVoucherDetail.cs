@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Service.interfaces
 
 		Task<APIResponse> GetAllVoucherTransactionDetailByVoucherNo(int VoucherNo);
         //Task<APIResponse> AddVoucherTransactionDetail(List<VoucherTransactionModel> model, string userId);
-        Task<APIResponse> AddVoucherTransactionDetail(VoucherTransactionModel model);
+        Task<APIResponse> AddVoucherTransactionDetail(List<VoucherTransactionModel> model, string UserId);
 
         Task<APIResponse> EditVoucherTransactionDetail(VoucherTransactionModel model);
         Task<APIResponse> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo);
@@ -75,5 +75,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetEmployeeSalaryVoucher(int EmployeeId, int Month, int Year);
         Task<APIResponse> ReverseEmployeeSalaryVoucher(long VoucherNo, string UserId);
         Task<APIResponse> DisapproveEmployeeApprovedSalary(DisapprovePayrollModel model, string UserId);
+        Task<APIResponse> GetVoucherDetailByVoucherNo(long VoucherNo);
+        Task<APIResponse> DeleteVoucherTransactions(int VoucherId, string modifiedById);
     }
 }

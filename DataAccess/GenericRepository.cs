@@ -160,7 +160,10 @@ namespace DataAccess
 
             return queryable;
         }
-
+        public virtual async Task<T> Get(long id)
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
         private bool disposed = false;
         protected virtual void Dispose(bool disposing)
         {

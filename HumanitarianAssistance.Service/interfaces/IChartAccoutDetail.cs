@@ -11,7 +11,9 @@ namespace HumanitarianAssistance.Service.interfaces
     {
         Task<APIResponse> GetAllChartAccountDetail();
         Task<APIResponse> GetAllAccountLevel();
-        Task<APIResponse> GetAllAccountType();
+        Task<APIResponse> GetAllAccountTypeByCategory(int id);
+        Task<APIResponse> AddAccountType(AccountTypeModel model);
+        Task<APIResponse> EditAccountType(AccountTypeModel model);
         Task<APIResponse> AddChartAccountDetail(ChartAccountDetailModel model);
         Task<APIResponse> EditChartAccountDetail(ChartAccountDetailModel model);
     }

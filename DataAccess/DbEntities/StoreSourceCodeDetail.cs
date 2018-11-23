@@ -13,7 +13,9 @@ namespace DataAccess.DbEntities
         [Column(Order = 1)]
         public long SourceCodeId { get; set; }
         public int CodeTypeId { get; set; }
+        [ForeignKey("CodeTypeId")]
         public CodeType CodeTypes { get; set; }
+        public string Code { get; set; }
         [StringLength(100)]
         public string Description { get; set; }
         [StringLength(200)]

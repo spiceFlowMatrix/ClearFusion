@@ -26,9 +26,11 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string AccountLevelName { get; set; }
     }
 
-    public class AccountTypeModel
+    public class AccountTypeModel : BaseModel
     {
         public int AccountTypeId { get; set; }
         public string AccountTypeName { get; set; }
+        public int? AccountCategory { get; set; }
+        public int? AccountHeadTypeId { get; set; }
     }
 }

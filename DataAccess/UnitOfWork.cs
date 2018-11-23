@@ -6,6 +6,9 @@ using HumanitarianAssistance.Entities;
 using DataAccess.DbEntities;
 using System.Threading.Tasks;
 using DataAccess.DbEntities.Store;
+using DataAccess.DbEntities.Project;
+using DataAccess.DbEntities.Marketing;
+using DataAccess.DbEntities.AccountingNew;
 
 namespace DataAccess
 {
@@ -28,16 +31,19 @@ namespace DataAccess
         private IGenericRepository<VoucherType> _vouchertypeRepository;
         private IGenericRepository<VoucherDetail> _voucherdetailsRepository;
         private IGenericRepository<VoucherDocumentDetail> _voucherdocumentdetailRepository;
-		//private IGenericRepository<VoucherTransactionDetails> _vouchertransactiondetailsRepository;
-		private IGenericRepository<VoucherTransactions> _voucherTransactionsRepository;
-		private IGenericRepository<AnalyticalType> _analyticaltypeRepository;
+        //private IGenericRepository<VoucherTransactionDetails> _vouchertransactiondetailsRepository;
+        private IGenericRepository<VoucherTransactions> _voucherTransactionsRepository;
+        private IGenericRepository<AnalyticalType> _analyticaltypeRepository;
         private IGenericRepository<AnalyticalDetail> _analyticaldetailRepository;
         private IGenericRepository<ExchangeRate> _exchangerateRepository;
         private IGenericRepository<StoreSourceCodeDetail> _storesourcecodeRepository;
         private IGenericRepository<EmployeeDetail> _employeedetailRepository;
         private IGenericRepository<DesignationDetail> _designationdetailRepository;
-        private IGenericRepository<ProjectBudget> _projectBudgetRepository;
+        //private IGenericRepository<ProjectBudget> _projectBudgetRepository;
         private IGenericRepository<ProjectDetails> _projectDetailRepository;
+        private IGenericRepository<ApproveProjectDetails> _approveProjectDetailsRepository;
+        private IGenericRepository<WinProjectDetails> _winroveProjectDetailsRepository;
+
         private IGenericRepository<JobHiringDetails> _jobhiringdetailsRepository;
         private IGenericRepository<ProfessionDetails> _professiondetailsRepository;
         private IGenericRepository<CountryDetails> _countrydetailsRepository;
@@ -65,7 +71,7 @@ namespace DataAccess
         private IGenericRepository<EmployeeAttendance> _employeeattendanceRepository;
         private IGenericRepository<EmployeeHealthDetail> _employeehealthdetailRepository;
         private IGenericRepository<EmployeeApplyLeave> _employeeapplyleaveRepository;
-        private IGenericRepository<ProjectDocument> _projectdocumentRepository;
+        //private IGenericRepository<ProjectDocument> _projectdocumentRepository;
         private IGenericRepository<NotesMaster> _notesmasterRepository;
         private IGenericRepository<JobGrade> _jobgradeRepository;
         private IGenericRepository<HolidayDetails> _holidaydetailsRepository;
@@ -74,7 +80,7 @@ namespace DataAccess
         private IGenericRepository<EmployeePayroll> _employeepayrollRepository;
         private IGenericRepository<EmployeePaymentTypes> _employeePaymentTypeRepository;
         private IGenericRepository<EmployeeMonthlyPayroll> _employeeMonthlyPayrollRepository;
-        private IGenericRepository<BudgetLineEmployees> _budgetLineEmployeesRepository;
+        //private IGenericRepository<BudgetLineEmployees> _budgetLineEmployeesRepository;
         private IGenericRepository<EmployeePensionRate> _employeePensionRateRepository;
         private IGenericRepository<EmployeeContractType> _employeeContractTypeRepository;
         private IGenericRepository<ContractTypeContent> _contractTypeContentRepository;
@@ -141,8 +147,54 @@ namespace DataAccess
         private IGenericRepository<PensionPaymentHistory> _pensionPaymentHistoryRepository;
         private IGenericRepository<PayrollAccountHead> _payrollAccountHeadRepository;
         private IGenericRepository<EmployeePayrollAccountHead> _employeePayrollAccountHeadRepository;
+        private IGenericRepository<DonorDetail> _donorDetailRepository;
+        private IGenericRepository<SectorDetails> _sectorDetailsRepository;
+        private IGenericRepository<ProgramDetail> _programDetailRepository;
+        private IGenericRepository<AreaDetail> _areaDetailRepository;
+        private IGenericRepository<DistrictDetail> _districtDetailRepository;
+        private IGenericRepository<StrengthConsiderationDetail> _strengthConsiderationRepository;
+        private IGenericRepository<GenderConsiderationDetail> _genderConsiderationRepository;
+        private IGenericRepository<SecurityDetail> _securityDetailRepository;
+        private IGenericRepository<SecurityConsiderationDetail> _securityConsiderationDetailRepository;
+        private IGenericRepository<ProjectDetail> _projectDetailNewRepository;
+        private IGenericRepository<ProjectPhaseDetails> _projectPhaseDetailsRepository;
+        private IGenericRepository<ProjectOtherDetail> _projectOtherDetailRepository;
+        
+        private IGenericRepository<ProjectAssignTo> _projectAssignToRepository;
+        private IGenericRepository<ProjectProgram> _projectProgramRepository;
+        private IGenericRepository<ProjectArea> _projectAreaRepository;
+        private IGenericRepository<ProjectSector> _projectSectorRepository;
         private IGenericRepository<EmployeeSalaryPaymentHistory> _employeeSalaryPaymentHistoryRepository;
         private IGenericRepository<EmployeeLanguages> _employeeLanguagesRepository;
+        private IGenericRepository<ExchangeRateDetail> _exchangeRateDetaileRepository;
+        private IGenericRepository<ProjectPhaseTime> _projectPhaseTimeRepository;
+        private IGenericRepository<ProjectCommunication> _projectCommunicationRepository;
+        private IGenericRepository<ProjectCommunicationAttachment> _projectCommunicationAttachmentRepository;
+        //Marketing
+        private IGenericRepository<ActivityType> _activityTypeRepository;
+        private IGenericRepository<ContractDetails> _contractDetailsRepository;
+        private IGenericRepository<JobDetails> _jobDetailsRepository;
+        private IGenericRepository<JobPhase> _jobPhaseRepository;
+        private IGenericRepository<JobPriceDetails> _jobPriceDetailsRepository;
+        private IGenericRepository<Language> _languageRepository;
+        private IGenericRepository<MediaCategory> _mediaCategoryRepository;
+        private IGenericRepository<Medium> _mediumRepository;
+        private IGenericRepository<Quality> _qualityRepository;
+        private IGenericRepository<Nature> _natureRepository;
+        private IGenericRepository<TimeCategory> _timeCategoryRepository;
+        private IGenericRepository<ClientDetails> _ClientDetailsRepository;
+        private IGenericRepository<UnitRate> _unitRateRepository;
+        private IGenericRepository<Category> _categoryRepository;
+
+        #region "new Accounting"
+        private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
+        private IGenericRepository<ChartOfAccountNew> _chartOfAccountNewRepository;
+
+        #endregion
+
+
+
+
 
         public UnitOfWork(ApplicationDbContext mschaContext)
         {
@@ -166,6 +218,35 @@ namespace DataAccess
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+
+        public IGenericRepository<ChartOfAccountNew> ChartOfAccountNewRepository
+        {
+            get
+            {
+                return _chartOfAccountNewRepository =
+                    _chartOfAccountNewRepository ?? new GenericRepository<ChartOfAccountNew>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<AccountFilterType> AccountFilterTypeRepository
+        {
+            get
+            {
+                return _accountFilterTypeRepository =
+                    _accountFilterTypeRepository ?? new GenericRepository<AccountFilterType>(_mschaContext);
+            }
+        }
+
+
+        public IGenericRepository<ProjectDetail> ProjectDetailNewRepository
+        {
+            get
+            {
+                return _projectDetailNewRepository =
+                    _projectDetailNewRepository ?? new GenericRepository<ProjectDetail>(_mschaContext);
+            }
         }
 
 
@@ -631,13 +712,13 @@ namespace DataAccess
                 return _employeePensionRateRepository = _employeePensionRateRepository ?? new GenericRepository<EmployeePensionRate>(_mschaContext);
             }
         }
-        public IGenericRepository<BudgetLineEmployees> BudgetLineEmployeesRepository
-        {
-            get
-            {
-                return _budgetLineEmployeesRepository = _budgetLineEmployeesRepository ?? new GenericRepository<BudgetLineEmployees>(_mschaContext);
-            }
-        }
+        //public IGenericRepository<BudgetLineEmployees> BudgetLineEmployeesRepository
+        //{
+        //    get
+        //    {
+        //        return _budgetLineEmployeesRepository = _budgetLineEmployeesRepository ?? new GenericRepository<BudgetLineEmployees>(_mschaContext);
+        //    }
+        //}
         public IGenericRepository<EmployeeMonthlyPayroll> EmployeeMonthlyPayrollRepository
         {
             get
@@ -660,13 +741,13 @@ namespace DataAccess
             }
         }
 
-        public IGenericRepository<ProjectBudget> ProjectBudgetRepository
-        {
-            get
-            {
-                return _projectBudgetRepository = _projectBudgetRepository ?? new GenericRepository<ProjectBudget>(_mschaContext);
-            }
-        }
+        //public IGenericRepository<ProjectBudget> ProjectBudgetRepository
+        //{
+        //    get
+        //    {
+        //        return _projectBudgetRepository = _projectBudgetRepository ?? new GenericRepository<ProjectBudget>(_mschaContext);
+        //    }
+        //}
         public IGenericRepository<OfficeDetail> OfficeDetailRepository
         {
             get
@@ -800,15 +881,15 @@ namespace DataAccess
         //    }
         //}
 
-		public IGenericRepository<VoucherTransactions> VoucherTransactionsRepository
-		{
-			get
-			{
-				return _voucherTransactionsRepository = _voucherTransactionsRepository ?? new GenericRepository<VoucherTransactions>(_mschaContext);
-			}
-		}
+        public IGenericRepository<VoucherTransactions> VoucherTransactionsRepository
+        {
+            get
+            {
+                return _voucherTransactionsRepository = _voucherTransactionsRepository ?? new GenericRepository<VoucherTransactions>(_mschaContext);
+            }
+        }
 
-		public IGenericRepository<AnalyticalType> AnalyticalTypeRepository
+        public IGenericRepository<AnalyticalType> AnalyticalTypeRepository
         {
             get
             {
@@ -1072,13 +1153,13 @@ namespace DataAccess
             }
         }
 
-        public IGenericRepository<ProjectDocument> ProjectDocumentRepository
-        {
-            get
-            {
-                return _projectdocumentRepository = _projectdocumentRepository ?? new GenericRepository<ProjectDocument>(_mschaContext);
-            }
-        }
+        //public IGenericRepository<ProjectDocument> ProjectDocumentRepository
+        //{
+        //    get
+        //    {
+        //        return _projectdocumentRepository = _projectdocumentRepository ?? new GenericRepository<ProjectDocument>(_mschaContext);
+        //    }
+        //}
 
         public IGenericRepository<NotesMaster> NotesMasterRepository
         {
@@ -1160,6 +1241,117 @@ namespace DataAccess
             }
         }
 
+        public IGenericRepository<DonorDetail> DonorDetailRepository
+        {
+            get
+            {
+                return _donorDetailRepository = _donorDetailRepository ?? new GenericRepository<DonorDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<SectorDetails> SectorDetailsRepository
+        {
+            get
+            {
+                return _sectorDetailsRepository = _sectorDetailsRepository ?? new GenericRepository<SectorDetails>(_mschaContext);
+            }
+        }
+        public IGenericRepository<ProgramDetail> ProgramDetailRepository
+        {
+            get
+            {
+                return _programDetailRepository = _programDetailRepository ?? new GenericRepository<ProgramDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<AreaDetail> AreaDetailRepository
+        {
+            get
+            {
+                return _areaDetailRepository = _areaDetailRepository ?? new GenericRepository<AreaDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<DistrictDetail> DistrictDetailRepository
+        {
+            get
+            {
+                return _districtDetailRepository = _districtDetailRepository ?? new GenericRepository<DistrictDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<GenderConsiderationDetail> GenderConsiderationRepository
+        {
+            get
+            {
+                return _genderConsiderationRepository = _genderConsiderationRepository ?? new GenericRepository<GenderConsiderationDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<SecurityDetail> SecurityDetailRepository
+        {
+            get
+            {
+                return _securityDetailRepository = _securityDetailRepository ?? new GenericRepository<SecurityDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<SecurityConsiderationDetail> SecurityConsiderationDetailRepository
+        {
+            get
+            {
+                return _securityConsiderationDetailRepository = _securityConsiderationDetailRepository ?? new GenericRepository<SecurityConsiderationDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<StrengthConsiderationDetail> StrengthConsiderationRepository
+        {
+            get
+            {
+                return _strengthConsiderationRepository = _strengthConsiderationRepository ?? new GenericRepository<StrengthConsiderationDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<ProjectPhaseDetails> ProjectPhaseDetailsRepository
+        {
+            get
+            {
+                return _projectPhaseDetailsRepository = _projectPhaseDetailsRepository ?? new GenericRepository<ProjectPhaseDetails>(_mschaContext);
+            }
+        }
+        public IGenericRepository<ProjectOtherDetail> ProjectOtherDetailRepository
+        {
+            get
+            {
+                return _projectOtherDetailRepository = _projectOtherDetailRepository ?? new GenericRepository<ProjectOtherDetail>(_mschaContext);
+            }
+        }
+
+
+        
+        public IGenericRepository<ProjectAssignTo> ProjectAssignToRepository
+        {
+            get
+            {
+                return _projectAssignToRepository = _projectAssignToRepository ?? new GenericRepository<ProjectAssignTo>(_mschaContext);
+            }
+        }
+        public IGenericRepository<ProjectProgram> ProjectProgramRepository
+        {
+            get
+            {
+                return _projectProgramRepository = _projectProgramRepository ?? new GenericRepository<ProjectProgram>(_mschaContext);
+            }
+        }
+        public IGenericRepository<ProjectArea> ProjectAreaRepository
+        {
+            get
+            {
+                return _projectAreaRepository = _projectAreaRepository ?? new GenericRepository<ProjectArea>(_mschaContext);
+            }
+        }
+        public IGenericRepository<ProjectSector> ProjectSectorRepository
+        {
+            get
+            {
+                return _projectSectorRepository = _projectSectorRepository ?? new GenericRepository<ProjectSector>(_mschaContext);
+            }
+        }
+
+
         public IGenericRepository<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistoryRepository
         {
             get
@@ -1175,6 +1367,167 @@ namespace DataAccess
                 return _employeeLanguagesRepository = _employeeLanguagesRepository ?? new GenericRepository<EmployeeLanguages>(_mschaContext);
             }
         }
+
+        public IGenericRepository<ActivityType> ActivityTypeRepository
+        {
+            get
+            {
+                return _activityTypeRepository = _activityTypeRepository ?? new GenericRepository<ActivityType>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ContractDetails> ContractDetailsRepository
+        {
+            get
+            {
+                return _contractDetailsRepository = _contractDetailsRepository ?? new GenericRepository<ContractDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<JobDetails> JobDetailsRepository
+        {
+            get
+            {
+                return _jobDetailsRepository = _jobDetailsRepository ?? new GenericRepository<JobDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<JobPhase> JobPhaseRepository
+        {
+            get
+            {
+                return _jobPhaseRepository = _jobPhaseRepository ?? new GenericRepository<JobPhase>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<JobPriceDetails> JobPriceDetailsRepository
+        {
+            get
+            {
+                return _jobPriceDetailsRepository = _jobPriceDetailsRepository ?? new GenericRepository<JobPriceDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<Language> LanguageRepository
+        {
+            get
+            {
+                return _languageRepository = _languageRepository ?? new GenericRepository<Language>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<MediaCategory> MediaCategoryRepository
+        {
+            get
+            {
+                return _mediaCategoryRepository = _mediaCategoryRepository ?? new GenericRepository<MediaCategory>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<Medium> MediumRepository
+        {
+            get
+            {
+                return _mediumRepository = _mediumRepository ?? new GenericRepository<Medium>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<Quality> QualityRepository
+        {
+            get
+            {
+                return _qualityRepository = _qualityRepository ?? new GenericRepository<Quality>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<UnitRate> UnitRateRepository
+        {
+            get
+            {
+                return _unitRateRepository = _unitRateRepository ?? new GenericRepository<UnitRate>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<Nature> NatureRepository
+        {
+            get
+            {
+                return _natureRepository = _natureRepository ?? new GenericRepository<Nature>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<TimeCategory> TimeCategoryRepository
+        {
+            get
+            {
+                return _timeCategoryRepository = _timeCategoryRepository ?? new GenericRepository<TimeCategory>(_mschaContext);
+            }
+        }
+        //Client Detail Repository
+        public IGenericRepository<ClientDetails> ClientDetailsRepository
+        {
+            get
+            {
+                return _ClientDetailsRepository = _ClientDetailsRepository ?? new GenericRepository<ClientDetails>(_mschaContext);
+            }
+        }
+        public IGenericRepository<Category> CategoryRepository
+        {
+            get
+            {
+                return _categoryRepository = _categoryRepository ?? new GenericRepository<Category>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectPhaseTime> ProjectPhaseTimeRepository
+        {
+            get
+            {
+                return _projectPhaseTimeRepository = _projectPhaseTimeRepository ?? new GenericRepository<ProjectPhaseTime>(_mschaContext);
+            }
+        }
+        public IGenericRepository<ProjectCommunication> ProjectCommunicationRepository
+        {
+            get
+            {
+                return _projectCommunicationRepository = _projectCommunicationRepository ?? new GenericRepository<ProjectCommunication>(_mschaContext);
+            }
+        }
+        public IGenericRepository<ProjectCommunicationAttachment> ProjectCommunicationAttachmentRepository
+        {
+            get
+            {
+                return _projectCommunicationAttachmentRepository = _projectCommunicationAttachmentRepository ?? new GenericRepository<ProjectCommunicationAttachment>(_mschaContext);
+            }
+        }
+
+
+        public IGenericRepository<ExchangeRateDetail> ExchangeRateDetailRepository
+        {
+            get
+            {
+                return _exchangeRateDetaileRepository = _exchangeRateDetaileRepository ?? new GenericRepository<ExchangeRateDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ApproveProjectDetails> ApproveProjectDetailsRepository
+        {
+            get
+            {
+                return _approveProjectDetailsRepository =
+                    _approveProjectDetailsRepository ?? new GenericRepository<ApproveProjectDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<WinProjectDetails> WinProjectDetailsRepository
+        {
+            get
+            {
+                return _winroveProjectDetailsRepository =
+                    _winroveProjectDetailsRepository ?? new GenericRepository<WinProjectDetails>(_mschaContext);
+            }
+        }
+
 
         public void Save()
         {

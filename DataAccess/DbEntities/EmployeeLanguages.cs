@@ -12,11 +12,14 @@ namespace DataAccess.DbEntities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
         public int SpeakLanguageId { get; set; }
-        public string LanguageName { get; set; }
-        public string Reading { get; set; }
-        public string Writing { get; set; }
-        public string Speaking { get; set; }
-        public string Listening { get; set; }
+        //public int LanguageName { get; set; }
+        public int LanguageId { get; set; }
+        [ForeignKey("LanguageId")]
+        public LanguageDetail LanguageDetail { get; set; }
+        public int Reading { get; set; }
+        public int Writing { get; set; }
+        public int Speaking { get; set; }
+        public int Listening { get; set; }
         public int EmployeeId { get; set; }
 
     }

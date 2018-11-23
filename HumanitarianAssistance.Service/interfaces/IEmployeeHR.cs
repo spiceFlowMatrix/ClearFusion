@@ -29,6 +29,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetEmployeePensionHistoryDetail(int EmployeeId, int OfficeId);
         Task<APIResponse> EditEmployeeSalaryAccountDetail(List<EmployeePayrollAccountModel> model, string userid);
         Task<APIResponse> GetPrimarySalaryHeads(int EmployeeId);
+        Task<APIResponse> GetAllLanguages();
+        string TransformExchangeRatesToFromCurrency();
 
         string OfficeHours(int iYear);
     }

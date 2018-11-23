@@ -25,6 +25,10 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using HumanitarianAssistance.WebAPI.ChaHub;
+using HumanitarianAssistance.Service.Classes.Marketing;
+using HumanitarianAssistance.Service.interfaces.Marketing;
+using HumanitarianAssistance.Service.interfaces.AccountingNew;
+using HumanitarianAssistance.Service.Classes.AccountingNew;
 
 namespace HumanitarianAssistance
 {
@@ -115,17 +119,24 @@ namespace HumanitarianAssistance
       services.AddTransient<IExchangeRate, ExchangeRateService>();
       services.AddTransient<IHREmployee, HREmployeeService>();
       services.AddTransient<IDesignation, DesignationService>();
-      services.AddTransient<IProjectBudget, ProjectBudgetService>();
-      services.AddTransient<IProjectDetails, ProjectDetailService>();
+      //services.AddTransient<IProjectBudget, ProjectBudgetService>();
+      //services.AddTransient<IProjectDetails, ProjectDetailService>();
       services.AddTransient<IProfession, ProfessionService>();
       services.AddTransient<ICode, CodeService>();
       services.AddTransient<ITaskAndActivity, TaskAndActivityService>();
-      services.AddTransient<IProjectPipeLining, ProjectPipeLiningService>();
+      //services.AddTransient<IProjectPipeLining, ProjectPipeLiningService>();
       services.AddTransient<IStore, StoreService>();
       services.AddTransient<INotificationManager, NotificationManagerService>();
       services.AddTransient<IEmployeeDetail, EmployeeDetailService>();
       services.AddTransient<IEmployeeHR, EmployeeHRService>();
+      services.AddTransient<IAccountRecords, AccountReportsService>();
+      services.AddTransient<IProject, ProjectService>();
+      services.AddTransient<IMasterPageService, MasterPageService>();
+      services.AddTransient<IJobDetailsService, JobDetailsService>();
+      services.AddTransient<IContractDetailsService, ContractDetailService>();
+      services.AddTransient<IChartOfAccountNewService, ChartOfAccountNewService>();
 
+      services.AddTransient<IClientDetails, ClientDetailsService>();
 
       //services.AddTransient<UserManager<AppUser>>();
 
@@ -215,7 +226,7 @@ namespace HumanitarianAssistance
         options.AddPolicy(DefaultCorsPolicyName, p =>
         {
           //todo: Get from confiuration
-          p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+          p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials();
         });
       });
 
@@ -291,7 +302,7 @@ namespace HumanitarianAssistance
 
       app.UseSignalR(routes =>
       {
-        routes.MapHub<LoopyHub>("/chathub");
+        routes.MapHub<ProjectChatHub>("/chathub");
       });
 
       app.UseMvc(routes =>

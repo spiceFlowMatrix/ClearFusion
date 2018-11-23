@@ -28,9 +28,12 @@ namespace DataAccess.DbEntities
 
         //public long Voucher { get; set; }
         public int ItemType { get; set; } // This must be used by the front-end to determine the UI to present for the item type
-										  // Types will include general purchase, vehicle, generator, fuel, maintenance, spare parts
-										  // General purchase will cover most items in the store, the additional types is for generators and vehicles management
-		[ForeignKey("ItemInventory")]
+                                          // Types will include general purchase, vehicle, generator, fuel, maintenance, spare parts
+                                          // General purchase will cover most items in the store, the additional types is for generators and vehicles management
+
+        public string MasterInventoryCode { get; set; }
+
+        [ForeignKey("ItemInventory")]
 		public StoreInventory Inventory { get; set; }
 		//[ForeignKey("Voucher")]
   //      public VoucherDetail VoucherDetail { get; set; }

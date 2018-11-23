@@ -1,0 +1,47 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+
+namespace DataAccess.DbEntities.Marketing
+{
+    public class ContractDetails : BaseEntityWithoutId
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1)]
+        public long ContractId { get; set; }
+        public string ContractCode { get; set; }
+        public string ClientName { get; set; }
+        [ForeignKey("ActivityTypeId")]
+        public long? ActivityTypeId { get; set; }
+        public ActivityType ActivityTypes { get; set; }
+        public double UnitRate { get; set; }
+        [ForeignKey("CurrencyId")]
+        public int? CurrencyId { get; set; }
+        public CurrencyDetails CurrencyDetails { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        [ForeignKey("LanguageId")]
+        public long? LanguageId { get; set; }
+        public Language Languages { get; set; }
+        [ForeignKey("MediumId")]
+        public long? MediumId { get; set; }
+        public Medium Mediums { get; set; }
+        [ForeignKey("NatureId")]
+        public long? NatureId { get; set; }
+        public Nature Natures { get; set; }
+        [ForeignKey("TimeCategoryId")]
+        public long? TimeCategoryId { get; set; }
+        public TimeCategory TimeCategories { get; set; }
+        [ForeignKey("MediaCategoryId")]
+        public long? MediaCategoryId { get; set; }
+        public MediaCategory MediaCategories { get; set; }
+        
+        public long? QualityId { get; set; }
+        [ForeignKey("QualityId")]
+        public Quality Qualities { get; set; }
+        public bool IsCompleted { get; set; }
+    }
+}

@@ -30,10 +30,10 @@ namespace HumanitarianAssistance.Controllers
     private IChartAccoutDetail _ichartAccoutDetail;
     private IExchangeRate _iexchangeRate;
     private IDesignation _idesignation;
-    private IProjectBudget _iProjectBudget;
+    //private IProjectBudget _iProjectBudget;
     private IProfession _iprofession;
     private ICode _icode;
-    private IProjectDetails _iProjectDetails;
+    //private IProjectDetails _iProjectDetails;
     public CodeController(
       UserManager<AppUser> userManager,
       IOfficeDetails iofficeDetail,
@@ -43,10 +43,10 @@ namespace HumanitarianAssistance.Controllers
       IChartAccoutDetail ichartAccoutDetail,
       IExchangeRate iexchangeRate,
       IDesignation idesignation,
-      IProjectBudget iProjectBudget,
+      //IProjectBudget iProjectBudget,
       IProfession iprofession,
-      ICode icode,
-      IProjectDetails iProjectDetails
+      ICode icode
+      //IProjectDetails iProjectDetails
       )
     {
       _userManager = userManager;
@@ -57,10 +57,10 @@ namespace HumanitarianAssistance.Controllers
       _ichartAccoutDetail = ichartAccoutDetail;
       _iexchangeRate = iexchangeRate;
       _idesignation = idesignation;
-      _iProjectBudget = iProjectBudget;
+      //_iProjectBudget = iProjectBudget;
       _iprofession = iprofession;
       _icode = icode;
-      _iProjectDetails = iProjectDetails;
+      //_iProjectDetails = iProjectDetails;
       _serializerSettings = new JsonSerializerSettings
       {
         Formatting = Formatting.Indented,
@@ -108,12 +108,6 @@ namespace HumanitarianAssistance.Controllers
 
         apiRespone = await _iofficeDetail.EditOfficeDetails(model);
       }
-      //}
-      //else
-      //{
-      //  apiRespone.StatusCode = 1000;
-      //  apiRespone.Message = ModelState.AddModelError()
-      //}
       return apiRespone;
     }
 
@@ -128,7 +122,6 @@ namespace HumanitarianAssistance.Controllers
         var id = user.Id;
         model.ModifiedById = id;
         model.ModifiedDate = DateTime.UtcNow;
-
         apiRespone = await _iofficeDetail.DeleteOfficeDetails(model);
       }
       return apiRespone;
@@ -362,11 +355,47 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+
+    [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> GetAllAccountType()
+
+    public async Task<APIResponse> AddAccountType([FromBody]AccountTypeModel model)
     {
-      APIResponse response = await _ichartAccoutDetail.GetAllAccountType();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.IsDeleted = false;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+      APIResponse response = await _ichartAccoutDetail.AddAccountType(model);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditAccountType([FromBody]AccountTypeModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.IsDeleted = false;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+      APIResponse response = await _ichartAccoutDetail.EditAccountType(model);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllAccountTypeByCategory([FromBody]int id)
+    {
+      APIResponse response = await _ichartAccoutDetail.GetAllAccountTypeByCategory(id);
       return response;
     }
 
@@ -488,73 +517,74 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> AddProjectBudget([FromBody] ProjectBudgetModel model)
-    {
-      if (ModelState.IsValid)
-      {
-        var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        if (user != null)
-        {
-          var id = user.Id;
-          model.CreatedById = id;
-          model.IsDeleted = false;
-          model.CreatedDate = DateTime.UtcNow;
-        }
-        APIResponse response = await _iProjectBudget.AddProjectBudget(model);
-        return response;
-      }
-      else
-      {
-        APIResponse response = new APIResponse();
-        response.Message = "Model is not valid";
-        response.StatusCode = 403;
-        return response;
-      }
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<APIResponse> AddProjectBudget([FromBody] ProjectBudgetModel model)
+    //{
+    //  if (ModelState.IsValid)
+    //  {
+    //    var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //    if (user != null)
+    //    {
+    //      var id = user.Id;
+    //      model.CreatedById = id;
+    //      model.IsDeleted = false;
+    //      model.CreatedDate = DateTime.UtcNow;
+    //    }
+    //    APIResponse response = await _iProjectBudget.AddProjectBudget(model);
+    //    return response;
+    //  }
+    //  else
+    //  {
+    //    APIResponse response = new APIResponse();
+    //    response.Message = "Model is not valid";
+    //    response.StatusCode = 403;
+    //    return response;
+    //  }
 
 
-    }
+    //}
 
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> EditAllProjectBudget([FromBody] ProjectBudgetModel model)
-    {
-      if (ModelState.IsValid)
-      {
-        var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        if (user != null)
-        {
-          var id = user.Id;
-          model.ModifiedById = id;
-          model.IsDeleted = false;
-          model.ModifiedDate = DateTime.UtcNow;
-        }
-        APIResponse response = await _iProjectBudget.EditProjectBudget(model);
-        return response;
-      }
-      else
-      {
-        APIResponse response = new APIResponse();
-        response.Message = "Model is not valid";
-        response.StatusCode = 403;
-        return response;
-      }
-    }
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<APIResponse> EditAllProjectBudget([FromBody] ProjectBudgetModel model)
+    //{
+    //  if (ModelState.IsValid)
+    //  {
+    //    var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //    if (user != null)
+    //    {
+    //      var id = user.Id;
+    //      model.ModifiedById = id;
+    //      model.IsDeleted = false;
+    //      model.ModifiedDate = DateTime.UtcNow;
+    //    }
+    //    APIResponse response = await _iProjectBudget.EditProjectBudget(model);
+    //    return response;
+    //  }
+    //  else
+    //  {
+    //    APIResponse response = new APIResponse();
+    //    response.Message = "Model is not valid";
+    //    response.StatusCode = 403;
+    //    return response;
+    //  }
+    //}
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllProjectBudget()
-    {
-      APIResponse response = await _iProjectBudget.GetProjectBudget();
-      return response;
-    }
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<APIResponse> GetAllProjectBudget()
+    //{
+    //  APIResponse response = await _iProjectBudget.GetProjectBudget();
+    //  return response;
+    //}
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllProjectDetails()
     {
-      APIResponse response = await _iProjectDetails.GetAllProjectDetails();
+      //APIResponse response = await _iProjectDetails.GetAllProjectDetails();
+      APIResponse response = null;
       return response;
     }
 
@@ -574,7 +604,8 @@ namespace HumanitarianAssistance.Controllers
             model.IsDeleted = false;
             model.CreatedDate = DateTime.UtcNow;
           }
-          APIResponse response = await _iProjectDetails.AddProjectDetails(model);
+          //APIResponse response = await _iProjectDetails.AddProjectDetails(model);
+          APIResponse response = null;
           return response;
         }
         else
@@ -605,7 +636,8 @@ namespace HumanitarianAssistance.Controllers
           model.IsDeleted = false;
           model.ModifiedDate = DateTime.UtcNow;
         }
-        APIResponse response = await _iProjectDetails.EditProjectDetails(model);
+        //APIResponse response = await _iProjectDetails.EditProjectDetails(model);
+        APIResponse response = null;
         return response;
       }
       else
@@ -1409,8 +1441,8 @@ namespace HumanitarianAssistance.Controllers
     {
       APIResponse response = new APIResponse();
 
-        response = await _icode.GetEmployeeAdvanceHistoryDetail(AdvanceID);
-     
+      response = await _icode.GetEmployeeAdvanceHistoryDetail(AdvanceID);
+
       return response;
     }
 
@@ -1474,6 +1506,14 @@ namespace HumanitarianAssistance.Controllers
       APIResponse response = await _icode.DeletePayrollAccountHead(model);
       return response;
     }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllDistrictDetailByProvinceId([FromBody] List<int?> ProvinceId)
+    {
+      APIResponse apiRespone = null;
+      apiRespone = await _icode.GetAllDistrictDetailByProvinceId(ProvinceId);
+      return apiRespone;
+    }
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
@@ -1491,6 +1531,5 @@ namespace HumanitarianAssistance.Controllers
       APIResponse response = await _icode.UpdatePayrollAccountHeadAllEmployees(model, Id);
       return response;
     }
-
   }
 }
