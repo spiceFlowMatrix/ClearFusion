@@ -92,6 +92,9 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllSecurityConsiderationDetails();
         Task<APIResponse> GetAllDistrictvalueByProvinceId(int[] provinceId);
         Task<APIResponse> AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
+        APIResponse AddEditProjectproposals(long projectId, string UserId);
+        APIResponse GetProjectproposalsById(long projectId);
+        
 
         #endregion
     }

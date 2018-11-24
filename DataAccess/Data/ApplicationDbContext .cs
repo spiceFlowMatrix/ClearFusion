@@ -207,6 +207,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<LanguageDetail> LanguageDetail { get; set; }
         public DbSet<WinProjectDetails> WinProjectDetails { get; set; }
         public DbSet<ApproveProjectDetails> ApproveProjectDetails { get; set; }
+        public DbSet<ProjectProposalDetail> ProjectProposalDetail { get; set; }
 
         #endregion 
 

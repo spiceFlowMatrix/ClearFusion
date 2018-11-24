@@ -99,20 +99,14 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<EmployeeOtherSkillsModel> EmployeeOtherSkillsList { get; set; }
         public List<EmployeeRelativeInfoModel> EmployeeRelativeInfoList { get; set; }
         public List<EmployeeHistoryOutsideOrganizationModel> EmployeeHistoryOutsideOrganizationList { get; set; }
-
         //public ExchangeGainOrLossModel ExchangeGainOrLossModel { get; set; }
         public List<TransactionsModel> ExchangeGainOrLossModel { get; set; }
-
-
-
         public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
         public List<ProcurmentSummaryModel> ProcurmentSummaryModelList { get; set; }
         public List<ItemOrderModel> ItemOrderModelList { get; set; }
         //public List<IGrouping<int, CategoryPopulator>> CategoryPopulatorLst { get; set; }
         public List<CategoryPopulator> CategoryPopulatorLst { get; set; }
-
         public ICollection<VoucherDetail> VouchersList { get; set; }
-
         public List<int> UserOfficeList { get; set; }
         public List<ExitInterviewModel> ExitInterviewList { get; set; }
         public List<InterviewDetailModel> InterviewDetailList { get; set; }
@@ -295,11 +289,15 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectProgram projectProgram { get; set; }
         public ProjectArea projectArea { get; set; }
         public ProjectSector projectSector { get; set; }
+
+        public ProjectProposalModel ProjectProposalModel { get; set; }
+
         #region Marketing
         public ICollection<JobDetails> JobDetails { get; set; }
         public ICollection<Quality> Qualities { get; set; }
         public ICollection<CurrencyDetails> Currencies { get; set; }
         public ICollection<ContractDetails> ContractDetails { get; set; }
+        public ContractDetailsModel contractDetailsModel { get; set; }
         public ICollection<Language> Languages { get; set; }
         public ICollection<Medium> Mediums { get; set; }
         public ICollection<Nature> Natures { get; set; }
@@ -313,6 +311,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<JobDetailsModel> JobDetailsModel { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
         public UnitRateModel unitRateDetails { get; set; }
+        public UnitRate unitRateDetailsById { get; set; }
         public IQueryable<UnitRateDetailsModel> rateDetails { get; set; }
         public UnitRateDetailsModel rateDetailsById { get; set; }
         public IQueryable<ClientDetailModel> clientDetailsModel { get; set; }
@@ -328,7 +327,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
 
         #region "Accounting New"
-        public ICollection<ChartOfAccountNew> AllAccountList { get; set; }
+        public List<ChartOfAccountNew> AllAccountList { get; set; }
         public ICollection<ChartOfAccountNew> MainLevelAccountList { get; set; }
         public List<ChartOfAccountNew> ControlLevelAccountList { get; set; }
         public List<ChartOfAccountNew> SubLevelAccountList { get; set; }

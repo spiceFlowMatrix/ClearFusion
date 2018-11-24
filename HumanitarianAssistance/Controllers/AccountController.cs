@@ -232,6 +232,9 @@ namespace HumanitarianAssistance.Controllers
 
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+          userClaims.Add(new Claim("Roles", roles[0])); //imp
+
+          userClaims.Add(new Claim("Roles", roles[0])); //imp
 
           //_ipermissions.GetPermissionsByRoleId()
 
@@ -1097,6 +1100,14 @@ namespace HumanitarianAssistance.Controllers
 
         response = await _iChartOfAccountNewService.AddChartOfAccount(model);
       }
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllAccountsByAccountHeadTypeId([FromBody]int id)
+    {
+      APIResponse response = await _iChartOfAccountNewService.GetAllAccountsByAccountHeadTypeId(id);
       return response;
     }
 

@@ -38,7 +38,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #region Donor information
     [HttpGet]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllDonorList()
     {
       APIResponse apiresponse = await _iProject.GetAllDonorList();
@@ -93,7 +93,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
     #endregion
-
+    
     #region Sector Information
 
     [HttpGet]
@@ -147,12 +147,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #endregion
 
-
     #region Program Information
-
-
-
-
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllProgramList()
@@ -355,7 +350,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpGet]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllProjectList()
     {
       APIResponse apiresponse = await _iProject.GetAllProjectList();
@@ -474,8 +469,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
-    
-
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
@@ -664,10 +657,33 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         var id = user.Id;
         apiRespone = await _iProject.WinApprovalDetail(model, id);
       }
-
       return apiRespone;
     }
+    #endregion
 
+    #region proposals
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditProjectproposals([FromBody]long ProjectId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone =  _iProject.AddEditProjectproposals(ProjectId, id);
+      }
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public  APIResponse GetProjectproposalsById([FromBody]long ProjectId)
+    {
+      APIResponse apiRespone = null;
+        apiRespone = _iProject.GetProjectproposalsById(ProjectId);
+      return apiRespone;
+    }
+    
     #endregion
 
   }

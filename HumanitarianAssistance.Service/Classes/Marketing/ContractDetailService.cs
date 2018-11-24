@@ -30,31 +30,51 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         public async Task<APIResponse> GetContractDetailsById(int contractId, string userId)
         {
             APIResponse response = new APIResponse();
+            ContractDetailsModel contractDetails = new ContractDetailsModel();
             try
             {
-                var clientDetails = (from ur in _uow.GetDbContext().ClientDetails
-                                     join at in _uow.GetDbContext().Categories on ur.CategoryId equals at.CategoryId
-                                     into jou
-                                     from dev_skill in jou.DefaultIfEmpty()
-                                     from at in _uow.GetDbContext().Categories
-                                     where !ur.IsDeleted.Value && !at.IsDeleted.Value && ur.ClientId == contractId
-                                     select (new ClientDetailModel
-                                     {
-                                         CategoryId = ur.CategoryId,
-                                         CategoryName = dev_skill.CategoryName ?? String.Empty,
-                                         ClientBackground = ur.ClientBackground,
-                                         ClientCode = ur.ClientCode,
-                                         ClientId = ur.ClientId,
-                                         ClientName = ur.ClientName,
-                                         Email = ur.Email,
-                                         FocalPoint = ur.FocalPoint,
-                                         History = ur.History,
-                                         Phone = ur.Phone,
-                                         PhysicialAddress = ur.PhysicialAddress,
-                                         Position = ur.Position
-                                     })).FirstOrDefault();
+                var existRecords = await _uow.ContractDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ContractId == contractId);
+                contractDetails.ActivityTypeId = existRecords.ActivityTypeId;
+                contractDetails.ClientName = existRecords.ClientName;
+                contractDetails.ContractCode = existRecords.ContractCode;
+                contractDetails.ContractId = existRecords.ContractId;
+                contractDetails.CurrencyId = existRecords.CurrencyId;
+                contractDetails.EndDate = existRecords.EndDate;
+                contractDetails.LanguageId = existRecords.LanguageId;
+                contractDetails.MediaCategoryId = existRecords.MediaCategoryId;
+                contractDetails.MediumId = existRecords.MediumId;
+                contractDetails.UnitRateId = existRecords.UnitRateId;
+                contractDetails.ClientId = existRecords.ClientId;
+                contractDetails.NatureId = existRecords.NatureId;
+                contractDetails.QualityId = existRecords.QualityId;
+                contractDetails.StartDate = existRecords.StartDate;
+                contractDetails.TimeCategoryId = existRecords.TimeCategoryId;
+                contractDetails.UnitRate = existRecords.UnitRate;
+                contractDetails.IsApproved = existRecords.IsApproved;
+                contractDetails.IsDeclined = existRecords.IsDeclined;
+                //var clientDetails = (from ur in _uow.GetDbContext().ClientDetails
+                //                     join at in _uow.GetDbContext().Categories on ur.CategoryId equals at.CategoryId
+                //                     into jou
+                //                     from dev_skill in jou.DefaultIfEmpty()
+                //                     from at in _uow.GetDbContext().Categories
+                //                     where !ur.IsDeleted.Value && !at.IsDeleted.Value && ur.ClientId == contractId
+                //                     select (new ClientDetailModel
+                //                     {
+                //                         CategoryId = ur.CategoryId,
+                //                         CategoryName = dev_skill.CategoryName ?? String.Empty,
+                //                         ClientBackground = ur.ClientBackground,
+                //                         ClientCode = ur.ClientCode,
+                //                         ClientId = ur.ClientId,
+                //                         ClientName = ur.ClientName,
+                //                         Email = ur.Email,
+                //                         FocalPoint = ur.FocalPoint,
+                //                         History = ur.History,
+                //                         Phone = ur.Phone,
+                //                         PhysicialAddress = ur.PhysicialAddress,
+                //                         Position = ur.Position
+                //                     })).FirstOrDefault();
 
-                response.data.clientDetailsById = clientDetails;
+                response.data.contractDetailsModel = contractDetails;
                 response.StatusCode = 200;
                 response.Message = "Success";
             }
@@ -101,6 +121,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 ContractDetails obj = _mapper.Map<ContractDetailsModel, ContractDetails>(model);
                 obj.ClientName = model.ClientName;
+                obj.ClientId = model.ClientId;
+                obj.UnitRateId = model.UnitRateId;
                 obj.ContractCode = model.ContractCode;
                 obj.UnitRate = model.UnitRate;
                 obj.QualityId = model.QualityId;
@@ -109,8 +131,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 obj.MediaCategoryId = model.MediaCategoryId;
                 obj.LanguageId = model.LanguageId;
                 obj.IsCompleted = false;
-                obj.StartDate = model.StartDate;
-                obj.EndDate = model.EndDate;
+                obj.StartDate = Convert.ToDateTime(model.StartDate);
+                obj.EndDate = Convert.ToDateTime(model.EndDate);
                 obj.CurrencyId = model.CurrencyId;
                 obj.ActivityTypeId = model.ActivityTypeId;
                 obj.IsDeleted = false;
@@ -174,15 +196,15 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         /// <param name="jobid"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public async Task<APIResponse> DeleteContractDetail(ContractDetails model)
+        public async Task<APIResponse> DeleteContractDetail(int model, string userId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var contractInfo = await _uow.ContractDetailsRepository.FindAsync(c => c.ContractId == model.ContractId);
+                var contractInfo = await _uow.ContractDetailsRepository.FindAsync(c => c.ContractId == model);
                 contractInfo.IsDeleted = true;
-                contractInfo.ModifiedById = model.ModifiedById;
-                contractInfo.ModifiedDate = model.ModifiedDate;
+                contractInfo.ModifiedById = userId;
+                contractInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.ContractDetailsRepository.UpdateAsyn(contractInfo, contractInfo.ContractId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -195,6 +217,21 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
 
+        public string getContractCode(string ContractId)
+        {
+            string code = string.Empty;
+            if (ContractId.Length == 1)
+                return code = "0000" + ContractId;
+            else if (ContractId.Length == 2)
+                return code = "000" + ContractId;
+            else if (ContractId.Length == 3)
+                return code = "00" + ContractId;
+            else if (ContractId.Length == 4)
+                return code = "0" + ContractId;
+            else
+                return code = "" + ContractId;
+        }
+
         /// <summary>
         /// Add or Edit Contract Detail
         /// </summary>
@@ -203,18 +240,36 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         /// <returns></returns>
         public async Task<APIResponse> AddEditContractDetail(ContractDetailsModel model, string UserId)
         {
+            ContractDetails contractDetails = new ContractDetails();
+            long LatestContractId = 0;
+            var contractcode = string.Empty;
             APIResponse response = new APIResponse();
+            ContractDetailsModel conDetails = new ContractDetailsModel();
             try
             {
                 if (model.ContractId == 0)
                 {
+                    var ContractDetail = _uow.GetDbContext().ContractDetails
+                                                               .OrderByDescending(x => x.ContractId)
+                                                               .FirstOrDefault();
+                    if (ContractDetail == null)
+                    {
+                        LatestContractId = 1;
+                        contractcode = getContractCode(LatestContractId.ToString());
+                    }
+                    else
+                    {
+                        LatestContractId = Convert.ToInt32(ContractDetail.ContractId) + 1;
+                        contractcode = getContractCode(LatestContractId.ToString());
+                    }
                     ContractDetails obj = _mapper.Map<ContractDetailsModel, ContractDetails>(model);
                     obj.ContractId = model.ContractId;
                     obj.ActivityTypeId = model.ActivityTypeId;
                     obj.ClientName = model.ClientName;
-                    obj.ContractCode = model.ContractCode;
+                    obj.ContractCode = contractcode;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
+                    obj.UnitRate = model.UnitRate;
                     obj.CreatedDate = DateTime.Now;
                     obj.CurrencyId = model.CurrencyId;
                     obj.StartDate = model.StartDate;
@@ -228,6 +283,21 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.TimeCategoryId = model.TimeCategoryId;
                     await _uow.ContractDetailsRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
+                    conDetails.ActivityTypeId = obj.ActivityTypeId;
+                    conDetails.ClientName = obj.ClientName;
+                    conDetails.ContractCode = obj.ContractCode;
+                    conDetails.ContractId = obj.ContractId;
+                    conDetails.CurrencyId = obj.CurrencyId;
+                    conDetails.EndDate = obj.EndDate;
+                    conDetails.LanguageId = obj.LanguageId;
+                    conDetails.MediaCategoryId = obj.MediaCategoryId;
+                    conDetails.MediumId = obj.MediumId;
+                    conDetails.NatureId = obj.NatureId;
+                    conDetails.QualityId = obj.QualityId;
+                    conDetails.StartDate = obj.StartDate;
+                    conDetails.TimeCategoryId = obj.TimeCategoryId;
+                    conDetails.UnitRate = obj.UnitRate;
+                    response.data.contractDetailsModel = conDetails;
                 }
                 else
                 {
@@ -240,6 +310,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         existRecord.ModifiedById = UserId;
                         existRecord.ModifiedDate = DateTime.Now;
                         await _uow.ContractDetailsRepository.UpdateAsyn(existRecord);
+                        response.data.contractDetailsModel = model;
                     }
                 }
                 response.StatusCode = StaticResource.successStatusCode;
@@ -249,6 +320,38 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> ApproveContract(ApproveContractModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            var existRecord = await _uow.ContractDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ContractId == model.ContractId);
+            if (existRecord != null)
+            {
+                try
+                {
+                    if (model.Type == "Approve")
+                    {
+                        existRecord.IsApproved = true;
+                    }
+                    if (model.Type == "Decline")
+                    {
+                        existRecord.IsDeclined = true;
+                    }
+                    existRecord.ModifiedDate = DateTime.UtcNow;
+                    existRecord.ModifiedById = UserId;
+                    _uow.GetDbContext().ContractDetails.Update(existRecord);
+                    _uow.GetDbContext().SaveChanges();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                catch (Exception ex)
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong + ex.Message;
+                }
             }
             return response;
         }

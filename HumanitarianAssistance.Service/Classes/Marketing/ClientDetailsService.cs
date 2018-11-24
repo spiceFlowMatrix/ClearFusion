@@ -88,10 +88,10 @@ namespace HumanitarianAssistance.Service.Classes
             var clientcode = string.Empty;
             DbContext db = _uow.GetDbContext();
             APIResponse response = new APIResponse();
+            long ClientId = 0;
             ClientDetails clientDetails = new ClientDetails();
             ClientDetailModel mod = new ClientDetailModel();
-            using (IDbContextTransaction tran = db.Database.BeginTransaction())
-            {
+            
                 try
                 {
                     if (model.ClientId == 0)
@@ -124,10 +124,11 @@ namespace HumanitarianAssistance.Service.Classes
                         ob.IsDeleted = false;
                         ob.CreatedById = UserId;
                         ob.CreatedDate = DateTime.Now;
-                        _uow.GetDbContext().ClientDetails.Add(ob);
-                        //await _uow.ClientDetailsRepository.AddAsyn(obj);
-                        clientDetails = ob;
-                        
+                        await _uow.GetDbContext().ClientDetails.AddAsync(ob);
+                        await _uow.SaveAsync();
+
+                        ClientId = ob.ClientId;
+                        mod.ClientId = ClientId;
                         mod.ClientName = ob.ClientName;
                         mod.CategoryId = ob.CategoryId;
                         mod.ClientBackground = ob.ClientBackground;
@@ -142,8 +143,7 @@ namespace HumanitarianAssistance.Service.Classes
                         response.data.clientDetailsById = mod;
                     }
                     else
-                    {
-                        //var existRecords = await _uow.ClientDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ClientId == model.ClientId);
+                    {                        
                         var existRecords = await _uow.ClientDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ClientId == model.ClientId);
                         if (existRecords != null)
                         {
@@ -154,59 +154,21 @@ namespace HumanitarianAssistance.Service.Classes
                             await _uow.ClientDetailsRepository.UpdateAsyn(existRecords);
                             model.type = "Edit";
                             response.data.clientDetailsById = model;
-                            //response.StatusCode = StaticResource.successStatusCode;
-                            //response.Message = "Success";
                         }
-                        //if (existRecords != null)
-                        //{
-
-                        //    //existRecords.IsDeleted = false;
-                        //    //existRecords.ModifiedById = UserId;
-                        //    //existRecords.ModifiedDate = DateTime.Now;
-                        //    //_mapper.Map(model, existRecords);
-
-                        //    ClientDetails obj = new ClientDetails();
-                        //    //_mapper.Map<ClientDetailModel, ClientDetails>(model);
-                        //    obj.CategoryId = model.CategoryId;
-                        //    obj.ClientBackground = model.ClientBackground;
-                        //    obj.ClientCode = model.ClientCode;
-                        //    obj.ClientName = model.ClientName;
-                        //    obj.Email = model.Email;
-                        //    obj.FocalPoint = model.FocalPoint;
-                        //    obj.History = model.History;
-                        //    obj.Phone = model.Phone;
-                        //    obj.PhysicialAddress = model.PhysicialAddress;
-                        //    obj.Position = model.Position;
-                        //    obj.IsDeleted = false;
-                        //    obj.ModifiedDate = DateTime.Now;
-                        //    obj.ModifiedById = UserId;
-                        //    _uow.GetDbContext().SaveChanges();
-                        //    //_uow.GetDbContext().ClientDetails.Sav(obj);
-                        //    //await _uow.ClientDetails.UpdateAsyn(obj);
-                        //    _uow.SaveAsync();
-                        //    ////_mapper.Map(model, existRecords);
-                        //    //existRecords.ModifiedById = UserId;
-                        //    //existRecords.ModifiedDate = DateTime.Now;
-                        //    ////_uow.GetDbContext().ClientDetails.Update(obj);
-                        //    await _uow.ClientDetailsRepository.UpdateAsyn(obj);
-                        //    //model.type = "Edit";
-                        //    response.data.clientDetailsById = model;
-                        //}
-                        //_uow.GetDbContext().SaveChanges();
+                      
                         LatestClientId = Convert.ToInt32(model.ClientId);
                     }
-                    //await _uow.SaveAsync();
                    
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
-                    tran.Commit();
+                   
                 }
                 catch (Exception ex)
                 {
                     response.StatusCode = StaticResource.failStatusCode;
                     response.Message = StaticResource.SomethingWrong + ex.Message;
                 }
-            }
+            
             return response;
         }
 

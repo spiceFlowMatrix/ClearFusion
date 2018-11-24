@@ -60,9 +60,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             APIResponse response = new APIResponse();
             try
             {
-                var mainLevelList = await _uow.ChartOfAccountNewRepository.FindAllAsync(x => x.ChartOfAccountNewId != parentId &&
-                                                                                             x.ParentID == parentId &&
-                                                                                             x.IsDeleted == false);
+                var mainLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                                                                    .Where(x => x.ChartOfAccountNewId != parentId && x.ParentID == parentId && x.IsDeleted == false)
+                                                                    .ToListAsync();
 
                 response.data.AllAccountList = mainLevelList;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -75,6 +75,31 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
             return response;
         }
+
+
+        public async Task<APIResponse> GetAllAccountsByAccountHeadTypeId(long id)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var mainLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                                                                        .Where(x => x.AccountHeadTypeId == id && x.IsDeleted == false)
+                                                                        .OrderBy(x => x.ChartOfAccountNewId)
+                                                                        .ToListAsync();
+
+                response.data.AllAccountList = mainLevelList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
 
 
         public async Task<APIResponse> AddChartOfAccount(ChartOfAccountNewModel model)
@@ -98,6 +123,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             ChartOfAccountNew obj = new ChartOfAccountNew();
 
                             obj.AccountLevelId = (int)AccountLevels.MainLevel;
+                            obj.AccountHeadTypeId = model.AccountHeadTypeId;
                             obj.ParentID = -1;
                             obj.AccountName = model.AccountName;
                             obj.CreatedById = model.CreatedById;
@@ -136,6 +162,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             if (parentPresent)
                             {
                                 obj.AccountLevelId = (int)AccountLevels.ControlLevel;
+                                obj.AccountHeadTypeId = model.AccountHeadTypeId;
                                 obj.ParentID = model.ParentID;
                                 obj.AccountName = model.AccountName;
                                 obj.CreatedById = model.CreatedById;
@@ -176,6 +203,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             if (parentPresent)
                             {
                                 obj.AccountLevelId = (int)AccountLevels.ControlLevel;
+                                obj.AccountHeadTypeId = model.AccountHeadTypeId;
                                 obj.ParentID = model.ParentID;
                                 obj.AccountName = model.AccountName;
 
@@ -220,6 +248,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             if (parentPresent)
                             {
                                 obj.AccountLevelId = (int)AccountLevels.ControlLevel;
+                                obj.AccountHeadTypeId = model.AccountHeadTypeId;
                                 obj.ParentID = model.ParentID;
                                 obj.AccountName = model.AccountName;
                                 obj.CreatedById = model.CreatedById;

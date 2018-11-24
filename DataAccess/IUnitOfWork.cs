@@ -169,6 +169,7 @@ namespace DataAccess
         IGenericRepository<ProjectCommunicationAttachment> ProjectCommunicationAttachmentRepository { get; }
         IGenericRepository<ApproveProjectDetails> ApproveProjectDetailsRepository { get; }
         IGenericRepository<WinProjectDetails> WinProjectDetailsRepository { get; }
+        IGenericRepository<ProjectProposalDetail> ProjectProposalDetailRepository { get; }
 
         #endregion 
 

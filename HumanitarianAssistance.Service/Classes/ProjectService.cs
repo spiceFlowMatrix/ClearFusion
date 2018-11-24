@@ -19,6 +19,7 @@ using System.Linq;
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore.Storage;
 using HumanitarianAssistance.ViewModels.Models;
+using System.IO;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -1619,6 +1620,42 @@ namespace HumanitarianAssistance.Service.Classes
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
                 response.CommonId.IsApproved = model.IsWin;
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+       public APIResponse AddEditProjectproposals(long Projectid,string userid)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/"+ "credentials.json");
+                string _detail;
+                _detail = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectCode).FirstOrDefault();
+                response.data.ProjectProposalModel = ProposalDoc.userCredential(_detail, pathFile);
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        public APIResponse GetProjectproposalsById(long Projectid)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                string _detail;
+                _detail = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectCode).FirstOrDefault();
+                response.data.ProjectProposalModel = ProposalDoc.GetProjectProposal(_detail, pathFile);
 
             }
             catch (Exception ex)

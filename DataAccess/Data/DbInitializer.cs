@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Data
 {
@@ -32,6 +33,9 @@ namespace DataAccess.Data
                 {
                     return; // DB has been seeded
                 }
+
+                if (!context.Database.EnsureCreated()) //update-database
+                    context.Database.Migrate();
 
                 await CreateDefaultUserAndRoleForApplication(userManager, roleManager, context, logger);
             }

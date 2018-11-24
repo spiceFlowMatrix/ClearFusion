@@ -19,7 +19,17 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long? NatureId { get; set; }
         public long? TimeCategoryId { get; set; }
         public long? MediaCategoryId { get; set; }
-        public long QualityId { get; set; }
+        public long? QualityId { get; set; }
         public bool IsCompleted { get; set; }
+        public long? ClientId { get; set; }
+        public long? UnitRateId { get; set; }
+        public bool IsApproved { get; set; }
+        public bool IsDeclined { get; set; }
+    }
+
+    public class ApproveContractModel
+    {
+        public long? ContractId { get; set; }
+        public string Type { get; set; }
     }
 }

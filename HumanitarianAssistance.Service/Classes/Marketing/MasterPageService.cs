@@ -896,7 +896,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
 
-        public async Task<APIResponse>DeleteUnitRate( int UnitRateId, string UserId)
+        public async Task<APIResponse> DeleteUnitRate(int UnitRateId, string UserId)
         {
             APIResponse response = new APIResponse();
             try
@@ -946,7 +946,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                         TimeCategoryId = ur.TimeCategoryId
                                     })).ToList();
 
-                
+
                 response.data.UnitRateDetails = unitRateList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -970,47 +970,55 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         {
             DbContext db = _uow.GetDbContext();
             APIResponse response = new APIResponse();
-            using (IDbContextTransaction tran = db.Database.BeginTransaction())
+            try
             {
-                try
+                if (model.UnitRateId == 0 || model.UnitRateId == null)
                 {
-                    if(model.UnitRateId == 0 || model.UnitRateId == null)
-                    {
-                        UnitRate obj = _mapper.Map<UnitRateModel, UnitRate>(model);
-                        obj.CreatedById = UserId;
-                        obj.CreatedDate = DateTime.Now;
-                        obj.IsDeleted = false;
-                        obj.ActivityTypeId = model.ActivityTypeId;
-                        obj.CurrencyId = model.CurrencyId;
-                        obj.UnitRates = model.UnitRates;
-                        obj.MediumId = model.MediumId;
-                        obj.NatureId = model.NatureId;
-                        obj.QualityId = model.QualityId;
-                        obj.TimeCategoryId = model.TimeCategoryId;
-                        await _uow.UnitRateRepository.AddAsyn(obj);
-                    }
-                    else
-                    {
-                        var  obj = await _uow.UnitRateRepository.FindAsync(x => x.UnitRateId == model.UnitRateId);
-                        obj.ModifiedById = UserId;
-                        obj.ModifiedDate = DateTime.Now;
-                        _mapper.Map(model, obj);
-                        await _uow.UnitRateRepository.UpdateAsyn(obj);
-                    }                    
+                    UnitRate obj = _mapper.Map<UnitRateModel, UnitRate>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.ActivityTypeId = model.ActivityTypeId;
+                    obj.CurrencyId = model.CurrencyId;
+                    obj.UnitRates = model.UnitRate;
+                    obj.MediumId = model.MediumId;
+                    obj.NatureId = model.NatureId;
+                    obj.QualityId = model.QualityId;
+                    obj.TimeCategoryId = model.TimeCategoryId;
+                    await _uow.UnitRateRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
-                    var activityDetails = await _uow.ActivityTypeRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId);
-                    model.ActivityName = activityDetails.ActivityName;
-                    response.data.unitRateDetails = model;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-                    tran.Commit();
+                    model.UnitRateId =  obj.UnitRateId;
+                    response.data.unitRateDetails = model; ;
                 }
-                catch (Exception ex)
+                else
                 {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = ex.Message;
+                    var obj = await _uow.UnitRateRepository.FindAsync(x => x.UnitRateId == model.UnitRateId);
+                    obj.ModifiedById = UserId;
+                    obj.ModifiedDate = DateTime.Now;
+                    obj.ActivityTypeId = model.ActivityTypeId;
+                    obj.CurrencyId = model.CurrencyId;
+                    obj.MediumId = model.MediumId;
+                    obj.NatureId = model.NatureId;
+                    obj.QualityId = model.QualityId;
+                    obj.TimeCategoryId = model.TimeCategoryId;
+                    obj.UnitRates = model.UnitRate;
+                    await _uow.UnitRateRepository.UpdateAsyn(obj);
+                    response.data.unitRateDetailsById = obj;
                 }
+
+                var activityDetails = await _uow.ActivityTypeRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId);
+                model.ActivityName = activityDetails.ActivityName;
+
+                
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
             return response;
         }
 
@@ -1052,17 +1060,19 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 var activity = await _uow.ActivityTypeRepository.FindAllAsync(x => x.IsDeleted == false);
                 var activityDetails = activity.Where(x => x.ActivityTypeId == model.ActivityTypeId).FirstOrDefault();
                 string activityName = activityDetails.ActivityName;
-                object unitRateById;
+                UnitRate unitRateById = new UnitRate();
                 if (activityName == "Broadcasting")
                 {
-                     unitRateById = await _uow.UnitRateRepository.FindAsync(x => x.TimeCategoryId == model.TimeCategoryId && x.MediumId == model.MediumId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false);
+                    unitRateById = _uow.GetDbContext().UnitRates.Where(x => x.TimeCategoryId == model.TimeCategoryId && x.MediumId == model.MediumId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false).FirstOrDefault();
+                    //await _uow.UnitRateRepository.FindAsync(x => x.TimeCategoryId == model.TimeCategoryId && x.MediumId == model.MediumId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false);
                 }
-                if(activityName == "Production")
+                if (activityName == "Production")
                 {
-                     unitRateById = await _uow.UnitRateRepository.FindAsync(x=>x.MediumId == model.MediumId && x.NatureId == model.NatureId && x.QualityId == model.QualityId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false);
+                    unitRateById = _uow.GetDbContext().UnitRates.Where(x => x.MediumId == model.MediumId && x.NatureId == model.NatureId && x.QualityId == model.QualityId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false).FirstOrDefault();
+                    //await _uow.UnitRateRepository.FindAsync(x=>x.MediumId == model.MediumId && x.NatureId == model.NatureId && x.QualityId == model.QualityId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false);
                 }
-               
-                //response.data.UnitRateByActivityId = unitRateById;
+
+                response.data.UnitRateByActivityId = unitRateById;
             }
             catch (Exception ex)
             {

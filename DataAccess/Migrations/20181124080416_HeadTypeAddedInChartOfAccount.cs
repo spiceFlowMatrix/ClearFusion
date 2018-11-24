@@ -2,13 +2,13 @@
 
 namespace DataAccess.Migrations
 {
-    public partial class EmployeeLanguagesTableadditionofEmployeeId : Migration
+    public partial class HeadTypeAddedInChartOfAccount : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "EmployeeId",
-                table: "EmployeeLanguages",
+                name: "AccountHeadTypeId",
+                table: "ChartOfAccountNew",
                 nullable: false,
                 defaultValue: 0);
         }
@@ -16,8 +16,8 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "EmployeeId",
-                table: "EmployeeLanguages");
+                name: "AccountHeadTypeId",
+                table: "ChartOfAccountNew");
         }
     }
 }

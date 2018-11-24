@@ -170,6 +170,9 @@ namespace DataAccess
         private IGenericRepository<ProjectPhaseTime> _projectPhaseTimeRepository;
         private IGenericRepository<ProjectCommunication> _projectCommunicationRepository;
         private IGenericRepository<ProjectCommunicationAttachment> _projectCommunicationAttachmentRepository;
+        private IGenericRepository<ProjectProposalDetail> _projectProposalDetailRepository;
+
+
         //Marketing
         private IGenericRepository<ActivityType> _activityTypeRepository;
         private IGenericRepository<ContractDetails> _contractDetailsRepository;
@@ -1525,6 +1528,14 @@ namespace DataAccess
             {
                 return _winroveProjectDetailsRepository =
                     _winroveProjectDetailsRepository ?? new GenericRepository<WinProjectDetails>(_mschaContext);
+            }
+        }
+        public IGenericRepository<ProjectProposalDetail> ProjectProposalDetailRepository
+        {
+            get
+            {
+                return _projectProposalDetailRepository =
+                    _projectProposalDetailRepository ?? new GenericRepository<ProjectProposalDetail>(_mschaContext);
             }
         }
 

@@ -13,10 +13,17 @@ namespace DataAccess.DbEntities.Marketing
         [Column(Order = 1)]
         public long ContractId { get; set; }
         public string ContractCode { get; set; }
+        [ForeignKey("ClientId")]
+        public long? ClientId { get; set; }
+        public ClientDetails ClientDetails { get; set; }
         public string ClientName { get; set; }
         [ForeignKey("ActivityTypeId")]
         public long? ActivityTypeId { get; set; }
         public ActivityType ActivityTypes { get; set; }
+        [ForeignKey("UnitRateId")]
+        public long? UnitRateId { get; set; }
+        public UnitRate UnitRates { get; set; }
+
         public double UnitRate { get; set; }
         [ForeignKey("CurrencyId")]
         public int? CurrencyId { get; set; }
@@ -43,5 +50,7 @@ namespace DataAccess.DbEntities.Marketing
         [ForeignKey("QualityId")]
         public Quality Qualities { get; set; }
         public bool IsCompleted { get; set; }
+        public bool IsApproved { get; set; }
+        public bool IsDeclined { get; set; }
     }
 }

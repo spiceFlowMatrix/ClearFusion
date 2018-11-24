@@ -53,6 +53,18 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     #region Contract Details
 
+    [HttpPost]
+    public async Task<APIResponse> ApproveContract([FromBody]ApproveContractModel model) {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _iContractDetailsService.ApproveContract(model, id);
+      }
+      return response;
+    }
+
     /// <summary>
     /// get contract details by id
     /// </summary>
@@ -116,19 +128,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <returns></returns>
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> DeleteContractDetail([FromBody]ContractDetails model)
+    public async Task<APIResponse> DeleteContractDetail([FromBody]int model)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-        model.ModifiedById = id;
-        model.ModifiedDate = DateTime.UtcNow;
-        apiRespone = await _iContractDetailsService.DeleteContractDetail(model);
+        //model.ModifiedById = id;
+        //model.ModifiedDate = DateTime.UtcNow;
+        apiRespone = await _iContractDetailsService.DeleteContractDetail(model,id);
       }
       return apiRespone;
     }
+
     #endregion
 
     #region Activity Type
@@ -789,8 +802,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       }
       return apiResponse;
     }
-    #endregion
 
+    /// <summary>
+    /// get unit rate by filters
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetUnitRateByActivityTypeId([FromBody]UnitRateModel model)
@@ -824,5 +841,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       }
       return apiRespone;
     }
+
+    #endregion
+
+
   }
 }

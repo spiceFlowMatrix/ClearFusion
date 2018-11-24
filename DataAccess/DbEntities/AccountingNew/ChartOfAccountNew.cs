@@ -25,6 +25,8 @@ namespace DataAccess.DbEntities.AccountingNew
         [ForeignKey("AccountTypeId")]
         public AccountType AccountType { get; set; }
 
+        public int AccountHeadTypeId { get; set; }
+
         public int? AccountFilterTypeId { get; set; }
         [ForeignKey("AccountFilterTypeId")]
         public AccountFilterType AccountFilterType { get; set; }
