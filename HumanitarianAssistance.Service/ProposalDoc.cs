@@ -8,6 +8,7 @@ using Google.Apis.Util.Store;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models.Project;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,6 +49,8 @@ namespace HumanitarianAssistance.Service
             var resp = createfolder(driveService, ProjectCode);
             return resp;
         }
+
+
         public static ProjectProposalModel createfolder(DriveService driveService, string ProjectCode)
         {
             ProjectProposalModel res = new ProjectProposalModel();
@@ -85,6 +88,7 @@ namespace HumanitarianAssistance.Service
                 var folderDetails = folderrequest.Execute();
                 res.FolderId = folderDetails.Id;
                 res.FolderName = folderDetails.Name;
+                
                 //Console.WriteLine("Folder ID: " + folderDetails.Id);
 
 
@@ -187,7 +191,167 @@ namespace HumanitarianAssistance.Service
             return res;
         }
 
+        public static ProjectProposalModel uploadEDIdoc(string ProjectCode, IFormFile filedata,string fileName,string pathFile,string uploadfilelocalpath)
+        {
+            ProjectProposalModel res = new ProjectProposalModel();
+            UserCredential credential;
+            using (var stream =
+                new FileStream(pathFile, FileMode.Open, FileAccess.Read))
+            {
+                // The file token.json stores the user's access and refresh tokens, and is created
+                // automatically when the authorization flow completes for the first time.
+                string credPath = "token.json";
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    GoogleClientSecrets.Load(stream).Secrets,
+                    Scopes,
+                    "sdd.shared@gmail.com",
+                    CancellationToken.None,
+                    new FileDataStore(credPath, true)).Result;
+            }            
+            var driveService = new DriveService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = ApplicationName,
+            });
 
+            List<File> result = new List<File>();
+            List<string> folderName = new List<string>();
+            FilesResource.ListRequest request4 = driveService.Files.List();
+            //request4.Corpora = "files/folders";
+            request4.Fields = "*";
+            do
+            {
+                FileList files = request4.Execute();
+                result.AddRange(files.Files);
+                result = result.Where(p => p.MimeType == "application/vnd.google-apps.folder" && p.Trashed == false).ToList();
+                folderName = result.Select(p => p.Name).Distinct().ToList();
+                request4.PageToken = files.NextPageToken;
+            } while (!String.IsNullOrEmpty(request4.PageToken));            
+            //string nameFile = fileName;
+            string folder = ProjectCode;
+            if (folderName.Contains(folder))
+            {
+                
+                File fileDetail = result.Where(p => p.MimeType == "application/vnd.google-apps.folder" && p.Trashed == false && p.Name == folder.Trim()).FirstOrDefault();
+                var fileMetadata = new File()
+                {
+                    Name = fileName,
+                    MimeType = GetMimeType(fileName),
+                    Parents = new List<string>
+                    {
+                        fileDetail.Id
+                    }
+                };
+                FilesResource.CreateMediaUpload request;
+                using (var stream = new System.IO.FileStream(uploadfilelocalpath,
+                    System.IO.FileMode.Open))
+                {
+                    request = driveService.Files.Create(
+                        fileMetadata, stream, GetMimeType(fileName));
+                    request.Fields = "*";
+                    request.Upload();
+                }
+                var file = request.ResponseBody;
+                res.EDIFileName = file.Name;
+                res.EdiFileId = file.Id;
+                var batch = new BatchRequest(driveService);
+                BatchRequest.OnResponse<Permission> callback = delegate (
+                    Permission permission,
+                    RequestError error,
+                    int index,
+                    System.Net.Http.HttpResponseMessage message)
+                {
+                    if (error != null)
+                    {
+                        res.FIleResponseMsg = error.Message;
+                    }
+                };
+                Permission userPermission = new Permission()
+                {
+                    Type = "anyone", //user
+                    Role = "writer",
+                    //EmailAddress = "anveshkjain@gmail.com"
+                };
 
+                var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
+                Permissionrequest.Fields = "*";
+                batch.Queue(Permissionrequest, callback);
+                var task = batch.ExecuteAsync();
+                res.ProposalWebLink = file.WebViewLink;
+                res.FIleResponseMsg = StaticResource.SuccessText;
+                res.StatusCode = StaticResource.successStatusCode;
+            }
+            else
+            {
+                var fileMetadata1 = new File()
+                {
+                    Name = folder,
+                    MimeType = "application/vnd.google-apps.folder"
+                };
+                var request3 = driveService.Files.Create(fileMetadata1);
+                request3.Fields = "id";
+                var folder1 = request3.Execute();
+                Console.WriteLine("Folder ID: " + folder1.Id);
+
+                var fileMetadata = new File()
+                {
+                    Name = fileName,
+                    MimeType = GetMimeType(fileName),
+                    Parents = new List<string>
+                    {
+                        folder1.Id
+                    }
+                };
+
+                FilesResource.CreateMediaUpload request;
+                using (var stream = new System.IO.FileStream(uploadfilelocalpath,
+                    System.IO.FileMode.Open))
+                {
+                    request = driveService.Files.Create(
+                        fileMetadata, stream, GetMimeType(fileName));
+                    request.Fields = "*";
+                    request.Upload();
+                }
+                var file = request.ResponseBody;
+                var batch = new BatchRequest(driveService);
+                BatchRequest.OnResponse<Permission> callback = delegate (
+                    Permission permission,
+                    RequestError error,
+                    int index,
+                    System.Net.Http.HttpResponseMessage message)
+                {
+                    if (error != null)
+                    {
+                        // Handle error
+                       
+                    }
+                    else
+                    {
+                        
+                    }
+                };
+                Permission userPermission = new Permission()
+                {
+                    Type = "anyone", //user
+                    Role = "writer",
+                };
+
+                var request1 = driveService.Permissions.Create(userPermission, file.Id);
+                request1.Fields = "*";
+                batch.Queue(request1, callback);
+                var task = batch.ExecuteAsync();
+                
+            }
+            return res;
+        }
+        private static string GetMimeType(string fileName)
+        {
+            string mimeType = "application/unknown";
+            string ext = System.IO.Path.GetExtension(fileName).ToLower();
+            Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(ext);
+            if (regKey != null && regKey.GetValue("Content Type") != null)
+                mimeType = regKey.GetValue("Content Type").ToString();
+            return mimeType;
+        }
     }
 }

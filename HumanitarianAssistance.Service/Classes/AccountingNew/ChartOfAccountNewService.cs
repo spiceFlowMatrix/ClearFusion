@@ -99,9 +99,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
-
-
-
         public async Task<APIResponse> AddChartOfAccount(ChartOfAccountNewModel model)
         {
             APIResponse response = new APIResponse();
@@ -151,9 +148,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     //Control Level
                     else if (model.AccountLevelId == (int)AccountLevels.ControlLevel)
                     {
-                        int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.ControlLevel);
+                        int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.ControlLevel && x.ChartOfAccountNewId == model.ParentID);
 
-                        if (levelcount <= (int)AccountLevelLimits.ControlLevel)
+                        if (levelcount < (int)AccountLevelLimits.ControlLevel)
                         {
                             ChartOfAccountNew obj = new ChartOfAccountNew();
 
@@ -164,6 +161,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                 obj.AccountLevelId = (int)AccountLevels.ControlLevel;
                                 obj.AccountHeadTypeId = model.AccountHeadTypeId;
                                 obj.ParentID = model.ParentID;
+                                obj.ChartOfAccountNewCode = model.ParentID.ToString() + (levelcount + 1);
                                 obj.AccountName = model.AccountName;
                                 obj.CreatedById = model.CreatedById;
                                 obj.CreatedDate = model.CreatedDate;
@@ -192,9 +190,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     //Sub Level
                     else if (model.AccountLevelId == (int)AccountLevels.SubLevel)
                     {
-                        int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.SubLevel);
+                        int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.SubLevel && x.ChartOfAccountNewId == model.ParentID);
 
-                        if (levelcount <= (int)AccountLevelLimits.SubLevel)
+                        if (levelcount < (int)AccountLevelLimits.SubLevel)
                         {
                             ChartOfAccountNew obj = new ChartOfAccountNew();
 
@@ -206,6 +204,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                 obj.AccountHeadTypeId = model.AccountHeadTypeId;
                                 obj.ParentID = model.ParentID;
                                 obj.AccountName = model.AccountName;
+                                obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode + genrateCode((levelcount + 1).ToString());
 
                                 obj.AccountFilterTypeId = model.AccountFilterTypeId != null ? model.AccountFilterTypeId : null;  //dropdown
                                 obj.AccountTypeId = model.AccountTypeId != null ? model.AccountTypeId : null; //dropdown
@@ -237,7 +236,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     //Input Level
                     else if (model.AccountLevelId == (int)AccountLevels.InputLevel)
                     {
-                        int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.InputLevel);
+                        int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.InputLevel && x.ChartOfAccountNewId == model.ParentID);
 
                         if (levelcount <= (int)AccountLevelLimits.InputLevel)
                         {
@@ -250,6 +249,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                 obj.AccountLevelId = (int)AccountLevels.ControlLevel;
                                 obj.AccountHeadTypeId = model.AccountHeadTypeId;
                                 obj.ParentID = model.ParentID;
+                                obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode + genrateCode((levelcount + 1).ToString());
                                 obj.AccountName = model.AccountName;
                                 obj.CreatedById = model.CreatedById;
                                 obj.CreatedDate = model.CreatedDate;
@@ -290,7 +290,39 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        public async Task<APIResponse> GetAllAccountFilter()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var mainLevelList = await _uow.GetDbContext().AccountFilterType.Where(x => x.IsDeleted == false).ToListAsync();
+
+                response.data.AllAccountFilterList = mainLevelList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+
+
+
+
+        //Create code
+        public string genrateCode(string id)
+        {
+            string code = string.Empty;
+            if (id.Length == 1)
+                return code = "0" + id;
+            else
+                return code = id;
+        }
 
     }
-
 }

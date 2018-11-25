@@ -2,6 +2,7 @@
 using DataAccess.DbEntities.Project;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models.Project;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -91,10 +92,13 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllSecurityDetails();
         Task<APIResponse> GetAllSecurityConsiderationDetails();
         Task<APIResponse> GetAllDistrictvalueByProvinceId(int[] provinceId);
-        Task<APIResponse> AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
+       
         APIResponse AddEditProjectproposals(long projectId, string UserId);
         APIResponse GetProjectproposalsById(long projectId);
         
+        APIResponse AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
+        APIResponse UploadEDIProposalFile(IFormFile file, string UserId, string Projectid,string fullPath);
+
 
         #endregion
     }

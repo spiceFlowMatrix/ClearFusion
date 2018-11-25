@@ -61,9 +61,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Documents\" />
+    <Folder Include="UploadotherDoc\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GoogleCredentials\credentials.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="GoogleCredentials\credentials.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.NETCore.App" Version="2.1.0" />

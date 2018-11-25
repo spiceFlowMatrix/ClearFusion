@@ -13,6 +13,11 @@ using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models.Project;
 using System.Security.Claims;
 using DataAccess.DbEntities.Project;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using System.Net.Http.Headers;
+using HumanitarianAssistance.Common.Helpers;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
@@ -22,14 +27,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
   {
     private readonly JsonSerializerSettings _serializerSettings;
     private readonly UserManager<AppUser> _userManager;
+    private IHostingEnvironment _hostingEnvironment;
     private IProject _iProject;
     public ProjectController(
        UserManager<AppUser> userManager,
-      IProject iProject
+      IProject iProject,
+      IHostingEnvironment hostingEnvironment
       )
     {
       _userManager = userManager;
       _iProject = iProject;
+      _hostingEnvironment = hostingEnvironment;
       _serializerSettings = new JsonSerializerSettings
       {
         Formatting = Formatting.Indented,
@@ -361,7 +369,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     public APIResponse GetProjectListById([FromBody]long Id)
     {
       APIResponse apiresponse =  _iProject.GetProjectListById(Id);
-       return apiresponse;
+
+      return apiresponse;
     }
 
 
@@ -614,7 +623,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         var id = user.Id;
 
-        apiRespone = await _iProject.AddEditProjectotherDetail(OtherDetail, id);
+        apiRespone =  _iProject.AddEditProjectotherDetail(OtherDetail, id);
       }
       return apiRespone;      
     }
@@ -681,6 +690,59 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     {
       APIResponse apiRespone = null;
         apiRespone = _iProject.GetProjectproposalsById(ProjectId);
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> UploadEDIProposalFile()
+    {
+      APIResponse apiRespone = null;
+      string fullPath = string.Empty;
+      try
+      {
+        var file = Request.Form.Files[0];
+        string folderName = Path.Combine(Directory.GetCurrentDirectory(), "UploadotherDoc/");
+        long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_').Length;
+        string ProjectId  = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[count - 2];
+        string DocType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[count - 1];
+        string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
+        
+        fileNames = DocType + fileNames;
+        string webRootPath = _hostingEnvironment.WebRootPath;
+        string newPath = Path.Combine(webRootPath, folderName);
+        if (!Directory.Exists(newPath))
+        {
+          Directory.CreateDirectory(newPath);
+        }
+        if (file.Length > 0)
+        {
+          string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
+           fullPath = Path.Combine(newPath, fileName);
+          using (var stream = new FileStream(fullPath, FileMode.Create))
+          {
+            file.CopyTo(stream);
+          }
+        }
+        var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        if (user != null)
+        {
+          var id = user.Id;
+          apiRespone = _iProject.UploadEDIProposalFile(file, id, ProjectId, fullPath);
+          if (apiRespone.StatusCode == StaticResource.successStatusCode);
+          {
+            DirectoryInfo di = new DirectoryInfo(folderName);
+            FileInfo[] fi = di.GetFiles();
+            FileInfo f = fi.Where(p => p.Name == fileNames).FirstOrDefault();
+            f.Delete();
+          }
+        }
+      
+      }
+      catch (System.Exception ex)
+      {
+        throw ex;
+        //return Json("Upload Failed: " + ex.Message);
+      }
       return apiRespone;
     }
     

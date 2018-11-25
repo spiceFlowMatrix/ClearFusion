@@ -19,7 +19,7 @@ namespace DataAccess.DbEntities.Project
         public string opportunity { get; set; }
         public string opportunitydescription { get; set; }
         public string ProvinceId { get; set; }
-        public int? DistrictID { get; set; }
+        public string DistrictID { get; set; }
         public int? OfficeId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
@@ -37,7 +37,7 @@ namespace DataAccess.DbEntities.Project
         public long? GenderConsiderationId { get; set; }
         public string GenderRemarks { get; set; }
         public long? SecurityId { get; set; }
-        public long? SecurityConsiderationId { get; set; }
+        public string SecurityConsiderationId { get; set; }
         public string SecurityRemarks { get; set; }
 
     }

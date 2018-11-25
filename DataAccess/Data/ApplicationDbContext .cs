@@ -533,6 +533,11 @@ namespace HumanitarianAssistance.Entities
                 new LanguageDetail { IsDeleted = false, LanguageId = 11, LanguageName = "Uzbek" }
             );
 
+            modelBuilder.Entity<AccountFilterType>().HasData(
+              new AccountFilterType { IsDeleted = false, AccountFilterTypeId = 1, AccountFilterTypeName = "Inventory Account" },
+              new AccountFilterType { IsDeleted = false, AccountFilterTypeId = 2, AccountFilterTypeName = "Salary Account" }
+          );
+
             #endregion
 
 

@@ -29,6 +29,6 @@ namespace DataAccess.DbEntities.Project
         public string ConceptFileId { get; set; }
         public string PresentationFileName { get; set; }
         public string PresentationFileId { get; set; }
-
+        public string ProposalWebLink { get; set; }
     }
 }

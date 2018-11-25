@@ -20,6 +20,8 @@ using System.Data.Common;
 using Microsoft.EntityFrameworkCore.Storage;
 using HumanitarianAssistance.ViewModels.Models;
 using System.IO;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http.Headers;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -1470,7 +1472,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> AddEditProjectotherDetail(ProjectOtherDetail model, string UserId)
+        public APIResponse AddEditProjectotherDetail(ProjectOtherDetail model, string UserId)
         {
             APIResponse response = new APIResponse();
             DbContext db = _uow.GetDbContext();
@@ -1487,6 +1489,7 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.opportunity = model.opportunity;
                         obj.opportunitydescription = model.opportunitydescription;
                         obj.ProvinceId = model.ProvinceId;
+                        obj.ProjectId = model.ProjectId;
                         obj.DistrictID = model.DistrictID;
                         obj.OfficeId = model.OfficeId;
                         obj.StartDate = model.StartDate;
@@ -1519,6 +1522,7 @@ namespace HumanitarianAssistance.Service.Classes
                         if (existProjectRecord != null)
                         {
                             existProjectRecord.opportunityNo = model.opportunityNo;
+                            existProjectRecord.ProjectId = model.ProjectId;
                             existProjectRecord.opportunity = model.opportunity;
                             existProjectRecord.opportunitydescription = model.opportunitydescription;
                             existProjectRecord.ProvinceId = model.ProvinceId;
@@ -1546,7 +1550,7 @@ namespace HumanitarianAssistance.Service.Classes
                             existProjectRecord.ModifiedById = UserId;
                             existProjectRecord.ModifiedDate = DateTime.Now;
                             _uow.GetDbContext().SaveChanges();
-                            LatestProjectOtherDetailId = model.ProjectId;
+                            LatestProjectOtherDetailId = model.ProjectOtherDetailId;
                         }
                     }
                     response.StatusCode = StaticResource.successStatusCode;
@@ -1562,6 +1566,7 @@ namespace HumanitarianAssistance.Service.Classes
                     response.Message = StaticResource.SomethingWrong + ex.Message;
                 }
             }
+
             return response;
         }
 
@@ -1631,6 +1636,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
        public APIResponse AddEditProjectproposals(long Projectid,string userid)
         {
+            ProjectProposalDetail model = new ProjectProposalDetail();
             APIResponse response = new APIResponse();
             try
             {
@@ -1638,7 +1644,19 @@ namespace HumanitarianAssistance.Service.Classes
                 string _detail;
                 _detail = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectCode).FirstOrDefault();
                 response.data.ProjectProposalModel = ProposalDoc.userCredential(_detail, pathFile);
-
+                model.FolderName = response.data.ProjectProposalModel.FolderName;
+                model.FolderId = response.data.ProjectProposalModel.FolderId;
+                model.ProposalFileName = response.data.ProjectProposalModel.ProposalFileName;
+                model.ProposalFileId = response.data.ProjectProposalModel.ProposalFileId;
+                model.ProposalWebLink = response.data.ProjectProposalModel.ProposalWebLink;
+                model.ProjectId = Projectid;
+                model.IsDeleted = false;
+                model.CreatedById = userid;
+                model.CreatedDate = DateTime.Now;
+                _uow.ProjectProposalDetailRepository.Add(model);
+                _uow.Save();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {
@@ -1656,7 +1674,32 @@ namespace HumanitarianAssistance.Service.Classes
                 string _detail;
                 _detail = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectCode).FirstOrDefault();
                 response.data.ProjectProposalModel = ProposalDoc.GetProjectProposal(_detail, pathFile);
-
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        public APIResponse UploadEDIProposalFile(IFormFile file, string UserId,string Projectid,string fullPath)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                string fileName = string.Empty;
+                long ProjectId = long.Parse(Projectid);
+                string _detail= _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == ProjectId && !x.IsDeleted.Value).Select(x => x.ProjectCode).FirstOrDefault();
+                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                if (file.Length > 0)
+                {
+                     fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
+                    fileName = "EDI" + fileName;                   
+                }
+                response.data.ProjectProposalModel = ProposalDoc.uploadEDIdoc(_detail, file, fileName, pathFile, fullPath);
+                //return Json("Upload Successful.");
             }
             catch (Exception ex)
             {

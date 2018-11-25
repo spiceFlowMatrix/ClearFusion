@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181125063303_addProposalWebLinkfield")]
+    partial class addProposalWebLinkfield
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,11 +80,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("AccountFilterType");
-
-                    b.HasData(
-                        new { AccountFilterTypeId = 1, AccountFilterTypeName = "Inventory Account", IsDeleted = false },
-                        new { AccountFilterTypeId = 2, AccountFilterTypeName = "Salary Account", IsDeleted = false }
-                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AccountingNew.ChartOfAccountNew", b =>
@@ -5333,7 +5330,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("CurrencyId");
 
-                    b.Property<string>("DistrictID");
+                    b.Property<int?>("DistrictID");
 
                     b.Property<long?>("DonorId");
 
@@ -5357,7 +5354,7 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("REOIReceiveDate");
 
-                    b.Property<string>("SecurityConsiderationId");
+                    b.Property<long?>("SecurityConsiderationId");
 
                     b.Property<long?>("SecurityId");
 

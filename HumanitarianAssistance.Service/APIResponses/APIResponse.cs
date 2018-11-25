@@ -332,6 +332,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ChartOfAccountNew> ControlLevelAccountList { get; set; }
         public List<ChartOfAccountNew> SubLevelAccountList { get; set; }
         public List<ChartOfAccountNew> InputLevelAccountList { get; set; }
+        public List<AccountFilterType> AllAccountFilterList { get; set; }
 
         #endregion
 

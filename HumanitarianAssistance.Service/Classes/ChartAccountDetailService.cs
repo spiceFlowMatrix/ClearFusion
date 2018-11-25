@@ -106,6 +106,27 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetAllAccountByAccountHeadTypeId(int id)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                List<AccountType> accounttypelist = await _uow.GetDbContext().AccountType
+                                                              .Where(x => !x.IsDeleted.Value && x.AccountHeadTypeId == id)
+                                                              .OrderBy(x => x.CreatedDate)
+                                                              .ToListAsync();
+                response.data.AccountTypeList = accounttypelist;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> AddAccountType(AccountTypeModel model)
         {
             APIResponse response = new APIResponse();
@@ -171,7 +192,7 @@ namespace HumanitarianAssistance.Service.Classes
                     response.Message = StaticResource.NameExist;
                 }
 
-               
+
             }
             catch (Exception ex)
             {

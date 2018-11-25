@@ -234,8 +234,6 @@ namespace HumanitarianAssistance.Controllers
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
           userClaims.Add(new Claim("Roles", roles[0])); //imp
 
-          userClaims.Add(new Claim("Roles", roles[0])); //imp
-
           //_ipermissions.GetPermissionsByRoleId()
 
           string k = _configuration["JwtKey"];
@@ -1108,6 +1106,15 @@ namespace HumanitarianAssistance.Controllers
     public async Task<APIResponse> GetAllAccountsByAccountHeadTypeId([FromBody]int id)
     {
       APIResponse response = await _iChartOfAccountNewService.GetAllAccountsByAccountHeadTypeId(id);
+      return response;
+    }
+
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllAccountFilter()
+    {
+      APIResponse response = await _iChartOfAccountNewService.GetAllAccountFilter();
       return response;
     }
 

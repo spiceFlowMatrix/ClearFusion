@@ -1,0 +1,77 @@
+New SP
+ssp_GetAllReviewCount (Done)
+ssp_GetSectionsForReviewTeam
+ssp_ReviewerSignatureUpdate
+
+
+
+New Task
+ssp_PopulateMedsTaperTemplate
+ssp_GetMedstrackerMedication
+
+
+
+
+$scope.gridsLoader = true;
+$scope.gridsLoader = false;
+
+
+
+
+
+Deepak @552
+
+
+5 May working day
+12 May working day
+13 May working day
+11 Aug working day
+18 Aug working day 
+
+
+86295.62  12 oct-19
+4032.69   12 Sep 2018
+14590.55   12 Nov 2018
+1792.32    12 Sep 2018
+3466.99   12 Sep 2018
+20476.10   12 Nov 2018
+36501.27   12 April 2019
+20000.00   12 Feb  2019
+
+9000
+
+
+ Elmah_Error
+
+userstagging / Test@1234 / dehradun
+
+https://sanctuary.allevasoft.com
+
+AllevaPr0#_C0rP#$
+
+
+steve.alleva
+
+Allev@!89
+
+secpassword 
+
+Test@1234
+
+viv125
+
+
+bluedartrehab.allevasoft.com
+
+steve.alleva/Allev@!89/secpassword
+
+oasis credentials are:
+
+oasis.support/Allev@!89/university
+
+
+https://docs.google.com/spreadsheets/d/1GNfit0VRz1QSdI8G06f6y8cF5FkoXv3lAhiutGFWM_8/edit#gid=775943135
+
+https://docs.google.com/spreadsheets/d/1Eab7btEeK7l5XPmomyoyB7t_RmrCDlJOqXwx5sX87iQ/edit#gid=630144124
+
+C:\Windows\System32\Drivers\etc

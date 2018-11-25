@@ -1531,5 +1531,14 @@ namespace HumanitarianAssistance.Controllers
       APIResponse response = await _icode.UpdatePayrollAccountHeadAllEmployees(model, Id);
       return response;
     }
+
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<object> GetAllAccountByAccountHeadTypeId([FromBody]int id)
+    {
+      APIResponse response = await _ichartAccoutDetail.GetAllAccountByAccountHeadTypeId(id);
+      return response;
+    }
   }
 }
