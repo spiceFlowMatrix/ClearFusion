@@ -34,8 +34,8 @@ namespace DataAccess.Data
                     return; // DB has been seeded
                 }
 
-                if (!context.Database.EnsureCreated()) //update-database
-                    context.Database.Migrate();
+                //if (!context.Database.EnsureCreated()) //update-database
+                //    context.Database.Migrate();
 
                 await CreateDefaultUserAndRoleForApplication(userManager, roleManager, context, logger);
             }
