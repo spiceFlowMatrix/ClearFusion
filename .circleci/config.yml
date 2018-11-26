@@ -46,6 +46,9 @@ jobs:
           command: |
             gcloud auth configure-docker
             docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}:${CIRCLE_SHA1}
+            kubectl patch deployment ${KUBDEPLOYMENT_API_STAGING} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
+            kubectl rollout status deployment/${KUBDEPLOYMENT_API_STAGING}
+            kubectl get pods
 workflows:
   version: 2.1
   nda-api-build-deploy:
