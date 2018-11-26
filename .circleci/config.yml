@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       - run: cd HumanitarianAssistance
-      - run: dotnet restore
+      - run: dotnet restore HumanitarianAssistance.WebAPI.csproj
       - run: dotnet publish HumanitarianAssistance.WebAPI.csproj -c Release -o release
       - run: cd release
       - run: echo $STAGING_APPSETTINGS_JSON > appsettings.json
