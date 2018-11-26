@@ -14,3 +14,19 @@ D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\Da
 D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csproj.CopyComplete
 D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.dll
 D:\Alpit\Project\Humanitarian Assistance\GCloudAfterDataTransfer\chaservicedt\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.pdb
+C:\Projects\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.deps.json
+C:\Projects\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.runtimeconfig.json
+C:\Projects\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.runtimeconfig.dev.json
+C:\Projects\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.dll
+C:\Projects\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.pdb
+C:\Projects\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.Common.dll
+C:\Projects\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.dll
+C:\Projects\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.pdb
+C:\Projects\clear-fusion\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.Common.pdb
+C:\Projects\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csprojAssemblyReference.cache
+C:\Projects\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csproj.CoreCompileInputs.cache
+C:\Projects\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.AssemblyInfoInputs.cache
+C:\Projects\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.AssemblyInfo.cs
+C:\Projects\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csproj.CopyComplete
+C:\Projects\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.dll
+C:\Projects\clear-fusion\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.pdb
