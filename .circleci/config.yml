@@ -5,15 +5,18 @@ jobs:
       - image: microsoft/dotnet:sdk
     steps:
       - checkout
+      - run: cd HumanitarianAssistance
       - run: dotnet restore
-      - run: dotnet publish -c Release -o release
-      - run: cp Training24Api/server.pfx Training24Api/release
-      - run: cp Training24Api/certificate.json Training24Api/release
+      - run: dotnet publish HumanitarianAssistance.WebAPI.csproj -c Release -o release
+      - run: cd release
+      - run: mkdir Documents
+      - run: cd ..
       - persist_to_workspace:
           root: .
           paths: 
-            - Training24Api/release
+            - HumanitarianAssistance/release
             - Dockerfile
+            - .dockerignore
   deploy-job:
     docker:
       - image: google/cloud-sdk
