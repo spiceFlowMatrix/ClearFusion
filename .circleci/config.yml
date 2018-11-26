@@ -9,6 +9,7 @@ jobs:
       - run: dotnet restore
       - run: dotnet publish HumanitarianAssistance.WebAPI.csproj -c Release -o release
       - run: cd release
+      - run: echo $STAGING_APPSETTINGS_JSON > appsettings.json
       - run: mkdir Documents
       - run: cd ..
       - persist_to_workspace:
