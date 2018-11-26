@@ -1,0 +1,59 @@
+version: 2.1
+jobs:
+  build-job:
+    docker:
+      - image: microsoft/dotnet:sdk
+    steps:
+      - checkout
+      - run: dotnet restore
+      - run: dotnet publish -c Release -o release
+      - run: cp Training24Api/server.pfx Training24Api/release
+      - run: cp Training24Api/certificate.json Training24Api/release
+      - persist_to_workspace:
+          root: .
+          paths: 
+            - Training24Api/release
+            - Dockerfile
+  deploy-job:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Set up Google cloud SDK. Important to set up cluster based on deployment
+          command: |
+            echo $GCLOUD_SERVICE_KEY > gcloud-service-key.json
+            gcloud auth activate-service-account --key-file gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+            # We have a policy to have a dedicated cluster for each deployment environment (Staging, Production, etc)
+            # In the cluster name we need to also include the environment name. Please use the following pattern
+            # GOOGLE_xxxxxxx_CLUSTER_NAME
+            # The xxx part is where we specify Staging or Production etc. Please write the environment variable in all caps.
+            # Or we're gonna need to have a talk...
+            gcloud --quiet container clusters get-credentials ${GOOGLE_STAGING_CLUSTER_NAME}
+      - setup_remote_docker
+      - run: find .
+      - run:
+          name: Tag docker image to GCR registry
+          command: |
+            docker build -t ${APPLICATION_NAME}:${CIRCLE_SHA1} ./workspace
+            docker tag ${APPLICATION_NAME}:${CIRCLE_SHA1} eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}:${CIRCLE_SHA1}
+      - run:
+          name: Push image to GRC & update k8s
+          command: |
+            gcloud auth configure-docker
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}:${CIRCLE_SHA1}
+            kubectl patch deployment ${KUBDEPLOYMENT_API_STAGING} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
+            kubectl rollout status deployment/${KUBDEPLOYMENT_API_STAGING}
+            kubectl get pods
+
+workflows:
+  version: 2.1
+  nda-api-build-deploy:
+    jobs:
+      - build-job:
+          filters:
+            branches:
+              only: master
