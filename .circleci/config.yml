@@ -5,14 +5,10 @@ jobs:
       - image: microsoft/dotnet:sdk
     steps:
       - checkout
-      - run: cd HumanitarianAssistance
-      - run: ls
-      - run: dotnet restore HumanitarianAssistance.sln
-      - run: dotnet publish HumanitarianAssistance.WebAPI.csproj -c Release -o release
-      - run: cd release
-      - run: echo $STAGING_APPSETTINGS_JSON > appsettings.json
-      - run: mkdir Documents
-      - run: cd ..
+      - run: dotnet restore HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj
+      - run: dotnet publish HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj -c Release -o release
+      - run: echo $STAGING_APPSETTINGS_JSON > HumanitarianAssistance/release/appsettings.json
+      - run: mkdir HumanitarianAssistance/release/Documents
       - persist_to_workspace:
           root: .
           paths: 
