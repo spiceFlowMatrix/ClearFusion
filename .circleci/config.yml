@@ -7,6 +7,7 @@ jobs:
       - checkout
       - run: dotnet restore HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj
       - run: dotnet publish HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj -c Release -o release
+      - run: echo $STAGING_APPSETTINGS_JSON
       - run: echo $STAGING_APPSETTINGS_JSON > HumanitarianAssistance/release/appsettings.json
       - run: mkdir HumanitarianAssistance/release/Documents
       - persist_to_workspace:
