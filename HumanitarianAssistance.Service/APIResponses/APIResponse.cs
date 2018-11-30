@@ -284,13 +284,16 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<ProjectDetailNewModel> ProjectDetailModel { get; set; }
         public ProjectDetailNewModel ProjectDetailModel1 { get; set; }
         public ProjectDetail ProjectDetail { get; set; }
-        public DonorDetail DonorDetailById { get; set; }
+        public DonorDetail DonorDetailById { get; set; }       
+        public ProjectOtherDetail OtherProjectDetailById { get; set; }
         public List<ProjectCommunicationModel> ProjectCommunicationModel { get; set; }
         public ProjectProgram projectProgram { get; set; }
         public ProjectArea projectArea { get; set; }
         public ProjectSector projectSector { get; set; }
 
         public ProjectProposalModel ProjectProposalModel { get; set; }
+        public ProjectProposalDetail ProjectProposalDetail { get; set; }
+        
 
         #region Marketing
         public ICollection<JobDetails> JobDetails { get; set; }

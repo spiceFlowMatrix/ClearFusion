@@ -364,15 +364,26 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       APIResponse apiresponse = await _iProject.GetAllProjectList();
       return apiresponse;
     }
+
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public APIResponse GetProjectListById([FromBody]long Id)
     {
-      APIResponse apiresponse =  _iProject.GetProjectListById(Id);
+      APIResponse apiresponse = _iProject.GetProjectListById(Id);
 
       return apiresponse;
     }
 
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public APIResponse GetProjectOtherDetailById([FromBody]long Id)
+    {
+      APIResponse apiresponse =  _iProject.GetOtherProjectListById(Id);
+
+      return apiresponse;
+    }
+   
 
 
     #endregion
@@ -628,13 +639,22 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;      
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public APIResponse GetOtherProjectListById([FromBody]long Id)
+    {
+      APIResponse apiresponse = _iProject.GetOtherProjectListById(Id);
+
+      return apiresponse;
+    }
+
 
     #endregion
 
 
 
 
-    
+
 
     #region projectApproval
     [HttpPost]
@@ -696,7 +716,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> UploadEDIProposalFile()
     {
-      APIResponse apiRespone = null;
+      APIResponse apiRespone = new APIResponse();
       string fullPath = string.Empty;
       try
       {
@@ -706,35 +726,45 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string ProjectId  = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[count - 2];
         string DocType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[count - 1];
         string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
-        
-        fileNames = DocType + fileNames;
-        string webRootPath = _hostingEnvironment.WebRootPath;
-        string newPath = Path.Combine(webRootPath, folderName);
-        if (!Directory.Exists(newPath))
+        string ext = System.IO.Path.GetExtension(fileNames).ToLower();
+        if (ext != ".jpeg" && ext != ".png")
         {
-          Directory.CreateDirectory(newPath);
-        }
-        if (file.Length > 0)
-        {
-          string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
-           fullPath = Path.Combine(newPath, fileName);
-          using (var stream = new FileStream(fullPath, FileMode.Create))
+          //fileNames =fileNames;
+          string webRootPath = _hostingEnvironment.WebRootPath;
+          string newPath = Path.Combine(webRootPath, folderName);
+          if (!Directory.Exists(newPath))
           {
-            file.CopyTo(stream);
+            Directory.CreateDirectory(newPath);
+          }
+          string fileName = string.Empty;
+          if (file.Length > 0)
+          {
+            //ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
+            fileName = DocType + "_" + fileNames;
+            fullPath = Path.Combine(newPath, fileName);
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+              file.CopyTo(stream);
+            }
+          }
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+          if (user != null)
+          {
+            var id = user.Id;
+            apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, fullPath, fileName);
+            if (apiRespone.StatusCode == StaticResource.successStatusCode)
+            {
+              DirectoryInfo di = new DirectoryInfo(folderName);
+              FileInfo[] fi = di.GetFiles();
+              FileInfo f = fi.Where(p => p.Name == fileName).FirstOrDefault();
+              f.Delete();
+            }
           }
         }
-        var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        if (user != null)
+        else
         {
-          var id = user.Id;
-          apiRespone = _iProject.UploadEDIProposalFile(file, id, ProjectId, fullPath);
-          if (apiRespone.StatusCode == StaticResource.successStatusCode);
-          {
-            DirectoryInfo di = new DirectoryInfo(folderName);
-            FileInfo[] fi = di.GetFiles();
-            FileInfo f = fi.Where(p => p.Name == fileNames).FirstOrDefault();
-            f.Delete();
-          }
+          apiRespone.StatusCode = StaticResource.FileNotSupported;
+          apiRespone.Message = StaticResource.FileText;
         }
       
       }
@@ -745,7 +775,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
-    
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditProjectProposalDetail([FromBody]ProposalDocModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditProjectProposalDetail(model, id);
+      }
+      return apiRespone;
+    }
+     
     #endregion
 
   }

@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181126072221_add-migration ProposalSupportiveDoc")]
+    partial class addmigrationProposalSupportiveDoc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5496,15 +5498,11 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<string>("BudgetFileExtType");
-
                     b.Property<string>("BudgetFileId");
 
                     b.Property<string>("BudgetFileName");
 
                     b.Property<string>("BudgetFileWebLink");
-
-                    b.Property<string>("ConceptFileExtType");
 
                     b.Property<string>("ConceptFileId");
 
@@ -5515,8 +5513,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("EDIFileExtType");
 
                     b.Property<string>("EDIFileName");
 
@@ -5530,13 +5526,9 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<bool?>("IsProposalAccept");
-
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("PresentationExtType");
 
                     b.Property<string>("PresentationFileId");
 
@@ -5544,21 +5536,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("PresentationFileWebLink");
 
-                    b.Property<int?>("ProjectAssignTo");
-
                     b.Property<long>("ProjectId");
-
-                    b.Property<string>("ProposalBudget");
-
-                    b.Property<DateTime?>("ProposalDueDate");
-
-                    b.Property<string>("ProposalExtType");
 
                     b.Property<string>("ProposalFileId");
 
                     b.Property<string>("ProposalFileName");
-
-                    b.Property<DateTime?>("ProposalStartDate");
 
                     b.Property<string>("ProposalWebLink");
 

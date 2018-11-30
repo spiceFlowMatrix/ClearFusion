@@ -28,14 +28,16 @@ namespace DataAccess.Data
         {
             try
             {
-                if (!context.Database.EnsureCreated()) //update-database
-                    context.Database.Migrate();
+
+                //if (!context.Database.EnsureCreated()) //update-database
+                //    context.Database.Migrate();
 
                 // Look for any users.
                 if (context.Users.Any())
                 {
                     return; // DB has been seeded
                 }
+
 
                 await CreateDefaultUserAndRoleForApplication(userManager, roleManager, context, logger);
             }

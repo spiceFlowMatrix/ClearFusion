@@ -105,34 +105,75 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
             try
             {
-                bool sameAccount = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.AccountName.ToLower() == model.AccountName.ToLower());
-                if (!sameAccount)
+                if (model != null)
                 {
-                    ChartOfAccountNew obj1 = new ChartOfAccountNew();
-
-                    //Main Level
-                    if (model.AccountLevelId == (int)AccountLevels.MainLevel)
+                    if (model.AccountName != null)
                     {
-                        int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.MainLevel);
+                        model.AccountName = model.AccountName.Trim();
+                    }
+                }
 
-                        if (levelcount <= (int)AccountLevelLimits.MainLevel)
+                //bool sameAccount = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.AccountName.ToLower() == model.AccountName.ToLower());
+                //if (!sameAccount)
+                //{
+                //Main Level
+                if (model.AccountLevelId == (int)AccountLevels.MainLevel)
+                {
+                    int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.MainLevel);
+
+                    if (levelcount <= (int)AccountLevelLimits.MainLevel)
+                    {
+                        ChartOfAccountNew obj = new ChartOfAccountNew();
+
+                        obj.AccountLevelId = (int)AccountLevels.MainLevel;
+                        obj.AccountHeadTypeId = model.AccountHeadTypeId;
+                        obj.ParentID = -1;
+                        obj.AccountName = model.AccountName;
+                        obj.CreatedById = model.CreatedById;
+                        obj.CreatedDate = model.CreatedDate;
+                        obj.IsDeleted = false;
+
+                        await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
+
+                        obj.ParentID = obj.ChartOfAccountNewId;
+                        obj.ChartOfAccountNewCode = obj.ChartOfAccountNewId.ToString();
+
+                        await _uow.ChartOfAccountNewRepository.UpdateAsyn(obj);
+
+                        response.CommonId.LongId = obj.ChartOfAccountNewId;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = StaticResource.SuccessText;
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.ExceedLevelCount;
+                    }
+                }
+
+                //Control Level
+                else if (model.AccountLevelId == (int)AccountLevels.ControlLevel)
+                {
+                    int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.ControlLevel && x.ParentID == model.ParentID);
+
+                    if (levelcount < (int)AccountLevelLimits.ControlLevel)
+                    {
+                        ChartOfAccountNew obj = new ChartOfAccountNew();
+
+                        bool parentPresent = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewId == model.ParentID);
+
+                        if (parentPresent)
                         {
-                            ChartOfAccountNew obj = new ChartOfAccountNew();
-
-                            obj.AccountLevelId = (int)AccountLevels.MainLevel;
+                            obj.AccountLevelId = (int)AccountLevels.ControlLevel;
                             obj.AccountHeadTypeId = model.AccountHeadTypeId;
-                            obj.ParentID = -1;
+                            obj.ParentID = model.ParentID;
+                            obj.ChartOfAccountNewCode = model.ParentID.ToString() + (levelcount + 1);
                             obj.AccountName = model.AccountName;
                             obj.CreatedById = model.CreatedById;
                             obj.CreatedDate = model.CreatedDate;
                             obj.IsDeleted = false;
 
                             await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
-
-                            obj.ParentID = obj.ChartOfAccountNewId;
-                            obj.ChartOfAccountNewCode = obj.ChartOfAccountNewId.ToString();
-
-                            await _uow.ChartOfAccountNewRepository.UpdateAsyn(obj);
 
                             response.CommonId.LongId = obj.ChartOfAccountNewId;
                             response.StatusCode = StaticResource.successStatusCode;
@@ -141,145 +182,110 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         else
                         {
                             response.StatusCode = StaticResource.failStatusCode;
-                            response.Message = StaticResource.ExceedLevelCount;
+                            response.Message = StaticResource.ParentIdNotPresent;
                         }
+
                     }
-
-                    //Control Level
-                    else if (model.AccountLevelId == (int)AccountLevels.ControlLevel)
+                    else
                     {
-                        int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.ControlLevel && x.ChartOfAccountNewId == model.ParentID);
-
-                        if (levelcount < (int)AccountLevelLimits.ControlLevel)
-                        {
-                            ChartOfAccountNew obj = new ChartOfAccountNew();
-
-                            bool parentPresent = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewId == model.ParentID);
-
-                            if (parentPresent)
-                            {
-                                obj.AccountLevelId = (int)AccountLevels.ControlLevel;
-                                obj.AccountHeadTypeId = model.AccountHeadTypeId;
-                                obj.ParentID = model.ParentID;
-                                obj.ChartOfAccountNewCode = model.ParentID.ToString() + (levelcount + 1);
-                                obj.AccountName = model.AccountName;
-                                obj.CreatedById = model.CreatedById;
-                                obj.CreatedDate = model.CreatedDate;
-                                obj.IsDeleted = false;
-
-                                await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
-
-                                response.CommonId.LongId = obj.ChartOfAccountNewId;
-                                response.StatusCode = StaticResource.successStatusCode;
-                                response.Message = StaticResource.SuccessText;
-                            }
-                            else
-                            {
-                                response.StatusCode = StaticResource.failStatusCode;
-                                response.Message = StaticResource.ParentIdNotPresent;
-                            }
-
-                        }
-                        else
-                        {
-                            response.StatusCode = StaticResource.failStatusCode;
-                            response.Message = StaticResource.ExceedLevelCount;
-                        }
-                    }
-
-                    //Sub Level
-                    else if (model.AccountLevelId == (int)AccountLevels.SubLevel)
-                    {
-                        int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.SubLevel && x.ChartOfAccountNewId == model.ParentID);
-
-                        if (levelcount < (int)AccountLevelLimits.SubLevel)
-                        {
-                            ChartOfAccountNew obj = new ChartOfAccountNew();
-
-                            bool parentPresent = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewId == model.ParentID);
-
-                            if (parentPresent)
-                            {
-                                obj.AccountLevelId = (int)AccountLevels.ControlLevel;
-                                obj.AccountHeadTypeId = model.AccountHeadTypeId;
-                                obj.ParentID = model.ParentID;
-                                obj.AccountName = model.AccountName;
-                                obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode + genrateCode((levelcount + 1).ToString());
-
-                                obj.AccountFilterTypeId = model.AccountFilterTypeId != null ? model.AccountFilterTypeId : null;  //dropdown
-                                obj.AccountTypeId = model.AccountTypeId != null ? model.AccountTypeId : null; //dropdown
-
-                                obj.CreatedById = model.CreatedById;
-                                obj.CreatedDate = model.CreatedDate;
-                                obj.IsDeleted = false;
-
-                                await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
-
-                                response.CommonId.LongId = obj.ChartOfAccountNewId;
-                                response.StatusCode = StaticResource.successStatusCode;
-                                response.Message = StaticResource.SuccessText;
-                            }
-                            else
-                            {
-                                response.StatusCode = StaticResource.failStatusCode;
-                                response.Message = StaticResource.ParentIdNotPresent;
-                            }
-
-                        }
-                        else
-                        {
-                            response.StatusCode = StaticResource.failStatusCode;
-                            response.Message = StaticResource.ExceedLevelCount;
-                        }
-                    }
-
-                    //Input Level
-                    else if (model.AccountLevelId == (int)AccountLevels.InputLevel)
-                    {
-                        int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.InputLevel && x.ChartOfAccountNewId == model.ParentID);
-
-                        if (levelcount <= (int)AccountLevelLimits.InputLevel)
-                        {
-                            ChartOfAccountNew obj = new ChartOfAccountNew();
-
-                            bool parentPresent = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewId == model.ParentID);
-
-                            if (parentPresent)
-                            {
-                                obj.AccountLevelId = (int)AccountLevels.ControlLevel;
-                                obj.AccountHeadTypeId = model.AccountHeadTypeId;
-                                obj.ParentID = model.ParentID;
-                                obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode + genrateCode((levelcount + 1).ToString());
-                                obj.AccountName = model.AccountName;
-                                obj.CreatedById = model.CreatedById;
-                                obj.CreatedDate = model.CreatedDate;
-                                obj.IsDeleted = false;
-
-                                await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
-
-                                response.CommonId.LongId = obj.ChartOfAccountNewId;
-                                response.StatusCode = StaticResource.successStatusCode;
-                                response.Message = StaticResource.SuccessText;
-                            }
-                            else
-                            {
-                                response.StatusCode = StaticResource.failStatusCode;
-                                response.Message = StaticResource.ParentIdNotPresent;
-                            }
-
-                        }
-                        else
-                        {
-                            response.StatusCode = StaticResource.failStatusCode;
-                            response.Message = StaticResource.ExceedLevelCount;
-                        }
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.ExceedLevelCount;
                     }
                 }
-                else
+
+                //Sub Level
+                else if (model.AccountLevelId == (int)AccountLevels.SubLevel)
                 {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.MandateNameAlreadyExist;
+                    int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.SubLevel && x.ParentID == model.ParentID);
+
+                    if (levelcount < (int)AccountLevelLimits.SubLevel)
+                    {
+                        ChartOfAccountNew obj = new ChartOfAccountNew();
+
+                        ChartOfAccountNew parentPresent = await _uow.GetDbContext().ChartOfAccountNew.FirstOrDefaultAsync(x => x.ChartOfAccountNewId == model.ParentID);
+
+                        if (parentPresent != null)
+                        {
+                            obj.AccountLevelId = (int)AccountLevels.SubLevel;
+                            obj.AccountHeadTypeId = model.AccountHeadTypeId;
+                            obj.ParentID = model.ParentID;
+                            obj.AccountName = model.AccountName;
+                            obj.ChartOfAccountNewCode = parentPresent.ChartOfAccountNewCode + genrateCode((levelcount + 1).ToString());
+
+                            obj.AccountFilterTypeId = model.AccountFilterTypeId != null ? model.AccountFilterTypeId : null;  //dropdown
+                            obj.AccountTypeId = model.AccountTypeId != null ? model.AccountTypeId : null; //dropdown
+
+                            obj.CreatedById = model.CreatedById;
+                            obj.CreatedDate = model.CreatedDate;
+                            obj.IsDeleted = false;
+
+                            await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
+
+                            response.CommonId.LongId = obj.ChartOfAccountNewId;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = StaticResource.SuccessText;
+                        }
+                        else
+                        {
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = StaticResource.ParentIdNotPresent;
+                        }
+
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.ExceedLevelCount;
+                    }
                 }
+
+                //Input Level
+                else if (model.AccountLevelId == (int)AccountLevels.InputLevel)
+                {
+                    int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.InputLevel && x.ParentID == model.ParentID);
+
+                    if (levelcount <= (int)AccountLevelLimits.InputLevel)
+                    {
+                        ChartOfAccountNew obj = new ChartOfAccountNew();
+
+                        ChartOfAccountNew parentPresent = await _uow.GetDbContext().ChartOfAccountNew.FirstOrDefaultAsync(x => x.ChartOfAccountNewId == model.ParentID);
+
+                        if (parentPresent != null)
+                        {
+                            obj.AccountLevelId = (int)AccountLevels.InputLevel;
+                            obj.AccountHeadTypeId = model.AccountHeadTypeId;
+                            obj.ParentID = model.ParentID;
+                            obj.ChartOfAccountNewCode = parentPresent.ChartOfAccountNewCode + genrateCode((levelcount + 1).ToString());
+                            obj.AccountName = model.AccountName;
+                            obj.CreatedById = model.CreatedById;
+                            obj.CreatedDate = model.CreatedDate;
+                            obj.IsDeleted = false;
+
+                            await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
+
+                            response.CommonId.LongId = obj.ChartOfAccountNewId;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = StaticResource.SuccessText;
+                        }
+                        else
+                        {
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = StaticResource.ParentIdNotPresent;
+                        }
+
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.ExceedLevelCount;
+                    }
+                }
+                //}
+                //else
+                //{
+                //    response.StatusCode = StaticResource.failStatusCode;
+                //    response.Message = StaticResource.MandateNameAlreadyExist;
+                //}
 
             }
             catch (Exception ex)
@@ -309,6 +315,46 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        public async Task<APIResponse> EditChartOfAccount(ChartOfAccountNewModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (model != null)
+                {
+                    var accountDetail = await _uow.GetDbContext().ChartOfAccountNew.FirstOrDefaultAsync(x => x.ChartOfAccountNewId == model.ChartOfAccountNewId);
+
+                    if (accountDetail != null)
+                    {
+                        accountDetail.AccountName = model.AccountName?.Trim();
+                        accountDetail.AccountTypeId = model.AccountTypeId;
+                        accountDetail.AccountFilterTypeId = model.AccountFilterTypeId;
+
+                        accountDetail.ModifiedDate = model.ModifiedDate;
+                        accountDetail.IsDeleted = false;
+
+                        await _uow.ChartOfAccountNewRepository.UpdateAsyn(accountDetail);
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = StaticResource.SuccessText;
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.NoDataFound;
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
 
 

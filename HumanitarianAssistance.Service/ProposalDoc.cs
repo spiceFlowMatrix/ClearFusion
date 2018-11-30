@@ -24,7 +24,7 @@ namespace HumanitarianAssistance.Service
     {
         static string[] Scopes = { DriveService.Scope.Drive };
         static string ApplicationName = "Humanitarianweb";
-        public static ProjectProposalModel userCredential(string ProjectCode,string pathFile)
+        public static DriveService userGoogleCredential(string ProjectCode, string pathFile)
         {
             UserCredential credential;
             using (var stream =
@@ -46,6 +46,13 @@ namespace HumanitarianAssistance.Service
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
             });
+            return driveService;
+        }
+
+
+        public static ProjectProposalModel userCredential(string ProjectCode, string pathFile)
+        {
+            var driveService = userGoogleCredential(ProjectCode, pathFile);
             var resp = createfolder(driveService, ProjectCode);
             return resp;
         }
@@ -73,7 +80,7 @@ namespace HumanitarianAssistance.Service
                 res.FIleResponseMsg = "File already exist with name " + ProjectCode;
                 res.StatusCode = StaticResource.NameAlreadyExist;
                 File fileDetail = result.FirstOrDefault(p => p.Name == ProjectCode);
-                res.ProposalWebLink= fileDetail.WebViewLink;
+                res.ProposalWebLink = fileDetail.WebViewLink;
                 //Console.WriteLine("File already exist with name {0}.", nameFile);
             }
             else
@@ -88,7 +95,7 @@ namespace HumanitarianAssistance.Service
                 var folderDetails = folderrequest.Execute();
                 res.FolderId = folderDetails.Id;
                 res.FolderName = folderDetails.Name;
-                
+
                 //Console.WriteLine("Folder ID: " + folderDetails.Id);
 
 
@@ -139,31 +146,12 @@ namespace HumanitarianAssistance.Service
 
         public static ProjectProposalModel GetProjectProposal(string ProjectCode, string pathFile)
         {
-            UserCredential credential;
-            using (var stream =
-                new FileStream(pathFile, FileMode.Open, FileAccess.Read))
-            {
-                // The file token.json stores the user's access and refresh tokens, and is created
-                // automatically when the authorization flow completes for the first time.
-                string credPath = "token.json";
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    Scopes,
-                    "sdd.shared@gmail.com",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-                //Console.WriteLine("Credential file saved to: " + credPath);
-            }
-            var driveService = new DriveService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
-            });
+            var driveService = userGoogleCredential(ProjectCode, pathFile);
             var resp = GetProposalwebLink(driveService, ProjectCode);
             return resp;
         }
 
-     public static ProjectProposalModel GetProposalwebLink(DriveService driveService, string ProjectCode)
+        public static ProjectProposalModel GetProposalwebLink(DriveService driveService, string ProjectCode)
         {
             ProjectProposalModel res = new ProjectProposalModel();
             List<File> result = new List<File>();
@@ -191,29 +179,12 @@ namespace HumanitarianAssistance.Service
             return res;
         }
 
-        public static ProjectProposalModel uploadEDIdoc(string ProjectCode, IFormFile filedata,string fileName,string pathFile,string uploadfilelocalpath)
+        public static ProjectProposalModel uploadOtherProposaldoc(string ProjectCode, IFormFile filedata, string fileName, string pathFile, string uploadfilelocalpath)
         {
             ProjectProposalModel res = new ProjectProposalModel();
-            UserCredential credential;
-            using (var stream =
-                new FileStream(pathFile, FileMode.Open, FileAccess.Read))
-            {
-                // The file token.json stores the user's access and refresh tokens, and is created
-                // automatically when the authorization flow completes for the first time.
-                string credPath = "token.json";
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    Scopes,
-                    "sdd.shared@gmail.com",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-            }            
-            var driveService = new DriveService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
-            });
-
+            string exten = System.IO.Path.GetExtension(fileName).ToLower();
+            string ext = exten.Trim('"').Split('.')[1];
+            var driveService = userGoogleCredential(ProjectCode, pathFile);
             List<File> result = new List<File>();
             List<string> folderName = new List<string>();
             FilesResource.ListRequest request4 = driveService.Files.List();
@@ -226,12 +197,12 @@ namespace HumanitarianAssistance.Service
                 result = result.Where(p => p.MimeType == "application/vnd.google-apps.folder" && p.Trashed == false).ToList();
                 folderName = result.Select(p => p.Name).Distinct().ToList();
                 request4.PageToken = files.NextPageToken;
-            } while (!String.IsNullOrEmpty(request4.PageToken));            
+            } while (!String.IsNullOrEmpty(request4.PageToken));
             //string nameFile = fileName;
             string folder = ProjectCode;
             if (folderName.Contains(folder))
             {
-                
+
                 File fileDetail = result.Where(p => p.MimeType == "application/vnd.google-apps.folder" && p.Trashed == false && p.Name == folder.Trim()).FirstOrDefault();
                 var fileMetadata = new File()
                 {
@@ -252,8 +223,6 @@ namespace HumanitarianAssistance.Service
                     request.Upload();
                 }
                 var file = request.ResponseBody;
-                res.EDIFileName = file.Name;
-                res.EdiFileId = file.Id;
                 var batch = new BatchRequest(driveService);
                 BatchRequest.OnResponse<Permission> callback = delegate (
                     Permission permission,
@@ -277,9 +246,38 @@ namespace HumanitarianAssistance.Service
                 Permissionrequest.Fields = "*";
                 batch.Queue(Permissionrequest, callback);
                 var task = batch.ExecuteAsync();
-                res.ProposalWebLink = file.WebViewLink;
-                res.FIleResponseMsg = StaticResource.SuccessText;
-                res.StatusCode = StaticResource.successStatusCode;
+                string fileType = file.Name.Trim('"').Split('_')[0];
+                res.FileType = fileType;
+                if (fileType == "EOI")
+                {
+                    res.EDIFileName = file.Name;
+                    res.EdiFileId = file.Id;
+                    res.EDIFileWebLink = file.WebViewLink;
+                    res.EDIFileExtType= ext;
+
+                }
+                else if (fileType == "BUDGET")
+                {
+                    res.BudgetFileName = file.Name;
+                    res.BudgetFileId = file.Id;
+                    res.BudgetFileWebLink = file.WebViewLink;
+                    res.BudgetFileExtType = ext;
+                }
+                else if (fileType == "CONCEPT")
+                {
+                    res.ConceptFileName = file.Name;
+                    res.ConceptFileId = file.Id;
+                    res.ConceptFileWebLink = file.WebViewLink;
+                    res.ConceptFileExtType = ext;
+                }
+                else if (fileType == "PRESENTATION")
+                {
+                    res.PresentationFileName = file.Name;
+                    res.PresentationFileId = file.Id;
+                    res.PresentationFileWebLink = file.WebViewLink;
+                    res.PresentationExtType = ext;
+                }
+
             }
             else
             {
@@ -312,7 +310,7 @@ namespace HumanitarianAssistance.Service
                     request.Fields = "*";
                     request.Upload();
                 }
-                var file = request.ResponseBody;
+
                 var batch = new BatchRequest(driveService);
                 BatchRequest.OnResponse<Permission> callback = delegate (
                     Permission permission,
@@ -320,14 +318,10 @@ namespace HumanitarianAssistance.Service
                     int index,
                     System.Net.Http.HttpResponseMessage message)
                 {
+
                     if (error != null)
                     {
-                        // Handle error
-                       
-                    }
-                    else
-                    {
-                        
+                        res.FIleResponseMsg = error.Message;
                     }
                 };
                 Permission userPermission = new Permission()
@@ -335,23 +329,71 @@ namespace HumanitarianAssistance.Service
                     Type = "anyone", //user
                     Role = "writer",
                 };
-
+                var file = request.ResponseBody;
                 var request1 = driveService.Permissions.Create(userPermission, file.Id);
                 request1.Fields = "*";
                 batch.Queue(request1, callback);
                 var task = batch.ExecuteAsync();
-                
+                string fileType = file.Name.Trim('"').Split('_')[0];
+                res.FileType = fileType;
+                if (fileType == "EOI")
+                {
+                    res.EDIFileName = file.Name;
+                    res.EdiFileId = file.Id;
+                    res.EDIFileWebLink = file.WebViewLink;
+                    res.EDIFileExtType = ext;
+                }
+                else if (fileType == "BUDGET")
+                {
+                    res.BudgetFileName = file.Name;
+                    res.BudgetFileId = file.Id;
+                    res.BudgetFileWebLink = file.WebViewLink;
+                    res.BudgetFileExtType = ext;
+                }
+                else if (fileType == "CONCEPT")
+                {
+                    res.ConceptFileName = file.Name;
+                    res.ConceptFileId = file.Id;
+                    res.ConceptFileWebLink = file.WebViewLink;
+                    res.ConceptFileExtType = ext;
+                }
+                else if (fileType == "PRESENTATION")
+                {
+                    res.PresentationFileName = file.Name;
+                    res.PresentationFileId = file.Id;
+                    res.PresentationFileWebLink = file.WebViewLink;
+                    res.PresentationExtType = ext;
+                }
             }
+            res.FIleResponseMsg = StaticResource.SuccessText;
+            res.StatusCode = StaticResource.successStatusCode;
             return res;
         }
         private static string GetMimeType(string fileName)
         {
             string mimeType = "application/unknown";
             string ext = System.IO.Path.GetExtension(fileName).ToLower();
-            Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(ext);
-            if (regKey != null && regKey.GetValue("Content Type") != null)
-                mimeType = regKey.GetValue("Content Type").ToString();
+            if (ext == ".docx" || ext == ".doc")
+            {
+                mimeType = "application/vnd.google-apps.document";
+            }
+            else if (ext == ".pdf")
+            {
+                //mimeType = "application/vnd.google-apps.file";
+                Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(ext);
+                if (regKey != null && regKey.GetValue("Content Type") != null)
+                    mimeType = regKey.GetValue("Content Type").ToString();
+            }
+            else if (ext == ".xlsx" || ext == ".xls" || ext == ".csv")
+            {
+                mimeType = "application/vnd.google-apps.spreadsheet";
+            }
+            //else if (ext == ".jpeg" || ext == ".png")
+            //{
+            //    mimeType = "application/vnd.google-apps.photo";
+            //}
             return mimeType;
         }
+
     }
 }

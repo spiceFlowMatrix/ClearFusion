@@ -97,8 +97,10 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetProjectproposalsById(long projectId);
         
         APIResponse AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
-        APIResponse UploadEDIProposalFile(IFormFile file, string UserId, string Projectid,string fullPath);
-
+        APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid,string fullPath,string fileNames);
+        APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId);
+       
+        APIResponse GetOtherProjectListById(long ProjectId);
 
         #endregion
     }

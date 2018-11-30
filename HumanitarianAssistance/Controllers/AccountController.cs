@@ -1119,5 +1119,22 @@ namespace HumanitarianAssistance.Controllers
     }
 
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditChartOfAccount([FromBody]ChartOfAccountNewModel model)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+
+        response = await _iChartOfAccountNewService.EditChartOfAccount(model);
+      }
+      return response;
+    }
+
+
   }
 }

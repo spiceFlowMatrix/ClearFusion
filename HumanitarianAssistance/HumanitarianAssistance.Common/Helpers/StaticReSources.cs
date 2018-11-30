@@ -334,8 +334,8 @@ namespace HumanitarianAssistance.Common.Helpers
 
     public const string NameExist = "Name Already Exist";
     public const string SuccessText = "Success";
-
-
+    public const string FileText = "File Not Supported";
+    public const int FileNotSupported = 4440;
     #region "Accounting New"
     public const string ExceedLevelCount = "You have reached Maximum Limit";
     public const string ParentIdNotPresent = "Account does not exist";

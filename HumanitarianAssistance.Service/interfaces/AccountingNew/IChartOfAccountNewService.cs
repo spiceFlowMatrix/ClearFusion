@@ -14,6 +14,9 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
         Task<APIResponse> GetAllAccountsByAccountHeadTypeId(long id);
         Task<APIResponse> AddChartOfAccount(ChartOfAccountNewModel model);
         Task<APIResponse> GetAllAccountFilter();
+        Task<APIResponse> EditChartOfAccount(ChartOfAccountNewModel model);
+
+
 
 
         //Task<APIResponse> GetAllProvinceDetails(int CountryId);

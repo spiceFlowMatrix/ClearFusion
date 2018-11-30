@@ -167,4 +167,11 @@ namespace HumanitarianAssistance.Common.Enums
     SubLevel = 999,
     InputLevel = 999999
   }
+  public enum MimeType
+  {
+    MainLevel = 9,
+    ControlLevel = 99,
+    SubLevel = 999,
+    InputLevel = 999999
+  }
 }

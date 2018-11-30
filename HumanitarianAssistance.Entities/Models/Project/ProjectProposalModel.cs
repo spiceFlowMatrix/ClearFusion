@@ -24,6 +24,20 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string FolderResponseMsg { get; set; }
         public int StatusCode { get; set; }
         public string ProposalWebLink { get; set; }
-
+        public string EDIFileWebLink { get; set; }
+        public string BudgetFileWebLink { get; set; }
+        public string ConceptFileWebLink { get; set; }
+        public string PresentationFileWebLink { get; set; }
+        public string FileType { get; set; }
+        public string ProposalExtType { get; set; }
+        public string EDIFileExtType { get; set; }
+        public string BudgetFileExtType { get; set; }
+        public string ConceptFileExtType { get; set; }
+        public string PresentationExtType { get; set; }
+        public DateTime ProposalStartDate { get; set; }
+        public string ProposalBudget { get; set; }
+        public DateTime ProposalDueDate { get; set; }
+        public int ProjectAssignTo { get; set; }
+        public bool? IsProposalAccept { get; set; }
     }
 }
