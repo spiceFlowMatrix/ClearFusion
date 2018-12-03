@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccess.Migrations
 {
-    public partial class initialize : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -164,6 +164,36 @@ namespace DataAccess.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountFilterType",
+                columns: table => new
+                {
+                    CreatedDate = table.Column<DateTime>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: true),
+                    AccountFilterTypeId = table.Column<int>(type: "serial", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    AccountFilterTypeName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountFilterType", x => x.AccountFilterTypeId);
+                    table.ForeignKey(
+                        name: "FK_AccountFilterType_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AccountFilterType_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1793,6 +1823,7 @@ namespace DataAccess.Migrations
                     IsDeleted = table.Column<bool>(nullable: true),
                     ProgramId = table.Column<long>(type: "serial", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    ProjectId = table.Column<long>(nullable: false),
                     ProgramName = table.Column<string>(nullable: true),
                     ProgramCode = table.Column<string>(nullable: true)
                 },
@@ -3353,97 +3384,6 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ContractDetails",
-                columns: table => new
-                {
-                    CreatedDate = table.Column<DateTime>(nullable: true),
-                    ModifiedDate = table.Column<DateTime>(nullable: true),
-                    CreatedById = table.Column<string>(nullable: true),
-                    ModifiedById = table.Column<string>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: true),
-                    ContractId = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    ContractCode = table.Column<string>(nullable: true),
-                    ClientName = table.Column<string>(nullable: true),
-                    ActivityTypeId = table.Column<long>(nullable: true),
-                    UnitRate = table.Column<double>(nullable: false),
-                    CurrencyId = table.Column<int>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false),
-                    LanguageId = table.Column<long>(nullable: true),
-                    MediumId = table.Column<long>(nullable: true),
-                    NatureId = table.Column<long>(nullable: true),
-                    TimeCategoryId = table.Column<long>(nullable: true),
-                    MediaCategoryId = table.Column<long>(nullable: true),
-                    QualityId = table.Column<long>(nullable: true),
-                    IsCompleted = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ContractDetails", x => x.ContractId);
-                    table.ForeignKey(
-                        name: "FK_ContractDetails_ActivityTypes_ActivityTypeId",
-                        column: x => x.ActivityTypeId,
-                        principalTable: "ActivityTypes",
-                        principalColumn: "ActivityTypeId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ContractDetails_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ContractDetails_CurrencyDetails_CurrencyId",
-                        column: x => x.CurrencyId,
-                        principalTable: "CurrencyDetails",
-                        principalColumn: "CurrencyId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ContractDetails_Languages_LanguageId",
-                        column: x => x.LanguageId,
-                        principalTable: "Languages",
-                        principalColumn: "LanguageId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ContractDetails_MediaCategories_MediaCategoryId",
-                        column: x => x.MediaCategoryId,
-                        principalTable: "MediaCategories",
-                        principalColumn: "MediaCategoryId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ContractDetails_Mediums_MediumId",
-                        column: x => x.MediumId,
-                        principalTable: "Mediums",
-                        principalColumn: "MediumId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ContractDetails_AspNetUsers_ModifiedById",
-                        column: x => x.ModifiedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ContractDetails_Natures_NatureId",
-                        column: x => x.NatureId,
-                        principalTable: "Natures",
-                        principalColumn: "NatureId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ContractDetails_Qualities_QualityId",
-                        column: x => x.QualityId,
-                        principalTable: "Qualities",
-                        principalColumn: "QualityId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ContractDetails_TimeCategories_TimeCategoryId",
-                        column: x => x.TimeCategoryId,
-                        principalTable: "TimeCategories",
-                        principalColumn: "TimeCategoryId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UnitRates",
                 columns: table => new
                 {
@@ -3600,6 +3540,60 @@ namespace DataAccess.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ChartAccountDetail_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChartOfAccountNew",
+                columns: table => new
+                {
+                    CreatedDate = table.Column<DateTime>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: true),
+                    ChartOfAccountNewId = table.Column<long>(type: "serial", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    ChartOfAccountNewCode = table.Column<string>(nullable: true),
+                    AccountName = table.Column<string>(maxLength: 100, nullable: true),
+                    ParentID = table.Column<long>(nullable: false),
+                    AccountLevelId = table.Column<int>(nullable: false),
+                    AccountTypeId = table.Column<int>(nullable: true),
+                    AccountHeadTypeId = table.Column<int>(nullable: false),
+                    AccountFilterTypeId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChartOfAccountNew", x => x.ChartOfAccountNewId);
+                    table.ForeignKey(
+                        name: "FK_ChartOfAccountNew_AccountFilterType_AccountFilterTypeId",
+                        column: x => x.AccountFilterTypeId,
+                        principalTable: "AccountFilterType",
+                        principalColumn: "AccountFilterTypeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ChartOfAccountNew_AccountLevel_AccountLevelId",
+                        column: x => x.AccountLevelId,
+                        principalTable: "AccountLevel",
+                        principalColumn: "AccountLevelId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ChartOfAccountNew_AccountType_AccountTypeId",
+                        column: x => x.AccountTypeId,
+                        principalTable: "AccountType",
+                        principalColumn: "AccountTypeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ChartOfAccountNew_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ChartOfAccountNew_AspNetUsers_ModifiedById",
                         column: x => x.ModifiedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -3890,6 +3884,46 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ApproveProjectDetails",
+                columns: table => new
+                {
+                    CreatedDate = table.Column<DateTime>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: true),
+                    ApproveProjrctId = table.Column<long>(type: "serial", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    ProjectId = table.Column<long>(nullable: false),
+                    CommentText = table.Column<string>(nullable: true),
+                    FileName = table.Column<string>(nullable: true),
+                    FilePath = table.Column<string>(nullable: true),
+                    IsApproved = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApproveProjectDetails", x => x.ApproveProjrctId);
+                    table.ForeignKey(
+                        name: "FK_ApproveProjectDetails_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ApproveProjectDetails_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ApproveProjectDetails_ProjectDetail_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "ProjectDetail",
+                        principalColumn: "ProjectId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectArea",
                 columns: table => new
                 {
@@ -3963,6 +3997,66 @@ namespace DataAccess.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProjectCommunication_ProjectDetail_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "ProjectDetail",
+                        principalColumn: "ProjectId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectOtherDetail",
+                columns: table => new
+                {
+                    CreatedDate = table.Column<DateTime>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: true),
+                    ProjectOtherDetailId = table.Column<long>(type: "serial", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    ProjectId = table.Column<long>(nullable: false),
+                    opportunityNo = table.Column<string>(nullable: true),
+                    opportunity = table.Column<string>(nullable: true),
+                    opportunitydescription = table.Column<string>(nullable: true),
+                    ProvinceId = table.Column<string>(nullable: true),
+                    DistrictID = table.Column<string>(nullable: true),
+                    OfficeId = table.Column<int>(nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: true),
+                    EndDate = table.Column<DateTime>(nullable: true),
+                    CurrencyId = table.Column<int>(nullable: true),
+                    budget = table.Column<string>(nullable: true),
+                    beneficiaryMale = table.Column<string>(nullable: true),
+                    beneficiaryFemale = table.Column<string>(nullable: true),
+                    projectGoal = table.Column<string>(nullable: true),
+                    projectObjective = table.Column<string>(nullable: true),
+                    mainActivities = table.Column<string>(nullable: true),
+                    DonorId = table.Column<long>(nullable: true),
+                    SubmissionDate = table.Column<DateTime>(nullable: true),
+                    REOIReceiveDate = table.Column<DateTime>(nullable: true),
+                    StrengthConsiderationId = table.Column<long>(nullable: true),
+                    GenderConsiderationId = table.Column<long>(nullable: true),
+                    GenderRemarks = table.Column<string>(nullable: true),
+                    SecurityId = table.Column<long>(nullable: true),
+                    SecurityConsiderationId = table.Column<string>(nullable: true),
+                    SecurityRemarks = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectOtherDetail", x => x.ProjectOtherDetailId);
+                    table.ForeignKey(
+                        name: "FK_ProjectOtherDetail_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectOtherDetail_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectOtherDetail_ProjectDetail_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "ProjectDetail",
                         principalColumn: "ProjectId",
@@ -4058,6 +4152,69 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProjectProposalDetail",
+                columns: table => new
+                {
+                    CreatedDate = table.Column<DateTime>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: true),
+                    ProjectProposaldetailId = table.Column<long>(type: "serial", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    FolderName = table.Column<string>(nullable: true),
+                    FolderId = table.Column<string>(nullable: true),
+                    ProposalFileName = table.Column<string>(nullable: true),
+                    ProjectId = table.Column<long>(nullable: false),
+                    ProposalFileId = table.Column<string>(nullable: true),
+                    EDIFileName = table.Column<string>(nullable: true),
+                    EdiFileId = table.Column<string>(nullable: true),
+                    BudgetFileName = table.Column<string>(nullable: true),
+                    BudgetFileId = table.Column<string>(nullable: true),
+                    ConceptFileName = table.Column<string>(nullable: true),
+                    ConceptFileId = table.Column<string>(nullable: true),
+                    PresentationFileName = table.Column<string>(nullable: true),
+                    PresentationFileId = table.Column<string>(nullable: true),
+                    ProposalWebLink = table.Column<string>(nullable: true),
+                    EDIFileWebLink = table.Column<string>(nullable: true),
+                    BudgetFileWebLink = table.Column<string>(nullable: true),
+                    ConceptFileWebLink = table.Column<string>(nullable: true),
+                    PresentationFileWebLink = table.Column<string>(nullable: true),
+                    ProposalExtType = table.Column<string>(nullable: true),
+                    EDIFileExtType = table.Column<string>(nullable: true),
+                    BudgetFileExtType = table.Column<string>(nullable: true),
+                    ConceptFileExtType = table.Column<string>(nullable: true),
+                    PresentationExtType = table.Column<string>(nullable: true),
+                    ProposalStartDate = table.Column<DateTime>(nullable: true),
+                    ProposalBudget = table.Column<string>(nullable: true),
+                    ProposalDueDate = table.Column<DateTime>(nullable: true),
+                    ProjectAssignTo = table.Column<int>(nullable: true),
+                    IsProposalAccept = table.Column<bool>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectProposalDetail", x => x.ProjectProposaldetailId);
+                    table.ForeignKey(
+                        name: "FK_ProjectProposalDetail_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectProposalDetail_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectProposalDetail_ProjectDetail_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "ProjectDetail",
+                        principalColumn: "ProjectId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectSector",
                 columns: table => new
                 {
@@ -4098,6 +4255,153 @@ namespace DataAccess.Migrations
                         principalTable: "SectorDetails",
                         principalColumn: "SectorId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WinProjectDetails",
+                columns: table => new
+                {
+                    CreatedDate = table.Column<DateTime>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: true),
+                    WinProjectId = table.Column<long>(type: "serial", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    ProjectId = table.Column<long>(nullable: false),
+                    CommentText = table.Column<string>(nullable: true),
+                    FileName = table.Column<string>(nullable: true),
+                    FilePath = table.Column<string>(nullable: true),
+                    IsWin = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WinProjectDetails", x => x.WinProjectId);
+                    table.ForeignKey(
+                        name: "FK_WinProjectDetails_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WinProjectDetails_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WinProjectDetails_ProjectDetail_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "ProjectDetail",
+                        principalColumn: "ProjectId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ContractDetails",
+                columns: table => new
+                {
+                    CreatedDate = table.Column<DateTime>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: true),
+                    ContractId = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    ContractCode = table.Column<string>(nullable: true),
+                    ClientId = table.Column<long>(nullable: true),
+                    ClientName = table.Column<string>(nullable: true),
+                    ActivityTypeId = table.Column<long>(nullable: true),
+                    UnitRateId = table.Column<long>(nullable: true),
+                    UnitRate = table.Column<double>(nullable: false),
+                    CurrencyId = table.Column<int>(nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    EndDate = table.Column<DateTime>(nullable: false),
+                    LanguageId = table.Column<long>(nullable: true),
+                    MediumId = table.Column<long>(nullable: true),
+                    NatureId = table.Column<long>(nullable: true),
+                    TimeCategoryId = table.Column<long>(nullable: true),
+                    MediaCategoryId = table.Column<long>(nullable: true),
+                    QualityId = table.Column<long>(nullable: true),
+                    IsCompleted = table.Column<bool>(nullable: false),
+                    IsApproved = table.Column<bool>(nullable: false),
+                    IsDeclined = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContractDetails", x => x.ContractId);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_ActivityTypes_ActivityTypeId",
+                        column: x => x.ActivityTypeId,
+                        principalTable: "ActivityTypes",
+                        principalColumn: "ActivityTypeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_ClientDetails_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "ClientDetails",
+                        principalColumn: "ClientId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_CurrencyDetails_CurrencyId",
+                        column: x => x.CurrencyId,
+                        principalTable: "CurrencyDetails",
+                        principalColumn: "CurrencyId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_Languages_LanguageId",
+                        column: x => x.LanguageId,
+                        principalTable: "Languages",
+                        principalColumn: "LanguageId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_MediaCategories_MediaCategoryId",
+                        column: x => x.MediaCategoryId,
+                        principalTable: "MediaCategories",
+                        principalColumn: "MediaCategoryId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_Mediums_MediumId",
+                        column: x => x.MediumId,
+                        principalTable: "Mediums",
+                        principalColumn: "MediumId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_Natures_NatureId",
+                        column: x => x.NatureId,
+                        principalTable: "Natures",
+                        principalColumn: "NatureId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_Qualities_QualityId",
+                        column: x => x.QualityId,
+                        principalTable: "Qualities",
+                        principalColumn: "QualityId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_TimeCategories_TimeCategoryId",
+                        column: x => x.TimeCategoryId,
+                        principalTable: "TimeCategories",
+                        principalColumn: "TimeCategoryId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContractDetails_UnitRates_UnitRateId",
+                        column: x => x.UnitRateId,
+                        principalTable: "UnitRates",
+                        principalColumn: "UnitRateId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -6821,6 +7125,15 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "AccountFilterType",
+                columns: new[] { "AccountFilterTypeId", "AccountFilterTypeName", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate" },
+                values: new object[,]
+                {
+                    { 1, "Inventory Account", null, null, false, null, null },
+                    { 2, "Salary Account", null, null, false, null, null }
+                });
+
+            migrationBuilder.InsertData(
                 table: "AccountHeadType",
                 columns: new[] { "AccountHeadTypeId", "AccountHeadTypeName", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate" },
                 values: new object[,]
@@ -6837,10 +7150,22 @@ namespace DataAccess.Migrations
                 columns: new[] { "AccountLevelId", "AccountLevelName" },
                 values: new object[,]
                 {
-                    { 1, "Main Level Accounts" },
-                    { 2, "Control Level Accounts" },
+                    { 4, "Input Level Accounts" },
                     { 3, "Sub Level Accounts" },
-                    { 4, "Input Level Accounts" }
+                    { 1, "Main Level Accounts" },
+                    { 2, "Control Level Accounts" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "CodeType",
+                columns: new[] { "CodeTypeId", "CodeTypeName" },
+                values: new object[,]
+                {
+                    { 1, "Organizations" },
+                    { 2, "Suppliers" },
+                    { 3, "Repair Shops" },
+                    { 4, "Individual/Others" },
+                    { 5, "Locations/Stores" }
                 });
 
             migrationBuilder.InsertData(
@@ -6887,9 +7212,42 @@ namespace DataAccess.Migrations
                 columns: new[] { "EmployeeTypeId", "CreatedById", "CreatedDate", "EmployeeTypeName", "IsDeleted", "ModifiedById", "ModifiedDate" },
                 values: new object[,]
                 {
-                    { 2, null, null, "Active", false, null, null },
                     { 1, null, null, "Prospective", false, null, null },
+                    { 2, null, null, "Active", false, null, null },
                     { 3, null, null, "Terminated", false, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "GenderConsiderationDetail",
+                columns: new[] { "GenderConsiderationId", "CreatedById", "CreatedDate", "GenderConsiderationName", "IsDeleted", "ModifiedById", "ModifiedDate" },
+                values: new object[,]
+                {
+                    { 2L, null, null, "40 % F - 60 % M Very Good", false, null, null },
+                    { 8L, null, null, "0 % F - 100 % M Poor", false, null, null },
+                    { 7L, null, null, "5 % F - 95 % M Poor", false, null, null },
+                    { 6L, null, null, "10 % F - 90 % M Poor", false, null, null },
+                    { 5L, null, null, "20 % F - 80 % M Poor", false, null, null },
+                    { 3L, null, null, "30 % F - 70 % M Good", false, null, null },
+                    { 1L, null, null, "50 % F - 50 % M Excellent", false, null, null },
+                    { 4L, null, null, "25 % F - 75 % M Poor", false, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "LanguageDetail",
+                columns: new[] { "LanguageId", "CreatedById", "CreatedDate", "IsDeleted", "LanguageName", "ModifiedById", "ModifiedDate" },
+                values: new object[,]
+                {
+                    { 9, null, null, false, "Turkmani", null, null },
+                    { 8, null, null, false, "Turkish", null, null },
+                    { 1, null, null, false, "Arabic", null, null },
+                    { 2, null, null, false, "Dari", null, null },
+                    { 3, null, null, false, "English", null, null },
+                    { 4, null, null, false, "French", null, null },
+                    { 5, null, null, false, "German", null, null },
+                    { 7, null, null, false, "Russian", null, null },
+                    { 6, null, null, false, "Pashto", null, null },
+                    { 11, null, null, false, "Uzbek", null, null },
+                    { 10, null, null, false, "Urdu", null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -6902,11 +7260,11 @@ namespace DataAccess.Migrations
                 columns: new[] { "PayrollHeadId", "AccountNo", "CreatedById", "CreatedDate", "Description", "IsDeleted", "ModifiedById", "ModifiedDate", "PayrollHeadName", "PayrollHeadTypeId", "TransactionTypeId" },
                 values: new object[,]
                 {
+                    { 4, null, null, null, null, true, null, null, "Gross Salary", 3, 2 },
+                    { 3, null, null, null, null, false, null, null, "Salary Tax", 2, 1 },
+                    { 2, null, null, null, null, false, null, null, "Advance Deduction", 2, 1 },
                     { 1, null, null, null, null, false, null, null, "Net Salary", 3, 1 },
-                    { 2, null, null, null, null, false, null, null, "Advance Deduction", 3, 2 },
-                    { 3, null, null, null, null, false, null, null, "Salary Tax", 3, 2 },
-                    { 4, null, null, null, null, false, null, null, "Gross Salary", 3, 2 },
-                    { 5, null, null, null, null, false, null, null, "Pension", 3, 2 }
+                    { 5, null, null, null, null, false, null, null, "Pension", 2, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -6914,13 +7272,59 @@ namespace DataAccess.Migrations
                 columns: new[] { "ReceiptTypeId", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate", "ReceiptTypeName" },
                 values: new object[,]
                 {
-                    { 6, null, null, false, null, null, "Return" },
                     { 5, null, null, false, null, null, "Loan" },
-                    { 4, null, null, false, null, null, "Take Over" },
-                    { 7, null, null, false, null, null, "Other" },
                     { 2, null, null, false, null, null, "Transfers" },
+                    { 3, null, null, false, null, null, "Donation" },
+                    { 4, null, null, false, null, null, "Take Over" },
+                    { 6, null, null, false, null, null, "Return" },
                     { 1, null, null, false, null, null, "Purchased" },
-                    { 3, null, null, false, null, null, "Donation" }
+                    { 7, null, null, false, null, null, "Other" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SalaryHeadDetails",
+                columns: new[] { "SalaryHeadId", "AccountNo", "CreatedById", "CreatedDate", "Description", "HeadName", "HeadTypeId", "IsDeleted", "ModifiedById", "ModifiedDate", "TransactionTypeId" },
+                values: new object[,]
+                {
+                    { 1, null, null, null, "Tr Allowance", "Tr Allowance", 1, false, null, null, 2 },
+                    { 10, null, null, null, "Other2Allowance", "Other2Allowance", 1, false, null, null, 2 },
+                    { 9, null, null, null, "Other1Allowance", "Other1Allowance", 1, false, null, null, 2 },
+                    { 8, null, null, null, "Medical Allowance", "Medical Allowance", 1, false, null, null, 2 },
+                    { 7, null, null, null, "Other Deduction", "Other Deduction", 2, false, null, null, 1 },
+                    { 6, null, null, null, "Other Allowance", "Other Allowance", 1, false, null, null, 2 },
+                    { 5, null, null, null, "Security Deduction", "Security Deduction", 2, false, null, null, 1 },
+                    { 4, null, null, null, "Capacity Building Deduction", "Capacity Building Deduction", 2, false, null, null, 1 },
+                    { 3, null, null, null, "Fine Deduction", "Fine Deduction", 2, false, null, null, 1 },
+                    { 2, null, null, null, "Food Allowance", "Food Allowance", 1, false, null, null, 2 },
+                    { 11, null, null, null, "Basic Pay (In hours)", "Basic Pay (In hours)", 3, false, null, null, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SecurityConsiderationDetail",
+                columns: new[] { "SecurityConsiderationId", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate", "SecurityConsiderationName" },
+                values: new object[,]
+                {
+                    { 7L, null, null, false, null, null, "Resources can be deployed partially" },
+                    { 2L, null, null, false, null, null, "Beneficiaries cannot be reached" },
+                    { 3L, null, null, false, null, null, "Resources cannot be deployed" },
+                    { 4L, null, null, false, null, null, "Threat exit for future (Highly)" },
+                    { 5L, null, null, false, null, null, "Project staff access the are partially" },
+                    { 11L, null, null, false, null, null, "Future Threats expected" },
+                    { 10L, null, null, false, null, null, "No obstacle for deploying Resources & office" },
+                    { 9L, null, null, false, null, null, "No barrier for staff to access the area" },
+                    { 8L, null, null, false, null, null, "Future Threats exits" },
+                    { 1L, null, null, false, null, null, "Project Staff Cannot Visit Project Site" },
+                    { 6L, null, null, false, null, null, "Bonfires can be reached partially" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SecurityDetail",
+                columns: new[] { "SecurityId", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate", "SecurityName" },
+                values: new object[,]
+                {
+                    { 1L, null, null, false, null, null, "Insecure" },
+                    { 3L, null, null, false, null, null, "Secure (Green Area)" },
+                    { 2L, null, null, false, null, null, "Partially Insecure" }
                 });
 
             migrationBuilder.InsertData(
@@ -6928,15 +7332,25 @@ namespace DataAccess.Migrations
                 columns: new[] { "StatusAtTimeOfIssueId", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate", "StatusName" },
                 values: new object[,]
                 {
+                    { 8, null, null, false, null, null, "Demolished" },
+                    { 5, null, null, false, null, null, "Sold" },
+                    { 9, null, null, false, null, null, "Broken" },
                     { 1, null, null, false, null, null, "New" },
                     { 2, null, null, false, null, null, "Useable" },
                     { 3, null, null, false, null, null, "To Repair" },
                     { 4, null, null, false, null, null, "Damage" },
-                    { 5, null, null, false, null, null, "Sold" },
-                    { 6, null, null, false, null, null, "Stolen" },
                     { 7, null, null, false, null, null, "Handover" },
-                    { 8, null, null, false, null, null, "Demolished" },
-                    { 9, null, null, false, null, null, "Broken" }
+                    { 6, null, null, false, null, null, "Stolen" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "StrengthConsiderationDetail",
+                columns: new[] { "StrengthConsiderationId", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate", "StrengthConsiderationName" },
+                values: new object[,]
+                {
+                    { 1L, null, null, false, null, null, "Gender Friendly" },
+                    { 2L, null, null, false, null, null, "Not Gender Friendly" },
+                    { 3L, null, null, false, null, null, "Not Applicable" }
                 });
 
             migrationBuilder.InsertData(
@@ -7044,6 +7458,16 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AccountFilterType_CreatedById",
+                table: "AccountFilterType",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccountFilterType_ModifiedById",
+                table: "AccountFilterType",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AccountHeadType_CreatedById",
                 table: "AccountHeadType",
                 column: "CreatedById");
@@ -7132,6 +7556,21 @@ namespace DataAccess.Migrations
                 name: "IX_AppraisalGeneralQuestions_ModifiedById",
                 table: "AppraisalGeneralQuestions",
                 column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApproveProjectDetails_CreatedById",
+                table: "ApproveProjectDetails",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApproveProjectDetails_ModifiedById",
+                table: "ApproveProjectDetails",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApproveProjectDetails_ProjectId",
+                table: "ApproveProjectDetails",
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AreaDetail_CreatedById",
@@ -7362,6 +7801,31 @@ namespace DataAccess.Migrations
                 column: "ModifiedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChartOfAccountNew_AccountFilterTypeId",
+                table: "ChartOfAccountNew",
+                column: "AccountFilterTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChartOfAccountNew_AccountLevelId",
+                table: "ChartOfAccountNew",
+                column: "AccountLevelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChartOfAccountNew_AccountTypeId",
+                table: "ChartOfAccountNew",
+                column: "AccountTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChartOfAccountNew_CreatedById",
+                table: "ChartOfAccountNew",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChartOfAccountNew_ModifiedById",
+                table: "ChartOfAccountNew",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ClientDetails_CategoryId",
                 table: "ClientDetails",
                 column: "CategoryId");
@@ -7380,6 +7844,11 @@ namespace DataAccess.Migrations
                 name: "IX_ContractDetails_ActivityTypeId",
                 table: "ContractDetails",
                 column: "ActivityTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContractDetails_ClientId",
+                table: "ContractDetails",
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContractDetails_CreatedById",
@@ -7425,6 +7894,11 @@ namespace DataAccess.Migrations
                 name: "IX_ContractDetails_TimeCategoryId",
                 table: "ContractDetails",
                 column: "TimeCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContractDetails_UnitRateId",
+                table: "ContractDetails",
+                column: "UnitRateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContractTypeContent_CreatedById",
@@ -8909,6 +9383,21 @@ namespace DataAccess.Migrations
                 column: "ModifiedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectOtherDetail_CreatedById",
+                table: "ProjectOtherDetail",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectOtherDetail_ModifiedById",
+                table: "ProjectOtherDetail",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectOtherDetail_ProjectId",
+                table: "ProjectOtherDetail",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectPhaseDetails_CreatedById",
                 table: "ProjectPhaseDetails",
                 column: "CreatedById");
@@ -8956,6 +9445,21 @@ namespace DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectProgram_ProjectId",
                 table: "ProjectProgram",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectProposalDetail_CreatedById",
+                table: "ProjectProposalDetail",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectProposalDetail_ModifiedById",
+                table: "ProjectProposalDetail",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectProposalDetail_ProjectId",
+                table: "ProjectProposalDetail",
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
@@ -9504,6 +10008,21 @@ namespace DataAccess.Migrations
                 name: "IX_VoucherTransactions_TransactionDate_AccountNo",
                 table: "VoucherTransactions",
                 columns: new[] { "TransactionDate", "AccountNo" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WinProjectDetails_CreatedById",
+                table: "WinProjectDetails",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WinProjectDetails_ModifiedById",
+                table: "WinProjectDetails",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WinProjectDetails_ProjectId",
+                table: "WinProjectDetails",
+                column: "ProjectId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -9513,6 +10032,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "AnalyticalDetail");
+
+            migrationBuilder.DropTable(
+                name: "ApproveProjectDetails");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -9545,7 +10067,7 @@ namespace DataAccess.Migrations
                 name: "CategoryPopulator");
 
             migrationBuilder.DropTable(
-                name: "ClientDetails");
+                name: "ChartOfAccountNew");
 
             migrationBuilder.DropTable(
                 name: "ContractDetails");
@@ -9740,10 +10262,16 @@ namespace DataAccess.Migrations
                 name: "ProjectCommunicationAttachment");
 
             migrationBuilder.DropTable(
+                name: "ProjectOtherDetail");
+
+            migrationBuilder.DropTable(
                 name: "ProjectPhaseTime");
 
             migrationBuilder.DropTable(
                 name: "ProjectProgram");
+
+            migrationBuilder.DropTable(
+                name: "ProjectProposalDetail");
 
             migrationBuilder.DropTable(
                 name: "ProjectSector");
@@ -9773,9 +10301,6 @@ namespace DataAccess.Migrations
                 name: "TechnicalQuestion");
 
             migrationBuilder.DropTable(
-                name: "UnitRates");
-
-            migrationBuilder.DropTable(
                 name: "UserDetailOffices");
 
             migrationBuilder.DropTable(
@@ -9797,6 +10322,9 @@ namespace DataAccess.Migrations
                 name: "VoucherTransactions");
 
             migrationBuilder.DropTable(
+                name: "WinProjectDetails");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -9806,13 +10334,19 @@ namespace DataAccess.Migrations
                 name: "BudgetReceivable");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "AccountFilterType");
+
+            migrationBuilder.DropTable(
+                name: "ClientDetails");
 
             migrationBuilder.DropTable(
                 name: "Languages");
 
             migrationBuilder.DropTable(
                 name: "MediaCategories");
+
+            migrationBuilder.DropTable(
+                name: "UnitRates");
 
             migrationBuilder.DropTable(
                 name: "EmailType");
@@ -9878,6 +10412,21 @@ namespace DataAccess.Migrations
                 name: "CodeType");
 
             migrationBuilder.DropTable(
+                name: "PurchaseGenerators");
+
+            migrationBuilder.DropTable(
+                name: "StorePurchaseOrders");
+
+            migrationBuilder.DropTable(
+                name: "PurchaseVehicles");
+
+            migrationBuilder.DropTable(
+                name: "ActivityMaster");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
+
+            migrationBuilder.DropTable(
                 name: "ActivityTypes");
 
             migrationBuilder.DropTable(
@@ -9891,18 +10440,6 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "TimeCategories");
-
-            migrationBuilder.DropTable(
-                name: "PurchaseGenerators");
-
-            migrationBuilder.DropTable(
-                name: "StorePurchaseOrders");
-
-            migrationBuilder.DropTable(
-                name: "PurchaseVehicles");
-
-            migrationBuilder.DropTable(
-                name: "ActivityMaster");
 
             migrationBuilder.DropTable(
                 name: "JobGrade");
