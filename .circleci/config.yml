@@ -23,8 +23,8 @@ jobs:
       - checkout
       - run: dotnet restore HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj
       - run: dotnet publish HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj -c Release -o release
-      - run: echo $CHAPROD_APPSETTINGS_JSON
-      - run: echo $CHAPROD_APPSETTINGS_JSON > HumanitarianAssistance/release/appsettings.json
+      - run: echo $SMOPROD_APPSETTINGS_JSON
+      - run: echo $SMOPROD_APPSETTINGS_JSON > HumanitarianAssistance/release/appsettings.json
       - run: mkdir HumanitarianAssistance/release/Documents
       - persist_to_workspace:
           root: .
