@@ -208,6 +208,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<WinProjectDetails> WinProjectDetails { get; set; }
         public DbSet<ApproveProjectDetails> ApproveProjectDetails { get; set; }
         public DbSet<ProjectProposalDetail> ProjectProposalDetail { get; set; }
+        public DbSet<DonorCriteriaDetails> DonorCriteriaDetail { get; set; }
+        
 
         #endregion 
 

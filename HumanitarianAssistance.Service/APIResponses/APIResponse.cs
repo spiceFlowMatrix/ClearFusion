@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public LoggerDetailsModel LoggerDetailsModel { get; set; }
         public ItemAmount ItemAmount { get; set; }
         public CommonId CommonId { get; set; }
-        
+
     }
 
     public class ItemAmount
@@ -284,7 +284,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<ProjectDetailNewModel> ProjectDetailModel { get; set; }
         public ProjectDetailNewModel ProjectDetailModel1 { get; set; }
         public ProjectDetail ProjectDetail { get; set; }
-        public DonorDetail DonorDetailById { get; set; }       
+        public DonorDetail DonorDetailById { get; set; }
         public ProjectOtherDetail OtherProjectDetailById { get; set; }
         public List<ProjectCommunicationModel> ProjectCommunicationModel { get; set; }
         public ProjectProgram projectProgram { get; set; }
@@ -293,7 +293,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ProjectProposalModel ProjectProposalModel { get; set; }
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
-        
+
 
         #region Marketing
         public ICollection<JobDetails> JobDetails { get; set; }
@@ -321,6 +321,13 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ClientDetails clientDetails { get; set; }
         public ClientDetailModel clientDetailsById { get; set; }
         public JobDetailsModel JobDetail { get; set; }
+        public MediaCategory mediaCategoryById { get; set; }
+        public Medium mediumById { get; set; }
+        public Nature natureById { get; set; }
+        public Quality qualityById { get; set; }
+        public JobPhase phaseById { get; set; }
+        public ActivityType activityById { get; set; }
+        public TimeCategory timeCatergoryById { get; set; }
         #endregion
 
         public List<LanguageDetail> LanguageDetail { get; set; }
@@ -355,7 +362,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public bool IsApproved { get; set; }
         public long LongId { get; set; }
     }
-     //get Approval Value
-     
+    //get Approval Value
+
 
 }

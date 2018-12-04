@@ -7,6 +7,10 @@
     <StartupObject />
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20181203074808_Initial.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
@@ -28,6 +32,10 @@
   <ItemGroup>
     <ProjectReference Include="..\HumanitarianAssistance.Entities\HumanitarianAssistance.ViewModels.csproj" />
     <ProjectReference Include="..\HumanitarianAssistance\HumanitarianAssistance.Common\HumanitarianAssistance.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

@@ -171,7 +171,7 @@ namespace DataAccess
         private IGenericRepository<ProjectCommunication> _projectCommunicationRepository;
         private IGenericRepository<ProjectCommunicationAttachment> _projectCommunicationAttachmentRepository;
         private IGenericRepository<ProjectProposalDetail> _projectProposalDetailRepository;
-
+        private IGenericRepository<DonorCriteriaDetails> _donorCriteriaDetailsRepository;
 
         //Marketing
         private IGenericRepository<ActivityType> _activityTypeRepository;
@@ -188,7 +188,8 @@ namespace DataAccess
         private IGenericRepository<ClientDetails> _ClientDetailsRepository;
         private IGenericRepository<UnitRate> _unitRateRepository;
         private IGenericRepository<Category> _categoryRepository;
-
+      
+        
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
         private IGenericRepository<ChartOfAccountNew> _chartOfAccountNewRepository;
@@ -1538,7 +1539,15 @@ namespace DataAccess
                     _projectProposalDetailRepository ?? new GenericRepository<ProjectProposalDetail>(_mschaContext);
             }
         }
-
+        public IGenericRepository<DonorCriteriaDetails> DonorCriteriaDetailsRepository
+        {
+            get
+            {
+                return _donorCriteriaDetailsRepository =
+                    _donorCriteriaDetailsRepository ?? new GenericRepository<DonorCriteriaDetails>(_mschaContext);
+            }
+        }
+        
 
         public void Save()
         {

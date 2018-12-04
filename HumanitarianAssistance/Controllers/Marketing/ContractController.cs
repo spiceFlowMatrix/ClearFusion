@@ -26,10 +26,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     private IContractDetailsService _iContractDetailsService;
     private IMasterPageService _iMasterPageService;
     private IClientDetails _iclientDetailService;
-    
+
     private ICode _iCodeService;
 
-    public ContractController(UserManager<AppUser> userManager, IClientDetails clientDetails,  IContractDetailsService iContractDetailsService, IMasterPageService iMasterPageService, ICode iCode)
+    public ContractController(UserManager<AppUser> userManager, IClientDetails clientDetails, IContractDetailsService iContractDetailsService, IMasterPageService iMasterPageService, ICode iCode)
     {
       _userManager = userManager;
       _iContractDetailsService = iContractDetailsService;
@@ -54,7 +54,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #region Contract Details
 
     [HttpPost]
-    public async Task<APIResponse> ApproveContract([FromBody]ApproveContractModel model) {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> ApproveContract([FromBody]ApproveContractModel model)
+    {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
@@ -65,12 +67,27 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       return response;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetFilteredContractList([FromBody]FilterContractModel model)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _iContractDetailsService.FilterContractList(model, id);
+      }
+      return response;
+    }
+
     /// <summary>
     /// get contract details by id
     /// </summary>
     /// <param name="contractId"></param>
     /// <returns></returns>
     [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetContractDetailsById([FromBody] int contractId)
     {
       APIResponse apiResponse = null;
@@ -88,7 +105,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetContractsList()
     {
       APIResponse apiRespone = null;
@@ -137,7 +154,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         var id = user.Id;
         //model.ModifiedById = id;
         //model.ModifiedDate = DateTime.UtcNow;
-        apiRespone = await _iContractDetailsService.DeleteContractDetail(model,id);
+        apiRespone = await _iContractDetailsService.DeleteContractDetail(model, id);
       }
       return apiRespone;
     }
@@ -145,6 +162,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #endregion
 
     #region Activity Type
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetActivityById([FromBody]int model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iMasterPageService.GetActivityById(model, id);
+      }
+      return apiResponse;
+    }
 
     /// <summary>
     /// Get Activity Type List
@@ -180,7 +211,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         {
           apiResponse = await _iMasterPageService.EditActivityType(model, id);
         }
-       
+
       }
       return apiResponse;
     }
@@ -226,6 +257,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #endregion
 
     #region Quality
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetQualityById([FromBody]int model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iMasterPageService.GetQualityById(model, id);
+      }
+      return apiResponse;
+    }
+
     /// <summary>
     /// Get Quality List
     /// </summary>
@@ -380,6 +426,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     #region Medium
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetMediumById([FromBody]int model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iMasterPageService.GetMediumById(model, id);
+      }
+      return apiResponse;
+    }
+
     /// <summary>
     /// Get all Medium List
     /// </summary>
@@ -406,7 +466,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if(model.MediumId == null)
+        if (model.MediumId == null)
         {
           apiResponse = await _iMasterPageService.AddMedium(model, id);
         }
@@ -460,6 +520,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     #region Time Category
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetTimeCategoryById([FromBody]int model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iMasterPageService.GetTimeCategoryById(model, id);
+      }
+      return apiResponse;
+    }
+
     /// <summary>
     /// Get all time category list
     /// </summary>
@@ -486,7 +560,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if(model.TimeCategoryId == null)
+        if (model.TimeCategoryId == null)
         {
           apiResponse = await _iMasterPageService.AddTimeCategory(model, id);
         }
@@ -523,7 +597,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteTimeCategory([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -540,12 +614,26 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     #region Nature
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetNatureById([FromBody]int model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iMasterPageService.GetNatureById(model, id);
+      }
+      return apiResponse;
+    }
+
     /// <summary>
     /// get all nature list
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllNatureList()
     {
       APIResponse apiresponse = await _iMasterPageService.GetAllNature();
@@ -566,7 +654,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if(model.NatureId == null)
+        if (model.NatureId == null)
         {
           apiResponse = await _iMasterPageService.AddNature(model, id);
         }
@@ -625,11 +713,25 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllMediaCategoryList()
     {
       APIResponse apiresponse = await _iMasterPageService.GetAllMediaCategory();
       return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetMediaCategoryById([FromBody]int model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iMasterPageService.GetMediaCategoryById(model, id);
+      }
+      return apiResponse;
     }
 
     /// <summary>
@@ -646,7 +748,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if(model.MediaCategoryId == null)
+        if (model.MediaCategoryId == 0 || model.MediaCategoryId == null)
         {
           apiResponse = await _iMasterPageService.AddMediaCategory(model, id);
         }
@@ -741,9 +843,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
-        var id = user.Id;    
-      
-       apiRespone = await _iclientDetailService.DeleteClientDetails(model,id);
+        var id = user.Id;
+
+        apiRespone = await _iclientDetailService.DeleteClientDetails(model, id);
       }
       return apiRespone;
     }
@@ -798,7 +900,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       {
         var id = user.Id;
         apiResponse = await _iMasterPageService.AddEditUnitRate(model, id);
-       
+
       }
       return apiResponse;
     }

@@ -651,11 +651,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #endregion
 
-
-
-
-
-
+    
     #region projectApproval
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
@@ -786,6 +782,23 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         var id = user.Id;
         apiRespone = _iProject.AddEditProjectProposalDetail(model, id);
+      }
+      return apiRespone;
+    }
+
+    #endregion
+
+    #region criteria evaluation
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditDonorCriteria([FromBody]DonorCriteriaModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditDonorCriteria(Model, id);
       }
       return apiRespone;
     }
