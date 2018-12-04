@@ -11,6 +11,7 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
     public interface IMasterPageService
     {
         #region Quality
+        Task<APIResponse> GetQualityById(int model, string UserId);
         Task<APIResponse> GetAllQuality();
         Task<APIResponse> DeleteQuality(int model, string UserId);
         Task<APIResponse> EditQuality(QualityModel model, string UserId);
@@ -22,16 +23,19 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> DeleteMedium(int model, string UserId);
         Task<APIResponse> EditMedium(MediumModel model, string UserId);
         Task<APIResponse> AddMedium(MediumModel model, string UserId);
+        Task<APIResponse> GetMediumById(int model, string UserId);
         #endregion
 
         #region Nature
         Task<APIResponse> GetAllNature();
+        Task<APIResponse> GetNatureById(int model, string UserId);
         Task<APIResponse> DeleteNature(int model, string UserId);
         Task<APIResponse> EditNature(NatureModel model, string UserId);
         Task<APIResponse> AddNature(NatureModel model, string UserId);
         #endregion
 
         #region Phase
+        Task<APIResponse> GetPhaseById(int model, string UserId);
         Task<APIResponse> GetAllPhase();
         Task<APIResponse> DeletePhase(int model, string UserId);
         Task<APIResponse> EditPhase(JobPhaseModel model, string UserId);
@@ -39,6 +43,7 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         #endregion
 
         #region Activity Type
+        Task<APIResponse> GetActivityById(int model, string UserId);
         Task<APIResponse> GetAllActivityType();
         Task<APIResponse> DeleteActivityType(int model, string UserId);
         Task<APIResponse> EditActivityType(ActivityTypeModel model, string UserId);
@@ -49,6 +54,7 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> GetAllMediaCategory();
         Task<APIResponse> DeleteMediaCategory(int model, string UserId);
         Task<APIResponse> EditMediaCategory(MediaCategoryModel model, string UserId);
+        Task<APIResponse> GetMediaCategoryById(int model, string UserId);
         Task<APIResponse> AddMediaCategory(MediaCategoryModel model, string UserId);
         #endregion
 
@@ -58,6 +64,7 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> DeleteTimeCategory(int model, string UserId);
         Task<APIResponse> EditTimeCategory(TimeCategoryModel model, string UserId);
         Task<APIResponse> AddTimeCategory(TimeCategoryModel model, string UserId);
+        Task<APIResponse> GetTimeCategoryById(int model, string UserId);
         #endregion
 
         #region Unit Rate

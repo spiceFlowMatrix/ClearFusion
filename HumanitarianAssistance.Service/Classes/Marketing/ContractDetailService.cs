@@ -243,6 +243,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             ContractDetails contractDetails = new ContractDetails();
             long LatestContractId = 0;
             var contractcode = string.Empty;
+            var client = _uow.GetDbContext().ClientDetails.Where(x => x.ClientId == model.ClientId && x.IsDeleted == false).FirstOrDefault();
+            model.ClientName = client.ClientName;
             APIResponse response = new APIResponse();
             ContractDetailsModel conDetails = new ContractDetailsModel();
             try
@@ -353,6 +355,93 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     response.Message = StaticResource.SomethingWrong + ex.Message;
                 }
             }
+            return response;
+        }
+
+        public async Task<APIResponse> FilterContractList(FilterContractModel model, string UserId)
+        {
+            //object filteredList;
+            APIResponse response = new APIResponse();
+            try
+            {
+                var contractList = _uow.GetDbContext().ContractDetails.Where(x => x.IsDeleted == false).ToList();
+                List<ContractDetails> filteredList = new List<ContractDetails>();
+                if (model != null)
+                {
+                    if (model.ActivityTypeId != 0 && model.ActivityTypeId != null)
+                    {
+                        contractList = contractList.Where(x => x.ActivityTypeId == model.ActivityTypeId).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(model.ClientName))
+                    {
+                        contractList = contractList.Where(x => x.ClientName == model.ClientName).ToList();
+                    }
+                    if (model.ContractId != 0 && model.ContractId != null)
+                    {
+                        contractList = contractList.Where(x => x.ContractId == model.ContractId).ToList();
+                    }
+                    if (model.CurrencyId != 0 && model.CurrencyId != null)
+                    {
+                        contractList = contractList.Where(x => x.CurrencyId == model.CurrencyId).ToList();
+                    }
+                    if (model.IsApproved == true)
+                    {
+                        contractList = contractList.Where(x => x.IsApproved == Convert.ToBoolean(model.IsApproved)).ToList();
+                    }
+                    if (model.IsApproved == false)
+                    {
+                        contractList = contractList.Where(x => x.IsApproved == Convert.ToBoolean(model.IsApproved)).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(model.FilterType))
+                    {
+                        if (model.FilterType == "Equals")
+                        {
+                            if (model.UnitRate != 0 && model.UnitRate != null)
+                            {
+                                contractList = contractList.Where(x => x.UnitRate == model.UnitRate).ToList();
+                            }
+                        }
+                        if (model.FilterType == "Greater Than")
+                        {
+                            if (model.UnitRate != 0 && model.UnitRate != null)
+                            {
+                                contractList = contractList.Where(x => x.UnitRate > model.UnitRate).ToList();
+                            }
+                        }
+                        if (model.FilterType == "Less Than")
+                        {
+                            if (model.UnitRate != 0 && model.UnitRate != null)
+                            {
+                                contractList = contractList.Where(x => x.UnitRate < model.UnitRate).ToList();
+                            }
+                        }
+                    }
+                    if (string.IsNullOrEmpty(model.FilterType))
+                    {
+                        if (model.UnitRate != 0 && model.UnitRate != null)
+                        {
+                            contractList = contractList.Where(x => x.UnitRate == model.UnitRate).ToList();
+                        }
+
+                    }
+                    response.data.ContractDetails = contractList;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "No Entries Found.Try Different Filters";
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
             return response;
         }
     }

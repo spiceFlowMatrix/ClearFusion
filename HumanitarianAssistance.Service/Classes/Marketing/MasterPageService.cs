@@ -28,8 +28,26 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             this._mapper = mapper;
             this._userManager = userManager;
         }
-
         #region Quality
+
+        public async Task<APIResponse> GetQualityById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                Quality obj = await _uow.QualityRepository.FindAsync(x => x.QualityId == model && x.IsDeleted == false);
+                response.data.qualityById = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         /// get Quality List
         /// </summary>
@@ -100,6 +118,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 _mapper.Map(model, obj);
                 await _uow.QualityRepository.UpdateAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.qualityById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -129,6 +148,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 obj.QualityName = model.QualityName;
                 await _uow.QualityRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.qualityById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -142,6 +162,25 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         #endregion
 
         #region Medium
+
+        public async Task<APIResponse> GetMediumById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                Medium obj = await _uow.MediumRepository.FindAsync(x => x.MediumId == model && x.IsDeleted == false);
+                response.data.mediumById = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         /// get Medium List
         /// </summary>
@@ -212,6 +251,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 _mapper.Map(model, obj);
                 await _uow.MediumRepository.UpdateAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.mediumById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -241,6 +281,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 obj.MediumName = model.MediumName;
                 await _uow.MediumRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.mediumById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -254,6 +295,25 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         #endregion
 
         #region Nature
+
+        public async Task<APIResponse> GetNatureById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                Nature obj = await _uow.NatureRepository.FindAsync(x => x.NatureId == model && x.IsDeleted == false);
+                response.data.natureById = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         /// get Nature List
         /// </summary>
@@ -324,6 +384,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 _mapper.Map(model, obj);
                 await _uow.NatureRepository.UpdateAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.natureById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -353,6 +414,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 obj.NatureName = model.NatureName;
                 await _uow.NatureRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.natureById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -366,6 +428,25 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         #endregion        
 
         #region Phase
+
+        public async Task<APIResponse> GetPhaseById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                JobPhase obj = await _uow.JobPhaseRepository.FindAsync(x => x.JobPhaseId == model && x.IsDeleted == false);
+                response.data.phaseById = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         /// get Phase List
         /// </summary>
@@ -436,6 +517,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 _mapper.Map(model, obj);
                 await _uow.JobPhaseRepository.UpdateAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.phaseById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -465,6 +547,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 obj.Phase = model.Phase;
                 await _uow.JobPhaseRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.phaseById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -475,9 +558,28 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-        #endregion        
+        #endregion
 
         #region Activity Type
+
+        public async Task<APIResponse> GetActivityById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ActivityType obj = await _uow.ActivityTypeRepository.FindAsync(x => x.ActivityTypeId == model && x.IsDeleted == false);
+                response.data.activityById = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         /// get Activity Type List
         /// </summary>
@@ -548,6 +650,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 _mapper.Map(model, obj);
                 await _uow.ActivityTypeRepository.UpdateAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.activityById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -577,6 +680,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 obj.ActivityName = model.ActivityName;
                 await _uow.ActivityTypeRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.activityById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -643,6 +747,24 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
 
+        public async Task<APIResponse> GetMediaCategoryById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                MediaCategory obj = await _uow.MediaCategoryRepository.FindAsync(x => x.MediaCategoryId == model && x.IsDeleted == false);
+                response.data.mediaCategoryById = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         /// Edit Selected Media Category
         /// </summary>
@@ -660,6 +782,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 _mapper.Map(model, obj);
                 await _uow.MediaCategoryRepository.UpdateAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.mediaCategoryById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -691,6 +814,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+                response.data.mediaCategoryById = obj;
             }
             catch (Exception ex)
             {
@@ -742,6 +866,24 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         #endregion
 
         #region TimeCategory
+
+        public async Task<APIResponse> GetTimeCategoryById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                TimeCategory obj = await _uow.TimeCategoryRepository.FindAsync(x => x.TimeCategoryId == model && x.IsDeleted == false);
+                response.data.timeCatergoryById = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
         /// <summary>
         /// get Time Category List
@@ -813,6 +955,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 _mapper.Map(model, obj);
                 await _uow.TimeCategoryRepository.UpdateAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.timeCatergoryById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -842,6 +985,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 obj.TimeCategoryName = model.TimeCategoryName;
                 await _uow.TimeCategoryRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
+                response.data.timeCatergoryById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -987,8 +1131,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.TimeCategoryId = model.TimeCategoryId;
                     await _uow.UnitRateRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
-                    model.UnitRateId =  obj.UnitRateId;
-                    response.data.unitRateDetails = model; ;
+                    model.UnitRateId = obj.UnitRateId;
+                    response.data.unitRateDetails = model;
                 }
                 else
                 {
@@ -1009,7 +1153,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 var activityDetails = await _uow.ActivityTypeRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId);
                 model.ActivityName = activityDetails.ActivityName;
 
-                
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1063,12 +1207,12 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 UnitRate unitRateById = new UnitRate();
                 if (activityName == "Broadcasting")
                 {
-                    unitRateById = _uow.GetDbContext().UnitRates.Where(x => x.TimeCategoryId == model.TimeCategoryId && x.MediumId == model.MediumId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false).FirstOrDefault();
+                    unitRateById = _uow.GetDbContext().UnitRates.Where(x => x.ActivityTypeId == model.ActivityTypeId && x.TimeCategoryId == model.TimeCategoryId && x.MediumId == model.MediumId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false).FirstOrDefault();
                     //await _uow.UnitRateRepository.FindAsync(x => x.TimeCategoryId == model.TimeCategoryId && x.MediumId == model.MediumId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false);
                 }
                 if (activityName == "Production")
                 {
-                    unitRateById = _uow.GetDbContext().UnitRates.Where(x => x.MediumId == model.MediumId && x.NatureId == model.NatureId && x.QualityId == model.QualityId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false).FirstOrDefault();
+                    unitRateById = _uow.GetDbContext().UnitRates.Where(x => x.ActivityTypeId == model.ActivityTypeId && x.MediumId == model.MediumId && x.NatureId == model.NatureId && x.QualityId == model.QualityId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false).FirstOrDefault();
                     //await _uow.UnitRateRepository.FindAsync(x=>x.MediumId == model.MediumId && x.NatureId == model.NatureId && x.QualityId == model.QualityId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false);
                 }
 
