@@ -48,20 +48,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       //var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       //if (user != null)
       //{
-        //var id = user.Id;
-        apiRespone = await _iJobDetailsService.GetAllJobDetails();
+      //var id = user.Id;
+      apiRespone = await _iJobDetailsService.GetAllJobDetails();
       //}
       return apiRespone;
     }
 
     #region Job Details
 
-      /// <summary>
-      /// Add And Update New Job
-      /// </summary>
-      /// <param name="model"></param>
-      /// <returns></returns>
-      ///
+    /// <summary>
+    /// Add And Update New Job
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    ///
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditJobDetail([FromBody]JobDetailsModel model)
@@ -126,7 +126,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if(model.JobPhaseId == null)
+        if (model.JobPhaseId == null)
         {
           apiResponse = await _iMasterPageService.AddPhase(model, id);
         }
@@ -134,6 +134,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         {
           apiResponse = await _iMasterPageService.EditPhase(model, id);
         }
+      }
+      return apiResponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetPhaseById([FromBody]int model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iMasterPageService.GetPhaseById(model, id);
       }
       return apiResponse;
     }

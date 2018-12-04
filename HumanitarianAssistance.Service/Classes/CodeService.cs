@@ -2153,7 +2153,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                ICollection<Language> Languages = await _uow.LanguageRepository.FindAllAsync(x => x.IsDeleted == false);
+                ICollection<LanguageDetail> Languages = await _uow.LanguageRepository.FindAllAsync(x => x.IsDeleted == false);
                 response.data.Languages = Languages;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -2208,7 +2208,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                Language obj = await _uow.LanguageRepository.FindAsync(x => x.LanguageId == model.LanguageId);
+                LanguageDetail obj = await _uow.LanguageRepository.FindAsync(x => x.LanguageId == model.LanguageId);
                 obj.ModifiedById = UserId;
                 obj.ModifiedDate = DateTime.Now;
                 _mapper.Map(model, obj);
@@ -2236,7 +2236,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                Language obj = _mapper.Map<LanguageModel,Language>(model);
+                LanguageDetail obj = _mapper.Map<LanguageModel,LanguageDetail>(model);
                 obj.CreatedById = UserId;
                 obj.CreatedDate = DateTime.Now;
                 obj.IsDeleted = false;
