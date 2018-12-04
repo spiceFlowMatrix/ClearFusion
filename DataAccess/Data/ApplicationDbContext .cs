@@ -209,6 +209,10 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ApproveProjectDetails> ApproveProjectDetails { get; set; }
         public DbSet<ProjectProposalDetail> ProjectProposalDetail { get; set; }
         public DbSet<DonorCriteriaDetails> DonorCriteriaDetail { get; set; }
+        public DbSet<PurposeofInitiativeCriteria> PurposeofInitiativeCriteria { get; set; }
+        public DbSet<EligibilityCriteriaDetail> EligibilityCriteriaDetail { get; set; }
+        public DbSet<FeasibilityCriteriaDetail> FeasibilityCriteriaDetail { get; set; }
+        public DbSet<PriorityCriteriaDetail> PriorityCriteriaDetail { get; set; }
         
 
         #endregion 

@@ -171,7 +171,13 @@ namespace DataAccess
         IGenericRepository<WinProjectDetails> WinProjectDetailsRepository { get; }
         IGenericRepository<ProjectProposalDetail> ProjectProposalDetailRepository { get; }
         IGenericRepository<DonorCriteriaDetails> DonorCriteriaDetailsRepository { get; }
-        #endregion 
+        IGenericRepository<PurposeofInitiativeCriteria> PurposeofInitiativeCriteriaRepository { get; }
+        IGenericRepository<EligibilityCriteriaDetail> EligibilityCriteriaDetailRepository { get; }
+        IGenericRepository<FeasibilityCriteriaDetail> FeasibilityCriteriaDetailRepository { get; }
+        IGenericRepository<PriorityCriteriaDetail> PriorityCriteriaDetailRepository { get; }
+        
+
+        #endregion
 
         #region Marketing
         IGenericRepository<UnitRate> UnitRateRepository { get; }
