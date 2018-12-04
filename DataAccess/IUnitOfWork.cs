@@ -180,7 +180,7 @@ namespace DataAccess
         IGenericRepository<JobDetails> JobDetailsRepository { get; }
         IGenericRepository<JobPhase> JobPhaseRepository { get; }
         IGenericRepository<JobPriceDetails> JobPriceDetailsRepository { get; }
-        IGenericRepository<Language> LanguageRepository { get; }
+        IGenericRepository<LanguageDetail> LanguageRepository { get; }
         IGenericRepository<MediaCategory> MediaCategoryRepository { get; }
         IGenericRepository<Medium> MediumRepository { get; }
         IGenericRepository<Quality> QualityRepository { get; }

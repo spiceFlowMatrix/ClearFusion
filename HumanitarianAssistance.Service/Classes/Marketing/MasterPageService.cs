@@ -839,7 +839,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 ICollection<TimeCategory> timeCategories = await _uow.TimeCategoryRepository.FindAllAsync(x => x.IsDeleted == false);
                 ICollection<MediaCategory> mediaCategories = await _uow.MediaCategoryRepository.FindAllAsync(x => x.IsDeleted == false);
                 ICollection<Medium> Mediums = await _uow.MediumRepository.FindAllAsync(x => x.IsDeleted == false);
-                ICollection<Language> languages = await _uow.LanguageRepository.FindAllAsync(x => x.IsDeleted == false);
+                ICollection<LanguageDetail> languages = await _uow.LanguageRepository.FindAllAsync(x => x.IsDeleted == false);
                 ICollection<Nature> jobNature = await _uow.NatureRepository.FindAllAsync(x => x.IsDeleted == false);
                 ICollection<CurrencyDetails> currency = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
                 ICollection<Quality> quality = await _uow.QualityRepository.FindAllAsync(x => x.IsDeleted == false);
