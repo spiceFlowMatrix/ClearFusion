@@ -48,7 +48,7 @@ namespace DataAccess.Data
 
         }
 
-        private static async Task CreateDefaultUserAndRoleForApplication(UserManager<AppUser> um, RoleManager<IdentityRole> rm, ApplicationDbContext context, ILogger<DbInitializer> logger)
+        public static async Task CreateDefaultUserAndRoleForApplication(UserManager<AppUser> um, RoleManager<IdentityRole> rm, ApplicationDbContext context, ILogger<DbInitializer> logger)
         {
             const string administratorRole = "SuperAdmin";
             const string email = "hamza@yopmail.com";

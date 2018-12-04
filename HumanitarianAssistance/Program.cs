@@ -26,7 +26,7 @@ namespace HumanitarianAssistance
           var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
           var dbInitializerLogger = services.GetRequiredService<ILogger<DbInitializer>>();
-          DbInitializer.Initialize(context, userManager, roleManager, dbInitializerLogger).Wait();
+          // DbInitializer.Initialize(context, userManager, roleManager, dbInitializerLogger).Wait();
         }
         catch (Exception ex)
         {
@@ -40,7 +40,7 @@ namespace HumanitarianAssistance
     public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
         WebHost.CreateDefaultBuilder(args)
             .UseStartup<Startup>()
-            .UseUrls("http://*:5000");        // 8080        // LIVE  // chaservice, chaclient      // Port 80
+            .UseUrls("http://*:5004");        // 8080        // LIVE  // chaservice, chaclient      // Port 80
                                               //.UseUrls("http://*:5001");       // 9090       // chatestclient, chatestservice       // Port 9000
                                               //.UseUrls("http://*:5002");       // 7070      // chaserviceclient, chaservicetest    // Port 7000
                                               // .UseUrls("http://*:5003"); // backend -> 1010 (chaapp1010Service) , frontend -> Port 1000 (chaapp1000Client) //Database=smomaindb
