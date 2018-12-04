@@ -24,11 +24,16 @@ using HumanitarianAssistance.WebAPI;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using DataAccess.Data;
+using Google.Apis.Logging;
 using HumanitarianAssistance.WebAPI.ChaHub;
 using HumanitarianAssistance.Service.Classes.Marketing;
 using HumanitarianAssistance.Service.interfaces.Marketing;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.Service.Classes.AccountingNew;
+using Microsoft.Extensions.Logging;
 
 namespace HumanitarianAssistance
 {
@@ -247,8 +252,10 @@ namespace HumanitarianAssistance
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
+
+      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
       if (env.IsDevelopment())
       {
@@ -311,6 +318,25 @@ namespace HumanitarianAssistance
         routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
 
       });
+    }
+
+    //2011
+    private static async Task UpdateDatabase(IApplicationBuilder app, UserManager<AppUser> um, RoleManager<IdentityRole> rm, ILogger<DbInitializer> logger)
+    {
+      using (var serviceScope = app.ApplicationServices
+        .GetRequiredService<IServiceScopeFactory>()
+        .CreateScope())
+      {
+        using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
+        {
+          context.Database.Migrate();
+
+          if (!context.Users.Any())
+          {
+            await DbInitializer.CreateDefaultUserAndRoleForApplication(um, rm, context, logger);
+          }
+        }
+      }
     }
   }
 }
