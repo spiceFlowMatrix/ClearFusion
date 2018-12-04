@@ -1809,6 +1809,74 @@ namespace HumanitarianAssistance.Service.Classes
         public APIResponse AddEditDonorCriteria(DonorCriteriaModel model, string UserId)
         {
             APIResponse response = new APIResponse();
+            DonorCriteriaDetails _detail = new DonorCriteriaDetails();
+            try
+            {
+                _detail = _uow.GetDbContext().DonorCriteriaDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                if (_detail == null)
+                {
+                    _detail = new DonorCriteriaDetails();
+                    _detail.MethodOfFunding = model.MethodOfFunding;
+                    _detail.PastFundingExperience = model.PastFundingExperience;
+                    _detail.ProposalAccepted = model.ProposalAccepted;
+                    _detail.ProposalExperience = model.ProposalExperience;
+                    _detail.Professional = model.Professional;
+                    _detail.FundsOnTime = model.FundsOnTime;
+                    _detail.EffectiveCommunication = model.EffectiveCommunication;
+                    _detail.Dispute = model.Dispute;
+                    _detail.OtherDeliverable = model.OtherDeliverable;
+                    _detail.OtherDeliverableType = model.OtherDeliverableType;
+                    _detail.PastWorkingExperience = model.PastWorkingExperience;
+                    _detail.CriticismPerformance = model.CriticismPerformance;
+                    _detail.TimeManagement = model.TimeManagement;
+                    _detail.MoneyAllocation = model.MoneyAllocation;
+                    _detail.Accountability = model.Accountability;
+                    _detail.DeliverableQuality = model.DeliverableQuality;
+                    _detail.DonorFinancingHistory = model.DonorFinancingHistory;
+                    _detail.ReligiousStanding = model.ReligiousStanding;
+                    _detail.PoliticalStanding = model.PoliticalStanding;
+                    _detail.ProjectId = model.ProjectId;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+                    _uow.DonorCriteriaDetailsRepository.Add(_detail);
+                }
+                else
+                {
+                    _detail.MethodOfFunding = model.MethodOfFunding;
+                    _detail.PastFundingExperience = model.PastFundingExperience;
+                    _detail.ProposalAccepted = model.ProposalAccepted;
+                    _detail.ProposalExperience = model.ProposalExperience;
+                    _detail.Professional = model.Professional;
+                    _detail.FundsOnTime = model.FundsOnTime;
+                    _detail.EffectiveCommunication = model.EffectiveCommunication;
+                    _detail.Dispute = model.Dispute;
+                    _detail.OtherDeliverable = model.OtherDeliverable;
+                    _detail.OtherDeliverableType = model.OtherDeliverableType;
+                    _detail.PastWorkingExperience = model.PastWorkingExperience;
+                    _detail.CriticismPerformance = model.CriticismPerformance;
+                    _detail.TimeManagement = model.TimeManagement;
+                    _detail.MoneyAllocation = model.MoneyAllocation;
+                    _detail.Accountability = model.Accountability;
+                    _detail.DeliverableQuality = model.DeliverableQuality;
+                    _detail.DonorFinancingHistory = model.DonorFinancingHistory;
+                    _detail.ReligiousStanding = model.ReligiousStanding;
+                    _detail.PoliticalStanding = model.PoliticalStanding;
+                    _detail.IsDeleted = false;
+                    _detail.ModifiedById = UserId;
+                    _detail.ModifiedDate = DateTime.Now;
+                    _uow.GetDbContext().SaveChanges();
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
             return response;
         }
         #endregion

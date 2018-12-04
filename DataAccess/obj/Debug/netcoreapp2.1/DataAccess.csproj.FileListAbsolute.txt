@@ -46,3 +46,19 @@ D:\Alpit\Project\Humanitarian Fork\angular 7\clearfusion-api\DataAccess\obj\Debu
 D:\Alpit\Project\Humanitarian Fork\angular 7\clearfusion-api\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csproj.CopyComplete
 D:\Alpit\Project\Humanitarian Fork\angular 7\clearfusion-api\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.dll
 D:\Alpit\Project\Humanitarian Fork\angular 7\clearfusion-api\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.pdb
+D:\Humanitarian\Api\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.deps.json
+D:\Humanitarian\Api\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.runtimeconfig.json
+D:\Humanitarian\Api\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.runtimeconfig.dev.json
+D:\Humanitarian\Api\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.dll
+D:\Humanitarian\Api\DataAccess\bin\Debug\netcoreapp2.1\DataAccess.pdb
+D:\Humanitarian\Api\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.Common.dll
+D:\Humanitarian\Api\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.dll
+D:\Humanitarian\Api\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.ViewModels.pdb
+D:\Humanitarian\Api\DataAccess\bin\Debug\netcoreapp2.1\HumanitarianAssistance.Common.pdb
+D:\Humanitarian\Api\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csprojAssemblyReference.cache
+D:\Humanitarian\Api\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csproj.CoreCompileInputs.cache
+D:\Humanitarian\Api\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.AssemblyInfoInputs.cache
+D:\Humanitarian\Api\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.AssemblyInfo.cs
+D:\Humanitarian\Api\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.csproj.CopyComplete
+D:\Humanitarian\Api\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.dll
+D:\Humanitarian\Api\DataAccess\obj\Debug\netcoreapp2.1\DataAccess.pdb
