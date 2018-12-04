@@ -226,13 +226,28 @@ namespace HumanitarianAssistance.Controllers
 
           var userClaims = await _userManager.GetClaimsAsync(user);
 
+
+
           //var officedetais = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
 
           var roles = await _userManager.GetRolesAsync(user);
 
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-          userClaims.Add(new Claim("Roles", roles[0])); //imp
+          Dictionary<string, List<string>> dic = new Dictionary<string, List<string>>();
+          foreach (var role in roles)
+          {
+            userClaims.Add(new Claim("Roles", role)); //imp
+
+            
+              var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
+              List<string> permissions= _uow.GetDbContext().Permissions.Join(_uow.GetDbContext().PermissionsInRoles.Where(x => x.RoleId == roleid.Id), (p) => p.Id, (p1) => p1.PermissionId, (p, r1) => new
+              {
+                PermissionName = p.Name,
+              }).Select(x=>x.PermissionName).ToList();
+
+            dic.Add(role, permissions);
+          }
 
           //_ipermissions.GetPermissionsByRoleId()
 

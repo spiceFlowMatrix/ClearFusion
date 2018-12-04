@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HumanitarianAssistance.ViewModels.Models.Marketing
 {
-  public  class ClientDetailModel: BaseModel
+    public class ClientDetailModel : BaseModel
     {
         public long ClientId { get; set; }
         public string ClientCode { get; set; }
@@ -19,5 +19,15 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long? CategoryId { get; set; }
         public string CategoryName { get; set; }
         public string type { get; set; }
+    }
+
+
+    public class FilterClientModel
+    {
+        public long? ClientId { get; set; }
+        public string ClientName { get; set; }
+        public string Email { get; set; }
+        public long? CategoryId { get; set; }
+        public string Position { get; set; }
     }
 }

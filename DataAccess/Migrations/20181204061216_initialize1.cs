@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccess.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initialize1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -633,6 +633,55 @@ namespace DataAccess.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_DistrictDetail_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DonorCriteriaDetail",
+                columns: table => new
+                {
+                    CreatedDate = table.Column<DateTime>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: true),
+                    DonorCEId = table.Column<long>(type: "serial", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    ProjectId = table.Column<long>(nullable: false),
+                    MethodOfFunding = table.Column<int>(nullable: true),
+                    PastFundingExperience = table.Column<bool>(nullable: true),
+                    ProposalAccepted = table.Column<bool>(nullable: true),
+                    ProposalExperience = table.Column<bool>(nullable: true),
+                    Professional = table.Column<bool>(nullable: true),
+                    FundsOnTime = table.Column<bool>(nullable: true),
+                    EffectiveCommunication = table.Column<bool>(nullable: true),
+                    Dispute = table.Column<bool>(nullable: true),
+                    OtherDeliverable = table.Column<bool>(nullable: true),
+                    OtherDeliverableType = table.Column<bool>(nullable: true),
+                    PastWorkingExperience = table.Column<bool>(nullable: true),
+                    CriticismPerformance = table.Column<bool>(nullable: true),
+                    TimeManagement = table.Column<bool>(nullable: true),
+                    MoneyAllocation = table.Column<bool>(nullable: true),
+                    Accountability = table.Column<bool>(nullable: true),
+                    DeliverableQuality = table.Column<bool>(nullable: true),
+                    DonorFinancingHistory = table.Column<bool>(nullable: true),
+                    ReligiousStanding = table.Column<bool>(nullable: true),
+                    PoliticalStanding = table.Column<bool>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DonorCriteriaDetail", x => x.DonorCEId);
+                    table.ForeignKey(
+                        name: "FK_DonorCriteriaDetail_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DonorCriteriaDetail_AspNetUsers_ModifiedById",
                         column: x => x.ModifiedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -7150,10 +7199,19 @@ namespace DataAccess.Migrations
                 columns: new[] { "AccountLevelId", "AccountLevelName" },
                 values: new object[,]
                 {
-                    { 4, "Input Level Accounts" },
-                    { 3, "Sub Level Accounts" },
                     { 1, "Main Level Accounts" },
-                    { 2, "Control Level Accounts" }
+                    { 2, "Control Level Accounts" },
+                    { 3, "Sub Level Accounts" },
+                    { 4, "Input Level Accounts" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ActivityTypes",
+                columns: new[] { "ActivityTypeId", "ActivityName", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate" },
+                values: new object[,]
+                {
+                    { 2L, "Production", null, null, false, null, null },
+                    { 1L, "Broadcasting", null, null, false, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -7161,11 +7219,11 @@ namespace DataAccess.Migrations
                 columns: new[] { "CodeTypeId", "CodeTypeName" },
                 values: new object[,]
                 {
-                    { 1, "Organizations" },
-                    { 2, "Suppliers" },
                     { 3, "Repair Shops" },
                     { 4, "Individual/Others" },
-                    { 5, "Locations/Stores" }
+                    { 5, "Locations/Stores" },
+                    { 2, "Suppliers" },
+                    { 1, "Organizations" }
                 });
 
             migrationBuilder.InsertData(
@@ -7183,9 +7241,9 @@ namespace DataAccess.Migrations
                 values: new object[,]
                 {
                     { 4, null, null, "USD", "US Dollars", null, false, null, null, false, false },
+                    { 2, null, null, "EUR", "European Curency", null, false, null, null, false, false },
                     { 3, null, null, "PKR", "Pakistani Rupees", null, false, null, null, false, true },
-                    { 1, null, null, "AFG", "Afghanistan", null, false, null, null, true, false },
-                    { 2, null, null, "EUR", "European Curency", null, false, null, null, false, false }
+                    { 1, null, null, "AFG", "Afghanistan", null, false, null, null, true, false }
                 });
 
             migrationBuilder.InsertData(
@@ -7202,8 +7260,8 @@ namespace DataAccess.Migrations
                 columns: new[] { "EmployeeContractTypeId", "EmployeeContractTypeName" },
                 values: new object[,]
                 {
-                    { 1, "Probationary" },
                     { 2, "PartTime" },
+                    { 1, "Probationary" },
                     { 3, "Permanent" }
                 });
 
@@ -7222,14 +7280,14 @@ namespace DataAccess.Migrations
                 columns: new[] { "GenderConsiderationId", "CreatedById", "CreatedDate", "GenderConsiderationName", "IsDeleted", "ModifiedById", "ModifiedDate" },
                 values: new object[,]
                 {
-                    { 2L, null, null, "40 % F - 60 % M Very Good", false, null, null },
-                    { 8L, null, null, "0 % F - 100 % M Poor", false, null, null },
                     { 7L, null, null, "5 % F - 95 % M Poor", false, null, null },
                     { 6L, null, null, "10 % F - 90 % M Poor", false, null, null },
                     { 5L, null, null, "20 % F - 80 % M Poor", false, null, null },
-                    { 3L, null, null, "30 % F - 70 % M Good", false, null, null },
+                    { 4L, null, null, "25 % F - 75 % M Poor", false, null, null },
+                    { 2L, null, null, "40 % F - 60 % M Very Good", false, null, null },
                     { 1L, null, null, "50 % F - 50 % M Excellent", false, null, null },
-                    { 4L, null, null, "25 % F - 75 % M Poor", false, null, null }
+                    { 8L, null, null, "0 % F - 100 % M Poor", false, null, null },
+                    { 3L, null, null, "30 % F - 70 % M Good", false, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -7237,17 +7295,17 @@ namespace DataAccess.Migrations
                 columns: new[] { "LanguageId", "CreatedById", "CreatedDate", "IsDeleted", "LanguageName", "ModifiedById", "ModifiedDate" },
                 values: new object[,]
                 {
-                    { 9, null, null, false, "Turkmani", null, null },
-                    { 8, null, null, false, "Turkish", null, null },
+                    { 11, null, null, false, "Uzbek", null, null },
                     { 1, null, null, false, "Arabic", null, null },
                     { 2, null, null, false, "Dari", null, null },
                     { 3, null, null, false, "English", null, null },
                     { 4, null, null, false, "French", null, null },
                     { 5, null, null, false, "German", null, null },
-                    { 7, null, null, false, "Russian", null, null },
+                    { 10, null, null, false, "Urdu", null, null },
                     { 6, null, null, false, "Pashto", null, null },
-                    { 11, null, null, false, "Uzbek", null, null },
-                    { 10, null, null, false, "Urdu", null, null }
+                    { 7, null, null, false, "Russian", null, null },
+                    { 8, null, null, false, "Turkish", null, null },
+                    { 9, null, null, false, "Turkmani", null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -7268,14 +7326,19 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "ProjectPhaseDetails",
+                columns: new[] { "ProjectPhaseDetailsId", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate", "ProjectPhase" },
+                values: new object[] { 1L, null, null, false, null, null, "Data Entry" });
+
+            migrationBuilder.InsertData(
                 table: "ReceiptType",
                 columns: new[] { "ReceiptTypeId", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate", "ReceiptTypeName" },
                 values: new object[,]
                 {
-                    { 5, null, null, false, null, null, "Loan" },
-                    { 2, null, null, false, null, null, "Transfers" },
-                    { 3, null, null, false, null, null, "Donation" },
                     { 4, null, null, false, null, null, "Take Over" },
+                    { 2, null, null, false, null, null, "Transfers" },
+                    { 5, null, null, false, null, null, "Loan" },
+                    { 3, null, null, false, null, null, "Donation" },
                     { 6, null, null, false, null, null, "Return" },
                     { 1, null, null, false, null, null, "Purchased" },
                     { 7, null, null, false, null, null, "Other" }
@@ -7322,9 +7385,9 @@ namespace DataAccess.Migrations
                 columns: new[] { "SecurityId", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate", "SecurityName" },
                 values: new object[,]
                 {
-                    { 1L, null, null, false, null, null, "Insecure" },
                     { 3L, null, null, false, null, null, "Secure (Green Area)" },
-                    { 2L, null, null, false, null, null, "Partially Insecure" }
+                    { 2L, null, null, false, null, null, "Partially Insecure" },
+                    { 1L, null, null, false, null, null, "Insecure" }
                 });
 
             migrationBuilder.InsertData(
@@ -7332,15 +7395,15 @@ namespace DataAccess.Migrations
                 columns: new[] { "StatusAtTimeOfIssueId", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate", "StatusName" },
                 values: new object[,]
                 {
-                    { 8, null, null, false, null, null, "Demolished" },
-                    { 5, null, null, false, null, null, "Sold" },
-                    { 9, null, null, false, null, null, "Broken" },
                     { 1, null, null, false, null, null, "New" },
                     { 2, null, null, false, null, null, "Useable" },
                     { 3, null, null, false, null, null, "To Repair" },
                     { 4, null, null, false, null, null, "Damage" },
+                    { 5, null, null, false, null, null, "Sold" },
+                    { 6, null, null, false, null, null, "Stolen" },
                     { 7, null, null, false, null, null, "Handover" },
-                    { 6, null, null, false, null, null, "Stolen" }
+                    { 8, null, null, false, null, null, "Demolished" },
+                    { 9, null, null, false, null, null, "Broken" }
                 });
 
             migrationBuilder.InsertData(
@@ -7348,8 +7411,8 @@ namespace DataAccess.Migrations
                 columns: new[] { "StrengthConsiderationId", "CreatedById", "CreatedDate", "IsDeleted", "ModifiedById", "ModifiedDate", "StrengthConsiderationName" },
                 values: new object[,]
                 {
-                    { 1L, null, null, false, null, null, "Gender Friendly" },
                     { 2L, null, null, false, null, null, "Not Gender Friendly" },
+                    { 1L, null, null, false, null, null, "Gender Friendly" },
                     { 3L, null, null, false, null, null, "Not Applicable" }
                 });
 
@@ -7968,6 +8031,16 @@ namespace DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_DistrictDetail_ModifiedById",
                 table: "DistrictDetail",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DonorCriteriaDetail_CreatedById",
+                table: "DonorCriteriaDetail",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DonorCriteriaDetail_ModifiedById",
+                table: "DonorCriteriaDetail",
                 column: "ModifiedById");
 
             migrationBuilder.CreateIndex(
@@ -10077,6 +10150,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "DistrictDetail");
+
+            migrationBuilder.DropTable(
+                name: "DonorCriteriaDetail");
 
             migrationBuilder.DropTable(
                 name: "DonorDetail");

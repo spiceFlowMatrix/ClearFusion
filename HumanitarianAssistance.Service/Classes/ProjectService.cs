@@ -1804,5 +1804,13 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
         #endregion
+
+        #region Criteria
+        public APIResponse AddEditDonorCriteria(DonorCriteriaModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            return response;
+        }
+        #endregion
     }
 }

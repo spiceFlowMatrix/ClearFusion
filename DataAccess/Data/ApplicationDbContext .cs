@@ -208,6 +208,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<WinProjectDetails> WinProjectDetails { get; set; }
         public DbSet<ApproveProjectDetails> ApproveProjectDetails { get; set; }
         public DbSet<ProjectProposalDetail> ProjectProposalDetail { get; set; }
+        public DbSet<DonorCriteriaDetails> DonorCriteriaDetail { get; set; }
+        
 
         #endregion 
 
@@ -537,6 +539,16 @@ namespace HumanitarianAssistance.Entities
               new AccountFilterType { IsDeleted = false, AccountFilterTypeId = 1, AccountFilterTypeName = "Inventory Account" },
               new AccountFilterType { IsDeleted = false, AccountFilterTypeId = 2, AccountFilterTypeName = "Salary Account" }
           );
+
+            modelBuilder.Entity<ProjectPhaseDetails>().HasData(
+              new ProjectPhaseDetails { IsDeleted = false, ProjectPhaseDetailsId = 1, ProjectPhase = "Data Entry" }
+          );
+
+            modelBuilder.Entity<ActivityType>().HasData(
+              new ActivityType { IsDeleted = false, ActivityTypeId = 1, ActivityName = "Broadcasting" },
+              new ActivityType { IsDeleted = false, ActivityTypeId = 2, ActivityName = "Production" }
+          );
+
 
             #endregion
 

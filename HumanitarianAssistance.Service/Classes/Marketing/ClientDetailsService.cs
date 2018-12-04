@@ -91,84 +91,84 @@ namespace HumanitarianAssistance.Service.Classes
             long ClientId = 0;
             ClientDetails clientDetails = new ClientDetails();
             ClientDetailModel mod = new ClientDetailModel();
-            
-                try
-                {
-                    if (model.ClientId == 0)
-                    {
-                        var ClientDetail = _uow.GetDbContext().ClientDetails
-                                                               .OrderByDescending(x => x.ClientId)
-                                                               .FirstOrDefault();
-                        if (ClientDetail == null)
-                        {
-                            LatestClientId = 1;
-                            clientcode = getClientCode(LatestClientId.ToString());
-                        }
-                        else
-                        {
-                            LatestClientId = ClientDetail.ClientId + 1;
-                            clientcode = getClientCode(LatestClientId.ToString());
-                        }
-                        ClientDetails ob = new ClientDetails();
-                        //ClientDetails obj = _mapper.Map<ClientDetailModel, ClientDetails>(model);
-                        ob.ClientName = model.ClientName;
-                        ob.CategoryId = model.CategoryId;
-                        ob.ClientBackground = model.ClientBackground;
-                        ob.Email = model.Email;
-                        ob.FocalPoint = model.FocalPoint;
-                        ob.History = model.History;
-                        ob.ClientCode = clientcode;
-                        ob.Phone = model.Phone;
-                        ob.PhysicialAddress = model.PhysicialAddress;
-                        ob.Position = model.Position;
-                        ob.IsDeleted = false;
-                        ob.CreatedById = UserId;
-                        ob.CreatedDate = DateTime.Now;
-                        await _uow.GetDbContext().ClientDetails.AddAsync(ob);
-                        await _uow.SaveAsync();
 
-                        ClientId = ob.ClientId;
-                        mod.ClientId = ClientId;
-                        mod.ClientName = ob.ClientName;
-                        mod.CategoryId = ob.CategoryId;
-                        mod.ClientBackground = ob.ClientBackground;
-                        mod.Email = ob.Email;
-                        mod.FocalPoint = ob.FocalPoint;
-                        mod.History = ob.History;
-                        mod.ClientCode = ob.ClientCode;
-                        mod.type = "Add";
-                        mod.Phone = ob.Phone;
-                        mod.PhysicialAddress = ob.PhysicialAddress;
-                        mod.Position = ob.Position;
-                        response.data.clientDetailsById = mod;
+            try
+            {
+                if (model.ClientId == 0)
+                {
+                    var ClientDetail = _uow.GetDbContext().ClientDetails
+                                                           .OrderByDescending(x => x.ClientId)
+                                                           .FirstOrDefault();
+                    if (ClientDetail == null)
+                    {
+                        LatestClientId = 1;
+                        clientcode = getClientCode(LatestClientId.ToString());
                     }
                     else
-                    {                        
-                        var existRecords = await _uow.ClientDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ClientId == model.ClientId);
-                        if (existRecords != null)
-                        {
-                            _mapper.Map(model, existRecords);
-                            existRecords.IsDeleted = false;
-                            existRecords.ModifiedById = UserId;
-                            existRecords.ModifiedDate = DateTime.Now;
-                            await _uow.ClientDetailsRepository.UpdateAsyn(existRecords);
-                            model.type = "Edit";
-                            response.data.clientDetailsById = model;
-                        }
-                      
-                        LatestClientId = Convert.ToInt32(model.ClientId);
+                    {
+                        LatestClientId = ClientDetail.ClientId + 1;
+                        clientcode = getClientCode(LatestClientId.ToString());
                     }
-                   
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-                   
+                    ClientDetails ob = new ClientDetails();
+                    //ClientDetails obj = _mapper.Map<ClientDetailModel, ClientDetails>(model);
+                    ob.ClientName = model.ClientName;
+                    ob.CategoryId = model.CategoryId;
+                    ob.ClientBackground = model.ClientBackground;
+                    ob.Email = model.Email;
+                    ob.FocalPoint = model.FocalPoint;
+                    ob.History = model.History;
+                    ob.ClientCode = clientcode;
+                    ob.Phone = model.Phone;
+                    ob.PhysicialAddress = model.PhysicialAddress;
+                    ob.Position = model.Position;
+                    ob.IsDeleted = false;
+                    ob.CreatedById = UserId;
+                    ob.CreatedDate = DateTime.Now;
+                    await _uow.GetDbContext().ClientDetails.AddAsync(ob);
+                    await _uow.SaveAsync();
+
+                    ClientId = ob.ClientId;
+                    mod.ClientId = ClientId;
+                    mod.ClientName = ob.ClientName;
+                    mod.CategoryId = ob.CategoryId;
+                    mod.ClientBackground = ob.ClientBackground;
+                    mod.Email = ob.Email;
+                    mod.FocalPoint = ob.FocalPoint;
+                    mod.History = ob.History;
+                    mod.ClientCode = ob.ClientCode;
+                    mod.type = "Add";
+                    mod.Phone = ob.Phone;
+                    mod.PhysicialAddress = ob.PhysicialAddress;
+                    mod.Position = ob.Position;
+                    response.data.clientDetailsById = mod;
                 }
-                catch (Exception ex)
+                else
                 {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.SomethingWrong + ex.Message;
+                    var existRecords = await _uow.ClientDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ClientId == model.ClientId);
+                    if (existRecords != null)
+                    {
+                        _mapper.Map(model, existRecords);
+                        existRecords.IsDeleted = false;
+                        existRecords.ModifiedById = UserId;
+                        existRecords.ModifiedDate = DateTime.Now;
+                        await _uow.ClientDetailsRepository.UpdateAsyn(existRecords);
+                        model.type = "Edit";
+                        response.data.clientDetailsById = model;
+                    }
+
+                    LatestClientId = Convert.ToInt32(model.ClientId);
                 }
-            
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
             return response;
         }
 
@@ -277,6 +277,56 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> FilterClientList(FilterClientModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var contractList = _uow.GetDbContext().ClientDetails.Where(x => x.IsDeleted == false).ToList();
+
+                List<ClientDetails> filteredList = new List<ClientDetails>();
+
+                if (model != null)
+                {
+                    if (model.ClientId != 0 && model.ClientId != null)
+                    {
+                        contractList = contractList.Where(x => x.ClientId == model.ClientId).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(model.ClientName))
+                    {
+                        contractList = contractList.Where(x => x.ClientName == model.ClientName).ToList();
+                    }
+                    if (model.CategoryId != 0 && model.CategoryId != null)
+                    {
+                        contractList = contractList.Where(x => x.CategoryId == model.CategoryId).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(model.Email))
+                    {
+                        contractList = contractList.Where(x => x.Email == model.Email).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(model.Position))
+                    {
+                        contractList = contractList.Where(x => x.Position == model.Position).ToList();
+                    }
+                    response.data.ClientDetails = contractList;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "No Entries Found.Try Different Filters";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         #endregion
 
         #region Category
@@ -370,6 +420,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
         #endregion
+
 
 
     }
