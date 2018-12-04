@@ -202,6 +202,9 @@ namespace HumanitarianAssistance
         //  options.AddPolicy("Trust", policy => policy.RequireClaim("Permission", "dashboardhome"));
         options.AddPolicy("Trust", policy => policy.RequireClaim("Roles", "Admin", "SuperAdmin", "Accounting Manager", "HR Manager", "Project Manager", "Administrator"));
         options.AddPolicy("DepartmentUser", policy => policy.RequireClaim("OfficeCode"));
+        options.AddPolicy("HRManager", policy => policy.RequireClaim("Roles", "HR Manager"));
+        options.AddPolicy("Accounting", policy => policy.RequireClaim("Roles", "Accounting Manager"));
+
         options.AddPolicy("DepartmentUser", policy => policy.RequireClaim("DepartmentId"));
         //options.AddPolicy("Trust", policy => policy.RequireClaim("OfficeCode"));
         //options.AddPolicy("AdministratorPolicy", policy =>
