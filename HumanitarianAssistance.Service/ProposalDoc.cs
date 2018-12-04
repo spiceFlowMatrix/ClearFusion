@@ -394,6 +394,36 @@ namespace HumanitarianAssistance.Service
             //}
             return mimeType;
         }
+        public static string FilePermission(DriveService driveService, string Fileid, string EmailId)
+        {
+            string Message = string.Empty;
+            var batch = new BatchRequest(driveService);
+            BatchRequest.OnResponse<Permission> callback = delegate (
+                Permission permission,
+                RequestError error,
+                int index,
+                System.Net.Http.HttpResponseMessage message)
+            {
 
+                if (error != null)
+                {
+                    Message = error.Message;
+                }
+            };
+
+            Permission userPermission = new Permission()
+            {
+                
+                Type = EmailId==null?"anyone" :"user",
+                Role = "writer",
+                EmailAddress = EmailId
+            };
+            //var file = request.ResponseBody;
+            var request1 = driveService.Permissions.Create(userPermission, Fileid);
+            request1.Fields = "*";
+            batch.Queue(request1, callback);
+            var task = batch.ExecuteAsync();
+            return Message = "Success";
+        }
     }
 }
