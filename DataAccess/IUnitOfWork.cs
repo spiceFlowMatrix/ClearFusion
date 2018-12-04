@@ -170,7 +170,7 @@ namespace DataAccess
         IGenericRepository<ApproveProjectDetails> ApproveProjectDetailsRepository { get; }
         IGenericRepository<WinProjectDetails> WinProjectDetailsRepository { get; }
         IGenericRepository<ProjectProposalDetail> ProjectProposalDetailRepository { get; }
-
+        IGenericRepository<DonorCriteriaDetails> DonorCriteriaDetailsRepository { get; }
         #endregion 
 
         #region Marketing
