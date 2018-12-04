@@ -15,6 +15,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditClientDetails(ClientDetailModel model, string UserId);
         Task<APIResponse> GetAllClient();
         Task<APIResponse> DeleteClientDetails(int model, string UserId);
+        Task<APIResponse> FilterClientList(FilterClientModel model, string UserId);
         #endregion
 
         #region Category
@@ -22,6 +23,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddCategory(CategoryModel model, string UserId);
         Task<APIResponse> EditCategory(CategoryModel model, string UserId);
         #endregion
-        
+
     }
 }

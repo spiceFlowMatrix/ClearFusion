@@ -17,5 +17,6 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> DeleteContractDetail(int model, string userId);
         Task<APIResponse> AddEditContractDetail(ContractDetailsModel model, string UserId);
         Task<APIResponse> ApproveContract(ApproveContractModel model, string UserId);
+        Task<APIResponse> FilterContractList(FilterContractModel model, string UserId);
     }
 }
