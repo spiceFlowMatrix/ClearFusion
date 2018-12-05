@@ -1664,11 +1664,11 @@ namespace HumanitarianAssistance.Service.Classes
             {
 
                 details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == Projectid && x.IsDeleted == false).FirstOrDefault();
-                if (details != null)
-                {
+                //if (details != null)
+               // {
                     response.data.ProjectProposalDetail = details;
 
-                }
+               // }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1775,6 +1775,8 @@ namespace HumanitarianAssistance.Service.Classes
                     details.ProjectAssignTo = model.ProjectAssignTo;
                     details.IsProposalAccept = model.IsProposalAccept;
                     details.ProjectId = model.ProjectId.Value;
+                    details.CurrencyId = model.CurrencyId;
+                    details.UserId = model.UserId;
                     details.IsDeleted = false;
                     details.CreatedById = UserId;
                     details.CreatedDate = DateTime.Now;
@@ -1788,6 +1790,8 @@ namespace HumanitarianAssistance.Service.Classes
                     details.ProjectAssignTo = model.ProjectAssignTo;
                     details.IsProposalAccept = model.IsProposalAccept;
                     details.ProjectId = model.ProjectId.Value;
+                    details.CurrencyId = model.CurrencyId;
+                    details.UserId = model.UserId;
                     details.ModifiedById = UserId;
                     details.ModifiedDate = DateTime.Now;
                     _uow.GetDbContext().SaveChanges();
