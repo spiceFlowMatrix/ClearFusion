@@ -90,6 +90,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public string StoreSourceCode { get; set; }
         public bool isSalaryHeadSaved { get; set; }
         public bool isPayrollHeadSaved { get; set; }
+        public VoucherTransactionModel VoucherTransactionModel { get; set; }
+        public List<VoucherTransactionModel> VoucherTransactionModelList { get; set; }
         public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
         public List<ItemSpecificationMasterModel> ItemSpecificationMasterList { get; set; }
         public List<ItemSpecificationDetailModel> ItemSpecificationDetailList { get; set; }
@@ -129,7 +131,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<EmployeeProjectModel> EmployeeProjectList { get; set; }
         public List<EmployeeSummaryDetails> EmployeeSummaryDetailsList { get; set; }
         public ExchangeRate ExchangeRateLists { get; set; }
-
+        public List<ExchangeRate> ExchangeRates { get; set; }
         public AccountOpendingAndClosingBL AccountOpendingAndClosingBL { get; set; }
         //List Response result
         public List<Roles> RoleList { get; set; }
@@ -333,7 +335,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<LanguageDetail> LanguageDetail { get; set; }
         public List<CodeType> SourceCodeTypelist { get; set; }
         public List<StoreSourceCodeDetailModel> SourceCodeDatalist { get; set; }
-
+        public ICollection<PaymentTypes> PaymentTypesList { get; set; }
 
 
         #region "Accounting New"

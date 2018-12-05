@@ -188,8 +188,8 @@ namespace DataAccess
         private IGenericRepository<ClientDetails> _ClientDetailsRepository;
         private IGenericRepository<UnitRate> _unitRateRepository;
         private IGenericRepository<Category> _categoryRepository;
-      
-        
+        private IGenericRepository<PaymentTypes> _paymentTypesRepository;
+
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
         private IGenericRepository<ChartOfAccountNew> _chartOfAccountNewRepository;
@@ -1547,7 +1547,15 @@ namespace DataAccess
                     _donorCriteriaDetailsRepository ?? new GenericRepository<DonorCriteriaDetails>(_mschaContext);
             }
         }
-        
+
+        public IGenericRepository<PaymentTypes> PaymentTypesRepository
+        {
+            get
+            {
+                return _paymentTypesRepository = _paymentTypesRepository ?? new GenericRepository<PaymentTypes>(_mschaContext);
+            }
+        }
+
 
         public void Save()
         {

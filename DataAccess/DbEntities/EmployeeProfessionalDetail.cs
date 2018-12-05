@@ -46,6 +46,7 @@ namespace DataAccess.DbEntities
         public long? ProjectId { get; set; }
         public string RegCode { get; set; }
         public string ContractStatus { get; set; }
+        public string TinNumber { get; set; }
         public int? ProfessionId { get; set; }
         [ForeignKey("ProfessionId")]
         public ProfessionDetails professionDetails { get; set; }

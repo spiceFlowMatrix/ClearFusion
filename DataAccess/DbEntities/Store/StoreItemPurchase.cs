@@ -35,10 +35,6 @@ namespace DataAccess.DbEntities.Store
 
         public int PurchasedById { get; set; }
 
-
-
-
-
         public long? VoucherId { get; set; }
         public DateTime VoucherDate { get; set; }
         public int? AssetTypeId { get; set; } // 1. Cash , 2. In Kind
@@ -50,8 +46,11 @@ namespace DataAccess.DbEntities.Store
         public long? ProjectId { get; set; }
 
         public long? BudgetLineId { get; set; }
-        public ProjectBudgetLine ProjectBudgetLine { get; set; }
-
+        public int? PaymentTypeId { get; set; }
+        public bool IsPurchaseVerified { get; set; } = false;
+        public long? VerifiedPurchaseVoucher { get; set; }
+        public int? OfficeId { get; set; }
+        public int? JournalCode { get; set; }
 
 
         [ForeignKey("InventoryItem")]
@@ -63,12 +62,10 @@ namespace DataAccess.DbEntities.Store
         [ForeignKey("UnitType")]
         public PurchaseUnitType PurchaseUnitType { get; set; }
 
+        [ForeignKey("VoucherId")]
+        public VoucherDetail VoucherDetail { get; set; }
 
-
-		[ForeignKey("VoucherId")]
-		public VoucherDetail VoucherDetail { get; set; }
-
-		[ForeignKey("Status")]
+        [ForeignKey("Status")]
         public StatusAtTimeOfIssue StatusAtTimeOfIssue { get; set; }
 
         [ForeignKey("ReceiptTypeId")]
@@ -76,8 +73,6 @@ namespace DataAccess.DbEntities.Store
 
         [ForeignKey("ProjectId")]
         public ProjectDetails ProjectDetails { get; set; }
-
-
 
 
         public List<StorePurchaseOrder> PurchaseOrders { get; set; }

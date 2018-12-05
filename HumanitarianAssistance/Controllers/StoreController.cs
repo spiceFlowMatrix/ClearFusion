@@ -23,10 +23,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
   {
     private readonly UserManager<AppUser> _userManager;
     private IStore _iStore;
-    public StoreController(UserManager<AppUser> userManager, IStore iStore)
+    private IVoucherDetail _iVoucherDetail;
+    public StoreController(UserManager<AppUser> userManager, IStore iStore, IVoucherDetail iVoucherDetail)
     {
       _userManager = userManager;
       _iStore = iStore;
+      _iVoucherDetail = iVoucherDetail;
     }
 
     #region "Store Inventories"
@@ -591,6 +593,135 @@ namespace HumanitarianAssistance.WebAPI.Controllers
        
       return apiresponse;
     }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllPaymentTypes()
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      apiresponse = await _iStore.GetAllPaymentTypes();
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddPaymentTypes([FromBody] PaymentTypes paymentTypes)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.AddPaymentTypes(paymentTypes, user.Id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> EditPaymentTypes([FromBody] PaymentTypes paymentTypes)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.EditPaymentTypes(paymentTypes, user.Id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpDelete]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> DeletePaymentTypes([FromQuery] int PaymentId)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.DeletePaymentTypes(PaymentId, user.Id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> VerifyPurchase([FromBody] ItemPurchaseModel model)
+    {
+      APIResponse apiRespone = null;
+      APIResponse xApiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+        apiRespone = await _iStore.VerifyPurchase(model);
+
+        if (apiRespone.StatusCode == 200 && apiRespone.Message.ToLower() == "success")
+        {
+
+          if (apiRespone.data.VoucherTransactionModel != null && apiRespone.data.ExchangeRates.Any())
+          {
+
+            int? debitAccount = apiRespone.data.VoucherTransactionModel.DebitAccount;
+            apiRespone.data.VoucherTransactionModel.DebitAccount = 0;
+
+            //Credit
+            xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(apiRespone.data.VoucherTransactionModel, apiRespone.data.ExchangeRates);
+
+            apiRespone.data.VoucherTransactionModel.CreditAccount = 0;
+            apiRespone.data.VoucherTransactionModel.DebitAccount = debitAccount;
+            apiRespone.data.VoucherTransactionModel.AccountNo = debitAccount;
+            apiRespone.data.VoucherTransactionModel.Debit = apiRespone.data.VoucherTransactionModel.Credit;
+            apiRespone.data.VoucherTransactionModel.Credit = 0;
+
+            xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(apiRespone.data.VoucherTransactionModel, apiRespone.data.ExchangeRates);
+          }
+        }
+      }
+      return xApiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> UnverifyPurchase([FromBody] ItemPurchaseModel model)
+    {
+      APIResponse apiRespone = null;
+      APIResponse xApiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        model.ModifiedById = user.Id;
+        model.ModifiedDate = DateTime.Now;
+        apiRespone = await _iStore.UnverifyPurchase(model);
+
+        if (apiRespone.StatusCode == 200 && apiRespone.Message.ToLower() == "success")
+        {
+
+          if (apiRespone.data.VoucherTransactionModelList.Any() && apiRespone.data.ExchangeRates.Any())
+          {
+
+            foreach (var item in apiRespone.data.VoucherTransactionModelList)
+            {
+
+              xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(item, apiRespone.data.ExchangeRates);
+
+            }
+          }
+        }
+      }
+      return apiRespone;
+    }
+
 
   }
 }

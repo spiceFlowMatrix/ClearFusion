@@ -178,6 +178,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<AccountLevel> AccountLevel { get; set; }
         public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
         public DbSet<AccountHeadType> AccountHeadType { get; set; }
+        public DbSet<PaymentTypes> PaymentTypes { get; set; }
 
 
         #region Project
