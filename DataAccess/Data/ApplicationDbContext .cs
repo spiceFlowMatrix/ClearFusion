@@ -213,6 +213,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EligibilityCriteriaDetail> EligibilityCriteriaDetail { get; set; }
         public DbSet<FeasibilityCriteriaDetail> FeasibilityCriteriaDetail { get; set; }
         public DbSet<PriorityCriteriaDetail> PriorityCriteriaDetail { get; set; }
+        public DbSet<FinancialCriteriaDetail> FinancialCriteriaDetail { get; set; }
+        public DbSet<RiskCriteriaDetail> RiskCriteriaDetail { get; set; }
         
 
         #endregion 

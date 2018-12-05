@@ -106,6 +106,8 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse AddEditFeasibilityCriteria(FeasibilityCriteriaModel model, string UserId);
         APIResponse GetAllProjectproposals(long projectId);
         APIResponse AddEditPriorityCriteria(PriorityCriteriaModel model, string UserId);
+        APIResponse AddEditFinancialCriteria(FinancialCriteriaModel model, string UserId);
+        APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId);
 
         #endregion
     }

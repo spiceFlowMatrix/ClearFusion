@@ -175,8 +175,9 @@ namespace DataAccess
         IGenericRepository<EligibilityCriteriaDetail> EligibilityCriteriaDetailRepository { get; }
         IGenericRepository<FeasibilityCriteriaDetail> FeasibilityCriteriaDetailRepository { get; }
         IGenericRepository<PriorityCriteriaDetail> PriorityCriteriaDetailRepository { get; }
+        IGenericRepository<FinancialCriteriaDetail> FinancialCriteriaDetailRepository { get; }
+        IGenericRepository<RiskCriteriaDetail> RiskCriteriaDetailRepository { get; }
         
-
         #endregion
 
         #region Marketing

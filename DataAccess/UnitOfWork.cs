@@ -176,6 +176,8 @@ namespace DataAccess
         private IGenericRepository<EligibilityCriteriaDetail> _eligibilityCriteriaDetailRepository;
         private IGenericRepository<FeasibilityCriteriaDetail> _feasibilityCriteriaDetailRepository;
         private IGenericRepository<PriorityCriteriaDetail> _priorityCriteriaDetailRepository;
+        private IGenericRepository<FinancialCriteriaDetail> _financialCriteriaDetailRepository;
+        private IGenericRepository<RiskCriteriaDetail> _riskCriteriaDetailRepository;
         
 
         //Marketing
@@ -1584,8 +1586,24 @@ namespace DataAccess
                     _priorityCriteriaDetailRepository ?? new GenericRepository<PriorityCriteriaDetail>(_mschaContext);
             }
         }
-        
+        public IGenericRepository<FinancialCriteriaDetail> FinancialCriteriaDetailRepository
+        {
+            get
+            {
+                return _financialCriteriaDetailRepository =
+                    _financialCriteriaDetailRepository ?? new GenericRepository<FinancialCriteriaDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<RiskCriteriaDetail> RiskCriteriaDetailRepository
+        {
+            get
+            {
+                return _riskCriteriaDetailRepository =
+                    _riskCriteriaDetailRepository ?? new GenericRepository<RiskCriteriaDetail>(_mschaContext);
+            }
+        }
 
+        
 
         public void Save()
         {
