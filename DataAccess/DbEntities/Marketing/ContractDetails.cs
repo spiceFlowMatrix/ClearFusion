@@ -32,7 +32,7 @@ namespace DataAccess.DbEntities.Marketing
         public DateTime EndDate { get; set; }
         [ForeignKey("LanguageId")]
         public long? LanguageId { get; set; }
-        public Language Languages { get; set; }
+        public LanguageDetail LanguageDetail { get; set; }
         [ForeignKey("MediumId")]
         public long? MediumId { get; set; }
         public Medium Mediums { get; set; }
