@@ -302,7 +302,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<CurrencyDetails> Currencies { get; set; }
         public ICollection<ContractDetails> ContractDetails { get; set; }
         public ContractDetailsModel contractDetailsModel { get; set; }
-        public ICollection<Language> Languages { get; set; }
+        public ICollection<LanguageDetail> Languages { get; set; }
         public ICollection<Medium> Mediums { get; set; }
         public ICollection<Nature> Natures { get; set; }
         public ICollection<JobPhase> JobPhases { get; set; }

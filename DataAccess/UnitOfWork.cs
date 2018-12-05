@@ -186,7 +186,7 @@ namespace DataAccess
         private IGenericRepository<JobDetails> _jobDetailsRepository;
         private IGenericRepository<JobPhase> _jobPhaseRepository;
         private IGenericRepository<JobPriceDetails> _jobPriceDetailsRepository;
-        private IGenericRepository<Language> _languageRepository;
+        private IGenericRepository<LanguageDetail> _languageRepository;
         private IGenericRepository<MediaCategory> _mediaCategoryRepository;
         private IGenericRepository<Medium> _mediumRepository;
         private IGenericRepository<Quality> _qualityRepository;
@@ -1419,11 +1419,11 @@ namespace DataAccess
             }
         }
 
-        public IGenericRepository<Language> LanguageRepository
+        public IGenericRepository<LanguageDetail> LanguageRepository
         {
             get
             {
-                return _languageRepository = _languageRepository ?? new GenericRepository<Language>(_mschaContext);
+                return _languageRepository = _languageRepository ?? new GenericRepository<LanguageDetail>(_mschaContext);
             }
         }
 
