@@ -1987,6 +1987,8 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Organization");
 
+                    b.Property<string>("Position");
+
                     b.Property<string>("ReasonForLeaving");
 
                     b.HasKey("EmployeeHistoryOutsideCountryId");
@@ -2025,6 +2027,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("MonthlySalary");
 
                     b.Property<string>("Organization");
+
+                    b.Property<string>("Position");
 
                     b.Property<string>("ReasonForLeaving");
 
@@ -2765,6 +2769,8 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Status")
                         .HasMaxLength(20);
+
+                    b.Property<string>("TinNumber");
 
                     b.Property<string>("TrainingBenefits");
 
@@ -4115,6 +4121,8 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
+                    b.Property<int?>("LanguageDetailLanguageId");
+
                     b.Property<long?>("LanguageId");
 
                     b.Property<long?>("MediaCategoryId");
@@ -4147,7 +4155,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("LanguageId");
+                    b.HasIndex("LanguageDetailLanguageId");
 
                     b.HasIndex("MediaCategoryId");
 
@@ -5145,6 +5153,155 @@ namespace DataAccess.Migrations
                     b.ToTable("DonorCriteriaDetail");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Project.EligibilityCriteriaDetail", b =>
+                {
+                    b.Property<long>("EligibilityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<bool?>("CoPartnership");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("DonorCriteriaMet");
+
+                    b.Property<bool?>("EligibilityDealine");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<long>("ProjectId");
+
+                    b.HasKey("EligibilityId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("EligibilityCriteriaDetail");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.FeasibilityCriteriaDetail", b =>
+                {
+                    b.Property<long>("FeasibilityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<bool?>("AnyInKindComponent");
+
+                    b.Property<bool?>("ByEquipment");
+
+                    b.Property<bool?>("CapacityAvailableForProject");
+
+                    b.Property<double?>("CostOfCompensationMoney");
+
+                    b.Property<int?>("CostOfCompensationMonth");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("EnoughTimeForProject");
+
+                    b.Property<bool?>("EnoughTimeToPrepareProposal");
+
+                    b.Property<bool?>("ExpandScope");
+
+                    b.Property<bool?>("FeasibilityExpert");
+
+                    b.Property<bool?>("FeasibleExpertDeploy");
+
+                    b.Property<bool?>("GeoGraphicalPresence");
+
+                    b.Property<bool?>("IsCostGreaterthenBudget");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<bool?>("IsFinancialContribution");
+
+                    b.Property<bool?>("IsGeographical");
+
+                    b.Property<bool?>("IsProjectPractical");
+
+                    b.Property<bool?>("IsSeasonal");
+
+                    b.Property<bool?>("IsSecurity");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int?>("PerCostGreaterthenBudget");
+
+                    b.Property<bool?>("PresenceCoverageInProject");
+
+                    b.Property<bool?>("ProjectAllowedBylaw");
+
+                    b.Property<bool?>("ProjectByLeadership");
+
+                    b.Property<long>("ProjectId");
+
+                    b.Property<bool?>("ProjectInLineWithOrgFocus");
+
+                    b.Property<double?>("ProjectRealCost");
+
+                    b.Property<bool?>("ThirdPartyContract");
+
+                    b.Property<bool?>("TrainedStaff");
+
+                    b.Property<bool?>("UseableByOrganisation");
+
+                    b.HasKey("FeasibilityId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("FeasibilityCriteriaDetail");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.FinancialCriteriaDetail", b =>
+                {
+                    b.Property<long>("FinancialCriteriaDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<double?>("Lump_Sum");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<double?>("Operational");
+
+                    b.Property<double?>("Overhead_Admin");
+
+                    b.Property<double?>("ProjectActivities");
+
+                    b.Property<long>("ProjectId");
+
+                    b.Property<double?>("Total");
+
+                    b.HasKey("FinancialCriteriaDetailId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("FinancialCriteriaDetail");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Project.GenderConsiderationDetail", b =>
                 {
                     b.Property<long>("GenderConsiderationId")
@@ -5181,6 +5338,57 @@ namespace DataAccess.Migrations
                         new { GenderConsiderationId = 7L, GenderConsiderationName = "5 % F - 95 % M Poor", IsDeleted = false },
                         new { GenderConsiderationId = 8L, GenderConsiderationName = "0 % F - 100 % M Poor", IsDeleted = false }
                     );
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.PriorityCriteriaDetail", b =>
+                {
+                    b.Property<long>("PriorityCriteriaDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<bool?>("CoverageAreaExpansion");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("ExpansionGoal");
+
+                    b.Property<bool?>("FillingFundingGap");
+
+                    b.Property<bool?>("GoodCause");
+
+                    b.Property<bool?>("ImproveDonorRelationship");
+
+                    b.Property<bool?>("ImprovePerformancecapacity");
+
+                    b.Property<bool?>("IncreaseEligibility");
+
+                    b.Property<bool?>("IncreaseReputation");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<bool?>("NewEquipment");
+
+                    b.Property<bool?>("NewSoftware");
+
+                    b.Property<bool?>("NewTraining");
+
+                    b.Property<long>("ProjectId");
+
+                    b.Property<bool?>("SkillImprove");
+
+                    b.HasKey("PriorityCriteriaDetailId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("PriorityCriteriaDetail");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProgramDetail", b =>
@@ -5595,6 +5803,8 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
+                    b.Property<int?>("CurrencyId");
+
                     b.Property<string>("EDIFileExtType");
 
                     b.Property<string>("EDIFileName");
@@ -5641,6 +5851,8 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("ProposalWebLink");
 
+                    b.Property<int?>("UserId");
+
                     b.HasKey("ProjectProposaldetailId");
 
                     b.HasIndex("CreatedById");
@@ -5683,6 +5895,166 @@ namespace DataAccess.Migrations
                     b.HasIndex("SectorId");
 
                     b.ToTable("ProjectSector");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.PurposeofInitiativeCriteria", b =>
+                {
+                    b.Property<long>("ProductServiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<bool?>("Aggriculture");
+
+                    b.Property<bool?>("Awareness");
+
+                    b.Property<bool?>("Children");
+
+                    b.Property<bool?>("CommunityDevelopment");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("Culture");
+
+                    b.Property<bool?>("DRR");
+
+                    b.Property<bool?>("Documentaries");
+
+                    b.Property<bool?>("DrugAbuses");
+
+                    b.Property<bool?>("Education");
+
+                    b.Property<bool?>("HealthAndNutrition");
+
+                    b.Property<bool?>("InvestigativeJournalism");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<bool?>("Music");
+
+                    b.Property<bool?>("News");
+
+                    b.Property<bool?>("OtherActivity");
+
+                    b.Property<bool?>("Others");
+
+                    b.Property<bool?>("PrintedMedia");
+
+                    b.Property<long>("ProjectId");
+
+                    b.Property<bool?>("RadioProduction");
+
+                    b.Property<bool?>("Reports");
+
+                    b.Property<bool?>("Right");
+
+                    b.Property<bool?>("RoundTable");
+
+                    b.Property<bool?>("ServiceEducation");
+
+                    b.Property<bool?>("ServiceHealthAndNutrition");
+
+                    b.Property<bool?>("SocioPolitiacalDebate");
+
+                    b.Property<bool?>("Studies");
+
+                    b.Property<bool?>("TVProgram");
+
+                    b.Property<bool?>("TargetBenificaiaryWomen");
+
+                    b.Property<bool?>("TargetBenificiaryAgeGroup");
+
+                    b.Property<bool?>("TargetBenificiaryMen");
+
+                    b.Property<bool?>("TargetBenificiaryaOccupation");
+
+                    b.Property<bool?>("Women");
+
+                    b.HasKey("ProductServiceId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("PurposeofInitiativeCriteria");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.RiskCriteriaDetail", b =>
+                {
+                    b.Property<long>("RiskCriteriaDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<bool?>("Beneficiaries");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("DeliveryFaiLure");
+
+                    b.Property<bool?>("DesctructionByTerroristActivity");
+
+                    b.Property<bool?>("Ethinc");
+
+                    b.Property<bool?>("Financiallosses");
+
+                    b.Property<bool?>("FocusDivertingrisk");
+
+                    b.Property<bool?>("GovernmentConfiscation");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<bool?>("Opportunityloss");
+
+                    b.Property<string>("OrganizationalDescription");
+
+                    b.Property<bool?>("OtherOrganizationalHarms");
+
+                    b.Property<bool?>("OverallOrganization");
+
+                    b.Property<bool?>("PrematureSeizure");
+
+                    b.Property<bool?>("Probablydelaysinfunding");
+
+                    b.Property<bool?>("ProjectAssets");
+
+                    b.Property<long>("ProjectId");
+
+                    b.Property<string>("ProjectSelection");
+
+                    b.Property<bool?>("Religious");
+
+                    b.Property<bool?>("Reputation");
+
+                    b.Property<bool?>("Sectarian");
+
+                    b.Property<bool?>("Security");
+
+                    b.Property<bool?>("Social");
+
+                    b.Property<bool?>("Staff");
+
+                    b.Property<bool?>("Suppliers");
+
+                    b.Property<bool?>("Traditional");
+
+                    b.HasKey("RiskCriteriaDetailId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("RiskCriteriaDetail");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.SectorDetails", b =>
@@ -6390,6 +6762,35 @@ namespace DataAccess.Migrations
                     b.ToTable("MotorSpareParts");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Store.PaymentTypes", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<int>("AccountId");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("PaymentId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("PaymentTypes");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Store.PurchaseGenerator", b =>
                 {
                     b.Property<int>("GeneratorId")
@@ -6614,9 +7015,17 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
+                    b.Property<bool>("IsPurchaseVerified");
+
+                    b.Property<int?>("JournalCode");
+
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int?>("OfficeId");
+
+                    b.Property<int?>("PaymentTypeId");
 
                     b.Property<long?>("ProjectId");
 
@@ -6639,13 +7048,13 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("UnitType");
 
+                    b.Property<long?>("VerifiedPurchaseVoucher");
+
                     b.Property<DateTime>("VoucherDate");
 
                     b.Property<long?>("VoucherId");
 
                     b.HasKey("PurchaseId");
-
-                    b.HasIndex("BudgetLineId");
 
                     b.HasIndex("CreatedById");
 
@@ -8886,9 +9295,9 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("CurrencyId");
 
-                    b.HasOne("DataAccess.DbEntities.Marketing.Language", "Languages")
+                    b.HasOne("DataAccess.DbEntities.LanguageDetail", "LanguageDetail")
                         .WithMany()
-                        .HasForeignKey("LanguageId");
+                        .HasForeignKey("LanguageDetailLanguageId");
 
                     b.HasOne("DataAccess.DbEntities.Marketing.MediaCategory", "MediaCategories")
                         .WithMany()
@@ -9207,7 +9616,51 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Project.EligibilityCriteriaDetail", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.FeasibilityCriteriaDetail", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.FinancialCriteriaDetail", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Project.GenderConsiderationDetail", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.PriorityCriteriaDetail", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
@@ -9427,6 +9880,28 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("SectorId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.PurposeofInitiativeCriteria", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.RiskCriteriaDetail", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.SectorDetails", b =>
@@ -9680,6 +10155,17 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Store.PaymentTypes", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Store.PurchaseGenerator", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -9746,10 +10232,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.Store.StoreItemPurchase", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.ProjectBudgetLine", "ProjectBudgetLine")
-                        .WithMany()
-                        .HasForeignKey("BudgetLineId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");

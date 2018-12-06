@@ -46,8 +46,8 @@ namespace HumanitarianAssistance.Service.Classes
                                      join at in _uow.GetDbContext().Categories on ur.CategoryId equals at.CategoryId
                                      into jou
                                      from dev_skill in jou.DefaultIfEmpty()
-                                     from at in _uow.GetDbContext().Categories
-                                     where !ur.IsDeleted.Value && !at.IsDeleted.Value && ur.ClientId == ClientId
+                                     from a in _uow.GetDbContext().ClientDetails
+                                     where !ur.IsDeleted.Value && !a.IsDeleted.Value && ur.ClientId == ClientId
                                      select (new ClientDetailModel
                                      {
                                          CategoryId = ur.CategoryId,

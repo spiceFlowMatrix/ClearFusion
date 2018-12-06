@@ -53,263 +53,274 @@ namespace HumanitarianAssistance.Service.Classes
 
                 //gets the total working hours in a day for an office
                 PayrollMonthlyHourDetail payrollMonthlyHourDetail = _uow.PayrollMonthlyHourDetailRepository.FindAll(x => x.OfficeId == modellist.FirstOrDefault().OfficeId && x.PayrollYear == modellist.FirstOrDefault().Date.Year && x.PayrollMonth == modellist.FirstOrDefault().Date.Month).FirstOrDefault();
-                int officeDailyHour = payrollMonthlyHourDetail.Hours.Value;
-                int officeMonthlyHour = payrollMonthlyHourDetail.WorkingTime.Value;
+                int? officeDailyHour = payrollMonthlyHourDetail.Hours;
+                int? officeMonthlyHour = payrollMonthlyHourDetail.WorkingTime;
 
-                //int? defaulthours = 0;
 
-                //uncomment when we have all offices hour detail
-                //var DefaultHourDetail = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false && x.OfficeId == modellist[0].OfficeId);
-
-                //var DefaultHourDetail = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false);
-
-                var financiallist = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDefault == true);
-
-                foreach (var list in modellist)
+                if (officeDailyHour != null && officeMonthlyHour != null)
                 {
-                    TimeSpan? totalworkhour;
-                    TimeSpan? totalovertime;
-                    int? overtime = 0, workingHours = 0;
 
-                    var isemprecord = existrecord.Where(x => x.EmployeeId == list.EmployeeId && x.Date.Date == list.Date.Date).ToList();
-                    totalworkhour = list.OutTime - list.InTime;
+                    //int? defaulthours = 0;
 
-                    if (isemprecord.Count == 0)
+                    //uncomment when we have all offices hour detail
+                    //var DefaultHourDetail = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false && x.OfficeId == modellist[0].OfficeId);
+
+                    //var DefaultHourDetail = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false);
+
+                    var financiallist = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDefault == true);
+
+                    foreach (var list in modellist)
                     {
+                        TimeSpan? totalworkhour;
+                        TimeSpan? totalovertime;
+                        int? overtime = 0, workingHours = 0;
 
-                        if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
+                        var isemprecord = existrecord.Where(x => x.EmployeeId == list.EmployeeId && x.Date.Date == list.Date.Date).ToList();
+                        totalworkhour = list.OutTime - list.InTime;
+
+                        if (isemprecord.Count == 0)
                         {
-                            list.AttendanceTypeId = 2;
-                            list.InTime = list.Date;
-                            list.OutTime = list.Date;
-                            totalworkhour = list.Date.Date - list.Date.Date;
-                        }
 
-                        OfficeInTime = new DateTime(list.InTime.Value.Year, list.InTime.Value.Month, list.InTime.Value.Day, payrollMonthlyHourDetail.InTime.Value.Hour, payrollMonthlyHourDetail.InTime.Value.Minute, payrollMonthlyHourDetail.InTime.Value.Second);
-                        OfficeOutTime = new DateTime(list.OutTime.Value.Year, list.OutTime.Value.Month, list.OutTime.Value.Day, payrollMonthlyHourDetail.OutTime.Value.Hour, payrollMonthlyHourDetail.OutTime.Value.Minute, payrollMonthlyHourDetail.OutTime.Value.Second);
-
-                        if (list.InTime < OfficeInTime)
-                        {
-                            totalovertime = OfficeInTime - list.InTime;
-                            overtime += totalovertime.Value.Hours;
-                            if (list.OutTime <= OfficeOutTime)
+                            if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
                             {
-                                totalworkhour = list.OutTime - OfficeInTime;
-                                workingHours += totalworkhour.Value.Hours;
+                                list.AttendanceTypeId = 2;
+                                list.InTime = list.Date;
+                                list.OutTime = list.Date;
+                                totalworkhour = list.Date.Date - list.Date.Date;
                             }
-                            if (list.OutTime > OfficeOutTime)
+
+                            OfficeInTime = new DateTime(list.InTime.Value.Year, list.InTime.Value.Month, list.InTime.Value.Day, payrollMonthlyHourDetail.InTime.Value.Hour, payrollMonthlyHourDetail.InTime.Value.Minute, payrollMonthlyHourDetail.InTime.Value.Second);
+                            OfficeOutTime = new DateTime(list.OutTime.Value.Year, list.OutTime.Value.Month, list.OutTime.Value.Day, payrollMonthlyHourDetail.OutTime.Value.Hour, payrollMonthlyHourDetail.OutTime.Value.Minute, payrollMonthlyHourDetail.OutTime.Value.Second);
+
+                            if (list.InTime < OfficeInTime)
                             {
-                                totalovertime = list.OutTime - OfficeOutTime;
+                                totalovertime = OfficeInTime - list.InTime;
                                 overtime += totalovertime.Value.Hours;
-                                totalworkhour = OfficeOutTime - OfficeInTime;
-                                workingHours += totalworkhour.Value.Hours;
-                            }
-
-                            list.TotalWorkTime = workingHours.ToString();
-                            list.HoverTimeHours = overtime;
-                        }
-
-                        else if (list.InTime >= OfficeInTime)
-                        {
-                            if (list.OutTime <= OfficeOutTime)
-                            {
-                                totalworkhour = list.OutTime - list.InTime;
-                                workingHours += totalworkhour.Value.Hours;
-                            }
-                            if (list.OutTime > OfficeOutTime)
-                            {
-                                totalovertime = list.OutTime - OfficeOutTime;
-                                overtime += totalovertime.Value.Hours;
-                                totalworkhour = OfficeOutTime - list.InTime;
-                                workingHours += totalworkhour.Value.Hours;
-                            }
-
-                            list.TotalWorkTime = workingHours.ToString();
-                            list.HoverTimeHours = overtime;
-
-                        }
-                        else
-                        {
-                            list.TotalWorkTime = workingHours.ToString();
-                            list.HoverTimeHours = overtime;
-                        }
-
-                        list.FinancialYearId = financiallist.FinancialYearId;
-                        list.CreatedById = UserId;
-                        list.CreatedDate = DateTime.UtcNow;
-                        list.IsDeleted = false;
-                        EmployeeAttendance obj = _mapper.Map<EmployeeAttendance>(list);
-                        await _uow.EmployeeAttendanceRepository.AddAsyn(obj);
-                        await _uow.SaveAsync();
-                    }
-
-                    EmployeeMonthlyAttendance xEmployeeMonthlyAttendanceRecord = await _uow.EmployeeMonthlyAttendanceRepository.FindAsync(x => x.EmployeeId == list.EmployeeId && x.Month == list.Date.Month && x.Year == list.Date.Year && x.IsDeleted == false);
-
-                    EmployeeMonthlyAttendance xEmployeeMonthlyAttendance = new EmployeeMonthlyAttendance();
-
-                    //If Employee record is present in monthly attendance table then 
-                    if (xEmployeeMonthlyAttendanceRecord != null)
-                    {
-
-                        //if Employee is absent without any leave
-                        if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
-                        {
-                            xEmployeeMonthlyAttendance.AbsentHours = xEmployeeMonthlyAttendance.AbsentHours == null ? 0 : xEmployeeMonthlyAttendance.AbsentHours;
-                            xEmployeeMonthlyAttendance.AbsentHours += officeDailyHour;
-                        }
-
-                        //update total attendance hours
-                        if (workingHours != 0 && overtime == 0)
-                        {
-                            xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
-
-                        }
-                        //update total attendance hours and also add overtime hours
-                        else if (workingHours != 0 && overtime != 0)
-                        {
-                            xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
-                            xEmployeeMonthlyAttendanceRecord.OvertimeHours = xEmployeeMonthlyAttendanceRecord.OvertimeHours ?? 0;
-                            xEmployeeMonthlyAttendanceRecord.OvertimeHours += overtime;
-                        }
-
-                        //updating employee monthly attendance record
-                        await _uow.EmployeeMonthlyAttendanceRepository.UpdateAsyn(xEmployeeMonthlyAttendanceRecord);
-                        await _uow.SaveAsync();
-                    }
-                    else// if employee monthly attendance record does not exists then add a record
-                    {
-                        int monthDays = GetMonthDays(modellist.FirstOrDefault().Date.Month, modellist.FirstOrDefault().Date.Year);
-
-                        //if employee is absent without any leave
-                        if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
-                        {
-                            xEmployeeMonthlyAttendance.IsDeleted = false;
-                            xEmployeeMonthlyAttendance.EmployeeId = list.EmployeeId;
-                            xEmployeeMonthlyAttendance.Month = list.Date.Month;
-                            xEmployeeMonthlyAttendance.Year = list.Date.Year;
-                            xEmployeeMonthlyAttendance.AttendanceHours = 0;
-                            xEmployeeMonthlyAttendance.OvertimeHours = 0;
-                            xEmployeeMonthlyAttendance.AbsentHours = officeDailyHour;
-                            xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
-                            xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
-                        }
-                        else
-                        {
-                            xEmployeeMonthlyAttendance.IsDeleted = false;
-                            xEmployeeMonthlyAttendance.EmployeeId = list.EmployeeId;
-                            xEmployeeMonthlyAttendance.Month = list.Date.Month;
-                            xEmployeeMonthlyAttendance.Year = list.Date.Year;
-                            xEmployeeMonthlyAttendance.AttendanceHours = workingHours;
-                            xEmployeeMonthlyAttendance.OvertimeHours = overtime;
-                            xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
-                            xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
-                        }
-
-                        Advances xAdvances = await _uow.GetDbContext().Advances.Where(x => x.IsDeleted == false && x.IsApproved == true
-                                                                        && x.EmployeeId == list.EmployeeId && x.OfficeId == list.OfficeId && x.IsDeducted == false
-                                                                        && x.AdvanceDate <= DateTime.Now).FirstOrDefaultAsync();
-                        if (xAdvances != null)
-                        {
-                            xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
-                            xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
-                            xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
-                        }
-
-                        await _uow.EmployeeMonthlyAttendanceRepository.AddAsyn(xEmployeeMonthlyAttendance);
-                    }
-                }
-
-                //If Employee is not present then check the leave table and update leave record accordingly
-                List<EmployeeApplyLeave> xEmployeeLeaveDetailList = _uow.GetDbContext().EmployeeApplyLeave
-                    .Include(x => x.EmployeeDetails.EmployeeProfessionalDetail)
-                                                                .Where(x => x.FromDate.Date >= modellist.FirstOrDefault().Date.Date &&
-                                                                            x.ToDate.Date <= modellist.FirstOrDefault().Date.Date &&
-                                                                            x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == modellist.FirstOrDefault().OfficeId
-                                                                            && x.IsDeleted == false)
-                                                                .ToList();
-
-                //If leave Exists then check the status of leave if approved then add the working hours of the day in attendance hours
-                if (xEmployeeLeaveDetailList.Count != 0)
-                {
-                    int monthDays = GetMonthDays(modellist.FirstOrDefault().Date.Month, modellist.FirstOrDefault().Date.Year);
-
-                    foreach (EmployeeApplyLeave xEmployeeApplyLeave in xEmployeeLeaveDetailList)
-                    {
-                        EmployeeMonthlyAttendance xEmployeeMonthlyAttendanceRecord = await _uow.EmployeeMonthlyAttendanceRepository.FindAsync(x => x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.Month == modellist.FirstOrDefault().Date.Date.Month && x.Year == modellist.FirstOrDefault().Date.Date.Year && x.IsDeleted == false);
-
-                        if (xEmployeeMonthlyAttendanceRecord == null)
-                        {
-
-                            EmployeeMonthlyAttendance xEmployeeMonthlyAttendance = new EmployeeMonthlyAttendance();
-
-                            if (xEmployeeApplyLeave.ApplyLeaveStatusId == 1)
-                            {
-                                //remove hardcoded attendance hours once all office hours are available in master table
-                                xEmployeeMonthlyAttendance.IsDeleted = false;
-                                xEmployeeMonthlyAttendance.OfficeId = modellist.FirstOrDefault().OfficeId;
-                                xEmployeeMonthlyAttendance.EmployeeId = xEmployeeApplyLeave.EmployeeId;
-                                xEmployeeMonthlyAttendance.Month = modellist.FirstOrDefault().Date.Month;
-                                xEmployeeMonthlyAttendance.Year = modellist.FirstOrDefault().Date.Year;
-                                xEmployeeMonthlyAttendance.AttendanceHours = xEmployeeMonthlyAttendance.AttendanceHours != null ? xEmployeeMonthlyAttendance.AttendanceHours.Value : 0;
-                                //xEmployeeMonthlyAttendance.AttendanceHours += officeDailyHour;
-                                xEmployeeMonthlyAttendance.LeaveHours += xEmployeeMonthlyAttendance.LeaveHours != null ? xEmployeeMonthlyAttendance.LeaveHours : 0;
-                                xEmployeeMonthlyAttendance.LeaveHours += officeDailyHour;
-                                xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
-
-                                Advances xAdvances = await _uow.GetDbContext().Advances.Where(x => x.IsDeleted == false && x.IsApproved == true && x.IsDeducted == false
-                                                                           && x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.OfficeId == modellist.FirstOrDefault().OfficeId
-                                                                           && x.AdvanceDate <= DateTime.Now).FirstOrDefaultAsync();
-                                if (xAdvances != null)
+                                if (list.OutTime <= OfficeOutTime)
                                 {
-                                    xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
-                                    xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
-                                    xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
+                                    totalworkhour = list.OutTime - OfficeInTime;
+                                    workingHours += totalworkhour.Value.Hours;
+                                }
+                                if (list.OutTime > OfficeOutTime)
+                                {
+                                    totalovertime = list.OutTime - OfficeOutTime;
+                                    overtime += totalovertime.Value.Hours;
+                                    totalworkhour = OfficeOutTime - OfficeInTime;
+                                    workingHours += totalworkhour.Value.Hours;
                                 }
 
-                                await _uow.EmployeeMonthlyAttendanceRepository.AddAsyn(xEmployeeMonthlyAttendance);
-                                await _uow.SaveAsync();
+                                list.TotalWorkTime = workingHours.ToString();
+                                list.HoverTimeHours = overtime;
+                            }
+
+                            else if (list.InTime >= OfficeInTime)
+                            {
+                                if (list.OutTime <= OfficeOutTime)
+                                {
+                                    totalworkhour = list.OutTime - list.InTime;
+                                    workingHours += totalworkhour.Value.Hours;
+                                }
+                                if (list.OutTime > OfficeOutTime)
+                                {
+                                    totalovertime = list.OutTime - OfficeOutTime;
+                                    overtime += totalovertime.Value.Hours;
+                                    totalworkhour = OfficeOutTime - list.InTime;
+                                    workingHours += totalworkhour.Value.Hours;
+                                }
+
+                                list.TotalWorkTime = workingHours.ToString();
+                                list.HoverTimeHours = overtime;
+
+                            }
+                            else
+                            {
+                                list.TotalWorkTime = workingHours.ToString();
+                                list.HoverTimeHours = overtime;
+                            }
+
+                            list.FinancialYearId = financiallist.FinancialYearId;
+                            list.CreatedById = UserId;
+                            list.CreatedDate = DateTime.UtcNow;
+                            list.IsDeleted = false;
+                            EmployeeAttendance obj = _mapper.Map<EmployeeAttendance>(list);
+                            await _uow.EmployeeAttendanceRepository.AddAsyn(obj);
+                            await _uow.SaveAsync();
+                        }
+
+                        EmployeeMonthlyAttendance xEmployeeMonthlyAttendanceRecord = await _uow.EmployeeMonthlyAttendanceRepository.FindAsync(x => x.EmployeeId == list.EmployeeId && x.Month == list.Date.Month && x.Year == list.Date.Year && x.IsDeleted == false);
+
+                        EmployeeMonthlyAttendance xEmployeeMonthlyAttendance = new EmployeeMonthlyAttendance();
+
+                        //If Employee record is present in monthly attendance table then 
+                        if (xEmployeeMonthlyAttendanceRecord != null)
+                        {
+
+                            //if Employee is absent without any leave
+                            if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
+                            {
+                                xEmployeeMonthlyAttendance.AbsentHours = xEmployeeMonthlyAttendance.AbsentHours == null ? 0 : xEmployeeMonthlyAttendance.AbsentHours;
+                                xEmployeeMonthlyAttendance.AbsentHours += officeDailyHour;
+                            }
+
+                            //update total attendance hours
+                            if (workingHours != 0 && overtime == 0)
+                            {
+                                xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
+
+                            }
+                            //update total attendance hours and also add overtime hours
+                            else if (workingHours != 0 && overtime != 0)
+                            {
+                                xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
+                                xEmployeeMonthlyAttendanceRecord.OvertimeHours = xEmployeeMonthlyAttendanceRecord.OvertimeHours ?? 0;
+                                xEmployeeMonthlyAttendanceRecord.OvertimeHours += overtime;
+                            }
+
+                            //updating employee monthly attendance record
+                            await _uow.EmployeeMonthlyAttendanceRepository.UpdateAsyn(xEmployeeMonthlyAttendanceRecord);
+                            await _uow.SaveAsync();
+                        }
+                        else// if employee monthly attendance record does not exists then add a record
+                        {
+                            int monthDays = GetMonthDays(modellist.FirstOrDefault().Date.Month, modellist.FirstOrDefault().Date.Year);
+
+                            //if employee is absent without any leave
+                            if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
+                            {
+                                xEmployeeMonthlyAttendance.IsDeleted = false;
+                                xEmployeeMonthlyAttendance.EmployeeId = list.EmployeeId;
+                                xEmployeeMonthlyAttendance.Month = list.Date.Month;
+                                xEmployeeMonthlyAttendance.Year = list.Date.Year;
+                                xEmployeeMonthlyAttendance.AttendanceHours = 0;
+                                xEmployeeMonthlyAttendance.OvertimeHours = 0;
+                                xEmployeeMonthlyAttendance.AbsentHours = officeDailyHour;
+                                xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
+                                xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
                             }
                             else
                             {
                                 xEmployeeMonthlyAttendance.IsDeleted = false;
-                                xEmployeeMonthlyAttendance.OfficeId = modellist[0].OfficeId;
-                                xEmployeeMonthlyAttendance.EmployeeId = xEmployeeApplyLeave.EmployeeId;
-                                xEmployeeMonthlyAttendance.Month = modellist.FirstOrDefault().Date.Month;
-                                xEmployeeMonthlyAttendance.Year = modellist.FirstOrDefault().Date.Year;
-                                xEmployeeMonthlyAttendance.AbsentHours = xEmployeeMonthlyAttendance.AbsentHours == null ? 0 : xEmployeeMonthlyAttendance.AbsentHours;
-                                xEmployeeMonthlyAttendance.AbsentHours += officeDailyHour;
+                                xEmployeeMonthlyAttendance.EmployeeId = list.EmployeeId;
+                                xEmployeeMonthlyAttendance.Month = list.Date.Month;
+                                xEmployeeMonthlyAttendance.Year = list.Date.Year;
+                                xEmployeeMonthlyAttendance.AttendanceHours = workingHours;
+                                xEmployeeMonthlyAttendance.OvertimeHours = overtime;
+                                xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
                                 xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
+                            }
 
-                                Advances xAdvances = await _uow.GetDbContext().Advances.Where(x => x.IsDeleted == false && x.IsApproved == true && x.IsDeducted == false
-                                                                          && x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.OfficeId == modellist.FirstOrDefault().OfficeId
-                                                                          && x.AdvanceDate < DateTime.Now).FirstOrDefaultAsync();
-                                if (xAdvances != null)
+                            Advances xAdvances = await _uow.GetDbContext().Advances.Where(x => x.IsDeleted == false && x.IsApproved == true
+                                                                            && x.EmployeeId == list.EmployeeId && x.OfficeId == list.OfficeId && x.IsDeducted == false
+                                                                            && x.AdvanceDate <= DateTime.Now).FirstOrDefaultAsync();
+                            if (xAdvances != null)
+                            {
+                                xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
+                                xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
+                                xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
+                            }
+
+                            await _uow.EmployeeMonthlyAttendanceRepository.AddAsyn(xEmployeeMonthlyAttendance);
+                        }
+                    }
+
+                    //If Employee is not present then check the leave table and update leave record accordingly
+                    List<EmployeeApplyLeave> xEmployeeLeaveDetailList = _uow.GetDbContext().EmployeeApplyLeave
+                        .Include(x => x.EmployeeDetails.EmployeeProfessionalDetail)
+                                                                    .Where(x => x.FromDate.Date >= modellist.FirstOrDefault().Date.Date &&
+                                                                                x.ToDate.Date <= modellist.FirstOrDefault().Date.Date &&
+                                                                                x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == modellist.FirstOrDefault().OfficeId
+                                                                                && x.IsDeleted == false)
+                                                                    .ToList();
+
+                    //If leave Exists then check the status of leave if approved then add the working hours of the day in attendance hours
+                    if (xEmployeeLeaveDetailList.Count != 0)
+                    {
+                        int monthDays = GetMonthDays(modellist.FirstOrDefault().Date.Month, modellist.FirstOrDefault().Date.Year);
+
+                        foreach (EmployeeApplyLeave xEmployeeApplyLeave in xEmployeeLeaveDetailList)
+                        {
+                            EmployeeMonthlyAttendance xEmployeeMonthlyAttendanceRecord = await _uow.EmployeeMonthlyAttendanceRepository.FindAsync(x => x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.Month == modellist.FirstOrDefault().Date.Date.Month && x.Year == modellist.FirstOrDefault().Date.Date.Year && x.IsDeleted == false);
+
+                            if (xEmployeeMonthlyAttendanceRecord == null)
+                            {
+
+                                EmployeeMonthlyAttendance xEmployeeMonthlyAttendance = new EmployeeMonthlyAttendance();
+
+                                if (xEmployeeApplyLeave.ApplyLeaveStatusId == 1)
                                 {
-                                    xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
-                                    xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
-                                    xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
+                                    //remove hardcoded attendance hours once all office hours are available in master table
+                                    xEmployeeMonthlyAttendance.IsDeleted = false;
+                                    xEmployeeMonthlyAttendance.OfficeId = modellist.FirstOrDefault().OfficeId;
+                                    xEmployeeMonthlyAttendance.EmployeeId = xEmployeeApplyLeave.EmployeeId;
+                                    xEmployeeMonthlyAttendance.Month = modellist.FirstOrDefault().Date.Month;
+                                    xEmployeeMonthlyAttendance.Year = modellist.FirstOrDefault().Date.Year;
+                                    xEmployeeMonthlyAttendance.AttendanceHours = xEmployeeMonthlyAttendance.AttendanceHours != null ? xEmployeeMonthlyAttendance.AttendanceHours.Value : 0;
+                                    //xEmployeeMonthlyAttendance.AttendanceHours += officeDailyHour;
+                                    xEmployeeMonthlyAttendance.LeaveHours += xEmployeeMonthlyAttendance.LeaveHours != null ? xEmployeeMonthlyAttendance.LeaveHours : 0;
+                                    xEmployeeMonthlyAttendance.LeaveHours += officeDailyHour;
+                                    xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
+
+                                    Advances xAdvances = await _uow.GetDbContext().Advances.Where(x => x.IsDeleted == false && x.IsApproved == true && x.IsDeducted == false
+                                                                               && x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.OfficeId == modellist.FirstOrDefault().OfficeId
+                                                                               && x.AdvanceDate <= DateTime.Now).FirstOrDefaultAsync();
+                                    if (xAdvances != null)
+                                    {
+                                        xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
+                                        xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
+                                        xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
+                                    }
+
+                                    await _uow.EmployeeMonthlyAttendanceRepository.AddAsyn(xEmployeeMonthlyAttendance);
+                                    await _uow.SaveAsync();
+                                }
+                                else
+                                {
+                                    xEmployeeMonthlyAttendance.IsDeleted = false;
+                                    xEmployeeMonthlyAttendance.OfficeId = modellist[0].OfficeId;
+                                    xEmployeeMonthlyAttendance.EmployeeId = xEmployeeApplyLeave.EmployeeId;
+                                    xEmployeeMonthlyAttendance.Month = modellist.FirstOrDefault().Date.Month;
+                                    xEmployeeMonthlyAttendance.Year = modellist.FirstOrDefault().Date.Year;
+                                    xEmployeeMonthlyAttendance.AbsentHours = xEmployeeMonthlyAttendance.AbsentHours == null ? 0 : xEmployeeMonthlyAttendance.AbsentHours;
+                                    xEmployeeMonthlyAttendance.AbsentHours += officeDailyHour;
+                                    xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
+
+                                    Advances xAdvances = await _uow.GetDbContext().Advances.Where(x => x.IsDeleted == false && x.IsApproved == true && x.IsDeducted == false
+                                                                              && x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.OfficeId == modellist.FirstOrDefault().OfficeId
+                                                                              && x.AdvanceDate < DateTime.Now).FirstOrDefaultAsync();
+                                    if (xAdvances != null)
+                                    {
+                                        xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
+                                        xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
+                                        xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
+                                    }
+
+                                    await _uow.EmployeeMonthlyAttendanceRepository.AddAsyn(xEmployeeMonthlyAttendance);
+                                    await _uow.SaveAsync();
                                 }
 
-                                await _uow.EmployeeMonthlyAttendanceRepository.AddAsyn(xEmployeeMonthlyAttendance);
-                                await _uow.SaveAsync();
                             }
-
-                        }
-                        else//if Employee Monthly Attendance Record is present then add leave hours
-                        {
-                            if (xEmployeeApplyLeave.ApplyLeaveStatusId == (int)ApplyLeaveStatus.Approve)
+                            else//if Employee Monthly Attendance Record is present then add leave hours
                             {
-                                xEmployeeMonthlyAttendanceRecord.LeaveHours = officeDailyHour;
-                                await _uow.EmployeeMonthlyAttendanceRepository.UpdateAsyn(xEmployeeMonthlyAttendanceRecord);
-                                await _uow.SaveAsync();
+                                if (xEmployeeApplyLeave.ApplyLeaveStatusId == (int)ApplyLeaveStatus.Approve)
+                                {
+                                    xEmployeeMonthlyAttendanceRecord.LeaveHours = officeDailyHour;
+                                    await _uow.EmployeeMonthlyAttendanceRepository.UpdateAsyn(xEmployeeMonthlyAttendanceRecord);
+                                    await _uow.SaveAsync();
+                                }
                             }
+
                         }
-
                     }
-                }
 
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Office Hours Not Set";
+
+                }
             }
             catch (Exception ex)
             {

@@ -28,14 +28,10 @@ namespace DataAccess.DbEntities.Store
 
 
         public string IssueVoucherNo { get; set; }
-        //[ForeignKey("IssueVoucherNo")]
-        //public VoucherDetail VoucherDetail { get; set; }
 
         public string Remarks { get; set; }
 
         public long Project { get; set; }
-        //[ForeignKey("Project")]
-        //public ProjectDetails ProjectDetails { get; set; }
 
         public string IssedToLocation { get; set; }
 

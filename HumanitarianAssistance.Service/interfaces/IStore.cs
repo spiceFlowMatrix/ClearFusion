@@ -74,5 +74,11 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetStoreTypeCode(int CodeTypeId);
         Task<APIResponse> EditStoreSourceCode(StoreSourceCodeDetailModel storeSourceCodeDetailModel, string userId);
         Task<APIResponse> DeleteStoreSourceCode(int storeSourceCodeId, string userId);
+        Task<APIResponse> GetAllPaymentTypes();
+        Task<APIResponse> AddPaymentTypes(PaymentTypes model, string UserId);
+        Task<APIResponse> EditPaymentTypes(PaymentTypes model, string UserId);
+        Task<APIResponse> DeletePaymentTypes(int PaymentId, string UserId);
+        Task<APIResponse> VerifyPurchase(ItemPurchaseModel model);
+        Task<APIResponse> UnverifyPurchase(ItemPurchaseModel model);
     }
 }

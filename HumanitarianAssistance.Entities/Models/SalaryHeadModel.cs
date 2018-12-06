@@ -25,5 +25,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public long? AccountNo { get; set; }
         public int? TransactionTypeId { get; set; }
         public decimal? Amount { get; set; }
+        public int? OfficeId { get; set; }
     }
 }

@@ -44,5 +44,7 @@ namespace DataAccess.DbEntities.Project
         public DateTime? ProposalDueDate { get; set; }
         public int? ProjectAssignTo { get; set; }
         public bool? IsProposalAccept { get; set; }
+        public int? CurrencyId { get; set; }
+        public int? UserId { get; set; }
     }
 }

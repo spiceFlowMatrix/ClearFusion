@@ -803,8 +803,99 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
-    #endregion
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditPurposeofInitiativeCriteria([FromBody]PurposeofInitiativeCriteriaModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditPurposeofInitiativeCriteria(Model, id);
+      }
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditEligibilityCriteriaDetail([FromBody]EligibilityCriteriaDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditEligibilityCriteriaDetail(Model, id);
+      }
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditFeasibilityCriteria([FromBody]FeasibilityCriteriaModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditFeasibilityCriteria(Model, id);
+      }
+      return apiRespone;
+    }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public APIResponse GetAllProjectproposals([FromBody]long ProjectId)
+    {
+      APIResponse apiRespone = null;
+     
+        apiRespone = _iProject.GetAllProjectproposals(ProjectId);
+      
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditPriorityCriteria([FromBody]PriorityCriteriaModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditPriorityCriteria(Model, id);
+      }
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditFinancialCriteria([FromBody]FinancialCriteriaModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditFinancialCriteria(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditRiskCriteria([FromBody]RiskCriteriaModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditRiskCriteria(Model, id);
+      }
+      return apiRespone;
+    }
+
+
+    #endregion
 
   }
 }

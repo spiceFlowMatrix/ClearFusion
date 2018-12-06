@@ -143,6 +143,7 @@ namespace DataAccess
         IGenericRepository<PayrollAccountHead> PayrollAccountHeadRepository { get; }
         IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository { get; }
         IGenericRepository<ExchangeRateDetail> ExchangeRateDetailRepository { get; }
+        IGenericRepository<PaymentTypes> PaymentTypesRepository { get; }
 
         #region Project
         IGenericRepository<DonorDetail> DonorDetailRepository { get; }
@@ -171,7 +172,14 @@ namespace DataAccess
         IGenericRepository<WinProjectDetails> WinProjectDetailsRepository { get; }
         IGenericRepository<ProjectProposalDetail> ProjectProposalDetailRepository { get; }
         IGenericRepository<DonorCriteriaDetails> DonorCriteriaDetailsRepository { get; }
-        #endregion 
+        IGenericRepository<PurposeofInitiativeCriteria> PurposeofInitiativeCriteriaRepository { get; }
+        IGenericRepository<EligibilityCriteriaDetail> EligibilityCriteriaDetailRepository { get; }
+        IGenericRepository<FeasibilityCriteriaDetail> FeasibilityCriteriaDetailRepository { get; }
+        IGenericRepository<PriorityCriteriaDetail> PriorityCriteriaDetailRepository { get; }
+        IGenericRepository<FinancialCriteriaDetail> FinancialCriteriaDetailRepository { get; }
+        IGenericRepository<RiskCriteriaDetail> RiskCriteriaDetailRepository { get; }
+        
+        #endregion
 
         #region Marketing
         IGenericRepository<UnitRate> UnitRateRepository { get; }
@@ -180,7 +188,7 @@ namespace DataAccess
         IGenericRepository<JobDetails> JobDetailsRepository { get; }
         IGenericRepository<JobPhase> JobPhaseRepository { get; }
         IGenericRepository<JobPriceDetails> JobPriceDetailsRepository { get; }
-        IGenericRepository<Language> LanguageRepository { get; }
+        IGenericRepository<LanguageDetail> LanguageRepository { get; }
         IGenericRepository<MediaCategory> MediaCategoryRepository { get; }
         IGenericRepository<Medium> MediumRepository { get; }
         IGenericRepository<Quality> QualityRepository { get; }

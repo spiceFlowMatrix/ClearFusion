@@ -48,7 +48,7 @@ namespace DataAccess.Data
 
         }
 
-        private static async Task CreateDefaultUserAndRoleForApplication(UserManager<AppUser> um, RoleManager<IdentityRole> rm, ApplicationDbContext context, ILogger<DbInitializer> logger)
+        public static async Task CreateDefaultUserAndRoleForApplication(UserManager<AppUser> um, RoleManager<IdentityRole> rm, ApplicationDbContext context, ILogger<DbInitializer> logger)
         {
             const string administratorRole = "SuperAdmin";
             const string email = "hamza@yopmail.com";
@@ -202,7 +202,6 @@ namespace DataAccess.Data
                     new Permissions { IsDeleted= false, Name = "CanAdd"},
                     new Permissions { IsDeleted= false, Name = "CanEdit"},
                     new Permissions { IsDeleted= false, Name = "CanView"},
-                    new Permissions { IsDeleted= false, Name = "CanRead"},
                     new Permissions { IsDeleted= false, Name = "CanDelete"}
                 };
                 await context.Permissions.AddRangeAsync(list);
