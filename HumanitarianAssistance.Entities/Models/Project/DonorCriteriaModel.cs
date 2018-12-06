@@ -27,7 +27,10 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? DonorFinancingHistory { get; set; }
         public bool? ReligiousStanding { get; set; }
         public bool? PoliticalStanding { get; set; }
+        public bool? DonorCriteriaMet { get; set; }
+        public bool? EligibilityDealine { get; set; }
+        public bool? CoPartnership { get; set; }
 
-      
+
     }
 }
