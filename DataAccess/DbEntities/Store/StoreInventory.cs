@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DataAccess.DbEntities.AccountingNew;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,13 +19,13 @@ namespace DataAccess.DbEntities
         public string InventoryDescription { get; set; }
         //public long InventoryChartOfAccount { get; set; }
         public int AssetType { get; set; }
-		public int InventoryDebitAccount { get; set; }
+		public long InventoryDebitAccount { get; set; }
 		[ForeignKey("InventoryDebitAccount")]
-        public ChartAccountDetail ChartDebitAccountDetails { get; set; }
+        public ChartOfAccountNew ChartDebitAccountDetails { get; set; }
 
-		public int? InventoryCreditAccount { get; set; }
+		public long? InventoryCreditAccount { get; set; }
 		[ForeignKey("InventoryCreditAccount")]
-		public ChartAccountDetail ChartCreditAccountDetails { get; set; }
+		public ChartOfAccountNew ChartCreditAccountDetails { get; set; }
 
 		public List<StoreInventoryItem> InventoryItems { get; set; }
     }

@@ -63,7 +63,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<Department> Department { get; set; }
         public DbSet<PermissionsInRoles> PermissionsInRoles { get; set; }
         public DbSet<CurrencyDetails> CurrencyDetails { get; set; }
-        public DbSet<ChartAccountDetail> ChartAccountDetail { get; set; }
+        //public DbSet<ChartAccountDetail> ChartAccountDetail { get; set; }
         public DbSet<AccountType> AccountType { get; set; }
         public DbSet<VoucherType> VoucherType { get; set; }
         //public DbSet<VoucherTransactionDetails> VoucherTransactionDetails { get; set; }
@@ -286,10 +286,10 @@ namespace HumanitarianAssistance.Entities
             modelBuilder.Entity<ProjectDetail>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<ExchangeRate>().HasIndex(e => e.Date);
 
-            modelBuilder.Entity<ChartAccountDetail>().HasIndex(e => e.AccountCode).IsUnique();
+            //modelBuilder.Entity<ChartAccountDetail>().HasIndex(e => e.AccountCode).IsUnique();
             modelBuilder.Entity<VoucherDetail>().HasIndex(e => e.VoucherNo).IsUnique();
             modelBuilder.Entity<VoucherTransactions>().HasIndex(e => e.TransactionId).IsUnique();
-            modelBuilder.Entity<VoucherTransactions>().HasIndex(e => new { e.TransactionDate, e.AccountNo });
+            modelBuilder.Entity<VoucherTransactions>().HasIndex(e => new { e.TransactionDate, e.ChartOfAccountNewId });
 
 
 

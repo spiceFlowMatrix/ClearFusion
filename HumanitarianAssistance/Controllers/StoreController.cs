@@ -672,7 +672,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
           if (apiRespone.data.VoucherTransactionModel != null && apiRespone.data.ExchangeRates.Any())
           {
 
-            int? debitAccount = apiRespone.data.VoucherTransactionModel.DebitAccount;
+            long? debitAccount = apiRespone.data.VoucherTransactionModel.DebitAccount;
             apiRespone.data.VoucherTransactionModel.DebitAccount = 0;
 
             //Credit
@@ -680,7 +680,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
             apiRespone.data.VoucherTransactionModel.CreditAccount = 0;
             apiRespone.data.VoucherTransactionModel.DebitAccount = debitAccount;
-            apiRespone.data.VoucherTransactionModel.AccountNo = debitAccount;
+            apiRespone.data.VoucherTransactionModel.ChartOfAccountNewId = debitAccount;
             apiRespone.data.VoucherTransactionModel.Debit = apiRespone.data.VoucherTransactionModel.Credit;
             apiRespone.data.VoucherTransactionModel.Credit = 0;
 

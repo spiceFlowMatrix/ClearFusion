@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess.DbEntities.AccountingNew;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,19 +12,19 @@ namespace DataAccess.DbEntities
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column(Order = 1, TypeName = "serial")]		
-		public int TransactionId { get; set; }
+		public long TransactionId { get; set; }
 		public long? VoucherNo { get; set; }
 		[ForeignKey("VoucherNo")]
 		public VoucherDetail VoucherDetails { get; set; }
 
-		public int? CreditAccount { get; set; }                                     // NOT IN USE NOW
-		public int? DebitAccount { get; set; }                                      // NOT IN USE NOW
+		public long? CreditAccount { get; set; }                                     // NOT IN USE NOW
+		public long? DebitAccount { get; set; }                                      // NOT IN USE NOW
 		public double? Amount { get; set; }                                         // NOT IN USE NOW
 
 		public string Description { get; set; }
 		public DateTime? TransactionDate { get; set; }
-		[ForeignKey("AccountNo")]
-		public ChartAccountDetail CreditAccountDetails { get; set; }
+		[ForeignKey("ChartOfAccountNewId")]
+		public ChartOfAccountNew CreditAccountDetails { get; set; }
 		//[ForeignKey("DebitAccount")]
 		//public ChartAccountDetail DebitAccountDetails { get; set; }
 
@@ -35,7 +36,7 @@ namespace DataAccess.DbEntities
 
 		public int? FinancialYearId { get; set; }
 		//public FinancialYearDetail FinancialYearDetails { get; set; }
-		public int? AccountNo { get; set; }
+		public long? ChartOfAccountNewId { get; set; }
 		public string Donor { get; set; }
 		public string Area { get; set; }
 		public string Sector { get; set; }
