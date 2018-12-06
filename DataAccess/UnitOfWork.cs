@@ -172,6 +172,13 @@ namespace DataAccess
         private IGenericRepository<ProjectCommunicationAttachment> _projectCommunicationAttachmentRepository;
         private IGenericRepository<ProjectProposalDetail> _projectProposalDetailRepository;
         private IGenericRepository<DonorCriteriaDetails> _donorCriteriaDetailsRepository;
+        private IGenericRepository<PurposeofInitiativeCriteria> _purposeofInitiativeCriteriaRepository;
+        private IGenericRepository<EligibilityCriteriaDetail> _eligibilityCriteriaDetailRepository;
+        private IGenericRepository<FeasibilityCriteriaDetail> _feasibilityCriteriaDetailRepository;
+        private IGenericRepository<PriorityCriteriaDetail> _priorityCriteriaDetailRepository;
+        private IGenericRepository<FinancialCriteriaDetail> _financialCriteriaDetailRepository;
+        private IGenericRepository<RiskCriteriaDetail> _riskCriteriaDetailRepository;
+        
 
         //Marketing
         private IGenericRepository<ActivityType> _activityTypeRepository;
@@ -1547,6 +1554,55 @@ namespace DataAccess
                     _donorCriteriaDetailsRepository ?? new GenericRepository<DonorCriteriaDetails>(_mschaContext);
             }
         }
+        public IGenericRepository<PurposeofInitiativeCriteria> PurposeofInitiativeCriteriaRepository
+        {
+            get
+            {
+                return _purposeofInitiativeCriteriaRepository =
+                    _purposeofInitiativeCriteriaRepository ?? new GenericRepository<PurposeofInitiativeCriteria>(_mschaContext);
+            }
+        }
+        public IGenericRepository<EligibilityCriteriaDetail> EligibilityCriteriaDetailRepository
+        {
+            get
+            {
+                return _eligibilityCriteriaDetailRepository =
+                    _eligibilityCriteriaDetailRepository ?? new GenericRepository<EligibilityCriteriaDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<FeasibilityCriteriaDetail> FeasibilityCriteriaDetailRepository
+        {
+            get
+            {
+                return _feasibilityCriteriaDetailRepository =
+                    _feasibilityCriteriaDetailRepository ?? new GenericRepository<FeasibilityCriteriaDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<PriorityCriteriaDetail> PriorityCriteriaDetailRepository
+        {
+            get
+            {
+                return _priorityCriteriaDetailRepository =
+                    _priorityCriteriaDetailRepository ?? new GenericRepository<PriorityCriteriaDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<FinancialCriteriaDetail> FinancialCriteriaDetailRepository
+        {
+            get
+            {
+                return _financialCriteriaDetailRepository =
+                    _financialCriteriaDetailRepository ?? new GenericRepository<FinancialCriteriaDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<RiskCriteriaDetail> RiskCriteriaDetailRepository
+        {
+            get
+            {
+                return _riskCriteriaDetailRepository =
+                    _riskCriteriaDetailRepository ?? new GenericRepository<RiskCriteriaDetail>(_mschaContext);
+            }
+        }
+
         
 
         public void Save()
