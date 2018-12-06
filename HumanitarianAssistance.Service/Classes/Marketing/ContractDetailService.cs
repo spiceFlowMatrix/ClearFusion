@@ -406,9 +406,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     {
                         contractList = contractList.Where(x => x.IsApproved == Convert.ToBoolean(model.IsApproved)).ToList();
                     }
-                    if (model.IsApproved == false)
+                    if (model.YesOrNo == "No")
                     {
-                        contractList = contractList.Where(x => x.IsApproved == Convert.ToBoolean(model.IsApproved)).ToList();
+                        contractList = contractList.Where(x => x.IsDeclined == true).ToList();
                     }
                     if (!string.IsNullOrEmpty(model.FilterType))
                     {
