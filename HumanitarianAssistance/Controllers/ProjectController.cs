@@ -845,11 +845,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public APIResponse GetAllProjectproposals([FromBody]long ProjectId)
+    public APIResponse GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
      
-        apiRespone = _iProject.GetAllProjectproposals(ProjectId);
+        apiRespone = _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
       
       return apiRespone;
     }

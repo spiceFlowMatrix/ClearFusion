@@ -7,7 +7,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
    public class CriteriaEveluationModel
     {
         public long ProjectId { get; set; }
-        public long DonorCEId { get; set; }
+        public long? DonorCEId { get; set; }
         public int? MethodOfFunding { get; set; }
         public bool? PastFundingExperience { get; set; }
         public bool? ProposalAccepted { get; set; }

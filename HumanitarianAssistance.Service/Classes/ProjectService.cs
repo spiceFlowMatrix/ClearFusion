@@ -1838,7 +1838,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.DonorFinancingHistory = model.DonorFinancingHistory;
                     _detail.ReligiousStanding = model.ReligiousStanding;
                     _detail.PoliticalStanding = model.PoliticalStanding;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
@@ -2105,7 +2105,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public APIResponse GetAllProjectproposals(long ProjectId)
+        public APIResponse GetAllCriteriaEvaluationDetalByProjectId(long ProjectId)
         {
             APIResponse response = new APIResponse();
 
@@ -2115,24 +2115,24 @@ namespace HumanitarianAssistance.Service.Classes
                     (from obj in _uow.GetDbContext().ProjectDetail
                      join donor in _uow.GetDbContext().DonorCriteriaDetail on obj.ProjectId equals donor.ProjectId into a
                      from b in a.DefaultIfEmpty()
-                     join purpose in _uow.GetDbContext().PurposeofInitiativeCriteria on obj.ProjectId equals purpose.ProjectId
-                     into d
-                     from p in d.DefaultIfEmpty()
-                     join eligibility in _uow.GetDbContext().EligibilityCriteriaDetail on obj.ProjectId equals eligibility.ProjectId
-                      into e
-                     from f in e.DefaultIfEmpty()
-                     join feasibility in _uow.GetDbContext().FeasibilityCriteriaDetail on obj.ProjectId equals feasibility.ProjectId
-                     into g
-                     from h in g.DefaultIfEmpty()
-                     join Priority in _uow.GetDbContext().PriorityCriteriaDetail on obj.ProjectId equals Priority.ProjectId
-                     into pr
-                     from pro in pr.DefaultIfEmpty()
-                     join financial in _uow.GetDbContext().FinancialCriteriaDetail on obj.ProjectId equals financial.ProjectId
-                     into fi
-                     from fin in fi.DefaultIfEmpty()
-                     join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into
-                     ri
-                     from ris in ri.DefaultIfEmpty()
+                     //join purpose in _uow.GetDbContext().PurposeofInitiativeCriteria on obj.ProjectId equals purpose.ProjectId
+                     //into d
+                     //from p in d.DefaultIfEmpty()
+                     //join eligibility in _uow.GetDbContext().EligibilityCriteriaDetail on obj.ProjectId equals eligibility.ProjectId
+                     // into e
+                     //from f in e.DefaultIfEmpty()
+                     //join feasibility in _uow.GetDbContext().FeasibilityCriteriaDetail on obj.ProjectId equals feasibility.ProjectId
+                     //into g
+                     //from h in g.DefaultIfEmpty()
+                     //join Priority in _uow.GetDbContext().PriorityCriteriaDetail on obj.ProjectId equals Priority.ProjectId
+                     //into pr
+                     //from pro in pr.DefaultIfEmpty()
+                     //join financial in _uow.GetDbContext().FinancialCriteriaDetail on obj.ProjectId equals financial.ProjectId
+                     //into fi
+                     //from fin in fi.DefaultIfEmpty()
+                     //join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into
+                     //ri
+                     //from ris in ri.DefaultIfEmpty()
                      select new CriteriaEveluationModel
                      {
                          ProjectId = obj.ProjectId,
@@ -2156,105 +2156,105 @@ namespace HumanitarianAssistance.Service.Classes
                          DonorFinancingHistory = b.DonorFinancingHistory,
                          ReligiousStanding = b.ReligiousStanding,
                          PoliticalStanding = b.PoliticalStanding,
-                         FeasibilityId = p.ProductServiceId,
-                         Women = p.Women,
-                         Children = p.Children,
-                         Awareness = p.Awareness,
-                         Education = p.Education,
-                         DrugAbuses = p.DrugAbuses,
-                         Right = p.Right,
-                         Culture = p.Culture,
-                         Music = p.Music,
-                         Documentaries = p.Documentaries,
-                         InvestigativeJournalism = p.InvestigativeJournalism,
-                         HealthAndNutrition = p.HealthAndNutrition,
-                         News = p.News,
-                         SocioPolitiacalDebate = p.SocioPolitiacalDebate,
-                         Studies = p.Studies,
-                         Reports = p.Reports,
-                         CommunityDevelopment = p.CommunityDevelopment,
-                         Aggriculture = p.Aggriculture,
-                         DRR = p.DRR,
-                         ServiceEducation = p.ServiceEducation,
-                         ServiceHealthAndNutrition = p.ServiceHealthAndNutrition,
-                         RadioProduction = p.RadioProduction,
-                         TVProgram = p.TVProgram,
-                         PrintedMedia = p.PrintedMedia,
-                         RoundTable = p.RoundTable,
-                         Others = p.Others,
-                         OtherActivity = p.OtherActivity,
-                         TargetBenificaiaryWomen = p.TargetBenificaiaryWomen,
-                         TargetBenificiaryMen = p.TargetBenificiaryMen,
-                         TargetBenificiaryAgeGroup = p.TargetBenificiaryAgeGroup,
-                         TargetBenificiaryaOccupation = p.TargetBenificiaryaOccupation,
-                         DonorCriteriaMet = f.DonorCriteriaMet,
-                         EligibilityDealine = f.EligibilityDealine,
-                         CoPartnership = f.CoPartnership,
-                         CapacityAvailableForProject = h.CapacityAvailableForProject,
-                         TrainedStaff = h.TrainedStaff,
-                         ByEquipment = h.ByEquipment,
-                         ExpandScope = h.ExpandScope,
-                         GeoGraphicalPresence = h.GeoGraphicalPresence,
-                         ThirdPartyContract = h.ThirdPartyContract,
-                         CostOfCompensationMonth = h.CostOfCompensationMonth,
-                         CostOfCompensationMoney = h.CostOfCompensationMoney,
-                         AnyInKindComponent = h.AnyInKindComponent,
-                         UseableByOrganisation = h.UseableByOrganisation,
-                         FeasibleExpertDeploy = h.FeasibleExpertDeploy,
-                         EnoughTimeForProject = h.EnoughTimeForProject,
-                         ProjectAllowedBylaw = h.ProjectAllowedBylaw,
-                         ProjectByLeadership = h.ProjectByLeadership,
-                         IsProjectPractical = h.IsProjectPractical,
-                         PresenceCoverageInProject = h.PresenceCoverageInProject,
-                         ProjectInLineWithOrgFocus = h.ProjectInLineWithOrgFocus,
-                         EnoughTimeToPrepareProposal = h.EnoughTimeToPrepareProposal,
-                         ProjectRealCost = h.ProjectRealCost,
-                         IsCostGreaterthenBudget = h.IsCostGreaterthenBudget,
-                         PerCostGreaterthenBudget = h.PerCostGreaterthenBudget,
-                         IsFinancialContribution = h.IsFinancialContribution,
-                         IsSecurity = h.IsSecurity,
-                         IsGeographical = h.IsGeographical,
-                         IsSeasonal = h.IsSeasonal,
-                         IncreaseEligibility = pro.IncreaseEligibility,
-                         IncreaseReputation = pro.IncreaseReputation,
-                         ImproveDonorRelationship = pro.ImproveDonorRelationship,
-                         GoodCause = pro.GoodCause,
-                         ImprovePerformancecapacity = pro.ImprovePerformancecapacity,
-                         SkillImprove = pro.SkillImprove,
-                         FillingFundingGap = pro.FillingFundingGap,
-                         NewSoftware = pro.NewSoftware,
-                         NewEquipment = pro.NewEquipment,
-                         CoverageAreaExpansion = pro.CoverageAreaExpansion,
-                         NewTraining = pro.NewTraining,
-                         ExpansionGoal = pro.ExpansionGoal,
-                         Total = fin.Total,
-                         ProjectActivities = fin.ProjectActivities,
-                         Operational = fin.Operational,
-                         Overhead_Admin = fin.Overhead_Admin,
-                         Lump_Sum = fin.Lump_Sum,
-                         Security = ris.Security,
-                         Staff = ris.Staff,
-                         ProjectAssets = ris.ProjectAssets,
-                         Suppliers = ris.Suppliers,
-                         Beneficiaries = ris.Beneficiaries,
-                         OverallOrganization = ris.OverallOrganization,
-                         DeliveryFaiLure = ris.DeliveryFaiLure,
-                         PrematureSeizure = ris.PrematureSeizure,
-                         GovernmentConfiscation = ris.GovernmentConfiscation,
-                         DesctructionByTerroristActivity = ris.DesctructionByTerroristActivity,
-                         Reputation = ris.Reputation,
-                         Religious = ris.Religious,
-                         Sectarian = ris.Sectarian,
-                         Ethinc = ris.Ethinc,
-                         Social = ris.Social,
-                         Traditional = ris.Traditional,
-                         FocusDivertingrisk = ris.FocusDivertingrisk,
-                         Financiallosses = ris.Financiallosses,
-                         Opportunityloss = ris.Opportunityloss,
-                         ProjectSelection = ris.ProjectSelection,
-                         Probablydelaysinfunding = ris.Probablydelaysinfunding,
-                         OtherOrganizationalHarms = ris.OtherOrganizationalHarms,
-                         OrganizationalDescription = ris.OrganizationalDescription
+                         //FeasibilityId = p.ProductServiceId,
+                         //Women = p.Women,
+                         //Children = p.Children,
+                         //Awareness = p.Awareness,
+                         //Education = p.Education,
+                         //DrugAbuses = p.DrugAbuses,
+                         //Right = p.Right,
+                         //Culture = p.Culture,
+                         //Music = p.Music,
+                         //Documentaries = p.Documentaries,
+                         //InvestigativeJournalism = p.InvestigativeJournalism,
+                         //HealthAndNutrition = p.HealthAndNutrition,
+                         //News = p.News,
+                         //SocioPolitiacalDebate = p.SocioPolitiacalDebate,
+                         //Studies = p.Studies,
+                         //Reports = p.Reports,
+                         //CommunityDevelopment = p.CommunityDevelopment,
+                         //Aggriculture = p.Aggriculture,
+                         //DRR = p.DRR,
+                         //ServiceEducation = p.ServiceEducation,
+                         //ServiceHealthAndNutrition = p.ServiceHealthAndNutrition,
+                         //RadioProduction = p.RadioProduction,
+                         //TVProgram = p.TVProgram,
+                         //PrintedMedia = p.PrintedMedia,
+                         //RoundTable = p.RoundTable,
+                         //Others = p.Others,
+                         //OtherActivity = p.OtherActivity,
+                         //TargetBenificaiaryWomen = p.TargetBenificaiaryWomen,
+                         //TargetBenificiaryMen = p.TargetBenificiaryMen,
+                         //TargetBenificiaryAgeGroup = p.TargetBenificiaryAgeGroup,
+                         //TargetBenificiaryaOccupation = p.TargetBenificiaryaOccupation,
+                         //DonorCriteriaMet = f.DonorCriteriaMet,
+                         //EligibilityDealine = f.EligibilityDealine,
+                         //CoPartnership = f.CoPartnership,
+                         //CapacityAvailableForProject = h.CapacityAvailableForProject,
+                         //TrainedStaff = h.TrainedStaff,
+                         //ByEquipment = h.ByEquipment,
+                         //ExpandScope = h.ExpandScope,
+                         //GeoGraphicalPresence = h.GeoGraphicalPresence,
+                         //ThirdPartyContract = h.ThirdPartyContract,
+                         //CostOfCompensationMonth = h.CostOfCompensationMonth,
+                         //CostOfCompensationMoney = h.CostOfCompensationMoney,
+                         //AnyInKindComponent = h.AnyInKindComponent,
+                         //UseableByOrganisation = h.UseableByOrganisation,
+                         //FeasibleExpertDeploy = h.FeasibleExpertDeploy,
+                         //EnoughTimeForProject = h.EnoughTimeForProject,
+                         //ProjectAllowedBylaw = h.ProjectAllowedBylaw,
+                         //ProjectByLeadership = h.ProjectByLeadership,
+                         //IsProjectPractical = h.IsProjectPractical,
+                         //PresenceCoverageInProject = h.PresenceCoverageInProject,
+                         //ProjectInLineWithOrgFocus = h.ProjectInLineWithOrgFocus,
+                         //EnoughTimeToPrepareProposal = h.EnoughTimeToPrepareProposal,
+                         //ProjectRealCost = h.ProjectRealCost,
+                         //IsCostGreaterthenBudget = h.IsCostGreaterthenBudget,
+                         //PerCostGreaterthenBudget = h.PerCostGreaterthenBudget,
+                         //IsFinancialContribution = h.IsFinancialContribution,
+                         //IsSecurity = h.IsSecurity,
+                         //IsGeographical = h.IsGeographical,
+                         //IsSeasonal = h.IsSeasonal,
+                         //IncreaseEligibility = pro.IncreaseEligibility,
+                         //IncreaseReputation = pro.IncreaseReputation,
+                         //ImproveDonorRelationship = pro.ImproveDonorRelationship,
+                         //GoodCause = pro.GoodCause,
+                         //ImprovePerformancecapacity = pro.ImprovePerformancecapacity,
+                         //SkillImprove = pro.SkillImprove,
+                         //FillingFundingGap = pro.FillingFundingGap,
+                         //NewSoftware = pro.NewSoftware,
+                         //NewEquipment = pro.NewEquipment,
+                         //CoverageAreaExpansion = pro.CoverageAreaExpansion,
+                         //NewTraining = pro.NewTraining,
+                         //ExpansionGoal = pro.ExpansionGoal,
+                         //Total = fin.Total,
+                         //ProjectActivities = fin.ProjectActivities,
+                         //Operational = fin.Operational,
+                         //Overhead_Admin = fin.Overhead_Admin,
+                         //Lump_Sum = fin.Lump_Sum,
+                         //Security = ris.Security,
+                         //Staff = ris.Staff,
+                         //ProjectAssets = ris.ProjectAssets,
+                         //Suppliers = ris.Suppliers,
+                         //Beneficiaries = ris.Beneficiaries,
+                         //OverallOrganization = ris.OverallOrganization,
+                         //DeliveryFaiLure = ris.DeliveryFaiLure,
+                         //PrematureSeizure = ris.PrematureSeizure,
+                         //GovernmentConfiscation = ris.GovernmentConfiscation,
+                         //DesctructionByTerroristActivity = ris.DesctructionByTerroristActivity,
+                         //Reputation = ris.Reputation,
+                         //Religious = ris.Religious,
+                         //Sectarian = ris.Sectarian,
+                         //Ethinc = ris.Ethinc,
+                         //Social = ris.Social,
+                         //Traditional = ris.Traditional,
+                         //FocusDivertingrisk = ris.FocusDivertingrisk,
+                         //Financiallosses = ris.Financiallosses,
+                         //Opportunityloss = ris.Opportunityloss,
+                         //ProjectSelection = ris.ProjectSelection,
+                         //Probablydelaysinfunding = ris.Probablydelaysinfunding,
+                         //OtherOrganizationalHarms = ris.OtherOrganizationalHarms,
+                         //OrganizationalDescription = ris.OrganizationalDescription
                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
                 response.data.CriteriaEveluationModel = details;
                 response.StatusCode = StaticResource.successStatusCode;
