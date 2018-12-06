@@ -86,11 +86,11 @@ namespace HumanitarianAssistance.Service.interfaces
 
 
         #region GetAllProvinceDetails
-        Task<APIResponse> GetAllProvinceDetails();
-        Task<APIResponse> GetAllStrengthConsiderationDetails();
-        Task<APIResponse> GetAllGenderConsiderationDetails();
-        Task<APIResponse> GetAllSecurityDetails();
-        Task<APIResponse> GetAllSecurityConsiderationDetails();
+        APIResponse GetAllProvinceDetails();
+        APIResponse GetAllStrengthConsiderationDetails();
+        APIResponse GetAllGenderConsiderationDetails();
+        APIResponse GetAllSecurityDetails();
+        APIResponse GetAllSecurityConsiderationDetails();
         Task<APIResponse> GetAllDistrictvalueByProvinceId(int[] provinceId);
        
         APIResponse AddEditProjectproposals(long projectId, string UserId);
