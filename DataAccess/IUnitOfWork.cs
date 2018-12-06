@@ -26,7 +26,7 @@ namespace DataAccess
         IGenericRepository<EmailSettingDetail> EmailSettingDetailRepository { get; }
         IGenericRepository<AccountType> AccountTypeRepository { get; }
         IGenericRepository<AccountLevel> AccountLevelRepository { get; }
-        IGenericRepository<ChartAccountDetail> ChartAccountDetailRepository { get; }
+        //IGenericRepository<ChartAccountDetail> ChartAccountDetailRepository { get; }
         IGenericRepository<VoucherType> VoucherTypeRepository { get; }
         IGenericRepository<VoucherDetail> VoucherDetailRepository { get; }
         IGenericRepository<VoucherDocumentDetail> VoucherDocumentDetailRepository { get; }
@@ -143,6 +143,7 @@ namespace DataAccess
         IGenericRepository<PayrollAccountHead> PayrollAccountHeadRepository { get; }
         IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository { get; }
         IGenericRepository<ExchangeRateDetail> ExchangeRateDetailRepository { get; }
+        IGenericRepository<PaymentTypes> PaymentTypesRepository { get; }
 
         #region Project
         IGenericRepository<DonorDetail> DonorDetailRepository { get; }

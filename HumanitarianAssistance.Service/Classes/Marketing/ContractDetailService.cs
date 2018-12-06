@@ -283,6 +283,15 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.NatureId = model.NatureId;
                     obj.QualityId = model.QualityId;
                     obj.TimeCategoryId = model.TimeCategoryId;
+                    obj.IsApproved = model.IsApproved;
+                    if(model.Type == "Approve")
+                    {
+                        obj.IsApproved = true;
+                    } 
+                    if(model.Type == "Rejected")
+                    {
+                        obj.IsDeclined = true;
+                    }
                     await _uow.ContractDetailsRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
                     conDetails.ActivityTypeId = obj.ActivityTypeId;
@@ -299,6 +308,15 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     conDetails.StartDate = obj.StartDate;
                     conDetails.TimeCategoryId = obj.TimeCategoryId;
                     conDetails.UnitRate = obj.UnitRate;
+                    conDetails.IsApproved = obj.IsApproved;
+                    if(obj.IsDeclined == true)
+                    {
+                        conDetails.IsDeclined = obj.IsDeclined;
+                    }
+                    if (obj.IsApproved == true)
+                    {
+                        conDetails.IsApproved = obj.IsApproved;
+                    }
                     response.data.contractDetailsModel = conDetails;
                 }
                 else
@@ -343,7 +361,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         existRecord.IsDeclined = true;
                     }
                     existRecord.ModifiedDate = DateTime.UtcNow;
-                    existRecord.ModifiedById = UserId;
+                    existRecord.ModifiedById = "aaaaaa";
                     _uow.GetDbContext().ContractDetails.Update(existRecord);
                     _uow.GetDbContext().SaveChanges();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -388,9 +406,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     {
                         contractList = contractList.Where(x => x.IsApproved == Convert.ToBoolean(model.IsApproved)).ToList();
                     }
-                    if (model.IsApproved == false)
+                    if (model.YesOrNo == "No")
                     {
-                        contractList = contractList.Where(x => x.IsApproved == Convert.ToBoolean(model.IsApproved)).ToList();
+                        contractList = contractList.Where(x => x.IsDeclined == true).ToList();
                     }
                     if (!string.IsNullOrEmpty(model.FilterType))
                     {

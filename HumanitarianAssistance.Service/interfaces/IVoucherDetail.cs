@@ -1,4 +1,5 @@
-﻿using HumanitarianAssistance.Service.APIResponses;
+﻿using DataAccess.DbEntities;
+using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
 using System;
 using System.Collections.Generic;
@@ -32,8 +33,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo);
         Task<APIResponse> AddVoucherDocumentDetail(VoucherDocumentDetailModel model);
         Task<APIResponse> DeleteVoucherDocumentDetail(int DocumentId, string ModifiedById);	
-        Task<APIResponse> GetAllLedgerDetails();
-        Task<APIResponse> GetTrailBlanceDetails();
         Task<APIResponse> GetTrailBlanceDetailsByCondition(LedgerModels model);
         //Task<APIResponse> GetTrailBlanceDetailsByCondition(int? OfficeId = null, DateTime? Fromdate = null, DateTime? Todate = null, int? CurrencyId = null, int? RecordType = null);
         Task<APIResponse> GetAllLedgerDetailsByCondition(LedgerModels model);
@@ -48,8 +47,6 @@ namespace HumanitarianAssistance.Service.interfaces
 		//Task<APIResponse> GetBlanceSheetDetails(int? financialyearid, int? currencyid, int? financialreporttype);
 		Task<APIResponse> GetBlanceSheetDetails(FinancialReportModel model);
 		//Task<APIResponse> GetDetailsOfNotes(int? GetDetailsOfNotes, int? financialyearid, int? currencyid);
-		Task<APIResponse> GetDetailsOfNotes(int? financialyearid, int? currencyid);
-
 
 		Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid);
 
@@ -77,5 +74,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DisapproveEmployeeApprovedSalary(DisapprovePayrollModel model, string UserId);
         Task<APIResponse> GetVoucherDetailByVoucherNo(long VoucherNo);
         Task<APIResponse> DeleteVoucherTransactions(int VoucherId, string modifiedById);
+        Task<APIResponse> AddVoucherTransactionConvertedToExchangeRate(VoucherTransactionModel model, List<ExchangeRate> exchangeRate);
     }
 }

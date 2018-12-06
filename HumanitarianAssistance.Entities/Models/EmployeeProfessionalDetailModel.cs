@@ -29,5 +29,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string BirthPlace { get; set; }
         public string PassportNo { get; set; }
         public int? ProfessionId { get; set; }
+        public string TinNumber { get; set; }
     }
 }

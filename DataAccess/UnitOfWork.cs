@@ -27,7 +27,7 @@ namespace DataAccess
         private IGenericRepository<EmailSettingDetail> _emailsettingdetailRepository;
         private IGenericRepository<AccountType> _accounttypeRepository;
         private IGenericRepository<AccountLevel> _accountlevelRepository;
-        private IGenericRepository<ChartAccountDetail> _chartaccountdetailRepository;
+        //private IGenericRepository<ChartAccountDetail> _chartaccountdetailRepository;
         private IGenericRepository<VoucherType> _vouchertypeRepository;
         private IGenericRepository<VoucherDetail> _voucherdetailsRepository;
         private IGenericRepository<VoucherDocumentDetail> _voucherdocumentdetailRepository;
@@ -195,8 +195,8 @@ namespace DataAccess
         private IGenericRepository<ClientDetails> _ClientDetailsRepository;
         private IGenericRepository<UnitRate> _unitRateRepository;
         private IGenericRepository<Category> _categoryRepository;
-      
-        
+        private IGenericRepository<PaymentTypes> _paymentTypesRepository;
+
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
         private IGenericRepository<ChartOfAccountNew> _chartOfAccountNewRepository;
@@ -852,13 +852,13 @@ namespace DataAccess
             }
         }
 
-        public IGenericRepository<ChartAccountDetail> ChartAccountDetailRepository
-        {
-            get
-            {
-                return _chartaccountdetailRepository = _chartaccountdetailRepository ?? new GenericRepository<ChartAccountDetail>(_mschaContext);
-            }
-        }
+        //public IGenericRepository<ChartAccountDetail> ChartAccountDetailRepository
+        //{
+        //    get
+        //    {
+        //        return _chartaccountdetailRepository = _chartaccountdetailRepository ?? new GenericRepository<ChartAccountDetail>(_mschaContext);
+        //    }
+        //}
 
         public IGenericRepository<VoucherType> VoucherTypeRepository
         {
@@ -1554,6 +1554,16 @@ namespace DataAccess
                     _donorCriteriaDetailsRepository ?? new GenericRepository<DonorCriteriaDetails>(_mschaContext);
             }
         }
+
+        public IGenericRepository<PaymentTypes> PaymentTypesRepository
+        {
+            get
+            {
+                return _paymentTypesRepository = _paymentTypesRepository ?? new GenericRepository<PaymentTypes>(_mschaContext);
+            }
+        }
+
+
         public IGenericRepository<PurposeofInitiativeCriteria> PurposeofInitiativeCriteriaRepository
         {
             get

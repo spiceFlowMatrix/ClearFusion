@@ -67,11 +67,11 @@ namespace HumanitarianAssistance.Service.Classes
 
                 BalanceSheetReportModel balanceSheetReportModel = new BalanceSheetReportModel();
 
-                var accountDetails = _uow.GetDbContext().ChartAccountDetail.Where(x => x.IsDeleted == false && x.AccountLevelId == 1).GroupBy(x => x.AccountCode);
+                var accountDetails = _uow.GetDbContext().ChartOfAccountNew.Where(x => x.IsDeleted == false && x.AccountLevelId == 1).GroupBy(x => x.ChartOfAccountNewId);
 
                 foreach(var obj in accountDetails)
                 {
-                    balanceSheetReportModel.AccountCode = obj.Key;
+                    balanceSheetReportModel.ChartOfAccountNewId = obj.Key;
 
 
                 }

@@ -33,6 +33,11 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public string ReceivedFromLocation { get; set; }
         public long? ProjectId { get; set; }
         public long? BudgetLineId { get; set; }
-
+        public int? PaymentTypeId { get; set; }
+        public bool? IsPurchaseVerified { get; set; }
+        public long? VerifiedPurchaseVoucher { get; set; }
+        public int? OfficeId { get; set; }
+        public int? JournalCode { get; set; }
+        public string VerifiedPurchaseVoucherReferenceNo { get; set; }
     }
 }

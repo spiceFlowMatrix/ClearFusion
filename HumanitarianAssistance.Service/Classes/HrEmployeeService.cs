@@ -64,6 +64,7 @@ namespace HumanitarianAssistance.Service.Classes
                 empprofessional.CreatedDate = model.CreatedDate;
                 empprofessional.IsDeleted = model.IsDeleted;
                 empprofessional.ProfessionId = model.ProfessionId;
+                empprofessional.TinNumber = model.TinNumber;
                 EmployeeProfessionalDetail obj1 = _mapper.Map<EmployeeProfessionalDetail>(empprofessional);
                 await _uow.EmployeeProfessionalDetailRepository.AddAsyn(obj1);
                 await _uow.SaveAsync();
@@ -164,10 +165,12 @@ namespace HumanitarianAssistance.Service.Classes
                     employeeinfo.PassportNo = model.PassportNo;
                     employeeinfo.BirthPlace = model.BirthPlace;
                     employeeinfo.IssuePlace = model.IssuePlace;
+
                     await _uow.EmployeeDetailRepository.UpdateAsyn(employeeinfo);
 
                     var employeeprofessionalinfo = await _uow.EmployeeProfessionalDetailRepository.FindAsync(x => x.EmployeeId == model.EmployeeID);
                     employeeprofessionalinfo.ProfessionId = model.ProfessionId;
+                    employeeprofessionalinfo.TinNumber = model.TinNumber;
                     await _uow.EmployeeProfessionalDetailRepository.UpdateAsyn(employeeprofessionalinfo);
 
                     var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.ModifiedById);
@@ -370,20 +373,6 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                //Get Employee General Information
-                //var employeelist = await Task.Run(() =>
-                //    _uow.GetDbContext().EmployeeDetail.Include(e=> e.EmployeeType)
-                //        //.Include(o=> o.OfficeDetails)
-                //        //.Include(d=> d.DepartmentDetails)
-                //        //.Include(d=> d.DesignationDetails)
-                //        .Include(p=> p.ProvinceDetails)
-                //        .Include(c=> c.CountryDetails)
-                //        .Include(n=> n.NationalityDetails)
-                //        .Include(h=> h.QualificationDetails)
-                //        .Include(p=> p.ProfessionDetails)
-                //    .Where(x => x.EmployeeID == EmployeeId).ToListAsync()
-                //);
-
                 var queryResult = EF.CompileAsyncQuery(
                  (ApplicationDbContext ctx) => ctx.EmployeeDetail.Include(e => e.EmployeeType)
                         .Include(p => p.ProvinceDetails)
@@ -450,7 +439,8 @@ namespace HumanitarianAssistance.Service.Classes
                     University = x.University,
                     BirthPlace = x.BirthPlace,
                     IssuePlace = x.IssuePlace,
-                    PassportNo = x.PassportNo
+                    PassportNo = x.PassportNo,
+                    TinNumber = x.EmployeeProfessionalDetail.TinNumber
                 }).ToList();
 
 
@@ -1306,56 +1296,54 @@ namespace HumanitarianAssistance.Service.Classes
                         await _uow.EmployeeDetailRepository.UpdateAsyn(employeeinfo);
                     }
 
+                    //when employee is active
+                    if (model.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
+                    {
+                        //Get Default payrollaccountheads and save it to the newly created employee
+                        List<SalaryHeadDetails> salaryHeadDetails = await _uow.GetDbContext().SalaryHeadDetails.Where(x => x.IsDeleted == false).ToListAsync();
 
-                    //if (model.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
-                    //{
+                        List<EmployeePayroll> EmployeePayrollList = new List<EmployeePayroll>();
 
-                    //    var financiallist = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDefault == true);
+                        foreach (SalaryHeadDetails salaryHead in salaryHeadDetails)
+                        {
+                            EmployeePayroll employeePayroll = new EmployeePayroll();
+                            employeePayroll.AccountNo = salaryHead.AccountNo;
+                            employeePayroll.HeadTypeId = salaryHead.HeadTypeId;
+                            employeePayroll.IsDeleted = false;
+                            employeePayroll.TransactionTypeId = salaryHead.TransactionTypeId;
+                            employeePayroll.EmployeeID = model.EmployeeId.Value;
+                            EmployeePayrollList.Add(employeePayroll);
+                        }
 
-                    //    var queryResult = EF.CompileAsyncQuery(
-                    //        (ApplicationDbContext ctx) => ctx.HolidayDetails
-                    //        .Where(x => x.IsDeleted == false && x.FinancialYearId == financiallist.FinancialYearId));
-                    //    var holidaylist = await Task.Run(() =>
-                    //        queryResult(_uow.GetDbContext()).ToListAsync().Result
-                    //    );
-
-                    //    //                 var empattendanceResult = EF.CompileAsyncQuery(
-                    //    //                     (ApplicationDbContext ctx) => ctx.EmployeeAttendance
-                    //    //                     .Where(x => x.IsDeleted == false && x.FinancialYearId == financiallist.FinancialYearId && x.EmployeeId == model.EmployeeId));
-                    //    //                 var empattendancelist = await Task.Run(() =>
-                    //    //empattendanceResult(_uow.GetDbContext()).ToListAsync().Result
-                    //    //                 );
-
-                    //    var empattendancelist = await _uow.EmployeeAttendanceRepository.FindAllAsync(x => x.FinancialYearId == financiallist.FinancialYearId && x.EmployeeId == model.EmployeeId);
-
-
-                    //    List<EmployeeAttendance> attendancelist = new List<EmployeeAttendance>();
-                    //    foreach (var list in holidaylist)
-                    //    {
-                    //        var existlist = empattendancelist.Where(x => x.Date.Date == list.Date.Date).ToList();
-                    //        if (existlist.Count == 0)
-                    //        {
-                    //            EmployeeAttendance attendance = new EmployeeAttendance();
-                    //            attendance.EmployeeId = (int)model.EmployeeId;
-                    //            attendance.InTime = list.Date.Date;
-                    //            attendance.OutTime = list.Date.Date;
-                    //            attendance.TotalWorkTime = "0";
-                    //            attendance.HoverTimeHours = 0;
-                    //            attendance.AttendanceTypeId = (int)AttendanceType.H;
-                    //            attendance.HolidayId = list.HolidayId;
-                    //            attendance.Date = model.CreatedDate;
-                    //            attendance.CreatedDate = model.CreatedDate;
-                    //            attendance.CreatedById = model.CreatedById;
-                    //            attendance.IsDeleted = false;
-                    //            attendance.FinancialYearId = financiallist.FinancialYearId;
-                    //            attendancelist.Add(attendance);
-                    //        }
-                    //    }
-                    //    await _uow.GetDbContext().EmployeeAttendance.AddRangeAsync(attendancelist);
-                    //    await _uow.SaveAsync();
+                        await _uow.GetDbContext().EmployeePayroll.AddRangeAsync(EmployeePayrollList);
+                        await _uow.GetDbContext().SaveChangesAsync();
 
 
-                    //}
+                        //Get Default payrollaccountheads and save it to the newly created employee
+                        List<PayrollAccountHead> payrollAccountHeads = await _uow.GetDbContext().PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
+
+                        List<EmployeePayrollAccountHead> employeePayrollAccountHeads = new List<EmployeePayrollAccountHead>();
+
+                        foreach (var employeePayrollAccount in payrollAccountHeads)
+                        {
+                            EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
+
+                            employeePayrollAccountHead.IsDeleted = false;
+                            employeePayrollAccountHead.AccountNo = employeePayrollAccount.AccountNo;
+                            employeePayrollAccountHead.Description = employeePayrollAccount.Description;
+                            employeePayrollAccountHead.EmployeeId = model.EmployeeId.Value;
+                            employeePayrollAccountHead.PayrollHeadId = employeePayrollAccount.PayrollHeadId;
+                            employeePayrollAccountHead.PayrollHeadName = employeePayrollAccount.PayrollHeadName;
+                            employeePayrollAccountHead.PayrollHeadTypeId = employeePayrollAccount.PayrollHeadTypeId;
+                            employeePayrollAccountHead.TransactionTypeId = employeePayrollAccount.TransactionTypeId;
+
+                            employeePayrollAccountHeads.Add(employeePayrollAccountHead);
+                        }
+
+                        await _uow.GetDbContext().EmployeePayrollAccountHead.AddRangeAsync(employeePayrollAccountHeads);
+                        await _uow.GetDbContext().SaveChangesAsync();
+                    }
+
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
@@ -4090,21 +4078,30 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var financialyear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDefault == true);
-                var list = await _uow.EmployeeApplyLeaveRepository.FindAllAsync(x => x.IsDeleted == false && x.EmployeeId == employeeid && x.ApplyLeaveStatusId != (int)ApplyLeaveStatus.Reject && x.FinancialYearId == financialyear.FinancialYearId);
-                var applyleavelist = list.Select(x => new ApplyLeaveModel
+
+                if (financialyear == null)
                 {
-                    Date = x.FromDate
-                }).ToList();
-                response.data.ApplyLeaveList = applyleavelist;
-                var holidaylist = await _uow.HolidayDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.FinancialYearId == financialyear.FinancialYearId);
-                foreach (var list1 in holidaylist)
-                {
-                    ApplyLeaveModel obj = new ApplyLeaveModel();
-                    obj.Date = list1.Date;
-                    response.data.ApplyLeaveList.Add(obj);
+                    var list = await _uow.EmployeeApplyLeaveRepository.FindAllAsync(x => x.IsDeleted == false && x.EmployeeId == employeeid && x.ApplyLeaveStatusId != (int)ApplyLeaveStatus.Reject && x.FinancialYearId == financialyear.FinancialYearId);
+                    var applyleavelist = list.Select(x => new ApplyLeaveModel
+                    {
+                        Date = x.FromDate
+                    }).ToList();
+                    response.data.ApplyLeaveList = applyleavelist;
+                    var holidaylist = await _uow.HolidayDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.FinancialYearId == financialyear.FinancialYearId);
+                    foreach (var list1 in holidaylist)
+                    {
+                        ApplyLeaveModel obj = new ApplyLeaveModel();
+                        obj.Date = list1.Date;
+                        response.data.ApplyLeaveList.Add(obj);
+                    }
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
                 }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Financial Year Not Found";
+                }
             }
             catch (Exception ex)
             {
@@ -5035,10 +5032,11 @@ namespace HumanitarianAssistance.Service.Classes
                                  .Include(x => x.Employee.EmployeeProfessionalDetail.DesignationDetails)
                                  .Include(x => x.Employee.EmployeeProfessionalDetail.OfficeDetail)
                                  .Include(x => x.Employee.EmployeeProfessionalDetail.EmployeeContractType)
-                                 .Where(x => x.EmployeeId == EmployeeId)
+                                 .Where(x => x.EmployeeId == EmployeeId && x.IsDeleted == false)
                                  .OrderByDescending(x => x.CreatedDate)
                                  .Select(x => new EmployeeContractModel
                                  {
+                                     EmployeeContractId = x.EmployeeContractId,
                                      EmployeeId = x.EmployeeId,
                                      EmployeeName = x.Employee.EmployeeName,
                                      FatherName = x.Employee.FatherName,
@@ -5242,6 +5240,8 @@ namespace HumanitarianAssistance.Service.Classes
                 var record = (from ept in _uow.GetDbContext().EmployeePaymentTypes
                               join ed in _uow.GetDbContext().EmployeeDetail
                               on ept.EmployeeID equals ed.EmployeeID
+                              join epd in _uow.GetDbContext().EmployeeProfessionalDetail
+                              on ed.EmployeeID equals epd.EmployeeId
                               where ept.EmployeeID == EmployeeId && ept.IsDeleted == false && ept.PayrollYear == financialYear.StartDate.Year && ept.OfficeId == OfficeId && ept.IsApproved == true
                               select new
                               {
@@ -5252,12 +5252,13 @@ namespace HumanitarianAssistance.Service.Classes
                                   Year = ept.PayrollYear,
                                   NetSalary = ept.NetSalary,
                                   SalaryTax = ept.SalaryTax,
+                                  EmployeeTaxpayerIdentification = epd.TinNumber
                               }).ToList();
 
                 if (record.Count > 0)
                 {
                     obj.EmployeeName = record[0].EmployeeName;
-                    obj.EmployeeTaxpayerIdentification = "Nill";
+                    obj.EmployeeTaxpayerIdentification = record[0].EmployeeTaxpayerIdentification != null ? record[0].EmployeeTaxpayerIdentification : "Nill";
                     obj.EmployeeAddress = record[0].CurrentAddress;
                     obj.TelephoneNumberEmployee = record[0].Phone;
                     obj.EmailAddressEmployee = record[0].Email;
@@ -5923,5 +5924,35 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        /// <summary>
+        /// remove Employee Contract Details
+        /// </summary>
+        /// <param name="employeeContractId"></param>
+        /// <param name="UserId"></param>
+        /// <returns>Success/Failure</returns>
+        public async Task<APIResponse> RemoveEmployeeContractDetails(int employeeContractId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+
+                EmployeeContract employeeContract = _uow.GetDbContext().EmployeeContract.FirstOrDefault(x => x.IsDeleted == false && x.EmployeeContractId == employeeContractId);
+
+                employeeContract.IsDeleted = true;
+                employeeContract.ModifiedById = UserId;
+
+                await _uow.EmployeeContractRepository.UpdateAsyn(employeeContract);
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }

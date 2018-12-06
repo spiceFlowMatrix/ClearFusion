@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181206071453_codeMergedWithRamanModelChanges")]
+    partial class codeMergedWithRamanModelChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -726,7 +728,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("AccountTypeId");
 
-                    b.Property<string>("ChartOfAccountCodeNew");
+                    b.Property<long>("ChartOfAccountCode");
 
                     b.Property<string>("CreatedById");
 
@@ -751,6 +753,59 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("CategoryPopulator");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.ChartAccountDetail", b =>
+                {
+                    b.Property<int>("AccountCode")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<int>("AccountLevelId");
+
+                    b.Property<string>("AccountName")
+                        .HasMaxLength(100);
+
+                    b.Property<int?>("AccountNote");
+
+                    b.Property<int?>("AccountTypeId");
+
+                    b.Property<long>("ChartOfAccountCode");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<string>("DepMethod");
+
+                    b.Property<float>("DepRate");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("MDCode");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<long>("ParentID");
+
+                    b.Property<bool>("Show");
+
+                    b.HasKey("AccountCode");
+
+                    b.HasIndex("AccountCode")
+                        .IsUnique();
+
+                    b.HasIndex("AccountLevelId");
+
+                    b.HasIndex("AccountTypeId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("ChartAccountDetail");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.CodeType", b =>
@@ -4407,11 +4462,11 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
+                    b.Property<int?>("AccountCode");
+
                     b.Property<int?>("AccountTypeId");
 
                     b.Property<int>("BlanceType");
-
-                    b.Property<long>("ChartOfAccountNewId");
 
                     b.Property<string>("CreatedById");
 
@@ -4431,9 +4486,9 @@ namespace DataAccess.Migrations
 
                     b.HasKey("NoteId");
 
-                    b.HasIndex("AccountTypeId");
+                    b.HasIndex("AccountCode");
 
-                    b.HasIndex("ChartOfAccountNewId");
+                    b.HasIndex("AccountTypeId");
 
                     b.HasIndex("CreatedById");
 
@@ -6715,7 +6770,7 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<long>("ChartOfAccountNewId");
+                    b.Property<int>("AccountId");
 
                     b.Property<string>("CreatedById");
 
@@ -7153,9 +7208,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("InventoryCode");
 
-                    b.Property<long?>("InventoryCreditAccount");
+                    b.Property<int?>("InventoryCreditAccount");
 
-                    b.Property<long>("InventoryDebitAccount");
+                    b.Property<int>("InventoryDebitAccount");
 
                     b.Property<string>("InventoryDescription");
 
@@ -7454,6 +7509,8 @@ namespace DataAccess.Migrations
 
                     b.Property<long?>("BudgetLineId");
 
+                    b.Property<int?>("ChartAccountDetailAccountCode");
+
                     b.Property<string>("ChequeNo")
                         .HasMaxLength(10);
 
@@ -7499,6 +7556,8 @@ namespace DataAccess.Migrations
                     b.HasKey("VoucherNo");
 
                     b.HasIndex("BudgetLineId");
+
+                    b.HasIndex("ChartAccountDetailAccountCode");
 
                     b.HasIndex("CreatedById");
 
@@ -7568,11 +7627,13 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactions", b =>
                 {
-                    b.Property<long>("TransactionId")
+                    b.Property<int>("TransactionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
                     b.Property<double?>("AFGAmount");
+
+                    b.Property<int?>("AccountNo");
 
                     b.Property<double?>("Amount");
 
@@ -7580,7 +7641,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("BudgetLineId");
 
-                    b.Property<long?>("ChartOfAccountNewId");
+                    b.Property<int?>("ChartAccountDetailAccountCode");
 
                     b.Property<string>("CostBook");
 
@@ -7590,13 +7651,13 @@ namespace DataAccess.Migrations
 
                     b.Property<double?>("Credit");
 
-                    b.Property<long?>("CreditAccount");
+                    b.Property<int?>("CreditAccount");
 
                     b.Property<int?>("CurrencyId");
 
                     b.Property<double?>("Debit");
 
-                    b.Property<long?>("DebitAccount");
+                    b.Property<int?>("DebitAccount");
 
                     b.Property<string>("Description");
 
@@ -7634,7 +7695,9 @@ namespace DataAccess.Migrations
 
                     b.HasKey("TransactionId");
 
-                    b.HasIndex("ChartOfAccountNewId");
+                    b.HasIndex("AccountNo");
+
+                    b.HasIndex("ChartAccountDetailAccountCode");
 
                     b.HasIndex("CreatedById");
 
@@ -7649,7 +7712,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("VoucherNo");
 
-                    b.HasIndex("TransactionDate", "ChartOfAccountNewId");
+                    b.HasIndex("TransactionDate", "AccountNo");
 
                     b.ToTable("VoucherTransactions");
                 });
@@ -8058,6 +8121,26 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("AccountTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.ChartAccountDetail", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AccountLevel", "AccountLevels")
+                        .WithMany()
+                        .HasForeignKey("AccountLevelId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AccountType", "AccountType")
+                        .WithMany()
+                        .HasForeignKey("AccountTypeId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
@@ -9377,14 +9460,13 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.NotesMaster", b =>
                 {
+                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail", "ChartAccountDetails")
+                        .WithMany()
+                        .HasForeignKey("AccountCode");
+
                     b.HasOne("DataAccess.DbEntities.AccountType", "AccountType")
                         .WithMany()
                         .HasForeignKey("AccountTypeId");
-
-                    b.HasOne("DataAccess.DbEntities.AccountingNew.ChartOfAccountNew", "ChartOfAccountNew")
-                        .WithMany()
-                        .HasForeignKey("ChartOfAccountNewId")
-                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
@@ -10243,11 +10325,11 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("DataAccess.DbEntities.AccountingNew.ChartOfAccountNew", "ChartCreditAccountDetails")
+                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail", "ChartCreditAccountDetails")
                         .WithMany()
                         .HasForeignKey("InventoryCreditAccount");
 
-                    b.HasOne("DataAccess.DbEntities.AccountingNew.ChartOfAccountNew", "ChartDebitAccountDetails")
+                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail", "ChartDebitAccountDetails")
                         .WithMany()
                         .HasForeignKey("InventoryDebitAccount")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -10347,6 +10429,10 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("BudgetLineId");
 
+                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail")
+                        .WithMany("VoucherList")
+                        .HasForeignKey("ChartAccountDetailAccountCode");
+
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -10398,9 +10484,13 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactions", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.AccountingNew.ChartOfAccountNew", "ChartOfAccountDetail")
-                        .WithMany("VoucherTransactionsList")
-                        .HasForeignKey("ChartOfAccountNewId");
+                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail", "CreditAccountDetails")
+                        .WithMany("CreditAccountlist")
+                        .HasForeignKey("AccountNo");
+
+                    b.HasOne("DataAccess.DbEntities.ChartAccountDetail")
+                        .WithMany("DebitAccountlist")
+                        .HasForeignKey("ChartAccountDetailAccountCode");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()

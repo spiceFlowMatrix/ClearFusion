@@ -43,17 +43,17 @@ namespace HumanitarianAssistance.ViewModels.Models
 
     public class AccountDetailModel
     {
-        public int AccountCode { get; set; }
+        public long ChartOfAccountNewId { get; set; }
         public string AccountName { get; set; }
-		public long ChartOfAccountCode { get; set; }
+		public string ChartOfAccountNewCode { get; set; }
         public int AccountLevelId { get; set; }
     }
 
     public class VoucherTransactionModel : BaseModel
     {        
-        public int TransactionId { get; set; }
-        public int? DebitAccount { get; set; }
-        public int? CreditAccount { get; set; }
+        public long TransactionId { get; set; }
+        public long? DebitAccount { get; set; }
+        public long? CreditAccount { get; set; }
         public double? Amount { get; set; }
         public string Description { get; set; }
         public DateTime? TransactionDate { get; set; }
@@ -67,7 +67,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public double? CreditAmount { get; set; }
 
         //In Use
-        public int? AccountNo { get; set; }
+        public long? ChartOfAccountNewId { get; set; }
         public double? Debit { get; set; }
         public double? Credit { get; set; }
 
@@ -115,7 +115,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 
     public class LedgerModel
     {
-        public long AccountCode { get; set; }
+        public long ChartOfAccountNewId { get; set; }
         public string ChartAccountName { get; set; }
         public string CurrencyName { get; set; }
         public string MainLevel { get; set; }
@@ -232,7 +232,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public double ExchangeGainLossAmount { get; set; }
         public string AccountName { get; set; }
         public int AccountCodeCredit { get; set; }
-        public int AccountCodeDebit { get; set; }
+        public long ChartOfAccountNewIdDebit { get; set; }
         public string OfficeCode { get; set; }
     }
 }
