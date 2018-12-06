@@ -59,7 +59,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
+       if (user != null)
       {
         var id = user.Id;
         response = await _iContractDetailsService.ApproveContract(model, id);
