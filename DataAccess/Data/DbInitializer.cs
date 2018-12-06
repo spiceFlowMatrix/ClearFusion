@@ -202,7 +202,6 @@ namespace DataAccess.Data
                     new Permissions { IsDeleted= false, Name = "CanAdd"},
                     new Permissions { IsDeleted= false, Name = "CanEdit"},
                     new Permissions { IsDeleted= false, Name = "CanView"},
-                    new Permissions { IsDeleted= false, Name = "CanRead"},
                     new Permissions { IsDeleted= false, Name = "CanDelete"}
                 };
                 await context.Permissions.AddRangeAsync(list);
