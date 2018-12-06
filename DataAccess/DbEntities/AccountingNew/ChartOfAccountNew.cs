@@ -8,14 +8,6 @@ namespace DataAccess.DbEntities.AccountingNew
 {
     public class ChartOfAccountNew : BaseEntityWithoutId
     {
-
-        public ChartOfAccountNew()
-        {
-            CreditAccountlist = new List<VoucherTransactions>();
-            DebitAccountlist = new List<VoucherTransactions>();
-        }
-
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
@@ -39,8 +31,8 @@ namespace DataAccess.DbEntities.AccountingNew
         [ForeignKey("AccountFilterTypeId")]
         public AccountFilterType AccountFilterType { get; set; }
 
-        public List<VoucherTransactions> CreditAccountlist { get; set; }
-        public List<VoucherTransactions> DebitAccountlist { get; set; }
+        public virtual List<VoucherTransactions> VoucherTransactionsList { get; set; }
+        //public virtual List<VoucherTransactions> DebitAccountlist { get; set; }
 
         //public List<VoucherDetail> VoucherList { get; set; }
     }

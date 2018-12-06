@@ -13,7 +13,8 @@ namespace DataAccess.DbEntities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column(Order = 1, TypeName = "serial")]		
 		public long TransactionId { get; set; }
-		public long? VoucherNo { get; set; }
+
+        public long? VoucherNo { get; set; }
 		[ForeignKey("VoucherNo")]
 		public VoucherDetail VoucherDetails { get; set; }
 
@@ -23,8 +24,13 @@ namespace DataAccess.DbEntities
 
 		public string Description { get; set; }
 		public DateTime? TransactionDate { get; set; }
-		[ForeignKey("ChartOfAccountNewId")]
-		public ChartOfAccountNew CreditAccountDetails { get; set; }
+
+
+        public long? ChartOfAccountNewId { get; set; }
+        [ForeignKey("ChartOfAccountNewId")]
+        public ChartOfAccountNew ChartOfAccountDetail { get; set; }
+
+
 		//[ForeignKey("DebitAccount")]
 		//public ChartAccountDetail DebitAccountDetails { get; set; }
 
@@ -36,7 +42,6 @@ namespace DataAccess.DbEntities
 
 		public int? FinancialYearId { get; set; }
 		//public FinancialYearDetail FinancialYearDetails { get; set; }
-		public long? ChartOfAccountNewId { get; set; }
 		public string Donor { get; set; }
 		public string Area { get; set; }
 		public string Sector { get; set; }

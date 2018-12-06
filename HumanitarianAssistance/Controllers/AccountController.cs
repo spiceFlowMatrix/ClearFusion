@@ -788,15 +788,6 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> GetTrailBlanceDetails()
-    {
-      APIResponse response = await _ivoucherDetail.GetTrailBlanceDetails();
-      return response;
-    }
-
-
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetTrailBlanceDetailsByCondition([FromBody] LedgerModels model)
@@ -866,14 +857,6 @@ namespace HumanitarianAssistance.Controllers
     public async Task<APIResponse> GetBlanceSheetDetails([FromBody]FinancialReportModel model)
     {
       APIResponse response = await _ivoucherDetail.GetBlanceSheetDetails(model);
-      return response;
-    }
-
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetDetailsOfNotes(int? financialyearid, int? currencyid)
-    {
-      APIResponse response = await _ivoucherDetail.GetDetailsOfNotes(financialyearid, currencyid);
       return response;
     }
 

@@ -216,9 +216,9 @@ namespace HumanitarianAssistance.Entities
         public DbSet<PriorityCriteriaDetail> PriorityCriteriaDetail { get; set; }
         public DbSet<FinancialCriteriaDetail> FinancialCriteriaDetail { get; set; }
         public DbSet<RiskCriteriaDetail> RiskCriteriaDetail { get; set; }
-        
 
-        #endregion 
+
+        #endregion
 
         #region Marketing
         public DbSet<UnitRate> UnitRates { get; set; }
@@ -248,21 +248,14 @@ namespace HumanitarianAssistance.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
-            //modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);
-            //modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.DebitAccountDetails).WithMany(b => b.DebitAccountlist);
-            //modelBuilder.Entity<VoucherTransactionDetails>().HasOne(p => p.VoucherDetails).WithMany(b => b.VoucherTransactionDetails);
 
-            modelBuilder.Entity<VoucherTransactions>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);
-            //modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.DebitAccountDetails).WithMany(b => b.DebitAccountlist);
+            modelBuilder.Entity<VoucherTransactions>().HasOne(x => x.ChartOfAccountDetail).WithMany(b => b.VoucherTransactionsList);
             modelBuilder.Entity<VoucherTransactions>().HasOne(p => p.VoucherDetails).WithMany(b => b.VoucherTransactionDetails);
 
-            //modelBuilder.Entity<ExchangeRate>().HasOne(x => x.CurrencyFrom).WithMany(b => b.ExchangeRateListFrom);
-            //modelBuilder.Entity<ExchangeRate>().HasOne(x => x.CurrencyTo).WithMany(b => b.ExchangeRateListTo);
-            //modelBuilder.Entity<EmployeePaymentType>().HasIndex(b => b.EmployeeID).IsUnique(false);
-            //modelBuilder.Entity<EmployeePaymentType>().HasIndex(b => b.EmployeeID).IsUnique(false);
+            //modelBuilder.Entity<ChartOfAccountNew>().HasMany(x => x.CreditAccountlist);
+            //modelBuilder.Entity<ChartOfAccountNew>().HasMany(x => x.DebitAccountlist);
 
-            //Non Clustered Index
-            //modelBuilder.Entity<BudgetLineEmployees>().HasIndex(t => new { t.OfficeId, t.ProjectId, t.BudgetLineId, t.IsActive });
+
 
 
             //Global filter on table

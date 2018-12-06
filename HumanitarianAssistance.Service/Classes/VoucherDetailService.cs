@@ -457,7 +457,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var journalcodeList = await Task.Run(() =>
-                  _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(e => e.VoucherTransactionDetails).ThenInclude(e => e.CreditAccountDetails).ToList()
+                  _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(e => e.VoucherTransactionDetails).ThenInclude(e => e.ChartOfAccountDetail).ToList()
                     );
                 List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
                 response.data.JournalVoucherViewList = listJournalView;
@@ -1008,7 +1008,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 //var transactionlist = await _uow.GetDbContext().VoucherTransactionDetails.Include(x => x.CreditAccountDetails).Include(x => x.DebitAccountDetails).Where(x => x.VoucherNo == VoucherNo && x.IsDeleted == false).ToListAsync();
-                var transactionlist = await _uow.GetDbContext().VoucherTransactions.Include(x => x.CreditAccountDetails).Where(x => x.VoucherNo == VoucherNo && x.IsDeleted == false).ToListAsync();
+                var transactionlist = await _uow.GetDbContext().VoucherTransactions.Include(x => x.ChartOfAccountDetail).Where(x => x.VoucherNo == VoucherNo && x.IsDeleted == false).ToListAsync();
 
                 IList<VoucherTransactionModel> tranlist = new List<VoucherTransactionModel>();
                 foreach (var item in transactionlist)
@@ -1425,44 +1425,6 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllLedgerDetails()
-        {
-
-            APIResponse response = new APIResponse();
-            try
-            {
-                var ledgerList = await Task.Run(() =>
-                  _uow.GetDbContext().ChartOfAccountNew.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).Where(x => x.AccountLevelId == 4).ToList()
-                    );
-
-                List<LedgerModel> list1 = new List<LedgerModel>();
-                //long VoucherNo = 0;
-                string mainlevel1 = null, controllevel1 = null, sublevel1 = null, currency = null;
-                foreach (var i in ledgerList)
-                {
-                    if (i.DebitAccountlist.Count > 0 || i.CreditAccountlist.Count > 0)
-                    {
-                        var s = _uow.ChartOfAccountNewRepository.FindAsync(x => x.ChartOfAccountNewId == i.ChartOfAccountNewId).Result.ParentID;
-                        var sublevel = _uow.ChartOfAccountNewRepository.FindAsync(x => x.ChartOfAccountNewId == s).Result;
-                        var controllevel = _uow.ChartOfAccountNewRepository.FindAsync(x => x.ChartOfAccountNewId == sublevel.ParentID).Result;
-                        var mainLevel = _uow.ChartOfAccountNewRepository.FindAsync(x => x.ChartOfAccountNewId == controllevel.ParentID).Result;
-                        mainlevel1 = mainLevel.AccountName;
-                        controllevel1 = controllevel.AccountName;
-                        sublevel1 = sublevel.AccountName;
-                    }
-                }
-                response.data.LedgerList = list1;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
-
         public async Task<APIResponse> GetAllLedgerDetailsByCondition(LedgerModels model)
         {
             APIResponse response = new APIResponse();
@@ -1542,14 +1504,14 @@ namespace HumanitarianAssistance.Service.Classes
                         if (model.RecordType == 1)
                         {
 
-                            openingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(c => c.CreditAccountDetails)
+                            openingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(c => c.ChartOfAccountDetail)
                                                        .Where(x => x.IsDeleted == false &&
                                                                         accountLevelFour.Contains(x.ChartOfAccountNewId.Value) &&
                                                                         model.OfficeIdList.Contains(x.OfficeId.Value) &&
                                                                         x.CurrencyId == model.CurrencyId &&
                                                                         x.TransactionDate.Value.Date < model.fromdate.Date).ToListAsync();
 
-                            closingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(c => c.CreditAccountDetails)
+                            closingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(c => c.ChartOfAccountDetail)
                                                    .Where(x => x.IsDeleted == false &&
                                                                     accountLevelFour.Contains(x.ChartOfAccountNewId.Value) &&
                                                                     model.OfficeIdList.Contains(x.OfficeId.Value) &&
@@ -1566,9 +1528,9 @@ namespace HumanitarianAssistance.Service.Classes
 
                                     obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
                                     //obj.AccountName = accountItem.AccountName;
-                                    obj.AccountName = item.CreditAccountDetails.AccountName;
+                                    obj.AccountName = item.ChartOfAccountDetail.AccountName;
                                     obj.VoucherNo = item.VoucherNo.ToString();
-                                    obj.ChartAccountName = item.CreditAccountDetails.AccountName;
+                                    obj.ChartAccountName = item.ChartOfAccountDetail.AccountName;
                                     obj.Description = item.Description;
                                     obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
                                     obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
@@ -1589,9 +1551,9 @@ namespace HumanitarianAssistance.Service.Classes
 
                                     obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
                                     //obj.AccountName = accountItem.AccountName;
-                                    obj.AccountName = item.CreditAccountDetails.AccountName;
+                                    obj.AccountName = item.ChartOfAccountDetail.AccountName;
                                     obj.VoucherNo = item.VoucherNo.ToString();
-                                    obj.ChartAccountName = item.CreditAccountDetails.AccountName;
+                                    obj.ChartAccountName = item.ChartOfAccountDetail.AccountName;
                                     obj.Description = item.Description;
                                     obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
                                     obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
@@ -1905,13 +1867,13 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             //Consolidate
 
-                            openingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(x => x.CreditAccountDetails)
+                            openingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(x => x.ChartOfAccountDetail)
                                                                         .Where(x => x.IsDeleted == false &&
                                                                         accountLevelFour.Contains(x.ChartOfAccountNewId.Value) &&
                                                                         model.OfficeIdList.Contains(x.OfficeId.Value) &&
                                                                         x.TransactionDate.Value.Date < model.fromdate.Date).ToListAsync();
 
-                            closingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(x => x.CreditAccountDetails)
+                            closingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(x => x.ChartOfAccountDetail)
                                                                     .Where(x => x.IsDeleted == false &&
                                                                     accountLevelFour.Contains(x.ChartOfAccountNewId.Value) &&
                                                                     model.OfficeIdList.Contains(x.OfficeId.Value) &&
@@ -1924,9 +1886,9 @@ namespace HumanitarianAssistance.Service.Classes
                                 LedgerModel obj = new LedgerModel();
 
                                 obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
-                                obj.AccountName = item.CreditAccountDetails.AccountName;
+                                obj.AccountName = item.ChartOfAccountDetail.AccountName;
                                 obj.VoucherNo = item.VoucherNo.ToString();
-                                obj.ChartAccountName = item.CreditAccountDetails.AccountName;
+                                obj.ChartAccountName = item.ChartOfAccountDetail.AccountName;
                                 obj.Description = item.Description;
                                 obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
                                 obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
@@ -1966,10 +1928,10 @@ namespace HumanitarianAssistance.Service.Classes
                                 LedgerModel obj = new LedgerModel();
 
                                 obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
-                                obj.AccountName = item.CreditAccountDetails.AccountName;
+                                obj.AccountName = item.ChartOfAccountDetail.AccountName;
                                 obj.VoucherNo = item.VoucherNo.ToString();
                                 obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
-                                obj.ChartAccountName = item.CreditAccountDetails.AccountName;
+                                obj.ChartAccountName = item.ChartOfAccountDetail.AccountName;
                                 obj.Description = item.Description;
                                 obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
                                 obj.TransactionDate = item.TransactionDate;
@@ -2758,59 +2720,6 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetTrailBlanceDetails()
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var ledgerList = await Task.Run(() =>
-                  _uow.GetDbContext().ChartOfAccountNew.Include(e => e.CreditAccountlist).Include(d => d.DebitAccountlist).ToList()
-                    );
-
-                List<TrailBlance> list = new List<TrailBlance>();
-                double? debitamount = 0, creditamount = 0;
-                foreach (var i in ledgerList)
-                {
-                    TrailBlance trailBlance = new TrailBlance();
-                    if (i.DebitAccountlist.Count > 0 || i.CreditAccountlist.Count > 0)
-                    {
-                        long? voucherno = 0;
-                        if (i.DebitAccountlist.Count > 0)
-                            voucherno = i.DebitAccountlist[0].VoucherNo;
-                        else
-                            voucherno = i.CreditAccountlist[0].VoucherNo;
-                        var currency = await Task.Run(() =>
-                            _uow.GetDbContext().VoucherDetail.Include(e => e.CurrencyDetail).Include(x => x.OfficeDetails).Where(v => v.VoucherNo == voucherno).FirstOrDefault()
-                        );
-                        //trailBlance.OfficeName = currency.OfficeDetails.OfficeName;
-                        trailBlance.CurrencyName = currency.CurrencyDetail.CurrencyName;
-                        trailBlance.AccountName = i.AccountName;
-                        foreach (var debit in i.DebitAccountlist)
-                        {
-                            debitamount = debitamount + debit.Amount;
-                        }
-                        foreach (var credit in i.CreditAccountlist)
-                        {
-                            creditamount = creditamount + credit.Amount;
-                        }
-                        trailBlance.DebitAmount = debitamount;
-                        trailBlance.CreditAmount = creditamount;
-                        list.Add(trailBlance);
-                    }
-                }
-                //response.data.TrailBlanceList = list;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
-
-
         public async Task<APIResponse> GetTrailBlanceDetailsByCondition(LedgerModels model)
         {
             APIResponse response = new APIResponse();
@@ -2969,7 +2878,7 @@ namespace HumanitarianAssistance.Service.Classes
                         finalTrialBalanceList = new List<LedgerModel>();
 
                         var transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                            .Include(x => x.CreditAccountDetails)
+                                                            .Include(x => x.ChartOfAccountDetail)
                                                             .Where(x => model.OfficesList.Contains(x.OfficeId) &&
                                                                        accountFourthLevelNotNull.Contains(x.ChartOfAccountNewId.Value) && //change the accountNo to long datatype
                                                                        x.TransactionDate.Value.Date >= model.fromdate.Date &&
@@ -2985,8 +2894,8 @@ namespace HumanitarianAssistance.Service.Classes
                             LedgerModel obj = new LedgerModel();
 
                             obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
-                            obj.AccountName = item.CreditAccountDetails.AccountName;
-                            obj.ChartAccountName = item.CreditAccountDetails.AccountName;
+                            obj.AccountName = item.ChartOfAccountDetail.AccountName;
+                            obj.ChartAccountName = item.ChartOfAccountDetail.AccountName;
                             obj.Description = item.Description;
                             obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == model.CurrencyId)?.CurrencyName;
                             obj.TransactionDate = item.TransactionDate;
@@ -4245,67 +4154,6 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetDetailsOfNotes(int? financialyearid, int? currencyid)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var Noteslist = await _uow.GetDbContext().NotesMaster
-                        .Include(c => c.ChartOfAccountNew)
-                        .Include(c => c.ChartOfAccountNew.CreditAccountlist)
-                        .Include(c => c.ChartOfAccountNew.DebitAccountlist)
-                        .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1)
-                        .GroupBy(g => g.Notes)
-                        .ToListAsync();
-
-                var list = await Task.Run(() =>
-                    _uow.GetDbContext().NotesMaster.Include(c => c.ChartOfAccountNew)
-                    .Include(c => c.ChartOfAccountNew.CreditAccountlist)
-                    .Include(c => c.ChartOfAccountNew.DebitAccountlist)
-                    .Where(x => x.IsDeleted == false && x.FinancialReportTypeId == 1).ToListAsync()
-                );
-
-                List<DetailsOfNotesModel> detailsofnoteList = new List<DetailsOfNotesModel>();
-                double? creditAmount = 0, debitAmount = 0, balanceAmount = 0;
-                foreach (var l in list)
-                {
-                    if (l.BlanceType == (int)BalanceType.SUM)
-                    {
-                        creditAmount = l.ChartOfAccountNew.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                        debitAmount = l.ChartOfAccountNew.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                        balanceAmount = debitAmount - creditAmount;
-                    }
-                    if (l.BlanceType == (int)BalanceType.DR)
-                    {
-                        debitAmount = l.ChartOfAccountNew.DebitAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                        balanceAmount = debitAmount;
-                    }
-                    if (l.BlanceType == (int)BalanceType.CR)
-                    {
-                        creditAmount = l.ChartOfAccountNew.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid && f.CurrencyId == currencyid).Sum(x => x.Amount);
-                        balanceAmount = creditAmount;
-                    }
-
-                    DetailsOfNotesModel obj = new DetailsOfNotesModel();
-                    obj.ChartOfAccountNewCode = l.ChartOfAccountNew.ChartOfAccountNewCode;
-                    obj.AccountName = l.ChartOfAccountNew?.AccountName ?? null;
-                    obj.Notes = l.Notes;
-                    obj.BalanceAmount = balanceAmount;
-                    detailsofnoteList.Add(obj);
-                }
-
-                response.data.DetailsOfNotesList = detailsofnoteList.OrderBy(x => x.Notes).ToList();
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
-
         public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
         {
             APIResponse response = new APIResponse();
@@ -4326,7 +4174,7 @@ namespace HumanitarianAssistance.Service.Classes
                     //var allAccounts = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).ToListAsync();
 
 
-                    var allAccounts = await _uow.GetDbContext().ChartOfAccountNew.Include(x => x.CreditAccountlist)
+                    var allAccounts = await _uow.GetDbContext().ChartOfAccountNew.Include(x => x.VoucherTransactionsList)
                         .Select(x => new
                         {
                             ChartOfAccountNewId = x.ChartOfAccountNewId,
