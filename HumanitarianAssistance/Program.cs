@@ -26,7 +26,7 @@ namespace HumanitarianAssistance
           var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
           var dbInitializerLogger = services.GetRequiredService<ILogger<DbInitializer>>();
-          DbInitializer.Initialize(context, userManager, roleManager, dbInitializerLogger).Wait();
+          // DbInitializer.Initialize(context, userManager, roleManager, dbInitializerLogger).Wait();
         }
         catch (Exception ex)
         {

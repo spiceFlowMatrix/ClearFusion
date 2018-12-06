@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build-job:
+  build-staging:
     docker:
       - image: microsoft/dotnet:sdk
     steps:
@@ -16,7 +16,40 @@ jobs:
             - HumanitarianAssistance/release
             - Dockerfile
             - .dockerignore
-  deploy-job:
+  build-smo:
+    docker:
+      - image: microsoft/dotnet:sdk
+    steps:
+      - checkout
+      - run: dotnet restore HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj
+      - run: dotnet publish HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj -c Release -o release
+      - run: echo $SMOPROD_APPSETTINGS_JSON
+      - run: echo $SMOPROD_APPSETTINGS_JSON > HumanitarianAssistance/release/appsettings.json
+      - run: mkdir HumanitarianAssistance/release/Documents
+      - persist_to_workspace:
+          root: .
+          paths: 
+            - HumanitarianAssistance/release
+            - Dockerfile
+            - .dockerignore
+            
+  build-cha:
+    docker:
+      - image: microsoft/dotnet:sdk
+    steps:
+      - checkout
+      - run: dotnet restore HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj
+      - run: dotnet publish HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj -c Release -o release
+      - run: echo $CHAPROD_APPSETTINGS_JSON
+      - run: echo $CHAPROD_APPSETTINGS_JSON > HumanitarianAssistance/release/appsettings.json
+      - run: mkdir HumanitarianAssistance/release/Documents
+      - persist_to_workspace:
+          root: .
+          paths: 
+            - HumanitarianAssistance/release
+            - Dockerfile
+            - .dockerignore
+  deploy-staging:
     docker:
       - image: google/cloud-sdk
     steps:
@@ -50,14 +83,112 @@ jobs:
             kubectl patch deployment ${KUBDEPLOYMENT_API_STAGING} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
             kubectl rollout status deployment/${KUBDEPLOYMENT_API_STAGING}
             kubectl get pods
+  deploy-cha:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Set up Google cloud SDK. Important to set up cluster based on deployment
+          command: |
+            echo $GCLOUD_SERVICE_KEY > gcloud-service-key.json
+            gcloud auth activate-service-account --key-file gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+            # We have a policy to have a dedicated cluster for each deployment environment (Staging, Production, etc)
+            # In the cluster name we need to also include the environment name. Please use the following pattern
+            # GOOGLE_xxxxxxx_CLUSTER_NAME
+            # The xxx part is where we specify Staging or Production etc. Please write the environment variable in all caps.
+            # Or we're gonna need to have a talk...
+            gcloud --quiet container clusters get-credentials ${GOOGLE_PRODUCTION_CLUSTER_NAME}
+      - setup_remote_docker
+      - run: find .
+      - run:
+          name: Tag docker image to GCR registry
+          command: |
+            docker build -t ${APPLICATION_NAME}:${CIRCLE_SHA1} ./workspace
+            docker tag ${APPLICATION_NAME}:${CIRCLE_SHA1} eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}-cha:${CIRCLE_SHA1}
+      - run:
+          name: Push image to GRC & update k8s
+          command: |
+            gcloud auth configure-docker
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}-cha:${CIRCLE_SHA1}
+            kubectl patch deployment ${KUBDEPLOYMENT_CHAAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'-cha","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"'-cha:'"$CIRCLE_SHA1"'"}]}}}}'
+            kubectl rollout status deployment/${KUBDEPLOYMENT_CHAAPI_PROD}
+            kubectl get pods
+  deploy-smo:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Set up Google cloud SDK. Important to set up cluster based on deployment
+          command: |
+            echo $GCLOUD_SERVICE_KEY > gcloud-service-key.json
+            gcloud auth activate-service-account --key-file gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+            # We have a policy to have a dedicated cluster for each deployment environment (Staging, Production, etc)
+            # In the cluster name we need to also include the environment name. Please use the following pattern
+            # GOOGLE_xxxxxxx_CLUSTER_NAME
+            # The xxx part is where we specify Staging or Production etc. Please write the environment variable in all caps.
+            # Or we're gonna need to have a talk...
+            gcloud --quiet container clusters get-credentials ${GOOGLE_PRODUCTION_CLUSTER_NAME}
+      - setup_remote_docker
+      - run: find .
+      - run:
+          name: Tag docker image to GCR registry
+          command: |
+            docker build -t ${APPLICATION_NAME}:${CIRCLE_SHA1} ./workspace
+            docker tag ${APPLICATION_NAME}:${CIRCLE_SHA1} eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}-smo:${CIRCLE_SHA1}
+      - run:
+          name: Push image to GRC & update k8s
+          command: |
+            gcloud auth configure-docker
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}-smo:${CIRCLE_SHA1}
+            kubectl patch deployment ${KUBDEPLOYMENT_SMOAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'-smo","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"'-smo:'"$CIRCLE_SHA1"'"}]}}}}'
+            kubectl rollout status deployment/${KUBDEPLOYMENT_SMOAPI_PROD}
+            kubectl get pods
 workflows:
   version: 2.1
-  nda-api-build-deploy:
+  clearfusion-api-build-deploy:
     jobs:
-      - build-job:
+      - build-staging:
           filters:
             branches:
               only: master
-      - deploy-job:
+      - deploy-staging:
           requires:
-          - build-job
+          - build-staging
+      - build-cha:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - deploy-cha:
+          requires:
+          - build-cha
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - build-smo:
+          requires:
+          - deploy-cha
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - deploy-smo:
+          requires:
+          - build-smo
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
