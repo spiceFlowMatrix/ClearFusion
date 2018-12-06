@@ -294,7 +294,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectProposalModel ProjectProposalModel { get; set; }
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
 
-        public CriteriaEveluationModel _CriteriaEveluationModel { get; set; }
+        public CriteriaEveluationModel CriteriaEveluationModel { get; set; }
 
         #region Marketing
         public ICollection<JobDetails> JobDetails { get; set; }
