@@ -1835,7 +1835,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.DonorFinancingHistory = model.DonorFinancingHistory;
                     _detail.ReligiousStanding = model.ReligiousStanding;
                     _detail.PoliticalStanding = model.PoliticalStanding;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;

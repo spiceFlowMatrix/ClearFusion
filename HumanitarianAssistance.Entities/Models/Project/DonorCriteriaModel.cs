@@ -6,8 +6,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 {
    public class DonorCriteriaModel
     {
-        public long ProjectId { get; set; }
-        public long DonorCEId { get; set; }
+        public long? ProjectId { get; set; }
+        public long? DonorCEId { get; set; }
         public int? MethodOfFunding { get; set; }
         public bool? PastFundingExperience { get; set; }
         public bool? ProposalAccepted { get; set; }
@@ -27,6 +27,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? DonorFinancingHistory { get; set; }
         public bool? ReligiousStanding { get; set; }
         public bool? PoliticalStanding { get; set; }
+
 
       
     }
