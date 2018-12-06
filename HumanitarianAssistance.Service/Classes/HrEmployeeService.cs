@@ -4078,21 +4078,30 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var financialyear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDefault == true);
-                var list = await _uow.EmployeeApplyLeaveRepository.FindAllAsync(x => x.IsDeleted == false && x.EmployeeId == employeeid && x.ApplyLeaveStatusId != (int)ApplyLeaveStatus.Reject && x.FinancialYearId == financialyear.FinancialYearId);
-                var applyleavelist = list.Select(x => new ApplyLeaveModel
+
+                if (financialyear == null)
                 {
-                    Date = x.FromDate
-                }).ToList();
-                response.data.ApplyLeaveList = applyleavelist;
-                var holidaylist = await _uow.HolidayDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.FinancialYearId == financialyear.FinancialYearId);
-                foreach (var list1 in holidaylist)
-                {
-                    ApplyLeaveModel obj = new ApplyLeaveModel();
-                    obj.Date = list1.Date;
-                    response.data.ApplyLeaveList.Add(obj);
+                    var list = await _uow.EmployeeApplyLeaveRepository.FindAllAsync(x => x.IsDeleted == false && x.EmployeeId == employeeid && x.ApplyLeaveStatusId != (int)ApplyLeaveStatus.Reject && x.FinancialYearId == financialyear.FinancialYearId);
+                    var applyleavelist = list.Select(x => new ApplyLeaveModel
+                    {
+                        Date = x.FromDate
+                    }).ToList();
+                    response.data.ApplyLeaveList = applyleavelist;
+                    var holidaylist = await _uow.HolidayDetailsRepository.FindAllAsync(x => x.OfficeId == OfficeId && x.FinancialYearId == financialyear.FinancialYearId);
+                    foreach (var list1 in holidaylist)
+                    {
+                        ApplyLeaveModel obj = new ApplyLeaveModel();
+                        obj.Date = list1.Date;
+                        response.data.ApplyLeaveList.Add(obj);
+                    }
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
                 }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Financial Year Not Found";
+                }
             }
             catch (Exception ex)
             {

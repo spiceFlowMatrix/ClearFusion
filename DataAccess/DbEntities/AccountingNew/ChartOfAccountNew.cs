@@ -31,8 +31,9 @@ namespace DataAccess.DbEntities.AccountingNew
         [ForeignKey("AccountFilterTypeId")]
         public AccountFilterType AccountFilterType { get; set; }
 
-        //public List<VoucherTransactions> CreditAccountlist { get; set; }
-        //public List<VoucherTransactions> DebitAccountlist { get; set; }
+        public virtual List<VoucherTransactions> VoucherTransactionsList { get; set; }
+        //public virtual List<VoucherTransactions> DebitAccountlist { get; set; }
+
         //public List<VoucherDetail> VoucherList { get; set; }
     }
 }
