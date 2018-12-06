@@ -44,5 +44,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long? CurrencyId { get; set; }
         public int? UnitRate { get; set; }
         public bool IsApproved { get; set; }
+        public string YesOrNo { get; set; }
     }
 }
