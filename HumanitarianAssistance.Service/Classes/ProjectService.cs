@@ -2256,7 +2256,7 @@ namespace HumanitarianAssistance.Service.Classes
                          OtherOrganizationalHarms = ris.OtherOrganizationalHarms,
                          OrganizationalDescription = ris.OrganizationalDescription
                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
-                response.data._CriteriaEveluationModel = details;
+                response.data.CriteriaEveluationModel = details;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
