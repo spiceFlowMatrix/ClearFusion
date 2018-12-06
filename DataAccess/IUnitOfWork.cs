@@ -26,7 +26,7 @@ namespace DataAccess
         IGenericRepository<EmailSettingDetail> EmailSettingDetailRepository { get; }
         IGenericRepository<AccountType> AccountTypeRepository { get; }
         IGenericRepository<AccountLevel> AccountLevelRepository { get; }
-        IGenericRepository<ChartAccountDetail> ChartAccountDetailRepository { get; }
+        //IGenericRepository<ChartAccountDetail> ChartAccountDetailRepository { get; }
         IGenericRepository<VoucherType> VoucherTypeRepository { get; }
         IGenericRepository<VoucherDetail> VoucherDetailRepository { get; }
         IGenericRepository<VoucherDocumentDetail> VoucherDocumentDetailRepository { get; }

@@ -8,7 +8,7 @@ namespace DataAccess.DbEntities
     {
 		public int CategoryPopulatorId { get; set; }
 		public string SubCategoryLabel { get; set; }
-		public long ChartOfAccountCode { get; set; }
+		public string ChartOfAccountCodeNew { get; set; }
 		//public string AccountName { get; set; }
 		public int AccountTypeId { get; set; }
 		public AccountType AccountType { get; set; }

@@ -47,7 +47,7 @@ namespace HumanitarianAssistance.Service.Classes
                     if (model.InventoryCreditAccount != model.InventoryDebitAccount)
                     {
                         var inventoryAccount =
-                           _uow.GetDbContext().ChartAccountDetail.Where(x => x.AccountCode == model.InventoryDebitAccount).ToList();
+                           _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ChartOfAccountNewId == model.InventoryDebitAccount).ToList();
 
                         //if (inventoryAccount.Count == 2)
                         //{
@@ -100,8 +100,8 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var edInv = await _uow.StoreInventoryRepository.FindAsync(c => c.InventoryId == model.InventoryId);
                 var inventoryAccount =
-                     _uow.GetDbContext().ChartAccountDetail.Where(x =>
-                                        x.AccountCode == model.InventoryDebitAccount).ToList();
+                     _uow.GetDbContext().ChartOfAccountNew.Where(x =>
+                                        x.ChartOfAccountNewId == model.InventoryDebitAccount).ToList();
                 if (edInv != null)
                 {
                     //edInv.InventoryCode = model.InventoryCode;
@@ -2213,7 +2213,7 @@ namespace HumanitarianAssistance.Service.Classes
                     storePaymentTypes.CreatedById = UserId;
                     storePaymentTypes.CreatedDate = DateTime.Now;
                     storePaymentTypes.Name = model.Name;
-                    storePaymentTypes.AccountId = model.AccountId;
+                    storePaymentTypes.ChartOfAccountNewId = model.ChartOfAccountNewId;
 
                     await _uow.PaymentTypesRepository.AddAsyn(storePaymentTypes);
                 }
@@ -2252,7 +2252,7 @@ namespace HumanitarianAssistance.Service.Classes
                         storePaymentTypes.ModifiedById = UserId;
                         storePaymentTypes.ModifiedDate = DateTime.Now;
                         storePaymentTypes.Name = model.Name;
-                        storePaymentTypes.AccountId = model.AccountId;
+                        storePaymentTypes.ChartOfAccountNewId = model.ChartOfAccountNewId;
                     }
 
                     //update PaymentType Record
@@ -2398,8 +2398,8 @@ namespace HumanitarianAssistance.Service.Classes
                             xVoucherTransactionModel.IsDeleted = false;
                             xVoucherTransactionModel.VoucherNo = obj.VoucherNo;
                             xVoucherTransactionModel.FinancialYearId = financialYearDetails.FinancialYearId;
-                            xVoucherTransactionModel.AccountNo = paymentTypes.AccountId;
-                            xVoucherTransactionModel.CreditAccount = paymentTypes.AccountId;
+                            xVoucherTransactionModel.ChartOfAccountNewId = paymentTypes.ChartOfAccountNewId;
+                            xVoucherTransactionModel.CreditAccount = paymentTypes.ChartOfAccountNewId;
                             xVoucherTransactionModel.DebitAccount = inventory.Inventory.InventoryDebitAccount;
                             xVoucherTransactionModel.Credit = model.UnitCost * model.Quantity;
                             xVoucherTransactionModel.Debit = 0;
@@ -2510,7 +2510,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     voucherTransactionModel.IsDeleted = false;
                                     voucherTransactionModel.VoucherNo = model.VerifiedPurchaseVoucher;
                                     voucherTransactionModel.FinancialYearId = voucherDetail.FinancialYearId;
-                                    voucherTransactionModel.AccountNo = transaction.AccountNo;
+                                    voucherTransactionModel.ChartOfAccountNewId = transaction.ChartOfAccountNewId;
                                     //voucherTransactionModel.CreditAccount = paymentTypes.AccountId;
                                     // voucherTransactionModel.DebitAccount = inventory.Inventory.InventoryDebitAccount;
                                     voucherTransactionModel.CurrencyId = transaction.CurrencyId;

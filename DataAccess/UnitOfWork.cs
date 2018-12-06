@@ -27,7 +27,7 @@ namespace DataAccess
         private IGenericRepository<EmailSettingDetail> _emailsettingdetailRepository;
         private IGenericRepository<AccountType> _accounttypeRepository;
         private IGenericRepository<AccountLevel> _accountlevelRepository;
-        private IGenericRepository<ChartAccountDetail> _chartaccountdetailRepository;
+        //private IGenericRepository<ChartAccountDetail> _chartaccountdetailRepository;
         private IGenericRepository<VoucherType> _vouchertypeRepository;
         private IGenericRepository<VoucherDetail> _voucherdetailsRepository;
         private IGenericRepository<VoucherDocumentDetail> _voucherdocumentdetailRepository;
@@ -852,13 +852,13 @@ namespace DataAccess
             }
         }
 
-        public IGenericRepository<ChartAccountDetail> ChartAccountDetailRepository
-        {
-            get
-            {
-                return _chartaccountdetailRepository = _chartaccountdetailRepository ?? new GenericRepository<ChartAccountDetail>(_mschaContext);
-            }
-        }
+        //public IGenericRepository<ChartAccountDetail> ChartAccountDetailRepository
+        //{
+        //    get
+        //    {
+        //        return _chartaccountdetailRepository = _chartaccountdetailRepository ?? new GenericRepository<ChartAccountDetail>(_mschaContext);
+        //    }
+        //}
 
         public IGenericRepository<VoucherType> VoucherTypeRepository
         {

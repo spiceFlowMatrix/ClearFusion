@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess.DbEntities.AccountingNew;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,9 +13,9 @@ namespace DataAccess.DbEntities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
         public int NoteId { get; set; }
-        public int? AccountCode { get; set; }
-        [ForeignKey("AccountCode")]
-        public ChartAccountDetail ChartAccountDetails { get; set; }
+        public long ChartOfAccountNewId { get; set; }
+        [ForeignKey("ChartOfAccountNewId")]
+        public ChartOfAccountNew ChartOfAccountNew { get; set; }
         public string Narration { get; set; }
         public int Notes { get; set; }
         public int BlanceType { get; set; } // 1 = Sum , 2 = CR , 3 = DR

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccess;
 using DataAccess.DbEntities;
+using DataAccess.DbEntities.AccountingNew;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
@@ -209,20 +210,20 @@ namespace HumanitarianAssistance.Service.Classes
 
                 ICollection<VoucherTransactions> transactionDetails = null;
 
-                List<ChartAccountDetail> allAccounts = new List<ChartAccountDetail>();
+                List<ChartOfAccountNew> allAccounts = new List<ChartOfAccountNew>();
 
-                List<ChartAccountDetail> InputLevelAccounts = new List<ChartAccountDetail>();
+                List<ChartOfAccountNew> InputLevelAccounts = new List<ChartOfAccountNew>();
 
-                allAccounts = await _uow.GetDbContext().ChartAccountDetail
-                        .Select(x => new ChartAccountDetail
+                allAccounts = await _uow.GetDbContext().ChartOfAccountNew
+                        .Select(x => new ChartOfAccountNew
                         {
-                            AccountCode = x.AccountCode,
+                            ChartOfAccountNewId = x.ChartOfAccountNewId,
                             AccountLevelId = x.AccountLevelId,
                             AccountLevels = x.AccountLevels,
                             AccountName = x.AccountName,
                             AccountType = x.AccountType,
                             AccountTypeId = x.AccountTypeId,
-                            ChartOfAccountCode = x.ChartOfAccountCode,
+                            ChartOfAccountNewCode = x.ChartOfAccountNewCode,
                             CreatedById = x.CreatedById,
                             CreatedDate = x.CreatedDate,
                             ParentID = x.ParentID,
@@ -231,7 +232,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 foreach (var accounts in model.AccountList)
                 {
-                    var accountDetail = allAccounts.Find(x => x.ChartOfAccountCode == accounts);
+                    var accountDetail = allAccounts.Find(x => x.ChartOfAccountNewId == accounts);
 
                     if (accountDetail != null)
                     {
@@ -242,11 +243,11 @@ namespace HumanitarianAssistance.Service.Classes
                 //If VoucherList and AccountList
                 if (model.VoucherList != null && model.AccountList != null)
                 {
-                    transactionDetails = xtransactionDetails.Where(x => model.VoucherList.Contains(x.VoucherNo) && InputLevelAccounts.Select(y => y.AccountCode).ToList().Contains(x.AccountNo.Value)).ToList();
+                    transactionDetails = xtransactionDetails.Where(x => model.VoucherList.Contains(x.VoucherNo) && InputLevelAccounts.Select(y => y.ChartOfAccountNewId).ToList().Contains(x.ChartOfAccountNewId.Value)).ToList();
                 }
                 else
                 {
-                    transactionDetails = xtransactionDetails.Where(x => InputLevelAccounts.Select(y => y.AccountCode).ToList().Contains(x.AccountNo.Value)).ToList();
+                    transactionDetails = xtransactionDetails.Where(x => InputLevelAccounts.Select(y => y.ChartOfAccountNewId).ToList().Contains(x.ChartOfAccountNewId.Value)).ToList();
                 }
 
                 List<TransactionsModel> exchangeGainLossList = new List<TransactionsModel>();
@@ -500,18 +501,18 @@ namespace HumanitarianAssistance.Service.Classes
                     ICollection<CurrencyDetails> allCurrencies = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
                     CurrencyDetails baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
 
-                    List<ChartAccountDetail> allAccounts = new List<ChartAccountDetail>();
+                    List<ChartOfAccountNew> allAccounts = new List<ChartOfAccountNew>();
 
-                    allAccounts = await _uow.GetDbContext().ChartAccountDetail/*.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist)*/
-                            .Select(x => new ChartAccountDetail
+                    allAccounts = await _uow.GetDbContext().ChartOfAccountNew/*.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist)*/
+                            .Select(x => new ChartOfAccountNew
                             {
-                                AccountCode = x.AccountCode,
+                                ChartOfAccountNewId = x.ChartOfAccountNewId,
                                 AccountLevelId = x.AccountLevelId,
                                 AccountLevels = x.AccountLevels,
                                 AccountName = x.AccountName,
                                 AccountType = x.AccountType,
                                 AccountTypeId = x.AccountTypeId,
-                                ChartOfAccountCode = x.ChartOfAccountCode,
+                                ChartOfAccountNewCode = x.ChartOfAccountNewCode,
                                 CreatedById = x.CreatedById,
                                 CreatedDate = x.CreatedDate,
                                 ParentID = x.ParentID,
@@ -536,23 +537,23 @@ namespace HumanitarianAssistance.Service.Classes
 
                     foreach (long chartOfAccountCode in model.AccountList)
                     {
-                        var accountDetails = allAccounts.Find(x => x.ChartOfAccountCode == chartOfAccountCode);
+                        var accountDetails = allAccounts.Find(x => x.ChartOfAccountNewId == chartOfAccountCode);
 
 
                         //start from here
-                        List<ChartAccountDetail> accountTransactionsList = CommonUtility.CommonFunctions.GetInputLevelAccountDetails(accountDetails, allAccounts);
+                        List<ChartOfAccountNew> accountTransactionsList = CommonUtility.CommonFunctions.GetInputLevelAccountDetails(accountDetails, allAccounts);
 
-                        foreach (ChartAccountDetail xChartAccountDetail in accountTransactionsList)
+                        foreach (ChartOfAccountNew xChartAccountDetail in accountTransactionsList)
                         {
                             IEnumerable<VoucherTransactions> fourLevelTransactions = null;
 
                             if (model.TransactionType == (int)Common.Enums.TransactionType.Credit)
                             {
-                                fourLevelTransactions = xtransactionDetails.Where(x => x.AccountNo == xChartAccountDetail.ChartOfAccountCode && x.Credit != 0);
+                                fourLevelTransactions = xtransactionDetails.Where(x => x.ChartOfAccountNewId == xChartAccountDetail.ChartOfAccountNewId && x.Credit != 0);
                             }
                             else
                             {
-                                fourLevelTransactions = xtransactionDetails.Where(x => x.AccountNo == xChartAccountDetail.ChartOfAccountCode && x.Debit != 0);
+                                fourLevelTransactions = xtransactionDetails.Where(x => x.ChartOfAccountNewId == xChartAccountDetail.ChartOfAccountNewId && x.Debit != 0);
                             }
 
                             foreach (var item in fourLevelTransactions)

@@ -34,7 +34,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<CurrencyDetails, CurrencyModel>().ReverseMap();
       CreateMap<JournalDetail, JournalDetailModel>().ReverseMap();
       CreateMap<EmailSettingDetail, EmailSettingModel>().ReverseMap();
-      CreateMap<ChartAccountDetail, ChartAccountDetailModel>().ReverseMap();
+      //CreateMap<ChartAccountDetail, ChartAccountDetailModel>().ReverseMap();
       CreateMap<VoucherDetail, VoucherDetailModel>().ReverseMap();
       CreateMap<VoucherTransactionDetails, VoucherTransactionModel>().ReverseMap();
       CreateMap<VoucherDocumentDetail, VoucherDocumentDetailModel>().ReverseMap();
