@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181205091319_CriteriaTable")]
+    partial class CriteriaTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4115,8 +4117,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<int?>("LanguageDetailLanguageId");
-
                     b.Property<long?>("LanguageId");
 
                     b.Property<long?>("MediaCategoryId");
@@ -4149,7 +4149,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("LanguageDetailLanguageId");
+                    b.HasIndex("LanguageId");
 
                     b.HasIndex("MediaCategoryId");
 
@@ -5797,8 +5797,6 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int?>("CurrencyId");
-
                     b.Property<string>("EDIFileExtType");
 
                     b.Property<string>("EDIFileName");
@@ -5844,8 +5842,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("ProposalStartDate");
 
                     b.Property<string>("ProposalWebLink");
-
-                    b.Property<int?>("UserId");
 
                     b.HasKey("ProjectProposaldetailId");
 
@@ -9252,9 +9248,9 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("CurrencyId");
 
-                    b.HasOne("DataAccess.DbEntities.LanguageDetail", "LanguageDetail")
+                    b.HasOne("DataAccess.DbEntities.Marketing.Language", "Languages")
                         .WithMany()
-                        .HasForeignKey("LanguageDetailLanguageId");
+                        .HasForeignKey("LanguageId");
 
                     b.HasOne("DataAccess.DbEntities.Marketing.MediaCategory", "MediaCategories")
                         .WithMany()

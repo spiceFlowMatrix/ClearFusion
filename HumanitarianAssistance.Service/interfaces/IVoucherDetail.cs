@@ -1,4 +1,5 @@
-﻿using HumanitarianAssistance.Service.APIResponses;
+﻿using DataAccess.DbEntities;
+using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
 using System;
 using System.Collections.Generic;
@@ -77,5 +78,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DisapproveEmployeeApprovedSalary(DisapprovePayrollModel model, string UserId);
         Task<APIResponse> GetVoucherDetailByVoucherNo(long VoucherNo);
         Task<APIResponse> DeleteVoucherTransactions(int VoucherId, string modifiedById);
+        Task<APIResponse> AddVoucherTransactionConvertedToExchangeRate(VoucherTransactionModel model, List<ExchangeRate> exchangeRate);
     }
 }
