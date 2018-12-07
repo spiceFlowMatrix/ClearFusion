@@ -234,7 +234,9 @@ namespace HumanitarianAssistance.Controllers
 
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-          Dictionary<string, List<string>> dic = new Dictionary<string, List<string>>();
+
+          //Roles - permissions 
+          Dictionary<string, List<string>> permissionDic = new Dictionary<string, List<string>>();
           foreach (var role in roles)
           {
             userClaims.Add(new Claim("Roles", role)); //imp
@@ -246,7 +248,7 @@ namespace HumanitarianAssistance.Controllers
                 PermissionName = p.Name,
               }).Select(x=>x.PermissionName).ToList();
 
-            dic.Add(role, permissions);
+            permissionDic.Add(role, permissions);
           }
 
           //_ipermissions.GetPermissionsByRoleId()
@@ -272,6 +274,8 @@ namespace HumanitarianAssistance.Controllers
           response.data.Token = new JwtSecurityTokenHandler().WriteToken(token);
           response.data.Roles = roles.ToList();
           //response.data.OfficeId = officedetais?.OfficeId ?? 0;
+
+          response.data.Permissions = permissionDic;
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
         }
         else

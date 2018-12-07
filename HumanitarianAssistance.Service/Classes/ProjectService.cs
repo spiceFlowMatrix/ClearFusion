@@ -1304,18 +1304,24 @@ namespace HumanitarianAssistance.Service.Classes
         /// Get All Area Details
         /// </summary>
         /// <returns></returns>
-        public async Task<APIResponse> GetAllProvinceDetails()
+        public APIResponse GetAllProvinceDetails()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var provincelist = (from p in await _uow.ProvinceDetailsRepository.GetAllAsyn()
-                                    where p.IsDeleted == false
-                                    select new ProvinceDetailsModel
-                                    {
-                                        ProvinceId = p.ProvinceId,
-                                        ProvinceName = p.ProvinceName
-                                    }).OrderBy(x => x.ProvinceName).ToList();
+                var provincelist = _uow.GetDbContext().ProvinceDetails.Where(x => x.IsDeleted == false).Select(x => new ProvinceDetailsModel
+                {
+                    ProvinceId = x.ProvinceId,
+                    ProvinceName = x.ProvinceName
+                }).OrderBy(x => x.ProvinceName).ToList();
+
+                //(from p in _uow.GetDbContext().ProvinceDetails()
+                //                    where p.IsDeleted == false
+                //                    select new ProvinceDetailsModel
+                //                    {
+                //                        ProvinceId = p.ProvinceId,
+                //                        ProvinceName = p.ProvinceName
+                //                    }).OrderBy(x => x.ProvinceName).ToList();
                 response.data.ProvinceDetailsList = provincelist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1327,18 +1333,25 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        public async Task<APIResponse> GetAllStrengthConsiderationDetails()
+        public APIResponse GetAllStrengthConsiderationDetails()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var StrengthConsiderationDetail = (from p in await _uow.StrengthConsiderationRepository.GetAllAsyn()
-                                                   where p.IsDeleted == false
-                                                   select new StrengthConsiderationDetail
-                                                   {
-                                                       StrengthConsiderationId = p.StrengthConsiderationId,
-                                                       StrengthConsiderationName = p.StrengthConsiderationName
-                                                   }).OrderBy(x => x.StrengthConsiderationName).ToList();
+                var StrengthConsiderationDetail = _uow.GetDbContext().StrengthConsiderationDetail.Where(x => x.IsDeleted == false).Select(x => new StrengthConsiderationDetail
+                {
+                    StrengthConsiderationId = x.StrengthConsiderationId,
+                    StrengthConsiderationName = x.StrengthConsiderationName
+                }).OrderBy(x => x.StrengthConsiderationName).ToList();
+
+
+                //(from p in await _uow.StrengthConsiderationRepository.GetAllAsyn()
+                //                                   where p.IsDeleted == false
+                //                                   select new StrengthConsiderationDetail
+                //                                   {
+                //                                       StrengthConsiderationId = p.StrengthConsiderationId,
+                //                                       StrengthConsiderationName = p.StrengthConsiderationName
+                //                                   }).OrderBy(x => x.StrengthConsiderationName).ToList();
                 response.data.StrengthConsiderationDetail = StrengthConsiderationDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1350,18 +1363,25 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        public async Task<APIResponse> GetAllGenderConsiderationDetails()
+        public APIResponse GetAllGenderConsiderationDetails()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var GenderConsiderationDetail = (from p in await _uow.GenderConsiderationRepository.GetAllAsyn()
-                                                 where p.IsDeleted == false
-                                                 select new GenderConsiderationDetail
-                                                 {
-                                                     GenderConsiderationId = p.GenderConsiderationId,
-                                                     GenderConsiderationName = p.GenderConsiderationName
-                                                 }).OrderBy(x => x.GenderConsiderationName).ToList();
+                var GenderConsiderationDetail = _uow.GetDbContext().GenderConsiderationDetail.Where(x => x.IsDeleted == false).Select(x => new GenderConsiderationDetail
+                {
+                    GenderConsiderationId = x.GenderConsiderationId,
+                    GenderConsiderationName = x.GenderConsiderationName
+                }).OrderBy(x => x.GenderConsiderationName).ToList();
+
+
+                //(from p in await _uow.GenderConsiderationRepository.GetAllAsyn()
+                //                                 where p.IsDeleted == false
+                //                                 select new GenderConsiderationDetail
+                //                                 {
+                //                                     GenderConsiderationId = p.GenderConsiderationId,
+                //                                     GenderConsiderationName = p.GenderConsiderationName
+                //                                 }).OrderBy(x => x.GenderConsiderationName).ToList();
                 response.data.GenderConsiderationDetail = GenderConsiderationDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1374,18 +1394,27 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllSecurityDetails()
+        public APIResponse GetAllSecurityDetails()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var SecurityDetail = (from p in await _uow.SecurityDetailRepository.GetAllAsyn()
-                                      where p.IsDeleted == false
-                                      select new SecurityDetail
-                                      {
-                                          SecurityId = p.SecurityId,
-                                          SecurityName = p.SecurityName
-                                      }).OrderBy(x => x.SecurityName).ToList();
+                var SecurityDetail = _uow.GetDbContext().SecurityDetail.Where(x => x.IsDeleted == false).Select(x => new SecurityDetail
+                {
+                    SecurityId = x.SecurityId,
+                    SecurityName = x.SecurityName
+                }).OrderBy(x => x.SecurityName).ToList();
+
+
+
+
+                //(from p in await _uow.SecurityDetailRepository.GetAllAsyn()
+                //                      where p.IsDeleted == false
+                //                      select new SecurityDetail
+                //                      {
+                //                          SecurityId = p.SecurityId,
+                //                          SecurityName = p.SecurityName
+                //                      }).OrderBy(x => x.SecurityName).ToList();
                 response.data.SecurityDetail = SecurityDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1398,18 +1427,26 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllSecurityConsiderationDetails()
+        public APIResponse GetAllSecurityConsiderationDetails()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var SecurityConsiderationDetail = (from p in await _uow.SecurityConsiderationDetailRepository.GetAllAsyn()
-                                                   where p.IsDeleted == false
-                                                   select new SecurityConsiderationDetail
-                                                   {
-                                                       SecurityConsiderationId = p.SecurityConsiderationId,
-                                                       SecurityConsiderationName = p.SecurityConsiderationName
-                                                   }).OrderBy(x => x.SecurityConsiderationName).ToList();
+                var SecurityConsiderationDetail =
+                     _uow.GetDbContext().SecurityConsiderationDetail.Where(x => x.IsDeleted == false).Select(x => new SecurityConsiderationDetail
+                     {
+                         SecurityConsiderationId = x.SecurityConsiderationId,
+                         SecurityConsiderationName = x.SecurityConsiderationName
+                     }).OrderBy(x => x.SecurityConsiderationName).ToList();
+
+
+                //(from p in await _uow.SecurityConsiderationDetailRepository.GetAllAsyn()
+                //                                   where p.IsDeleted == false
+                //                                   select new SecurityConsiderationDetail
+                //                                   {
+                //                                       SecurityConsiderationId = p.SecurityConsiderationId,
+                //                                       SecurityConsiderationName = p.SecurityConsiderationName
+                //                                   }).OrderBy(x => x.SecurityConsiderationName).ToList();
                 response.data.SecurityConsiderationDetail = SecurityConsiderationDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1665,10 +1702,10 @@ namespace HumanitarianAssistance.Service.Classes
 
                 details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == Projectid && x.IsDeleted == false).FirstOrDefault();
                 //if (details != null)
-               // {
-                    response.data.ProjectProposalDetail = details;
+                // {
+                response.data.ProjectProposalDetail = details;
 
-               // }
+                // }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -2370,7 +2407,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
-      public  APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId)
+        public APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             RiskCriteriaDetail _detail = new RiskCriteriaDetail();
