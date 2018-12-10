@@ -2091,7 +2091,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsSecurity = model.IsSecurity;
                     _detail.IsGeographical = model.IsGeographical;
                     _detail.IsSeasonal = model.IsSeasonal;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
@@ -2124,7 +2124,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsSecurity = model.IsSecurity;
                     _detail.IsGeographical = model.IsGeographical;
                     _detail.IsSeasonal = model.IsSeasonal;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.Now;
@@ -2372,7 +2372,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.Operational = model.Operational;
                     _detail.Overhead_Admin = model.Overhead_Admin;
                     _detail.Lump_Sum = model.Lump_Sum;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
@@ -2384,7 +2384,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.Operational = model.Operational;
                     _detail.Overhead_Admin = model.Overhead_Admin;
                     _detail.Lump_Sum = model.Lump_Sum;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.Now;
@@ -2434,7 +2434,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.Probablydelaysinfunding = model.Probablydelaysinfunding;
                     _detail.OtherOrganizationalHarms = model.OtherOrganizationalHarms;
                     _detail.OrganizationalDescription = model.OrganizationalDescription;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
@@ -2465,7 +2465,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.Probablydelaysinfunding = model.Probablydelaysinfunding;
                     _detail.OtherOrganizationalHarms = model.OtherOrganizationalHarms;
                     _detail.OrganizationalDescription = model.OrganizationalDescription;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.Now;
