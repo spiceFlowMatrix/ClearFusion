@@ -893,6 +893,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditTargetBeneficiary([FromBody]TargetBeneficiaryDetail Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditTargetBeneficiary(Model, id);
+      }
+      return apiRespone;
+    }
 
 
     #endregion

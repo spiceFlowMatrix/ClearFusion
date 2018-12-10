@@ -2488,6 +2488,50 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
+       public APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            TargetBeneficiaryDetail _detail = new TargetBeneficiaryDetail();
+            try
+            {
+                _detail = _uow.GetDbContext().TargetBeneficiaryDetail.Where(x => x.ProjectId == model.ProjectId && x.TargetId==model.TargetId && x.IsDeleted == false).FirstOrDefault();
+                if (_detail == null)
+                {
+                    _detail = new TargetBeneficiaryDetail();
+                    _detail.TargetType = model.TargetType;
+                    _detail.TargetName = model.TargetName;
+                    _detail.ProjectId = model.ProjectId;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+                    _uow.TargetBeneficiaryDetailRepository.Add(_detail);
+                }
+                else
+                {
+                    _detail.TargetType = model.TargetType;
+                    _detail.TargetName = model.TargetName;
+                    _detail.ProjectId = model.ProjectId;
+                    _detail.IsDeleted = false;
+                    _detail.ModifiedById = UserId;
+                    _detail.ModifiedDate = DateTime.Now;
+                    _uow.GetDbContext().SaveChanges();
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+
+
+
+
 
         #endregion
     }
