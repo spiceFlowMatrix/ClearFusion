@@ -94,7 +94,7 @@ namespace HumanitarianAssistance.Service.Classes
                         existRecord.ModifiedDate = DateTime.Now;
                         _uow.GetDbContext().SaveChanges();
                         response.StatusCode = StaticResource.successStatusCode;
-
+                        response.data.DonorDetailById = existRecord;
                         response.Message = "Success";
                     }
                 }
