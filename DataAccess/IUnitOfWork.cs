@@ -178,6 +178,7 @@ namespace DataAccess
         IGenericRepository<PriorityCriteriaDetail> PriorityCriteriaDetailRepository { get; }
         IGenericRepository<FinancialCriteriaDetail> FinancialCriteriaDetailRepository { get; }
         IGenericRepository<RiskCriteriaDetail> RiskCriteriaDetailRepository { get; }
+        IGenericRepository<TargetBeneficiaryDetail> TargetBeneficiaryDetailRepository { get; }
         
         #endregion
 

@@ -339,6 +339,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
 
 
+        public Dictionary<string,List<string>> Permissions { get; set; }
+
+
         #region "Accounting New"
         public List<ChartOfAccountNew> AllAccountList { get; set; }
         public ICollection<ChartOfAccountNew> MainLevelAccountList { get; set; }
