@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? PrintedMedia { get; set; }
         public bool? RoundTable { get; set; }
         public bool? Others { get; set; }
-        public bool? OtherActivity { get; set; }
+        public string OtherActivity { get; set; }
         public bool? TargetBenificaiaryWomen { get; set; }
         public bool? TargetBenificiaryMen { get; set; }
         public bool? TargetBenificiaryAgeGroup { get; set; }

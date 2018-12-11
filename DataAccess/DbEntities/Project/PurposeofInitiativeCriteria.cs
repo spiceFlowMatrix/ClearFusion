@@ -14,6 +14,7 @@ namespace DataAccess.DbEntities.Project
         public long ProductServiceId { get; set; }
         public bool? Women { get; set; }
         [ForeignKey("ProjectId")]
+        public ProjectDetail ProjectDetail { get; set; }
         public long ProjectId { get; set; }
         public bool? Children { get; set; }
         public bool? Awareness { get; set; }
@@ -39,10 +40,12 @@ namespace DataAccess.DbEntities.Project
         public bool? PrintedMedia { get; set; }
         public bool? RoundTable { get; set; }
         public bool? Others { get; set; }
-        public bool? OtherActivity { get; set; }
+        public string OtherActivity { get; set; }
         public bool? TargetBenificaiaryWomen { get; set; }
         public bool? TargetBenificiaryMen { get; set; }
         public bool? TargetBenificiaryAgeGroup { get; set; }
         public bool? TargetBenificiaryaOccupation { get; set; }
+        public bool? Service { get; set; }
+        public bool? Product { get; set; }
     }
 }

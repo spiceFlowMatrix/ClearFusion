@@ -110,6 +110,8 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId);
         APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId);
 
+        APIResponse AddEditFinancialProjectDetail(FinancialProjectDetailModel model, string UserId);
+
         #endregion
     }
 }

@@ -17,16 +17,16 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? EffectiveCommunication { get; set; }
         public bool? Dispute { get; set; }
         public bool? OtherDeliverable { get; set; }
-        public bool? OtherDeliverableType { get; set; }
+        public string OtherDeliverableType { get; set; }
         public bool? PastWorkingExperience { get; set; }
         public bool? CriticismPerformance { get; set; }
         public bool? TimeManagement { get; set; }
         public bool? MoneyAllocation { get; set; }
         public bool? Accountability { get; set; }
         public bool? DeliverableQuality { get; set; }
-        public bool? DonorFinancingHistory { get; set; }
-        public bool? ReligiousStanding { get; set; }
-        public bool? PoliticalStanding { get; set; }
+        public int? DonorFinancingHistory { get; set; }
+        public int? ReligiousStanding { get; set; }
+        public int? PoliticalStanding { get; set; }
         public long FeasibilityId { get; set; }
         public bool? CapacityAvailableForProject { get; set; }
         public bool? TrainedStaff { get; set; }
@@ -80,7 +80,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? PrintedMedia { get; set; }
         public bool? RoundTable { get; set; }
         public bool? Others { get; set; }
-        public bool? OtherActivity { get; set; }
+        public string OtherActivity { get; set; }
         public bool? TargetBenificaiaryWomen { get; set; }
         public bool? TargetBenificiaryMen { get; set; }
         public bool? TargetBenificiaryAgeGroup { get; set; }
@@ -125,7 +125,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? FocusDivertingrisk { get; set; }
         public bool? Financiallosses { get; set; }
         public bool? Opportunityloss { get; set; }
-        public string ProjectSelection { get; set; }
+        public List<long?> ProjectSelectionId { get; set; }
+
         public bool? Probablydelaysinfunding { get; set; }
         public bool? OtherOrganizationalHarms { get; set; }
         public string OrganizationalDescription { get; set; }

@@ -31,5 +31,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? Probablydelaysinfunding { get; set; }
         public bool? OtherOrganizationalHarms { get; set; }
         public string OrganizationalDescription { get; set; }
+        public List<long?> ProjectSelectionId { get; set; }
     }
 }

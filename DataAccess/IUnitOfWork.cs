@@ -179,7 +179,8 @@ namespace DataAccess
         IGenericRepository<FinancialCriteriaDetail> FinancialCriteriaDetailRepository { get; }
         IGenericRepository<RiskCriteriaDetail> RiskCriteriaDetailRepository { get; }
         IGenericRepository<TargetBeneficiaryDetail> TargetBeneficiaryDetailRepository { get; }
-        
+        IGenericRepository<FinancialProjectDetail> FinancialProjectDetailRepository { get; }
+
         #endregion
 
         #region Marketing
