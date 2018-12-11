@@ -836,13 +836,13 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                ICollection<TimeCategory> timeCategories = await _uow.TimeCategoryRepository.FindAllAsync(x => x.IsDeleted == false);
-                ICollection<MediaCategory> mediaCategories = await _uow.MediaCategoryRepository.FindAllAsync(x => x.IsDeleted == false);
-                ICollection<Medium> Mediums = await _uow.MediumRepository.FindAllAsync(x => x.IsDeleted == false);
-                ICollection<LanguageDetail> languages = await _uow.LanguageRepository.FindAllAsync(x => x.IsDeleted == false);
-                ICollection<Nature> jobNature = await _uow.NatureRepository.FindAllAsync(x => x.IsDeleted == false);
-                ICollection<CurrencyDetails> currency = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
-                ICollection<Quality> quality = await _uow.QualityRepository.FindAllAsync(x => x.IsDeleted == false);
+                ICollection<TimeCategory> timeCategories = await _uow.TimeCategoryRepository.FindAllAsync(x => x.IsDeleted == false && x.TimeCategoryName!=null && x.TimeCategoryName!="");
+                ICollection<MediaCategory> mediaCategories = await _uow.MediaCategoryRepository.FindAllAsync(x => x.IsDeleted == false && x.CategoryName != null && x.CategoryName != "");
+                ICollection<Medium> Mediums = await _uow.MediumRepository.FindAllAsync(x => x.IsDeleted == false && x.MediumName != null && x.MediumName != "");
+                ICollection<LanguageDetail> languages = await _uow.LanguageRepository.FindAllAsync(x => x.IsDeleted == false && x.LanguageName != null && x.LanguageName != "");
+                ICollection<Nature> jobNature = await _uow.NatureRepository.FindAllAsync(x => x.IsDeleted == false && x.NatureName != null && x.NatureName != "");
+                ICollection<CurrencyDetails> currency = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false && x.CurrencyName != null && x.CurrencyName != "");
+                ICollection<Quality> quality = await _uow.QualityRepository.FindAllAsync(x => x.IsDeleted == false && x.QualityName!=null && x.QualityName != "");
                 ICollection<ActivityType> activityType = await _uow.ActivityTypeRepository.FindAllAsync(x => x.IsDeleted == false);
                 response.data.Qualities = quality;
                 response.data.Mediums = Mediums;
@@ -1141,13 +1141,14 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj.IsDeleted = false;
                         obj.ActivityTypeId = model.ActivityTypeId;
                         obj.CurrencyId = model.CurrencyId;
-                        obj.UnitRates = model.UnitRate;
+                        obj.UnitRates = model.UnitRates;
                         obj.MediumId = model.MediumId;
                         obj.NatureId = model.NatureId;
                         obj.QualityId = model.QualityId;
                         obj.TimeCategoryId = model.TimeCategoryId;
                         await _uow.UnitRateRepository.AddAsyn(obj);
                         await _uow.SaveAsync();
+                        model.ActivityName = activity;
                         model.UnitRateId = obj.UnitRateId;
                         response.data.unitRateDetails = model;
                     }
@@ -1170,7 +1171,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj.NatureId = model.NatureId;
                         obj.QualityId = model.QualityId;
                         obj.TimeCategoryId = model.TimeCategoryId;
-                        obj.UnitRates = model.UnitRate;
+                        obj.UnitRates = model.UnitRates;
                         await _uow.UnitRateRepository.UpdateAsyn(obj);
                         response.data.unitRateDetailsById = obj;
                         var activityDetails = await _uow.ActivityTypeRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId);

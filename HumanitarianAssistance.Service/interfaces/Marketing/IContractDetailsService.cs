@@ -12,6 +12,7 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
     {
         Task<APIResponse> GetContractDetailsById(int contractId, string userId);
         Task<APIResponse> GetAllContractDetails();
+        Task<APIResponse> GetAllContractDetailsByClientId();
         Task<APIResponse> AddContractDetails(ContractDetailsModel model, string UserId);
         Task<APIResponse> EditContractDetails(ContractDetailsModel model, string UserId);
         Task<APIResponse> DeleteContractDetail(int model, string userId);
