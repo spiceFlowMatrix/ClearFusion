@@ -118,6 +118,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       return apiRespone;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetContractsListByClient()
+    {
+      APIResponse apiRespone = null;
+      //var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      //if (user != null)
+      //{
+      //var id = user.Id;
+      apiRespone = await _iContractDetailsService.GetAllContractDetailsByClientId();
+      //}
+      return apiRespone;
+    }
+
+
     /// <summary>
     /// Add And Update New Job
     /// </summary>
