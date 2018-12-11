@@ -1148,6 +1148,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj.TimeCategoryId = model.TimeCategoryId;
                         await _uow.UnitRateRepository.AddAsyn(obj);
                         await _uow.SaveAsync();
+                        model.ActivityName = activity;
                         model.UnitRateId = obj.UnitRateId;
                         response.data.unitRateDetails = model;
                     }
