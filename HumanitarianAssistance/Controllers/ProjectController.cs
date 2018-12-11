@@ -844,12 +844,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public APIResponse GetAllProjectproposals([FromBody]long ProjectId)
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public APIResponse GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
      
-        apiRespone = _iProject.GetAllProjectproposals(ProjectId);
+        apiRespone = _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
       
       return apiRespone;
     }
@@ -890,6 +890,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         var id = user.Id;
         apiRespone = _iProject.AddEditRiskCriteria(Model, id);
+      }
+      return apiRespone;
+    }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditTargetBeneficiary([FromBody]TargetBeneficiaryDetail Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditTargetBeneficiary(Model, id);
       }
       return apiRespone;
     }

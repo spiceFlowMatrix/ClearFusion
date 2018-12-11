@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 {
   public  class PurposeofInitiativeCriteriaModel
     {
-        public long ProductServiceId { get; set; }
+        public long? ProductServiceId { get; set; }
         public bool? Women { get; set; }        
         public long ProjectId { get; set; }
         public bool? Children { get; set; }

@@ -216,7 +216,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<PriorityCriteriaDetail> PriorityCriteriaDetail { get; set; }
         public DbSet<FinancialCriteriaDetail> FinancialCriteriaDetail { get; set; }
         public DbSet<RiskCriteriaDetail> RiskCriteriaDetail { get; set; }
-
+        public DbSet<TargetBeneficiaryDetail> TargetBeneficiaryDetail { get; set; }
+        
 
         #endregion
 
