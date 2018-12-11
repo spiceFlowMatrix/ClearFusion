@@ -7,7 +7,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
     public class UnitRateModel
     {
         public long? UnitRateId { get; set; }
-        public double UnitRate { get; set; }
+        public double UnitRates { get; set; }
         public long? CurrencyId { get; set; }
         public long? MediumId { get; set; }
         public long? TimeCategoryId { get; set; }
