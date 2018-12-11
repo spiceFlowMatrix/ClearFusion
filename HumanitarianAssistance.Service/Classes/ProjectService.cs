@@ -2510,6 +2510,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ModifiedDate = DateTime.Now;
                     _uow.GetDbContext().SaveChanges();
                 }
+                response.CommonId.Id = Convert.ToInt32(_detail.TargetId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
