@@ -325,6 +325,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ClientDetails clientDetails { get; set; }
         public ClientDetailModel clientDetailsById { get; set; }
         public JobDetailsModel JobDetail { get; set; }
+        public JobPriceModel JobPriceDetail { get; set; }
         public MediaCategory mediaCategoryById { get; set; }
         public Medium mediumById { get; set; }
         public Nature natureById { get; set; }
