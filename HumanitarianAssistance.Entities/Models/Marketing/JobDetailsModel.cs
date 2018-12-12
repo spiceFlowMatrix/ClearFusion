@@ -24,5 +24,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public float DiscountPercent { get; set; }
         public double TotalPrice { get; set; }
         public bool IsInvoiceApproved { get; set; }
+        public long Minutes { get; set; }
     }
 }
