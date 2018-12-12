@@ -179,7 +179,12 @@ namespace DataAccess
         private IGenericRepository<FinancialCriteriaDetail> _financialCriteriaDetailRepository;
         private IGenericRepository<RiskCriteriaDetail> _riskCriteriaDetailRepository;
         private IGenericRepository<TargetBeneficiaryDetail> _targetBeneficiaryDetailRepository;
+        private IGenericRepository<FinancialProjectDetail> _financialProjectDetailRepository;
+
         
+
+
+
 
         //Marketing
         private IGenericRepository<ActivityType> _activityTypeRepository;
@@ -1619,6 +1624,15 @@ namespace DataAccess
             {
                 return _targetBeneficiaryDetailRepository =
                     _targetBeneficiaryDetailRepository ?? new GenericRepository<TargetBeneficiaryDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<FinancialProjectDetail> FinancialProjectDetailRepository
+        {
+            get
+            {
+                return _financialProjectDetailRepository =
+                    _financialProjectDetailRepository ?? new GenericRepository<FinancialProjectDetail>(_mschaContext);
             }
         }
         

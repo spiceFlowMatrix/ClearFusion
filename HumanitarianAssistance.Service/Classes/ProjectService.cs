@@ -2162,8 +2162,10 @@ namespace HumanitarianAssistance.Service.Classes
                      from Priority in pr.DefaultIfEmpty()
                      join financial in _uow.GetDbContext().FinancialCriteriaDetail on obj.ProjectId equals financial.ProjectId into fi
                      from financial in fi.DefaultIfEmpty()
-                     join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri 
+                     join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri
                      from risk in ri.DefaultIfEmpty()
+                         //join selected in _uow.GetDbContext().FinancialProjectDetail on obj.ProjectId equals selected.ProjectId into sp
+                         //from selected in sp.DefaultIfEmpty()
                      select new CriteriaEveluationModel
                      {
                          ProjectId = obj.ProjectId,
@@ -2282,11 +2284,19 @@ namespace HumanitarianAssistance.Service.Classes
                          FocusDivertingrisk = risk.FocusDivertingrisk,
                          Financiallosses = risk.Financiallosses,
                          Opportunityloss = risk.Opportunityloss,
-                         ProjectSelection = risk.ProjectSelection,
+
+                         //ProjectSelectionId = selected.ProjectSelectionId,
+
                          Probablydelaysinfunding = risk.Probablydelaysinfunding,
                          OtherOrganizationalHarms = risk.OtherOrganizationalHarms,
                          OrganizationalDescription = risk.OrganizationalDescription
                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
+
+
+                List<long?> selectedProjects = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).Select(x => x.ProjectSelectionId).ToList();
+
+                details.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
+
                 response.data.CriteriaEveluationModel = details;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -2407,7 +2417,7 @@ namespace HumanitarianAssistance.Service.Classes
             RiskCriteriaDetail _detail = new RiskCriteriaDetail();
             try
             {
-                _detail = _uow.GetDbContext().RiskCriteriaDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                _detail = _uow.GetDbContext().RiskCriteriaDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
                 if (_detail == null)
                 {
                     _detail = new RiskCriteriaDetail();
@@ -2430,7 +2440,8 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.FocusDivertingrisk = model.FocusDivertingrisk;
                     _detail.Financiallosses = model.Financiallosses;
                     _detail.Opportunityloss = model.Opportunityloss;
-                    _detail.ProjectSelection = model.ProjectSelection;
+
+
                     _detail.Probablydelaysinfunding = model.Probablydelaysinfunding;
                     _detail.OtherOrganizationalHarms = model.OtherOrganizationalHarms;
                     _detail.OrganizationalDescription = model.OrganizationalDescription;
@@ -2438,7 +2449,11 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
+
+
                     _uow.RiskCriteriaDetailRepository.Add(_detail);
+
+
                 }
                 else
                 {
@@ -2461,7 +2476,8 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.FocusDivertingrisk = model.FocusDivertingrisk;
                     _detail.Financiallosses = model.Financiallosses;
                     _detail.Opportunityloss = model.Opportunityloss;
-                    _detail.ProjectSelection = model.ProjectSelection;
+
+
                     _detail.Probablydelaysinfunding = model.Probablydelaysinfunding;
                     _detail.OtherOrganizationalHarms = model.OtherOrganizationalHarms;
                     _detail.OrganizationalDescription = model.OrganizationalDescription;
@@ -2469,8 +2485,50 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.Now;
+
+
                     _uow.GetDbContext().SaveChanges();
                 }
+
+
+              
+                if (model.ProjectSelectionId != null)
+                {
+                    //check
+                    bool projectPresent = _uow.GetDbContext().FinancialProjectDetail.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+
+
+                    //if exist then remove
+                    if (projectPresent)
+                    {
+                        var projectExist = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+
+                        // if exist then remove it
+                        _uow.GetDbContext().FinancialProjectDetail.RemoveRange(projectExist);
+                        _uow.GetDbContext().SaveChanges();
+                    }
+
+                    List<FinancialProjectDetail> projectList = new List<FinancialProjectDetail>();
+
+                    foreach (var item in model.ProjectSelectionId)
+                    {
+                        FinancialProjectDetail _data = new FinancialProjectDetail();
+
+                        _data.ProjectSelectionId = item;
+                        _data.ProjectId = model.ProjectId.Value;
+                        _data.IsDeleted = false;
+                        _data.CreatedById = UserId;
+                        _data.CreatedDate = DateTime.Now;
+
+                        projectList.Add(_data);
+                    }
+
+                    //Add
+                    _uow.GetDbContext().FinancialProjectDetail.AddRange(projectList);
+                    _uow.GetDbContext().SaveChanges();
+                }
+
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -2482,13 +2540,13 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
-       public APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId)
+        public APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId)
         {
             APIResponse response = new APIResponse();
             TargetBeneficiaryDetail _detail = new TargetBeneficiaryDetail();
             try
             {
-                _detail = _uow.GetDbContext().TargetBeneficiaryDetail.Where(x => x.ProjectId == model.ProjectId && x.TargetId==model.TargetId && x.IsDeleted == false).FirstOrDefault();
+                _detail = _uow.GetDbContext().TargetBeneficiaryDetail.Where(x => x.ProjectId == model.ProjectId && x.TargetId == model.TargetId && x.IsDeleted == false).FirstOrDefault();
                 if (_detail == null)
                 {
                     _detail = new TargetBeneficiaryDetail();
@@ -2510,6 +2568,49 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ModifiedDate = DateTime.Now;
                     _uow.GetDbContext().SaveChanges();
                 }
+                response.CommonId.Id = Convert.ToInt32(_detail.TargetId);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public APIResponse AddEditFinancialProjectDetail(FinancialProjectDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            FinancialProjectDetail _detail = new FinancialProjectDetail();
+            try
+            {
+                _detail = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == model.ProjectId && x.FinancialProjectDetailId == model.FinancialProjectDetailId && x.IsDeleted == false).FirstOrDefault();
+                if (_detail == null)
+                {
+                    _detail = new FinancialProjectDetail();
+                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectSelectionId = model.ProjectSelectionId;
+                    _detail.ProjectName = model.ProjectName;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+                    _uow.FinancialProjectDetailRepository.Add(_detail);
+                }
+                else
+                {
+                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectSelectionId = model.ProjectSelectionId;
+                    _detail.ProjectName = model.ProjectName;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+                    _uow.FinancialProjectDetailRepository.Add(_detail);
+                    _uow.GetDbContext().SaveChanges();
+                }
+                response.CommonId.Id = Convert.ToInt32(_detail.ProjectSelectionId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
