@@ -38,5 +38,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? TargetBenificiaryMen { get; set; }
         public bool? TargetBenificiaryAgeGroup { get; set; }
         public bool? TargetBenificiaryaOccupation { get; set; }
+        public bool? Service { get; set; }
+        public bool? Product { get; set; }
     }
 }
