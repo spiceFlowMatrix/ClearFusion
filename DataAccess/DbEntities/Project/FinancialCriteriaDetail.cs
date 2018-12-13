@@ -13,6 +13,7 @@ namespace DataAccess.DbEntities.Project
         [Column(Order = 1, TypeName = "serial")]
         public long FinancialCriteriaDetailId { get; set; }
         [ForeignKey("ProjectId")]
+        public ProjectDetail ProjectDetail { get; set; }
         public long ProjectId { get; set; }
         public double? Total { get; set; }
         public double? ProjectActivities { get; set; }

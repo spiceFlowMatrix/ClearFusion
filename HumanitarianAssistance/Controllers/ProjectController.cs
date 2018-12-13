@@ -582,38 +582,38 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region Other Details dropdown
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllProvinceDetails()
+    public APIResponse GetAllProvinceDetails()
     {
-      APIResponse response = await _iProject.GetAllProvinceDetails();
+      APIResponse response =  _iProject.GetAllProvinceDetails();
       return response;
     }
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllStrengthConsiderationDetails()
+    public  APIResponse GetAllStrengthConsiderationDetails()
     {
-      APIResponse response = await _iProject.GetAllStrengthConsiderationDetails();
+      APIResponse response =  _iProject.GetAllStrengthConsiderationDetails();
       return response;
     }
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllGenderConsiderationDetails()
+    public APIResponse GetAllGenderConsiderationDetails()
     {
-      APIResponse response = await _iProject.GetAllGenderConsiderationDetails();
+      APIResponse response = _iProject.GetAllGenderConsiderationDetails();
       return response;
     }
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllSecurityDetails()
+    public APIResponse GetAllSecurityDetails()
     {
-      APIResponse response = await _iProject.GetAllSecurityDetails();
+      APIResponse response =  _iProject.GetAllSecurityDetails();
       return response;
     }
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetAllSecurityConsiderationDetails()
+    public APIResponse GetAllSecurityConsiderationDetails()
     {
-      APIResponse response = await _iProject.GetAllSecurityConsiderationDetails();
+      APIResponse response = _iProject.GetAllSecurityConsiderationDetails();
       return response;
     }
     [HttpPost]
@@ -639,14 +639,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;      
     }
 
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public APIResponse GetOtherProjectListById([FromBody]long Id)
-    {
-      APIResponse apiresponse = _iProject.GetOtherProjectListById(Id);
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public APIResponse GetOtherProjectListById([FromBody]long Id)
+    //{
+    //  APIResponse apiresponse = _iProject.GetOtherProjectListById(Id);
 
-      return apiresponse;
-    }
+    //  return apiresponse;
+    //}
 
 
     #endregion
@@ -845,11 +845,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public APIResponse GetAllProjectproposals([FromBody]long ProjectId)
+    public APIResponse GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
      
-        apiRespone = _iProject.GetAllProjectproposals(ProjectId);
+        apiRespone = _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
       
       return apiRespone;
     }
@@ -893,7 +893,33 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditTargetBeneficiary([FromBody]TargetBeneficiaryDetail Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditTargetBeneficiary(Model, id);
+      }
+      return apiRespone;
+    }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddEditFinanacialProjectDetail([FromBody]FinancialProjectDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditFinancialProjectDetail(Model, id);
+      }
+      return apiRespone;
+    }
 
     #endregion
 

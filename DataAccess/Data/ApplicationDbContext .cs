@@ -218,6 +218,9 @@ namespace HumanitarianAssistance.Entities
         public DbSet<PriorityCriteriaDetail> PriorityCriteriaDetail { get; set; }
         public DbSet<FinancialCriteriaDetail> FinancialCriteriaDetail { get; set; }
         public DbSet<RiskCriteriaDetail> RiskCriteriaDetail { get; set; }
+        public DbSet<TargetBeneficiaryDetail> TargetBeneficiaryDetail { get; set; }
+        public DbSet<FinancialProjectDetail> FinancialProjectDetail { get; set; }
+
 
 
         #endregion
@@ -286,7 +289,7 @@ namespace HumanitarianAssistance.Entities
             modelBuilder.Entity<VoucherDetail>().HasIndex(e => e.VoucherNo).IsUnique();
             modelBuilder.Entity<VoucherTransactions>().HasIndex(e => e.TransactionId).IsUnique();
             modelBuilder.Entity<VoucherTransactions>().HasIndex(e => new { e.TransactionDate, e.ChartOfAccountNewId });
-
+            modelBuilder.Entity<FinancialProjectDetail>().HasQueryFilter(x => x.IsDeleted == false);
 
 
 

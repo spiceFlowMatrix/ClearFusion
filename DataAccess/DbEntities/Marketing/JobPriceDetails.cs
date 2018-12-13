@@ -22,6 +22,7 @@ namespace DataAccess.DbEntities.Marketing
         public bool IsInvoiceApproved { get; set; }
         [ForeignKey("JobId")]
         public long JobId { get; set; }
+        public long Minutes { get; set; }
         public JobDetails JobDetails { get; set; }
     }
 }

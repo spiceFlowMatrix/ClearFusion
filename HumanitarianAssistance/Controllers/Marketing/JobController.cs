@@ -56,6 +56,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     #region Job Details
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetJobDetailsById([FromBody]int model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iJobDetailsService.GetJobDetailsById(model, id);
+      }
+      return apiRespone;
+    }
+    
+
     /// <summary>
     /// Add And Update New Job
     /// </summary>
@@ -83,19 +98,32 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <returns></returns>
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> DeleteJobDetail([FromBody]JobDetails model)
+    public async Task<APIResponse> DeleteJobDetail([FromBody]int model)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-        model.ModifiedById = id;
-        model.ModifiedDate = DateTime.UtcNow;
-        apiRespone = await _iJobDetailsService.DeleteJobDetail(model);
+        apiRespone = await _iJobDetailsService.DeleteJobDetail(model, id);
       }
       return apiRespone;
     }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetFilteredJoblist([FromBody]JobFilterModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iJobDetailsService.FilterJobList(model, id);
+      }
+      return apiRespone;
+    }
+    
     #endregion
 
     #region Job Phase

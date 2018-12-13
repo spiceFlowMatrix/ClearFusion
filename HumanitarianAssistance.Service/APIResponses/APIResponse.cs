@@ -318,6 +318,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<TimeCategory> TimeCategories { get; set; }
         public List<JobDetailsModel> JobDetailsModel { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
+        public List<ContractByClient> ContractByClientList { get; set; }
         public UnitRateModel unitRateDetails { get; set; }
         public UnitRate unitRateDetailsById { get; set; }
         public IQueryable<UnitRateDetailsModel> rateDetails { get; set; }
@@ -326,6 +327,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ClientDetails clientDetails { get; set; }
         public ClientDetailModel clientDetailsById { get; set; }
         public JobDetailsModel JobDetail { get; set; }
+        public JobPriceModel JobPriceDetail { get; set; }
+        public List<JobDetailsModel> JobPriceDetailList { get; set; }
         public MediaCategory mediaCategoryById { get; set; }
         public Medium mediumById { get; set; }
         public Nature natureById { get; set; }
@@ -339,6 +342,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<CodeType> SourceCodeTypelist { get; set; }
         public List<StoreSourceCodeDetailModel> SourceCodeDatalist { get; set; }
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
+
+
+        public Dictionary<string,List<string>> Permissions { get; set; }
 
 
         #region "Accounting New"

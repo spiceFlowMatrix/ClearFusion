@@ -6,17 +6,16 @@ using System.Text;
 
 namespace DataAccess.DbEntities.Project
 {
-    public class EligibilityCriteriaDetail : BaseEntityWithoutId
+    public class FinancialProjectDetail: BaseEntityWithoutId
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
-        public long EligibilityId { get; set; }
+        public long FinancialProjectDetailId { get; set; }
         [ForeignKey("ProjectId")]
-        public ProjectDetail ProjectDetail { get; set; }
+        public  ProjectDetail ProjectDetail { get; set; }
         public long ProjectId { get; set; }
-        public bool? DonorCriteriaMet { get; set; }
-        public bool? EligibilityDealine { get; set; }
-        public bool? CoPartnership { get; set; }
+        public long? ProjectSelectionId { get; set; }
+        public string ProjectName { get; set; }
     }
 }

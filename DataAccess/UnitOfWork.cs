@@ -178,7 +178,13 @@ namespace DataAccess
         private IGenericRepository<PriorityCriteriaDetail> _priorityCriteriaDetailRepository;
         private IGenericRepository<FinancialCriteriaDetail> _financialCriteriaDetailRepository;
         private IGenericRepository<RiskCriteriaDetail> _riskCriteriaDetailRepository;
+        private IGenericRepository<TargetBeneficiaryDetail> _targetBeneficiaryDetailRepository;
+        private IGenericRepository<FinancialProjectDetail> _financialProjectDetailRepository;
+
         
+
+
+
 
         //Marketing
         private IGenericRepository<ActivityType> _activityTypeRepository;
@@ -1612,9 +1618,24 @@ namespace DataAccess
                     _riskCriteriaDetailRepository ?? new GenericRepository<RiskCriteriaDetail>(_mschaContext);
             }
         }
+        public IGenericRepository<TargetBeneficiaryDetail> TargetBeneficiaryDetailRepository
+        {
+            get
+            {
+                return _targetBeneficiaryDetailRepository =
+                    _targetBeneficiaryDetailRepository ?? new GenericRepository<TargetBeneficiaryDetail>(_mschaContext);
+            }
+        }
 
+        public IGenericRepository<FinancialProjectDetail> FinancialProjectDetailRepository
+        {
+            get
+            {
+                return _financialProjectDetailRepository =
+                    _financialProjectDetailRepository ?? new GenericRepository<FinancialProjectDetail>(_mschaContext);
+            }
+        }
         
-
         public void Save()
         {
             _mschaContext.SaveChanges();

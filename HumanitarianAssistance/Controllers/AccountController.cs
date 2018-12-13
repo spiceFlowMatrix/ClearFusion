@@ -281,6 +281,8 @@ namespace HumanitarianAssistance.Controllers
           response.data.Roles = roles.ToList();
           response.data.UserRolePermissions = userRolePermissionsList;
           //response.data.OfficeId = officedetais?.OfficeId ?? 0;
+
+          response.data.Permissions = permissionDic;
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
         }
         else
