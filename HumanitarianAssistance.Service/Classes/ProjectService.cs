@@ -1964,6 +1964,8 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
+                    _detail.Product = model.Product;
+                    _detail.Service = model.Service;
                     _uow.PurposeofInitiativeCriteriaRepository.Add(_detail);
                 }
                 else
@@ -2001,6 +2003,8 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.Now;
+                    _detail.Product = model.Product;
+                    _detail.Service = model.Service;
                     _uow.GetDbContext().SaveChanges();
                 }
                 response.StatusCode = StaticResource.successStatusCode;
@@ -2220,6 +2224,8 @@ namespace HumanitarianAssistance.Service.Classes
                          TargetBenificiaryMen = purpose.TargetBenificiaryMen,
                          TargetBenificiaryAgeGroup = purpose.TargetBenificiaryAgeGroup,
                          TargetBenificiaryaOccupation = purpose.TargetBenificiaryaOccupation,
+                         Product= purpose.Product,
+                         Service= purpose.Service,
                          DonorCriteriaMet = eligibility.DonorCriteriaMet,
                          EligibilityDealine = eligibility.EligibilityDealine,
                          CoPartnership = eligibility.CoPartnership,
@@ -2568,7 +2574,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ModifiedDate = DateTime.Now;
                     _uow.GetDbContext().SaveChanges();
                 }
-                response.CommonId.Id = Convert.ToInt32(_detail.TargetId);
+                response.CommonId.LongId = _detail.TargetId;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
