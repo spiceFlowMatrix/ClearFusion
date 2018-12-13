@@ -108,6 +108,39 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
 
+        public async Task<APIResponse> GetAllContractDetailsByClientId()
+        {
+            APIResponse response = new APIResponse();
+            
+            List<ContractByClient> modelList = new List<ContractByClient>();
+
+            try
+            {
+                var list = await _uow.ContractDetailsRepository.FindAllAsync(x => !x.IsDeleted.Value);
+                foreach (var item in list)
+                {
+                    ContractByClient model = new ContractByClient();
+                    model.ContractByClients = item.ClientName + "" + "-" + item.ContractId;
+                    model.ContractId = item.ContractId;
+                    model.ClientName = item.ClientName;
+                    model.ClientId = item.ClientId;
+                    model.UnitRate = item.UnitRate;
+                    model.CurrencyId = item.CurrencyId;
+                    modelList.Add(model);
+                }
+               
+                response.data.ContractByClientList = modelList;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         /// Add New Contract
         /// </summary>
@@ -284,11 +317,11 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.QualityId = model.QualityId;
                     obj.TimeCategoryId = model.TimeCategoryId;
                     obj.IsApproved = model.IsApproved;
-                    if(model.Type == "Approve")
+                    if (model.Type == "Approve")
                     {
                         obj.IsApproved = true;
-                    } 
-                    if(model.Type == "Rejected")
+                    }
+                    if (model.Type == "Rejected")
                     {
                         obj.IsDeclined = true;
                     }
@@ -309,7 +342,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     conDetails.TimeCategoryId = obj.TimeCategoryId;
                     conDetails.UnitRate = obj.UnitRate;
                     conDetails.IsApproved = obj.IsApproved;
-                    if(obj.IsDeclined == true)
+                    if (obj.IsDeclined == true)
                     {
                         conDetails.IsDeclined = obj.IsDeclined;
                     }
@@ -406,9 +439,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     {
                         contractList = contractList.Where(x => x.IsApproved == Convert.ToBoolean(model.IsApproved)).ToList();
                     }
-                    if (model.IsApproved == false)
+                    if (model.YesOrNo == "No")
                     {
-                        contractList = contractList.Where(x => x.IsApproved == Convert.ToBoolean(model.IsApproved)).ToList();
+                        contractList = contractList.Where(x => x.IsDeclined == true).ToList();
                     }
                     if (!string.IsNullOrEmpty(model.FilterType))
                     {

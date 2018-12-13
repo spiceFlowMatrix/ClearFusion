@@ -45,6 +45,7 @@ namespace HumanitarianAssistance.Controllers
     private IVoucherDetail _ivoucherDetail;
     private IExchangeRate _iExchangeRate;
     private IChartOfAccountNewService _iChartOfAccountNewService;
+    private IPermissionsInRoles _iPermissionsInRolesService;
     IUnitOfWork _uow;
 
 
@@ -166,43 +167,27 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    public async Task<object> Post(string RoleName)
+    public async Task<bool> AddRole(string RoleName)
     {
-      //var user = new AppUser
-      //{
-      //  FirstName = "naval",
-      //  LastName="bhatt",
-      //  UserName = model.Email,
-      //  Email = model.Email
+      
+      IdentityResult identityResult = null;
 
-
-      //};
-      //var result = await _userManager.CreateAsync(user, model.Password);
-
-      // if (result.Succeeded)
-      //{
-      // if (result.Succeeded)
-      //{
-      var roleExists = await _roleManager.FindByNameAsync(RoleName);
-      if (roleExists == null)
+      try
       {
-        var role = new IdentityRole();
-        role.Name = RoleName;
-        await _roleManager.CreateAsync(role);
+        var roleExists = await _roleManager.FindByNameAsync(RoleName);
+
+        if (roleExists == null)
+        {
+          var role = new IdentityRole();
+          role.Name = RoleName;
+          identityResult  = await _roleManager.CreateAsync(role);
+        }
       }
-      //role = new IdentityRole();
-      //role.Name = "Normal";
-      //var supadmin = await _roleManager.FindByNameAsync("SuperAdmin");
-      //await _roleManager.AddClaimAsync(supadmin, new Claim("Permission", "dashboardhome"));
+      catch (Exception exception)
+      {
 
-
-      // }
-
-      //await _signInManager.SignInAsync(user, false);
-      //return await GenerateJwtToken(model.Email, user);
-      // }
-      return Ok("SDFF");
-      //throw new ApplicationException("UNKNOWN_ERROR");
+      }
+      return identityResult.Succeeded;
     }
 
     [HttpPost]
@@ -234,19 +219,42 @@ namespace HumanitarianAssistance.Controllers
 
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-          Dictionary<string, List<string>> dic = new Dictionary<string, List<string>>();
+          //Dictionary<string, List<string>> dic = new Dictionary<string, List<string>>();
+
+          List<UserRolePermissionsModel> userRolePermissionsList = new List<UserRolePermissionsModel>();
+
           foreach (var role in roles)
           {
+            UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
+
             userClaims.Add(new Claim("Roles", role)); //imp
-
             
-              var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
-              List<string> permissions= _uow.GetDbContext().Permissions.Join(_uow.GetDbContext().PermissionsInRoles.Where(x => x.RoleId == roleid.Id), (p) => p.Id, (p1) => p1.PermissionId, (p, r1) => new
-              {
-                PermissionName = p.Name,
-              }).Select(x=>x.PermissionName).ToList();
+            var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
 
-            dic.Add(role, permissions);
+            userRolePermissions.RoleName = role;
+            userRolePermissions.RoleId = roleid.Id;
+
+            List<RolePermissions> rolePermissionsList = _uow.GetDbContext().RolePermissions.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
+
+            if (rolePermissionsList.Any())
+            {
+
+              userRolePermissions.RolePagePermission = new List<RolePermissionModel>();
+
+              foreach (RolePermissions rolePermissions in rolePermissionsList)
+              {
+                RolePermissionModel rolePermissionModel = new RolePermissionModel();
+                rolePermissionModel.CanEdit = rolePermissions.CanEdit;
+                rolePermissionModel.CanView = rolePermissions.CanView;
+                rolePermissionModel.ModuleId = rolePermissions.ModuleId;
+                rolePermissionModel.PageId = rolePermissions.PageId;
+                rolePermissionModel.RolesPermissionId = rolePermissions.RolesPermissionId;
+                userRolePermissions.RolePagePermission.Add(rolePermissionModel);
+              }
+            }
+
+            userRolePermissionsList.Add(userRolePermissions);
+
           }
 
           //_ipermissions.GetPermissionsByRoleId()
@@ -271,7 +279,10 @@ namespace HumanitarianAssistance.Controllers
           response.Message = "Success";
           response.data.Token = new JwtSecurityTokenHandler().WriteToken(token);
           response.data.Roles = roles.ToList();
+          response.data.UserRolePermissions = userRolePermissionsList;
           //response.data.OfficeId = officedetais?.OfficeId ?? 0;
+
+          //response.data.Permissions = permissionDic;
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
         }
         else
@@ -788,15 +799,6 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> GetTrailBlanceDetails()
-    {
-      APIResponse response = await _ivoucherDetail.GetTrailBlanceDetails();
-      return response;
-    }
-
-
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetTrailBlanceDetailsByCondition([FromBody] LedgerModels model)
@@ -866,14 +868,6 @@ namespace HumanitarianAssistance.Controllers
     public async Task<APIResponse> GetBlanceSheetDetails([FromBody]FinancialReportModel model)
     {
       APIResponse response = await _ivoucherDetail.GetBlanceSheetDetails(model);
-      return response;
-    }
-
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetDetailsOfNotes(int? financialyearid, int? currencyid)
-    {
-      APIResponse response = await _ivoucherDetail.GetDetailsOfNotes(financialyearid, currencyid);
       return response;
     }
 
@@ -1150,6 +1144,38 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllApplicationPages()
+    {
+      APIResponse response = null;
+
+        response = await _ipermissionsInRoles.GetAllApplicationPages();
+    
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> AddRoleWithPagePermissions([FromBody]RolesWithPagePermissionsModel rolesWithPagePermissionsModel)
+    {
+      APIResponse response = null;
+
+      if (rolesWithPagePermissionsModel!=null)
+      {
+        bool result= await AddRole(rolesWithPagePermissionsModel.RoleName);
+
+        if (result)
+        {
+
+          var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == rolesWithPagePermissionsModel.RoleName);
+
+          response = await _ipermissionsInRoles.AddRoleWithPagePermissions(rolesWithPagePermissionsModel, role.Id);
+        }
+      }
+
+      return response;
+    }
 
   }
 }

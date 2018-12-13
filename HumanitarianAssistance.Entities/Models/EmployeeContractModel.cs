@@ -6,6 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class EmployeeContractModel
     {
+        public int? EmployeeContractId { get; set; }
         public int EmployeeId { get; set; }
         public string EmployeeName { get; set; }
         public string FatherName { get; set; }

@@ -6,8 +6,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 {
    public class RiskCriteriaModel
     {
-        public long RiskCriteriaDetailId { get; set; }
-        public long ProjectId { get; set; }
+        public long? RiskCriteriaDetailId { get; set; }
+        public long? ProjectId { get; set; }
         public bool? Security { get; set; }
         public bool? Staff { get; set; }
         public bool? ProjectAssets { get; set; }
@@ -31,5 +31,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? Probablydelaysinfunding { get; set; }
         public bool? OtherOrganizationalHarms { get; set; }
         public string OrganizationalDescription { get; set; }
+        public List<long?> ProjectSelectionId { get; set; }
     }
 }

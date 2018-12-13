@@ -1222,5 +1222,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpDelete]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> RemoveEmployeeContractDetails([FromQuery]int employeeContractId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var Userid = user.Id;
+        response = await _iHREmployee.RemoveEmployeeContractDetails(employeeContractId, Userid);
+      }
+      return response;
+    }
+
+
   }
 }

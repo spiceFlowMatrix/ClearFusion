@@ -18,5 +18,11 @@ namespace DataAccess.DbEntities
         public string PermissionId { get; set; }
         public Boolean IsGrant { get; set; }
         public string CurrentPermissionId { get; set; }
+        public int? PageId { get; set; }
+        //[ForeignKey("PageId")]
+        //public ApplicationPages ApplicationPages { get; set; }
+        public int ModuleId { get; set; }
+        public Boolean CanView { get; set; }
+        public Boolean CanEdit { get; set; }
     }
 }

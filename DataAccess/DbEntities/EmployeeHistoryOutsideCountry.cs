@@ -18,6 +18,7 @@ namespace DataAccess.DbEntities
 		public string MonthlySalary { get; set; }
 		public string ReasonForLeaving { get; set; }
 		public int? EmployeeID { get; set; }
-		public EmployeeDetail EmployeeDetail { get; set; }
+        public string Position { get; set; }
+        public EmployeeDetail EmployeeDetail { get; set; }
 	}
 }

@@ -94,7 +94,7 @@ namespace HumanitarianAssistance.Service.Classes
                         existRecord.ModifiedDate = DateTime.Now;
                         _uow.GetDbContext().SaveChanges();
                         response.StatusCode = StaticResource.successStatusCode;
-
+                        response.data.DonorDetailById = existRecord;
                         response.Message = "Success";
                     }
                 }
@@ -1304,18 +1304,24 @@ namespace HumanitarianAssistance.Service.Classes
         /// Get All Area Details
         /// </summary>
         /// <returns></returns>
-        public async Task<APIResponse> GetAllProvinceDetails()
+        public APIResponse GetAllProvinceDetails()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var provincelist = (from p in await _uow.ProvinceDetailsRepository.GetAllAsyn()
-                                    where p.IsDeleted == false
-                                    select new ProvinceDetailsModel
-                                    {
-                                        ProvinceId = p.ProvinceId,
-                                        ProvinceName = p.ProvinceName
-                                    }).OrderBy(x => x.ProvinceName).ToList();
+                var provincelist = _uow.GetDbContext().ProvinceDetails.Where(x => x.IsDeleted == false).Select(x => new ProvinceDetailsModel
+                {
+                    ProvinceId = x.ProvinceId,
+                    ProvinceName = x.ProvinceName
+                }).OrderBy(x => x.ProvinceName).ToList();
+
+                //(from p in _uow.GetDbContext().ProvinceDetails()
+                //                    where p.IsDeleted == false
+                //                    select new ProvinceDetailsModel
+                //                    {
+                //                        ProvinceId = p.ProvinceId,
+                //                        ProvinceName = p.ProvinceName
+                //                    }).OrderBy(x => x.ProvinceName).ToList();
                 response.data.ProvinceDetailsList = provincelist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1327,18 +1333,25 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        public async Task<APIResponse> GetAllStrengthConsiderationDetails()
+        public APIResponse GetAllStrengthConsiderationDetails()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var StrengthConsiderationDetail = (from p in await _uow.StrengthConsiderationRepository.GetAllAsyn()
-                                                   where p.IsDeleted == false
-                                                   select new StrengthConsiderationDetail
-                                                   {
-                                                       StrengthConsiderationId = p.StrengthConsiderationId,
-                                                       StrengthConsiderationName = p.StrengthConsiderationName
-                                                   }).OrderBy(x => x.StrengthConsiderationName).ToList();
+                var StrengthConsiderationDetail = _uow.GetDbContext().StrengthConsiderationDetail.Where(x => x.IsDeleted == false).Select(x => new StrengthConsiderationDetail
+                {
+                    StrengthConsiderationId = x.StrengthConsiderationId,
+                    StrengthConsiderationName = x.StrengthConsiderationName
+                }).OrderBy(x => x.StrengthConsiderationName).ToList();
+
+
+                //(from p in await _uow.StrengthConsiderationRepository.GetAllAsyn()
+                //                                   where p.IsDeleted == false
+                //                                   select new StrengthConsiderationDetail
+                //                                   {
+                //                                       StrengthConsiderationId = p.StrengthConsiderationId,
+                //                                       StrengthConsiderationName = p.StrengthConsiderationName
+                //                                   }).OrderBy(x => x.StrengthConsiderationName).ToList();
                 response.data.StrengthConsiderationDetail = StrengthConsiderationDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1350,18 +1363,25 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        public async Task<APIResponse> GetAllGenderConsiderationDetails()
+        public APIResponse GetAllGenderConsiderationDetails()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var GenderConsiderationDetail = (from p in await _uow.GenderConsiderationRepository.GetAllAsyn()
-                                                 where p.IsDeleted == false
-                                                 select new GenderConsiderationDetail
-                                                 {
-                                                     GenderConsiderationId = p.GenderConsiderationId,
-                                                     GenderConsiderationName = p.GenderConsiderationName
-                                                 }).OrderBy(x => x.GenderConsiderationName).ToList();
+                var GenderConsiderationDetail = _uow.GetDbContext().GenderConsiderationDetail.Where(x => x.IsDeleted == false).Select(x => new GenderConsiderationDetail
+                {
+                    GenderConsiderationId = x.GenderConsiderationId,
+                    GenderConsiderationName = x.GenderConsiderationName
+                }).OrderBy(x => x.GenderConsiderationName).ToList();
+
+
+                //(from p in await _uow.GenderConsiderationRepository.GetAllAsyn()
+                //                                 where p.IsDeleted == false
+                //                                 select new GenderConsiderationDetail
+                //                                 {
+                //                                     GenderConsiderationId = p.GenderConsiderationId,
+                //                                     GenderConsiderationName = p.GenderConsiderationName
+                //                                 }).OrderBy(x => x.GenderConsiderationName).ToList();
                 response.data.GenderConsiderationDetail = GenderConsiderationDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1374,18 +1394,27 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllSecurityDetails()
+        public APIResponse GetAllSecurityDetails()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var SecurityDetail = (from p in await _uow.SecurityDetailRepository.GetAllAsyn()
-                                      where p.IsDeleted == false
-                                      select new SecurityDetail
-                                      {
-                                          SecurityId = p.SecurityId,
-                                          SecurityName = p.SecurityName
-                                      }).OrderBy(x => x.SecurityName).ToList();
+                var SecurityDetail = _uow.GetDbContext().SecurityDetail.Where(x => x.IsDeleted == false).Select(x => new SecurityDetail
+                {
+                    SecurityId = x.SecurityId,
+                    SecurityName = x.SecurityName
+                }).OrderBy(x => x.SecurityName).ToList();
+
+
+
+
+                //(from p in await _uow.SecurityDetailRepository.GetAllAsyn()
+                //                      where p.IsDeleted == false
+                //                      select new SecurityDetail
+                //                      {
+                //                          SecurityId = p.SecurityId,
+                //                          SecurityName = p.SecurityName
+                //                      }).OrderBy(x => x.SecurityName).ToList();
                 response.data.SecurityDetail = SecurityDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1398,18 +1427,26 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllSecurityConsiderationDetails()
+        public APIResponse GetAllSecurityConsiderationDetails()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var SecurityConsiderationDetail = (from p in await _uow.SecurityConsiderationDetailRepository.GetAllAsyn()
-                                                   where p.IsDeleted == false
-                                                   select new SecurityConsiderationDetail
-                                                   {
-                                                       SecurityConsiderationId = p.SecurityConsiderationId,
-                                                       SecurityConsiderationName = p.SecurityConsiderationName
-                                                   }).OrderBy(x => x.SecurityConsiderationName).ToList();
+                var SecurityConsiderationDetail =
+                     _uow.GetDbContext().SecurityConsiderationDetail.Where(x => x.IsDeleted == false).Select(x => new SecurityConsiderationDetail
+                     {
+                         SecurityConsiderationId = x.SecurityConsiderationId,
+                         SecurityConsiderationName = x.SecurityConsiderationName
+                     }).OrderBy(x => x.SecurityConsiderationName).ToList();
+
+
+                //(from p in await _uow.SecurityConsiderationDetailRepository.GetAllAsyn()
+                //                                   where p.IsDeleted == false
+                //                                   select new SecurityConsiderationDetail
+                //                                   {
+                //                                       SecurityConsiderationId = p.SecurityConsiderationId,
+                //                                       SecurityConsiderationName = p.SecurityConsiderationName
+                //                                   }).OrderBy(x => x.SecurityConsiderationName).ToList();
                 response.data.SecurityConsiderationDetail = SecurityConsiderationDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1665,10 +1702,10 @@ namespace HumanitarianAssistance.Service.Classes
 
                 details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == Projectid && x.IsDeleted == false).FirstOrDefault();
                 //if (details != null)
-               // {
-                    response.data.ProjectProposalDetail = details;
+                // {
+                response.data.ProjectProposalDetail = details;
 
-               // }
+                // }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1838,7 +1875,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.DonorFinancingHistory = model.DonorFinancingHistory;
                     _detail.ReligiousStanding = model.ReligiousStanding;
                     _detail.PoliticalStanding = model.PoliticalStanding;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
@@ -1927,6 +1964,8 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
+                    _detail.Product = model.Product;
+                    _detail.Service = model.Service;
                     _uow.PurposeofInitiativeCriteriaRepository.Add(_detail);
                 }
                 else
@@ -1964,6 +2003,8 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.Now;
+                    _detail.Product = model.Product;
+                    _detail.Service = model.Service;
                     _uow.GetDbContext().SaveChanges();
                 }
                 response.StatusCode = StaticResource.successStatusCode;
@@ -2054,7 +2095,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsSecurity = model.IsSecurity;
                     _detail.IsGeographical = model.IsGeographical;
                     _detail.IsSeasonal = model.IsSeasonal;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
@@ -2087,7 +2128,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsSecurity = model.IsSecurity;
                     _detail.IsGeographical = model.IsGeographical;
                     _detail.IsSeasonal = model.IsSeasonal;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.Now;
@@ -2105,7 +2146,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public APIResponse GetAllProjectproposals(long ProjectId)
+        public APIResponse GetAllCriteriaEvaluationDetalByProjectId(long ProjectId)
         {
             APIResponse response = new APIResponse();
 
@@ -2114,148 +2155,154 @@ namespace HumanitarianAssistance.Service.Classes
                 var details =
                     (from obj in _uow.GetDbContext().ProjectDetail
                      join donor in _uow.GetDbContext().DonorCriteriaDetail on obj.ProjectId equals donor.ProjectId into a
-                     from b in a.DefaultIfEmpty()
-                     join purpose in _uow.GetDbContext().PurposeofInitiativeCriteria on obj.ProjectId equals purpose.ProjectId
-                     into d
-                     from p in d.DefaultIfEmpty()
-                     join eligibility in _uow.GetDbContext().EligibilityCriteriaDetail on obj.ProjectId equals eligibility.ProjectId
-                      into e
-                     from f in e.DefaultIfEmpty()
-                     join feasibility in _uow.GetDbContext().FeasibilityCriteriaDetail on obj.ProjectId equals feasibility.ProjectId
-                     into g
-                     from h in g.DefaultIfEmpty()
-                     join Priority in _uow.GetDbContext().PriorityCriteriaDetail on obj.ProjectId equals Priority.ProjectId
-                     into pr
-                     from pro in pr.DefaultIfEmpty()
-                     join financial in _uow.GetDbContext().FinancialCriteriaDetail on obj.ProjectId equals financial.ProjectId
-                     into fi
-                     from fin in fi.DefaultIfEmpty()
-                     join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into
-                     ri
-                     from ris in ri.DefaultIfEmpty()
+                     from donor in a.DefaultIfEmpty()
+                     join purpose in _uow.GetDbContext().PurposeofInitiativeCriteria on obj.ProjectId equals purpose.ProjectId into d
+                     from purpose in d.DefaultIfEmpty()
+                     join eligibility in _uow.GetDbContext().EligibilityCriteriaDetail on obj.ProjectId equals eligibility.ProjectId into e
+                     from eligibility in e.DefaultIfEmpty()
+                     join feasibility in _uow.GetDbContext().FeasibilityCriteriaDetail on obj.ProjectId equals feasibility.ProjectId into g
+                     from feasibility in g.DefaultIfEmpty()
+                     join Priority in _uow.GetDbContext().PriorityCriteriaDetail on obj.ProjectId equals Priority.ProjectId into pr
+                     from Priority in pr.DefaultIfEmpty()
+                     join financial in _uow.GetDbContext().FinancialCriteriaDetail on obj.ProjectId equals financial.ProjectId into fi
+                     from financial in fi.DefaultIfEmpty()
+                     join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri
+                     from risk in ri.DefaultIfEmpty()
+                         //join selected in _uow.GetDbContext().FinancialProjectDetail on obj.ProjectId equals selected.ProjectId into sp
+                         //from selected in sp.DefaultIfEmpty()
                      select new CriteriaEveluationModel
                      {
                          ProjectId = obj.ProjectId,
-                         DonorCEId = b.DonorCEId,
-                         MethodOfFunding = b.MethodOfFunding,
-                         PastFundingExperience = b.PastFundingExperience,
-                         ProposalAccepted = b.ProposalAccepted,
-                         ProposalExperience = b.ProposalExperience,
-                         Professional = b.Professional,
-                         FundsOnTime = b.FundsOnTime,
-                         EffectiveCommunication = b.EffectiveCommunication,
-                         Dispute = b.Dispute,
-                         OtherDeliverable = b.OtherDeliverable,
-                         OtherDeliverableType = b.OtherDeliverableType,
-                         PastWorkingExperience = b.PastWorkingExperience,
-                         CriticismPerformance = b.CriticismPerformance,
-                         TimeManagement = b.TimeManagement,
-                         MoneyAllocation = b.MoneyAllocation,
-                         Accountability = b.Accountability,
-                         DeliverableQuality = b.DeliverableQuality,
-                         DonorFinancingHistory = b.DonorFinancingHistory,
-                         ReligiousStanding = b.ReligiousStanding,
-                         PoliticalStanding = b.PoliticalStanding,
-                         FeasibilityId = p.ProductServiceId,
-                         Women = p.Women,
-                         Children = p.Children,
-                         Awareness = p.Awareness,
-                         Education = p.Education,
-                         DrugAbuses = p.DrugAbuses,
-                         Right = p.Right,
-                         Culture = p.Culture,
-                         Music = p.Music,
-                         Documentaries = p.Documentaries,
-                         InvestigativeJournalism = p.InvestigativeJournalism,
-                         HealthAndNutrition = p.HealthAndNutrition,
-                         News = p.News,
-                         SocioPolitiacalDebate = p.SocioPolitiacalDebate,
-                         Studies = p.Studies,
-                         Reports = p.Reports,
-                         CommunityDevelopment = p.CommunityDevelopment,
-                         Aggriculture = p.Aggriculture,
-                         DRR = p.DRR,
-                         ServiceEducation = p.ServiceEducation,
-                         ServiceHealthAndNutrition = p.ServiceHealthAndNutrition,
-                         RadioProduction = p.RadioProduction,
-                         TVProgram = p.TVProgram,
-                         PrintedMedia = p.PrintedMedia,
-                         RoundTable = p.RoundTable,
-                         Others = p.Others,
-                         OtherActivity = p.OtherActivity,
-                         TargetBenificaiaryWomen = p.TargetBenificaiaryWomen,
-                         TargetBenificiaryMen = p.TargetBenificiaryMen,
-                         TargetBenificiaryAgeGroup = p.TargetBenificiaryAgeGroup,
-                         TargetBenificiaryaOccupation = p.TargetBenificiaryaOccupation,
-                         DonorCriteriaMet = f.DonorCriteriaMet,
-                         EligibilityDealine = f.EligibilityDealine,
-                         CoPartnership = f.CoPartnership,
-                         CapacityAvailableForProject = h.CapacityAvailableForProject,
-                         TrainedStaff = h.TrainedStaff,
-                         ByEquipment = h.ByEquipment,
-                         ExpandScope = h.ExpandScope,
-                         GeoGraphicalPresence = h.GeoGraphicalPresence,
-                         ThirdPartyContract = h.ThirdPartyContract,
-                         CostOfCompensationMonth = h.CostOfCompensationMonth,
-                         CostOfCompensationMoney = h.CostOfCompensationMoney,
-                         AnyInKindComponent = h.AnyInKindComponent,
-                         UseableByOrganisation = h.UseableByOrganisation,
-                         FeasibleExpertDeploy = h.FeasibleExpertDeploy,
-                         EnoughTimeForProject = h.EnoughTimeForProject,
-                         ProjectAllowedBylaw = h.ProjectAllowedBylaw,
-                         ProjectByLeadership = h.ProjectByLeadership,
-                         IsProjectPractical = h.IsProjectPractical,
-                         PresenceCoverageInProject = h.PresenceCoverageInProject,
-                         ProjectInLineWithOrgFocus = h.ProjectInLineWithOrgFocus,
-                         EnoughTimeToPrepareProposal = h.EnoughTimeToPrepareProposal,
-                         ProjectRealCost = h.ProjectRealCost,
-                         IsCostGreaterthenBudget = h.IsCostGreaterthenBudget,
-                         PerCostGreaterthenBudget = h.PerCostGreaterthenBudget,
-                         IsFinancialContribution = h.IsFinancialContribution,
-                         IsSecurity = h.IsSecurity,
-                         IsGeographical = h.IsGeographical,
-                         IsSeasonal = h.IsSeasonal,
-                         IncreaseEligibility = pro.IncreaseEligibility,
-                         IncreaseReputation = pro.IncreaseReputation,
-                         ImproveDonorRelationship = pro.ImproveDonorRelationship,
-                         GoodCause = pro.GoodCause,
-                         ImprovePerformancecapacity = pro.ImprovePerformancecapacity,
-                         SkillImprove = pro.SkillImprove,
-                         FillingFundingGap = pro.FillingFundingGap,
-                         NewSoftware = pro.NewSoftware,
-                         NewEquipment = pro.NewEquipment,
-                         CoverageAreaExpansion = pro.CoverageAreaExpansion,
-                         NewTraining = pro.NewTraining,
-                         ExpansionGoal = pro.ExpansionGoal,
-                         Total = fin.Total,
-                         ProjectActivities = fin.ProjectActivities,
-                         Operational = fin.Operational,
-                         Overhead_Admin = fin.Overhead_Admin,
-                         Lump_Sum = fin.Lump_Sum,
-                         Security = ris.Security,
-                         Staff = ris.Staff,
-                         ProjectAssets = ris.ProjectAssets,
-                         Suppliers = ris.Suppliers,
-                         Beneficiaries = ris.Beneficiaries,
-                         OverallOrganization = ris.OverallOrganization,
-                         DeliveryFaiLure = ris.DeliveryFaiLure,
-                         PrematureSeizure = ris.PrematureSeizure,
-                         GovernmentConfiscation = ris.GovernmentConfiscation,
-                         DesctructionByTerroristActivity = ris.DesctructionByTerroristActivity,
-                         Reputation = ris.Reputation,
-                         Religious = ris.Religious,
-                         Sectarian = ris.Sectarian,
-                         Ethinc = ris.Ethinc,
-                         Social = ris.Social,
-                         Traditional = ris.Traditional,
-                         FocusDivertingrisk = ris.FocusDivertingrisk,
-                         Financiallosses = ris.Financiallosses,
-                         Opportunityloss = ris.Opportunityloss,
-                         ProjectSelection = ris.ProjectSelection,
-                         Probablydelaysinfunding = ris.Probablydelaysinfunding,
-                         OtherOrganizationalHarms = ris.OtherOrganizationalHarms,
-                         OrganizationalDescription = ris.OrganizationalDescription
+                         DonorCEId = donor != null ? donor.DonorCEId : 0,
+                         MethodOfFunding = donor.MethodOfFunding,
+                         PastFundingExperience = donor.PastFundingExperience,
+                         ProposalAccepted = donor.ProposalAccepted,
+                         ProposalExperience = donor.ProposalExperience,
+                         Professional = donor.Professional,
+                         FundsOnTime = donor.FundsOnTime,
+                         EffectiveCommunication = donor.EffectiveCommunication,
+                         Dispute = donor.Dispute,
+                         OtherDeliverable = donor.OtherDeliverable,
+                         OtherDeliverableType = donor.OtherDeliverableType,
+                         PastWorkingExperience = donor.PastWorkingExperience,
+                         CriticismPerformance = donor.CriticismPerformance,
+                         TimeManagement = donor.TimeManagement,
+                         MoneyAllocation = donor.MoneyAllocation,
+                         Accountability = donor.Accountability,
+                         DeliverableQuality = donor.DeliverableQuality,
+                         DonorFinancingHistory = donor.DonorFinancingHistory,
+                         ReligiousStanding = donor.ReligiousStanding,
+                         PoliticalStanding = donor.PoliticalStanding,
+                         ProductServiceId = purpose != null ? purpose.ProductServiceId : 0,
+                         Women = purpose.Women,
+                         Children = purpose.Children,
+                         Awareness = purpose.Awareness,
+                         Education = purpose.Education,
+                         DrugAbuses = purpose.DrugAbuses,
+                         Right = purpose.Right,
+                         Culture = purpose.Culture,
+                         Music = purpose.Music,
+                         Documentaries = purpose.Documentaries,
+                         InvestigativeJournalism = purpose.InvestigativeJournalism,
+                         HealthAndNutrition = purpose.HealthAndNutrition,
+                         News = purpose.News,
+                         SocioPolitiacalDebate = purpose.SocioPolitiacalDebate,
+                         Studies = purpose.Studies,
+                         Reports = purpose.Reports,
+                         CommunityDevelopment = purpose.CommunityDevelopment,
+                         Aggriculture = purpose.Aggriculture,
+                         DRR = purpose.DRR,
+                         ServiceEducation = purpose.ServiceEducation,
+                         ServiceHealthAndNutrition = purpose.ServiceHealthAndNutrition,
+                         RadioProduction = purpose.RadioProduction,
+                         TVProgram = purpose.TVProgram,
+                         PrintedMedia = purpose.PrintedMedia,
+                         RoundTable = purpose.RoundTable,
+                         Others = purpose.Others,
+                         OtherActivity = purpose.OtherActivity,
+                         TargetBenificaiaryWomen = purpose.TargetBenificaiaryWomen,
+                         TargetBenificiaryMen = purpose.TargetBenificiaryMen,
+                         TargetBenificiaryAgeGroup = purpose.TargetBenificiaryAgeGroup,
+                         TargetBenificiaryaOccupation = purpose.TargetBenificiaryaOccupation,
+                         Product= purpose.Product,
+                         Service= purpose.Service,
+                         DonorCriteriaMet = eligibility.DonorCriteriaMet,
+                         EligibilityDealine = eligibility.EligibilityDealine,
+                         CoPartnership = eligibility.CoPartnership,
+                         CapacityAvailableForProject = feasibility.CapacityAvailableForProject,
+                         TrainedStaff = feasibility.TrainedStaff,
+                         ByEquipment = feasibility.ByEquipment,
+                         ExpandScope = feasibility.ExpandScope,
+                         GeoGraphicalPresence = feasibility.GeoGraphicalPresence,
+                         ThirdPartyContract = feasibility.ThirdPartyContract,
+                         CostOfCompensationMonth = feasibility.CostOfCompensationMonth,
+                         CostOfCompensationMoney = feasibility.CostOfCompensationMoney,
+                         AnyInKindComponent = feasibility.AnyInKindComponent,
+                         UseableByOrganisation = feasibility.UseableByOrganisation,
+                         FeasibleExpertDeploy = feasibility.FeasibleExpertDeploy,
+                         EnoughTimeForProject = feasibility.EnoughTimeForProject,
+                         ProjectAllowedBylaw = feasibility.ProjectAllowedBylaw,
+                         ProjectByLeadership = feasibility.ProjectByLeadership,
+                         IsProjectPractical = feasibility.IsProjectPractical,
+                         PresenceCoverageInProject = feasibility.PresenceCoverageInProject,
+                         ProjectInLineWithOrgFocus = feasibility.ProjectInLineWithOrgFocus,
+                         EnoughTimeToPrepareProposal = feasibility.EnoughTimeToPrepareProposal,
+                         ProjectRealCost = feasibility.ProjectRealCost,
+                         IsCostGreaterthenBudget = feasibility.IsCostGreaterthenBudget,
+                         PerCostGreaterthenBudget = feasibility.PerCostGreaterthenBudget,
+                         IsFinancialContribution = feasibility.IsFinancialContribution,
+                         IsSecurity = feasibility.IsSecurity,
+                         IsGeographical = feasibility.IsGeographical,
+                         IsSeasonal = feasibility.IsSeasonal,
+                         IncreaseEligibility = Priority.IncreaseEligibility,
+                         IncreaseReputation = Priority.IncreaseReputation,
+                         ImproveDonorRelationship = Priority.ImproveDonorRelationship,
+                         GoodCause = Priority.GoodCause,
+                         ImprovePerformancecapacity = Priority.ImprovePerformancecapacity,
+                         SkillImprove = Priority.SkillImprove,
+                         FillingFundingGap = Priority.FillingFundingGap,
+                         NewSoftware = Priority.NewSoftware,
+                         NewEquipment = Priority.NewEquipment,
+                         CoverageAreaExpansion = Priority.CoverageAreaExpansion,
+                         NewTraining = Priority.NewTraining,
+                         ExpansionGoal = Priority.ExpansionGoal,
+                         Total = financial.Total,
+                         ProjectActivities = financial.ProjectActivities,
+                         Operational = financial.Operational,
+                         Overhead_Admin = financial.Overhead_Admin,
+                         Lump_Sum = financial.Lump_Sum,
+                         Security = risk.Security,
+                         Staff = risk.Staff,
+                         ProjectAssets = risk.ProjectAssets,
+                         Suppliers = risk.Suppliers,
+                         Beneficiaries = risk.Beneficiaries,
+                         OverallOrganization = risk.OverallOrganization,
+                         DeliveryFaiLure = risk.DeliveryFaiLure,
+                         PrematureSeizure = risk.PrematureSeizure,
+                         GovernmentConfiscation = risk.GovernmentConfiscation,
+                         DesctructionByTerroristActivity = risk.DesctructionByTerroristActivity,
+                         Reputation = risk.Reputation,
+                         Religious = risk.Religious,
+                         Sectarian = risk.Sectarian,
+                         Ethinc = risk.Ethinc,
+                         Social = risk.Social,
+                         Traditional = risk.Traditional,
+                         FocusDivertingrisk = risk.FocusDivertingrisk,
+                         Financiallosses = risk.Financiallosses,
+                         Opportunityloss = risk.Opportunityloss,
+
+                         //ProjectSelectionId = selected.ProjectSelectionId,
+
+                         Probablydelaysinfunding = risk.Probablydelaysinfunding,
+                         OtherOrganizationalHarms = risk.OtherOrganizationalHarms,
+                         OrganizationalDescription = risk.OrganizationalDescription
                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
+
+
+                List<long?> selectedProjects = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).Select(x => x.ProjectSelectionId).ToList();
+
+                details.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
+
                 response.data.CriteriaEveluationModel = details;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -2341,7 +2388,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.Operational = model.Operational;
                     _detail.Overhead_Admin = model.Overhead_Admin;
                     _detail.Lump_Sum = model.Lump_Sum;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
@@ -2353,7 +2400,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.Operational = model.Operational;
                     _detail.Overhead_Admin = model.Overhead_Admin;
                     _detail.Lump_Sum = model.Lump_Sum;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.Now;
@@ -2370,13 +2417,13 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
-      public  APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId)
+        public APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             RiskCriteriaDetail _detail = new RiskCriteriaDetail();
             try
             {
-                _detail = _uow.GetDbContext().RiskCriteriaDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                _detail = _uow.GetDbContext().RiskCriteriaDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
                 if (_detail == null)
                 {
                     _detail = new RiskCriteriaDetail();
@@ -2399,15 +2446,20 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.FocusDivertingrisk = model.FocusDivertingrisk;
                     _detail.Financiallosses = model.Financiallosses;
                     _detail.Opportunityloss = model.Opportunityloss;
-                    _detail.ProjectSelection = model.ProjectSelection;
+
+
                     _detail.Probablydelaysinfunding = model.Probablydelaysinfunding;
                     _detail.OtherOrganizationalHarms = model.OtherOrganizationalHarms;
                     _detail.OrganizationalDescription = model.OrganizationalDescription;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
                     _detail.CreatedDate = DateTime.Now;
+
+
                     _uow.RiskCriteriaDetailRepository.Add(_detail);
+
+
                 }
                 else
                 {
@@ -2430,16 +2482,59 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.FocusDivertingrisk = model.FocusDivertingrisk;
                     _detail.Financiallosses = model.Financiallosses;
                     _detail.Opportunityloss = model.Opportunityloss;
-                    _detail.ProjectSelection = model.ProjectSelection;
+
+
                     _detail.Probablydelaysinfunding = model.Probablydelaysinfunding;
                     _detail.OtherOrganizationalHarms = model.OtherOrganizationalHarms;
                     _detail.OrganizationalDescription = model.OrganizationalDescription;
-                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.Now;
+
+
                     _uow.GetDbContext().SaveChanges();
                 }
+
+
+              
+                if (model.ProjectSelectionId != null)
+                {
+                    //check
+                    bool projectPresent = _uow.GetDbContext().FinancialProjectDetail.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+
+
+                    //if exist then remove
+                    if (projectPresent)
+                    {
+                        var projectExist = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+
+                        // if exist then remove it
+                        _uow.GetDbContext().FinancialProjectDetail.RemoveRange(projectExist);
+                        _uow.GetDbContext().SaveChanges();
+                    }
+
+                    List<FinancialProjectDetail> projectList = new List<FinancialProjectDetail>();
+
+                    foreach (var item in model.ProjectSelectionId)
+                    {
+                        FinancialProjectDetail _data = new FinancialProjectDetail();
+
+                        _data.ProjectSelectionId = item;
+                        _data.ProjectId = model.ProjectId.Value;
+                        _data.IsDeleted = false;
+                        _data.CreatedById = UserId;
+                        _data.CreatedDate = DateTime.Now;
+
+                        projectList.Add(_data);
+                    }
+
+                    //Add
+                    _uow.GetDbContext().FinancialProjectDetail.AddRange(projectList);
+                    _uow.GetDbContext().SaveChanges();
+                }
+
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -2451,6 +2546,93 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
+        public APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            TargetBeneficiaryDetail _detail = new TargetBeneficiaryDetail();
+            try
+            {
+                _detail = _uow.GetDbContext().TargetBeneficiaryDetail.Where(x => x.ProjectId == model.ProjectId && x.TargetId == model.TargetId && x.IsDeleted == false).FirstOrDefault();
+                if (_detail == null)
+                {
+                    _detail = new TargetBeneficiaryDetail();
+                    _detail.TargetType = model.TargetType;
+                    _detail.TargetName = model.TargetName;
+                    _detail.ProjectId = model.ProjectId;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+                    _uow.TargetBeneficiaryDetailRepository.Add(_detail);
+                }
+                else
+                {
+                    _detail.TargetType = model.TargetType;
+                    _detail.TargetName = model.TargetName;
+                    _detail.ProjectId = model.ProjectId;
+                    _detail.IsDeleted = false;
+                    _detail.ModifiedById = UserId;
+                    _detail.ModifiedDate = DateTime.Now;
+                    _uow.GetDbContext().SaveChanges();
+                }
+                response.CommonId.LongId = _detail.TargetId;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public APIResponse AddEditFinancialProjectDetail(FinancialProjectDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            FinancialProjectDetail _detail = new FinancialProjectDetail();
+            try
+            {
+                _detail = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == model.ProjectId && x.FinancialProjectDetailId == model.FinancialProjectDetailId && x.IsDeleted == false).FirstOrDefault();
+                if (_detail == null)
+                {
+                    _detail = new FinancialProjectDetail();
+                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectSelectionId = model.ProjectSelectionId;
+                    _detail.ProjectName = model.ProjectName;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+                    _uow.FinancialProjectDetailRepository.Add(_detail);
+                }
+                else
+                {
+                    _detail.ProjectId = model.ProjectId;
+                    _detail.ProjectSelectionId = model.ProjectSelectionId;
+                    _detail.ProjectName = model.ProjectName;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+                    _uow.FinancialProjectDetailRepository.Add(_detail);
+                    _uow.GetDbContext().SaveChanges();
+                }
+                response.CommonId.Id = Convert.ToInt32(_detail.ProjectSelectionId);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+
+
+
+
 
         #endregion
     }
