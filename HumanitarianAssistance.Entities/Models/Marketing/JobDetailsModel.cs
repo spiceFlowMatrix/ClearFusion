@@ -24,6 +24,19 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public float DiscountPercent { get; set; }
         public double TotalPrice { get; set; }
         public bool IsInvoiceApproved { get; set; }
+        public bool IsDeleted { get; set; }
         public long Minutes { get; set; }
+    }
+
+    public class JobFilterModel
+    {
+        public bool IsApproved { get; set; }
+        public string YesOrNo { get; set; }
+        public double UnitRate { get; set; }
+        public double TotalPrice { get; set; }
+        public long ContractId { get; set; }
+        public string FilterType { get; set; }
+        public string JobName { get; set; }
+        public long JobId { get; set; }
     }
 }
