@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 {
   public  class PurposeofInitiativeCriteriaModel
     {
-        public long ProductServiceId { get; set; }
+        public long? ProductServiceId { get; set; }
         public bool? Women { get; set; }        
         public long ProjectId { get; set; }
         public bool? Children { get; set; }
@@ -33,10 +33,12 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? PrintedMedia { get; set; }
         public bool? RoundTable { get; set; }
         public bool? Others { get; set; }
-        public bool? OtherActivity { get; set; }
+        public string OtherActivity { get; set; }
         public bool? TargetBenificaiaryWomen { get; set; }
         public bool? TargetBenificiaryMen { get; set; }
         public bool? TargetBenificiaryAgeGroup { get; set; }
         public bool? TargetBenificiaryaOccupation { get; set; }
+        public bool? Service { get; set; }
+        public bool? Product { get; set; }
     }
 }

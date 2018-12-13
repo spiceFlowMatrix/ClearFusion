@@ -13,6 +13,7 @@ namespace DataAccess.DbEntities.Project
         [Column(Order = 1, TypeName = "serial")]
         public long PriorityCriteriaDetailId { get; set; }
         [ForeignKey("ProjectId")]
+        public ProjectDetail ProjectDetail { get; set; }
         public long ProjectId { get; set; }
         public bool? IncreaseEligibility { get; set; }
         public bool? IncreaseReputation { get; set; }

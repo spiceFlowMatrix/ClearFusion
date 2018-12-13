@@ -6,8 +6,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 {
    public class FinancialCriteriaModel
     {
-        public long FinancialCriteriaDetailId { get; set; }       
-        public long ProjectId { get; set; }
+        public long? FinancialCriteriaDetailId { get; set; }       
+        public long? ProjectId { get; set; }
         public double? Total { get; set; }
         
         public double? ProjectActivities { get; set; }

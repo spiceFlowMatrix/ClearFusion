@@ -104,10 +104,13 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse AddEditPurposeofInitiativeCriteria(PurposeofInitiativeCriteriaModel model, string UserId);
         APIResponse AddEditEligibilityCriteriaDetail(EligibilityCriteriaDetailModel model, string UserId);
         APIResponse AddEditFeasibilityCriteria(FeasibilityCriteriaModel model, string UserId);
-        APIResponse GetAllProjectproposals(long projectId);
+        APIResponse GetAllCriteriaEvaluationDetalByProjectId(long projectId);
         APIResponse AddEditPriorityCriteria(PriorityCriteriaModel model, string UserId);
         APIResponse AddEditFinancialCriteria(FinancialCriteriaModel model, string UserId);
         APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId);
+        APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId);
+
+        APIResponse AddEditFinancialProjectDetail(FinancialProjectDetailModel model, string UserId);
 
         #endregion
     }

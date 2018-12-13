@@ -6,8 +6,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 {
    public class FeasibilityCriteriaModel
     {
-        public long FeasibilityId { get; set; }
-        public long ProjectId { get; set; }
+        public long? FeasibilityId { get; set; }
+        public long? ProjectId { get; set; }
         public bool? CapacityAvailableForProject { get; set; }
         public bool? TrainedStaff { get; set; }
         public bool? ByEquipment { get; set; }

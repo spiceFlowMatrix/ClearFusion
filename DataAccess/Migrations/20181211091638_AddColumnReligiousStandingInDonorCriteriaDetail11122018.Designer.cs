@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181211091638_AddColumnReligiousStandingInDonorCriteriaDetail11122018")]
+    partial class AddColumnReligiousStandingInDonorCriteriaDetail11122018
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3686,7 +3688,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("JobName");
 
-                    b.Property<long?>("JobPhaseId");
+                    b.Property<long>("JobPhaseId");
 
                     b.Property<string>("ModifiedById");
 
@@ -4143,8 +4145,6 @@ namespace DataAccess.Migrations
                     b.Property<bool>("IsInvoiceApproved");
 
                     b.Property<long>("JobId");
-
-                    b.Property<long>("Minutes");
 
                     b.Property<string>("ModifiedById");
 
@@ -5279,7 +5279,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("ProjectName");
 
-                    b.Property<long?>("ProjectSelectionId");
+                    b.Property<int?>("ProjectSelectionId");
 
                     b.HasKey("FinancialProjectDetailId");
 
@@ -9149,7 +9149,8 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.JobPhase", "JobPhases")
                         .WithMany()
-                        .HasForeignKey("JobPhaseId");
+                        .HasForeignKey("JobPhaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()

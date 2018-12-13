@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181211090921_financialProjectDetailAndRemoveDonorCriteriaColoum11122018")]
+    partial class financialProjectDetailAndRemoveDonorCriteriaColoum11122018
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3686,7 +3688,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("JobName");
 
-                    b.Property<long?>("JobPhaseId");
+                    b.Property<long>("JobPhaseId");
 
                     b.Property<string>("ModifiedById");
 
@@ -4143,8 +4145,6 @@ namespace DataAccess.Migrations
                     b.Property<bool>("IsInvoiceApproved");
 
                     b.Property<long>("JobId");
-
-                    b.Property<long>("Minutes");
 
                     b.Property<string>("ModifiedById");
 
@@ -5055,8 +5055,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("Dispute");
 
-                    b.Property<int?>("DonorFinancingHistory");
-
                     b.Property<bool?>("EffectiveCommunication");
 
                     b.Property<bool?>("FundsOnTime");
@@ -5079,8 +5077,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("PastWorkingExperience");
 
-                    b.Property<int?>("PoliticalStanding");
-
                     b.Property<bool?>("Professional");
 
                     b.Property<long>("ProjectId");
@@ -5088,8 +5084,6 @@ namespace DataAccess.Migrations
                     b.Property<bool?>("ProposalAccepted");
 
                     b.Property<bool?>("ProposalExperience");
-
-                    b.Property<int?>("ReligiousStanding");
 
                     b.Property<bool?>("TimeManagement");
 
@@ -5279,7 +5273,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("ProjectName");
 
-                    b.Property<long?>("ProjectSelectionId");
+                    b.Property<int?>("ProjectSelectionId");
 
                     b.HasKey("FinancialProjectDetailId");
 
@@ -9149,7 +9143,8 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DbEntities.JobPhase", "JobPhases")
                         .WithMany()
-                        .HasForeignKey("JobPhaseId");
+                        .HasForeignKey("JobPhaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
