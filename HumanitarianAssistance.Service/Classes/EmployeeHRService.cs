@@ -353,8 +353,8 @@ namespace HumanitarianAssistance.Service.Classes
                 if (xExchangeRate.Count == 0)
                 {
                     xExchangeRate = await _uow.ExchangeRateRepository.FindAllAsync(x => x.IsDeleted == false && x.Date.Value.Date.Year == DateTime.Now.Year);
-                 }
-                else if (xExchangeRate.Count == 0)
+                }
+                if (xExchangeRate.Count == 0)
                 {
                     throw new Exception("Exchange Rate Not Defined");
                 }
@@ -368,21 +368,21 @@ namespace HumanitarianAssistance.Service.Classes
                     payrollDetail = await _uow.GetDbContext().EmployeePayroll.Include(x => x.SalaryHeadDetails).Where(x => x.EmployeeID == payrollAttendance.EmployeeId && x.IsDeleted == false).Select(x => new EmployeePayrollModel
                     {
                         PayrollId = x.PayrollId,
-                        CreatedById = x.CreatedById,
-                        CreatedDate = x.CreatedDate,
+                        //CreatedById = x.CreatedById,
+                       // CreatedDate = x.CreatedDate,
                         CurrencyId = x.CurrencyId.Value,
                         EmployeeId = x.EmployeeID,
-                        ModifiedById = x.ModifiedById,
+                        //ModifiedById = x.ModifiedById,
                         HeadTypeId = x.SalaryHeadDetails.HeadTypeId,
                         IsDeleted = x.IsDeleted,
-                        ModifiedDate = x.ModifiedDate,
+                        //ModifiedDate = x.ModifiedDate,
                         MonthlyAmount = x.MonthlyAmount.Value,
                         PaymentType = 2, //hourly
                         PensionRate = pensionRate != null ? pensionRate : DefaultValues.DefaultPensionRate,
                         SalaryHeadId = x.SalaryHeadId.Value,
                         SalaryHeadType = x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
                         SalaryHead = x.SalaryHeadDetails.HeadName,
-                        BasicPay = x.BasicPay,
+                        //BasicPay = x.BasicPay,
                         AccountNo= x.AccountNo,
                         TransactionTypeId= x.TransactionTypeId
                     }).ToListAsync();
@@ -434,7 +434,7 @@ namespace HumanitarianAssistance.Service.Classes
                             }
 
                             //Net Salary  = (Gross + Allowances) - Deductions
-                            obj.NetSalary = obj.GrossSalary - obj.TotalDeduction - obj.SalaryTax - payrollAttendance.AdvanceRecoveryAmount - obj.PensionAmount;
+                            obj.NetSalary = obj.GrossSalary - (obj.TotalDeduction!=null? obj.TotalDeduction:0) - (obj.SalaryTax !=null? obj.SalaryTax:0) - payrollAttendance.AdvanceRecoveryAmount - (obj.PensionAmount!=null? obj.PensionAmount :0);
 
                             //foreach (var item in payrollDetail)
                             //{
@@ -1089,7 +1089,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                 .Include(x => x.SalaryHeadDetails)
                                                                                 .Where(x => x.EmployeeID == item.EmployeeID &&
                                                                                             x.Date.Year == item.PayrollYear &&
-                                                                                            x.Date.Month == item.PayrollMonth)
+                                                                                            x.Date.Month == item.PayrollMonth && x.IsDeleted== false)
                                                                                 .Select(x => new EmployeePayrollModel
                                                                                 {
                                                                                     CurrencyId = x.CurrencyId,

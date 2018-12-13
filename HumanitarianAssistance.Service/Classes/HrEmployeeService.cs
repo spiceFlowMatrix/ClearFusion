@@ -1525,32 +1525,37 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var financialyearid = _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDeleted == false && x.IsDefault == true).Result.FinancialYearId;
-                //var list = await Task.Run(() =>
-                //    _uow.GetDbContext().AssignLeaveToEmployee.Include(x => x.LeaveReasonDetails).Where(x => x.IsDeleted == false && x.FinancialYearId == financialyearid && x.EmployeeId == EmployeeId).OrderByDescending(a=> a.LeaveId).ToListAsync()
-                //);
+                var financialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDeleted == false && x.IsDefault == true);
 
-                var queryResult = EF.CompileAsyncQuery(
-                  (ApplicationDbContext ctx) => ctx.AssignLeaveToEmployee.Include(x => x.LeaveReasonDetails)
-                    .Where(x => x.IsDeleted == false && x.FinancialYearId == financialyearid && x.EmployeeId == EmployeeId));
-                var list = await Task.Run(() =>
-                    queryResult(_uow.GetDbContext()).ToListAsync().Result.OrderByDescending(a => a.LeaveId)
-                );
-
-                var assignleavelist = list.Select(x => new AssignLeaveToEmployeeModel
+                if (financialYear != null)
                 {
-                    LeaveId = x.LeaveId,
-                    LeaveReasonId = x.LeaveReasonId,
-                    LeaveReasonName = x.LeaveReasonDetails.ReasonName,
-                    Unit = x.LeaveReasonDetails.Unit,
-                    AssignUnit = x.AssignUnit,
-                    BlanceLeave = (x.AssignUnit - (x.UsedLeaveUnit ?? 0)),
-                    FinancialYearId = x.FinancialYearId,
-                    Description = x.Description
-                }).ToList();
-                response.data.AssignLeaveToEmployeeList = assignleavelist;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                    var queryResult = EF.CompileAsyncQuery(
+                  (ApplicationDbContext ctx) => ctx.AssignLeaveToEmployee.Include(x => x.LeaveReasonDetails)
+                    .Where(x => x.IsDeleted == false && x.FinancialYearId == financialYear.FinancialYearId && x.EmployeeId == EmployeeId));
+                    var list = await Task.Run(() =>
+                        queryResult(_uow.GetDbContext()).ToListAsync().Result.OrderByDescending(a => a.LeaveId)
+                    );
+
+                    var assignleavelist = list.Select(x => new AssignLeaveToEmployeeModel
+                    {
+                        LeaveId = x.LeaveId,
+                        LeaveReasonId = x.LeaveReasonId,
+                        LeaveReasonName = x.LeaveReasonDetails.ReasonName,
+                        Unit = x.LeaveReasonDetails.Unit,
+                        AssignUnit = x.AssignUnit,
+                        BlanceLeave = (x.AssignUnit - (x.UsedLeaveUnit ?? 0)),
+                        FinancialYearId = x.FinancialYearId,
+                        Description = x.Description
+                    }).ToList();
+                    response.data.AssignLeaveToEmployeeList = assignleavelist;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Financial Year Not Found";
+                }
             }
             catch (Exception ex)
             {
@@ -4079,7 +4084,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var financialyear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDefault == true);
 
-                if (financialyear == null)
+                if (financialyear != null)
                 {
                     var list = await _uow.EmployeeApplyLeaveRepository.FindAllAsync(x => x.IsDeleted == false && x.EmployeeId == employeeid && x.ApplyLeaveStatusId != (int)ApplyLeaveStatus.Reject && x.FinancialYearId == financialyear.FinancialYearId);
                     var applyleavelist = list.Select(x => new ApplyLeaveModel
