@@ -235,21 +235,23 @@ namespace HumanitarianAssistance.Controllers
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
+          userClaims.Add(new Claim("Roles", roles[0])); //imp
+
           //Roles - permissions 
-          Dictionary<string, List<string>> permissionDic = new Dictionary<string, List<string>>();
-          foreach (var role in roles)
-          {
-            userClaims.Add(new Claim("Roles", role)); //imp
+          //Dictionary<string, List<string>> permissionDic = new Dictionary<string, List<string>>();
+          //foreach (var role in roles)
+          //{
+          //  userClaims.Add(new Claim("Roles", role)); //imp
 
             
-              var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
-              List<string> permissions= _uow.GetDbContext().Permissions.Join(_uow.GetDbContext().PermissionsInRoles.Where(x => x.RoleId == roleid.Id), (p) => p.Id, (p1) => p1.PermissionId, (p, r1) => new
-              {
-                PermissionName = p.Name,
-              }).Select(x=>x.PermissionName).ToList();
+          //    var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
+          //    List<string> permissions= _uow.GetDbContext().Permissions.Join(_uow.GetDbContext().PermissionsInRoles.Where(x => x.RoleId == roleid.Id), (p) => p.Id, (p1) => p1.PermissionId, (p, r1) => new
+          //    {
+          //      PermissionName = p.Name,
+          //    }).Select(x=>x.PermissionName).ToList();
 
-            permissionDic.Add(role, permissions);
-          }
+          //  permissionDic.Add(role, permissions);
+          //}
 
           //_ipermissions.GetPermissionsByRoleId()
 
@@ -275,7 +277,7 @@ namespace HumanitarianAssistance.Controllers
           response.data.Roles = roles.ToList();
           //response.data.OfficeId = officedetais?.OfficeId ?? 0;
 
-          response.data.Permissions = permissionDic;
+          response.data.Permissions = null;
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
         }
         else
