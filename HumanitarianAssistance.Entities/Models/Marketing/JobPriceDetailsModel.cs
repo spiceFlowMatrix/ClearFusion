@@ -36,5 +36,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public string JobName { get; set; }
         public string JobCode { get; set; }
         public long Minutes { get; set; }
+        public bool IsApproved { get; set; }
     }
 }

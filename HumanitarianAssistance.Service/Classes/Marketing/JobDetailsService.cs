@@ -235,6 +235,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    FinalRate = jp.FinalRate,
                                    FinalPrice = jp.FinalPrice,
                                    TotalPrice = jp.TotalPrice,
+                                   IsApproved = j.IsApproved
                                })).FirstOrDefault();
                 response.data.JobPriceDetail = JobList;
                 response.StatusCode = 200;
@@ -280,7 +281,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.Description = model.Description;
                     obj.EndDate = model.EndDate;
                     obj.IsActive = true;
-                    obj.IsApproved = true;
+                    obj.IsApproved = model.IsApproved;
                     obj.JobCode = model.JobCode;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
@@ -333,6 +334,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     details.JobId = obj.JobId;
                     details.JobPriceId = obj1.JobPriceId;
                     details.Minutes = obj1.Minutes;
+                    details.IsApproved = obj.IsApproved;
                     response.data.JobPriceDetail = details;
                 }
                 else
@@ -355,7 +357,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj2.FinalRate = model.FinalRate;
                         obj2.TotalPrice = model.TotalPrice;
                         obj2.UnitRate = model.UnitRate;
-                        obj2.Units = model.Units;
+                        obj2.Minutes = model.Minutes;
+                        obj2.JobPriceId = existRecords.JobPriceId;
                         _mapper.Map(obj2, existRecords);
 
                         existRecords.IsDeleted = false;
@@ -366,6 +369,124 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> FilterJobList(JobFilterModel model, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var JobList1 = (from j in _uow.GetDbContext().JobDetails
+                               join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
+                               where !j.IsDeleted.Value && !jp.IsDeleted.Value
+                               select (new JobDetailsModel
+                               {
+                                   JobId = j.JobId,
+                                   JobCode = j.JobCode,
+                                   JobName = j.JobName,
+                                   EndDate = j.EndDate,
+                                   IsActive = j.IsActive,
+                                   IsApproved = j.IsApproved,
+                                   UnitRate = jp.UnitRate,
+                                   Units = jp.Units,
+                                   FinalRate = jp.FinalRate,
+                                   FinalPrice = jp.FinalPrice,
+                                   TotalPrice = jp.TotalPrice,
+                                   IsInvoiceApproved = jp.IsInvoiceApproved,
+                                   ContractId = j.ContractId,
+                                   Discount = jp.Discount,
+                                   DiscountPercent = jp.DiscountPercent,
+                                   Minutes = jp.Minutes
+                               })).ToList();
+
+                if (model != null)
+                {
+                    if (!string.IsNullOrEmpty(model.JobName))
+                    {
+                        JobList1 = JobList1.Where(x => x.JobName == model.JobName).ToList();
+                    }
+                    if (model.JobId != 0)
+                    {
+                        JobList1 = JobList1.Where(x => x.JobId == model.JobId).ToList();
+                    }
+                    if (model.IsApproved == true)
+                    {
+                        JobList1 = JobList1.Where(x => x.IsApproved == Convert.ToBoolean(model.IsApproved)).ToList();
+                    }
+                    if (model.YesOrNo == "No")
+                    {
+                        JobList1 = JobList1.Where(x => x.IsApproved == false).ToList();
+                    }
+                    if (model.ContractId != 0)
+                    {
+                        JobList1 = JobList1.Where(x => x.ContractId == model.ContractId).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(model.FilterType))
+                    {
+                        if (model.FilterType == "Equals")
+                        {
+                            if (model.UnitRate != 0)
+                            {
+                                JobList1 = JobList1.Where(x => x.UnitRate == model.UnitRate).ToList();
+                            }
+                            if (model.TotalPrice != 0)
+                            {
+                                JobList1 = JobList1.Where(x => x.TotalPrice == model.TotalPrice).ToList();
+                            }
+                        }
+                        if (model.FilterType == "Greater Than")
+                        {
+                            if (model.UnitRate != 0)
+                            {
+                                JobList1 = JobList1.Where(x => x.UnitRate > model.UnitRate).ToList();
+                            }
+                            if (model.TotalPrice != 0)
+                            {
+                                JobList1 = JobList1.Where(x => x.TotalPrice > model.TotalPrice).ToList();
+                            }
+                        }
+                        if (model.FilterType == "Less Than")
+                        {
+                            if (model.UnitRate != 0)
+                            {
+                                JobList1 = JobList1.Where(x => x.UnitRate < model.UnitRate).ToList();
+                            }
+                            if (model.TotalPrice != 0)
+                            {
+                                JobList1 = JobList1.Where(x => x.TotalPrice < model.TotalPrice).ToList();
+                            }
+                        }
+                    }
+                    if (string.IsNullOrEmpty(model.FilterType))
+                    {
+                        if (model.UnitRate != 0)
+                        {
+                            JobList1 = JobList1.Where(x => x.UnitRate == model.UnitRate).ToList();
+                        }
+                        if (model.TotalPrice != 0)
+                        {
+                            JobList1 = JobList1.Where(x => x.TotalPrice == model.TotalPrice).ToList();
+                        }
+
+                    }
+                    response.data.JobPriceDetailList = JobList1;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "No Entries Found.Try Different Filters";
+                }
+
+
             }
             catch (Exception ex)
             {
