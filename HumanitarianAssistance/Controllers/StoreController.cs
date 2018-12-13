@@ -680,7 +680,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
             apiRespone.data.VoucherTransactionModel.CreditAccount = 0;
             apiRespone.data.VoucherTransactionModel.DebitAccount = debitAccount;
-            apiRespone.data.VoucherTransactionModel.ChartOfAccountNewId = debitAccount;
+            apiRespone.data.VoucherTransactionModel.AccountNo = debitAccount;
             apiRespone.data.VoucherTransactionModel.Debit = apiRespone.data.VoucherTransactionModel.Credit;
             apiRespone.data.VoucherTransactionModel.Credit = 0;
 

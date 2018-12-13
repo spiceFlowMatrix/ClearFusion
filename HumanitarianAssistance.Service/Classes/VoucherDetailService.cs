@@ -519,38 +519,9 @@ namespace HumanitarianAssistance.Service.Classes
                                                   t.ChartOfAccountNewId,
                                                   t.Debit,
                                                   t.Credit,
-                                                  a.AccountName
+                                                  a.AccountName,
+                                                  a.ChartOfAccountNewCode
                                               })).ToList();
-                        //.Skip(model.Skip)
-                        //.Take(model.Take)
-
-
-
-                        //voucherDetailsCount = (from v in _uow.GetDbContext().VoucherDetail
-                        //                       join t in _uow.GetDbContext().VoucherTransactions on v.VoucherNo equals t.VoucherNo
-                        //                       where model.JournalCode.Contains(v.JournalCode) &&
-                        //                             model.OfficesList.Contains(v.OfficeId) &&
-                        //                             v.IsDeleted == false &&
-                        //                             v.CurrencyId == model.CurrencyId &&       // for particular currency
-                        //                             v.VoucherDate.Value.Date >= model.fromdate.Date &&
-                        //                             v.VoucherDate.Value.Date <= model.todate.Date
-                        //                       orderby t.TransactionDate
-                        //                       select (new
-                        //                       {
-                        //                           t.TransactionDate,
-                        //                           v.VoucherNo,
-                        //                           t.Description,
-                        //                           t.CurrencyId,
-                        //                           t.Program,
-                        //                           t.Project,
-                        //                           t.AccountNo,
-                        //                           t.Debit,
-                        //                           t.Credit,
-                        //                           //a.AccountName
-                        //                       }))
-                        //                      .Count();
-
-
 
                         foreach (var item in VoucherDetails)
                         {
@@ -562,13 +533,12 @@ namespace HumanitarianAssistance.Service.Classes
                                 obj.VoucherNo = item?.VoucherNo ?? 0;
                                 obj.TransactionDescription = item?.Description ?? null;
                                 obj.CurrencyId = item.CurrencyId;
-                                //obj.Project = item.ProjectDetails?.Description ?? null;
-                                //obj.BudgetLineDescription = item.ProjectBudgetLine?.Description ?? null;
-                                obj.AccountCode = item.ChartOfAccountNewId.Value;
+                                obj.AccountCode = item.ChartOfAccountNewCode;
                                 obj.AccountName = item.AccountName;
                                 obj.CreditAmount = item.Credit;
                                 obj.DebitAmount = item.Debit;
                                 obj.ReferenceNo = item.ReferenceNo;
+                                obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
                                 listJournalView.Add(obj);
                             }
                         }
@@ -601,42 +571,11 @@ namespace HumanitarianAssistance.Service.Classes
                                                   t.AFGAmount,
                                                   t.PKRAmount,
                                                   t.USDAmount,
-                                                  t.EURAmount
+                                                  t.EURAmount,
+                                                  a.ChartOfAccountNewCode
                                               }))
                                                 .OrderBy(x => x.TransactionDate)
                                                 .ToList();
-                        //.Skip(model.Skip)
-                        //.Take(model.Take)
-
-
-
-                        //voucherDetailsCount = (from v in _uow.GetDbContext().VoucherDetail
-                        //                       join t in _uow.GetDbContext().VoucherTransactions on v.VoucherNo equals t.VoucherNo
-                        //                       where model.JournalCode.Contains(v.JournalCode) &&
-                        //                             model.OfficesList.Contains(v.OfficeId) &&
-                        //                             v.IsDeleted == false &&
-                        //                             v.VoucherDate.Value.Date >= model.fromdate.Date &&
-                        //                             v.VoucherDate.Value.Date <= model.todate.Date
-                        //                       select (new
-                        //                       {
-                        //                           t.TransactionDate,
-                        //                           v.VoucherNo,
-                        //                           t.Description,
-                        //                           t.CurrencyId,
-                        //                           t.Program,
-                        //                           t.Project,
-                        //                           t.AccountNo,
-                        //                           t.Debit,
-                        //                           t.Credit,
-                        //                           t.AFGAmount,
-                        //                           t.PKRAmount,
-                        //                           t.USDAmount,
-                        //                           t.EURAmount
-                        //                           //a.AccountName
-                        //                       }))
-                        //                      .Count();
-
-
 
                         foreach (var item in VoucherDetails)
                         {
@@ -648,10 +587,9 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.TransactionDescription = item.Description;
                             obj.CurrencyId = item.CurrencyId;
                             obj.ReferenceNo = item.ReferenceNo;
-                            //obj.Project = item.ProjectDetails?.Description ?? null;
-                            //obj.BudgetLineDescription = v.ProjectBudgetLine?.Description ?? null;
-                            obj.AccountCode = item.ChartOfAccountNewId.Value;
+                            obj.AccountCode = item.ChartOfAccountNewCode;
                             obj.AccountName = item.AccountName;
+                            obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
 
                             if (model.CurrencyId == (int)Currency.PKR)
                             {
@@ -682,7 +620,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     }
 
-                    var journalReport = listJournalView.GroupBy(x => x.AccountCode).ToList();
+                    var journalReport = listJournalView.GroupBy(x => x.ChartOfAccountNewId).ToList();
 
                     List<JournalReportViewModel> journalReportList = new List<JournalReportViewModel>();
 
@@ -690,7 +628,8 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         journalReportList.Add(new JournalReportViewModel
                         {
-                            AccountCode = accountItem.Key,
+                            ChartOfAccountNewId= accountItem.Key,
+                            AccountCode = accountItem.FirstOrDefault(x=> x.ChartOfAccountNewId== accountItem.Key).AccountCode,
                             AccountName = accountItem.FirstOrDefault()?.AccountName,
                             DebitAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount)), 4),
                             CreditAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.CreditAmount)), 4),
@@ -722,162 +661,6 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        //public async Task<APIResponse> GetJouranlVoucherDetailsByCondition(JournalViewModel model)
-        //{
-        //    APIResponse response = new APIResponse();
-        //    try
-        //    {
-        //        //List<JournalDetail> list = new List<JournalDetail>();
-        //        //var journalcodeList = await Task.Run(() =>
-        //        //  _uow.GetDbContext().JournalDetail.Include(e => e.VoucherDetails).ThenInclude(p => p.VoucherTransactionDetails).ThenInclude(p => p.CreditAccountDetails).Include(e => e.VoucherDetails).ThenInclude(c => c.ProjectBudgetLine).ThenInclude(c => c.ProjectDetails).Where(x => x.IsDeleted == false && model.JournalCode.Contains(x.JournalCode)).ToList()
-        //        //    );
-
-        //        //var journalcodeList = await Task.Run(() =>
-        //        //_uow.GetDbContext().JournalDetail.Where(x => x.IsDeleted == false && model.JournalCode.Contains(x.JournalCode)).ToDictionary(x => x.JournalCode));
-
-        //        var VoucherDetails = _uow.GetDbContext().VoucherDetail.Include(x => x.VoucherTransactionDetails).Where(x => x.IsDeleted == false && model.JournalCode.Contains(x.JournalCode) && model.OfficesList.Contains(x.OfficeId) && x.VoucherDate.Value.Date >= model.fromdate.Date && x.VoucherDate.Value.Date <= model.todate.Date).ToList();
-
-
-        //        //&& x.VoucherDate.Value.Date >= model.fromdate.Date && x.VoucherDate.Value.Date <= model.todate.Date
-
-
-
-
-        //        //var VoucherDetails = await Task.Run(() =>
-        //        //   _uow.GetDbContext().VoucherDetail.Where(x => x.IsDeleted == false && model.OfficesList.Contains(Convert.ToInt32(x.OfficeId)) && x.VoucherDate.Value.Date >= model.fromdate.Date && x.VoucherDate.Value.Date <= model.todate.Date && model.JournalCode.Contains(Convert.ToInt32(x.JournalCode))).ToDictionary(x => x.VoucherNo));
-
-        //        //var VoucherTransactionDetails = await Task.Run(() =>
-        //        //   _uow.GetDbContext().VoucherTransactionDetails.Include(p => p.CreditAccountDetails).Where(x => x.IsDeleted == false && x.TransactionDate.Value.Date >= model.fromdate.Date && x.TransactionDate.Value.Date <= model.todate.Date && VoucherDetails.ContainsKey(Convert.ToInt64(x.VoucherNo))).ToList());
-
-        //        //List<ExchangeRate> exchangeratelist = new List<ExchangeRate>();
-
-        //        if (model.fromdate == null && model.todate == null)
-        //        {
-        //            model.fromdate = new DateTime(DateTime.UtcNow.Year, 1, 1);
-        //            model.todate = DateTime.UtcNow;
-        //        }
-
-        //        //exchangeratelist = await _uow.GetDbContext().ExchangeRates.Where(x => x.Date.Value.Date >= model.fromdate.Date && x.Date.Value.Date <= model.todate.Date).ToListAsync();
-
-        //        var allCurrencies = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
-        //        var baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
-
-        //        List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
-
-        //        foreach (var v in VoucherDetails)
-        //        {
-        //            foreach (var transactions in v.VoucherTransactionDetails)
-        //            {
-
-        //                //if (transactions.TransactionDate.Value.Date >= model.fromdate.Date && transactions.TransactionDate.Value.Date <= model.todate.Date && v.VoucherNo == transactions.VoucherNo)
-        //                //{
-        //                var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-        //                var creditAccount = transactions.CreditAccountDetails;
-
-        //                if (model.RecordType == 1)
-        //                {
-        //                    if (v.CurrencyId == model.CurrencyId)
-        //                    {
-        //                        // Credit & Debit For Single Record Type
-        //                        JournalVoucherViewModel obj = new JournalVoucherViewModel();
-        //                        obj.TransactionDate = transactions.TransactionDate;
-        //                        obj.VoucherNo = transactions?.VoucherNo ?? 0;
-        //                        obj.TransactionDescription = transactions?.Description ?? null;
-        //                        obj.CurrencyId = transactions.CurrencyId;
-        //                        obj.Project = v.Description ?? null;
-        //                        obj.BudgetLineDescription = v.Description ?? null;
-        //                        obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
-        //                        obj.AccountName = creditAccount?.AccountName ?? null;
-        //                        obj.CreditAmount = transactions?.Credit ?? 0;
-        //                        obj.DebitAmount = transactions?.Debit ?? 0;
-
-        //                        //obj.CreditAmount = transactions?.Credit * exchangeRate?.Rate ?? 0;
-        //                        //obj.DebitAmount = transactions?.Debit * exchangeRate?.Rate ?? 0;
-        //                        listJournalView.Add(obj);
-        //                    }
-
-        //                }
-        //                else
-        //                {
-
-        //                    if (v.CurrencyId == model.CurrencyId)
-        //                    {
-        //                        // Credit & Debit For Single Record Type
-        //                        JournalVoucherViewModel obj = new JournalVoucherViewModel();
-        //                        obj.TransactionDate = transactions.TransactionDate;
-        //                        obj.VoucherNo = transactions?.VoucherNo ?? 0;
-        //                        obj.TransactionDescription = transactions?.Description ?? null;
-        //                        obj.CurrencyId = transactions.CurrencyId;
-        //                        obj.Project = v.Description ?? null;
-        //                        obj.BudgetLineDescription = v.Description ?? null;
-        //                        obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
-        //                        obj.AccountName = creditAccount?.AccountName ?? null;
-        //                        obj.CreditAmount = transactions?.Credit ?? 0;
-        //                        obj.DebitAmount = transactions?.Debit ?? 0;
-
-        //                        //obj.CreditAmount = transactions?.Credit * exchangeRate?.Rate ?? 0;
-        //                        //obj.DebitAmount = transactions?.Debit * exchangeRate?.Rate ?? 0;
-        //                        listJournalView.Add(obj);
-        //                    }
-        //                    else if (baseCurrency.CurrencyId == model.CurrencyId)
-        //                    {
-        //                        // Credit & Debit For Single Record Type
-        //                        JournalVoucherViewModel obj = new JournalVoucherViewModel();
-        //                        obj.TransactionDate = transactions.TransactionDate;
-        //                        obj.VoucherNo = transactions?.VoucherNo ?? 0;
-        //                        obj.TransactionDescription = transactions?.Description ?? null;
-        //                        obj.CurrencyId = transactions.CurrencyId;
-        //                        obj.Project = v.Description ?? null;
-        //                        obj.BudgetLineDescription = v.Description ?? null;
-        //                        obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
-        //                        obj.AccountName = creditAccount?.AccountName ?? null;
-        //                        //obj.CreditAmount = transactions?.Credit ?? 0;
-        //                        //obj.DebitAmount = transactions?.Debit ?? 0;
-
-        //                        obj.CreditAmount = Math.Round(transactions?.Credit * exchangeRate?.Rate ?? 0, 2);
-        //                        obj.DebitAmount = Math.Round(transactions?.Debit * exchangeRate?.Rate ?? 0, 2);
-        //                        listJournalView.Add(obj);
-        //                    }
-        //                    else
-        //                    {
-        //                        //Credit & Debit for Consolidated Record Type
-
-        //                        var exchangeRate2 = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-        //                        //var exchangeRate = exchangeratelist.Where(x => x.IsDeleted == false && x.FromCurrency == transactions.CurrencyId && x.ToCurrency == model.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault().Rate;
-        //                        JournalVoucherViewModel obj = new JournalVoucherViewModel();
-        //                        obj.TransactionDate = transactions.TransactionDate;
-        //                        obj.VoucherNo = transactions?.VoucherNo ?? 0;
-        //                        obj.TransactionDescription = transactions?.Description ?? null;
-        //                        obj.CurrencyId = transactions.CurrencyId;
-        //                        obj.Project = v.Description ?? null;
-        //                        obj.BudgetLineDescription = v.Description ?? null;
-        //                        obj.AccountCode = creditAccount?.ChartOfAccountCode ?? 0;
-        //                        obj.AccountName = creditAccount?.AccountName ?? null;
-        //                        obj.CreditAmount = Math.Round((transactions?.Credit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
-        //                        obj.DebitAmount = Math.Round((transactions?.Debit * exchangeRate?.Rate)/ exchangeRate2?.Rate ?? 0, 2);
-        //                        listJournalView.Add(obj);
-        //                    }
-
-        //                }
-
-
-        //            }
-        //        }
-
-        //        response.data.JournalVoucherViewList = listJournalView;
-        //        response.StatusCode = StaticResource.successStatusCode;
-        //        response.Message = "Success";
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.StatusCode = StaticResource.failStatusCode;
-        //        response.Message = StaticResource.SomethingWrong + ex.Message;
-        //    }
-        //    return response;
-        //}
-
         public async Task<APIResponse> GetAllAccountCode()
         {
             APIResponse response = new APIResponse();
@@ -887,7 +670,7 @@ namespace HumanitarianAssistance.Service.Classes
                                        where c.IsDeleted == false
                                        select new AccountDetailModel
                                        {
-                                           ChartOfAccountNewId = c.ChartOfAccountNewId,
+                                           AccountCode = c.ChartOfAccountNewId,
                                            AccountName = c.ChartOfAccountNewCode + " - " + c.AccountName,
                                            ChartOfAccountNewCode = c.ChartOfAccountNewCode,
                                            AccountLevelId = c.AccountLevelId
@@ -938,7 +721,7 @@ namespace HumanitarianAssistance.Service.Classes
                                        where c.IsDeleted == false
                                        select new AccountDetailModel
                                        {
-                                           ChartOfAccountNewId = c.ChartOfAccountNewId,
+                                           AccountCode = c.ChartOfAccountNewId,
                                            AccountName = c.ChartOfAccountNewCode + " - " + c.AccountName,
                                            ChartOfAccountNewCode = c.ChartOfAccountNewCode
                                        }).OrderBy(x => x.AccountName).ToList();
@@ -1025,7 +808,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreditAccount = item?.CreditAccount;
 
                     //In-Use
-                    obj.ChartOfAccountNewId = item.ChartOfAccountNewId;
+                    obj.AccountNo = item.ChartOfAccountNewId;
                     obj.Credit = item?.Credit;
                     obj.Debit = item?.Debit;
                     obj.ProjectId = item?.ProjectId;
@@ -1162,7 +945,7 @@ namespace HumanitarianAssistance.Service.Classes
                     //vouchertransactionInfo.TransactionDate = model.TransactionDate; //should be equals to Voucher Date so don't EDIT 
 
                     //In-Use
-                    vouchertransactionInfo.ChartOfAccountNewId = model.ChartOfAccountNewId;
+                    vouchertransactionInfo.ChartOfAccountNewId = model.AccountNo;
                     vouchertransactionInfo.Credit = model.Credit;
                     vouchertransactionInfo.Debit = model.Debit;
                     vouchertransactionInfo.ModifiedById = model.ModifiedById;
@@ -5128,9 +4911,9 @@ namespace HumanitarianAssistance.Service.Classes
                                        where c.IsDeleted == false && c.AccountLevelId == 4 //4 = level 4 accounts for transactions
                                        select new AccountDetailModel
                                        {
-                                           ChartOfAccountNewId = c.ChartOfAccountNewId,
+                                           AccountCode = c.ChartOfAccountNewId,
                                            AccountName = c.ChartOfAccountNewCode + " - " + c.AccountName,
-                                           ChartOfAccountNewCode = c.ChartOfAccountNewCode
+                                           ChartOfAccountNewCode = c.ChartOfAccountNewCode,
                                        }).OrderBy(x => x.AccountName).ToList();
                 response.data.AccountDetailList = accountcodelist;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5178,7 +4961,7 @@ namespace HumanitarianAssistance.Service.Classes
                 xVoucherTransactionModel.IsDeleted = false;
                 xVoucherTransactionModel.VoucherNo = obj.VoucherNo;
                 xVoucherTransactionModel.FinancialYearId = model.FinancialYearId;
-                xVoucherTransactionModel.ChartOfAccountNewId = model.AccountCodeCredit;
+                xVoucherTransactionModel.AccountNo = model.AccountCodeCredit;
                 xVoucherTransactionModel.CreditAccount = model.AccountCodeCredit;
                 xVoucherTransactionModel.Credit = Math.Abs(model.ExchangeGainLossAmount);
                 xVoucherTransactionModel.Debit = 0;
@@ -5195,7 +4978,7 @@ namespace HumanitarianAssistance.Service.Classes
                     // for Debit
                     xVoucherTransactionModel.Debit = model.ExchangeGainLossAmount;
                     xVoucherTransactionModel.Credit = 0;
-                    xVoucherTransactionModel.ChartOfAccountNewId = model.ChartOfAccountNewIdDebit;
+                    xVoucherTransactionModel.AccountNo = model.ChartOfAccountNewIdDebit;
                     xVoucherTransactionModel.DebitAccount = model.ChartOfAccountNewIdDebit;
                     xVoucherTransactionModel.CreditAccount = 0;
 
@@ -5314,7 +5097,7 @@ namespace HumanitarianAssistance.Service.Classes
                                        where c.IsDeleted == false && c.AccountLevelId == (int)AccountLevels.InputLevel
                                        select new AccountDetailModel
                                        {
-                                           ChartOfAccountNewId = c.ChartOfAccountNewId,
+                                           AccountCode = c.ChartOfAccountNewId,
                                            AccountName = c.ChartOfAccountNewCode + " - " + c.AccountName,
                                            ChartOfAccountNewCode = c.ChartOfAccountNewCode
                                        }).OrderBy(x => x.AccountName).ToList();
@@ -5369,7 +5152,7 @@ namespace HumanitarianAssistance.Service.Classes
                 xVoucherTransactionModel.IsDeleted = false;
                 xVoucherTransactionModel.VoucherNo = obj.VoucherNo;
                 xVoucherTransactionModel.FinancialYearId = financialYear.FinancialYearId;
-                xVoucherTransactionModel.ChartOfAccountNewId = EmployeePensionPayment.CreditAccount;
+                xVoucherTransactionModel.AccountNo = EmployeePensionPayment.CreditAccount;
                 xVoucherTransactionModel.CreditAccount = EmployeePensionPayment.CreditAccount;
                 xVoucherTransactionModel.Credit = Convert.ToDouble(EmployeePensionPayment.PensionAmount);
                 xVoucherTransactionModel.Debit = 0;
@@ -5386,7 +5169,7 @@ namespace HumanitarianAssistance.Service.Classes
                     //Creating Voucher Transaction for Debit
                     xVoucherTransactionModel.Debit = Convert.ToDouble(EmployeePensionPayment.PensionAmount);
                     xVoucherTransactionModel.Credit = 0;
-                    xVoucherTransactionModel.ChartOfAccountNewId = EmployeePensionPayment.DebitAccount;
+                    xVoucherTransactionModel.AccountNo = EmployeePensionPayment.DebitAccount;
                     xVoucherTransactionModel.DebitAccount = EmployeePensionPayment.DebitAccount;
                     xVoucherTransactionModel.CreditAccount = 0;
 
@@ -5441,6 +5224,11 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.OfficeId == 16).OrderByDescending(x => x.Date).ToListAsync();
 
+                if (!exchangeRate.Any())
+                {
+                    exchangeRate= await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).ToListAsync();
+                }
+
                 //for gross salary= basicpay * totalworkhours
                 decimal? grossSalary = EmployeeSalaryVoucher.EmployeePayrollLists.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).Sum(x => x.MonthlyAmount) * EmployeeSalaryVoucher.PresentHours;
 
@@ -5493,7 +5281,7 @@ namespace HumanitarianAssistance.Service.Classes
                             //Include only salary heads in voucher that has transaction type as credit and salary head type is not general
                             if (salaryhead.TransactionTypeId == (int)TransactionType.Debit && (salaryhead.MonthlyAmount != null && salaryhead.MonthlyAmount != 0) && salaryhead.HeadTypeId != (int)SalaryHeadType.GENERAL)
                             {
-                                xVoucherTransactionModel.ChartOfAccountNewId = Convert.ToInt32(salaryhead.AccountNo);
+                                xVoucherTransactionModel.AccountNo = Convert.ToInt32(salaryhead.AccountNo);
                                 xVoucherTransactionModel.DebitAccount = Convert.ToInt32(salaryhead.AccountNo);
                                 xVoucherTransactionModel.Description = string.Format(StaticResource.SalaryHeadAllowances, salaryhead.HeadName);
                                 xVoucherTransactionModel.Debit = Convert.ToDouble(salaryhead.MonthlyAmount);
@@ -5503,7 +5291,7 @@ namespace HumanitarianAssistance.Service.Classes
                             }//Include only salary heads in voucher that has transaction type as debit and salary head type is not general
                             else if (salaryhead.TransactionTypeId == (int)TransactionType.Credit && (salaryhead.MonthlyAmount != null && salaryhead.MonthlyAmount != 0) && salaryhead.HeadTypeId != (int)SalaryHeadType.GENERAL)
                             {
-                                xVoucherTransactionModel.ChartOfAccountNewId = Convert.ToInt32(salaryhead.AccountNo);
+                                xVoucherTransactionModel.AccountNo = Convert.ToInt32(salaryhead.AccountNo);
                                 xVoucherTransactionModel.CreditAccount = Convert.ToInt32(salaryhead.AccountNo);
                                 xVoucherTransactionModel.Description = string.Format(StaticResource.SalaryHeadDeductions, salaryhead.HeadName);
                                 xVoucherTransactionModel.Credit = Convert.ToDouble(salaryhead.MonthlyAmount);
@@ -5529,7 +5317,7 @@ namespace HumanitarianAssistance.Service.Classes
                             //Include only salary heads in voucher that has transaction type as credit
                             if (payrollHead.TransactionTypeId == (int)TransactionType.Debit && (payrollHead.Amount != null && payrollHead.Amount != 0))
                             {
-                                xVoucherTransactionModel.ChartOfAccountNewId = Convert.ToInt32(payrollHead.AccountNo);
+                                xVoucherTransactionModel.AccountNo = Convert.ToInt32(payrollHead.AccountNo);
                                 xVoucherTransactionModel.DebitAccount = Convert.ToInt32(payrollHead.AccountNo);
 
                                 if (payrollHead.PayrollHeadTypeId != (int)SalaryHeadType.GENERAL)
@@ -5548,7 +5336,7 @@ namespace HumanitarianAssistance.Service.Classes
                             }//Include only salary heads in voucher that has transaction type as debit
                             else if (payrollHead.TransactionTypeId == (int)TransactionType.Credit && (payrollHead.Amount != null && payrollHead.Amount != 0))
                             {
-                                xVoucherTransactionModel.ChartOfAccountNewId = Convert.ToInt32(payrollHead.AccountNo);
+                                xVoucherTransactionModel.AccountNo = Convert.ToInt32(payrollHead.AccountNo);
                                 xVoucherTransactionModel.CreditAccount = Convert.ToInt32(payrollHead.AccountNo);
 
                                 if (payrollHead.PayrollHeadTypeId != (int)SalaryHeadType.GENERAL)
@@ -5576,8 +5364,8 @@ namespace HumanitarianAssistance.Service.Classes
                 //Creating Voucher transactions for Gross Salary
                 if (grossSalary != null && grossSalary != 0)
                 {
-                    xVoucherTransactionModel.ChartOfAccountNewId = Convert.ToInt32(EmployeeSalaryVoucher.EmployeePayrollLists.FirstOrDefault(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).AccountNo);
-                    xVoucherTransactionModel.CreditAccount = xVoucherTransactionModel.ChartOfAccountNewId;
+                    xVoucherTransactionModel.AccountNo = Convert.ToInt32(EmployeeSalaryVoucher.EmployeePayrollLists.FirstOrDefault(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).AccountNo);
+                    xVoucherTransactionModel.CreditAccount = xVoucherTransactionModel.AccountNo;
                     xVoucherTransactionModel.Description = "Basic Pay Debited";
                     xVoucherTransactionModel.Debit = Convert.ToDouble(grossSalary);
                     xVoucherTransactionModel.Credit = 0;
@@ -5695,7 +5483,7 @@ namespace HumanitarianAssistance.Service.Classes
                         reverseTransactions.Credit = transaction.Debit;
                         reverseTransactions.CurrencyId = transaction.CurrencyId;
                         reverseTransactions.FinancialYearId = transaction.FinancialYearId;
-                        reverseTransactions.ChartOfAccountNewId = transaction.ChartOfAccountNewId;
+                        reverseTransactions.AccountNo = transaction.ChartOfAccountNewId;
                         reverseTransactions.OfficeId = transaction.OfficeId;
                         reverseTransactions.VoucherNo = transaction.VoucherNo;
                         reverseTransactions.IsDeleted = false;

@@ -24,7 +24,7 @@ namespace HumanitarianAssistance.Entities
 
         //DataTransfer
         public DbSet<EmployeeDetailDT> EmployeeDetailDT { get; set; }
-
+       
 
 
         public DbSet<AccountNoteDetail> AccountNoteDetail { get; set; }
@@ -179,6 +179,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
         public DbSet<AccountHeadType> AccountHeadType { get; set; }
         public DbSet<PaymentTypes> PaymentTypes { get; set; }
+        public DbSet<ApplicationPages> ApplicationPages { get; set; }
+        public DbSet<RolePermissions> RolePermissions { get; set; }
 
 
         #region Project
@@ -248,6 +250,7 @@ namespace HumanitarianAssistance.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
+           // modelBuilder.Entity<RolePermissions>().HasKey(s => new { s.RoleId});
 
             modelBuilder.Entity<VoucherTransactions>().HasOne(x => x.ChartOfAccountDetail).WithMany(b => b.VoucherTransactionsList);
             modelBuilder.Entity<VoucherTransactions>().HasOne(p => p.VoucherDetails).WithMany(b => b.VoucherTransactionDetails);

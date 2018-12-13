@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181212085116_RolePermissionstableadd1")]
+    partial class RolePermissionstableadd1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4975,6 +4977,8 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ModifiedById");
 
+                    b.HasIndex("PageId");
+
                     b.ToTable("PermissionsInRoles");
                 });
 
@@ -6483,9 +6487,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.RolePermissions", b =>
                 {
-                    b.Property<int>("RolesPermissionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
+                    b.Property<string>("RoleId")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<bool>("CanEdit");
 
@@ -6509,9 +6512,13 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("PageId");
 
-                    b.Property<string>("RoleId");
+                    b.Property<int>("RolesPermissionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
 
-                    b.HasKey("RolesPermissionId");
+                    b.HasKey("RoleId");
+
+                    b.HasAlternateKey("RoleId", "RolesPermissionId");
 
                     b.HasIndex("CreatedById");
 
@@ -9576,6 +9583,10 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.ApplicationPages", "ApplicationPages")
+                        .WithMany()
+                        .HasForeignKey("PageId");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.ProfessionDetails", b =>
