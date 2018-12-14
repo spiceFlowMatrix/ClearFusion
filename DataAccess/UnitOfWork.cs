@@ -180,8 +180,15 @@ namespace DataAccess
         private IGenericRepository<RiskCriteriaDetail> _riskCriteriaDetailRepository;
         private IGenericRepository<TargetBeneficiaryDetail> _targetBeneficiaryDetailRepository;
         private IGenericRepository<FinancialProjectDetail> _financialProjectDetailRepository;
+        private IGenericRepository<PriorityOtherDetail> _priorityOtherDetailRepository;
+        private IGenericRepository<CEFeasibilityExpertOtherDetail> _feasibilit5yexpertDetailRepository;
+        private IGenericRepository<CEAgeGroupDetail> _ageGroupOtherDetailRepository;
+        private IGenericRepository<CEOccupationDetail> _occupationOtherDetailRepository;
+        private IGenericRepository<CEAssumptionDetail> _assumptionOtherDetailRepository;
 
         
+
+
 
 
 
@@ -1635,7 +1642,54 @@ namespace DataAccess
                     _financialProjectDetailRepository ?? new GenericRepository<FinancialProjectDetail>(_mschaContext);
             }
         }
-        
+
+        public IGenericRepository<PriorityOtherDetail> PriorityOtherDetailRepository
+        {
+            get
+            {
+                return _priorityOtherDetailRepository =
+                    _priorityOtherDetailRepository ?? new GenericRepository<PriorityOtherDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<CEFeasibilityExpertOtherDetail> CEFeasibilityExpertOtherDetail
+        {
+            get
+            {
+                return _feasibilit5yexpertDetailRepository =
+                    _feasibilit5yexpertDetailRepository ?? new GenericRepository<CEFeasibilityExpertOtherDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<CEAgeGroupDetail> CEAgeGroupDetail
+        {
+            get
+            {
+                return _ageGroupOtherDetailRepository =
+                    _ageGroupOtherDetailRepository ?? new GenericRepository<CEAgeGroupDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<CEOccupationDetail> CEOccupationDetail
+        {
+            get
+            {
+                return _occupationOtherDetailRepository =
+                    _occupationOtherDetailRepository ?? new GenericRepository<CEOccupationDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<CEAssumptionDetail> CEAssumptionDetail
+        {
+            get
+            {
+                return _assumptionOtherDetailRepository =
+                    _assumptionOtherDetailRepository ?? new GenericRepository<CEAssumptionDetail>(_mschaContext);
+            }
+        }
+       
+
+
         public void Save()
         {
             _mschaContext.SaveChanges();

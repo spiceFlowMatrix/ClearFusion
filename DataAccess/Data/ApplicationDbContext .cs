@@ -182,6 +182,12 @@ namespace HumanitarianAssistance.Entities
         public DbSet<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public DbSet<ApplicationPages> ApplicationPages { get; set; }
         public DbSet<RolePermissions> RolePermissions { get; set; }
+        public DbSet<CEFeasibilityExpertOtherDetail> CEFeasibilityExpertOtherDetail { get; set; }
+        public DbSet<CEAgeGroupDetail> CEAgeGroupDetail { get; set; }
+        public DbSet<CEOccupationDetail> CEOccupationDetail { get; set; }
+
+        public DbSet<CEAssumptionDetail> CEAssumptionDetail { get; set; }
+
 
 
         #region Project
