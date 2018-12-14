@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181213104837_PriorityOtherDetailTableAddition")]
+    partial class PriorityOtherDetailTableAddition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -364,37 +366,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("AnalyticalDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.ApplicationPages", b =>
-                {
-                    b.Property<int>("PageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("ModuleId");
-
-                    b.Property<string>("ModuleName");
-
-                    b.Property<string>("PageName");
-
-                    b.HasKey("PageId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("ApplicationPages");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AppraisalGeneralQuestions", b =>
@@ -4371,8 +4342,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<long?>("MediaCategoryId");
-
                     b.Property<long?>("MediumId");
 
                     b.Property<string>("ModifiedById");
@@ -4394,8 +4363,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CurrencyDetailsCurrencyId");
-
-                    b.HasIndex("MediaCategoryId");
 
                     b.HasIndex("MediumId");
 
@@ -4947,10 +4914,6 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("PermissionId");
 
-                    b.Property<bool>("CanEdit");
-
-                    b.Property<bool>("CanView");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -4964,10 +4927,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("ModuleId");
-
-                    b.Property<int?>("PageId");
 
                     b.Property<int>("PermissionsInRolesId")
                         .ValueGeneratedOnAdd()
@@ -6600,47 +6559,6 @@ namespace DataAccess.Migrations
                     b.ToTable("RatingBasedCriteria");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.RolePermissions", b =>
-                {
-                    b.Property<int>("RolesPermissionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<bool>("CanEdit");
-
-                    b.Property<bool>("CanView");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("CurrentPermissionId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<bool>("IsGrant");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("ModuleId");
-
-                    b.Property<int?>("PageId");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("RolesPermissionId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("PageId");
-
-                    b.ToTable("RolePermissions");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.SalaryHeadDetails", b =>
                 {
                     b.Property<int>("SalaryHeadId")
@@ -8105,17 +8023,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.ApplicationPages", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.AppraisalGeneralQuestions", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -9552,10 +9459,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("CurrencyDetailsCurrencyId");
 
-                    b.HasOne("DataAccess.DbEntities.Marketing.MediaCategory", "MediaCategories")
-                        .WithMany()
-                        .HasForeignKey("MediaCategoryId");
-
                     b.HasOne("DataAccess.DbEntities.Marketing.Medium", "Medium")
                         .WithMany()
                         .HasForeignKey("MediumId");
@@ -10241,21 +10144,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.RolePermissions", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.ApplicationPages", "ApplicationPages")
-                        .WithMany()
-                        .HasForeignKey("PageId");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.SalaryHeadDetails", b =>
