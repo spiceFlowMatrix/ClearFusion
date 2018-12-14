@@ -14,6 +14,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long? NatureId { get; set; }
         public long? QualityId { get; set; }
         public long? ActivityTypeId { get; set; }
+        public long? MediaCategoryId { get; set; }
         public string ActivityName { get; set; }
     }
 
@@ -26,6 +27,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long? CurrencyId { get; set; }
         public long? MediumId { get; set; }
         public long? TimeCategoryId { get; set; }
+        public long? MediaCategoryId { get; set; }
         public long? NatureId { get; set; }
         public long? QualityId { get; set; }
     }

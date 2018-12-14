@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181214045427_CEOccupationAssumptionAgeGrouoOtherDetail14122018")]
+    partial class CEOccupationAssumptionAgeGrouoOtherDetail14122018
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4371,8 +4373,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<long?>("MediaCategoryId");
-
                     b.Property<long?>("MediumId");
 
                     b.Property<string>("ModifiedById");
@@ -4394,8 +4394,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CurrencyDetailsCurrencyId");
-
-                    b.HasIndex("MediaCategoryId");
 
                     b.HasIndex("MediumId");
 
@@ -9675,10 +9673,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.CurrencyDetails", "CurrencyDetails")
                         .WithMany()
                         .HasForeignKey("CurrencyDetailsCurrencyId");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.MediaCategory", "MediaCategories")
-                        .WithMany()
-                        .HasForeignKey("MediaCategoryId");
 
                     b.HasOne("DataAccess.DbEntities.Marketing.Medium", "Medium")
                         .WithMany()
