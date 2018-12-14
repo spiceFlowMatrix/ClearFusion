@@ -1025,7 +1025,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                            MediumId = ur.MediumId,
                                            NatureId = ur.NatureId,
                                            QualityId = ur.QualityId,
-                                           TimeCategoryId = ur.TimeCategoryId
+                                           TimeCategoryId = ur.TimeCategoryId,
+                                           MediaCategoryId = ur.MediaCategoryId
                                        })).FirstOrDefault();
 
                 response.data.rateDetailsById = unitRateDetails;
@@ -1087,7 +1088,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                         MediumId = ur.MediumId,
                                         NatureId = ur.NatureId,
                                         QualityId = ur.QualityId,
-                                        TimeCategoryId = ur.TimeCategoryId
+                                        TimeCategoryId = ur.TimeCategoryId,
+                                        MediaCategoryId = ur.MediaCategoryId
                                     })).ToList();
 
 
@@ -1146,6 +1148,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj.NatureId = model.NatureId;
                         obj.QualityId = model.QualityId;
                         obj.TimeCategoryId = model.TimeCategoryId;
+                        obj.MediaCategoryId = model.MediaCategoryId;
                         await _uow.UnitRateRepository.AddAsyn(obj);
                         await _uow.SaveAsync();
                         model.ActivityName = activity;
@@ -1171,6 +1174,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj.NatureId = model.NatureId;
                         obj.QualityId = model.QualityId;
                         obj.TimeCategoryId = model.TimeCategoryId;
+                        obj.MediaCategoryId = model.MediaCategoryId;
                         obj.UnitRates = model.UnitRates;
                         await _uow.UnitRateRepository.UpdateAsyn(obj);
                         response.data.unitRateDetailsById = obj;
