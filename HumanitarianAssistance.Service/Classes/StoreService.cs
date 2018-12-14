@@ -2398,7 +2398,7 @@ namespace HumanitarianAssistance.Service.Classes
                             xVoucherTransactionModel.IsDeleted = false;
                             xVoucherTransactionModel.VoucherNo = obj.VoucherNo;
                             xVoucherTransactionModel.FinancialYearId = financialYearDetails.FinancialYearId;
-                            xVoucherTransactionModel.ChartOfAccountNewId = paymentTypes.ChartOfAccountNewId;
+                            xVoucherTransactionModel.AccountNo = paymentTypes.ChartOfAccountNewId;
                             xVoucherTransactionModel.CreditAccount = paymentTypes.ChartOfAccountNewId;
                             xVoucherTransactionModel.DebitAccount = inventory.Inventory.InventoryDebitAccount;
                             xVoucherTransactionModel.Credit = model.UnitCost * model.Quantity;
@@ -2510,7 +2510,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     voucherTransactionModel.IsDeleted = false;
                                     voucherTransactionModel.VoucherNo = model.VerifiedPurchaseVoucher;
                                     voucherTransactionModel.FinancialYearId = voucherDetail.FinancialYearId;
-                                    voucherTransactionModel.ChartOfAccountNewId = transaction.ChartOfAccountNewId;
+                                    voucherTransactionModel.AccountNo = transaction.ChartOfAccountNewId;
                                     //voucherTransactionModel.CreditAccount = paymentTypes.AccountId;
                                     // voucherTransactionModel.DebitAccount = inventory.Inventory.InventoryDebitAccount;
                                     voucherTransactionModel.CurrencyId = transaction.CurrencyId;

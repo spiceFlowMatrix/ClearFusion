@@ -43,7 +43,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 
     public class AccountDetailModel
     {
-        public long ChartOfAccountNewId { get; set; }
+        public long AccountCode { get; set; }
         public string AccountName { get; set; }
 		public string ChartOfAccountNewCode { get; set; }
         public int AccountLevelId { get; set; }
@@ -67,7 +67,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public double? CreditAmount { get; set; }
 
         //In Use
-        public long? ChartOfAccountNewId { get; set; }
+        public long? AccountNo { get; set; } //new COA ID ChartOfAccountNewId
         public double? Debit { get; set; }
         public double? Credit { get; set; }
 

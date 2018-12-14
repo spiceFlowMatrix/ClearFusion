@@ -379,22 +379,22 @@ namespace HumanitarianAssistance.Service.Classes
 						}
 					}
 
-					foreach (var rol in currentRoles)
-					{
+					//foreach (var rol in currentRoles)
+					//{
 
 
 
-						var permissionlist = (from pir in await _uow.PermissionsInRolesRepository.GetAllAsyn()
-											  join p in await _uow.PermissionRepository.GetAllAsyn() on pir.PermissionId equals p.Id
-											  where pir.RoleId == rol.Id && pir.IsGrant == true
-											  select new PermissionsModel
-											  {
-												  Id = pir.PermissionId,
-												  Name = p.Name
-											  }).ToList();
+					//	var permissionlist = (from pir in await _uow.PermissionsInRolesRepository.GetAllAsyn()
+					//						  join p in await _uow.PermissionRepository.GetAllAsyn() on pir.PermissionId equals p.Id
+					//						  where pir.RoleId == rol.Id && pir.IsGrant == true
+					//						  select new PermissionsModel
+					//						  {
+					//							  Id = pir.PermissionId,
+					//							  Name = p.Name
+					//						  }).ToList();
 
-						rol.PermissionsList = permissionlist;
-					}
+					//	rol.PermissionsList = permissionlist;
+					//}
 
 					response.data.RoleList = currentRoles;
 					response.StatusCode = StaticResource.successStatusCode;

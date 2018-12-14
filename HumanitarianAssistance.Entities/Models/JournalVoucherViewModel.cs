@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string JournalCode { get; set; }
         public long VoucherNo { get; set; }
         public DateTime? TransactionDate { get; set; }
-        public long AccountCode { get; set; }
+        public string AccountCode { get; set; }
         public string AccountName { get; set; }
 
         public string TransactionDescription { get; set; }
@@ -19,5 +19,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public double? CreditAmount { get; set; }
         public double? DebitAmount { get; set; }
         public string ReferenceNo { get; set; }
+        public long ChartOfAccountNewId { get; set; }
     }
 }
