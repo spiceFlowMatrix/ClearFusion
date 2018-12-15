@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccess;
 using DataAccess.DbEntities;
+using DataAccess.DbEntities.AccountingNew;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
@@ -33,17 +34,17 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var charlist = await Task.Run(() =>
-                  _uow.GetDbContext().ChartAccountDetail.Include(c => c.AccountType).Where(a => a.IsDeleted == false).ToList()
+                  _uow.GetDbContext().ChartOfAccountNew.Include(c => c.AccountType).Where(a => a.IsDeleted == false).ToList()
                     );
                 var chartaccountlist = charlist.Select(blog => new ChartAccountDetailModel
                 {
-                    AccountCode = blog.AccountCode,
+                    ChartOfAccountNewId = blog.ChartOfAccountNewId,
                     AccountName = blog.AccountName,
                     AccountLevelId = blog.AccountLevelId,
                     AccountTypeName = blog.AccountType.AccountTypeName,
                     AccountTypeId = blog.AccountType.AccountTypeId,
                     ParentID = blog.ParentID,
-                    ChartOfAccountCode = blog.ChartOfAccountCode
+                    ChartOfAccountNewCode = blog.ChartOfAccountNewCode
                     //DepRate = blog.DepRate,
                     //DepMethod = blog.DepMethod,
                     //MDCode = blog.MDCode,
@@ -209,7 +210,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var accountCodeExists = await _uow.ChartAccountDetailRepository.FindAsync(x => x.ChartOfAccountCode == model.ChartOfAccountCode);
+                var accountCodeExists = await _uow.ChartOfAccountNewRepository.FindAsync(x => x.ChartOfAccountNewId == model.ChartOfAccountNewId);
                 if (accountCodeExists == null)
                 {
                     if (model.AccountName == null || model.AccountName == "")
@@ -218,11 +219,11 @@ namespace HumanitarianAssistance.Service.Classes
                         response.Message = "Please enter Account Name.";
                         return response;
                     }
-                    ChartAccountDetail obj = _mapper.Map<ChartAccountDetail>(model);
+                    ChartOfAccountNew obj = _mapper.Map<ChartOfAccountNew>(model);
                     obj.CreatedById = model.CreatedById;
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
-                    await _uow.ChartAccountDetailRepository.AddAsyn(obj);
+                    await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
 
                     //var insertedaccountcode = obj.AccountCode;
@@ -264,7 +265,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var chartaccountInfo = await _uow.ChartAccountDetailRepository.FindAsync(c => c.AccountCode == model.AccountCode);
+                var chartaccountInfo = await _uow.ChartOfAccountNewRepository.FindAsync(c => c.ChartOfAccountNewId == model.ChartOfAccountNewId);
                 if (chartaccountInfo != null)
                 {
                     //chartaccountInfo.ChartOfAccountCode = model.ChartOfAccountCode;
@@ -277,7 +278,7 @@ namespace HumanitarianAssistance.Service.Classes
                     //chartaccountInfo.DepRate = model.DepRate;
                     chartaccountInfo.ModifiedById = model.ModifiedById;
                     chartaccountInfo.ModifiedDate = model.ModifiedDate;
-                    await _uow.ChartAccountDetailRepository.UpdateAsyn(chartaccountInfo);
+                    await _uow.ChartOfAccountNewRepository.UpdateAsyn(chartaccountInfo);
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }

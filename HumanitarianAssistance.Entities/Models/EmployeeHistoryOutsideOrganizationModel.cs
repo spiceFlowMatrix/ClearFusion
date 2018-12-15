@@ -14,5 +14,6 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string MonthlySalary { get; set; }
 		public string ReasonForLeaving { get; set; }
 		public int EmployeeID { get; set; }
-	}
+        public string Position { get; set; }
+    }
 }

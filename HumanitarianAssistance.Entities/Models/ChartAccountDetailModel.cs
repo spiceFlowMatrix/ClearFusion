@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class ChartAccountDetailModel : BaseModel
     {
-        public int AccountCode { get; set; }
+        public long ChartOfAccountNewId { get; set; }
         public string AccountName { get; set; }
         public int AccountLevelId { get; set; }
         public int? AccountTypeId { get; set; }
@@ -17,7 +17,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? AccountNote { get; set; }
         public string MDCode { get; set; }
         public Boolean? Show { get; set; }
-        public long ChartOfAccountCode { get; set; }
+        public string ChartOfAccountNewCode { get; set; }
     }
 
     public class AccountLevelModel

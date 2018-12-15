@@ -18,7 +18,7 @@ namespace DataAccess.DbEntities
         public string JobCode { get; set; }
         public int? ContractId { get; set; }
         [ForeignKey("JobPhaseId")]
-        public long JobPhaseId { get; set; }
+        public long? JobPhaseId { get; set; }
         public JobPhase JobPhases { get; set; }        
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

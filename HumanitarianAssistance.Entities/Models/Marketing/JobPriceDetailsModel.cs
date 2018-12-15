@@ -16,5 +16,26 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public double TotalPrice { get; set; }
         public bool IsInvoiceApproved { get; set; }
         public long JobId { get; set; }
+        public long Minutes { get; set; }
+    }
+
+    public class JobPriceModel
+    {
+        public string ClientName { get; set; }
+        public long? ClientId { get; set; }
+        public long? ContractId { get; set; }
+        public long? JobPriceId { get; set; }
+        public double UnitRate { get; set; }
+        public double FinalPrice { get; set; }
+        public double Discount { get; set; }
+        public float DiscountPercent { get; set; }
+        public double TotalPrice { get; set; }
+        public long JobId { get; set; }
+        public double FinalRate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string JobName { get; set; }
+        public string JobCode { get; set; }
+        public long Minutes { get; set; }
+        public bool IsApproved { get; set; }
     }
 }

@@ -60,6 +60,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public string BirthPlace { get; set; }
 		public string IssuePlace { get; set; }
         public int? MaritalStatusId { get; set; }
+        public string TinNumber { get; set; }
 
         //public IList<EmployeeProfessionalDetailModel> EmployeeProfessionalList { get; set; }
         //public IList<EmployeeDocumentDetailModel> EmployeeDocumentDetailList { get; set; }

@@ -44,11 +44,12 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         EmployeeHistoryOutsideOrganizationId = x.EmployeeHistoryOutsideOrganizationId,
                         EmployeeID = Convert.ToInt32(x.EmployeeID),
-                        EmploymentFrom = x.EmploymentFrom==null? null: (DateTime?)Convert.ToDateTime(x.EmploymentFrom),
+                        EmploymentFrom = x.EmploymentFrom == null ? null : (DateTime?)Convert.ToDateTime(x.EmploymentFrom),
                         EmploymentTo = x.EmploymentTo == null ? null : (DateTime?)Convert.ToDateTime(x.EmploymentTo),
                         MonthlySalary = x.MonthlySalary,
                         Organization = x.Organization,
-                        ReasonForLeaving = x.ReasonForLeaving
+                        ReasonForLeaving = x.ReasonForLeaving,
+                        Position = x.Position
                     }).ToList();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -164,7 +165,8 @@ namespace HumanitarianAssistance.Service.Classes
                         EmploymentTo = x.EmploymentTo == null ? null : (DateTime?)Convert.ToDateTime(x.EmploymentTo),
                         MonthlySalary = x.MonthlySalary.ToString(),
                         Organization = x.Organization,
-                        ReasonForLeaving = x.ReasonForLeaving
+                        ReasonForLeaving = x.ReasonForLeaving,
+                        Position = x.Position
                     }).ToList();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

@@ -24,7 +24,7 @@ namespace HumanitarianAssistance.Entities
 
         //DataTransfer
         public DbSet<EmployeeDetailDT> EmployeeDetailDT { get; set; }
-
+       
 
 
         public DbSet<AccountNoteDetail> AccountNoteDetail { get; set; }
@@ -63,7 +63,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<Department> Department { get; set; }
         public DbSet<PermissionsInRoles> PermissionsInRoles { get; set; }
         public DbSet<CurrencyDetails> CurrencyDetails { get; set; }
-        public DbSet<ChartAccountDetail> ChartAccountDetail { get; set; }
+        //public DbSet<ChartAccountDetail> ChartAccountDetail { get; set; }
         public DbSet<AccountType> AccountType { get; set; }
         public DbSet<VoucherType> VoucherType { get; set; }
         //public DbSet<VoucherTransactionDetails> VoucherTransactionDetails { get; set; }
@@ -178,6 +178,16 @@ namespace HumanitarianAssistance.Entities
         public DbSet<AccountLevel> AccountLevel { get; set; }
         public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
         public DbSet<AccountHeadType> AccountHeadType { get; set; }
+        public DbSet<PaymentTypes> PaymentTypes { get; set; }
+        public DbSet<PriorityOtherDetail> PriorityOtherDetail { get; set; }
+        public DbSet<ApplicationPages> ApplicationPages { get; set; }
+        public DbSet<RolePermissions> RolePermissions { get; set; }
+        public DbSet<CEFeasibilityExpertOtherDetail> CEFeasibilityExpertOtherDetail { get; set; }
+        public DbSet<CEAgeGroupDetail> CEAgeGroupDetail { get; set; }
+        public DbSet<CEOccupationDetail> CEOccupationDetail { get; set; }
+
+        public DbSet<CEAssumptionDetail> CEAssumptionDetail { get; set; }
+
 
 
         #region Project
@@ -209,9 +219,18 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ApproveProjectDetails> ApproveProjectDetails { get; set; }
         public DbSet<ProjectProposalDetail> ProjectProposalDetail { get; set; }
         public DbSet<DonorCriteriaDetails> DonorCriteriaDetail { get; set; }
-        
+        public DbSet<PurposeofInitiativeCriteria> PurposeofInitiativeCriteria { get; set; }
+        public DbSet<EligibilityCriteriaDetail> EligibilityCriteriaDetail { get; set; }
+        public DbSet<FeasibilityCriteriaDetail> FeasibilityCriteriaDetail { get; set; }
+        public DbSet<PriorityCriteriaDetail> PriorityCriteriaDetail { get; set; }
+        public DbSet<FinancialCriteriaDetail> FinancialCriteriaDetail { get; set; }
+        public DbSet<RiskCriteriaDetail> RiskCriteriaDetail { get; set; }
+        public DbSet<TargetBeneficiaryDetail> TargetBeneficiaryDetail { get; set; }
+        public DbSet<FinancialProjectDetail> FinancialProjectDetail { get; set; }
 
-        #endregion 
+
+
+        #endregion
 
         #region Marketing
         public DbSet<UnitRate> UnitRates { get; set; }
@@ -241,21 +260,15 @@ namespace HumanitarianAssistance.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
-            //modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);
-            //modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.DebitAccountDetails).WithMany(b => b.DebitAccountlist);
-            //modelBuilder.Entity<VoucherTransactionDetails>().HasOne(p => p.VoucherDetails).WithMany(b => b.VoucherTransactionDetails);
+           // modelBuilder.Entity<RolePermissions>().HasKey(s => new { s.RoleId});
 
-            modelBuilder.Entity<VoucherTransactions>().HasOne(x => x.CreditAccountDetails).WithMany(b => b.CreditAccountlist);
-            //modelBuilder.Entity<VoucherTransactionDetails>().HasOne(x => x.DebitAccountDetails).WithMany(b => b.DebitAccountlist);
+            modelBuilder.Entity<VoucherTransactions>().HasOne(x => x.ChartOfAccountDetail).WithMany(b => b.VoucherTransactionsList);
             modelBuilder.Entity<VoucherTransactions>().HasOne(p => p.VoucherDetails).WithMany(b => b.VoucherTransactionDetails);
 
-            //modelBuilder.Entity<ExchangeRate>().HasOne(x => x.CurrencyFrom).WithMany(b => b.ExchangeRateListFrom);
-            //modelBuilder.Entity<ExchangeRate>().HasOne(x => x.CurrencyTo).WithMany(b => b.ExchangeRateListTo);
-            //modelBuilder.Entity<EmployeePaymentType>().HasIndex(b => b.EmployeeID).IsUnique(false);
-            //modelBuilder.Entity<EmployeePaymentType>().HasIndex(b => b.EmployeeID).IsUnique(false);
+            //modelBuilder.Entity<ChartOfAccountNew>().HasMany(x => x.CreditAccountlist);
+            //modelBuilder.Entity<ChartOfAccountNew>().HasMany(x => x.DebitAccountlist);
 
-            //Non Clustered Index
-            //modelBuilder.Entity<BudgetLineEmployees>().HasIndex(t => new { t.OfficeId, t.ProjectId, t.BudgetLineId, t.IsActive });
+
 
 
             //Global filter on table
@@ -279,11 +292,11 @@ namespace HumanitarianAssistance.Entities
             modelBuilder.Entity<ProjectDetail>().HasQueryFilter(x => x.IsDeleted == false);
             modelBuilder.Entity<ExchangeRate>().HasIndex(e => e.Date);
 
-            modelBuilder.Entity<ChartAccountDetail>().HasIndex(e => e.AccountCode).IsUnique();
+            //modelBuilder.Entity<ChartAccountDetail>().HasIndex(e => e.AccountCode).IsUnique();
             modelBuilder.Entity<VoucherDetail>().HasIndex(e => e.VoucherNo).IsUnique();
             modelBuilder.Entity<VoucherTransactions>().HasIndex(e => e.TransactionId).IsUnique();
-            modelBuilder.Entity<VoucherTransactions>().HasIndex(e => new { e.TransactionDate, e.AccountNo });
-
+            modelBuilder.Entity<VoucherTransactions>().HasIndex(e => new { e.TransactionDate, e.ChartOfAccountNewId });
+            modelBuilder.Entity<FinancialProjectDetail>().HasQueryFilter(x => x.IsDeleted == false);
 
 
 

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -26,45 +27,77 @@ namespace HumanitarianAssistance.Service.Classes
             this._userManager = userManager;
         }
 
-        public async Task<APIResponse> AddPermissionsInRoles(List<PermissionsInRolesModel> model , string RoleId)
+        public async Task<APIResponse> AddPermissionsInRoles(List<PermissionsInRolesModel> model, string RoleId)
         {
             APIResponse response = new APIResponse();
-			List<PermissionsInRoles> list= new List<PermissionsInRoles>();
+            List<PermissionsInRoles> list = new List<PermissionsInRoles>();
             try
             {
-				var notexitlist1 = await _uow.PermissionsInRolesRepository.FindAllAsync(x => x.RoleId == RoleId);
-				foreach (var v in notexitlist1)
-				{
-					v.IsGrant = false;
-					v.ModifiedById = model[0].CreatedById;
-					v.ModifiedDate = DateTime.UtcNow;
-					await _uow.PermissionsInRolesRepository.UpdateAsyn(v, v.RoleId, v.PermissionId);
-				}
-				for (int i = 0; i < model.Count; i++)
-				{
-					
-					var existPermissionsInRoles =  await _uow.PermissionsInRolesRepository.FindAsync(x => x.PermissionId == model[i].PermissionId && x.RoleId == model[i].RoleId && x.IsDeleted == false);
-					if (existPermissionsInRoles == null)
-					{
-						PermissionsInRoles p = _mapper.Map<PermissionsInRoles>(model[i]);
-						p.IsGrant = true;
-						await _uow.PermissionsInRolesRepository.AddAsyn(p);
-						await _uow.PermissionsInRolesRepository.SaveAsync();
-						response.StatusCode = StaticResource.successStatusCode;
-						response.Message = "New Permission In Role Added";
-					}
-					else
-					{
-						existPermissionsInRoles.IsGrant = true;
-						response.StatusCode = StaticResource.successStatusCode;
-						response.Message = "New Permission In Role Added";
-						existPermissionsInRoles.ModifiedById = model[i].CreatedById;
-						existPermissionsInRoles.ModifiedDate = DateTime.UtcNow;
-						await _uow.PermissionsInRolesRepository.UpdateAsyn(existPermissionsInRoles, existPermissionsInRoles.RoleId, existPermissionsInRoles.PermissionId);
-					}
-				}
-     
-			}
+                var notexitlist1 = await _uow.PermissionsInRolesRepository.FindAllAsync(x => x.RoleId == RoleId);
+                foreach (var v in notexitlist1)
+                {
+                    v.IsGrant = false;
+                    v.ModifiedById = model[0].CreatedById;
+                    v.ModifiedDate = DateTime.UtcNow;
+                    await _uow.PermissionsInRolesRepository.UpdateAsyn(v, v.RoleId, v.PermissionId);
+                }
+
+
+                if (model.Any())
+                {
+                    var roleId = model[0].RoleId;
+
+                    var existPermissionsInRoles = await _uow.GetDbContext().PermissionsInRoles.AnyAsync(x => x.RoleId == roleId);
+
+                    //Edit
+                    if (existPermissionsInRoles)
+                    {
+                        var existingPermission = await _uow.PermissionsInRolesRepository.FindAllAsync(x => x.RoleId == roleId);
+                        foreach (var i in existingPermission)
+                        {
+                            await _uow.PermissionsInRolesRepository.DeleteAsyn(i);
+                        }
+                    }
+
+                    for (int i = 0; i < model.Count; i++)
+                    {
+                        PermissionsInRoles p = _mapper.Map<PermissionsInRoles>(model[i]);
+                        p.IsGrant = true;
+                        p.RoleId = model[0].RoleId;
+                        await _uow.PermissionsInRolesRepository.AddAsyn(p);
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "New Permission In Role Added";
+                    }
+                }
+
+                //for (int i = 0; i < model.Count; i++)
+                //{
+
+                //    var existPermissionsInRoles = await _uow.PermissionsInRolesRepository.FindAsync(x => x.PermissionId == model[i].PermissionId && x.RoleId == model[i].RoleId && x.IsDeleted == false);
+                //    if (existPermissionsInRoles == null)
+                //    {
+                //        PermissionsInRoles p = _mapper.Map<PermissionsInRoles>(model[i]);
+                //        p.IsGrant = true;
+                //        await _uow.PermissionsInRolesRepository.AddAsyn(p);
+                //        response.StatusCode = StaticResource.successStatusCode;
+                //        response.Message = "New Permission In Role Added";
+                //    }
+                //    else
+                //    {
+                //        existPermissionsInRoles.PermissionId = model[i].PermissionId;
+                //        existPermissionsInRoles.IsGrant = true;
+                //        existPermissionsInRoles.ModifiedById = model[i].CreatedById;
+                //        existPermissionsInRoles.ModifiedDate = DateTime.UtcNow;
+
+                //        await _uow.PermissionsInRolesRepository.UpdateAsyn(existPermissionsInRoles, existPermissionsInRoles.RoleId, existPermissionsInRoles.PermissionId);
+
+                //        response.StatusCode = StaticResource.successStatusCode;
+                //        response.Message = "Permission Updated";
+                //    }
+                //}
+
+
+            }
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
@@ -74,7 +107,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
         public async Task<APIResponse> GetPermissionByRoleId(string roleid)
-        {            
+        {
             APIResponse response = new APIResponse();
             try
             {
@@ -97,25 +130,107 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        
+
         public async Task<APIResponse> GetPermissionsAsync()
         {
             APIResponse response = new APIResponse();
             try
             {
-                await Task.Run(() => {
+                await Task.Run(() =>
+                {
                     IList<PermissionsModel> list = _uow.PermissionRepository
                     .GetAll().Where(x => x.IsDeleted == false)
                     .Select(x => new PermissionsModel { Name = x.Name, Id = x.Id }).ToList();
                     response.data.PermissionsList = list;
-                                  }
+                }
                 );
 
-                
-            }catch(Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = StaticResource.SomethingWentWrong +ex.Message;
+                response.Message = StaticResource.SomethingWentWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Get All Pages that are in use in Application
+        /// </summary>
+        /// <returns></returns>
+        public async Task<APIResponse> GetAllApplicationPages()
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                List<ApplicationPages> applicationPagesList = await _uow.GetDbContext().ApplicationPages.Where(x => x.IsDeleted == false).ToListAsync();
+
+                if (applicationPagesList.Any())
+                {
+                    response.data.ApplicationPagesList = applicationPagesList;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.NoDataFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Add Role With Page Permissions
+        /// </summary>
+        /// <param name="rolesWithPagePermissionsModel"></param>
+        /// <param name="RoleId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> AddRoleWithPagePermissions(RolesWithPagePermissionsModel rolesWithPagePermissionsModel, string RoleId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (rolesWithPagePermissionsModel !=null)
+                {
+                   List<RolePermissions> rolePermissionsList = new List<RolePermissions>();
+
+                    foreach (ApplicationPagesModel item in rolesWithPagePermissionsModel.Permissions)
+                    {
+                        RolePermissions rolePermissions = new RolePermissions();
+                        rolePermissions.CanEdit = item.Edit;
+                        rolePermissions.CanView = item.View;
+                        rolePermissions.CreatedDate = DateTime.Now;
+                        rolePermissions.IsDeleted = false;
+                        rolePermissions.PageId = item.PageId;
+                        rolePermissions.RoleId = RoleId;
+                        rolePermissions.ModuleId = item.ModuleId;
+                        _uow.GetDbContext().RolePermissions.Add(rolePermissions);
+                        _uow.GetDbContext().SaveChanges();
+                        _uow.GetDbContext().Entry<RolePermissions>(rolePermissions).State = EntityState.Detached;
+                    }
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.NoDataFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
         }

@@ -6,6 +6,7 @@ namespace HumanitarianAssistance.Common.Helpers
 {
   public static class StaticResource
   {
+    public const int notFoundCode = 120;
     public const int successStatusCode = 200;
     public const int otherManagerAlreadyParticipatedStatusCode = 800;
     public const int failStatusCode = 400;
@@ -67,7 +68,7 @@ namespace HumanitarianAssistance.Common.Helpers
     public const string AccountAlreadyExists = "Account Code already exists";
     public const string AccountCantAddToSameAccount = "Credit and Debit account are same !";
 
-
+    public const string unitRateExists = "Unit Rate already exists. Please select different combinations.";
     public const string TaskTypeAdded = "Task Type has added";
     public const string TaskTypeNotAdded = "Task Type has not added";
     public const string TaskTypeDeleted = "Task Type has deleted";
@@ -326,11 +327,16 @@ namespace HumanitarianAssistance.Common.Helpers
     //HR
     public const string PensionPaymentCreated = "Pension Payment Done On {0} for {1}";
 
+    // Marketing
+    public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
+
     //Salary Payment
-    public const string SalaryPaymentDone = "Salary Payment Done On {0} for {1}";
+    public const string SalaryPaymentDone = "Salary Payment:"; //EmpCode-EmpName-Month-<salary payment>
     public const string SalaryHeadAllowances = "{0} has been debited towards Gross Salary";
     public const string SalaryHeadDeductions = "{0} has been credited towards Net Salary";
     public const string JobCodeExist = "Job Code Already Exist";
+    public const string PurchaseVoucherCreated = "Purchase Voucher Created";
+    public const string PurchaseVoucherUnverified = "Reverse Purchase Payments";
 
     public const string NameExist = "Name Already Exist";
     public const string SuccessText = "Success";

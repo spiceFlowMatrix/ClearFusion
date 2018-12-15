@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
    public class BalanceSheetReportModel
     {
-        public int AccountCode { get; set; }
+        public long ChartOfAccountNewId { get; set; }
         public double Amount { get; set; }
         public List<BalanceSheetReportModel> Accounts { get; set; }
 

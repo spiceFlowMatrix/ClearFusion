@@ -11,7 +11,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public string Description { get; set; }
         public string JobCode { get; set; }
         public int? ContractId { get; set; }
-        public long JobPhaseId { get; set; }
+        public long? JobPhaseId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsActive { get; set; }
@@ -24,5 +24,19 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public float DiscountPercent { get; set; }
         public double TotalPrice { get; set; }
         public bool IsInvoiceApproved { get; set; }
+        public bool IsDeleted { get; set; }
+        public long Minutes { get; set; }
+    }
+
+    public class JobFilterModel
+    {
+        public bool IsApproved { get; set; }
+        public string YesOrNo { get; set; }
+        public double UnitRate { get; set; }
+        public double TotalPrice { get; set; }
+        public long ContractId { get; set; }
+        public string FilterType { get; set; }
+        public string JobName { get; set; }
+        public long JobId { get; set; }
     }
 }

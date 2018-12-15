@@ -59,7 +59,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
+       if (user != null)
       {
         var id = user.Id;
         response = await _iContractDetailsService.ApproveContract(model, id);
@@ -117,6 +117,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       //}
       return apiRespone;
     }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetContractsListByClient()
+    {
+      APIResponse apiRespone = null;
+      //var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      //if (user != null)
+      //{
+      //var id = user.Id;
+      apiRespone = await _iContractDetailsService.GetAllContractDetailsByClientId();
+      //}
+      return apiRespone;
+    }
+
 
     /// <summary>
     /// Add And Update New Job
@@ -894,7 +909,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddUnitRate([FromBody]UnitRateModel model)
     {
-      APIResponse apiResponse = null;
+       APIResponse apiResponse = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {

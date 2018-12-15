@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess.DbEntities.AccountingNew;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,8 +23,8 @@ namespace DataAccess.DbEntities
 
 		public string Description { get; set; }
         public DateTime? TransactionDate { get; set; }	
-        [ForeignKey("AccountNo")]
-        public ChartAccountDetail CreditAccountDetails { get; set; }
+        [ForeignKey("ChartOfAccountNewId")]
+        public ChartOfAccountNew CreditAccountDetails { get; set; }
         //[ForeignKey("DebitAccount")]
         //public ChartAccountDetail DebitAccountDetails { get; set; }
 
@@ -35,7 +36,7 @@ namespace DataAccess.DbEntities
 
         public int? FinancialYearId { get; set; }
         //public FinancialYearDetail FinancialYearDetails { get; set; }
-        public int? AccountNo { get; set; }
+        public long? ChartOfAccountNewId { get; set; }
         public string Donor { get; set; }
         public string Area { get; set; }
         public string Sector { get; set; }

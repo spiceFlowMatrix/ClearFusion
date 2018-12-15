@@ -58,8 +58,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// Get Client List
     /// </summary>
     /// <returns></returns>
+    
     [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllClientList()
     {
       APIResponse apiresponse = await _iclientDetailService.GetAllClient();
@@ -71,8 +72,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
+    
     [HttpPost]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddClient([FromBody]ClientDetailModel model)
     {
       APIResponse apiResponse = null;
@@ -90,6 +92,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
+    
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditClient([FromBody]ClientDetailModel model)
@@ -109,6 +112,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
+    
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteClient([FromBody]int model)
@@ -121,6 +125,25 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         apiRespone = await _iclientDetailService.DeleteClientDetails(model, id);
       }
       return apiRespone;
+    }
+
+    /// <summary>
+    /// client filter
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetFilteredClientList([FromBody]FilterClientModel model)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        response = await _iclientDetailService.FilterClientList(model, id);
+      }
+      return response;
     }
 
     #endregion
