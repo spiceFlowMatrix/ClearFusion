@@ -180,6 +180,12 @@ namespace DataAccess
         IGenericRepository<RiskCriteriaDetail> RiskCriteriaDetailRepository { get; }
         IGenericRepository<TargetBeneficiaryDetail> TargetBeneficiaryDetailRepository { get; }
         IGenericRepository<FinancialProjectDetail> FinancialProjectDetailRepository { get; }
+        IGenericRepository<PriorityOtherDetail> PriorityOtherDetailRepository { get; }
+        IGenericRepository<CEFeasibilityExpertOtherDetail> CEFeasibilityExpertOtherDetail { get; }
+        IGenericRepository<CEAgeGroupDetail> CEAgeGroupDetail { get; }
+        IGenericRepository<CEOccupationDetail> CEOccupationDetail { get; }
+        IGenericRepository<CEAssumptionDetail> CEAssumptionDetail { get; }
+
 
         #endregion
 
