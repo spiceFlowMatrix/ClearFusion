@@ -1204,6 +1204,63 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
 
+    #region DonorEligibilityDetail
+    [HttpGet]
+    public async Task<APIResponse> GetAllDonorEligibilityDetailList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllDonorEligibilityDetailList();
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetAllDonorEligibilityByProjectId([FromBody]long projectId)
+    {
+      APIResponse apiresponse = await _iProject.GetAllDonorEligibilityDetailByProjectId(projectId);
+      return apiresponse;
+    }
+    [HttpPost]
+    public async Task<APIResponse> AddDonorEligibilityDetail([FromBody]DonorEligibilityCriteriaModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddDonorEligibilityOtherDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditDonorEligibilityDetail([FromBody]DonorEligibilityCriteriaModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.EditDonorEligibilityOtherDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteDonorEligibilityDetails([FromBody]long donorEligibilityDetailId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+
+        apiRespone = await _iProject.DeleteDOnorEligibilityCriteriaOtherDetails(donorEligibilityDetailId, id);
+      }
+      return apiRespone;
+    }
+
+    #endregion
+
+
     #endregion
 
   }

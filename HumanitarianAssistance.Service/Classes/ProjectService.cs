@@ -865,6 +865,7 @@ namespace HumanitarianAssistance.Service.Classes
                                               ProjectCode = x.ProjectCode,
                                               ProjectName = x.ProjectName,
                                               ProjectDescription = x.ProjectDescription,
+                                              IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
                                               ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
                                               //? "Data Entry"
                                               // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
@@ -906,7 +907,8 @@ namespace HumanitarianAssistance.Service.Classes
                                          ProjectDescription = obj.ProjectDescription,
                                          ProjectPhaseDetailsId = phase.ProjectPhaseDetailsId,
                                          IsWin = c == null ? false : c.IsWin,
-                                         IsApproved = y == null ? false : y.IsApproved
+                                         IsApproved = y == null ? false : y.IsApproved,
+                                         IsCriteriaEvaluationSubmit = obj.IsCriteriaEvaluationSubmit
                                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
 
 
@@ -2173,6 +2175,7 @@ namespace HumanitarianAssistance.Service.Classes
                      select new CriteriaEveluationModel
                      {
                          ProjectId = obj.ProjectId,
+                         IsCriteriaEvaluationSubmit=obj.IsCriteriaEvaluationSubmit,
                          DonorCEId = donor != null ? donor.DonorCEId : 0,
                          MethodOfFunding = donor.MethodOfFunding,
                          PastFundingExperience = donor.PastFundingExperience,
@@ -2656,7 +2659,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var list = await _uow.GetDbContext().PriorityOtherDetail.Where(x => x.IsDeleted == false && x.ProjectId==projectId)
+                var list = await _uow.GetDbContext().PriorityOtherDetail.Where(x => x.IsDeleted == false && x.ProjectId == projectId)
                    .OrderByDescending(x => x.PriorityOtherDetailId).ToListAsync();
 
                 response.data.PriorityOtherDetail = list;
@@ -3248,6 +3251,130 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
+
+
+        #region donorEligibilityCriteria
+        public async Task<APIResponse> GetAllDonorEligibilityDetailList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().DonorEligibilityCriteria.Where(x => x.IsDeleted == false)
+                   .OrderByDescending(x => x.DonorEligibilityDetailId).ToListAsync();
+
+                response.data.DonorEligibilityCriteria = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> GetAllDonorEligibilityDetailByProjectId(long projectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().DonorEligibilityCriteria.Where(x => x.IsDeleted == false && x.ProjectId == projectId)
+                   .OrderByDescending(x => x.DonorEligibilityDetailId).ToListAsync();
+
+                response.data.DonorEligibilityCriteria = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddDonorEligibilityOtherDetail(DonorEligibilityCriteriaModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                DonorEligibilityCriteria _detail = new DonorEligibilityCriteria();
+
+                _detail.DonorEligibilityDetailId = model.DonorEligibilityDetailId.Value;
+                _detail.Name = model.Name;
+                _detail.ProjectId = model.ProjectId;
+                _detail.IsDeleted = false;
+                _detail.CreatedById = UserId;
+                _detail.CreatedDate = DateTime.Now;
+
+                await _uow.DonorEligibilityCriteriaRepository.AddAsyn(_detail);
+
+                response.CommonId.LongId = _detail.DonorEligibilityDetailId;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> EditDonorEligibilityOtherDetail(DonorEligibilityCriteriaModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                DonorEligibilityCriteria _detail = await _uow.GetDbContext().DonorEligibilityCriteria.FirstOrDefaultAsync(x => x.DonorEligibilityDetailId == model.DonorEligibilityDetailId && x.IsDeleted == false);
+                if (_detail != null)
+                {
+                    _detail.Name = model.Name;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+
+                    await _uow.DonorEligibilityCriteriaRepository.UpdateAsyn(_detail);
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteDOnorEligibilityCriteriaOtherDetails(long donorEligibilityDetailId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                DonorEligibilityCriteria donorEligibilityInfo = await _uow.DonorEligibilityCriteriaRepository.FindAsync(c => c.DonorEligibilityDetailId == donorEligibilityDetailId);
+
+                donorEligibilityInfo.IsDeleted = true;
+                donorEligibilityInfo.ModifiedById = userId;
+                donorEligibilityInfo.ModifiedDate = DateTime.Now;
+
+                await _uow.DonorEligibilityCriteriaRepository.UpdateAsyn(donorEligibilityInfo);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
 
 
         #endregion

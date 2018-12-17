@@ -306,6 +306,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<CEOccupationDetail> CEOccupationDetail { get; set; }
         public ICollection<CEAssumptionDetail> CEAssumptionDetail { get; set; }
 
+        public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
+
 
         #region Marketing
         public ICollection<JobDetails> JobDetails { get; set; }

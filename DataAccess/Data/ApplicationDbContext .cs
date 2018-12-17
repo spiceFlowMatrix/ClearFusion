@@ -187,6 +187,9 @@ namespace HumanitarianAssistance.Entities
         public DbSet<CEOccupationDetail> CEOccupationDetail { get; set; }
 
         public DbSet<CEAssumptionDetail> CEAssumptionDetail { get; set; }
+        public DbSet<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
+
+        
 
 
 
