@@ -28,6 +28,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 {
   [Produces("application/json")]
   [Route("api/AccountReports/[Action]")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class AccountReportsController : Controller
     {
     private readonly SignInManager<AppUser> _signInManager;
@@ -76,7 +77,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetBalanceSheetReport()
     {
       APIResponse response = await _iaccountRecords.GetBalanceSheet();

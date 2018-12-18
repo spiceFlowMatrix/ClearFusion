@@ -185,6 +185,8 @@ namespace DataAccess
         IGenericRepository<CEAgeGroupDetail> CEAgeGroupDetail { get; }
         IGenericRepository<CEOccupationDetail> CEOccupationDetail { get; }
         IGenericRepository<CEAssumptionDetail> CEAssumptionDetail { get; }
+        IGenericRepository<DonorEligibilityCriteria> DonorEligibilityCriteriaRepository { get; }
+
 
 
         #endregion
