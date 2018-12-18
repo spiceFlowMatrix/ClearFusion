@@ -95,12 +95,15 @@ namespace HumanitarianAssistance.Controllers
       }
       return Ok("cxvxc");
     }
+
+
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "DepartmentUser")]
     public string EmployeeList()
     {
       return "Product List ";
     }
+
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]

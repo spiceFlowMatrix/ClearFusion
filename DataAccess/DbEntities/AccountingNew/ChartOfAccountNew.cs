@@ -21,12 +21,18 @@ namespace DataAccess.DbEntities.AccountingNew
         [ForeignKey("AccountLevelId")]
         public AccountLevel AccountLevels { get; set; }
 
+        // This field is for storing the financial report type - income, assets,
+        // liabilities etc that the account is connected to.
+        public int AccountHeadTypeId { get; set; }
+
+        // This field is for storing the financial report "note" 
+        // that this account is connected to.
         public int? AccountTypeId { get; set; }
         [ForeignKey("AccountTypeId")]
         public AccountType AccountType { get; set; }
 
-        public int AccountHeadTypeId { get; set; }
-
+        // Field for storing the type of transactions that must be attributed
+        // towards this account. Such as inventory account, salary account.
         public int? AccountFilterTypeId { get; set; }
         [ForeignKey("AccountFilterTypeId")]
         public AccountFilterType AccountFilterType { get; set; }
