@@ -41,7 +41,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetJobsList()
     {
       APIResponse apiRespone = null;
@@ -53,6 +53,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       //}
       return apiRespone;
     }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetJobsPaginatedList([FromBody]JobPaginationModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iJobDetailsService.GetJobsPaginatedList(model, id);
+      }
+      return apiRespone;
+    }
+    
 
     #region Job Details
 
@@ -109,6 +124,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       }
       return apiRespone;
     }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetFilteredJoblist([FromBody]JobFilterModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iJobDetailsService.FilterJobList(model, id);
+      }
+      return apiRespone;
+    }
+    
     #endregion
 
     #region Job Phase

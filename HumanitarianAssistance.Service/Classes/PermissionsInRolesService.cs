@@ -154,5 +154,85 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+        /// <summary>
+        /// Get All Pages that are in use in Application
+        /// </summary>
+        /// <returns></returns>
+        public async Task<APIResponse> GetAllApplicationPages()
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                List<ApplicationPages> applicationPagesList = await _uow.GetDbContext().ApplicationPages.Where(x => x.IsDeleted == false).ToListAsync();
+
+                if (applicationPagesList.Any())
+                {
+                    response.data.ApplicationPagesList = applicationPagesList;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.NoDataFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Add Role With Page Permissions
+        /// </summary>
+        /// <param name="rolesWithPagePermissionsModel"></param>
+        /// <param name="RoleId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> AddRoleWithPagePermissions(RolesWithPagePermissionsModel rolesWithPagePermissionsModel, string RoleId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (rolesWithPagePermissionsModel !=null)
+                {
+                   List<RolePermissions> rolePermissionsList = new List<RolePermissions>();
+
+                    foreach (ApplicationPagesModel item in rolesWithPagePermissionsModel.Permissions)
+                    {
+                        RolePermissions rolePermissions = new RolePermissions();
+                        rolePermissions.CanEdit = item.Edit;
+                        rolePermissions.CanView = item.View;
+                        rolePermissions.CreatedDate = DateTime.Now;
+                        rolePermissions.IsDeleted = false;
+                        rolePermissions.PageId = item.PageId;
+                        rolePermissions.RoleId = RoleId;
+                        rolePermissions.ModuleId = item.ModuleId;
+                        _uow.GetDbContext().RolePermissions.Add(rolePermissions);
+                        _uow.GetDbContext().SaveChanges();
+                        _uow.GetDbContext().Entry<RolePermissions>(rolePermissions).State = EntityState.Detached;
+                    }
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.NoDataFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
     }
 }

@@ -921,6 +921,346 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
+
+    [HttpGet]
+    public async Task<APIResponse> GetAllPriorityOtherDetailList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllPriorityDetailList();
+      return apiresponse;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetAllPriorityOtherDetailByProjectId([FromBody] long ProjectId)
+    {
+      APIResponse apiresponse = await _iProject.GetAllPriorityDetailByProjectId(ProjectId);
+      return apiresponse;
+    }
+    [HttpPost]
+    public async Task<APIResponse> AddPriorityOtherDetail([FromBody]CEPriorityDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddPriorityOtherDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditPriorityOtherDetail([FromBody]CEPriorityDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.EditPriorityOtherDetail(Model, id);
+      }
+      return apiRespone;
+    }
+   
+    [HttpPost]
+    public async Task<APIResponse> DeletePriorityDetails([FromBody]long PriorityOtherDetailId)
+     {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+       
+        apiRespone = await _iProject.DeletePriorityOtherDetails(PriorityOtherDetailId, id);
+      }
+      return apiRespone;
+    }
+
+    #region feasibility Expert detail
+
+    [HttpGet]
+    public async Task<APIResponse> GetAllFeasibilityExpertDetailList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllFeasibilityExpertList();
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetAllExpertDetailByProjectId([FromBody] long projectId)
+    {
+      APIResponse apiresponse = await _iProject.GetAllExpertDetailByProjectId(projectId);
+      return apiresponse;
+    }
+    [HttpPost]
+    public async Task<APIResponse> AddFeasibleExpertOtherDetail([FromBody]CEFeasibilityExpertOtherModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddFeasibilityExpertDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditFeasibleExpertOtherDetail([FromBody]CEFeasibilityExpertOtherModel Model)
+     {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.EditFeasibilityExpertDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteFeasibleExpertDetails([FromBody]long PriorityOtherDetailId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+
+        apiRespone = await _iProject.DeleteFeasibilityExperrtDetails(PriorityOtherDetailId, id);
+      }
+      return apiRespone;
+    }
+    #endregion
+
+
+
+    #region Age group detail
+    [HttpGet]
+    public async Task<APIResponse> GetAllAgeGroupDetailList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllAgeGroupDetailList();
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetAllAgeGroupByProjectId([FromBody]long projectId)
+    {
+      APIResponse apiresponse = await _iProject.GetAllAgeGroupByProjectId(projectId);
+      return apiresponse;
+    }
+    [HttpPost]
+    public async Task<APIResponse> AddAgeGRoupDetail([FromBody]CEAgeGroupDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddAgeGroupDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditAGeGroupDetail([FromBody]CEAgeGroupDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.EditAgeGroupDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteAgeGroupDetails([FromBody]long ageGroupOtherDetailId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+
+        apiRespone = await _iProject.DeleteAgeGroupDetails(ageGroupOtherDetailId, id);
+      }
+      return apiRespone;
+    }
+    #endregion
+
+    #region OccupationDetail
+    [HttpGet]
+    public async Task<APIResponse> GetAllOccupationDetailList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllOccuopationList();
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetAllOccupationByProjectId([FromBody] long projectId)
+    {
+      APIResponse apiresponse = await _iProject.GetAllOccupatiopnByProjectId(projectId);
+      return apiresponse;
+    }
+    [HttpPost]
+    public async Task<APIResponse> AddOccupationDetail([FromBody]CEOccupationDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddOccupationOtherDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditOccupatiopnDetail([FromBody]CEOccupationDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.EditOccupationOtherDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteOccupationDetails([FromBody]long occupationOtherDetailId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+
+        apiRespone = await _iProject.DeleteOccupationDetails(occupationOtherDetailId, id);
+      }
+      return apiRespone;
+    }
+
+
+    #endregion
+
+    #region AssumptionDetail
+    [HttpGet]
+    public async Task<APIResponse> GetAllAssumptionDetailList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllAssumptionList();
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetAllAssumptionByProjectId([FromBody]long projectId)
+    {
+      APIResponse apiresponse = await _iProject.GetAllAssumptionByProjectId(projectId);
+      return apiresponse;
+    }
+    [HttpPost]
+    public async Task<APIResponse> AddAssumptionDetail([FromBody]CEAssumptionDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddAssumptionDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditAssumptionDetail([FromBody]CEAssumptionDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.EditAssumptionDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteAssumptionDetails([FromBody]long assumptionDetailId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+
+        apiRespone = await _iProject.DeleteAssumptionDetails(assumptionDetailId, id);
+      }
+      return apiRespone;
+    }
+
+    #endregion
+
+
+
+    #region DonorEligibilityDetail
+    [HttpGet]
+    public async Task<APIResponse> GetAllDonorEligibilityDetailList()
+    {
+      APIResponse apiresponse = await _iProject.GetAllDonorEligibilityDetailList();
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetAllDonorEligibilityByProjectId([FromBody]long projectId)
+    {
+      APIResponse apiresponse = await _iProject.GetAllDonorEligibilityDetailByProjectId(projectId);
+      return apiresponse;
+    }
+    [HttpPost]
+    public async Task<APIResponse> AddDonorEligibilityDetail([FromBody]DonorEligibilityCriteriaModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddDonorEligibilityOtherDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditDonorEligibilityDetail([FromBody]DonorEligibilityCriteriaModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.EditDonorEligibilityOtherDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteDonorEligibilityDetails([FromBody]long donorEligibilityDetailId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+
+        apiRespone = await _iProject.DeleteDOnorEligibilityCriteriaOtherDetails(donorEligibilityDetailId, id);
+      }
+      return apiRespone;
+    }
+
+    #endregion
+
+
     #endregion
 
   }

@@ -6,6 +6,7 @@ namespace HumanitarianAssistance.Common.Helpers
 {
   public static class StaticResource
   {
+    public const int notFoundCode = 120;
     public const int successStatusCode = 200;
     public const int otherManagerAlreadyParticipatedStatusCode = 800;
     public const int failStatusCode = 400;
@@ -325,6 +326,9 @@ namespace HumanitarianAssistance.Common.Helpers
 
     //HR
     public const string PensionPaymentCreated = "Pension Payment Done On {0} for {1}";
+
+    // Marketing
+    public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
 
     //Salary Payment
     public const string SalaryPaymentDone = "Salary Payment:"; //EmpCode-EmpName-Month-<salary payment>

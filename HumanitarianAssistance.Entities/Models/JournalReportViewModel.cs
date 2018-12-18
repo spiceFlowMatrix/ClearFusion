@@ -6,10 +6,11 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class JournalReportViewModel
     {
-        public long AccountCode { get; set; }
+        public string AccountCode { get; set; }
         public string AccountName { get; set; }
         public decimal DebitAmount { get; set; }
         public decimal CreditAmount { get; set; }
         public decimal Balance { get; set; }
+        public long ChartOfAccountNewId { get; set; }
     }
 }
