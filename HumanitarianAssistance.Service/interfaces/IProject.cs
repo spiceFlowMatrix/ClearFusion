@@ -117,12 +117,15 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddAgeGroupDetail(CEAgeGroupDetailModel model, string UserId);
         Task<APIResponse> AddOccupationOtherDetail(CEOccupationDetailModel model, string UserId);
         Task<APIResponse> AddAssumptionDetail(CEAssumptionDetailModel model, string UserId);
+        Task<APIResponse> AddDonorEligibilityOtherDetail(DonorEligibilityCriteriaModel model, string UserId);
+
 
         Task<APIResponse> EditPriorityOtherDetail(CEPriorityDetailModel model, string UserId);
         Task<APIResponse> EditFeasibilityExpertDetail(CEFeasibilityExpertOtherModel model, string UserId);
         Task<APIResponse> EditAgeGroupDetail(CEAgeGroupDetailModel model, string UserId);
         Task<APIResponse> EditOccupationOtherDetail(CEOccupationDetailModel model, string UserId);
         Task<APIResponse> EditAssumptionDetail(CEAssumptionDetailModel model, string UserId);
+        Task<APIResponse> EditDonorEligibilityOtherDetail(DonorEligibilityCriteriaModel model, string UserId);
 
 
 
@@ -133,6 +136,10 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> GetAllAgeGroupDetailList();
         Task<APIResponse> GetAllAgeGroupByProjectId(long projectId);
+
+        Task<APIResponse> GetAllDonorEligibilityDetailByProjectId(long projectId);
+        Task<APIResponse> GetAllDonorEligibilityDetailList();
+
 
 
 
@@ -147,8 +154,11 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteAgeGroupDetails(long Id, string userId);
         Task<APIResponse> DeleteOccupationDetails(long Id, string userId);
         Task<APIResponse> DeleteAssumptionDetails(long Id, string userId);
+        Task<APIResponse> DeleteDOnorEligibilityCriteriaOtherDetails(long Id, string userId);
 
+        Task<APIResponse> AddEditCriteriaEvalutionSubmitDetail(ProjectDetailNewModel model);
 
+        
 
         #endregion
     }

@@ -17,5 +17,6 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> FilterJobList(JobFilterModel model, string userId);
         Task<APIResponse> AddEditJobDetail(JobDetailsModel model, string UserId);
         Task<APIResponse> GetJobDetailsById(int model, string UserId);
+        Task<APIResponse> GetJobsPaginatedList(JobPaginationModel model, string UserId);        
     }
 }

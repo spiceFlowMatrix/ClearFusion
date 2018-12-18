@@ -394,8 +394,9 @@ namespace HumanitarianAssistance.Service
             //}
             return mimeType;
         }
-        public static string FilePermission(DriveService driveService, string Fileid, string EmailId)
+        public static string FilePermission(string ProjectCode,string Fileid, string EmailId,string pathFile)
         {
+            var driveService = userGoogleCredential(ProjectCode, pathFile);
             string Message = string.Empty;
             var batch = new BatchRequest(driveService);
             BatchRequest.OnResponse<Permission> callback = delegate (
