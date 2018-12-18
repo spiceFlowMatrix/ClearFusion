@@ -18,7 +18,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 {
     [Produces("application/json")]
     [Route("api/TaskAndActivity/[Action]")]
-    public class TaskAndActivityController : Controller
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+  public class TaskAndActivityController : Controller
     {
       private readonly JsonSerializerSettings _serializerSettings;
       private readonly UserManager<AppUser> _userManager;
@@ -39,7 +40,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> AddTask([FromBody]TaskMasterModel model)
     {
       APIResponse apiRespone = null;
@@ -56,7 +56,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> EditTask([FromBody]TaskMasterModel model)
     {
       APIResponse apiRespone = null;
@@ -73,7 +72,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllTask(int projectid)
     {
       APIResponse response = await _taskAndActivity.GetAllTask(projectid);
@@ -81,7 +79,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> AddActivityDetail([FromBody]ActivityMasterModel model)
     {
       APIResponse apiRespone = null;
@@ -98,7 +95,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> EditActivityDetail([FromBody]ActivityMasterModel model)
     {
       APIResponse apiRespone = null;
@@ -115,7 +111,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllActivity()
     {
       APIResponse response = await _taskAndActivity.GetAllActivity();
@@ -123,7 +118,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> AddAssignActivityDetail([FromBody]AssignActivityModel model)
     {
       APIResponse apiRespone = null;
@@ -140,7 +134,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllAssignActivityDetailByCondition(long? ProjectId, int? TaskId, int? ActivityId)
     {
       APIResponse response = await _taskAndActivity.GetAllAssignActivityDetailByCondition(ProjectId, TaskId, ActivityId);
