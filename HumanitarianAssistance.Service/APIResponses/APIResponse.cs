@@ -326,6 +326,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<MediaCategory> MediaCategories { get; set; }
         public ICollection<TimeCategory> TimeCategories { get; set; }
         public List<JobDetailsModel> JobDetailsModel { get; set; }
+        public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
         public List<ContractByClient> ContractByClientList { get; set; }
         public UnitRateModel unitRateDetails { get; set; }

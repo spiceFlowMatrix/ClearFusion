@@ -1172,8 +1172,18 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     {                       
                         if (obj1 != null)
                         {
-                            response.StatusCode = StaticResource.failStatusCode;
-                            response.Message = StaticResource.unitRateExists;
+                            if(obj1.UnitRates == model.UnitRates)
+                            {
+                                response.StatusCode = StaticResource.failStatusCode;
+                                response.Message = StaticResource.unitRateExists;
+                            }
+                            else
+                            {
+                                obj1.UnitRates = model.UnitRates;
+                                await _uow.UnitRateRepository.UpdateAsyn(obj1);
+                                response.data.unitRateDetailsById = obj1;
+                            }
+                            
                         }
                     }
                     else
