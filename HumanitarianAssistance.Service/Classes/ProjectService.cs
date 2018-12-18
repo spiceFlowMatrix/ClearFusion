@@ -21,6 +21,7 @@ using HumanitarianAssistance.ViewModels.Models;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Hosting;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -30,11 +31,13 @@ namespace HumanitarianAssistance.Service.Classes
         IUnitOfWork _uow;
         IMapper _mapper;
         UserManager<AppUser> _userManager;
-        public ProjectService(IUnitOfWork uow, IMapper mapper, UserManager<AppUser> userManager)
+        private IHostingEnvironment _hostingEnvironment;
+        public ProjectService(IUnitOfWork uow, IMapper mapper, UserManager<AppUser> userManager, IHostingEnvironment hostingEnvironment)
         {
             this._uow = uow;
             this._mapper = mapper;
             this._userManager = userManager;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         #region Donor Details
@@ -766,6 +769,7 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             existProjectRecord.ProjectName = model.ProjectName;
                             existProjectRecord.ProjectDescription = model.ProjectDescription;
+                            existProjectRecord.IsProposalComplate = model.IsProposalComplate.Value;
                             existProjectRecord.IsDeleted = false;
                             existProjectRecord.ModifiedById = UserId;
                             existProjectRecord.ModifiedDate = DateTime.Now;
@@ -893,7 +897,7 @@ namespace HumanitarianAssistance.Service.Classes
                                      join win in _uow.GetDbContext().WinProjectDetails on obj.ProjectId equals win.ProjectId into p
                                      from c in p.DefaultIfEmpty()
                                      join approve in _uow.GetDbContext().ApproveProjectDetails on obj.ProjectId equals approve.ProjectId into z
-                                     from y in z.DefaultIfEmpty()
+                                     from approve in z.DefaultIfEmpty()
                                      join Proposal in _uow.GetDbContext().ProjectProposalDetail on obj.ProjectId equals Proposal.ProjectId into pr
                                      from Proposal in pr.DefaultIfEmpty()
                                      join phase in _uow.GetDbContext().ProjectPhaseDetails on obj.ProjectPhaseDetailsId equals phase.ProjectPhaseDetailsId
@@ -904,10 +908,11 @@ namespace HumanitarianAssistance.Service.Classes
                                          ProjectName = obj.ProjectName,
                                          ProjectDescription = obj.ProjectDescription,
                                          ProjectPhaseDetailsId = phase.ProjectPhaseDetailsId,
-                                         IsWin = c == null ? false : c.IsWin,
-                                         IsApproved = y == null ? false : y.IsApproved,
-                                         IsProposalSubmit = Proposal == null ? false : Proposal.IsProposalAccept,
+                                         IsWin = c.IsWin,
+                                         IsApproved = approve.IsApproved,
+                                         IsProposalSubmit = Proposal.IsProposalAccept,
                                         IsCriteriaEvaluationSubmit = obj.IsCriteriaEvaluationSubmit == null ? false :   obj.IsCriteriaEvaluationSubmit,
+                                         IsProposalComplate= obj.IsProposalComplate,
                                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
 
 
@@ -1604,12 +1609,13 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                ApproveProjectDetails obj = _mapper.Map<ApproveProjectDetailModel, ApproveProjectDetails>(model);
+                ApproveProjectDetails obj = new ApproveProjectDetails();
                 obj.ProjectId = model.ProjectId;
                 obj.CommentText = model.CommentText;
                 obj.FileName = model.FileName;
                 obj.FilePath = model.FilePath;
                 obj.IsApproved = model.IsApproved;
+                obj.UploadedFile = string.IsNullOrEmpty(model.UploadedFile)? null: Convert.FromBase64String(model.UploadedFile);
                 obj.IsDeleted = false;
                 obj.CreatedById = UserId;
                 obj.CreatedDate = DateTime.Now;
@@ -1619,6 +1625,18 @@ namespace HumanitarianAssistance.Service.Classes
                 response.Message = "Success";
                 response.CommonId.IsApproved = model.IsApproved;
 
+                if (model.IsApproved == false)
+                {
+                   var details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                    if (details != null)
+                    {
+                        details.IsProposalAccept= model.IsApproved;
+                        details.ModifiedById = UserId;
+                        details.IsDeleted = false;
+                        details.ModifiedDate = DateTime.Now;
+                        _uow.GetDbContext().SaveChanges();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -1636,12 +1654,13 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                WinProjectDetails obj = _mapper.Map<WinApprovalProjectModel, WinProjectDetails>(model);
+                WinProjectDetails obj = new WinProjectDetails();
                 obj.ProjectId = model.ProjectId;
                 obj.CommentText = model.CommentText;
                 obj.FileName = model.FileName;
                 obj.FilePath = model.FilePath;
                 obj.IsWin = model.IsWin;
+                obj.UploadedFile = string.IsNullOrEmpty(model.UploadedFile) ? null : Convert.FromBase64String(model.UploadedFile);
                 obj.IsDeleted = false;
                 obj.CreatedById = UserId;
                 obj.CreatedDate = DateTime.Now;
@@ -3428,7 +3447,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-
+        
         #endregion
 
 
