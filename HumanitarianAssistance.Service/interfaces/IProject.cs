@@ -156,8 +156,9 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteAssumptionDetails(long Id, string userId);
         Task<APIResponse> DeleteDOnorEligibilityCriteriaOtherDetails(long Id, string userId);
 
+        Task<APIResponse> AddEditCriteriaEvalutionSubmitDetail(ProjectDetailNewModel model);
 
-
+        
 
         #endregion
     }

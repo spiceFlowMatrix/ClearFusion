@@ -1258,6 +1258,23 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
+
+    [HttpPost]
+
+    public async Task<APIResponse> AddEditCriteriaEvaluationSubmit([FromBody]ProjectDetailNewModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+
+        apiRespone = await _iProject.AddEditCriteriaEvalutionSubmitDetail(model);
+      }
+      return apiRespone;
+    }
+
+
     #endregion
 
 

@@ -865,7 +865,7 @@ namespace HumanitarianAssistance.Service.Classes
                                               ProjectCode = x.ProjectCode,
                                               ProjectName = x.ProjectName,
                                               ProjectDescription = x.ProjectDescription,
-                                              IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
+                                              IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit == null ? false : x.IsCriteriaEvaluationSubmit,
                                               ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
                                               //? "Data Entry"
                                               // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
@@ -3432,6 +3432,36 @@ namespace HumanitarianAssistance.Service.Classes
         #endregion
 
 
+
+        #region add/edit IscriteriaEvalutaionSubmit
+
+        public async Task<APIResponse> AddEditCriteriaEvalutionSubmitDetail(ProjectDetailNewModel model)
+        {
+            APIResponse response = new APIResponse();
+           
+            DbContext db = _uow.GetDbContext();
+            try
+            {
+                var ProjectDetail = _uow.GetDbContext().ProjectDetail
+                                                   .Where(x => x.ProjectId == model.ProjectId)
+                                                   .FirstOrDefault(x => x.IsDeleted == false);
+                if (ProjectDetail != null)
+                {
+                    ProjectDetail.IsCriteriaEvaluationSubmit = model.IsCriteriaEvaluationSubmit;
+                    ProjectDetail.ModifiedDate = DateTime.Now;
+                  await  _uow.ProjectDetailNewRepository.UpdateAsyn(ProjectDetail, ProjectDetail.ProjectId);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        #endregion
         #endregion
     }
 }
