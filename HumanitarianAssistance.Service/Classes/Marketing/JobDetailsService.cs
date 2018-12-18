@@ -69,7 +69,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    FinalPrice = jp.FinalPrice,
                                    TotalPrice = jp.TotalPrice,
                                    IsInvoiceApproved = jp.IsInvoiceApproved
-                               })).ToList();
+                               })).Take(10).Skip(0).ToList();
+                int count = _uow.GetDbContext().JobDetails.Where(x=>x.IsDeleted==false).ToList().Count;
 
 
 
@@ -77,6 +78,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
                 //var list = await _uow.JobDetailsRepository.FindAllAsync(x => !x.IsDeleted.Value);
                 response.data.JobDetailsModel = JobList;
+                response.data.jobListTotalCount = count;
                 response.StatusCode = 200;
                 response.Message = "Success";
             }
@@ -221,7 +223,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
                                where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.JobId == model
                                select (new JobPriceModel
-                               {         
+                               {
                                    Minutes = jp.Minutes,
                                    JobId = j.JobId,
                                    ContractId = j.ContractId,
@@ -335,7 +337,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     details.JobPriceId = obj1.JobPriceId;
                     details.Minutes = obj1.Minutes;
                     details.IsApproved = obj.IsApproved;
+                    int count = _uow.GetDbContext().JobDetails.Where(x => x.IsDeleted == false).ToList().Count();
                     response.data.JobPriceDetail = details;
+                    response.data.jobListTotalCount = count;
                 }
                 else
                 {
@@ -384,27 +388,27 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             try
             {
                 var JobList1 = (from j in _uow.GetDbContext().JobDetails
-                               join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
-                               where !j.IsDeleted.Value && !jp.IsDeleted.Value
-                               select (new JobDetailsModel
-                               {
-                                   JobId = j.JobId,
-                                   JobCode = j.JobCode,
-                                   JobName = j.JobName,
-                                   EndDate = j.EndDate,
-                                   IsActive = j.IsActive,
-                                   IsApproved = j.IsApproved,
-                                   UnitRate = jp.UnitRate,
-                                   Units = jp.Units,
-                                   FinalRate = jp.FinalRate,
-                                   FinalPrice = jp.FinalPrice,
-                                   TotalPrice = jp.TotalPrice,
-                                   IsInvoiceApproved = jp.IsInvoiceApproved,
-                                   ContractId = j.ContractId,
-                                   Discount = jp.Discount,
-                                   DiscountPercent = jp.DiscountPercent,
-                                   Minutes = jp.Minutes
-                               })).ToList();
+                                join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
+                                where !j.IsDeleted.Value && !jp.IsDeleted.Value
+                                select (new JobDetailsModel
+                                {
+                                    JobId = j.JobId,
+                                    JobCode = j.JobCode,
+                                    JobName = j.JobName,
+                                    EndDate = j.EndDate,
+                                    IsActive = j.IsActive,
+                                    IsApproved = j.IsApproved,
+                                    UnitRate = jp.UnitRate,
+                                    Units = jp.Units,
+                                    FinalRate = jp.FinalRate,
+                                    FinalPrice = jp.FinalPrice,
+                                    TotalPrice = jp.TotalPrice,
+                                    IsInvoiceApproved = jp.IsInvoiceApproved,
+                                    ContractId = j.ContractId,
+                                    Discount = jp.Discount,
+                                    DiscountPercent = jp.DiscountPercent,
+                                    Minutes = jp.Minutes
+                                })).ToList();
 
                 if (model != null)
                 {
@@ -497,6 +501,46 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         }
 
         #endregion
+        public async Task<APIResponse> GetJobsPaginatedList(JobPaginationModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
 
+
+                var JobList = (from j in _uow.GetDbContext().JobDetails
+                               join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
+                               where !j.IsDeleted.Value && !jp.IsDeleted.Value
+                               select (new JobDetailsModel
+                               {
+                                   JobId = j.JobId,
+                                   JobCode = j.JobCode,
+                                   JobName = j.JobName,
+                                   Description = j.Description,
+                                   JobPhaseId = j.JobPhaseId,
+                                   StartDate = j.StartDate,
+                                   EndDate = j.EndDate,
+                                   IsActive = j.IsActive,
+                                   IsApproved = j.IsApproved,
+                                   UnitRate = jp.UnitRate,
+                                   Units = jp.Units,
+                                   FinalRate = jp.FinalRate,
+                                   FinalPrice = jp.FinalPrice,
+                                   TotalPrice = jp.TotalPrice,
+                                   IsInvoiceApproved = jp.IsInvoiceApproved
+                               })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+                
+                response.data.JobDetailsModel = JobList;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
     }
 }
+
