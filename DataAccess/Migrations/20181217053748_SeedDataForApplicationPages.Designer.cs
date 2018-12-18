@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181217053748_SeedDataForApplicationPages")]
+    partial class SeedDataForApplicationPages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4422,8 +4424,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<long?>("MediaCategoryId");
-
                     b.Property<long?>("MediumId");
 
                     b.Property<string>("ModifiedById");
@@ -4445,8 +4445,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CurrencyDetailsCurrencyId");
-
-                    b.HasIndex("MediaCategoryId");
 
                     b.HasIndex("MediumId");
 
@@ -5081,7 +5079,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("FilePath");
 
-                    b.Property<bool?>("IsApproved");
+                    b.Property<bool>("IsApproved");
 
                     b.Property<bool?>("IsDeleted");
 
@@ -5090,8 +5088,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<long>("ProjectId");
-
-                    b.Property<byte[]>("UploadedFile");
 
                     b.HasKey("ApproveProjrctId");
 
@@ -5131,130 +5127,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("AreaDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEAgeGroupDetail", b =>
-                {
-                    b.Property<long>("AgeGroupOtherDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("AgeGroupOtherDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("CEAgeGroupDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEAssumptionDetail", b =>
-                {
-                    b.Property<long>("AssumptionDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("AssumptionDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("CEAssumptionDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEFeasibilityExpertOtherDetail", b =>
-                {
-                    b.Property<long>("ExpertOtherDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("ExpertOtherDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("CEFeasibilityExpertOtherDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEOccupationDetail", b =>
-                {
-                    b.Property<long>("OccupationOtherDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("OccupationOtherDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("CEOccupationDetail");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.DonorCriteriaDetails", b =>
@@ -5322,37 +5194,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("DonorCriteriaDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.DonorEligibilityCriteria", b =>
-                {
-                    b.Property<long>("DonorEligibilityDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("DonorEligibilityDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("DonorEligibilityCriteria");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.EligibilityCriteriaDetail", b =>
@@ -5634,37 +5475,6 @@ namespace DataAccess.Migrations
                     b.ToTable("PriorityCriteriaDetail");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.PriorityOtherDetail", b =>
-                {
-                    b.Property<long>("PriorityOtherDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("PriorityOtherDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("PriorityOtherDetail");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProgramDetail", b =>
                 {
                     b.Property<long>("ProgramId")
@@ -5843,8 +5653,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("EndDate");
 
                     b.Property<bool>("IsActive");
-
-                    b.Property<bool?>("IsCriteriaEvaluationSubmit");
 
                     b.Property<bool?>("IsDeleted");
 
@@ -6526,15 +6334,13 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<bool?>("IsWin");
+                    b.Property<bool>("IsWin");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<long>("ProjectId");
-
-                    b.Property<byte[]>("UploadedFile");
 
                     b.HasKey("WinProjectId");
 
@@ -9764,10 +9570,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("CurrencyDetailsCurrencyId");
 
-                    b.HasOne("DataAccess.DbEntities.Marketing.MediaCategory", "MediaCategories")
-                        .WithMany()
-                        .HasForeignKey("MediaCategoryId");
-
                     b.HasOne("DataAccess.DbEntities.Marketing.Medium", "Medium")
                         .WithMany()
                         .HasForeignKey("MediumId");
@@ -9950,87 +9752,7 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEAgeGroupDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEAssumptionDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEFeasibilityExpertOtherDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEOccupationDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.DonorCriteriaDetails", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.DonorEligibilityCriteria", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
@@ -10122,22 +9844,6 @@ namespace DataAccess.Migrations
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.PriorityCriteriaDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.PriorityOtherDetail", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()

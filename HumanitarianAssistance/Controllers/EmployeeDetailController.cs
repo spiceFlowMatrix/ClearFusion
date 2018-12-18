@@ -19,6 +19,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 {
   [Produces("application/json")]
   [Route("api/EmployeeDetail/[Action]")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class EmployeeDetailController : Controller
   {
     private readonly JsonSerializerSettings _serializerSettings;
@@ -42,7 +43,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Employee History Outside Organization"
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    
     public async Task<APIResponse> GetAllEmployeeHistoryOutsideOrganization([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeHistoryOutsideOrganization(EmployeeId);
@@ -50,7 +51,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeHistoryOutsideOrganization([FromBody]EmployeeHistoryOutsideOrganizationModel model)
     {
       APIResponse apiResponse = null;
@@ -64,7 +64,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeHistoryOutsideOrganization([FromBody]EmployeeHistoryOutsideOrganizationModel model)
     {
       APIResponse apiResponse = null;
@@ -78,7 +77,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteEmployeeHistoryOutsideOrganization([FromBody]EmployeeHistoryOutsideOrganizationModel model)
     {
       APIResponse apiResponse = null;
@@ -96,7 +94,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Employee History Outside Country"
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllEmployeeHistoryOutsideCountry([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeHistoryOutsideCountry(EmployeeId);
@@ -104,7 +101,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeHistoryOutsideCountry([FromBody]EmployeeHistoryOutsideOrganizationModel model)
     {
       APIResponse apiResponse = null;
@@ -118,7 +114,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeHistoryOutsideCountry([FromBody]EmployeeHistoryOutsideOrganizationModel model)
     {
       APIResponse apiResponse = null;
@@ -132,7 +127,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteEmployeeHistoryOutsideCountry([FromBody]EmployeeHistoryOutsideOrganizationModel model)
     {
       APIResponse apiResponse = null;
@@ -150,7 +144,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Employee Relative Information"
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllEmployeeRelativeInformation([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeRelativeInformation(EmployeeId);
@@ -158,7 +151,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeRelativeInformation([FromBody]EmployeeRelativeInfoModel model)
     {
       APIResponse apiResponse = null;
@@ -172,7 +164,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeRelativeInformation([FromBody]EmployeeRelativeInfoModel model)
     {
       APIResponse apiResponse = null;
@@ -186,7 +177,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteEmployeeRelativeInformation([FromBody]EmployeeRelativeInfoModel model)
     {
       APIResponse apiResponse = null;
@@ -204,7 +194,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Employee Info References"
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllEmployeeInfoReferences([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeInfoReferences(EmployeeId);
@@ -212,7 +201,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeInfoReferences([FromBody]EmployeeRelativeInfoModel model)
     {
       APIResponse apiResponse = null;
@@ -226,7 +214,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeInfoReferences([FromBody]EmployeeRelativeInfoModel model)
     {
       APIResponse apiResponse = null;
@@ -240,7 +227,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteEmployeeInfoReferences([FromBody]EmployeeRelativeInfoModel model)
     {
       APIResponse apiResponse = null;
@@ -258,7 +244,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Employee Other Skills"
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllEmployeeOtherSkills([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeOtherSkills(EmployeeId);
@@ -266,7 +251,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeOtherSkills([FromBody]EmployeeOtherSkillsModel model)
     {
       APIResponse apiResponse = null;
@@ -280,7 +264,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeOtherSkills([FromBody]EmployeeOtherSkillsModel model)
     {
       APIResponse apiResponse = null;
@@ -294,7 +277,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteEmployeeOtherSkills([FromBody]EmployeeOtherSkillsModel model)
     {
       APIResponse apiResponse = null;
@@ -312,7 +294,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Employee Salary Budgets"
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllEmployeeSalaryBudgets([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeSalaryBudgets(EmployeeId);
@@ -320,7 +301,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeSalaryBudgets([FromBody]EmployeeSalaryBudgetModel model)
     {
       APIResponse apiResponse = null;
@@ -334,7 +314,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeSalaryBudgets([FromBody]EmployeeSalaryBudgetModel model)
     {
       APIResponse apiResponse = null;
@@ -348,7 +327,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteEmployeeSalaryBudgets([FromBody]EmployeeSalaryBudgetModel model)
     {
       APIResponse apiResponse = null;
@@ -366,7 +344,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Employee Educations"
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllEmployeeEducations([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeEducations(EmployeeId);
@@ -374,7 +351,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeEducations([FromBody]EmployeeEducationsModel model)
     {
       APIResponse apiResponse = null;
@@ -388,7 +364,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeEducations([FromBody]EmployeeEducationsModel model)
     {
       APIResponse apiResponse = null;
@@ -402,7 +377,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteEmployeeEducations([FromBody]EmployeeEducationsModel model)
     {
       APIResponse apiResponse = null;
@@ -420,7 +394,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Employee Salary Analytical Info"
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllEmployeeSalaryAnalyticalInfo([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeSalaryAnalyticalInfo(EmployeeId);
@@ -428,7 +401,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeSalaryAnalyticalInfo([FromBody]EmployeeSalaryAnalyticalInfoModel model)
     {
       APIResponse apiResponse = null;
@@ -442,7 +414,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeSalaryAnalyticalInfo([FromBody]EmployeeSalaryAnalyticalInfoModel model)
     {
       APIResponse apiResponse = null;
@@ -456,7 +427,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteEmployeeSalaryAnalyticalInfo([FromBody]EmployeeSalaryAnalyticalInfoModel model)
     {
       APIResponse apiResponse = null;
@@ -475,7 +445,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllEmployeeHealthInfo([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeHealthInfo(EmployeeId);
@@ -483,7 +452,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeHealthInfo([FromBody]EmployeeHealthInformationModel model)
     {
       APIResponse apiResponse = null;
@@ -497,7 +465,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeHealthInfo([FromBody]EmployeeHealthInformationModel model)
     {
       APIResponse apiResponse = null;
@@ -514,7 +481,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetEmployeeHealthQuestion([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetEmployeeHealthQuestion(EmployeeId);
@@ -522,7 +488,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeHealthQuestion([FromBody]EmployeeHealthQuestion model)
     {
       APIResponse apiResponse = null;
@@ -536,7 +501,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeHealthQuestion([FromBody]EmployeeHealthQuestion model)
     {
       APIResponse apiResponse = null;
@@ -551,7 +515,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteEmployeeHealthQuestion([FromBody]EmployeeHealthQuestion model)
     {
       APIResponse apiResponse = null;
@@ -569,7 +532,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Employee Languages"
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllEmployeeLanguages([FromQuery]int EmployeeId)
     {
       APIResponse apiresponse = await _iEmployeeDetail.GetAllEmployeeLanguages(EmployeeId);
@@ -577,7 +539,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEmployeeLanguages([FromBody]EmployeeLanguages model)
     {
       APIResponse apiResponse = null;
@@ -595,7 +556,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditEmployeeLanguages([FromBody]EmployeeLanguages model)
     {
       APIResponse apiResponse = null;
@@ -613,7 +573,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> RemoveEmployeeLanguages([FromBody]EmployeeLanguages model)
     {
       APIResponse apiResponse = null;

@@ -565,7 +565,56 @@ namespace HumanitarianAssistance.Entities
               new ActivityType { IsDeleted = false, ActivityTypeId = 2, ActivityName = "Production" }
           );
 
-
+            modelBuilder.Entity<ApplicationPages>().HasData(
+                new ApplicationPages { IsDeleted = false, PageId = 1,  PageName = "Users", ModuleId = 1, ModuleName = "Users"},
+                new ApplicationPages { IsDeleted = false, PageId = 2, PageName = "ChartOfAccount", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 3, PageName = "JournalCodes", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 4, PageName = "CurrencyCodes", ModuleId = 2, ModuleName = "Code" },
+                 new ApplicationPages { IsDeleted = false, PageId = 5, PageName = "OfficeCodes", ModuleId = 2, ModuleName = "Code" },
+                 new ApplicationPages { IsDeleted = false, PageId = 6, PageName = "FinancialYear", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 7, PageName = "PensionRate", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 8, PageName = "EmployeeContract", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 9, PageName = "AppraisalQuestions", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 10, PageName = "TechnicalQuestions", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 11, PageName = "EmailSettings", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 12, PageName = "ExchangeRate", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 13, PageName = "LeaveReason", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 14, PageName = "Profession", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 15, PageName = "Department", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 16, PageName = "Qualification", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 17, PageName = "Designation", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 18, PageName = "JobGrade", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 19, PageName = "SalaryHead", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 20, PageName = "SalaryTaxReportContent", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 21, PageName = "SetPayrollAccount", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 22, PageName = "Vouchers", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = false, PageId = 23, PageName = "Journal", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = false, PageId = 24, PageName = "LedgerStatement", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = false, PageId = 25, PageName = "BudgetBalance", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = false, PageId = 26, PageName = "TrialBalance", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = false, PageId = 27, PageName = "FinancialReport", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = false, PageId = 28, PageName = "CategoryPopulator", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = false, PageId = 29, PageName = "ExchangeGainLoss", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = false, PageId = 30, PageName = "GainLossTransaction", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = false, PageId = 31, PageName = "PensionPayments", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = false, PageId = 32, PageName = "Employees", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 33, PageName = "PayrollDailyHours", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 34, PageName = "Holidays", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 35, PageName = "Attendance", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 36, PageName = "ApproveLeave", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 37, PageName = "MonthlyPayrollRegister", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 38, PageName = "Jobs", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 39, PageName = "Interview", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 40, PageName = "EmployeeAppraisal", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 41, PageName = "Advances", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 42, PageName = "Summary", ModuleId = 4, ModuleName = "HR" },
+                new ApplicationPages { IsDeleted = false, PageId = 43, PageName = "Categories", ModuleId = 5, ModuleName = "Store" },
+                new ApplicationPages { IsDeleted = false, PageId = 44, PageName = "StoreSourceCodes", ModuleId = 5, ModuleName = "Store" },
+                new ApplicationPages { IsDeleted = false, PageId = 45, PageName = "PaymentTypes", ModuleId = 5, ModuleName = "Store" },
+                new ApplicationPages { IsDeleted = false, PageId = 46, PageName = "Store", ModuleId = 5, ModuleName = "Store" },
+                new ApplicationPages { IsDeleted = false, PageId = 47, PageName = "ProcurementSummary", ModuleId = 5, ModuleName = "Store" },
+                new ApplicationPages { IsDeleted = false, PageId = 48, PageName = "DepreciationReport", ModuleId = 5, ModuleName = "Store" }
+                );
             #endregion
 
 
