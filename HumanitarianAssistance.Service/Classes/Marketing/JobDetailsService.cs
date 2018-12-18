@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,33 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
         #region Job Details
 
+        public async Task<APIResponse> ApproveJob(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var jobInfo = await _uow.JobDetailsRepository.FindAsync(c => c.JobId == model && c.IsDeleted == false);
+                jobInfo.IsApproved = true;
+                jobInfo.ModifiedById = UserId;
+                jobInfo.ModifiedDate = DateTime.UtcNow;
+                await _uow.JobDetailsRepository.UpdateAsyn(jobInfo, jobInfo.JobId);
+                var jobPriceInfo = await _uow.JobPriceDetailsRepository.FindAsync(c => c.JobId == model);
+                jobPriceInfo.IsInvoiceApproved = true;
+                jobPriceInfo.ModifiedById = UserId;
+                jobPriceInfo.ModifiedDate = DateTime.UtcNow;
+                await _uow.JobPriceDetailsRepository.UpdateAsyn(jobPriceInfo, jobPriceInfo.JobId);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+                response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         ///  Get All Jobs List
         /// </summary>
@@ -47,9 +75,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-
-
-                var JobList = (from j in _uow.GetDbContext().JobDetails
+                int count = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+                var JobList = await (from j in _uow.GetDbContext().JobDetails
                                join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
                                where !j.IsDeleted.Value && !jp.IsDeleted.Value
                                select (new JobDetailsModel
@@ -69,8 +96,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    FinalPrice = jp.FinalPrice,
                                    TotalPrice = jp.TotalPrice,
                                    IsInvoiceApproved = jp.IsInvoiceApproved
-                               })).Take(10).Skip(0).ToList();
-                int count = _uow.GetDbContext().JobDetails.Where(x=>x.IsDeleted==false).ToList().Count;
+                               })).Take(10).Skip(0).ToListAsync();
+                
 
 
 
@@ -188,6 +215,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.JobPriceDetailsRepository.UpdateAsyn(jobPriceInfo, jobPriceInfo.JobId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+                response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
             }
             catch (Exception ex)
             {
