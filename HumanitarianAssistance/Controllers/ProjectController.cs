@@ -657,6 +657,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddApprovalProjectDetail([FromBody]ApproveProjectDetailModel model)
     {
+
+      if (!string.IsNullOrEmpty(model.UploadedFile))
+      {
+        model.UploadedFile = model.UploadedFile.Substring(model.UploadedFile.IndexOf(',') + 1);
+      }
+      
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
@@ -676,6 +682,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     public async Task<APIResponse> WinApprovalProjectDetail([FromBody]WinApprovalProjectModel model)
     {
       APIResponse apiRespone = null;
+      if (!string.IsNullOrEmpty(model.UploadedFile))
+      {
+        model.UploadedFile = model.UploadedFile.Substring(model.UploadedFile.IndexOf(',') + 1);
+      }
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
@@ -1257,6 +1267,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
+    
 
     #endregion
 

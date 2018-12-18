@@ -155,10 +155,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteOccupationDetails(long Id, string userId);
         Task<APIResponse> DeleteAssumptionDetails(long Id, string userId);
         Task<APIResponse> DeleteDOnorEligibilityCriteriaOtherDetails(long Id, string userId);
-
-
-
-
+     
         #endregion
     }
 }

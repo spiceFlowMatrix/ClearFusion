@@ -18,6 +18,7 @@ namespace DataAccess.DbEntities.Project
         public string CommentText { get; set; }
         public string FileName { get; set; }
         public string FilePath { get; set; }
-        public bool IsWin { get; set; }
+        public bool? IsWin { get; set; }
+        public byte[] UploadedFile { get; set; }
     }
 }
