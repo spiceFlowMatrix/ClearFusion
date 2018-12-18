@@ -79,6 +79,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeletePayrollAccountHead(PayrollHeadModel model);
         Task<APIResponse> GetAllDistrictDetailByProvinceId(List<int?> ProvinceId);
         Task<APIResponse> UpdatePayrollAccountHeadAllEmployees(List<PayrollHeadModel> model, string UserId);
+        Task<APIResponse> GetApplicationPages();
 
         #region Language
         Task<APIResponse> EditLanguage(LanguageModel model, string UserId);

@@ -2255,5 +2255,30 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
+        /// <summary>
+        /// Get Application Pages List
+        /// </summary>
+        /// <returns>Pages List</returns>
+        public async Task<APIResponse> GetApplicationPages()
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                List<ApplicationPages> xApplicationPages = await _uow.GetDbContext().ApplicationPages.Where(x => x.IsDeleted== false).ToListAsync();
+
+                response.data.ApplicationPagesList = xApplicationPages;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+
     }
 }

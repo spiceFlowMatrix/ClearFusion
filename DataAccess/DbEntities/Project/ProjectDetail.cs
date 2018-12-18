@@ -22,5 +22,6 @@ namespace DataAccess.DbEntities.Project
         public ProjectPhaseDetails ProjectPhaseDetails { get; set; }
         public bool IsProposalComplate { get; set; }
         public bool IsActive { get; set; }
+        public bool? IsCriteriaEvaluationSubmit { get; set; }
     }
 }

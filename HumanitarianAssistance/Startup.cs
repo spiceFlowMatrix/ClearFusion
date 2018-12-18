@@ -336,7 +336,7 @@ namespace HumanitarianAssistance
       {
         using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
         {
-          // context.Database.Migrate();
+          context.Database.Migrate();
 
           if (!context.Users.Any())
           {

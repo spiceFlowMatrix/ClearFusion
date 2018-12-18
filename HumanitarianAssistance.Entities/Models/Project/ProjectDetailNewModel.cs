@@ -18,5 +18,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string TotalDaysinHours  { get; set; }
         public bool? IsWin { get; set; }
         public bool? IsApproved { get; set; }
+        public bool? IsProposalSubmit { get; set; }
+        public bool? IsCriteriaEvaluationSubmit { get; set; }
+
     }
 }

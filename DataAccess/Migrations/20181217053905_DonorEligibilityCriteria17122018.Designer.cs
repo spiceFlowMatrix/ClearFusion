@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181217053905_DonorEligibilityCriteria17122018")]
+    partial class DonorEligibilityCriteria17122018
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -395,57 +397,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("ApplicationPages");
-
-                    b.HasData(
-                        new { PageId = 1, IsDeleted = false, ModuleId = 1, ModuleName = "Users", PageName = "Users" },
-                        new { PageId = 2, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "ChartOfAccount" },
-                        new { PageId = 3, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "JournalCodes" },
-                        new { PageId = 4, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "CurrencyCodes" },
-                        new { PageId = 5, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "OfficeCodes" },
-                        new { PageId = 6, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "FinancialYear" },
-                        new { PageId = 7, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "PensionRate" },
-                        new { PageId = 8, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "EmployeeContract" },
-                        new { PageId = 9, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "AppraisalQuestions" },
-                        new { PageId = 10, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "TechnicalQuestions" },
-                        new { PageId = 11, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "EmailSettings" },
-                        new { PageId = 12, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "ExchangeRate" },
-                        new { PageId = 13, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "LeaveReason" },
-                        new { PageId = 14, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Profession" },
-                        new { PageId = 15, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Department" },
-                        new { PageId = 16, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Qualification" },
-                        new { PageId = 17, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Designation" },
-                        new { PageId = 18, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "JobGrade" },
-                        new { PageId = 19, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SalaryHead" },
-                        new { PageId = 20, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SalaryTaxReportContent" },
-                        new { PageId = 21, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SetPayrollAccount" },
-                        new { PageId = 22, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "Vouchers" },
-                        new { PageId = 23, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "Journal" },
-                        new { PageId = 24, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "LedgerStatement" },
-                        new { PageId = 25, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "BudgetBalance" },
-                        new { PageId = 26, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "TrialBalance" },
-                        new { PageId = 27, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "FinancialReport" },
-                        new { PageId = 28, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "CategoryPopulator" },
-                        new { PageId = 29, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "ExchangeGainLoss" },
-                        new { PageId = 30, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "GainLossTransaction" },
-                        new { PageId = 31, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "PensionPayments" },
-                        new { PageId = 32, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Employees" },
-                        new { PageId = 33, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "PayrollDailyHours" },
-                        new { PageId = 34, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Holidays" },
-                        new { PageId = 35, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Attendance" },
-                        new { PageId = 36, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "ApproveLeave" },
-                        new { PageId = 37, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "MonthlyPayrollRegister" },
-                        new { PageId = 38, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Jobs" },
-                        new { PageId = 39, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Interview" },
-                        new { PageId = 40, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "EmployeeAppraisal" },
-                        new { PageId = 41, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Advances" },
-                        new { PageId = 42, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Summary" },
-                        new { PageId = 43, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "Categories" },
-                        new { PageId = 44, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "StoreSourceCodes" },
-                        new { PageId = 45, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "PaymentTypes" },
-                        new { PageId = 46, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "Store" },
-                        new { PageId = 47, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "ProcurementSummary" },
-                        new { PageId = 48, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "DepreciationReport" }
-                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AppraisalGeneralQuestions", b =>
@@ -5081,7 +5032,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("FilePath");
 
-                    b.Property<bool?>("IsApproved");
+                    b.Property<bool>("IsApproved");
 
                     b.Property<bool?>("IsDeleted");
 
@@ -5090,8 +5041,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<long>("ProjectId");
-
-                    b.Property<byte[]>("UploadedFile");
 
                     b.HasKey("ApproveProjrctId");
 
@@ -5844,8 +5793,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<bool?>("IsCriteriaEvaluationSubmit");
-
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<bool>("IsProposalComplate");
@@ -6526,15 +6473,13 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<bool?>("IsWin");
+                    b.Property<bool>("IsWin");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<long>("ProjectId");
-
-                    b.Property<byte[]>("UploadedFile");
 
                     b.HasKey("WinProjectId");
 

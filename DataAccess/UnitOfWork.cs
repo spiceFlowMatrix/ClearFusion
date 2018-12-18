@@ -185,8 +185,9 @@ namespace DataAccess
         private IGenericRepository<CEAgeGroupDetail> _ageGroupOtherDetailRepository;
         private IGenericRepository<CEOccupationDetail> _occupationOtherDetailRepository;
         private IGenericRepository<CEAssumptionDetail> _assumptionOtherDetailRepository;
+        private IGenericRepository<DonorEligibilityCriteria> _donorEligibilityCriteria;
 
-        
+
 
 
 
@@ -1687,8 +1688,18 @@ namespace DataAccess
                     _assumptionOtherDetailRepository ?? new GenericRepository<CEAssumptionDetail>(_mschaContext);
             }
         }
-       
 
+        public IGenericRepository<DonorEligibilityCriteria> DonorEligibilityCriteriaRepository
+        {
+            get
+            {
+                return _donorEligibilityCriteria =
+                    _donorEligibilityCriteria ?? new GenericRepository<DonorEligibilityCriteria>(_mschaContext);
+            }
+        }
+
+
+        
 
         public void Save()
         {

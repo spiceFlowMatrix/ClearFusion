@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
 {
     public interface IChartOfAccountNewService
     {
-        Task<APIResponse> GetMainLevelAccount(int id);
+        Task<APIResponse> GetMainLevelAccount(long id);
         Task<APIResponse> GetAllAccountsByParentId(long parentId);
         Task<APIResponse> GetAllAccountsByAccountHeadTypeId(long id);
         Task<APIResponse> AddChartOfAccount(ChartOfAccountNewModel model);

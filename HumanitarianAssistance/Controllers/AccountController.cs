@@ -30,6 +30,7 @@ namespace HumanitarianAssistance.Controllers
 {
   [Produces("application/json")]
   [Route("api/Account/[Action]")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class AccountController : Controller
   {
     private readonly SignInManager<AppUser> _signInManager;
@@ -85,6 +86,7 @@ namespace HumanitarianAssistance.Controllers
 
 
     [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddUserInRole([FromBody] LoginViewModel model)
     {
       var user = await _userManager.FindByEmailAsync(model.UserName);
@@ -98,7 +100,7 @@ namespace HumanitarianAssistance.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "DepartmentUser")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public string EmployeeList()
     {
       return "Product List ";
@@ -106,7 +108,7 @@ namespace HumanitarianAssistance.Controllers
 
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddPermissions([FromBody] PermissionsModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -172,7 +174,7 @@ namespace HumanitarianAssistance.Controllers
     [HttpPost]
     public async Task<bool> AddRole(string RoleName)
     {
-      
+
       IdentityResult identityResult = null;
 
       try
@@ -183,7 +185,7 @@ namespace HumanitarianAssistance.Controllers
         {
           var role = new IdentityRole();
           role.Name = RoleName;
-          identityResult  = await _roleManager.CreateAsync(role);
+          identityResult = await _roleManager.CreateAsync(role);
         }
       }
       catch (Exception exception)
@@ -226,33 +228,77 @@ namespace HumanitarianAssistance.Controllers
 
           List<UserRolePermissionsModel> userRolePermissionsList = new List<UserRolePermissionsModel>();
 
+          List<RolePermissionModel> RolePermissionModelList = new List<RolePermissionModel>();
+
           foreach (var role in roles)
           {
             UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
 
-            userClaims.Add(new Claim("Roles", role)); //imp
-            
+            //userClaims.Add(new Claim("Roles", role)); //imp
+
             var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
 
-            userRolePermissions.RoleName = role;
-            userRolePermissions.RoleId = roleid.Id;
+            //userRolePermissions.RoleName = role;
+            //userRolePermissions.RoleId = roleid.Id;
 
             List<RolePermissions> rolePermissionsList = _uow.GetDbContext().RolePermissions.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
 
             if (rolePermissionsList.Any())
             {
 
-              userRolePermissions.RolePagePermission = new List<RolePermissionModel>();
+              //userRolePermissions.RolePagePermission = new List<RolePermissionModel>();
+
+              //foreach (RolePermissions rolePermissions in rolePermissionsList)
+              //{
+              //  RolePermissionModel rolePermissionModel = new RolePermissionModel();
+              //  rolePermissionModel.CanEdit = rolePermissions.CanEdit;
+              //  rolePermissionModel.CanView = rolePermissions.CanView;
+              //  rolePermissionModel.ModuleId = rolePermissions.ModuleId;
+              //  rolePermissionModel.PageId = rolePermissions.PageId;
+              //  rolePermissionModel.RolesPermissionId = rolePermissions.RolesPermissionId;
+              //  userRolePermissions.RolePagePermission.Add(rolePermissionModel);
+              //}
 
               foreach (RolePermissions rolePermissions in rolePermissionsList)
               {
-                RolePermissionModel rolePermissionModel = new RolePermissionModel();
-                rolePermissionModel.CanEdit = rolePermissions.CanEdit;
-                rolePermissionModel.CanView = rolePermissions.CanView;
-                rolePermissionModel.ModuleId = rolePermissions.ModuleId;
-                rolePermissionModel.PageId = rolePermissions.PageId;
-                rolePermissionModel.RolesPermissionId = rolePermissions.RolesPermissionId;
-                userRolePermissions.RolePagePermission.Add(rolePermissionModel);
+                if (RolePermissionModelList.Any())
+                {
+                  RolePermissionModel rolePermissionModel = RolePermissionModelList.FirstOrDefault(x => x.PageId == rolePermissions.PageId);
+
+                  if (rolePermissionModel == null)
+                  {
+                    RolePermissionModel rolePermission = new RolePermissionModel();
+                    rolePermission.CanEdit = rolePermissions.CanEdit;
+                    rolePermission.CanView = rolePermissions.CanView;
+                    rolePermission.ModuleId = rolePermissions.ModuleId;
+                    rolePermission.PageId = rolePermissions.PageId;
+                    rolePermission.RolesPermissionId = rolePermissions.RolesPermissionId;
+                    RolePermissionModelList.Add(rolePermission);
+                  }
+                  else
+                  {
+                    if (rolePermissionModel.CanView && !rolePermissionModel.CanEdit && rolePermissions.CanEdit)
+                    {
+                      rolePermissionModel.CanEdit = rolePermissions.CanEdit;
+                    }
+                    else if (!rolePermissionModel.CanView && !rolePermissionModel.CanEdit && rolePermissions.CanEdit)
+                    {
+                      rolePermissionModel.CanView = true;
+                      rolePermissionModel.CanEdit = true; 
+                    }
+
+                  }
+                }
+                else
+                {
+                  RolePermissionModel rolePermissionModel = new RolePermissionModel();
+                  rolePermissionModel.CanEdit = rolePermissions.CanEdit;
+                  rolePermissionModel.CanView = rolePermissions.CanView;
+                  rolePermissionModel.ModuleId = rolePermissions.ModuleId;
+                  rolePermissionModel.PageId = rolePermissions.PageId;
+                  rolePermissionModel.RolesPermissionId = rolePermissions.RolesPermissionId;
+                  RolePermissionModelList.Add(rolePermissionModel);
+                }
               }
             }
 
@@ -282,10 +328,10 @@ namespace HumanitarianAssistance.Controllers
           response.Message = "Success";
           response.data.Token = new JwtSecurityTokenHandler().WriteToken(token);
           response.data.Roles = roles.ToList();
-          response.data.UserRolePermissions = userRolePermissionsList;
-          //response.data.OfficeId = officedetais?.OfficeId ?? 0;
+          //response.data.UserRolePermissions = userRolePermissionsList;
+          response.data.RolePermissionModelList = RolePermissionModelList;
 
-          //response.data.Permissions = permissionDic;
+
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
         }
         else
@@ -303,7 +349,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme )]
     public async Task<object> AddUsers([FromBody]UserDetailsModel users)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -320,7 +366,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> EditUser([FromBody]UserDetailsModel users)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -337,7 +383,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> ChangePassword([FromBody]ChangePasswordModel model)
     {
       APIResponse response = null;
@@ -363,7 +409,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> ResetPassword([FromBody]ResetPassword model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -381,7 +427,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetDepartment(string officeCode)
     {
       APIResponse response = await _iuserDetails.GetDepartmentsByOfficeCodeAsyn(officeCode);
@@ -389,7 +435,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AssignRoleToUser([FromBody]RolesAndUserModel model)
     {
       var user = await _userManager.FindByIdAsync(model.UserId);
@@ -419,7 +465,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetRoles()
     {
 
@@ -451,7 +497,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     //[HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme )]
     //public async Task<object> GetRolesByUserId()
     //{
     //  APIResponse response = new APIResponse();
@@ -464,7 +510,7 @@ namespace HumanitarianAssistance.Controllers
     //}
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllUserDetails()
     {
       APIResponse response = await _iuserDetails.GetAllUserDetails();
@@ -472,7 +518,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetUserDetailsByUserId(string UserId)
     {
       APIResponse response = await _iuserDetails.GetUserDetailsByUserId(UserId);
@@ -480,7 +526,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> PermissionsInRoles([FromBody] List<PermissionsInRolesModel> model, string RoleId)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -500,7 +546,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetPermissionByRoleId(string roleid)
     {
       APIResponse response = await _ipermissionsInRoles.GetPermissionByRoleId(roleid);
@@ -508,7 +554,7 @@ namespace HumanitarianAssistance.Controllers
 
     }
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetPermissions()
     {
       APIResponse response = await _ipermissionsInRoles.GetPermissionsAsync();
@@ -516,7 +562,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetUserRole(string userid)
     {
       APIResponse response = await _iuserDetails.GetUserRolesByUserId(userid);
@@ -524,7 +570,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> CheckCurrentPassword(string pwd)
     {
       APIResponse api = new APIResponse();
@@ -556,7 +602,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllVoucherDetails()
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherDetails();
@@ -565,7 +611,7 @@ namespace HumanitarianAssistance.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllVouchersByOfficeId(int officeid)
     {
       APIResponse response = await _ivoucherDetail.GetAllVouchersByOfficeId(officeid);
@@ -573,7 +619,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllVoucherDetailsByFilter([FromBody] VoucherFilterModel filterModel)
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherDetailsByFilter(filterModel);
@@ -581,7 +627,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllVoucherType()
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherType();
@@ -589,7 +635,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddVoucherDetail([FromBody] VoucherDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -606,7 +652,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> EditVoucherDetail([FromBody] VoucherDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -623,7 +669,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> DeleteVoucherDetail(int VoucherNo)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -637,7 +683,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetJouranlVoucherDetailsByCondition([FromBody] JournalViewModel model)
     {
       //APIResponse response = await _ivoucherDetail.GetJouranlVoucherDetails();
@@ -647,7 +693,7 @@ namespace HumanitarianAssistance.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllAccountCode()
     {
       APIResponse response = await _ivoucherDetail.GetAllAccountCode();
@@ -655,7 +701,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllControlLevelAccountCode()
     {
       APIResponse response = await _ivoucherDetail.GetAllControlLevelAccountCode();
@@ -663,7 +709,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllVoucherTransactionDetailByVoucherNo(int VoucherNo)
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherTransactionDetailByVoucherNo(VoucherNo);
@@ -671,7 +717,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     //[HttpPost]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme )]
     //public async Task<object> AddVoucherTransactionDetail([FromBody] List<VoucherTransactionModel> model)
     //{
     //  APIResponse apiRespone = null;
@@ -686,7 +732,7 @@ namespace HumanitarianAssistance.Controllers
 
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddVoucherTransactionDetail([FromBody] List<VoucherTransactionModel> model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -703,7 +749,7 @@ namespace HumanitarianAssistance.Controllers
 
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> EditVoucherTransactionDetail([FromBody] VoucherTransactionModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -720,7 +766,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> DeleteVoucherTransactionDetail(int Id)
     {
       APIResponse response = null;
@@ -734,7 +780,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> DeleteVoucherTransactions(int Id)
     {
       APIResponse response = null;
@@ -749,7 +795,7 @@ namespace HumanitarianAssistance.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo)
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherDocumentDetailByVoucherNo(VoucherNo);
@@ -757,7 +803,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddVoucherDocumentDetail([FromBody] VoucherDocumentDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -775,7 +821,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> DeleteVoucherDocumentDetail(int DocumentId)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -789,7 +835,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllLedgerDetails([FromBody] LedgerModels model)
     {
       APIResponse response = null;
@@ -803,7 +849,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetTrailBlanceDetailsByCondition([FromBody] LedgerModels model)
     {
       APIResponse response = await _ivoucherDetail.GetTrailBlanceDetailsByCondition(model);
@@ -811,7 +857,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllVoucherTransactionDetailByBudgetLine(long projectId, long budgetLineId)
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherTransactionDetailByBudgetLine(projectId, budgetLineId);
@@ -819,7 +865,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetProjectAndBudgetLine()
     {
       APIResponse repsonse = await _ivoucherDetail.GetProjectAndBudgetLine();
@@ -827,7 +873,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> AddNotesDetails([FromBody] NotesMasterModel model)
     {
       APIResponse respone = null;
@@ -843,7 +889,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> EditNotesDetails([FromBody] NotesMasterModel model)
     {
       APIResponse response = null;
@@ -859,7 +905,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllNotesDetails()
     {
       APIResponse response = await _ivoucherDetail.GetAllNotesDetails();
@@ -867,7 +913,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetBlanceSheetDetails([FromBody]FinancialReportModel model)
     {
       APIResponse response = await _ivoucherDetail.GetBlanceSheetDetails(model);
@@ -875,7 +921,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
     {
       APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData(financialyearid, currencyid);
@@ -883,7 +929,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> AddCategoryPopulator([FromBody] CategoryPopulatorModel model)
     {
       APIResponse respone = null;
@@ -896,7 +942,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> EditCategoryPopulator([FromBody] CategoryPopulatorModel model)
     {
       APIResponse response = null;
@@ -909,7 +955,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> DeleteCategoryPopulator(int categoryPopulatorId)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -923,7 +969,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllCategoryPopulator()
     {
       APIResponse response = await _ivoucherDetail.GetAllCategoryPopulator();
@@ -931,7 +977,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllUserNotifications(string userid)
     {
       APIResponse response = await _ivoucherDetail.GetAllUserNotifications(userid);
@@ -939,7 +985,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetExchangeGainOrLossAmount([FromBody]ExchangeGainOrLossFilterModel model)
     {
       APIResponse response = await _iExchangeRate.GetExchangeGainOrLossAmount(model);
@@ -947,7 +993,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllVoucherByJouranlId([FromBody]JournalVoucherFilterModel JournalVoucherFilter)
     {
       APIResponse response = await _ivoucherDetail.GetAllVoucherByJouranlId(JournalVoucherFilter);
@@ -955,7 +1001,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetLevelFourAccountCode()
     {
       APIResponse response = await _ivoucherDetail.GetLevelFourAccountCode();
@@ -963,7 +1009,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetExchangeGainOrLossTransactionAmount([FromBody]ExchangeGainOrLossTransactionFilterModel model)
     {
       APIResponse response = await _iExchangeRate.GetExchangeGainOrLossTransactionAmount(model);
@@ -971,7 +1017,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddExchangeGainLossVoucher([FromBody] ExchangeGainLossVoucher model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -988,7 +1034,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetExchangeGainLossVoucherList(int OfficeId)
     {
       APIResponse response = await _ivoucherDetail.GetExchangeGainLossVoucherList(OfficeId);
@@ -996,7 +1042,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> DeleteExchangeGainLossVoucher(long VoucherNo, string UserId)
     {
       APIResponse response = await _ivoucherDetail.DeleteExchangeGainLossVoucher(VoucherNo, UserId);
@@ -1004,7 +1050,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetAllInputLevelAccountCode()
     {
       APIResponse response = await _ivoucherDetail.GetAllInputLevelAccountCode();
@@ -1012,7 +1058,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddEmployeePensionPayment([FromBody]EmployeePensionPaymentModel model)
     {
       APIResponse response = null;
@@ -1026,7 +1072,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GenerateSalaryVoucher([FromBody]EmployeeSalaryVoucherModel model)
     {
       APIResponse response = null;
@@ -1040,7 +1086,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetEmployeeSalaryVoucher(int EmployeeId, int Month, int Year)
     {
       APIResponse response = await _ivoucherDetail.GetEmployeeSalaryVoucher(EmployeeId, Month, Year);
@@ -1048,7 +1094,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> ReverseEmployeeSalaryVoucher(long VoucherNo)
     {
       APIResponse response = null;
@@ -1061,7 +1107,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> DisapproveEmployeeApprovedSalary([FromBody]DisapprovePayrollModel model)
     {
       APIResponse response = null;
@@ -1074,7 +1120,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetVoucherDetailByVoucherNo(int VoucherNo)
     {
       APIResponse response = await _ivoucherDetail.GetVoucherDetailByVoucherNo(VoucherNo);
@@ -1082,15 +1128,15 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetMainLevelAccount([FromBody]int id)
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<APIResponse> GetMainLevelAccount([FromBody]long id)
     {
       APIResponse response = await _iChartOfAccountNewService.GetMainLevelAccount(id);
       return response;
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllAccountsByParentId([FromBody]int id)
     {
       APIResponse response = await _iChartOfAccountNewService.GetAllAccountsByParentId(id);
@@ -1098,7 +1144,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddChartOfAccount([FromBody]ChartOfAccountNewModel model)
     {
       APIResponse response = null;
@@ -1114,7 +1160,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllAccountsByAccountHeadTypeId([FromBody]int id)
     {
       APIResponse response = await _iChartOfAccountNewService.GetAllAccountsByAccountHeadTypeId(id);
@@ -1123,7 +1169,7 @@ namespace HumanitarianAssistance.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllAccountFilter()
     {
       APIResponse response = await _iChartOfAccountNewService.GetAllAccountFilter();
@@ -1132,7 +1178,7 @@ namespace HumanitarianAssistance.Controllers
 
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> EditChartOfAccount([FromBody]ChartOfAccountNewModel model)
     {
       APIResponse response = null;
@@ -1148,25 +1194,25 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllApplicationPages()
     {
       APIResponse response = null;
 
-        response = await _ipermissionsInRoles.GetAllApplicationPages();
-    
+      response = await _ipermissionsInRoles.GetAllApplicationPages();
+
       return response;
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> AddRoleWithPagePermissions([FromBody]RolesWithPagePermissionsModel rolesWithPagePermissionsModel)
     {
       APIResponse response = null;
 
-      if (rolesWithPagePermissionsModel!=null)
+      if (rolesWithPagePermissionsModel != null)
       {
-        bool result= await AddRole(rolesWithPagePermissionsModel.RoleName);
+        bool result = await AddRole(rolesWithPagePermissionsModel.RoleName);
 
         if (result)
         {
