@@ -5,7 +5,7 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
 {
     public interface IFinancialReportService
     {
-        Task<APIResponse> GetNoteBalancesByHeadType(int headType, int toCurrencyId);
+        Task<APIResponse> GetNoteBalancesByHeadType(int headType);
         Task<APIResponse> GetNoteBalanceById(int noteId);
     }
 }

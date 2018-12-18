@@ -34,6 +34,7 @@ using HumanitarianAssistance.Service.interfaces.Marketing;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.Service.Classes.AccountingNew;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace HumanitarianAssistance
 {
@@ -143,6 +144,8 @@ namespace HumanitarianAssistance
 
       services.AddTransient<IClientDetails, ClientDetailsService>();
 
+      services.AddTransient<IFinancialReportService, FinancialReportService>();
+
       //services.AddTransient<UserManager<AppUser>>();
 
       var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
@@ -245,6 +248,7 @@ namespace HumanitarianAssistance
           {
             // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+            config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
           });
 
       //Mapper.Initialize(cfg => cfg.AddProfile<AutoMapperProfile>());

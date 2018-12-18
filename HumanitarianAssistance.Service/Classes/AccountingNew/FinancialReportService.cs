@@ -26,7 +26,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             this._mapper = mapper;
             this._userManager = userManager;
         }
-        public async Task<APIResponse> GetNoteBalancesByHeadType(int headType, int toCurrencyId)
+
+        public async Task<APIResponse> GetNoteBalancesByHeadType(int headType)
         {
             APIResponse response = new APIResponse();
 
