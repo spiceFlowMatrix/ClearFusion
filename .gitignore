@@ -62,3 +62,5 @@ Version.cpp
 
 obj/*
 bin/*
+*/obj/*
+*/bin/*
