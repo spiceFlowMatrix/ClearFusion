@@ -14,13 +14,13 @@ using Microsoft.AspNetCore.Identity;
 
 namespace HumanitarianAssistance.Service.Classes.AccountingNew
 {
-    public class FinancialReportService : IFinancialReportService
+    public class AccountBalanceService : IAccountBalance
     {
         private IUnitOfWork _uow;
         private UserManager<AppUser> _userManager;
         private IMapper _mapper;
 
-        public FinancialReportService(IUnitOfWork uow, IMapper mapper, UserManager<AppUser> userManager)
+        public AccountBalanceService(IUnitOfWork uow, IMapper mapper, UserManager<AppUser> userManager)
         {
             this._uow = uow;
             this._mapper = mapper;
@@ -36,7 +36,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 var subLevelList =
                     await _uow.ChartOfAccountNewRepository.FindAllAsync(x =>
-                        x.AccountLevelId == (int) AccountLevels.SubLevel);
+                        x.AccountLevelId == (int)AccountLevels.SubLevel && x.AccountHeadTypeId == headType);
                 response.data.SubLevelAccountList = subLevelList.ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -48,6 +48,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
             // TODO: fetch all vouchers that contain transactions towards accounts whose head type matches this headType
             // TODO: get exchange rate for each transaction. Use the currencyId from each transaction's voucher, and the toCurrencyId to get  
+
+            // TODO: get all notes that have accounts whose head type match this.headType
 
             return response;
         }

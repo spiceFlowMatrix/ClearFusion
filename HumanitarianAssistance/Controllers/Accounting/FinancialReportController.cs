@@ -27,7 +27,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
     private IPermissionsInRoles _ipermissionsInRoles;
     private IPermissionsInRoles _iPermissionsInRolesService;
     IUnitOfWork _uow;
-    private IFinancialReportService _financialReportService;
+    private IAccountBalance _financialReportService;
 
     public FinancialReportController(
       SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager,
@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
       IConfiguration configuration, IPermissions ipermissions,
       IUserDetails iuserDetails, IPermissionsInRoles ipermissionsInRoles,
       IPermissionsInRoles iPermissionsInRolesService, IUnitOfWork uow,
-      IFinancialReportService financialReportService)
+      IAccountBalance financialReportService)
     {
       _signInManager = signInManager;
       _roleManager = roleManager;

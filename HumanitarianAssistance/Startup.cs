@@ -144,7 +144,7 @@ namespace HumanitarianAssistance
 
       services.AddTransient<IClientDetails, ClientDetailsService>();
 
-      services.AddTransient<IFinancialReportService, FinancialReportService>();
+      services.AddTransient<IAccountBalance, AccountBalanceService>();
 
       //services.AddTransient<UserManager<AppUser>>();
 
