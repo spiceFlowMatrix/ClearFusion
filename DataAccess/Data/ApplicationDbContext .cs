@@ -179,8 +179,18 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
         public DbSet<AccountHeadType> AccountHeadType { get; set; }
         public DbSet<PaymentTypes> PaymentTypes { get; set; }
+        public DbSet<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public DbSet<ApplicationPages> ApplicationPages { get; set; }
         public DbSet<RolePermissions> RolePermissions { get; set; }
+        public DbSet<CEFeasibilityExpertOtherDetail> CEFeasibilityExpertOtherDetail { get; set; }
+        public DbSet<CEAgeGroupDetail> CEAgeGroupDetail { get; set; }
+        public DbSet<CEOccupationDetail> CEOccupationDetail { get; set; }
+
+        public DbSet<CEAssumptionDetail> CEAssumptionDetail { get; set; }
+        public DbSet<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
+
+        
+
 
 
         #region Project

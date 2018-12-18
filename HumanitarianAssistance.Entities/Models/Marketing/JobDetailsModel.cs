@@ -39,4 +39,10 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public string JobName { get; set; }
         public long JobId { get; set; }
     }
+
+    public class JobPaginationModel
+    {
+        public int pageIndex { get; set; }
+        public int pageSize { get; set; }
+    }
 }

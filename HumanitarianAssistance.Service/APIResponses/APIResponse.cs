@@ -301,6 +301,16 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<UserRolePermissionsModel> UserRolePermissions { get; set; }
         public List<RolePermissionModel> RolePermissionModelList { get; set; }
 
+       
+        public ICollection<PriorityOtherDetail> PriorityOtherDetail { get; set; }
+        public ICollection<CEFeasibilityExpertOtherDetail> FeasibilityExpertOtherDetail { get; set; }
+        public ICollection<CEAgeGroupDetail> CEAgeGroupDetail { get; set; }
+        public ICollection<CEOccupationDetail> CEOccupationDetail { get; set; }
+        public ICollection<CEAssumptionDetail> CEAssumptionDetail { get; set; }
+
+        public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
+
+
         #region Marketing
         public ICollection<JobDetails> JobDetails { get; set; }
         public ICollection<Quality> Qualities { get; set; }
@@ -318,6 +328,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<MediaCategory> MediaCategories { get; set; }
         public ICollection<TimeCategory> TimeCategories { get; set; }
         public List<JobDetailsModel> JobDetailsModel { get; set; }
+        public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
         public List<ContractByClient> ContractByClientList { get; set; }
         public UnitRateModel unitRateDetails { get; set; }

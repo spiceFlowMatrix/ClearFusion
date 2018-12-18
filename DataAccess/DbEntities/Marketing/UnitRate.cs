@@ -31,5 +31,8 @@ namespace DataAccess.DbEntities.Marketing
         [ForeignKey("ActivityTypeId")]
         public long? ActivityTypeId { get; set; }
         public ActivityType ActivityTypes { get; set; }
+        [ForeignKey("MediaCategoryId")]
+        public long? MediaCategoryId { get; set; }
+        public MediaCategory MediaCategories { get; set; }
     }
 }

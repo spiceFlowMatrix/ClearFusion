@@ -865,6 +865,7 @@ namespace HumanitarianAssistance.Service.Classes
                                               ProjectCode = x.ProjectCode,
                                               ProjectName = x.ProjectName,
                                               ProjectDescription = x.ProjectDescription,
+                                              IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
                                               ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
                                               //? "Data Entry"
                                               // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
@@ -888,15 +889,13 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                //var ProjectDetail = await _uow.GetDbContext().ProjectDetail
-                //                          .Include(x => x.ProjectPhaseDetails)
-                //                          .FirstOrDefaultAsync(x => !x.IsDeleted.Value && x.ProjectId == ProjectId);
-
                 var ProjectDetail = (from obj in _uow.GetDbContext().ProjectDetail
                                      join win in _uow.GetDbContext().WinProjectDetails on obj.ProjectId equals win.ProjectId into p
                                      from c in p.DefaultIfEmpty()
                                      join approve in _uow.GetDbContext().ApproveProjectDetails on obj.ProjectId equals approve.ProjectId into z
                                      from y in z.DefaultIfEmpty()
+                                     join Proposal in _uow.GetDbContext().ProjectProposalDetail on obj.ProjectId equals Proposal.ProjectId into pr
+                                     from Proposal in pr.DefaultIfEmpty()
                                      join phase in _uow.GetDbContext().ProjectPhaseDetails on obj.ProjectPhaseDetailsId equals phase.ProjectPhaseDetailsId
                                      select new ProjectDetailNewModel
                                      {
@@ -906,7 +905,9 @@ namespace HumanitarianAssistance.Service.Classes
                                          ProjectDescription = obj.ProjectDescription,
                                          ProjectPhaseDetailsId = phase.ProjectPhaseDetailsId,
                                          IsWin = c == null ? false : c.IsWin,
-                                         IsApproved = y == null ? false : y.IsApproved
+                                         IsApproved = y == null ? false : y.IsApproved,
+                                         IsProposalSubmit = Proposal == null ? false : Proposal.IsProposalAccept,
+                                        IsCriteriaEvaluationSubmit = obj.IsCriteriaEvaluationSubmit == null ? false :   obj.IsCriteriaEvaluationSubmit,
                                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
 
 
@@ -941,6 +942,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreatedDate = DateTime.Now;
                     await _uow.ProjectAssignToRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
+
                 }
                 else
                 {
@@ -1232,19 +1234,15 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var ProjectCommunicationModel = //(from obj in _uow.GetDbContext().ProjectCommunication
-                                                //join Att in _uow.GetDbContext().ProjectCommunicationAttachment on obj.ProjectId equals Att.ProjectId 
-                                                 _uow.GetDbContext().ProjectCommunication.Where(x => !x.IsDeleted.Value && x.ProjectId == ProjectId).Select(y => new ProjectCommunicationModel()
-                                                 {
-                                                     ProjectDescription = y.ProjectDescription,
-                                                     CreatedByName = _uow.GetDbContext().UserDetails.Where(z => z.AspNetUserId == y.CreatedById).Select(p => p.FirstName + " " + p.LastName).FirstOrDefault(),
-                                                     RoleId = _uow.GetDbContext().UserRoles.Where(z => z.UserId == y.CreatedById).Select(z => z.RoleId).FirstOrDefault(),
-                                                     //UserRole = _uow.GetDbContext().Roles.Where(a=>a.Id== RoleId).Select(z=>z.Name).FirstOrDefault(),
-                                                     CreatedDate = y.CreatedDate.Value.ToString("dd MMMM yyyy h:mm tt"),
-                                                     CreatedById = y.CreatedById,
-                                                     PCId = y.PCId,
-                                                     // PCAId = y.PCAId
-                                                 }).ToList();
+                var ProjectCommunicationModel = _uow.GetDbContext().ProjectCommunication.Where(x => !x.IsDeleted.Value && x.ProjectId == ProjectId).Select(y => new ProjectCommunicationModel()
+                {
+                    ProjectDescription = y.ProjectDescription,
+                    CreatedByName = _uow.GetDbContext().UserDetails.Where(z => z.AspNetUserId == y.CreatedById).Select(p => p.FirstName + " " + p.LastName).FirstOrDefault(),
+                    RoleId = _uow.GetDbContext().UserRoles.Where(z => z.UserId == y.CreatedById).Select(z => z.RoleId).FirstOrDefault(),
+                    CreatedDate = y.CreatedDate.Value.ToString("dd MMMM yyyy h:mm tt"),
+                    CreatedById = y.CreatedById,
+                    PCId = y.PCId,
+                }).ToList();
                 var resp = (from obj in ProjectCommunicationModel
                             join role in _uow.GetDbContext().Roles on obj.RoleId equals role.Id
                             select new ProjectCommunicationModel
@@ -1701,11 +1699,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
 
                 details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == Projectid && x.IsDeleted == false).FirstOrDefault();
-                //if (details != null)
-                // {
                 response.data.ProjectProposalDetail = details;
-
-                // }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1802,6 +1796,7 @@ namespace HumanitarianAssistance.Service.Classes
             ProjectProposalDetail details = new ProjectProposalDetail();
             try
             {
+                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
                 details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
                 if (details == null)
                 {
@@ -1809,7 +1804,7 @@ namespace HumanitarianAssistance.Service.Classes
                     details.ProposalStartDate = model.ProposalStartDate;
                     details.ProposalBudget = model.ProposalBudget;
                     details.ProposalDueDate = model.ProposalDueDate;
-                    details.ProjectAssignTo = model.ProjectAssignTo;
+                    details.ProjectAssignTo = model.UserId;
                     details.IsProposalAccept = model.IsProposalAccept;
                     details.ProjectId = model.ProjectId.Value;
                     details.CurrencyId = model.CurrencyId;
@@ -1818,13 +1813,43 @@ namespace HumanitarianAssistance.Service.Classes
                     details.CreatedById = UserId;
                     details.CreatedDate = DateTime.Now;
                     _uow.ProjectProposalDetailRepository.Add(details);
+
+                    if (model.ProjectAssignTo != null)
+                    {
+                        var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                        var EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == model.UserId).Select(p => p.Username).FirstOrDefault();
+                        if (proposaldetails != null && EmailID != null)
+                        {
+                            if (proposaldetails.FolderId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile);
+                            }
+
+                            if (proposaldetails.EdiFileId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile);
+                            }
+                            if (proposaldetails.BudgetFileId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile);
+                            }
+                            if (proposaldetails.ConceptFileId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile);
+                            }
+                            if (proposaldetails.PresentationFileId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile);
+                            }
+                        }
+                    }
                 }
                 else
                 {
                     details.ProposalStartDate = model.ProposalStartDate;
                     details.ProposalBudget = model.ProposalBudget;
                     details.ProposalDueDate = model.ProposalDueDate;
-                    details.ProjectAssignTo = model.ProjectAssignTo;
+                    details.ProjectAssignTo = model.UserId;
                     details.IsProposalAccept = model.IsProposalAccept;
                     details.ProjectId = model.ProjectId.Value;
                     details.CurrencyId = model.CurrencyId;
@@ -1832,6 +1857,38 @@ namespace HumanitarianAssistance.Service.Classes
                     details.ModifiedById = UserId;
                     details.ModifiedDate = DateTime.Now;
                     _uow.GetDbContext().SaveChanges();
+                    if (details.ProjectAssignTo != null)
+                    {
+                        var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                        var EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == details.UserId).Select(p => p.Username).FirstOrDefault();
+                        if (proposaldetails != null && EmailID != null)
+                        {
+                            if (proposaldetails.FolderId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile);
+                            }
+                            if (proposaldetails.ProposalFileId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ProposalFileId, EmailID, pathFile);
+                            }
+                            if (proposaldetails.EdiFileId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile);
+                            }
+                            if (proposaldetails.BudgetFileId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile);
+                            }
+                            if (proposaldetails.ConceptFileId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile);
+                            }
+                            if (proposaldetails.PresentationFileId != null)
+                            {
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile);
+                            }
+                        }
+                    }
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -2173,6 +2230,7 @@ namespace HumanitarianAssistance.Service.Classes
                      select new CriteriaEveluationModel
                      {
                          ProjectId = obj.ProjectId,
+                         IsCriteriaEvaluationSubmit=obj.IsCriteriaEvaluationSubmit,
                          DonorCEId = donor != null ? donor.DonorCEId : 0,
                          MethodOfFunding = donor.MethodOfFunding,
                          PastFundingExperience = donor.PastFundingExperience,
@@ -2224,8 +2282,8 @@ namespace HumanitarianAssistance.Service.Classes
                          TargetBenificiaryMen = purpose.TargetBenificiaryMen,
                          TargetBenificiaryAgeGroup = purpose.TargetBenificiaryAgeGroup,
                          TargetBenificiaryaOccupation = purpose.TargetBenificiaryaOccupation,
-                         Product= purpose.Product,
-                         Service= purpose.Service,
+                         Product = purpose.Product,
+                         Service = purpose.Service,
                          DonorCriteriaMet = eligibility.DonorCriteriaMet,
                          EligibilityDealine = eligibility.EligibilityDealine,
                          CoPartnership = eligibility.CoPartnership,
@@ -2497,7 +2555,7 @@ namespace HumanitarianAssistance.Service.Classes
                 }
 
 
-              
+
                 if (model.ProjectSelectionId != null)
                 {
                     //check
@@ -2629,9 +2687,749 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        #region priorityOtherDetail
+        public async Task<APIResponse> GetAllPriorityDetailList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().PriorityOtherDetail.Where(x => x.IsDeleted == false)
+                   .OrderByDescending(x => x.PriorityOtherDetailId).ToListAsync();
+
+                response.data.PriorityOtherDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> GetAllPriorityDetailByProjectId(long projectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().PriorityOtherDetail.Where(x => x.IsDeleted == false && x.ProjectId == projectId)
+                   .OrderByDescending(x => x.PriorityOtherDetailId).ToListAsync();
+
+                response.data.PriorityOtherDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddPriorityOtherDetail(CEPriorityDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                PriorityOtherDetail _detail = new PriorityOtherDetail();
+
+                _detail.PriorityOtherDetailId = model.PriorityOtherDetailId.Value;
+                _detail.Name = model.Name;
+                _detail.ProjectId = model.ProjectId;
+                _detail.IsDeleted = false;
+                _detail.CreatedById = UserId;
+                _detail.CreatedDate = DateTime.Now;
+
+                await _uow.PriorityOtherDetailRepository.AddAsyn(_detail);
+
+                response.CommonId.LongId = _detail.PriorityOtherDetailId;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> EditPriorityOtherDetail(CEPriorityDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                PriorityOtherDetail _detail = await _uow.GetDbContext().PriorityOtherDetail.FirstOrDefaultAsync(x => x.PriorityOtherDetailId == model.PriorityOtherDetailId && x.IsDeleted == false);
+                if (_detail != null)
+                {
+                    _detail.Name = model.Name;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+
+                    await _uow.PriorityOtherDetailRepository.UpdateAsyn(_detail);
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeletePriorityOtherDetails(long priorityOtherDetailId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                PriorityOtherDetail priorityInfo = await _uow.PriorityOtherDetailRepository.FindAsync(c => c.PriorityOtherDetailId == priorityOtherDetailId);
+
+                priorityInfo.IsDeleted = true;
+                priorityInfo.ModifiedById = userId;
+                priorityInfo.ModifiedDate = DateTime.Now;
+
+                await _uow.PriorityOtherDetailRepository.UpdateAsyn(priorityInfo);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
+        #region FeasibilityExpertOtherDetail
+        public async Task<APIResponse> GetAllFeasibilityExpertList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().CEFeasibilityExpertOtherDetail.Where(x => x.IsDeleted == false)
+                   .OrderByDescending(x => x.ExpertOtherDetailId).ToListAsync();
+
+                response.data.FeasibilityExpertOtherDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> GetAllExpertDetailByProjectId(long projectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().CEFeasibilityExpertOtherDetail.Where(x => x.IsDeleted == false && x.ProjectId == projectId)
+                   .OrderByDescending(x => x.ExpertOtherDetailId).ToListAsync();
+
+                response.data.FeasibilityExpertOtherDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddFeasibilityExpertDetail(CEFeasibilityExpertOtherModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEFeasibilityExpertOtherDetail _detail = new CEFeasibilityExpertOtherDetail();
+
+                _detail.ExpertOtherDetailId = model.ExpertOtherDetailId.Value;
+                _detail.Name = model.Name;
+                _detail.ProjectId = model.ProjectId;
+                _detail.IsDeleted = false;
+                _detail.CreatedById = UserId;
+                _detail.CreatedDate = DateTime.Now;
+
+                await _uow.CEFeasibilityExpertOtherDetail.AddAsyn(_detail);
+
+                response.CommonId.LongId = _detail.ExpertOtherDetailId;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> EditFeasibilityExpertDetail(CEFeasibilityExpertOtherModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEFeasibilityExpertOtherDetail _detail = await _uow.GetDbContext().CEFeasibilityExpertOtherDetail.FirstOrDefaultAsync(x => x.ExpertOtherDetailId == model.ExpertOtherDetailId && x.IsDeleted == false);
+                if (_detail != null)
+                {
+                    _detail.Name = model.Name;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+
+                    await _uow.CEFeasibilityExpertOtherDetail.UpdateAsyn(_detail);
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteFeasibilityExperrtDetails(long expertOtherDetailId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEFeasibilityExpertOtherDetail expertInfo = await _uow.CEFeasibilityExpertOtherDetail.FindAsync(c => c.ExpertOtherDetailId == expertOtherDetailId);
+
+                expertInfo.IsDeleted = true;
+                expertInfo.ModifiedById = userId;
+                expertInfo.ModifiedDate = DateTime.Now;
+
+                await _uow.CEFeasibilityExpertOtherDetail.UpdateAsyn(expertInfo);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        #endregion
+
+        #region agegroup 
+
+        public async Task<APIResponse> GetAllAgeGroupDetailList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().CEAgeGroupDetail.Where(x => x.IsDeleted == false)
+                   .OrderByDescending(x => x.AgeGroupOtherDetailId).ToListAsync();
+
+                response.data.CEAgeGroupDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> GetAllAgeGroupByProjectId(long projectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().CEAgeGroupDetail.Where(x => x.IsDeleted == false && x.ProjectId == projectId)
+                   .OrderByDescending(x => x.AgeGroupOtherDetailId).ToListAsync();
+
+                response.data.CEAgeGroupDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddAgeGroupDetail(CEAgeGroupDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEAgeGroupDetail _detail = new CEAgeGroupDetail();
+
+                _detail.AgeGroupOtherDetailId = model.AgeGroupOtherDetailId.Value;
+                _detail.Name = model.Name;
+                _detail.ProjectId = model.ProjectId;
+                _detail.IsDeleted = false;
+                _detail.CreatedById = UserId;
+                _detail.CreatedDate = DateTime.Now;
+
+                await _uow.CEAgeGroupDetail.AddAsyn(_detail);
+
+                response.CommonId.LongId = _detail.AgeGroupOtherDetailId;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> EditAgeGroupDetail(CEAgeGroupDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEAgeGroupDetail _detail = await _uow.GetDbContext().CEAgeGroupDetail.FirstOrDefaultAsync(x => x.AgeGroupOtherDetailId == model.AgeGroupOtherDetailId && x.IsDeleted == false);
+                if (_detail != null)
+                {
+                    _detail.Name = model.Name;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+
+                    await _uow.CEAgeGroupDetail.UpdateAsyn(_detail);
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteAgeGroupDetails(long ageGroupOtherDetailId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEAgeGroupDetail expertInfo = await _uow.CEAgeGroupDetail.FindAsync(c => c.AgeGroupOtherDetailId == ageGroupOtherDetailId);
+
+                expertInfo.IsDeleted = true;
+                expertInfo.ModifiedById = userId;
+                expertInfo.ModifiedDate = DateTime.Now;
+
+                await _uow.CEAgeGroupDetail.UpdateAsyn(expertInfo);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
 
 
 
+        #region CEOccupationDtail
+
+        public async Task<APIResponse> GetAllOccuopationList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().CEOccupationDetail.Where(x => x.IsDeleted == false)
+                   .OrderByDescending(x => x.OccupationOtherDetailId).ToListAsync();
+
+                response.data.CEOccupationDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> GetAllOccupatiopnByProjectId(long projectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().CEOccupationDetail.Where(x => x.IsDeleted == false && x.ProjectId == projectId)
+                   .OrderByDescending(x => x.OccupationOtherDetailId).ToListAsync();
+
+                response.data.CEOccupationDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddOccupationOtherDetail(CEOccupationDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEOccupationDetail _detail = new CEOccupationDetail();
+
+                _detail.OccupationOtherDetailId = model.OccupationOtherDetailId.Value;
+                _detail.Name = model.Name;
+                _detail.ProjectId = model.ProjectId;
+                _detail.IsDeleted = false;
+                _detail.CreatedById = UserId;
+                _detail.CreatedDate = DateTime.Now;
+
+                await _uow.CEOccupationDetail.AddAsyn(_detail);
+
+                response.CommonId.LongId = _detail.OccupationOtherDetailId;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> EditOccupationOtherDetail(CEOccupationDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEOccupationDetail _detail = await _uow.GetDbContext().CEOccupationDetail.FirstOrDefaultAsync(x => x.OccupationOtherDetailId == model.OccupationOtherDetailId && x.IsDeleted == false);
+                if (_detail != null)
+                {
+                    _detail.Name = model.Name;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+
+                    await _uow.CEOccupationDetail.UpdateAsyn(_detail);
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteOccupationDetails(long occupationOtherDetailId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEOccupationDetail expertInfo = await _uow.CEOccupationDetail.FindAsync(c => c.OccupationOtherDetailId == occupationOtherDetailId);
+
+                expertInfo.IsDeleted = true;
+                expertInfo.ModifiedById = userId;
+                expertInfo.ModifiedDate = DateTime.Now;
+
+                await _uow.CEOccupationDetail.UpdateAsyn(expertInfo);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
+
+        #region assumprtionDetail
+        public async Task<APIResponse> GetAllAssumptionList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().CEAssumptionDetail.Where(x => x.IsDeleted == false)
+                   .OrderByDescending(x => x.AssumptionDetailId).ToListAsync();
+
+                response.data.CEAssumptionDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> GetAllAssumptionByProjectId(long projectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().CEAssumptionDetail.Where(x => x.IsDeleted == false && x.ProjectId == projectId)
+                   .OrderByDescending(x => x.AssumptionDetailId).ToListAsync();
+
+                response.data.CEAssumptionDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddAssumptionDetail(CEAssumptionDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEAssumptionDetail _detail = new CEAssumptionDetail();
+
+                _detail.AssumptionDetailId = model.AssumptionDetailId.Value;
+                _detail.Name = model.Name;
+                _detail.ProjectId = model.ProjectId;
+                _detail.IsDeleted = false;
+                _detail.CreatedById = UserId;
+                _detail.CreatedDate = DateTime.Now;
+
+                await _uow.CEAssumptionDetail.AddAsyn(_detail);
+
+                response.CommonId.LongId = _detail.AssumptionDetailId;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> EditAssumptionDetail(CEAssumptionDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEAssumptionDetail _detail = await _uow.GetDbContext().CEAssumptionDetail.FirstOrDefaultAsync(x => x.AssumptionDetailId == model.AssumptionDetailId && x.IsDeleted == false);
+                if (_detail != null)
+                {
+                    _detail.Name = model.Name;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+
+                    await _uow.CEAssumptionDetail.UpdateAsyn(_detail);
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteAssumptionDetails(long assumptionDetailId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                CEAssumptionDetail expertInfo = await _uow.CEAssumptionDetail.FindAsync(c => c.AssumptionDetailId == assumptionDetailId);
+
+                expertInfo.IsDeleted = true;
+                expertInfo.ModifiedById = userId;
+                expertInfo.ModifiedDate = DateTime.Now;
+
+                await _uow.CEAssumptionDetail.UpdateAsyn(expertInfo);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
+
+
+        #region donorEligibilityCriteria
+        public async Task<APIResponse> GetAllDonorEligibilityDetailList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().DonorEligibilityCriteria.Where(x => x.IsDeleted == false)
+                   .OrderByDescending(x => x.DonorEligibilityDetailId).ToListAsync();
+
+                response.data.DonorEligibilityCriteria = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> GetAllDonorEligibilityDetailByProjectId(long projectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().DonorEligibilityCriteria.Where(x => x.IsDeleted == false && x.ProjectId == projectId)
+                   .OrderByDescending(x => x.DonorEligibilityDetailId).ToListAsync();
+
+                response.data.DonorEligibilityCriteria = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddDonorEligibilityOtherDetail(DonorEligibilityCriteriaModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                DonorEligibilityCriteria _detail = new DonorEligibilityCriteria();
+
+                _detail.DonorEligibilityDetailId = model.DonorEligibilityDetailId.Value;
+                _detail.Name = model.Name;
+                _detail.ProjectId = model.ProjectId;
+                _detail.IsDeleted = false;
+                _detail.CreatedById = UserId;
+                _detail.CreatedDate = DateTime.Now;
+
+                await _uow.DonorEligibilityCriteriaRepository.AddAsyn(_detail);
+
+                response.CommonId.LongId = _detail.DonorEligibilityDetailId;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> EditDonorEligibilityOtherDetail(DonorEligibilityCriteriaModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                DonorEligibilityCriteria _detail = await _uow.GetDbContext().DonorEligibilityCriteria.FirstOrDefaultAsync(x => x.DonorEligibilityDetailId == model.DonorEligibilityDetailId && x.IsDeleted == false);
+                if (_detail != null)
+                {
+                    _detail.Name = model.Name;
+                    _detail.IsDeleted = false;
+                    _detail.CreatedById = UserId;
+                    _detail.CreatedDate = DateTime.Now;
+
+                    await _uow.DonorEligibilityCriteriaRepository.UpdateAsyn(_detail);
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteDOnorEligibilityCriteriaOtherDetails(long donorEligibilityDetailId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                DonorEligibilityCriteria donorEligibilityInfo = await _uow.DonorEligibilityCriteriaRepository.FindAsync(c => c.DonorEligibilityDetailId == donorEligibilityDetailId);
+
+                donorEligibilityInfo.IsDeleted = true;
+                donorEligibilityInfo.ModifiedById = userId;
+                donorEligibilityInfo.ModifiedDate = DateTime.Now;
+
+                await _uow.DonorEligibilityCriteriaRepository.UpdateAsyn(donorEligibilityInfo);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
 
 
         #endregion

@@ -15,8 +15,8 @@ namespace HumanitarianAssistance.Service.interfaces
         #region Donor Info
         Task<APIResponse> GetAllDonorList();
         Task<APIResponse> AddEditDonorDetails(DonorModel model, string UserId);
-       // Task<APIResponse> EditDonorDetails(DonorModel model, string UserId);
-        Task<APIResponse> DeleteDonorDetails(long DonarId,string UserId);
+        // Task<APIResponse> EditDonorDetails(DonorModel model, string UserId);
+        Task<APIResponse> DeleteDonorDetails(long DonarId, string UserId);
         Task<APIResponse> GetDonarListById(long DonarId);
         #endregion
 
@@ -50,21 +50,21 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> SecurityDetailList();
         Task<APIResponse> SecurityConsiderationDetailList();
         #endregion
-        
+
         #region AddEditProjectDetail
         APIResponse AddEditProjectDetail(ProjectDetailNewModel model, string UserId);
         Task<APIResponse> DeleteProjectDetail(long ProjectId, string UserId);
         Task<APIResponse> GetAllProjectList();
         APIResponse GetProjectListById(long ProjectId);
-        
+
         Task<APIResponse> AddEditProjectAssignToEmployee(ProjectAssignToModel model, string UserId);
         Task<APIResponse> DeleteProjectAssignToEmployee(ProjectAssignTo model, string UserId);
-        
+
         Task<APIResponse> AddEditProjectProgram(ProjectProgramModel model, string UserId);
         Task<APIResponse> getProjectProgramById(long ProjectId);
         Task<APIResponse> getProjectAreaById(long ProjectId);
         Task<APIResponse> getProjectSectorById(long ProjectId);
-        
+
         Task<APIResponse> DeleteProjectProgram(ProjectProgram model, string UserId);
 
         Task<APIResponse> AddEditProjectSector(ProjectSectorModel model, string UserId);
@@ -92,13 +92,13 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetAllSecurityDetails();
         APIResponse GetAllSecurityConsiderationDetails();
         Task<APIResponse> GetAllDistrictvalueByProvinceId(int[] provinceId);
-       
+
         APIResponse AddEditProjectproposals(long projectId, string UserId);
         APIResponse GetProjectproposalsById(long projectId);
-        
+
         APIResponse AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
-        APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid,string fullPath,string fileNames);
-        APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId);       
+        APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileNames);
+        APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId);
         APIResponse GetOtherProjectListById(long ProjectId);
         APIResponse AddEditDonorCriteria(DonorCriteriaModel model, string UserId);
         APIResponse AddEditPurposeofInitiativeCriteria(PurposeofInitiativeCriteriaModel model, string UserId);
@@ -111,6 +111,53 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId);
 
         APIResponse AddEditFinancialProjectDetail(FinancialProjectDetailModel model, string UserId);
+
+        Task<APIResponse> AddPriorityOtherDetail(CEPriorityDetailModel model, string UserId);
+        Task<APIResponse> AddFeasibilityExpertDetail(CEFeasibilityExpertOtherModel model, string UserId);
+        Task<APIResponse> AddAgeGroupDetail(CEAgeGroupDetailModel model, string UserId);
+        Task<APIResponse> AddOccupationOtherDetail(CEOccupationDetailModel model, string UserId);
+        Task<APIResponse> AddAssumptionDetail(CEAssumptionDetailModel model, string UserId);
+        Task<APIResponse> AddDonorEligibilityOtherDetail(DonorEligibilityCriteriaModel model, string UserId);
+
+
+        Task<APIResponse> EditPriorityOtherDetail(CEPriorityDetailModel model, string UserId);
+        Task<APIResponse> EditFeasibilityExpertDetail(CEFeasibilityExpertOtherModel model, string UserId);
+        Task<APIResponse> EditAgeGroupDetail(CEAgeGroupDetailModel model, string UserId);
+        Task<APIResponse> EditOccupationOtherDetail(CEOccupationDetailModel model, string UserId);
+        Task<APIResponse> EditAssumptionDetail(CEAssumptionDetailModel model, string UserId);
+        Task<APIResponse> EditDonorEligibilityOtherDetail(DonorEligibilityCriteriaModel model, string UserId);
+
+
+
+        Task<APIResponse> GetAllPriorityDetailList();
+        Task<APIResponse> GetAllPriorityDetailByProjectId(long projectId);
+        Task<APIResponse> GetAllFeasibilityExpertList();
+        Task<APIResponse> GetAllExpertDetailByProjectId(long projectId);
+
+        Task<APIResponse> GetAllAgeGroupDetailList();
+        Task<APIResponse> GetAllAgeGroupByProjectId(long projectId);
+
+        Task<APIResponse> GetAllDonorEligibilityDetailByProjectId(long projectId);
+        Task<APIResponse> GetAllDonorEligibilityDetailList();
+
+
+
+
+        Task<APIResponse> GetAllOccuopationList();
+        Task<APIResponse> GetAllOccupatiopnByProjectId(long projectId);
+
+        Task<APIResponse> GetAllAssumptionList();
+        Task<APIResponse> GetAllAssumptionByProjectId(long projectId);
+
+        Task<APIResponse> DeletePriorityOtherDetails(long Id, string userId);
+        Task<APIResponse> DeleteFeasibilityExperrtDetails(long Id, string userId);
+        Task<APIResponse> DeleteAgeGroupDetails(long Id, string userId);
+        Task<APIResponse> DeleteOccupationDetails(long Id, string userId);
+        Task<APIResponse> DeleteAssumptionDetails(long Id, string userId);
+        Task<APIResponse> DeleteDOnorEligibilityCriteriaOtherDetails(long Id, string userId);
+
+
+
 
         #endregion
     }

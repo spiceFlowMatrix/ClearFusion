@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181213104837_PriorityOtherDetailTableAddition")]
+    partial class PriorityOtherDetailTableAddition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -364,88 +366,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("AnalyticalDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.ApplicationPages", b =>
-                {
-                    b.Property<int>("PageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("ModuleId");
-
-                    b.Property<string>("ModuleName");
-
-                    b.Property<string>("PageName");
-
-                    b.HasKey("PageId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("ApplicationPages");
-
-                    b.HasData(
-                        new { PageId = 1, IsDeleted = false, ModuleId = 1, ModuleName = "Users", PageName = "Users" },
-                        new { PageId = 2, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "ChartOfAccount" },
-                        new { PageId = 3, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "JournalCodes" },
-                        new { PageId = 4, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "CurrencyCodes" },
-                        new { PageId = 5, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "OfficeCodes" },
-                        new { PageId = 6, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "FinancialYear" },
-                        new { PageId = 7, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "PensionRate" },
-                        new { PageId = 8, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "EmployeeContract" },
-                        new { PageId = 9, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "AppraisalQuestions" },
-                        new { PageId = 10, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "TechnicalQuestions" },
-                        new { PageId = 11, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "EmailSettings" },
-                        new { PageId = 12, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "ExchangeRate" },
-                        new { PageId = 13, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "LeaveReason" },
-                        new { PageId = 14, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Profession" },
-                        new { PageId = 15, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Department" },
-                        new { PageId = 16, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Qualification" },
-                        new { PageId = 17, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Designation" },
-                        new { PageId = 18, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "JobGrade" },
-                        new { PageId = 19, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SalaryHead" },
-                        new { PageId = 20, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SalaryTaxReportContent" },
-                        new { PageId = 21, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SetPayrollAccount" },
-                        new { PageId = 22, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "Vouchers" },
-                        new { PageId = 23, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "Journal" },
-                        new { PageId = 24, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "LedgerStatement" },
-                        new { PageId = 25, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "BudgetBalance" },
-                        new { PageId = 26, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "TrialBalance" },
-                        new { PageId = 27, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "FinancialReport" },
-                        new { PageId = 28, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "CategoryPopulator" },
-                        new { PageId = 29, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "ExchangeGainLoss" },
-                        new { PageId = 30, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "GainLossTransaction" },
-                        new { PageId = 31, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "PensionPayments" },
-                        new { PageId = 32, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Employees" },
-                        new { PageId = 33, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "PayrollDailyHours" },
-                        new { PageId = 34, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Holidays" },
-                        new { PageId = 35, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Attendance" },
-                        new { PageId = 36, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "ApproveLeave" },
-                        new { PageId = 37, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "MonthlyPayrollRegister" },
-                        new { PageId = 38, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Jobs" },
-                        new { PageId = 39, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Interview" },
-                        new { PageId = 40, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "EmployeeAppraisal" },
-                        new { PageId = 41, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Advances" },
-                        new { PageId = 42, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Summary" },
-                        new { PageId = 43, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "Categories" },
-                        new { PageId = 44, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "StoreSourceCodes" },
-                        new { PageId = 45, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "PaymentTypes" },
-                        new { PageId = 46, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "Store" },
-                        new { PageId = 47, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "ProcurementSummary" },
-                        new { PageId = 48, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "DepreciationReport" }
-                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AppraisalGeneralQuestions", b =>
@@ -4422,8 +4342,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<long?>("MediaCategoryId");
-
                     b.Property<long?>("MediumId");
 
                     b.Property<string>("ModifiedById");
@@ -4445,8 +4363,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CurrencyDetailsCurrencyId");
-
-                    b.HasIndex("MediaCategoryId");
 
                     b.HasIndex("MediumId");
 
@@ -4998,10 +4914,6 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("PermissionId");
 
-                    b.Property<bool>("CanEdit");
-
-                    b.Property<bool>("CanView");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -5015,10 +4927,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("ModuleId");
-
-                    b.Property<int?>("PageId");
 
                     b.Property<int>("PermissionsInRolesId")
                         .ValueGeneratedOnAdd()
@@ -5131,130 +5039,6 @@ namespace DataAccess.Migrations
                     b.ToTable("AreaDetail");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEAgeGroupDetail", b =>
-                {
-                    b.Property<long>("AgeGroupOtherDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("AgeGroupOtherDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("CEAgeGroupDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEAssumptionDetail", b =>
-                {
-                    b.Property<long>("AssumptionDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("AssumptionDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("CEAssumptionDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEFeasibilityExpertOtherDetail", b =>
-                {
-                    b.Property<long>("ExpertOtherDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("ExpertOtherDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("CEFeasibilityExpertOtherDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEOccupationDetail", b =>
-                {
-                    b.Property<long>("OccupationOtherDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("OccupationOtherDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("CEOccupationDetail");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.DonorCriteriaDetails", b =>
                 {
                     b.Property<long>("DonorCEId")
@@ -5320,37 +5104,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("DonorCriteriaDetail");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.DonorEligibilityCriteria", b =>
-                {
-                    b.Property<long>("DonorEligibilityDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("DonorEligibilityDetailId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("DonorEligibilityCriteria");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.EligibilityCriteriaDetail", b =>
@@ -5841,8 +5594,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("EndDate");
 
                     b.Property<bool>("IsActive");
-
-                    b.Property<bool?>("IsCriteriaEvaluationSubmit");
 
                     b.Property<bool?>("IsDeleted");
 
@@ -6806,47 +6557,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("RatingBasedCriteria");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.RolePermissions", b =>
-                {
-                    b.Property<int>("RolesPermissionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<bool>("CanEdit");
-
-                    b.Property<bool>("CanView");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("CurrentPermissionId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<bool>("IsGrant");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("ModuleId");
-
-                    b.Property<int?>("PageId");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("RolesPermissionId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("PageId");
-
-                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.SalaryHeadDetails", b =>
@@ -8313,17 +8023,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.ApplicationPages", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.AppraisalGeneralQuestions", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -9760,10 +9459,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("CurrencyDetailsCurrencyId");
 
-                    b.HasOne("DataAccess.DbEntities.Marketing.MediaCategory", "MediaCategories")
-                        .WithMany()
-                        .HasForeignKey("MediaCategoryId");
-
                     b.HasOne("DataAccess.DbEntities.Marketing.Medium", "Medium")
                         .WithMany()
                         .HasForeignKey("MediumId");
@@ -9946,87 +9641,7 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEAgeGroupDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEAssumptionDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEFeasibilityExpertOtherDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CEOccupationDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.DonorCriteriaDetails", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.DonorEligibilityCriteria", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
@@ -10529,21 +10144,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.RolePermissions", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.ApplicationPages", "ApplicationPages")
-                        .WithMany()
-                        .HasForeignKey("PageId");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.SalaryHeadDetails", b =>
