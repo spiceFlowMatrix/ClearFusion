@@ -23,6 +23,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 {
   [Produces("application/json")]
   [Route("api/Project/[Action]")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class ProjectController : Controller
   {
     private readonly JsonSerializerSettings _serializerSettings;
@@ -46,14 +47,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #region Donor information
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    
     public async Task<APIResponse> GetAllDonorList()
     {
       APIResponse apiresponse = await _iProject.GetAllDonorList();
       return apiresponse;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditDonorDetails([FromBody]DonorModel model)
     {
       APIResponse apiResponse = null;
@@ -80,7 +80,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     //}
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteDonorDetails([FromBody]long DonarId)
     {
       APIResponse apiRespone = null;
@@ -94,7 +93,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetDonarListById([FromBody]long DonarId)
     {
       APIResponse apiresponse = await _iProject.GetDonarListById(DonarId);
@@ -105,14 +103,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region Sector Information
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllSectorList()
     {
       APIResponse apiresponse = await _iProject.GetAllSectorList();
       return apiresponse;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddSectorDetails([FromBody]SectorModel model)
     {
       APIResponse apiResponse = null;
@@ -125,7 +121,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiResponse;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditSectorDetails([FromBody]SectorModel model)
     {
       APIResponse apiResponse = null;
@@ -139,7 +134,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteSectorDetails([FromBody]SectorDetails model)
     {
       APIResponse apiRespone = null;
@@ -157,14 +151,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region Program Information
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllProgramList()
     {
       APIResponse apiresponse = await _iProject.GetAllProgramList();
       return apiresponse;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddProgramDetails([FromBody]ProgramModel model)
     {
       APIResponse apiResponse = null;
@@ -180,7 +172,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditProgramDetails([FromBody]ProgramModel model)
     {
       APIResponse apiResponse = null;
@@ -194,7 +185,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteProgramDetails([FromBody]ProgramDetail model)
     {
       APIResponse apiRespone = null;
@@ -215,14 +205,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region Area Information
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllAreaList()
     {
       APIResponse apiresponse = await _iProject.GetAllAreaList();
       return apiresponse;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddAreaDetails([FromBody]AreaModel model)
     {
       APIResponse apiResponse = null;
@@ -235,7 +223,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiResponse;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditAreaDetails([FromBody]AreaModel model)
     {
       APIResponse apiResponse = null;
@@ -249,7 +236,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteAreaDetails([FromBody]AreaDetail model)
     {
       APIResponse apiRespone = null;
@@ -268,7 +254,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region GenderConsiderationList
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GenderConsiderationList()
     {
       APIResponse apiresponse = await _iProject.GenderConsiderationList();
@@ -280,7 +265,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region StrengthConsiderationDetailList
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> StrengthConsiderationDetailList()
     {
       APIResponse apiresponse = await _iProject.StrengthConsiderationDetailList();
@@ -292,7 +276,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region SecurityDetailList
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> SecurityDetailList()
     {
       APIResponse apiresponse = await _iProject.SecurityDetailList();
@@ -304,7 +287,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region SecurityConsiderationDetailList
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> SecurityConsiderationDetailList()
     {
       APIResponse apiresponse = await _iProject.SecurityConsiderationDetailList();
@@ -324,7 +306,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     ///
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditProjectDetail([FromBody]ProjectDetailNewModel model)
     {
       APIResponse apiRespone = null;
@@ -343,7 +324,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteProjectDetail([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
@@ -358,7 +338,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpGet]
-     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllProjectList()
     {
       APIResponse apiresponse = await _iProject.GetAllProjectList();
@@ -366,7 +345,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public APIResponse GetProjectListById([FromBody]long Id)
     {
       APIResponse apiresponse = _iProject.GetProjectListById(Id);
@@ -376,7 +354,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public APIResponse GetProjectOtherDetailById([FromBody]long Id)
     {
       APIResponse apiresponse =  _iProject.GetOtherProjectListById(Id);
@@ -395,7 +372,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditProjectAssignToEmployee([FromBody]ProjectAssignToModel model)
     {
       APIResponse apiRespone = null;
@@ -409,7 +385,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteProjectAssignToEmployee([FromBody]ProjectAssignTo model)
     {
       APIResponse apiRespone = null;
@@ -425,7 +400,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region Add/Edit Project Program to Current Project
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditProjectProgram([FromBody]ProjectProgramModel model)
     {
       APIResponse apiRespone = null;
@@ -438,7 +412,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> getProjectProgramById([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
@@ -451,7 +424,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditProjectArea([FromBody]ProjectAreaModel model)
     {
       APIResponse apiRespone = null;
@@ -464,7 +436,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> getProjectAreaById([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
@@ -477,7 +448,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> getProjectSectorById([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
@@ -491,7 +461,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteProjectProgram([FromBody]ProjectProgram model)
     {
       APIResponse apiRespone = null;
@@ -507,7 +476,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region Add/Edit Project Sector Area to Current Project
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditProjectSector([FromBody]ProjectSectorModel model)
     {
       APIResponse apiRespone = null;
@@ -521,7 +489,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteProjectSector([FromBody]ProjectSector model)
     {
       APIResponse apiRespone = null;
@@ -536,7 +503,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteProjectArea([FromBody]ProjectArea model)
     {
       APIResponse apiRespone = null;
@@ -557,14 +523,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region Project Communication
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetChatByProjectId([FromBody]long ProjectId)
     {
       APIResponse apiresponse = await _iProject.GetChatByProjectId(ProjectId);
       return apiresponse;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddProjectChat([FromBody]ProjectCommunicationModel model)
     {
       APIResponse apiRespone = null;
@@ -581,28 +545,24 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region Other Details dropdown
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public APIResponse GetAllProvinceDetails()
     {
       APIResponse response =  _iProject.GetAllProvinceDetails();
       return response;
     }
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public  APIResponse GetAllStrengthConsiderationDetails()
     {
       APIResponse response =  _iProject.GetAllStrengthConsiderationDetails();
       return response;
     }
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public APIResponse GetAllGenderConsiderationDetails()
     {
       APIResponse response = _iProject.GetAllGenderConsiderationDetails();
       return response;
     }
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public APIResponse GetAllSecurityDetails()
     {
       APIResponse response =  _iProject.GetAllSecurityDetails();
@@ -610,14 +570,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public APIResponse GetAllSecurityConsiderationDetails()
     {
       APIResponse response = _iProject.GetAllSecurityConsiderationDetails();
       return response;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllDistrictvalueByProvinceId([FromBody]int[] ProvinceId)
     {
       APIResponse response = await _iProject.GetAllDistrictvalueByProvinceId(ProvinceId);
@@ -625,7 +583,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditProjectotherDetail([FromBody]ProjectOtherDetail OtherDetail)
     {
       APIResponse apiRespone = null;
@@ -654,7 +611,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     
     #region projectApproval
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddApprovalProjectDetail([FromBody]ApproveProjectDetailModel model)
     {
       APIResponse apiRespone = null;
@@ -672,7 +628,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region Win/loss project approval
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> WinApprovalProjectDetail([FromBody]WinApprovalProjectModel model)
     {
       APIResponse apiRespone = null;
@@ -688,7 +643,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region proposals
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditProjectproposals([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
@@ -701,7 +655,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public  APIResponse GetProjectproposalsById([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
@@ -709,7 +662,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> UploadEDIProposalFile()
     {
       APIResponse apiRespone = new APIResponse();
@@ -773,7 +725,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditProjectProposalDetail([FromBody]ProposalDocModel model)
     {
       APIResponse apiRespone = null;
@@ -790,7 +741,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region criteria evaluation
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditDonorCriteria([FromBody]DonorCriteriaModel Model)
     {
       APIResponse apiRespone = null;
@@ -804,7 +754,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditPurposeofInitiativeCriteria([FromBody]PurposeofInitiativeCriteriaModel Model)
     {
       APIResponse apiRespone = null;
@@ -817,7 +766,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditEligibilityCriteriaDetail([FromBody]EligibilityCriteriaDetailModel Model)
     {
       APIResponse apiRespone = null;
@@ -830,7 +778,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditFeasibilityCriteria([FromBody]FeasibilityCriteriaModel Model)
     {
       APIResponse apiRespone = null;
@@ -844,7 +791,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public APIResponse GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
@@ -854,7 +800,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditPriorityCriteria([FromBody]PriorityCriteriaModel Model)
     {
       APIResponse apiRespone = null;
@@ -867,7 +812,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditFinancialCriteria([FromBody]FinancialCriteriaModel Model)
     {
       APIResponse apiRespone = null;
@@ -881,7 +825,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditRiskCriteria([FromBody]RiskCriteriaModel Model)
     {
       APIResponse apiRespone = null;
@@ -894,7 +837,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditTargetBeneficiary([FromBody]TargetBeneficiaryDetail Model)
     {
       APIResponse apiRespone = null;
@@ -908,7 +850,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditFinanacialProjectDetail([FromBody]FinancialProjectDetailModel Model)
     {
       APIResponse apiRespone = null;

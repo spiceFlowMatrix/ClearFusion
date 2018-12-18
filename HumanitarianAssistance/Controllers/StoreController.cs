@@ -19,6 +19,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 {
   [Produces("application/json")]
   [Route("api/Store/[Action]")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class StoreController : Controller
   {
     private readonly UserManager<AppUser> _userManager;
@@ -33,7 +34,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region "Store Inventories"
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllInventories(int? AssetType)
     {
       APIResponse apiresponse = await _iStore.GetAllInventories(AssetType);
@@ -41,7 +41,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddInventory([FromBody] StoreInventoryModel model)
     {
       APIResponse apiRespone = null;
@@ -56,7 +55,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditInventory([FromBody] StoreInventoryModel model)
     {
       APIResponse apiRespone = null;
@@ -71,7 +69,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteInventory([FromBody] StoreInventoryModel model)
     {
       APIResponse apiRespone = null;
@@ -91,7 +88,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Store Items"
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddInventoryItems([FromBody] StoreInventoryItemModel model)
     {
       APIResponse apiRespone = null;
@@ -106,7 +102,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditInventoryItems([FromBody] StoreInventoryItemModel model)
     {
       APIResponse apiRespone = null;
@@ -121,7 +116,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteInventoryItems([FromBody] StoreInventoryItemModel model)
     {
       APIResponse apiRespone = null;
@@ -136,7 +130,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllInventoryItems(string ItemInventory)
     {
       APIResponse apiresponse = await _iStore.GetAllInventoryItems(ItemInventory);
@@ -149,7 +142,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Store Item Types"
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddInventoryItemsType([FromBody] InventoryItemTypeModel model)
     {
       APIResponse apiRespone = null;
@@ -164,7 +156,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditInventoryItemsType([FromBody] InventoryItemTypeModel model)
     {
       APIResponse apiRespone = null;
@@ -179,7 +170,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteInventoryItemsType([FromBody] InventoryItemTypeModel model)
     {
       APIResponse apiRespone = null;
@@ -194,7 +184,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllInventoryItemsType()
     {
       APIResponse apiresponse = await _iStore.GetAllInventoryItemsType();
@@ -207,7 +196,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Store Purchase"
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetSerialNumber(string serialNumber)
     {
       APIResponse apiresponse = await _iStore.GetSerialNumber(serialNumber);
@@ -215,7 +203,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllPurchasesByItem(string itemId)
     {
       APIResponse apiresponse = await _iStore.GetAllPurchasesByItem(itemId);
@@ -223,7 +210,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddPurchase([FromBody] ItemPurchaseModel model)
     {
       APIResponse apiRespone = null;
@@ -238,7 +224,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditPurchase([FromBody] ItemPurchaseModel model)
     {
       APIResponse apiRespone = null;
@@ -253,7 +238,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeletePurchase([FromBody] ItemPurchaseModel model)
     {
       APIResponse apiRespone = null;
@@ -274,7 +258,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Store Order"
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddItemOrder([FromBody] ItemOrderModel model)
     {
       APIResponse apiresponse = await _iStore.AddItemOrder(model);
@@ -282,7 +265,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditItemOrder([FromBody] ItemOrderModel model)
     {
       APIResponse apiresponse = await _iStore.EditItemOrder(model);
@@ -290,7 +272,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteItemOrder([FromBody] ItemOrderModel model)
     {
       APIResponse apiresponse = await _iStore.DeleteItemOrder(model);
@@ -298,7 +279,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllItemsOrder(string ItemId)
     {
       APIResponse apiresponse = await _iStore.GetAllItemsOrder(ItemId);
@@ -313,7 +293,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #region "Purchase Unit Type"
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddPurchaseUnitType([FromBody]PurchaseUnitType model)
     {
       APIResponse apiRespone = null;
@@ -328,7 +307,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditPurchaseUnitType([FromBody] PurchaseUnitType model)
     {
       APIResponse apiRespone = null;
@@ -343,7 +321,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeletePurchaseUnitType([FromBody] PurchaseUnitType model)
     {
       APIResponse apiRespone = null;
@@ -358,7 +335,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllPurchaseUnitType()
     {
       APIResponse apiresponse = await _iStore.GetAllPurchaseUnitType();
@@ -369,7 +345,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetItemAmounts(string ItemId)
     {
       APIResponse apiresponse = await _iStore.GetItemAmounts(ItemId);
@@ -378,7 +353,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetProcurementSummary(int EmployeeId, int CurrencyId)
     {
       APIResponse apiresponse = await _iStore.GetProcurementSummary(EmployeeId, CurrencyId);
@@ -386,7 +360,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllDepreciationByFilter([FromBody]DepreciationReportFilter depretiationFilter)
     {
       APIResponse apiresponse = await _iStore.GetAllDepreciationByFilter(depretiationFilter);
@@ -394,7 +367,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> UpdateInvoice([FromBody]UpdatePurchaseInvoiceModel model)
     {
       APIResponse apiresponse = new APIResponse();
@@ -407,7 +379,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllPurchaseInvoices([FromQuery]string PurchaseId)
     {
       APIResponse apiresponse = await _iStore.GetAllPurchaseInvoices(PurchaseId);
@@ -415,7 +386,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> UpdatePurchaseImage([FromBody]UpdatePurchaseInvoiceModel model)
     {
       APIResponse apiresponse = new APIResponse();
@@ -428,7 +398,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddItemSpecificationsDetails([FromBody]List<ItemSpecificationDetailModel> model)
     {
       APIResponse apiresponse = new APIResponse();
@@ -441,7 +410,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditItemSpecificationsDetails([FromBody]ItemSpecificationDetailModel model)
     {
       APIResponse apiresponse = new APIResponse();
@@ -454,7 +422,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllItemSpecificationsDetails([FromQuery]string ItemId, int ItemTypeId, int OfficeId)
     {
       APIResponse apiresponse = await _iStore.GetAllItemSpecificationsDetails(ItemId, ItemTypeId, OfficeId);
@@ -462,7 +429,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddItemSpecificationsMaster([FromBody]ItemSpecificationMasterModel model)
     {
       APIResponse apiresponse = new APIResponse();
@@ -475,7 +441,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditItemSpecificationsMaster([FromBody]ItemSpecificationMasterModel model)
     {
       APIResponse apiresponse = new APIResponse();
@@ -487,7 +452,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetItemSpecificationsMaster([FromQuery]int ItemTypeId, int OfficeId)
     {
       APIResponse apiresponse = await _iStore.GetItemSpecificationsMaster(ItemTypeId, OfficeId);
@@ -496,7 +460,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllStatusAtTimeOfIssue()
     {
       APIResponse apiresponse = await _iStore.GetAllStatusAtTimeOfIssue();
@@ -505,7 +468,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllReceiptType()
     {
       APIResponse apiresponse = await _iStore.GetAllReceiptType();
@@ -513,7 +475,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetInventoryCode([FromQuery] int Id)
     {
       APIResponse apiresponse = await _iStore.GetInventoryCode(Id);
@@ -521,7 +482,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetInventoryItemCode([FromQuery] string Id, int TypeId)
     {
       APIResponse apiresponse = await _iStore.GetInventoryItemCode(Id, TypeId);
@@ -529,7 +489,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllStoreSourceType()
     {
       APIResponse apiresponse = await _iStore.GetAllStoreSourceType();
@@ -537,7 +496,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllStoreSourceCode(int? typeId)
     {
       APIResponse apiresponse = await _iStore.GetAllStoreSourceCode(typeId);
@@ -545,7 +503,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddStoreSourceCode([FromBody]StoreSourceCodeDetailModel model)
     {
       APIResponse apiresponse = new APIResponse();
@@ -558,7 +515,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetStoreTypeCode([FromQuery] int CodeTypeId)
     {
       APIResponse apiresponse = await _iStore.GetStoreTypeCode(CodeTypeId);
@@ -566,7 +522,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditStoreSourceCode([FromBody]StoreSourceCodeDetailModel model)
     {
       APIResponse apiresponse = new APIResponse();
@@ -579,7 +534,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteStoreSourceCode([FromQuery]int Id)
     {
       APIResponse apiresponse = new APIResponse();
@@ -595,7 +549,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllPaymentTypes()
     {
       APIResponse apiresponse = new APIResponse();
@@ -606,7 +559,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddPaymentTypes([FromBody] PaymentTypes paymentTypes)
     {
       APIResponse apiresponse = new APIResponse();
@@ -622,7 +574,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditPaymentTypes([FromBody] PaymentTypes paymentTypes)
     {
       APIResponse apiresponse = new APIResponse();
@@ -638,7 +589,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpDelete]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeletePaymentTypes([FromQuery] int PaymentId)
     {
       APIResponse apiresponse = new APIResponse();
@@ -654,7 +604,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> VerifyPurchase([FromBody] ItemPurchaseModel model)
     {
       APIResponse apiRespone = null;
@@ -692,7 +641,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> UnverifyPurchase([FromBody] ItemPurchaseModel model)
     {
       APIResponse apiRespone = null;

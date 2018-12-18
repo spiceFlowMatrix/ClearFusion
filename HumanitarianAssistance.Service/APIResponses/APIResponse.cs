@@ -299,6 +299,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public CriteriaEveluationModel CriteriaEveluationModel { get; set; }
         public List<ApplicationPages> ApplicationPagesList { get; set; }
         public List<UserRolePermissionsModel> UserRolePermissions { get; set; }
+        public List<RolePermissionModel> RolePermissionModelList { get; set; }
 
         #region Marketing
         public ICollection<JobDetails> JobDetails { get; set; }

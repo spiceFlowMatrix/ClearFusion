@@ -20,6 +20,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 {
   [Produces("application/json")]
   [Route("api/EmployeeHR/[Action]")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class EmployeeHRController : Controller
   {
     private IEmployeeHR _iEmployeeHR;
@@ -38,7 +39,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> AddEmployeeAttendanceDetails([FromBody] List<EmployeeAttendanceModel> modellist)
     {
       APIResponse response = null;
@@ -52,7 +52,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllEmployeeMonthlyPayrollListApproved(int officeid, int month, int year, int paymentType)
     {
       APIResponse response = await _iEmployeeHR.GetAllEmployeeMonthlyPayrollListApproved(officeid, month, year, paymentType);
@@ -60,7 +59,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType)
     {
       APIResponse response = await _iEmployeeHR.GetAllEmployeeMonthlyPayrollList(officeid, currencyid, month, year, paymentType);
@@ -68,7 +66,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllPayrollMonthlyHourDetail([FromBody] PayrollHourFilterModel model)
     {
       APIResponse response = null;
@@ -77,7 +74,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddPayrollMonthlyHourDetail([FromBody] PayrollMonthlyHourDetailModel model)
     {
       APIResponse response = null;
@@ -92,7 +88,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> EditPayrollMonthlyHourDetail([FromBody] PayrollMonthlyHourDetailModel model)
     {
       APIResponse response = null;
@@ -107,7 +102,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> EmployeePaymentTypeReportForSaveOnly([FromBody]List<EmployeePaymentTypeModel> model)
     {
       APIResponse response = null;
@@ -120,7 +114,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> EmployeePaymentTypeReport([FromBody]List<EmployeePaymentTypeModel> model)
     {
       APIResponse response = null;
@@ -133,7 +126,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> EmployeePensionReport([FromQuery]PensionReportModel model)
     {
       APIResponse response = null;
@@ -146,7 +138,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> EmployeeSalaryTaxDetails([FromBody]SalaryTaxModel model)
     {
       APIResponse response = null;
@@ -159,7 +150,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllEmployeePension(int OfficeId)
     {
       APIResponse response = null;
@@ -172,7 +162,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetEmployeePensionHistoryDetail(int EmployeeId, int OfficeId)
     {
       APIResponse response = null;
@@ -185,7 +174,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> AddEmployeeLeaveDetails([FromBody] List<AssignLeaveToEmployeeModel> model)
     {
       APIResponse apiRespone = null;
@@ -206,7 +194,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> EditEmployeeAccountSalaryDetail([FromBody] List<EmployeePayrollAccountModel> model)
     {
       APIResponse response = null;
@@ -220,7 +207,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetPrimarySalaryHeads(int EmployeeId)
     {
       APIResponse response = null;
@@ -233,7 +219,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<object> GetAllLanguages()
     {
       APIResponse response = null;

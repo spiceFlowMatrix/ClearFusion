@@ -14,6 +14,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 {
   [Produces("application/json")]
   [Route("api/Notification/[Action]")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class NotificationController : Controller
   {
 
@@ -30,7 +31,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> SetNotificationIsReadFlag(int loggerDetailsId)
     {
       APIResponse apiRespone = null;
@@ -39,7 +39,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetNotificationIsReadCount()
     {
       APIResponse apiRespone = null;

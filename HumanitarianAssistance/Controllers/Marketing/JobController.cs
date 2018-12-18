@@ -17,6 +17,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 {
   [Produces("application/json")]
   [Route("api/Job/[Action]")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class JobController : Controller
   {
     private readonly JsonSerializerSettings _serializerSettings;
@@ -41,7 +42,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetJobsList()
     {
       APIResponse apiRespone = null;
@@ -57,7 +57,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #region Job Details
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetJobDetailsById([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -78,7 +77,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <returns></returns>
     ///
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditJobDetail([FromBody]JobDetailsModel model)
     {
       APIResponse apiRespone = null;
@@ -97,7 +95,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteJobDetail([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -111,7 +108,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetFilteredJoblist([FromBody]JobFilterModel model)
     {
       APIResponse apiRespone = null;
@@ -133,7 +129,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllPhaseList()
     {
       APIResponse apiresponse = await _iMasterPageService.GetAllPhase();
@@ -146,7 +141,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddPhase([FromBody]JobPhaseModel model)
     {
       APIResponse apiResponse = null;
@@ -167,7 +161,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetPhaseById([FromBody]int model)
     {
       APIResponse apiResponse = null;
@@ -186,7 +179,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditPhase([FromBody]JobPhaseModel model)
     {
       APIResponse apiResponse = null;
@@ -205,7 +197,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeletePhase([FromBody]int model)
     {
       APIResponse apiRespone = null;
