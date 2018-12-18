@@ -356,11 +356,13 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         #region "Accounting New"
         public List<ChartOfAccountNew> AllAccountList { get; set; }
-        public ICollection<ChartOfAccountNew> MainLevelAccountList { get; set; }
+        public List<ChartOfAccountNew> MainLevelAccountList { get; set; }
         public List<ChartOfAccountNew> ControlLevelAccountList { get; set; }
         public List<ChartOfAccountNew> SubLevelAccountList { get; set; }
         public List<ChartOfAccountNew> InputLevelAccountList { get; set; }
         public List<AccountFilterType> AllAccountFilterList { get; set; }
+
+        public ChartOfAccountNew ChartOfAccountNewDetail { get; set; }
 
         #endregion
 

@@ -36,12 +36,15 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         /// </summary>
         /// <param name="id"></param>
         /// <returns>List</returns>
-        public async Task<APIResponse> GetMainLevelAccount(int id)
+        public async Task<APIResponse> GetMainLevelAccount(long id)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var mainLevelList = await _uow.ChartOfAccountNewRepository.FindAllAsync(x => x.AccountLevelId == id && x.IsDeleted == false);
+                var mainLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                                                             .Where(x => x.AccountLevelId == id && x.IsDeleted == false)
+                                                             .OrderBy(x=>x.ChartOfAccountNewId)
+                                                             .ToListAsync();
 
                 response.data.MainLevelAccountList = mainLevelList;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -61,7 +64,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
                 var mainLevelList = await _uow.GetDbContext().ChartOfAccountNew
-                                                                    .Where(x => x.ChartOfAccountNewId != parentId && x.ParentID == parentId && x.IsDeleted == false)
+                                                                    .Where(x => x.ChartOfAccountNewId != parentId &&
+                                                                                x.ParentID == parentId &&
+                                                                                x.IsDeleted == false)
+                                                                    .OrderBy(x=>x.ChartOfAccountNewId)
                                                                     .ToListAsync();
 
                 response.data.AllAccountList = mainLevelList;
@@ -75,7 +81,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
             return response;
         }
-
 
         public async Task<APIResponse> GetAllAccountsByAccountHeadTypeId(long id)
         {
@@ -136,11 +141,11 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
 
                         obj.ParentID = obj.ChartOfAccountNewId;
-                        obj.ChartOfAccountNewCode = obj.ChartOfAccountNewId.ToString();
+                        obj.ChartOfAccountNewCode = (levelcount + 1).ToString();
 
                         await _uow.ChartOfAccountNewRepository.UpdateAsyn(obj);
 
-                        response.CommonId.LongId = obj.ChartOfAccountNewId;
+                        response.data.ChartOfAccountNewDetail = obj;
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = StaticResource.SuccessText;
                     }
@@ -160,14 +165,16 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     {
                         ChartOfAccountNew obj = new ChartOfAccountNew();
 
-                        bool parentPresent = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewId == model.ParentID);
+                        //bool parentPresent = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewId == model.ParentID);
 
-                        if (parentPresent)
+                        ChartOfAccountNew parentPresent = await _uow.GetDbContext().ChartOfAccountNew.FirstOrDefaultAsync(x => x.ChartOfAccountNewId == model.ParentID);
+
+                        if (parentPresent != null)
                         {
                             obj.AccountLevelId = (int)AccountLevels.ControlLevel;
                             obj.AccountHeadTypeId = model.AccountHeadTypeId;
                             obj.ParentID = model.ParentID;
-                            obj.ChartOfAccountNewCode = model.ParentID.ToString() + (levelcount + 1);
+                            obj.ChartOfAccountNewCode = parentPresent.ChartOfAccountNewCode + (levelcount + 1);
                             obj.AccountName = model.AccountName;
                             obj.CreatedById = model.CreatedById;
                             obj.CreatedDate = model.CreatedDate;
@@ -175,7 +182,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                             await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
 
-                            response.CommonId.LongId = obj.ChartOfAccountNewId;
+                            response.data.ChartOfAccountNewDetail = obj;
                             response.StatusCode = StaticResource.successStatusCode;
                             response.Message = StaticResource.SuccessText;
                         }
@@ -221,7 +228,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                             await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
 
-                            response.CommonId.LongId = obj.ChartOfAccountNewId;
+                            response.data.ChartOfAccountNewDetail = obj;
                             response.StatusCode = StaticResource.successStatusCode;
                             response.Message = StaticResource.SuccessText;
                         }
@@ -263,7 +270,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                             await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
 
-                            response.CommonId.LongId = obj.ChartOfAccountNewId;
+                            response.data.ChartOfAccountNewDetail = obj;
                             response.StatusCode = StaticResource.successStatusCode;
                             response.Message = StaticResource.SuccessText;
                         }

@@ -1080,7 +1080,7 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<APIResponse> GetMainLevelAccount([FromBody]int id)
+    public async Task<APIResponse> GetMainLevelAccount([FromBody]long id)
     {
       APIResponse response = await _iChartOfAccountNewService.GetMainLevelAccount(id);
       return response;
