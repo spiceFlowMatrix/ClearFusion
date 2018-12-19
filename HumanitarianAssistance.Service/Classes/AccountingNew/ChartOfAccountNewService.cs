@@ -351,10 +351,17 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
-        public async Task UpdateBalanceMetadataForInputAccounts(int subLevelAccountId, bool isCreditBalanceType,
+        public async Task UpdateBalanceMetadataForInputAccounts(long subLevelAccountId, bool isCreditBalanceType,
             int accountTypeId)
         {
-
+            var accounts = await _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ParentID == subLevelAccountId).ToListAsync();
+            foreach (var account in accounts)
+            {
+                account.IsCreditBalancetype = isCreditBalanceType;
+                account.AccountTypeId = accountTypeId;
+            }
+            _uow.GetDbContext().ChartOfAccountNew.UpdateRange(accounts);
+            await _uow.GetDbContext().SaveChangesAsync();
         }
 
         public async Task<APIResponse> EditChartOfAccount(ChartOfAccountNewModel model)
@@ -379,8 +386,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         if (accountDetail.AccountLevelId == (int) AccountLevels.SubLevel)
                         {
                             // Updated all input-level accounts' account types and balance types if true
-
-
+                            await UpdateBalanceMetadataForInputAccounts(accountDetail.ChartOfAccountNewId,
+                                (bool)accountDetail.IsCreditBalancetype, (int)accountDetail.AccountTypeId);
                         }
 
                         await _uow.ChartOfAccountNewRepository.UpdateAsyn(accountDetail);
