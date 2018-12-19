@@ -23,5 +23,8 @@ namespace DataAccess.DbEntities.Project
         public bool? IsProposalComplate { get; set; }
         public bool IsActive { get; set; }
         public bool? IsCriteriaEvaluationSubmit { get; set; }
+
+        public int? ReviewerId { get; set; }
+        public int? DirectorId { get; set; }
     }
 }

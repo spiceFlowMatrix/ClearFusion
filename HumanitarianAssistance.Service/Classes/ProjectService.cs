@@ -747,6 +747,8 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.StartDate = DateTime.Now;
                         obj.EndDate = model.EndDate;
                         obj.IsProposalComplate = model.IsProposalComplate;
+                        obj.ReviewerId = model.ReviewerId;
+                        obj.DirectorId = model.DirectorId;
                         obj.ProjectPhaseDetailsId = Convert.ToInt64(ProjectPhaseType.DataEntryPhase);
                         obj.IsDeleted = false;
                         obj.IsActive = true;
@@ -769,7 +771,9 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             existProjectRecord.ProjectName = model.ProjectName;
                             existProjectRecord.ProjectDescription = model.ProjectDescription;
-                            existProjectRecord.IsProposalComplate = model.IsProposalComplate.Value;
+                            existProjectRecord.IsProposalComplate = model.IsProposalComplate;
+                            existProjectRecord.ReviewerId = model.ReviewerId;
+                            existProjectRecord.DirectorId = model.DirectorId;
                             existProjectRecord.IsDeleted = false;
                             existProjectRecord.ModifiedById = UserId;
                             existProjectRecord.ModifiedDate = DateTime.Now;
@@ -905,6 +909,8 @@ namespace HumanitarianAssistance.Service.Classes
                                      {
                                          ProjectId = obj.ProjectId,
                                          ProjectCode = obj.ProjectCode,
+                                         DirectorId=obj.DirectorId,
+                                         ReviewerId=obj.ReviewerId,
                                          ProjectName = obj.ProjectName,
                                          ProjectDescription = obj.ProjectDescription,
                                          ProjectPhaseDetailsId = phase.ProjectPhaseDetailsId,
@@ -1722,14 +1728,53 @@ namespace HumanitarianAssistance.Service.Classes
         public APIResponse GetProjectproposalsById(long Projectid)
         {
             APIResponse response = new APIResponse();
-            ProjectProposalDetail details = new ProjectProposalDetail();
+            ProjectProposalModel obj = new ProjectProposalModel();
             try
             {
+               var detail = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == Projectid && x.IsDeleted == false);
+                if (detail != null)
+                {
 
-                details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == Projectid && x.IsDeleted == false).FirstOrDefault();
-                response.data.ProjectProposalDetail = details;
+                obj.ProjectProposaldetailId = detail.ProjectProposaldetailId;
+                obj.FolderName = detail.FolderName;
+                obj.FolderId = detail.FolderId;
+                obj.ProposalFileName = detail.ProposalFileName;
+                obj.ProjectId = detail.ProjectId;
+                obj.ProposalFileId = detail.ProposalFileId;
+                obj.EDIFileName = detail.EDIFileName;
+                obj.EdiFileId = detail.EdiFileId;
+                obj.BudgetFileName = detail.BudgetFileName;
+                obj.BudgetFileId = detail.BudgetFileId;
+                obj.ConceptFileName = detail.ConceptFileName;
+                obj.ConceptFileId = detail.ConceptFileId;
+                obj.PresentationFileName = detail.PresentationFileName;
+                obj.ProposalWebLink = detail.ProposalWebLink;
+                obj.EDIFileWebLink = detail.EDIFileWebLink;
+                obj.BudgetFileWebLink = detail.BudgetFileWebLink;
+                obj.ConceptFileWebLink = detail.ConceptFileWebLink;
+                obj.PresentationFileWebLink = detail.PresentationFileWebLink;
+                obj.ProposalExtType = detail.ProposalExtType;
+                obj.EDIFileExtType = detail.EDIFileExtType;
+                obj.BudgetFileExtType = detail.BudgetFileExtType;
+                obj.ConceptFileExtType = detail.ConceptFileExtType;
+                obj.PresentationExtType = detail.PresentationExtType;
+                obj.ProposalStartDate = detail.CreatedDate;
+                obj.ProposalBudget = detail.ProposalBudget;
+                obj.ProposalDueDate = detail.ProposalDueDate;
+                obj.ProjectAssignTo = detail.ProjectAssignTo;
+                obj.IsProposalAccept = detail.IsProposalAccept;
+                obj.CurrencyId = detail.CurrencyId;
+                obj.UserId = detail.UserId;
+
+                    response.data.ProjectProposalModel = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.NoDataFound;
+                }
             }
             catch (Exception ex)
             {
