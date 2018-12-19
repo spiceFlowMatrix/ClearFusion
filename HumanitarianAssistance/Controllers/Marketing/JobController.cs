@@ -152,7 +152,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       }
       return apiRespone;
     }
-    
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetFilteredJobslist([FromBody]FilterJobModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iJobDetailsService.FilterJobsList(model, id);
+      }
+      return apiRespone;
+    }
+
     #endregion
 
     #region Job Phase
