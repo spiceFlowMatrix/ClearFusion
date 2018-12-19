@@ -746,7 +746,7 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.ProjectDescription = model.ProjectDescription;
                         obj.StartDate = DateTime.Now;
                         obj.EndDate = model.EndDate;
-                        obj.IsProposalComplate = false;
+                        obj.IsProposalComplate = model.IsProposalComplate;
                         obj.ProjectPhaseDetailsId = Convert.ToInt64(ProjectPhaseType.DataEntryPhase);
                         obj.IsDeleted = false;
                         obj.IsActive = true;
@@ -869,7 +869,7 @@ namespace HumanitarianAssistance.Service.Classes
                                               ProjectCode = x.ProjectCode,
                                               ProjectName = x.ProjectName,
                                               ProjectDescription = x.ProjectDescription,
-                                              IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit == null ? false : x.IsCriteriaEvaluationSubmit,
+                                              IsCriteriaEvaluationSubmit =x.IsCriteriaEvaluationSubmit,
                                               ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
                                               //? "Data Entry"
                                               // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
@@ -911,7 +911,7 @@ namespace HumanitarianAssistance.Service.Classes
                                          IsWin = c.IsWin,
                                          IsApproved = approve.IsApproved,
                                          IsProposalSubmit = Proposal.IsProposalAccept,
-                                        IsCriteriaEvaluationSubmit = obj.IsCriteriaEvaluationSubmit == null ? false :   obj.IsCriteriaEvaluationSubmit,
+                                        IsCriteriaEvaluationSubmit = obj.IsCriteriaEvaluationSubmit,
                                          IsProposalComplate= obj.IsProposalComplate,
                                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
 
@@ -1628,12 +1628,21 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model.IsApproved == false)
                 {
                    var details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                    var projectdetail= _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
                     if (details != null)
                     {
                         details.IsProposalAccept= model.IsApproved;
                         details.ModifiedById = UserId;
                         details.IsDeleted = false;
                         details.ModifiedDate = DateTime.Now;
+                        _uow.GetDbContext().SaveChanges();
+                    }
+                    if (projectdetail != null)
+                    {
+                        projectdetail.IsProposalComplate = model.IsApproved;
+                        projectdetail.ModifiedById = UserId;
+                        projectdetail.IsDeleted = false;
+                        projectdetail.ModifiedDate = DateTime.Now;
                         _uow.GetDbContext().SaveChanges();
                     }
                 }
