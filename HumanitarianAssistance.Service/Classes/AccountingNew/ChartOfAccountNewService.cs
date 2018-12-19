@@ -351,14 +351,15 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
-        public async Task UpdateBalanceMetadataForInputAccounts(long subLevelAccountId, bool isCreditBalanceType,
-            int accountTypeId)
+        public async Task UpdateBalanceMetadataForInputAccounts(long subLevelAccountId)
         {
+            var subLvlAccount = await _uow.GetDbContext().ChartOfAccountNew
+                .Where(x => x.ChartOfAccountNewId == subLevelAccountId).FirstOrDefaultAsync();
             var accounts = await _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ParentID == subLevelAccountId).ToListAsync();
             foreach (var account in accounts)
             {
-                account.IsCreditBalancetype = isCreditBalanceType;
-                account.AccountTypeId = accountTypeId;
+                account.IsCreditBalancetype = subLvlAccount.IsCreditBalancetype;
+                account.AccountTypeId = subLvlAccount.AccountTypeId;
             }
             _uow.GetDbContext().ChartOfAccountNew.UpdateRange(accounts);
             await _uow.GetDbContext().SaveChangesAsync();
@@ -386,8 +387,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         if (accountDetail.AccountLevelId == (int) AccountLevels.SubLevel)
                         {
                             // Updated all input-level accounts' account types and balance types if true
-                            await UpdateBalanceMetadataForInputAccounts(accountDetail.ChartOfAccountNewId,
-                                (bool)accountDetail.IsCreditBalancetype, (int)accountDetail.AccountTypeId);
+                            await UpdateBalanceMetadataForInputAccounts(accountDetail.ChartOfAccountNewId);
                         }
 
                         await _uow.ChartOfAccountNewRepository.UpdateAsyn(accountDetail);
@@ -400,8 +400,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         response.StatusCode = StaticResource.failStatusCode;
                         response.Message = StaticResource.NoDataFound;
                     }
-
-
                 }
             }
             catch (Exception ex)
@@ -411,9 +409,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
             return response;
         }
-
-
-
 
 
         //Create code
