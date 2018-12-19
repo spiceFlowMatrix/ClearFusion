@@ -40,6 +40,15 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long JobId { get; set; }
     }
 
+    public class FilterJobModel
+    {
+        public bool FinalPrice { get; set; }
+        public string Value { get; set; }
+        public bool JobId { get; set; }
+        public bool JobName { get; set; }
+        public bool Approved { get; set; }
+    }
+
     public class JobPaginationModel
     {
         public int pageIndex { get; set; }

@@ -27,6 +27,32 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             this._userManager = userManager;
         }
 
+        public async Task<APIResponse> GetContractByClientId(int model, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var contracts = (from j in _uow.GetDbContext().ContractDetails
+                                 join jp in _uow.GetDbContext().ClientDetails on j.ClientId equals jp.ClientId
+                                 where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.ClientId == model
+                                 select (new ContractByClient
+                                 {
+                                     ClientId = jp.ClientId,
+                                     ClientName = jp.ClientName,
+                                     ContractId = j.ContractId
+                                 })).ToList();
+                response.data.ContractByClientList = contracts;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> GetContractDetailsById(int contractId, string userId)
         {
             APIResponse response = new APIResponse();
@@ -116,7 +142,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
             try
             {
-                var list = await _uow.ContractDetailsRepository.FindAllAsync(x => !x.IsDeleted.Value);
+                var list = await _uow.ContractDetailsRepository.FindAllAsync(x => !x.IsDeleted.Value && x.IsApproved == true);
                 foreach (var item in list)
                 {
                     ContractByClient model = new ContractByClient();
