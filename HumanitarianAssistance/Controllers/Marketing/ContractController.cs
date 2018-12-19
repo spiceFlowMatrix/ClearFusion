@@ -19,6 +19,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 {
   [Produces("application/json")]
   [Route("api/Contract/[Action]")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class ContractController : Controller
   {
     private readonly JsonSerializerSettings _serializerSettings;
@@ -54,7 +55,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #region Contract Details
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> ApproveContract([FromBody]ApproveContractModel model)
     {
       APIResponse response = null;
@@ -68,7 +68,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetFilteredContractList([FromBody]FilterContractModel model)
     {
       APIResponse response = null;
@@ -87,7 +86,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="contractId"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetContractDetailsById([FromBody] int contractId)
     {
       APIResponse apiResponse = null;
@@ -105,7 +103,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetContractsList()
     {
       APIResponse apiRespone = null;
@@ -119,7 +116,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetContractsListByClient()
     {
       APIResponse apiRespone = null;
@@ -140,7 +136,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <returns></returns>
     ///
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddEditContractDetail([FromBody]ContractDetailsModel model)
     {
       APIResponse apiRespone = null;
@@ -173,7 +168,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteContractDetail([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -193,7 +187,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #region Activity Type
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetActivityById([FromBody]int model)
     {
       APIResponse apiResponse = null;
@@ -211,7 +204,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllActivityTypeList()
     {
       APIResponse apiresponse = await _iMasterPageService.GetAllActivityType();
@@ -224,7 +216,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddActivityType([FromBody]ActivityTypeModel model)
     {
       APIResponse apiResponse = null;
@@ -251,7 +242,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditActivityType([FromBody]ActivityTypeModel model)
     {
       APIResponse apiResponse = null;
@@ -270,7 +260,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteActivityType([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -288,7 +277,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #region Quality
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetQualityById([FromBody]int model)
     {
       APIResponse apiResponse = null;
@@ -306,7 +294,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllQualityList()
     {
       APIResponse apiresponse = await _iMasterPageService.GetAllQuality();
@@ -319,7 +306,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddQuality([FromBody]QualityModel model)
     {
       APIResponse apiResponse = null;
@@ -346,7 +332,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditQuality([FromBody]QualityModel model)
     {
       APIResponse apiResponse = null;
@@ -365,7 +350,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteQuality([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -386,7 +370,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllLanguageList()
     {
       APIResponse apiresponse = await _iCodeService.GetAllLanguage();
@@ -399,7 +382,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddLanguage([FromBody]LanguageModel model)
     {
       APIResponse apiResponse = null;
@@ -418,7 +400,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditLanguage([FromBody]LanguageModel model)
     {
       APIResponse apiResponse = null;
@@ -437,7 +418,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteLanguage([FromBody]LanguageModel model)
     {
       APIResponse apiRespone = null;
@@ -456,7 +436,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #region Medium
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetMediumById([FromBody]int model)
     {
       APIResponse apiResponse = null;
@@ -474,7 +453,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllMediumList()
     {
       APIResponse apiresponse = await _iMasterPageService.GetAllMedium();
@@ -487,7 +465,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddMedium([FromBody]MediumModel model)
     {
       APIResponse apiResponse = null;
@@ -513,7 +490,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditMedium([FromBody]MediumModel model)
     {
       APIResponse apiResponse = null;
@@ -532,7 +508,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteMedium([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -550,7 +525,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #region Time Category
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetTimeCategoryById([FromBody]int model)
     {
       APIResponse apiResponse = null;
@@ -568,7 +542,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllTimeCategoryList()
     {
       APIResponse apiresponse = await _iMasterPageService.GetAllTimeCategory();
@@ -581,7 +554,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddTime([FromBody]TimeCategoryModel model)
     {
       APIResponse apiResponse = null;
@@ -607,7 +579,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditTimeCategory([FromBody]TimeCategoryModel model)
     {
       APIResponse apiResponse = null;
@@ -626,7 +597,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteTimeCategory([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -644,7 +614,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #region Nature
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetNatureById([FromBody]int model)
     {
       APIResponse apiResponse = null;
@@ -662,7 +631,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllNatureList()
     {
       APIResponse apiresponse = await _iMasterPageService.GetAllNature();
@@ -675,7 +643,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddNature([FromBody]NatureModel model)
     {
       APIResponse apiResponse = null;
@@ -701,7 +668,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditNature([FromBody]NatureModel model)
     {
       APIResponse apiResponse = null;
@@ -720,7 +686,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteNature([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -742,7 +707,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllMediaCategoryList()
     {
       APIResponse apiresponse = await _iMasterPageService.GetAllMediaCategory();
@@ -750,7 +714,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetMediaCategoryById([FromBody]int model)
     {
       APIResponse apiResponse = null;
@@ -769,7 +732,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddMediaCategory([FromBody]MediaCategoryModel model)
     {
       APIResponse apiResponse = null;
@@ -795,7 +757,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditMediaCategory([FromBody]MediaCategoryModel model)
     {
       APIResponse apiResponse = null;
@@ -814,7 +775,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteMediaCategory([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -831,14 +791,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #region ClientDetails
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllClientList()
     {
       APIResponse apiresponse = await _iclientDetailService.GetAllClient();
       return apiresponse;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddClientDetails([FromBody]ClientDetailModel model)
     {
       APIResponse apiResponse = null;
@@ -851,7 +809,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       return apiResponse;
     }
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> EditClientDetails([FromBody]ClientDetailModel model)
     {
       APIResponse apiResponse = null;
@@ -865,7 +822,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteClientDetails([FromBody]int model)
     {
       APIResponse apiRespone = null;
@@ -888,7 +844,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetAllUnitRateList()
     {
       APIResponse apiresponse = await _iMasterPageService.GetAllUnitRateList();
@@ -901,7 +856,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="UnitRateId"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetUnitRateById([FromBody] string UnitRateId)
     {
       APIResponse apiResponse = null;
@@ -920,7 +874,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> AddUnitRate([FromBody]UnitRateModel model)
     {
        APIResponse apiResponse = null;
@@ -940,7 +893,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetUnitRateByActivityTypeId([FromBody]UnitRateModel model)
     {
       APIResponse apiResponse = null;
@@ -960,7 +912,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> DeleteUnitRate([FromBody]int model)
     {
       APIResponse apiRespone = null;

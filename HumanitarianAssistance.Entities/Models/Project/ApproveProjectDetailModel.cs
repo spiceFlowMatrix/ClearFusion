@@ -12,5 +12,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public bool IsApproved { get; set; }
+        public string UploadedFile { get; set; }
     }
 }

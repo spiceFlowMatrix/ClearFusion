@@ -20,7 +20,8 @@ namespace DataAccess.DbEntities.Project
         public long? ProjectPhaseDetailsId { get; set; }
         [ForeignKey("ProjectPhaseDetailsId")]
         public ProjectPhaseDetails ProjectPhaseDetails { get; set; }
-        public bool IsProposalComplate { get; set; }
+        public bool? IsProposalComplate { get; set; }
         public bool IsActive { get; set; }
+        public bool? IsCriteriaEvaluationSubmit { get; set; }
     }
 }

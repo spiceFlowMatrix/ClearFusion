@@ -258,7 +258,7 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
 
-      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+      //UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
       if (env.IsDevelopment())
       {
@@ -332,7 +332,7 @@ namespace HumanitarianAssistance
       {
         using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
         {
-          // context.Database.Migrate();
+          context.Database.Migrate();
 
           if (!context.Users.Any())
           {

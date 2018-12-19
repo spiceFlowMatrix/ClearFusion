@@ -299,12 +299,16 @@ namespace HumanitarianAssistance.Service.APIResponses
         public CriteriaEveluationModel CriteriaEveluationModel { get; set; }
         public List<ApplicationPages> ApplicationPagesList { get; set; }
         public List<UserRolePermissionsModel> UserRolePermissions { get; set; }
+        public List<RolePermissionModel> RolePermissionModelList { get; set; }
+
        
         public ICollection<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public ICollection<CEFeasibilityExpertOtherDetail> FeasibilityExpertOtherDetail { get; set; }
         public ICollection<CEAgeGroupDetail> CEAgeGroupDetail { get; set; }
         public ICollection<CEOccupationDetail> CEOccupationDetail { get; set; }
         public ICollection<CEAssumptionDetail> CEAssumptionDetail { get; set; }
+
+        public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
 
 
         #region Marketing
@@ -357,11 +361,13 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         #region "Accounting New"
         public List<ChartOfAccountNew> AllAccountList { get; set; }
-        public ICollection<ChartOfAccountNew> MainLevelAccountList { get; set; }
+        public List<ChartOfAccountNew> MainLevelAccountList { get; set; }
         public List<ChartOfAccountNew> ControlLevelAccountList { get; set; }
         public List<ChartOfAccountNew> SubLevelAccountList { get; set; }
         public List<ChartOfAccountNew> InputLevelAccountList { get; set; }
         public List<AccountFilterType> AllAccountFilterList { get; set; }
+
+        public ChartOfAccountNew ChartOfAccountNewDetail { get; set; }
 
         #endregion
 

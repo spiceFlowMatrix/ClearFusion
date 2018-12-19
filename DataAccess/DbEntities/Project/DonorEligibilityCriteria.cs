@@ -6,19 +6,15 @@ using System.Text;
 
 namespace DataAccess.DbEntities.Project
 {
-    public class WinProjectDetails: BaseEntityWithoutId
+   public class DonorEligibilityCriteria: BaseEntityWithoutId
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
-        public long WinProjectId { get; set; } 
-        [ForeignKey("ProjectId")]
+        public long DonorEligibilityDetailId { get; set; }
+        public string Name { get; set; }
         public long ProjectId { get; set; }
+        [ForeignKey("ProjectId")]
         public ProjectDetail ProjectDetail { get; set; }
-        public string CommentText { get; set; }
-        public string FileName { get; set; }
-        public string FilePath { get; set; }
-        public bool? IsWin { get; set; }
-        public byte[] UploadedFile { get; set; }
     }
 }

@@ -1,12 +1,75 @@
-HumanitarianAssistance.Entities/obj/
-HumanitarianAssistance.Service/obj/
-HumanitarianAssistance/HumanitarianAssistance.Common/obj/
-HumanitarianAssistance/obj/
-HumanitarianAssistance.Service/bin/
-HumanitarianAssistance/bin/
-HumanitarianAssistance.Entities/bin/
-DataAccess/obj/
-DataAccess/bin/
-/HumanitarianAssistance/HumanitarianAssistance.Common/bin/Debug/netcoreapp2.1
-HumanitarianAssistance/HumanitarianAssistance.Common/bin/
+# See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# compiled output
+/dist
+/tmp
+/out-tsc
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# System Files
+.DS_Store
+Thumbs.db
+*.cache
+*.dll
+*.exe
+*.pdb
+/build/
+*.suo
+*.user
+_ReSharper.*/
+*.sdf
+*.opensdf
+*.tlog
+*.log
+TestResult.xml
+*.VisualState.xml
+Version.cs
+Version.h
+Version.cpp
+# Visual Studio 2015 cache/options directory
+*.vs/
+
+obj/*
+bin/*
+*/obj/*
+*/bin/*
+HumanitarianAssistance/HumanitarianAssistance.Common/bin/Debug/netcoreapp2.1/HumanitarianAssistance.Common.deps.json
+HumanitarianAssistance/HumanitarianAssistance.Common/bin/Release/netcoreapp2.1/HumanitarianAssistance.Common.deps.json
+HumanitarianAssistance/HumanitarianAssistance.Common/obj/Debug/netcoreapp2.1/HumanitarianAssistance.Common.csproj.FileListAbsolute.txt
+HumanitarianAssistance/HumanitarianAssistance.Common/obj/Release/netcoreapp2.1/HumanitarianAssistance.Common.AssemblyInfo.cs
+HumanitarianAssistance/HumanitarianAssistance.Common/obj/Release/netcoreapp2.1/HumanitarianAssistance.Common.csproj.FileListAbsolute.txt
+HumanitarianAssistance/HumanitarianAssistance.Common/obj/Release/netcoreapp2.1/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+HumanitarianAssistance/HumanitarianAssistance.Common/obj/Release/netcoreapp2.1/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+HumanitarianAssistance/HumanitarianAssistance.Common/obj/Release/netcoreapp2.1/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+HumanitarianAssistance/HumanitarianAssistance.Common/obj/
