@@ -13,6 +13,6 @@ namespace DataAccess.DbEntities
         [Column(Order = 1, TypeName = "serial")]
         public int AccountHeadTypeId { get; set; }
         public string AccountHeadTypeName { get; set; }
-
+        public bool IsCreditBalancetype { get; set; }
     }
 }

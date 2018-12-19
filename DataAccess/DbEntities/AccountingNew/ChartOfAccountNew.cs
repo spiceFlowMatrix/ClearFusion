@@ -13,6 +13,10 @@ namespace DataAccess.DbEntities.AccountingNew
         [Column(Order = 1, TypeName = "serial")]
         public long ChartOfAccountNewId { get; set; }
         public string ChartOfAccountNewCode { get; set; }
+
+        // App logic must always set this during add/edit actions
+        public bool? IsCreditBalancetype { get; set; }
+
         [StringLength(100)]
         public string AccountName { get; set; }
         public long ParentID { get; set; }

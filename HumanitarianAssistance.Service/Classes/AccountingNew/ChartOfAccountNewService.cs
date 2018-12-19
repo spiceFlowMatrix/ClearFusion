@@ -104,6 +104,15 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        public async Task<bool> GetAccountBalanceTypeByAccountType(int accountTypeId)
+        {
+            var accountType = await _uow.GetDbContext().AccountType.Where(x => x.AccountTypeId == accountTypeId)
+                .FirstOrDefaultAsync();
+            var accountHeadType = await _uow.GetDbContext().AccountHeadType
+                .Where(x => x.AccountHeadTypeId == accountType.AccountHeadTypeId).FirstOrDefaultAsync();
+            return accountHeadType.IsCreditBalancetype;
+        }
+
         public async Task<APIResponse> AddChartOfAccount(ChartOfAccountNewModel model)
         {
             APIResponse response = new APIResponse();
@@ -213,6 +222,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                         if (parentPresent != null)
                         {
+
                             obj.AccountLevelId = (int)AccountLevels.SubLevel;
                             obj.AccountHeadTypeId = model.AccountHeadTypeId;
                             obj.ParentID = model.ParentID;
@@ -220,7 +230,20 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             obj.ChartOfAccountNewCode = parentPresent.ChartOfAccountNewCode + genrateCode((levelcount + 1).ToString());
 
                             obj.AccountFilterTypeId = model.AccountFilterTypeId != null ? model.AccountFilterTypeId : null;  //dropdown
-                            obj.AccountTypeId = model.AccountTypeId != null ? model.AccountTypeId : null; //dropdown
+                            // obj.AccountTypeId = model.AccountTypeId != null ? model.AccountTypeId : null; //dropdown
+
+                            if (model.AccountTypeId != null)
+                            {
+                                obj.AccountTypeId = model.AccountTypeId;
+                                // Get balance type.
+                                obj.IsCreditBalancetype =
+                                    await GetAccountBalanceTypeByAccountType((int) obj.AccountTypeId);
+                            }
+                            else
+                            {
+                                obj.AccountTypeId = null;
+                                obj.IsCreditBalancetype = null;
+                            }
 
                             obj.CreatedById = model.CreatedById;
                             obj.CreatedDate = model.CreatedDate;
@@ -266,6 +289,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             obj.AccountName = model.AccountName;
                             obj.CreatedById = model.CreatedById;
                             obj.CreatedDate = model.CreatedDate;
+
+                            // set account type and balance type
+                            obj.AccountTypeId = parentPresent.AccountTypeId;
+                            obj.IsCreditBalancetype = parentPresent.IsCreditBalancetype;
+                            //////////////////////
+
                             obj.IsDeleted = false;
 
                             await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
@@ -322,6 +351,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        public async Task UpdateBalanceMetadataForInputAccounts(int subLevelAccountId, bool isCreditBalanceType,
+            int accountTypeId)
+        {
+
+        }
+
         public async Task<APIResponse> EditChartOfAccount(ChartOfAccountNewModel model)
         {
             APIResponse response = new APIResponse();
@@ -340,6 +375,13 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                         accountDetail.ModifiedDate = model.ModifiedDate;
                         accountDetail.IsDeleted = false;
+
+                        if (accountDetail.AccountLevelId == (int) AccountLevels.SubLevel)
+                        {
+                            // Updated all input-level accounts' account types and balance types if true
+
+
+                        }
 
                         await _uow.ChartOfAccountNewRepository.UpdateAsyn(accountDetail);
 

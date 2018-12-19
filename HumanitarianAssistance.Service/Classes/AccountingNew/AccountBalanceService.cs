@@ -11,6 +11,7 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Service.Classes.AccountingNew
 {
@@ -35,9 +36,23 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
                 var subLevelList =
-                    await _uow.ChartOfAccountNewRepository.FindAllAsync(x =>
-                        x.AccountLevelId == (int)AccountLevels.SubLevel && x.AccountHeadTypeId == headType);
-                response.data.SubLevelAccountList = subLevelList.ToList();
+                    await _uow.GetDbContext().ChartOfAccountNew.Where(x =>
+                        x.AccountLevelId == (int)AccountLevels.SubLevel && x.AccountHeadTypeId == headType)
+                        .ToListAsync();
+
+                // Select all input level accounts where the account's parent exists in the sub-level list
+                var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                    .Where(x => subLevelList
+                        .Select(a => a.ChartOfAccountNewId)
+                        .Contains(x.ParentID))
+                    .ToListAsync();
+
+                var vTransactions = await _uow.GetDbContext().VoucherTransactions.Where(x =>
+                        inputLevelList.Select(a => a.ChartOfAccountNewId).Contains((long) x.ChartOfAccountNewId))
+                    .ToListAsync();
+
+
+                response.data.SubLevelAccountList = subLevelList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
