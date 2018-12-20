@@ -42,5 +42,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string UserRole { get; set; }
         public int? CurrencyId { get; set; }
         public int? UserId{ get; set; }
+        public bool? IsApproved { get; set; }
     }
 }
