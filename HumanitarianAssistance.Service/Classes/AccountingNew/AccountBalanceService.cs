@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DataAccess;
 using DataAccess.DbEntities;
+using DataAccess.DbEntities.AccountingNew;
 using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
@@ -35,16 +36,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             // TODO: get all input-level accounts that match the headType
             try
             {
-                var subLevelList =
-                    await _uow.GetDbContext().ChartOfAccountNew.Where(x =>
-                        x.AccountLevelId == (int)AccountLevels.SubLevel && x.AccountHeadTypeId == headType)
-                        .ToListAsync();
 
                 // Select all input level accounts where the account's parent exists in the sub-level list
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
-                    .Where(x => subLevelList
-                        .Select(a => a.ChartOfAccountNewId)
-                        .Contains(x.ParentID))
+                    .Where(x => x.AccountHeadTypeId == headType)
                     .ToListAsync();
 
                 var vTransactions = await _uow.GetDbContext().VoucherTransactions.Where(x =>
@@ -52,7 +47,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     .ToListAsync();
 
 
-                response.data.SubLevelAccountList = subLevelList;
+                response.data.SubLevelAccountList = inputLevelList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -67,6 +62,32 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             // TODO: get all notes that have accounts whose head type match this.headType
 
             return response;
+        }
+
+        public async Task<double> GetAccountBalanceById(long accountId)
+        {
+            // check if account exists
+            var accountTask = _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ChartOfAccountNewId == accountId).FirstOrDefaultAsync();
+            // get all transactions
+            var transactions = await _uow.GetDbContext().VoucherTransactions.Where(x => x.ChartOfAccountNewId == accountId)
+                .ToListAsync();
+
+            var account = await accountTask;
+            var transactionCredits = transactions.Select(x => x.Credit);
+            var transactionDebits = transactions.Select(x => x.Debit);
+            var totalCredits = transactionCredits.Sum();
+            var totalDebits = transactionDebits.Sum();
+            double balance = 0;
+            if ((bool)account.IsCreditBalancetype)
+            {
+                balance = (double)totalCredits - (double)totalDebits;
+            }
+            else
+            {
+                balance = (double) totalDebits - (double) totalCredits;
+            }
+
+            return balance;
         }
 
         public async Task<APIResponse> GetNoteBalanceById(int noteType)

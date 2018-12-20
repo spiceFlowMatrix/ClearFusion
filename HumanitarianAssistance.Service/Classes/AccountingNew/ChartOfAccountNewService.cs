@@ -293,6 +293,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             // set account type and balance type
                             obj.AccountTypeId = parentPresent.AccountTypeId;
                             obj.IsCreditBalancetype = parentPresent.IsCreditBalancetype;
+                            obj.AccountFilterTypeId = parentPresent.AccountFilterTypeId;
                             //////////////////////
 
                             obj.IsDeleted = false;
@@ -351,15 +352,20 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
-        public async Task UpdateBalanceMetadataForInputAccounts(long subLevelAccountId)
+        public async Task UpdateBalanceMetadataForInputAccounts(ChartOfAccountNew subLvlAccount)
         {
-            var subLvlAccount = await _uow.GetDbContext().ChartOfAccountNew
-                .Where(x => x.ChartOfAccountNewId == subLevelAccountId).FirstOrDefaultAsync();
-            var accounts = await _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ParentID == subLevelAccountId).ToListAsync();
+            var accounts = await _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ParentID == subLvlAccount.ChartOfAccountNewId).ToListAsync();
+            var accType = await _uow.GetDbContext().AccountType
+                .FirstOrDefaultAsync(x => x.AccountTypeId == subLvlAccount.AccountTypeId);
+            var accHeadType = await _uow.GetDbContext().AccountHeadType
+                .FirstOrDefaultAsync(x => x.AccountHeadTypeId == accType.AccountHeadTypeId);
+            subLvlAccount.IsCreditBalancetype = accHeadType.IsCreditBalancetype;
+            _uow.GetDbContext().ChartOfAccountNew.Update(subLvlAccount);
             foreach (var account in accounts)
             {
                 account.IsCreditBalancetype = subLvlAccount.IsCreditBalancetype;
                 account.AccountTypeId = subLvlAccount.AccountTypeId;
+                account.AccountFilterTypeId = subLvlAccount.AccountFilterTypeId;
             }
             _uow.GetDbContext().ChartOfAccountNew.UpdateRange(accounts);
             await _uow.GetDbContext().SaveChangesAsync();
@@ -384,13 +390,14 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         accountDetail.ModifiedDate = model.ModifiedDate;
                         accountDetail.IsDeleted = false;
 
-                        if (accountDetail.AccountLevelId == (int) AccountLevels.SubLevel)
-                        {
-                            // Updated all input-level accounts' account types and balance types if true
-                            await UpdateBalanceMetadataForInputAccounts(accountDetail.ChartOfAccountNewId);
-                        }
 
                         await _uow.ChartOfAccountNewRepository.UpdateAsyn(accountDetail);
+
+                        if (accountDetail.AccountLevelId == (int)AccountLevels.SubLevel)
+                        {
+                            // Updated all input-level accounts' account types and balance types if true
+                            await UpdateBalanceMetadataForInputAccounts(accountDetail);
+                        }
 
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = StaticResource.SuccessText;
