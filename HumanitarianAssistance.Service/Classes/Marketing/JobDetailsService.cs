@@ -65,6 +65,29 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
 
+        public async Task<APIResponse> AcceptAgreement(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var jobInfo = await _uow.JobDetailsRepository.FindAsync(c => c.JobId == model && c.IsDeleted == false);
+                jobInfo.IsAgreementApproved = true;
+                jobInfo.ModifiedById = UserId;
+                jobInfo.ModifiedDate = DateTime.UtcNow;
+                await _uow.JobDetailsRepository.UpdateAsyn(jobInfo, jobInfo.JobId);                
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+                response.data.JobDetailModel = jobInfo;
+                response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         ///  Get All Jobs List
         /// </summary>
@@ -266,7 +289,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    FinalRate = jp.FinalRate,
                                    FinalPrice = jp.FinalPrice,
                                    TotalPrice = jp.TotalPrice,
-                                   IsApproved = j.IsApproved
+                                   IsApproved = j.IsApproved,
+                                   IsAgreementApproved = j.IsAgreementApproved
                                })).FirstOrDefault();
                 response.data.JobPriceDetail = JobList;
                 response.StatusCode = 200;
