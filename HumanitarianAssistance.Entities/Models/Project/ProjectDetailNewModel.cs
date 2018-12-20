@@ -20,6 +20,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? IsApproved { get; set; }
         public bool? IsProposalSubmit { get; set; }
         public bool? IsCriteriaEvaluationSubmit { get; set; }
-
+        public int? ReviewerId { get; set; }
+        public int? DirectorId { get; set; }
     }
 }

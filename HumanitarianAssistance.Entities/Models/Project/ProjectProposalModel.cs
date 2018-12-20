@@ -34,11 +34,14 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string BudgetFileExtType { get; set; }
         public string ConceptFileExtType { get; set; }
         public string PresentationExtType { get; set; }
-        public DateTime ProposalStartDate { get; set; }
+        public DateTime? ProposalStartDate { get; set; }
         public string ProposalBudget { get; set; }
-        public DateTime ProposalDueDate { get; set; }
-        public int ProjectAssignTo { get; set; }
+        public DateTime? ProposalDueDate { get; set; }
+        public int? ProjectAssignTo { get; set; }
         public bool? IsProposalAccept { get; set; }
         public string UserRole { get; set; }
+        public int? CurrencyId { get; set; }
+        public int? UserId{ get; set; }
+        public bool? IsApproved { get; set; }
     }
 }

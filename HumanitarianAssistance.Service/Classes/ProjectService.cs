@@ -747,6 +747,8 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.StartDate = DateTime.Now;
                         obj.EndDate = model.EndDate;
                         obj.IsProposalComplate = model.IsProposalComplate;
+                        obj.ReviewerId = model.ReviewerId;
+                        obj.DirectorId = model.DirectorId;
                         obj.ProjectPhaseDetailsId = Convert.ToInt64(ProjectPhaseType.DataEntryPhase);
                         obj.IsDeleted = false;
                         obj.IsActive = true;
@@ -769,7 +771,9 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             existProjectRecord.ProjectName = model.ProjectName;
                             existProjectRecord.ProjectDescription = model.ProjectDescription;
-                            existProjectRecord.IsProposalComplate = model.IsProposalComplate.Value;
+                            existProjectRecord.IsProposalComplate = model.IsProposalComplate;
+                            existProjectRecord.ReviewerId = model.ReviewerId;
+                            existProjectRecord.DirectorId = model.DirectorId;
                             existProjectRecord.IsDeleted = false;
                             existProjectRecord.ModifiedById = UserId;
                             existProjectRecord.ModifiedDate = DateTime.Now;
@@ -869,7 +873,7 @@ namespace HumanitarianAssistance.Service.Classes
                                               ProjectCode = x.ProjectCode,
                                               ProjectName = x.ProjectName,
                                               ProjectDescription = x.ProjectDescription,
-                                              IsCriteriaEvaluationSubmit =x.IsCriteriaEvaluationSubmit,
+                                              IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
                                               ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
                                               //? "Data Entry"
                                               // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
@@ -905,14 +909,16 @@ namespace HumanitarianAssistance.Service.Classes
                                      {
                                          ProjectId = obj.ProjectId,
                                          ProjectCode = obj.ProjectCode,
+                                         DirectorId = obj.DirectorId,
+                                         ReviewerId = obj.ReviewerId,
                                          ProjectName = obj.ProjectName,
                                          ProjectDescription = obj.ProjectDescription,
                                          ProjectPhaseDetailsId = phase.ProjectPhaseDetailsId,
                                          IsWin = c.IsWin,
                                          IsApproved = approve.IsApproved,
                                          IsProposalSubmit = Proposal.IsProposalAccept,
-                                        IsCriteriaEvaluationSubmit = obj.IsCriteriaEvaluationSubmit,
-                                         IsProposalComplate= obj.IsProposalComplate,
+                                         IsCriteriaEvaluationSubmit = obj.IsCriteriaEvaluationSubmit,
+                                         IsProposalComplate = obj.IsProposalComplate,
                                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
 
 
@@ -1615,7 +1621,7 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.FileName = model.FileName;
                 obj.FilePath = model.FilePath;
                 obj.IsApproved = model.IsApproved;
-                obj.UploadedFile = string.IsNullOrEmpty(model.UploadedFile)? null: Convert.FromBase64String(model.UploadedFile);
+                obj.UploadedFile = string.IsNullOrEmpty(model.UploadedFile) ? null : Convert.FromBase64String(model.UploadedFile);
                 obj.IsDeleted = false;
                 obj.CreatedById = UserId;
                 obj.CreatedDate = DateTime.Now;
@@ -1627,11 +1633,11 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (model.IsApproved == false)
                 {
-                   var details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
-                    var projectdetail= _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                    var details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                    var projectdetail = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
                     if (details != null)
                     {
-                        details.IsProposalAccept= model.IsApproved;
+                        details.IsProposalAccept = model.IsApproved;
                         details.ModifiedById = UserId;
                         details.IsDeleted = false;
                         details.ModifiedDate = DateTime.Now;
@@ -1722,14 +1728,54 @@ namespace HumanitarianAssistance.Service.Classes
         public APIResponse GetProjectproposalsById(long Projectid)
         {
             APIResponse response = new APIResponse();
-            ProjectProposalDetail details = new ProjectProposalDetail();
+            ProjectProposalModel obj = new ProjectProposalModel();
             try
             {
+                var detail = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == Projectid && x.IsDeleted == false);
+                var Projectdetail = _uow.GetDbContext().ApproveProjectDetails.FirstOrDefault(x => x.ProjectId == Projectid && x.IsDeleted == false);
+                if (detail != null)
+                {
 
-                details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == Projectid && x.IsDeleted == false).FirstOrDefault();
-                response.data.ProjectProposalDetail = details;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                    obj.ProjectProposaldetailId = detail.ProjectProposaldetailId;
+                    obj.FolderName = detail.FolderName;
+                    obj.FolderId = detail.FolderId;
+                    obj.ProposalFileName = detail.ProposalFileName;
+                    obj.ProjectId = detail.ProjectId;
+                    obj.ProposalFileId = detail.ProposalFileId;
+                    obj.EDIFileName = detail.EDIFileName;
+                    obj.EdiFileId = detail.EdiFileId;
+                    obj.BudgetFileName = detail.BudgetFileName;
+                    obj.BudgetFileId = detail.BudgetFileId;
+                    obj.ConceptFileName = detail.ConceptFileName;
+                    obj.ConceptFileId = detail.ConceptFileId;
+                    obj.PresentationFileName = detail.PresentationFileName;
+                    obj.ProposalWebLink = detail.ProposalWebLink;
+                    obj.EDIFileWebLink = detail.EDIFileWebLink;
+                    obj.BudgetFileWebLink = detail.BudgetFileWebLink;
+                    obj.ConceptFileWebLink = detail.ConceptFileWebLink;
+                    obj.PresentationFileWebLink = detail.PresentationFileWebLink;
+                    obj.ProposalExtType = detail.ProposalExtType;
+                    obj.EDIFileExtType = detail.EDIFileExtType;
+                    obj.BudgetFileExtType = detail.BudgetFileExtType;
+                    obj.ConceptFileExtType = detail.ConceptFileExtType;
+                    obj.PresentationExtType = detail.PresentationExtType;
+                    obj.ProposalStartDate = detail.CreatedDate;
+                    obj.ProposalBudget = detail.ProposalBudget;
+                    obj.ProposalDueDate = detail.ProposalDueDate;
+                    obj.ProjectAssignTo = detail.ProjectAssignTo;
+                    obj.IsProposalAccept = detail.IsProposalAccept;
+                    obj.CurrencyId = detail.CurrencyId;
+                    obj.UserId = detail.UserId;
+                    obj.IsApproved =Projectdetail?.IsApproved;
+                    response.data.ProjectProposalModel = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.NoDataFound;
+                }
             }
             catch (Exception ex)
             {
@@ -2258,7 +2304,7 @@ namespace HumanitarianAssistance.Service.Classes
                      select new CriteriaEveluationModel
                      {
                          ProjectId = obj.ProjectId,
-                         IsCriteriaEvaluationSubmit=obj.IsCriteriaEvaluationSubmit,
+                         IsCriteriaEvaluationSubmit = obj.IsCriteriaEvaluationSubmit,
                          DonorCEId = donor != null ? donor.DonorCEId : 0,
                          MethodOfFunding = donor.MethodOfFunding,
                          PastFundingExperience = donor.PastFundingExperience,
@@ -3456,7 +3502,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        
+
         #endregion
 
 
@@ -3466,7 +3512,7 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> AddEditCriteriaEvalutionSubmitDetail(ProjectDetailNewModel model)
         {
             APIResponse response = new APIResponse();
-           
+
             DbContext db = _uow.GetDbContext();
             try
             {
@@ -3477,8 +3523,9 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     ProjectDetail.IsCriteriaEvaluationSubmit = model.IsCriteriaEvaluationSubmit;
                     ProjectDetail.ModifiedDate = DateTime.Now;
-                  await  _uow.ProjectDetailNewRepository.UpdateAsyn(ProjectDetail, ProjectDetail.ProjectId);
+                    await _uow.ProjectDetailNewRepository.UpdateAsyn(ProjectDetail, ProjectDetail.ProjectId);
                     response.StatusCode = StaticResource.successStatusCode;
+                    response.CommonId.IsApproved = ProjectDetail.IsCriteriaEvaluationSubmit.Value;
                     response.Message = "Success";
                 }
             }
