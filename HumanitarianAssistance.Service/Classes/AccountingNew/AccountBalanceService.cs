@@ -29,23 +29,43 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             this._userManager = userManager;
         }
 
-        public async Task<APIResponse> GetNoteBalancesByHeadType(int headType)
+        public async Task<APIResponse> GetNoteBalancesByHeadType(int headTypeId, int toCurrency)
         {
             APIResponse response = new APIResponse();
 
-            // TODO: get all input-level accounts that match the headType
+            // TODO: get all input-level accounts that match the headTypeId
             try
             {
 
                 // Select all input level accounts where the account's parent exists in the sub-level list
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
-                    .Where(x => x.AccountHeadTypeId == headType)
+                    .Where(x => x.AccountHeadTypeId == headTypeId)
                     .ToListAsync();
 
                 var vTransactions = await _uow.GetDbContext().VoucherTransactions.Where(x =>
                         inputLevelList.Select(a => a.ChartOfAccountNewId).Contains((long) x.ChartOfAccountNewId))
                     .ToListAsync();
 
+                // TODO: figure out where to get toCurrency for filtering exchange rates on.
+                // each transaction may have a different. we cannot assume a single fromCurrency
+                // only a single toCurrency
+                var exRates = await _uow.GetDbContext().ExchangeRates.Where(x =>
+                    vTransactions.Select(y => y.TransactionDate).Contains(x.Date) 
+                    && vTransactions.Select(z => z.CurrencyId).Contains(x.FromCurrency))
+                    .ToListAsync();
+
+                var tasks = new List<Task<double>>();
+
+                foreach (var account in inputLevelList)
+                {
+                    tasks.Add(GetAccountBalanceById(account.ChartOfAccountNewId));
+                }
+
+                foreach (var task in tasks)
+                {
+                    var balance = await task;
+
+                }
 
                 response.data.SubLevelAccountList = inputLevelList;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -56,10 +76,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
-            // TODO: fetch all vouchers that contain transactions towards accounts whose head type matches this headType
+            // TODO: fetch all vouchers that contain transactions towards accounts whose head type matches this headTypeId
             // TODO: get exchange rate for each transaction. Use the currencyId from each transaction's voucher, and the toCurrencyId to get  
 
-            // TODO: get all notes that have accounts whose head type match this.headType
+            // TODO: get all notes that have accounts whose head type match this.headTypeId
 
             return response;
         }
@@ -72,6 +92,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             var transactions = await _uow.GetDbContext().VoucherTransactions.Where(x => x.ChartOfAccountNewId == accountId)
                 .ToListAsync();
 
+            //TODO: get the currency value of all transactions at a given toCurrency 
             var account = await accountTask;
             var transactionCredits = transactions.Select(x => x.Credit);
             var transactionDebits = transactions.Select(x => x.Debit);

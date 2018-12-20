@@ -52,7 +52,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
     [HttpGet]
     public async Task<object> Get()
     {
-      var reportResult = await _financialReportService.GetNoteBalancesByHeadType(1);
+      var reportResult = await _financialReportService.GetNoteBalancesByHeadType(1, 2);
       return reportResult;
     }
   }
