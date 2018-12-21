@@ -21,6 +21,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
 
     public class JobPriceModel
     {
+        public string CreatedBy { get; set; }
         public string ClientName { get; set; }
         public long? ClientId { get; set; }
         public long? ContractId { get; set; }
@@ -37,5 +38,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public string JobCode { get; set; }
         public long Minutes { get; set; }
         public bool IsApproved { get; set; }
+        public bool IsAgreementApproved { get; set; }
     }
 }

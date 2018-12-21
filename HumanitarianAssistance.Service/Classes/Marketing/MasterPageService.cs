@@ -1055,7 +1055,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     await _uow.UnitRateRepository.UpdateAsyn(mediumDetails);
 
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    response.Message = "Unit Rate deleted Successfully";
                 }
             }
             catch (Exception ex)
@@ -1154,6 +1154,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         model.ActivityName = activity;
                         model.UnitRateId = obj.UnitRateId;
                         response.data.unitRateDetails = model;
+                        response.Message = "Unit Rate Added Successfully";
                     }
                     else
                     {
@@ -1200,11 +1201,12 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj1.UnitRates = model.UnitRates;
                         await _uow.UnitRateRepository.UpdateAsyn(obj1);
                         response.data.unitRateDetailsById = obj1;
+                        response.Message = "Unit Rate updated Successfully";
                     }                   
                     var activityDetails = await _uow.ActivityTypeRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId);
                     model.ActivityName = activityDetails.ActivityName;
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                   
                 }
             }
             catch (Exception ex)

@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181220071006_agreementChange")]
+    partial class agreementChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3748,7 +3750,7 @@ namespace DataAccess.Migrations
                     b.Property<long>("JobId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long?>("ContractId");
+                    b.Property<int?>("ContractId");
 
                     b.Property<string>("CreatedById");
 
@@ -3779,8 +3781,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("StartDate");
 
                     b.HasKey("JobId");
-
-                    b.HasIndex("ContractId");
 
                     b.HasIndex("CreatedById");
 
@@ -9489,10 +9489,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.JobDetails", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.Marketing.ContractDetails", "ContractDetails")
-                        .WithMany()
-                        .HasForeignKey("ContractId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
