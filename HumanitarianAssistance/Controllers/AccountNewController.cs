@@ -93,5 +93,39 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<object> AddVoucherDetail([FromBody] VoucherDetailModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.IsDeleted = false;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+      APIResponse response = await _iVoucherNewService.AddVoucherNewDetail(model);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<object> EditVoucherNewDetail([FromBody] VoucherDetailModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.IsDeleted = false;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+      APIResponse response = await _iVoucherNewService.EditVoucherNewDetail(model);
+      return response;
+    }
+
   }
 }
