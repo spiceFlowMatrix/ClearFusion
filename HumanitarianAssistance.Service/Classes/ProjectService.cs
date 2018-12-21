@@ -762,6 +762,9 @@ namespace HumanitarianAssistance.Service.Classes
                         _ProjectPhase.CreatedById = UserId;
                         _ProjectPhase.CreatedDate = DateTime.Now;
                         _uow.ProjectPhaseTimeRepository.Add(_ProjectPhase);
+
+                        response.data.ProjectDetail = obj; //dont remove this
+
                     }
                     else
                     {
