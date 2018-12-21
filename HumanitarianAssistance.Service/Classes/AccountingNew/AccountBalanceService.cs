@@ -64,7 +64,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 foreach (var task in tasks)
                 {
                     var balance = await task;
-
                 }
 
                 response.data.SubLevelAccountList = inputLevelList;
@@ -89,8 +88,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             // check if account exists
             var accountTask = _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ChartOfAccountNewId == accountId).FirstOrDefaultAsync();
             // get all transactions
-            var transactions = await _uow.GetDbContext().VoucherTransactions.Where(x => x.ChartOfAccountNewId == accountId)
-                .ToListAsync();
+            var transactions = await _uow.VoucherTransactionsRepository.FindAllAsync(x => x.ChartOfAccountNewId == accountId);
 
             //TODO: get the currency value of all transactions at a given toCurrency 
             var account = await accountTask;
@@ -109,6 +107,20 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
 
             return balance;
+        }
+
+        // Use this when getting transaction value after exchange on the transaction date.
+        private double GetTransactionValue(VoucherTransactions transaction, 
+            List<ExchangeRate> exRates, int toCurrencyId)
+        {
+
+        }
+
+        // Use this when getting transaction value after exchange on a specific date.
+        private double GetTransactionValue(VoucherTransactions transaction,
+            List<ExchangeRate> exRates, int toCurrencyId, DateTimeOffset exRateDate)
+        {
+
         }
 
         public async Task<APIResponse> GetNoteBalanceById(int noteType)
