@@ -79,39 +79,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? BudgetLineId { get; set; }
 
     }
-
-    //public class LedgerModel
-    //{
-    //    public int AccountCode { get; set; }
-    //    public string ChartAccountName { get; set; }
-    //    public string CurrencyName { get; set; }
-    //    public string MainLevel { get; set; }
-    //    public string ControlLevel { get; set; }
-    //    public string SubLevel { get; set; }
-
-    //    public string TransactionType { get; set; }
-
-    //    //public int TransactionNo { get; set; }
-    //    //public string AccountName { get; set; }
-    //    //public DateTime TransactionDate { get; set; }
-    //    //public double DebitAccount { get; set; }
-    //    //public double CreditAccount { get; set; }
-    //    //public long VoucherNo { get; set; }
-    //    //public string Description { get; set; }
-    //    public List<Transaction> Transactionlist { get; set; }
-    //}
-
-    //public class Transaction
-    //{
-    //    public int TransactionNo { get; set; }
-    //    public string AccountName { get; set; }
-    //    public DateTime TransactionDate { get; set; }
-    //    public double DebitAmount { get; set; }
-    //    public double CreditAmount { get; set; }
-    //    public long VoucherNo { get; set; }
-    //    public string Description { get; set; }
-
-    //}
+    
 
     public class LedgerModel
     {
@@ -235,4 +203,5 @@ namespace HumanitarianAssistance.ViewModels.Models
         public long ChartOfAccountNewIdDebit { get; set; }
         public string OfficeCode { get; set; }
     }
+
 }

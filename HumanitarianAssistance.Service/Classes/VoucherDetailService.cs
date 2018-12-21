@@ -862,9 +862,9 @@ namespace HumanitarianAssistance.Service.Classes
                         model.FinancialYearId = voucherDetail.FinancialYearId;
                         model.CurrencyId = voucherDetail.CurrencyId;
 
+                       VoucherTransactions obj = _mapper.Map<VoucherTransactions>(model);
 
-                        VoucherTransactions obj = _mapper.Map<VoucherTransactions>(model);
-
+                        obj.ChartOfAccountNewId = model.AccountNo;
                         obj.CreatedById = UserId;
                         obj.IsDeleted = false;
                         obj.CreatedDate = DateTime.Now;
