@@ -20,6 +20,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
 
     public class UnitRateDetailsModel
     {
+        public bool IsDeleted { get; set; }
         public long? UnitRateId { get; set; }
         public double UnitRates { get; set; }
         public long ActivityTypeId { get; set; }
