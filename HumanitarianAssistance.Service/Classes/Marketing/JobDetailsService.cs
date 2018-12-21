@@ -54,8 +54,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 jobPriceInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.JobPriceDetailsRepository.UpdateAsyn(jobPriceInfo, jobPriceInfo.JobId);
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Job Approved";
                 response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+                response.data.JobDetails = _uow.GetDbContext().JobDetails.Where(x=>x.IsDeleted==false).ToList();
             }
             catch (Exception ex)
             {
@@ -76,7 +77,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 jobInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.JobDetailsRepository.UpdateAsyn(jobInfo, jobInfo.JobId);                
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Agreement Accepted";
                 response.data.JobDetailModel = jobInfo;
                 response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
             }
@@ -237,7 +238,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 jobPriceInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.JobPriceDetailsRepository.UpdateAsyn(jobPriceInfo, jobPriceInfo.JobId);
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Job Deleted Successfully";
                 response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
             }
             catch (Exception ex)
@@ -270,12 +271,14 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
 
 
-                var JobList = (from j in _uow.GetDbContext().JobDetails
+                var JobList = (from j in _uow.GetDbContext().JobDetails                               
                                join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
+                               join cd in _uow.GetDbContext().ContractDetails on j.ContractId equals cd.ContractId
                                where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.JobId == model
                                select (new JobPriceModel
                                {                                
                                    CreatedBy = j.CreatedBy.ToString(),
+                                   ClientId = cd.ClientId,
                                    Minutes = jp.Minutes,
                                    JobId = j.JobId,
                                    ContractId = j.ContractId,
@@ -393,6 +396,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     int count = _uow.GetDbContext().JobDetails.Where(x => x.IsDeleted == false).ToList().Count();
                     response.data.JobPriceDetail = details;
                     response.data.jobListTotalCount = count;
+                    response.Message = "Job Created Successfully";
                 }
                 else
                 {
@@ -422,10 +426,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         existRecords.ModifiedById = UserId;
                         existRecords.ModifiedDate = DateTime.Now;
                         await _uow.JobPriceDetailsRepository.UpdateAsyn(existRecords);
+                        response.Message = "Job Updated Successfully";
                     }
                 }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.StatusCode = StaticResource.successStatusCode;               
             }
             catch (Exception ex)
             {

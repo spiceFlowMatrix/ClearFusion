@@ -16,7 +16,9 @@ namespace DataAccess.DbEntities
         public string JobName { get; set; }
         public string Description { get; set; }
         public string JobCode { get; set; }
-        public int? ContractId { get; set; }
+        [ForeignKey("ContractId")]
+        public long? ContractId { get; set; }
+        public ContractDetails ContractDetails { get; set; }
         [ForeignKey("JobPhaseId")]
         public long? JobPhaseId { get; set; }
         public JobPhase JobPhases { get; set; }        
