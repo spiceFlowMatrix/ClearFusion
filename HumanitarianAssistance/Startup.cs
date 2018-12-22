@@ -234,7 +234,7 @@ namespace HumanitarianAssistance
         options.AddPolicy(DefaultCorsPolicyName, p =>
         {
           //todo: Get from confiuration
-          p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+          p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
         });
       });
 

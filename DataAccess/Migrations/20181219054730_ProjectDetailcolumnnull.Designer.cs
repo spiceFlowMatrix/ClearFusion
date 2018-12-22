@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181219054730_ProjectDetailcolumnnull")]
+    partial class ProjectDetailcolumnnull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3760,8 +3762,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<bool>("IsAgreementApproved");
-
                     b.Property<bool>("IsApproved");
 
                     b.Property<bool?>("IsDeleted");
@@ -5842,8 +5842,6 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int?>("DirectorId");
-
                     b.Property<DateTime?>("EndDate");
 
                     b.Property<bool>("IsActive");
@@ -5865,8 +5863,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("ProjectName");
 
                     b.Property<long?>("ProjectPhaseDetailsId");
-
-                    b.Property<int?>("ReviewerId");
 
                     b.Property<DateTime?>("StartDate");
 
