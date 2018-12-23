@@ -39,31 +39,30 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                 // Select all input level accounts where the account's parent exists in the sub-level list
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
-                    .Where(x => x.AccountHeadTypeId == headTypeId)
+                    .Where(x => x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
                     .ToListAsync();
 
+
                 var vTransactions = await _uow.GetDbContext().VoucherTransactions.Where(x =>
-                        inputLevelList.Select(a => a.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId))
+                        inputLevelList.Select(a => (long)a.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId) 
+                        && x.ChartOfAccountNewId != null && x.IsDeleted == false)
                     .ToListAsync();
+
+                var vouchers = await _uow.GetDbContext().VoucherDetail.Where(x =>
+                    vTransactions.Select(a => a.VoucherNo).Contains(x.VoucherNo)).ToListAsync();
 
                 // TODO: figure out where to get toCurrency for filtering exchange rates on.
                 // each transaction may have a different. we cannot assume a single fromCurrency
                 // only a single toCurrency
-                var exRates = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).Where(x =>
+                var exRates = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).Where(x =>
                     vTransactions.Select(y => y.TransactionDate).Any(y => x.Date <= y)
-                    && vTransactions.Select(z => z.CurrencyId).Contains(x.FromCurrency))
-                    .ToListAsync();
+                    && vTransactions.Select(z => z.CurrencyId).Contains(x.FromCurrency)).ToListAsync();
 
-                var tasks = new List<Task<double>>();
+                var tasks = new List<double>();
 
                 foreach (var account in inputLevelList)
                 {
-                    tasks.Add(GetAccountBalanceById(account.ChartOfAccountNewId));
-                }
-
-                foreach (var task in tasks)
-                {
-                    var balance = await task;
+                    tasks.Add(GetAccountBalanceById(vTransactions, exRates, toCurrency, account));
                 }
 
                 response.data.SubLevelAccountList = inputLevelList;
@@ -84,7 +83,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         }
 
         private double GetAccountBalanceById(List<VoucherTransactions> transactions,
-            List<ExchangeRate> exRates, int toCurrency, ChartOfAccountNew account)
+            List<ExchangeRateDetail> exRates, int toCurrency, ChartOfAccountNew account)
         {
             List<VoucherTransactions> transactionsOriginal = new List<VoucherTransactions>();
 
@@ -98,13 +97,17 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 }
                 else
                 {
-                    exchangeRate = exRates.OrderByDescending(x => x.Date).FirstOrDefault(x =>
-                        x.ToCurrency == toCurrency && x.FromCurrency == transaction.CurrencyId &&
-                        x.Date <= transaction.TransactionDate && x.OfficeId == transaction.OfficeId).Rate;
+                    if(transaction.TransactionDate == null)
+                        throw new Exception("Transaction date is not set");
+                    if(transaction.CurrencyId == null)
+                        throw new Exception("Transaction currency is not set");
+                    var interexchangeRate = exRates.OrderByDescending(x => x.Date)
+                        .FirstOrDefault(x => x.Date <= transaction.TransactionDate 
+                                             && x.FromCurrency == transaction.CurrencyId 
+                                             && x.ToCurrency == toCurrency).Rate;
                 }
 
-                var oTrans = new VoucherTransactions();
-                oTrans = transaction;
+                var oTrans = (transaction);
                 oTrans.Credit = exchangeRate * transaction.Credit;
                 oTrans.Debit = exchangeRate * transaction.Debit;
                 transactionsOriginal.Add(oTrans);
