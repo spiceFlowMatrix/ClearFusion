@@ -1,9 +1,0 @@
-C:\Projects\clearfusion\clearfusion-api\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Debug\netcoreapp2.1\HumanitarianAssistance.Common.deps.json
-C:\Projects\clearfusion\clearfusion-api\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Debug\netcoreapp2.1\HumanitarianAssistance.Common.dll
-C:\Projects\clearfusion\clearfusion-api\HumanitarianAssistance\HumanitarianAssistance.Common\bin\Debug\netcoreapp2.1\HumanitarianAssistance.Common.pdb
-C:\Projects\clearfusion\clearfusion-api\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Common.csprojAssemblyReference.cache
-C:\Projects\clearfusion\clearfusion-api\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Common.csproj.CoreCompileInputs.cache
-C:\Projects\clearfusion\clearfusion-api\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Common.AssemblyInfoInputs.cache
-C:\Projects\clearfusion\clearfusion-api\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Common.AssemblyInfo.cs
-C:\Projects\clearfusion\clearfusion-api\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Common.dll
-C:\Projects\clearfusion\clearfusion-api\HumanitarianAssistance\HumanitarianAssistance.Common\obj\Debug\netcoreapp2.1\HumanitarianAssistance.Common.pdb

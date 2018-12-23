@@ -42,7 +42,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
                 var mainLevelList = await _uow.GetDbContext().ChartOfAccountNew
-                                                             .Where(x => x.AccountLevelId == id && x.IsDeleted == false)
+                                                             .Where(x => x.AccountHeadTypeId == id && x.AccountLevelId == (int)AccountLevels.MainLevel && x.IsDeleted == false)
                                                              .OrderBy(x=>x.ChartOfAccountNewId)
                                                              .ToListAsync();
 
@@ -133,9 +133,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 //Main Level
                 if (model.AccountLevelId == (int)AccountLevels.MainLevel)
                 {
-                    int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.MainLevel);
+                    int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.MainLevel && x.IsDeleted == false);
 
-                    if (levelcount <= (int)AccountLevelLimits.MainLevel)
+                    if (levelcount < (int)AccountLevelLimits.MainLevel)
                     {
                         ChartOfAccountNew obj = new ChartOfAccountNew();
 
@@ -274,7 +274,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 {
                     int levelcount = await _uow.GetDbContext().ChartOfAccountNew.CountAsync(x => x.AccountLevelId == (int)AccountLevels.InputLevel && x.ParentID == model.ParentID);
 
-                    if (levelcount <= (int)AccountLevelLimits.InputLevel)
+                    if (levelcount < (int)AccountLevelLimits.InputLevel)
                     {
                         ChartOfAccountNew obj = new ChartOfAccountNew();
 

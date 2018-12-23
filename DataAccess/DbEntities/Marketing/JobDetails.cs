@@ -24,5 +24,6 @@ namespace DataAccess.DbEntities
         public DateTime EndDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsApproved { get; set; }
+        public bool IsAgreementApproved { get; set; }
     }
 }

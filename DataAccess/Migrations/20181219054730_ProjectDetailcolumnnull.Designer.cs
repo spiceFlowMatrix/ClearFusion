@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181219054730_ProjectDetailcolumnnull")]
+    partial class ProjectDetailcolumnnull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,8 +32,6 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsCreditBalancetype");
-
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
@@ -47,11 +47,11 @@ namespace DataAccess.Migrations
                     b.ToTable("AccountHeadType");
 
                     b.HasData(
-                        new { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsCreditBalancetype = false, IsDeleted = false },
-                        new { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsCreditBalancetype = true, IsDeleted = false },
-                        new { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsCreditBalancetype = true, IsDeleted = false },
-                        new { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsCreditBalancetype = true, IsDeleted = false },
-                        new { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsCreditBalancetype = false, IsDeleted = false }
+                        new { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false },
+                        new { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false },
+                        new { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false },
+                        new { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false },
+                        new { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false }
                     );
                 });
 
@@ -109,8 +109,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsCreditBalancetype");
 
                     b.Property<bool?>("IsDeleted");
 
@@ -3764,8 +3762,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<bool>("IsAgreementApproved");
-
                     b.Property<bool>("IsApproved");
 
                     b.Property<bool?>("IsDeleted");
@@ -5846,8 +5842,6 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int?>("DirectorId");
-
                     b.Property<DateTime?>("EndDate");
 
                     b.Property<bool>("IsActive");
@@ -5869,8 +5863,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("ProjectName");
 
                     b.Property<long?>("ProjectPhaseDetailsId");
-
-                    b.Property<int?>("ReviewerId");
 
                     b.Property<DateTime?>("StartDate");
 

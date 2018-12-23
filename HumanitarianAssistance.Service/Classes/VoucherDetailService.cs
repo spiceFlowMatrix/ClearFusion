@@ -850,10 +850,10 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     var voucherDetail = await _uow.VoucherDetailRepository.FindAsync(x => x.VoucherNo == model.VoucherNo);
 
-                    var exchangeRateAFG = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.AFG);
-                    var exchangeRateEUR = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.EUR);
-                    var exchangeRatePKR = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.PKR);
-                    var exchangeRateUSD = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.USD);
+                    var exchangeRateAFG = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.AFG);
+                    var exchangeRateEUR = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.EUR);
+                    var exchangeRatePKR = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.PKR);
+                    var exchangeRateUSD = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == (int)Currency.USD);
 
                     if (exchangeRateAFG != null && exchangeRateEUR != null && exchangeRatePKR != null && exchangeRateUSD != null)
                     {
@@ -872,35 +872,36 @@ namespace HumanitarianAssistance.Service.Classes
                         if (obj.CurrencyId == (int)Currency.AFG)
                         {
                             obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
-                            obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateAFG.Rate) / exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateAFG.Rate) / exchangeRateEUR.Rate), 4);
-                            obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateAFG.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateAFG.Rate)), 4);
-                            obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateAFG.Rate) / (exchangeRateUSD.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateAFG.Rate) / exchangeRateUSD.Rate), 4);
+                            obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateAFG.Rate) / (double)exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateAFG.Rate) / (double)exchangeRateEUR.Rate), 4);
+                            obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateAFG.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateAFG.Rate)), 4);
+                            obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateAFG.Rate) / ((double)exchangeRateUSD.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateAFG.Rate) / (double)exchangeRateUSD.Rate), 4);
                         }
                         if (obj.CurrencyId == (int)Currency.EUR)
                         {
                             obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
-                            obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateEUR.Rate) / exchangeRateAFG.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateEUR.Rate) / exchangeRateUSD.Rate), 4);
-                            obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit * exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit * exchangeRateEUR.Rate), 4);
-                            obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateEUR.Rate) / exchangeRateUSD.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateEUR.Rate) / exchangeRateUSD.Rate), 4);
+                            obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateEUR.Rate) / (double)exchangeRateAFG.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateEUR.Rate) / (double)exchangeRateUSD.Rate), 4);
+                            obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit * (double)exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit * (double)exchangeRateEUR.Rate), 4);
+                            obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateEUR.Rate) / (double)exchangeRateUSD.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateEUR.Rate) / (double)exchangeRateUSD.Rate), 4);
                         }
                         if (obj.CurrencyId == (int)Currency.PKR)
                         {
 
                             obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
-                            obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / exchangeRateAFG.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / exchangeRateAFG.Rate), 4);
-                            obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / exchangeRateEUR.Rate), 4);
-                            obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / exchangeRateUSD.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / exchangeRateUSD.Rate), 4);
+                            obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / (double)exchangeRateAFG.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / (double)exchangeRateAFG.Rate), 4);
+                            obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / (double)exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / (double)exchangeRateEUR.Rate), 4);
+                            obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit / (double)exchangeRateUSD.Rate), 4) : Math.Round(Convert.ToDouble(obj.Credit / (double)exchangeRateUSD.Rate), 4);
                         }
                         if (obj.CurrencyId == (int)Currency.USD)
                         {
                             obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble(obj.Debit), 4) : Math.Round(Convert.ToDouble(obj.Credit), 4);
-                            obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateUSD.Rate) / (exchangeRateAFG.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateUSD.Rate) / (exchangeRateAFG.Rate)), 4);
-                            obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateUSD.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateUSD.Rate)), 4);
-                            obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * exchangeRateUSD.Rate) / (exchangeRateEUR.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * exchangeRateUSD.Rate) / (exchangeRateEUR.Rate)), 4);
+                            obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateUSD.Rate) / ((double)exchangeRateAFG.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateUSD.Rate) / ((double)exchangeRateAFG.Rate)), 4);
+                            obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateUSD.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateUSD.Rate)), 4);
+                            obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateUSD.Rate) / ((double)exchangeRateEUR.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateUSD.Rate) / ((double)exchangeRateEUR.Rate)), 4);
                         }
 
                         obj.ProjectId = model.ProjectId;
                         obj.BudgetLineId = model.BudgetLineId;
+                        obj.ChartOfAccountNewId = model.AccountNo;
 
                         await _uow.GetDbContext().VoucherTransactions.AddAsync(obj);
                         await _uow.SaveAsync();
