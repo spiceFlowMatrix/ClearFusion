@@ -29,6 +29,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             this._userManager = userManager;
         }
 
+        // Get Account Balance
+        // get accounts
+        // get accounts transactions
+        // get exchange rate for each transaction
+        // get account balance by id
+
         public async Task<APIResponse> GetNoteBalancesByHeadType(int headTypeId, int toCurrency)
         {
             APIResponse response = new APIResponse();
