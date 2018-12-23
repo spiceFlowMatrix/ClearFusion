@@ -43,14 +43,14 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     .ToListAsync();
 
                 var vTransactions = await _uow.GetDbContext().VoucherTransactions.Where(x =>
-                        inputLevelList.Select(a => a.ChartOfAccountNewId).Contains((long) x.ChartOfAccountNewId))
+                        inputLevelList.Select(a => a.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId))
                     .ToListAsync();
 
                 // TODO: figure out where to get toCurrency for filtering exchange rates on.
                 // each transaction may have a different. we cannot assume a single fromCurrency
                 // only a single toCurrency
-                var exRates = await _uow.GetDbContext().ExchangeRates.Where(x =>
-                    vTransactions.Select(y => y.TransactionDate).Contains(x.Date) 
+                var exRates = await _uow.GetDbContext().ExchangeRates.OrderByDescending(x => x.Date).Where(x =>
+                    vTransactions.Select(y => y.TransactionDate).Any(y => x.Date <= y)
                     && vTransactions.Select(z => z.CurrencyId).Contains(x.FromCurrency))
                     .ToListAsync();
 
@@ -83,7 +83,50 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
-        public async Task<double> GetAccountBalanceById(long accountId)
+        private double GetAccountBalanceById(List<VoucherTransactions> transactions,
+            List<ExchangeRate> exRates, int toCurrency, ChartOfAccountNew account)
+        {
+            List<VoucherTransactions> transactionsOriginal = new List<VoucherTransactions>();
+
+            // Get value of each transaction (debit or credit) in the given currency on the transaction date
+            foreach (var transaction in transactions)
+            {
+                double? exchangeRate = 0.0;
+                if (transaction.CurrencyId == toCurrency)
+                {
+                    exchangeRate = 1;
+                }
+                else
+                {
+                    exchangeRate = exRates.OrderByDescending(x => x.Date).FirstOrDefault(x =>
+                        x.ToCurrency == toCurrency && x.FromCurrency == transaction.CurrencyId &&
+                        x.Date <= transaction.TransactionDate && x.OfficeId == transaction.OfficeId).Rate;
+                }
+
+                var oTrans = new VoucherTransactions();
+                oTrans = transaction;
+                oTrans.Credit = exchangeRate * transaction.Credit;
+                oTrans.Debit = exchangeRate * transaction.Debit;
+                transactionsOriginal.Add(oTrans);
+            }
+
+            var totalCredits = transactionsOriginal.Select(x => x.Credit).Sum();
+            var totalDebits = transactionsOriginal.Select(x => x.Debit).Sum();
+            double balance = 0;
+            if ((bool)account.IsCreditBalancetype)
+            {
+                balance = (double)totalCredits - (double)totalDebits;
+            }
+            else
+            {
+                balance = (double)totalDebits - (double)totalCredits;
+            }
+
+            return balance;
+
+        }
+
+        private async Task<double> GetAccountBalanceById(long accountId)
         {
             // check if account exists
             var accountTask = _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ChartOfAccountNewId == accountId).FirstOrDefaultAsync();
@@ -103,12 +146,14 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
             else
             {
-                balance = (double) totalDebits - (double) totalCredits;
+                balance = (double)totalDebits - (double)totalCredits;
             }
 
             return balance;
         }
 
+
+        /*
         // Use this when getting transaction value after exchange on the transaction date.
         private double GetTransactionValue(VoucherTransactions transaction, 
             List<ExchangeRate> exRates, int toCurrencyId)
@@ -122,7 +167,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         {
 
         }
-
+        */
         public async Task<APIResponse> GetNoteBalanceById(int noteType)
         {
             APIResponse response = new APIResponse();
