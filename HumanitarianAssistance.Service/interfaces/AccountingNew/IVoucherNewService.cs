@@ -12,6 +12,6 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
     {
         Task<APIResponse> GetAllNewVoucherList(VoucherNewFilterModel voucherNewFilterModel);
         Task<APIResponse> AddVoucherNewDetail(VoucherDetailModel model);
-        Task<APIResponse> EditVoucherNewDetail(VoucherDetailModel model)
+        Task<APIResponse> EditVoucherNewDetail(VoucherDetailModel model);
     }
 }
