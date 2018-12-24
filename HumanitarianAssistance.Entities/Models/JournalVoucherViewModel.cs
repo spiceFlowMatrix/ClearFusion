@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class JournalVoucherViewModel
     {
-        public string JournalCode { get; set; }
+        public int? JournalCode { get; set; }
         public long VoucherNo { get; set; }
         public DateTime? TransactionDate { get; set; }
         public string AccountCode { get; set; }
