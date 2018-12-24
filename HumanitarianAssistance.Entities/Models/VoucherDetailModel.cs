@@ -18,7 +18,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? VoucherTypeId { get; set; }
         public int? OfficeId { get; set; }
         public string OfficeName { get; set; }
-        public long ? ProjectId { get; set; }
+        public long? ProjectId { get; set; }
         public long? BudgetLineId { get; set; }
         public int? FinancialYearId { get; set; }
         public string FinancialYearName { get; set; }
