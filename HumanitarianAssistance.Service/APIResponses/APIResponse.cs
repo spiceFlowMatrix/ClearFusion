@@ -288,6 +288,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectDetail ProjectDetail { get; set; }
         public DonorDetail DonorDetailById { get; set; }
         public ProjectOtherDetail OtherProjectDetailById { get; set; }
+        public SecurityConsiderationMultiSelect MultiSecurityConsiderationById { get; set; }
+        public List<long> SecurityConsiderationMultiSelectById { get; set; }
+
         public List<ProjectCommunicationModel> ProjectCommunicationModel { get; set; }
         public ProjectProgram projectProgram { get; set; }
         public ProjectArea projectArea { get; set; }

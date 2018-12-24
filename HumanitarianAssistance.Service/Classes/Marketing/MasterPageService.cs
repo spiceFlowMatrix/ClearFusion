@@ -1055,7 +1055,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     await _uow.UnitRateRepository.UpdateAsyn(mediumDetails);
 
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    response.Message = "Unit Rate deleted Successfully";
                 }
             }
             catch (Exception ex)
@@ -1123,7 +1123,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 unitRateDetails = await _uow.UnitRateRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId
                 && x.CurrencyId == model.CurrencyId && x.MediumId == model.MediumId && x.TimeCategoryId
-                == model.TimeCategoryId && x.MediaCategoryId == model.MediaCategoryId && x.IsDeleted == false);
+                == model.TimeCategoryId && x.MediaCategoryId == model.MediaCategoryId && x.QualityId == model.QualityId && x.IsDeleted == false);
             }
             if (activity == "Production")
             {
@@ -1154,13 +1154,14 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         model.ActivityName = activity;
                         model.UnitRateId = obj.UnitRateId;
                         response.data.unitRateDetails = model;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Unit Rate Added Successfully";
                     }
                     else
                     {
                         var obj = await _uow.UnitRateRepository.FindAsync(x => x.UnitRateId == model.UnitRateId && x.IsDeleted == false);
                         if (obj == null)
                         {
-                            response.StatusCode = StaticResource.failStatusCode;
                             response.Message = StaticResource.unitRateExists;
                         }
                     }
@@ -1169,12 +1170,11 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 {
                     var obj1 = await _uow.UnitRateRepository.FindAsync(x => x.UnitRateId == model.UnitRateId && x.IsDeleted == false);
                     if (unitRateDetails != null)
-                    {                       
+                    {
                         if (obj1 != null)
                         {
-                            if(obj1.UnitRates == model.UnitRates)
+                            if (obj1.UnitRates == model.UnitRates)
                             {
-                                response.StatusCode = StaticResource.failStatusCode;
                                 response.Message = StaticResource.unitRateExists;
                             }
                             else
@@ -1182,8 +1182,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                 obj1.UnitRates = model.UnitRates;
                                 await _uow.UnitRateRepository.UpdateAsyn(obj1);
                                 response.data.unitRateDetailsById = obj1;
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Unit Rate updated Successfully";
                             }
-                            
+
                         }
                     }
                     else
@@ -1200,11 +1202,11 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj1.UnitRates = model.UnitRates;
                         await _uow.UnitRateRepository.UpdateAsyn(obj1);
                         response.data.unitRateDetailsById = obj1;
-                    }                   
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Unit Rate updated Successfully";
+                    }
                     var activityDetails = await _uow.ActivityTypeRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId);
                     model.ActivityName = activityDetails.ActivityName;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
                 }
             }
             catch (Exception ex)
@@ -1270,7 +1272,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     response.StatusCode = StaticResource.notFoundCode;
                     response.Message = StaticResource.unitRateNotFound;
                 }
-              else
+                else
                 {
                     response.StatusCode = StaticResource.successStatusCode;
                     response.data.UnitRateByActivityId = unitRateById;

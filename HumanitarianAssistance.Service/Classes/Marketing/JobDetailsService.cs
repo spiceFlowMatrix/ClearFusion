@@ -54,8 +54,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 jobPriceInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.JobPriceDetailsRepository.UpdateAsyn(jobPriceInfo, jobPriceInfo.JobId);
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Job Approved";
                 response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+                response.data.JobDetails = _uow.GetDbContext().JobDetails.Where(x => x.IsDeleted == false).ToList();
             }
             catch (Exception ex)
             {
@@ -71,14 +72,26 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             try
             {
                 var jobInfo = await _uow.JobDetailsRepository.FindAsync(c => c.JobId == model && c.IsDeleted == false);
-                jobInfo.IsAgreementApproved = true;
-                jobInfo.ModifiedById = UserId;
-                jobInfo.ModifiedDate = DateTime.UtcNow;
-                await _uow.JobDetailsRepository.UpdateAsyn(jobInfo, jobInfo.JobId);                
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-                response.data.JobDetailModel = jobInfo;
-                response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+                if (jobInfo.IsApproved == true)
+                {
+                    jobInfo.IsAgreementApproved = true;
+                    jobInfo.ModifiedById = UserId;
+                    jobInfo.ModifiedDate = DateTime.UtcNow;
+                    await _uow.JobDetailsRepository.UpdateAsyn(jobInfo, jobInfo.JobId);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Agreement Accepted";
+                    response.data.JobDetailModel = jobInfo;
+                    response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Job is not approved.";
+                    response.data.JobDetailModel = jobInfo;
+                    response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+
+                }
+
             }
             catch (Exception ex)
             {
@@ -237,7 +250,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 jobPriceInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.JobPriceDetailsRepository.UpdateAsyn(jobPriceInfo, jobPriceInfo.JobId);
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Job Deleted Successfully";
                 response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
             }
             catch (Exception ex)
@@ -272,10 +285,12 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
                 var JobList = (from j in _uow.GetDbContext().JobDetails
                                join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
+                               join cd in _uow.GetDbContext().ContractDetails on j.ContractId equals cd.ContractId
                                where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.JobId == model
                                select (new JobPriceModel
-                               {                                
+                               {
                                    CreatedBy = j.CreatedBy.ToString(),
+                                   ClientId = cd.ClientId,
                                    Minutes = jp.Minutes,
                                    JobId = j.JobId,
                                    ContractId = j.ContractId,
@@ -318,81 +333,93 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 if (model.JobId == 0)
                 {
-                    var jobDetail = _uow.GetDbContext().JobDetails
-                                                               .OrderByDescending(x => x.ContractId)
-                                                               .FirstOrDefault();
-                    if (jobDetail == null)
+                    var jobList = _uow.GetDbContext().JobDetails.Where(x => x.JobName == model.JobName).FirstOrDefault();
+                    if (jobList == null)
                     {
-                        LatestJobId = 1;
-                        jobcode = getJobCode(LatestJobId.ToString());
+                        var jobDetail = _uow.GetDbContext().JobDetails
+                                                                                       .OrderByDescending(x => x.ContractId)
+                                                                                       .FirstOrDefault();
+                        if (jobDetail == null)
+                        {
+                            LatestJobId = 1;
+                            jobcode = getJobCode(LatestJobId.ToString());
+                        }
+                        else
+                        {
+                            LatestJobId = Convert.ToInt32(jobDetail.ContractId) + 1;
+                            jobcode = getJobCode(LatestJobId.ToString());
+                        }
+                        JobDetails obj = _mapper.Map<JobDetailsModel, JobDetails>(model);
+                        obj.ContractId = model.ContractId;
+                        obj.Description = model.Description;
+                        obj.EndDate = model.EndDate;
+                        obj.IsActive = true;
+                        obj.IsApproved = model.IsApproved;
+                        obj.JobCode = model.JobCode;
+                        obj.IsDeleted = false;
+                        obj.CreatedById = UserId;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.JobPhaseId = model.JobPhaseId;
+                        obj.JobName = model.JobName;
+                        obj.JobCode = jobcode;
+                        obj.IsDeleted = false;
+                        await _uow.JobDetailsRepository.AddAsyn(obj);
+                        await _uow.SaveAsync();
+
+                        JobPriceDetailsModel obj1 = new JobPriceDetailsModel();
+                        obj1.JobId = obj.JobId;
+                        obj1.Discount = model.Discount;
+                        obj1.DiscountPercent = model.DiscountPercent;
+                        obj1.FinalPrice = model.FinalPrice;
+                        obj1.FinalRate = model.FinalRate;
+                        obj1.TotalPrice = model.TotalPrice;
+                        obj1.UnitRate = model.UnitRate;
+                        obj1.Units = model.Units;
+                        obj1.Minutes = model.Minutes;
+
+                        JobPriceDetails priceDetails = _mapper.Map<JobPriceDetailsModel, JobPriceDetails>(obj1);
+                        priceDetails.JobId = obj1.JobId;
+                        priceDetails.Minutes = obj1.Minutes;
+                        priceDetails.Discount = obj1.Discount;
+                        priceDetails.DiscountPercent = obj1.DiscountPercent;
+                        priceDetails.FinalPrice = obj1.FinalPrice;
+                        priceDetails.FinalRate = obj1.FinalRate;
+                        priceDetails.TotalPrice = obj1.TotalPrice;
+                        priceDetails.UnitRate = obj1.UnitRate;
+                        priceDetails.Units = obj1.Units;
+                        priceDetails.CreatedById = UserId;
+                        priceDetails.CreatedDate = DateTime.UtcNow;
+                        priceDetails.IsDeleted = false;
+                        await _uow.JobPriceDetailsRepository.AddAsyn(priceDetails);
+                        await _uow.SaveAsync();
+
+                        JobPriceModel details = new JobPriceModel();
+                        details.ContractId = model.ContractId;
+                        details.Discount = model.Discount;
+                        details.DiscountPercent = model.DiscountPercent;
+                        details.EndDate = model.EndDate;
+                        details.FinalPrice = model.FinalPrice;
+                        details.FinalRate = model.FinalRate;
+                        details.JobCode = obj.JobCode;
+                        details.JobName = model.JobName;
+                        details.TotalPrice = model.TotalPrice;
+                        details.UnitRate = model.UnitRate;
+                        details.JobId = obj.JobId;
+                        details.JobPriceId = obj1.JobPriceId;
+                        details.Minutes = obj1.Minutes;
+                        details.IsApproved = obj.IsApproved;
+                        int count = _uow.GetDbContext().JobDetails.Where(x => x.IsDeleted == false).ToList().Count();
+                        response.data.JobPriceDetail = details;
+                        response.data.jobListTotalCount = count;
+                        response.Message = "Job Created Successfully";
+                        response.StatusCode = StaticResource.successStatusCode;
                     }
                     else
                     {
-                        LatestJobId = Convert.ToInt32(jobDetail.ContractId) + 1;
-                        jobcode = getJobCode(LatestJobId.ToString());
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Job Name already exists. Please try again with other job name.";
                     }
-                    JobDetails obj = _mapper.Map<JobDetailsModel, JobDetails>(model);
-                    obj.ContractId = model.ContractId;
-                    obj.Description = model.Description;
-                    obj.EndDate = model.EndDate;
-                    obj.IsActive = true;
-                    obj.IsApproved = model.IsApproved;
-                    obj.JobCode = model.JobCode;
-                    obj.IsDeleted = false;
-                    obj.CreatedById = UserId;
-                    obj.CreatedDate = DateTime.Now;
-                    obj.JobPhaseId = model.JobPhaseId;
-                    obj.JobName = model.JobName;
-                    obj.JobCode = jobcode;
-                    obj.IsDeleted = false;
-                    await _uow.JobDetailsRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
-
-                    JobPriceDetailsModel obj1 = new JobPriceDetailsModel();
-                    obj1.JobId = obj.JobId;
-                    obj1.Discount = model.Discount;
-                    obj1.DiscountPercent = model.DiscountPercent;
-                    obj1.FinalPrice = model.FinalPrice;
-                    obj1.FinalRate = model.FinalRate;
-                    obj1.TotalPrice = model.TotalPrice;
-                    obj1.UnitRate = model.UnitRate;
-                    obj1.Units = model.Units;
-                    obj1.Minutes = model.Minutes;
-
-                    JobPriceDetails priceDetails = _mapper.Map<JobPriceDetailsModel, JobPriceDetails>(obj1);
-                    priceDetails.JobId = obj1.JobId;
-                    priceDetails.Minutes = obj1.Minutes;
-                    priceDetails.Discount = obj1.Discount;
-                    priceDetails.DiscountPercent = obj1.DiscountPercent;
-                    priceDetails.FinalPrice = obj1.FinalPrice;
-                    priceDetails.FinalRate = obj1.FinalRate;
-                    priceDetails.TotalPrice = obj1.TotalPrice;
-                    priceDetails.UnitRate = obj1.UnitRate;
-                    priceDetails.Units = obj1.Units;
-                    priceDetails.CreatedById = UserId;
-                    priceDetails.CreatedDate = DateTime.UtcNow;
-                    priceDetails.IsDeleted = false;
-                    await _uow.JobPriceDetailsRepository.AddAsyn(priceDetails);
-                    await _uow.SaveAsync();
-
-                    JobPriceModel details = new JobPriceModel();
-                    details.ContractId = model.ContractId;
-                    details.Discount = model.Discount;
-                    details.DiscountPercent = model.DiscountPercent;
-                    details.EndDate = model.EndDate;
-                    details.FinalPrice = model.FinalPrice;
-                    details.FinalRate = model.FinalRate;
-                    details.JobCode = obj.JobCode;
-                    details.JobName = model.JobName;
-                    details.TotalPrice = model.TotalPrice;
-                    details.UnitRate = model.UnitRate;
-                    details.JobId = obj.JobId;
-                    details.JobPriceId = obj1.JobPriceId;
-                    details.Minutes = obj1.Minutes;
-                    details.IsApproved = obj.IsApproved;
-                    int count = _uow.GetDbContext().JobDetails.Where(x => x.IsDeleted == false).ToList().Count();
-                    response.data.JobPriceDetail = details;
-                    response.data.jobListTotalCount = count;
+                    
                 }
                 else
                 {
@@ -422,10 +449,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         existRecords.ModifiedById = UserId;
                         existRecords.ModifiedDate = DateTime.Now;
                         await _uow.JobPriceDetailsRepository.UpdateAsyn(existRecords);
+                        response.Message = "Job Updated Successfully";
+                        response.StatusCode = StaticResource.successStatusCode;
                     }
-                }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                }             
             }
             catch (Exception ex)
             {
@@ -555,44 +582,48 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
         public async Task<APIResponse> FilterJobsList(FilterJobModel model, string userId)
         {
+            string finalPriceValue = null;
+            string jobIdValue = null;
+            string jobNameValue = null;
+            string ApprovedValue = null;
+
             APIResponse response = new APIResponse();
             try
             {
-                var JobList1 = (from j in _uow.GetDbContext().JobDetails
-                                join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
-                                where !j.IsDeleted.Value && !jp.IsDeleted.Value
-                                select (new JobDetailsModel
-                                {
-                                    JobId = j.JobId,
-                                    JobCode = j.JobCode,
-                                    JobName = j.JobName,
-                                    EndDate = j.EndDate,
-                                    IsActive = j.IsActive,
-                                    IsApproved = j.IsApproved,
-                                    UnitRate = jp.UnitRate,
-                                    Units = jp.Units,
-                                    FinalRate = jp.FinalRate,
-                                    FinalPrice = jp.FinalPrice,
-                                    TotalPrice = jp.TotalPrice,
-                                    IsInvoiceApproved = jp.IsInvoiceApproved,
-                                    ContractId = j.ContractId,
-                                    Discount = jp.Discount,
-                                    DiscountPercent = jp.DiscountPercent,
-                                    Minutes = jp.Minutes
-                                })).ToList();
-
-                if (model != null)
+                if (!string.IsNullOrEmpty(model.Value))
                 {
-                    if (!string.IsNullOrEmpty(model.Value))
-                    {
-                        JobList1 = JobList1.Where(x => x.JobId.ToString() == model.Value || 
-                        x.IsApproved.ToString() == model.Value || 
-                        x.JobName.Contains(model.Value) || 
-                        x.FinalPrice.ToString() == model.Value).ToList();
-                    }
-                 
-                    response.data.jobListTotalCount = JobList1.Count();
-                    response.data.JobPriceDetailList = JobList1;
+                    finalPriceValue = model.FinalPrice ? model.Value.ToLower().Trim() : null;
+                    jobIdValue = model.JobId ? model.Value.ToLower().Trim() : null;
+                    jobNameValue = model.JobName ? model.Value.ToLower().Trim() : null;
+                    ApprovedValue = model.Approved ? model.Value.ToLower().Trim() : null;
+                    var JobList = (from j in _uow.GetDbContext().JobDetails
+                                   join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
+                                   where (jp.FinalPrice.ToString().ToLower().Trim() == finalPriceValue ||
+                                          j.JobId.ToString().ToLower().Trim() == jobIdValue ||
+                                          j.JobName.ToString().ToLower().Trim() == jobNameValue ||
+                                          j.IsApproved.ToString().ToLower().Trim() == ApprovedValue) &&
+                                          j.IsDeleted == false
+                                   select (new JobDetailsModel
+                                   {
+                                       JobId = j.JobId,
+                                       JobCode = j.JobCode,
+                                       JobName = j.JobName,
+                                       EndDate = j.EndDate,
+                                       IsActive = j.IsActive,
+                                       IsApproved = j.IsApproved,
+                                       UnitRate = jp.UnitRate,
+                                       Units = jp.Units,
+                                       FinalRate = jp.FinalRate,
+                                       FinalPrice = jp.FinalPrice,
+                                       TotalPrice = jp.TotalPrice,
+                                       IsInvoiceApproved = jp.IsInvoiceApproved,
+                                       ContractId = j.ContractId,
+                                       Discount = jp.Discount,
+                                       DiscountPercent = jp.DiscountPercent,
+                                       Minutes = jp.Minutes
+                                   })).ToList();
+                    response.data.jobListTotalCount = JobList.Count();
+                    response.data.JobPriceDetailList = JobList;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }

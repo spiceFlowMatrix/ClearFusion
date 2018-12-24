@@ -17,7 +17,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public double Discount { get; set; }
         public float DiscountPercent { get; set; }
         public DateTime EndDate { get; set; }
-        public int? ContractId { get; set; }
+        public long? ContractId { get; set; }
         public long Minutes { get; set; }
         public bool IsApproved { get; set; }
         public string Description { get; set; }  

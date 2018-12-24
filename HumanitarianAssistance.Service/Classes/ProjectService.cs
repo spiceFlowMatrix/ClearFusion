@@ -1611,6 +1611,91 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+        //secutiryconsideration
+
+        public APIResponse GetSecurityConsiMultiSelectByProjectId(long ProjectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                
+                List<long> SelectedSecurityList = _uow.GetDbContext().SecurityConsiderationMultiSelect.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).Select(x => x.SecurityConsiderationId).ToList();
+
+                //details.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
+
+                response.data.SecurityConsiderationMultiSelectById = SelectedSecurityList;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public APIResponse AddEditSecurityConsidMultiDetail(SecurityConsiderationMultiSelectModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();          
+            try
+            {
+               
+
+                    if (model.SecurityConsiderationId != null)
+                    {
+                      
+                        bool securityPresent = _uow.GetDbContext().SecurityConsiderationMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                       
+                        if (securityPresent)
+                        {
+                            var securityExist = _uow.GetDbContext().SecurityConsiderationMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+
+                            
+                            _uow.GetDbContext().SecurityConsiderationMultiSelect.RemoveRange(securityExist);
+                            _uow.GetDbContext().SaveChanges();
+                        }
+
+                        List<SecurityConsiderationMultiSelect> securityList = new List<SecurityConsiderationMultiSelect>();
+
+                        foreach (var item in model.SecurityConsiderationId)
+                        {
+                            SecurityConsiderationMultiSelect _data = new SecurityConsiderationMultiSelect();
+
+                            _data.SecurityConsiderationId = item.Value;
+                            _data.ProjectId = model.ProjectId;
+                            _data.IsDeleted = false;
+                            _data.CreatedById = UserId;
+                            _data.CreatedDate = DateTime.Now;
+
+                            securityList.Add(_data);
+                        }
+
+                        //Add
+                        _uow.GetDbContext().SecurityConsiderationMultiSelect.AddRange(securityList);
+                        _uow.GetDbContext().SaveChanges();
+                    }
+
+
+                  
+                //response.CommonId.Id = Convert.ToInt32(_detail.SecurityConsiderationId);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+
+
+
+
+
 
 
         #endregion
