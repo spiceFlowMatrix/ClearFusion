@@ -103,8 +103,9 @@ namespace HumanitarianAssistance.ViewModels.Models
         public List<Transaction> Transactionlist { get; set; }
 		public double TotalCredit { get; set; }
 		public double TotalDebit { get; set; }
+        public string ChartOfAccountNewCode { get; set; }
 
-	}
+    }
 
 	public class AccountTransactionLogger {
 		public long AccountCode { get; set; }
