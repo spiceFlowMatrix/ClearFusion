@@ -316,6 +316,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         #region Marketing
         public ICollection<JobDetails> JobDetails { get; set; }
+        public JobDetails JobDetailModel { get; set; }
         public ICollection<Quality> Qualities { get; set; }
         public ICollection<CurrencyDetails> Currencies { get; set; }
         public ICollection<ContractDetails> ContractDetails { get; set; }
