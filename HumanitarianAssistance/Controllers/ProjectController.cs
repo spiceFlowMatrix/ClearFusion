@@ -695,8 +695,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
             Directory.CreateDirectory(newPath);
           }
           string fileName = string.Empty;
-          if (file.Length > 0)
-          {
+          //if (file.Length > 0)
+          //{
             //ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
             fileName = DocType + "_" + fileNames;
             fullPath = Path.Combine(newPath, fileName);
@@ -704,7 +704,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
             {
               file.CopyTo(stream);
             }
-          }
+          //}
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
           if (user != null)
           {

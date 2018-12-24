@@ -23,8 +23,8 @@ namespace HumanitarianAssistance.Service
     public class ProposalDoc
     {
         static string[] Scopes = { DriveService.Scope.Drive };
-        static string ApplicationName = "Humanitarianweb";
-        public static DriveService userGoogleCredential(string ProjectCode, string pathFile)
+        static string ApplicationName = string.Empty;
+        public static DriveService userGoogleCredential(string ProjectCode, string pathFile, ViewModels.Models.Project.GoogleCredential Credential)
         {
             UserCredential credential;
             using (var stream =
@@ -36,7 +36,8 @@ namespace HumanitarianAssistance.Service
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
                     Scopes,
-                    "sdd.shared@gmail.com",
+                   //"sdd.shared@gmail.com",
+                   Credential.EmailId,// "hamza@edgsolutions.net",
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
                 //Console.WriteLine("Credential file saved to: " + credPath);
@@ -44,15 +45,15 @@ namespace HumanitarianAssistance.Service
             var driveService = new DriveService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
+                ApplicationName = Credential.ApplicationName,
             });
             return driveService;
         }
 
 
-        public static ProjectProposalModel userCredential(string ProjectCode, string pathFile)
+        public static ProjectProposalModel userCredential(string ProjectCode, string pathFile, ViewModels.Models.Project.GoogleCredential Credential)
         {
-            var driveService = userGoogleCredential(ProjectCode, pathFile);
+            var driveService = userGoogleCredential(ProjectCode, pathFile, Credential);
             var resp = createfolder(driveService, ProjectCode);
             return resp;
         }
@@ -144,12 +145,12 @@ namespace HumanitarianAssistance.Service
             return res;
         }
 
-        public static ProjectProposalModel GetProjectProposal(string ProjectCode, string pathFile)
-        {
-            var driveService = userGoogleCredential(ProjectCode, pathFile);
-            var resp = GetProposalwebLink(driveService, ProjectCode);
-            return resp;
-        }
+        //public static ProjectProposalModel GetProjectProposal(string ProjectCode, string pathFile)
+        //{
+        //    var driveService = userGoogleCredential(ProjectCode, pathFile);
+        //    var resp = GetProposalwebLink(driveService, ProjectCode);
+        //    return resp;
+        //}
 
         public static ProjectProposalModel GetProposalwebLink(DriveService driveService, string ProjectCode)
         {
@@ -179,12 +180,12 @@ namespace HumanitarianAssistance.Service
             return res;
         }
 
-        public static ProjectProposalModel uploadOtherProposaldoc(string ProjectCode, IFormFile filedata, string fileName, string pathFile, string uploadfilelocalpath)
+        public static ProjectProposalModel uploadOtherProposaldoc(string ProjectCode, IFormFile filedata, string fileName, string pathFile, string uploadfilelocalpath, ViewModels.Models.Project.GoogleCredential Credential)
         {
             ProjectProposalModel res = new ProjectProposalModel();
             string exten = System.IO.Path.GetExtension(fileName).ToLower();
             string ext = exten.Trim('"').Split('.')[1];
-            var driveService = userGoogleCredential(ProjectCode, pathFile);
+            var driveService = userGoogleCredential(ProjectCode, pathFile, Credential);
             List<File> result = new List<File>();
             List<string> folderName = new List<string>();
             FilesResource.ListRequest request4 = driveService.Files.List();
@@ -394,9 +395,9 @@ namespace HumanitarianAssistance.Service
             //}
             return mimeType;
         }
-        public static string FilePermission(string ProjectCode,string Fileid, string EmailId,string pathFile)
+        public static string FilePermission(string ProjectCode,string Fileid, string EmailId,string pathFile, ViewModels.Models.Project.GoogleCredential Credential)
         {
-            var driveService = userGoogleCredential(ProjectCode, pathFile);
+            var driveService = userGoogleCredential(ProjectCode, pathFile, Credential);
             string Message = string.Empty;
             var batch = new BatchRequest(driveService);
             BatchRequest.OnResponse<Permission> callback = delegate (
