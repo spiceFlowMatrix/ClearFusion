@@ -360,7 +360,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiresponse;
     }
-   
+
+
+    [HttpPost]
+    public APIResponse GetSecurityConsiMultiSelectByProjectId([FromBody]long Id)
+    {
+      APIResponse apiresponse = _iProject.GetSecurityConsiMultiSelectByProjectId(Id);
+
+      return apiresponse;
+    }
+    
+
 
 
     #endregion
@@ -1038,6 +1048,22 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
+
+
+
+    [HttpPost]
+    public async Task<APIResponse> AddEditSecurityConsiMultiselect([FromBody]SecurityConsiderationMultiSelectModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditSecurityConsidMultiDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
     #endregion
 
     #region OccupationDetail

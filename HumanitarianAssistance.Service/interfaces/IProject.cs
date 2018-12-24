@@ -158,8 +158,10 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> AddEditCriteriaEvalutionSubmitDetail(ProjectDetailNewModel model);
 
-        
 
+        APIResponse AddEditSecurityConsidMultiDetail(SecurityConsiderationMultiSelectModel model, string UserId);
+
+        APIResponse GetSecurityConsiMultiSelectByProjectId(long ProjectId);
         #endregion
     }
 }
