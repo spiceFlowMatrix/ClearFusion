@@ -68,7 +68,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                 foreach (var account in inputLevelList)
                 {
-                    tasks.Add(CalculateAccountBalanceById(vTransactions, exRates, toCurrency, account));
+                    tasks.Add(CalculateAccountBalanceByAccount(vTransactions, exRates, toCurrency, account));
                 }
 
                 response.data.SubLevelAccountList = inputLevelList;
@@ -84,33 +84,61 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
-        private void GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime endDate)
+        private async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime endDate)
         {
-
+            return await _uow.GetDbContext().VoucherTransactions
+                .Where(x => x.TransactionDate <= endDate 
+                            && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
+                            && x.IsDeleted == false
+                            && x.ChartOfAccountNewId != null)
+                .ToListAsync();
         }
 
-        private void GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime startDate,
+        private async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime startDate,
             DateTime endDate)
         {
-
+            return await _uow.GetDbContext().VoucherTransactions
+                .Where(x => x.TransactionDate <= endDate
+                            && x.TransactionDate >= startDate
+                            && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
+                            && x.IsDeleted == false
+                            && x.ChartOfAccountNewId != null)
+                .ToListAsync();
         }
 
-        private void GetTransactionExchangeRates(List<VoucherTransactions> transactions)
+        // Value after exchange on the transaction date
+        private async Task<List<VoucherTransactions>> GetTransactionValuesAfterExchange(List<VoucherTransactions> transactions, int toCurrencyId)
+        {
+            var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId);
+            ratesQuery = ratesQuery.Where(x => transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency));
+            ratesQuery = ratesQuery.Where(x => transactions.Select(y => y.TransactionDate).Any(z => z >= x.Date));
+            var ratesList = ratesQuery.ToListAsync();
+
+            foreach (var transaction in transactions)
+            {
+                
+            }
+        }
+
+        private ExchangeRateDetail DetermineTransactionExrate(VoucherTransactions transaction,
+            List<ExchangeRateDetail> rates)
         {
 
         }
 
-        private void GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime endDate)
+        // Value after exchange on the given onDate
+        private async Task<List<VoucherTransactions>> GetTransactionValuesAfterExchange(List<VoucherTransactions> transactions, int toCurrencyId, DateTime onDate)
         {
 
         }
+
 
         private void GetAccountBalances(List<ChartOfAccountNew> inputLevelAccount, DateTime startDate, DateTime endDate)
         {
 
         }
 
-        private double CalculateAccountBalanceById(List<VoucherTransactions> transactions,
+        private double CalculateAccountBalanceByAccount(List<VoucherTransactions> transactions,
             List<ExchangeRateDetail> exRates, int toCurrency, ChartOfAccountNew account)
         {
             List<VoucherTransactions> transactionsOriginal = new List<VoucherTransactions>();
@@ -157,7 +185,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
         }
 
-        private async Task<double> CalculateAccountBalanceById(long accountId)
+        private async Task<double> CalculateAccountBalanceByAccount(long accountId)
         {
             // check if account exists
             var accountTask = _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ChartOfAccountNewId == accountId).FirstOrDefaultAsync();
