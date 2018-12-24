@@ -68,7 +68,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                 foreach (var account in inputLevelList)
                 {
-                    tasks.Add(GetAccountBalanceById(vTransactions, exRates, toCurrency, account));
+                    tasks.Add(CalculateAccountBalanceById(vTransactions, exRates, toCurrency, account));
                 }
 
                 response.data.SubLevelAccountList = inputLevelList;
@@ -80,15 +80,37 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
-            // TODO: fetch all vouchers that contain transactions towards accounts whose head type matches this headTypeId
-            // TODO: get exchange rate for each transaction. Use the currencyId from each transaction's voucher, and the toCurrencyId to get  
-
-            // TODO: get all notes that have accounts whose head type match this.headTypeId
 
             return response;
         }
 
-        private double GetAccountBalanceById(List<VoucherTransactions> transactions,
+        private void GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime endDate)
+        {
+
+        }
+
+        private void GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime startDate,
+            DateTime endDate)
+        {
+
+        }
+
+        private void GetTransactionExchangeRates(List<VoucherTransactions> transactions)
+        {
+
+        }
+
+        private void GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime endDate)
+        {
+
+        }
+
+        private void GetAccountBalances(List<ChartOfAccountNew> inputLevelAccount, DateTime startDate, DateTime endDate)
+        {
+
+        }
+
+        private double CalculateAccountBalanceById(List<VoucherTransactions> transactions,
             List<ExchangeRateDetail> exRates, int toCurrency, ChartOfAccountNew account)
         {
             List<VoucherTransactions> transactionsOriginal = new List<VoucherTransactions>();
@@ -135,7 +157,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
         }
 
-        private async Task<double> GetAccountBalanceById(long accountId)
+        private async Task<double> CalculateAccountBalanceById(long accountId)
         {
             // check if account exists
             var accountTask = _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ChartOfAccountNewId == accountId).FirstOrDefaultAsync();
