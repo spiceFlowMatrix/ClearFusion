@@ -1123,7 +1123,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 unitRateDetails = await _uow.UnitRateRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId
                 && x.CurrencyId == model.CurrencyId && x.MediumId == model.MediumId && x.TimeCategoryId
-                == model.TimeCategoryId && x.MediaCategoryId == model.MediaCategoryId && x.IsDeleted == false);
+                == model.TimeCategoryId && x.MediaCategoryId == model.MediaCategoryId && x.QualityId == model.QualityId && x.IsDeleted == false);
             }
             if (activity == "Production")
             {
@@ -1182,6 +1182,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                 obj1.UnitRates = model.UnitRates;
                                 await _uow.UnitRateRepository.UpdateAsyn(obj1);
                                 response.data.unitRateDetailsById = obj1;
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Unit Rate updated Successfully";
                             }
 
                         }
