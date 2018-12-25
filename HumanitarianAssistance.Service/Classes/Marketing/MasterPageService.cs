@@ -90,7 +90,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     await _uow.QualityRepository.UpdateAsyn(qualityDetails);
 
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    response.Message = "Quality deleted successfully";
                 }
             }
             catch (Exception ex)
@@ -120,7 +120,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.qualityById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Quality deleted successfully";
             }
             catch (Exception ex)
             {
@@ -150,7 +150,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.qualityById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Quality added successfully";
             }
             catch (Exception ex)
             {
@@ -223,7 +223,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     await _uow.MediumRepository.UpdateAsyn(mediumDetails);
 
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    response.Message = "Medium deleted successfully";
                 }
             }
             catch (Exception ex)
@@ -253,7 +253,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.mediumById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Medium updated successfully";
             }
             catch (Exception ex)
             {
@@ -283,7 +283,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.mediumById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Medium added successfully";
             }
             catch (Exception ex)
             {
@@ -356,7 +356,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     await _uow.NatureRepository.UpdateAsyn(natureDetails);
 
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    response.Message = "Nature deleted successfully";
                 }
             }
             catch (Exception ex)
@@ -386,7 +386,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.natureById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Nature updated successfully";
             }
             catch (Exception ex)
             {
@@ -416,7 +416,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.natureById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Nature added successfully";
             }
             catch (Exception ex)
             {
@@ -489,7 +489,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     await _uow.JobPhaseRepository.UpdateAsyn(phaseDetails);
 
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    response.Message = "Phase deleted successfully";
                 }
             }
             catch (Exception ex)
@@ -519,7 +519,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.phaseById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Phase updated successfully";
             }
             catch (Exception ex)
             {
@@ -549,7 +549,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.phaseById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Phase added Successfully";
             }
             catch (Exception ex)
             {
@@ -693,7 +693,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         }
         #endregion
 
-        #region MediaCategory
+        #region Media Category
         /// <summary>
         /// get Media Category List
         /// </summary>
@@ -736,7 +736,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     await _uow.MediaCategoryRepository.UpdateAsyn(mediaCategory);
 
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    response.Message = "Media Category deleted successfully";
                 }
             }
             catch (Exception ex)
@@ -784,7 +784,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.mediaCategoryById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Media Category updated successfully";
             }
             catch (Exception ex)
             {
@@ -813,7 +813,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.MediaCategoryRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Media Category Added successfully";
                 response.data.mediaCategoryById = obj;
             }
             catch (Exception ex)
@@ -927,7 +927,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     await _uow.TimeCategoryRepository.UpdateAsyn(timeCategory);
 
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    response.Message = "Time Category deleted successfully";
                 }
             }
             catch (Exception ex)
@@ -957,7 +957,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.timeCatergoryById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Time category updated successfully";
             }
             catch (Exception ex)
             {
@@ -987,7 +987,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.timeCatergoryById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Time Category added successfully";
             }
             catch (Exception ex)
             {
