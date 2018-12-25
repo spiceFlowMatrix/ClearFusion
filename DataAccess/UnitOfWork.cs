@@ -187,6 +187,9 @@ namespace DataAccess
         private IGenericRepository<CEAssumptionDetail> _assumptionOtherDetailRepository;
         private IGenericRepository<DonorEligibilityCriteria> _donorEligibilityCriteria;
 
+        private IGenericRepository<ProvinceMultiSelect> _provinceMultiSelectRepository;
+        private IGenericRepository<DistrictMultiSelect> _districtMultiSelectRepository;
+        private IGenericRepository<SecurityConsiderationMultiSelect> _securityConsiderationMultiSelectRepository;
 
 
 
@@ -1698,8 +1701,32 @@ namespace DataAccess
             }
         }
 
+        public IGenericRepository<ProvinceMultiSelect> ProvinceMultiSelectRepository
+        {
+            get
+            {
+                return _provinceMultiSelectRepository =
+                    _provinceMultiSelectRepository ?? new GenericRepository<ProvinceMultiSelect>(_mschaContext);
+            }
+        }
+        public IGenericRepository<DistrictMultiSelect> DistrictMultiSelectRepository
+        {
+            get
+            {
+                return _districtMultiSelectRepository =
+                    _districtMultiSelectRepository ?? new GenericRepository<DistrictMultiSelect>(_mschaContext);
+            }
+        }
+        public IGenericRepository<SecurityConsiderationMultiSelect> SecurityConsiderationMultiSelectRepository
+        {
+            get
+            {
+                return _securityConsiderationMultiSelectRepository =
+                    _securityConsiderationMultiSelectRepository ?? new GenericRepository<SecurityConsiderationMultiSelect>(_mschaContext);
+            }
+        }
+       
 
-        
 
         public void Save()
         {

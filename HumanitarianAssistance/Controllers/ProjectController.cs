@@ -360,7 +360,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiresponse;
     }
-   
+
+
+    [HttpPost]
+    public APIResponse GetSecurityConsiMultiSelectByProjectId([FromBody]long Id)
+    {
+      APIResponse apiresponse = _iProject.GetSecurityConsiMultiSelectByProjectId(Id);
+
+      return apiresponse;
+    }
+    
+
 
 
     #endregion
@@ -695,8 +705,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
             Directory.CreateDirectory(newPath);
           }
           string fileName = string.Empty;
-          if (file.Length > 0)
-          {
+          //if (file.Length > 0)
+          //{
             //ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
             fileName = DocType + "_" + fileNames;
             fullPath = Path.Combine(newPath, fileName);
@@ -704,7 +714,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
             {
               file.CopyTo(stream);
             }
-          }
+          //}
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
           if (user != null)
           {
@@ -1038,6 +1048,22 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
+
+
+
+    [HttpPost]
+    public async Task<APIResponse> AddEditSecurityConsiMultiselect([FromBody]SecurityConsiderationMultiSelectModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditSecurityConsidMultiDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
     #endregion
 
     #region OccupationDetail
