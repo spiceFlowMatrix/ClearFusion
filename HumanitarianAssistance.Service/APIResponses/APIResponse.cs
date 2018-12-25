@@ -150,6 +150,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<AccountLevelModel> AccountLevelList { get; set; }
         public List<AccountType> AccountTypeList { get; set; }
         public IList<VoucherDetailModel> VoucherDetailList { get; set; }
+        public VoucherDetailModel VoucherDetail { get; set; }
         public IList<VoucherTypeModel> VoucherTypeList { get; set; }
         public IList<VoucherDocumentDetailModel> VoucherDocumentDetailList { get; set; }
 
