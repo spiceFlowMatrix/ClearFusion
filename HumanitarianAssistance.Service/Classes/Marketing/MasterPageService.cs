@@ -120,7 +120,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.SaveAsync();
                 response.data.qualityById = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Quality deleted successfully";
+                response.Message = "Quality updated successfully";
             }
             catch (Exception ex)
             {
