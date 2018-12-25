@@ -86,8 +86,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       };
     }
 
-    [HttpGet]
-    public async Task<object> GetAllVoucherList(VoucherNewFilterModel voucherNewFilterModel)
+    [HttpPost]
+    public async Task<object> GetAllVoucherList([FromBody]VoucherNewFilterModel voucherNewFilterModel)
     {
       APIResponse response = await _iVoucherNewService.GetAllNewVoucherList(voucherNewFilterModel);
       return response;

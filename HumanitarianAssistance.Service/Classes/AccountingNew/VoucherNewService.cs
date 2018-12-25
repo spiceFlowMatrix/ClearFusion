@@ -37,38 +37,47 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         {
             APIResponse response = new APIResponse();
 
-            string codeValue = null;
-            string journalValue = null;
-            string dateValue = null;
-            string nameValue = null;
+            //string codeValue = null;
+            //string journalValue = null;
+            //string dateValue = null;
+            //string nameValue = null;
 
-            if (!string.IsNullOrEmpty(voucherNewFilterModel.FilterValue))
-            {
-                codeValue = voucherNewFilterModel.CodeFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
-                nameValue = voucherNewFilterModel.NameFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
-                dateValue = voucherNewFilterModel.DateFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
-                journalValue = voucherNewFilterModel.JournalFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
-            }
+            //if (!string.IsNullOrEmpty(voucherNewFilterModel.FilterValue))
+            //{
+            //    codeValue = voucherNewFilterModel.CodeFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
+            //    nameValue = voucherNewFilterModel.NameFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
+            //    dateValue = voucherNewFilterModel.DateFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
+            //    journalValue = voucherNewFilterModel.JournalFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
+            //}
 
             try
             {
-
                 var voucherList = await Task.Run(() =>
                     _uow.GetDbContext().VoucherDetail
                                       .Include(o => o.OfficeDetails)
                                       .Include(j => j.JournalDetails)
                                       .Include(c => c.CurrencyDetail)
                                       .Include(f => f.FinancialYearDetails)
-                                      .Where(v => v.IsDeleted == false &&
-                                               (
-                                               v.VoucherNo.ToString().Trim() == codeValue ||
-                                               v.ReferenceNo.ToString().Trim() == nameValue ||
-                                               v.VoucherDate.ToString().Trim() == dateValue ||
-                                               v.JournalDetails.JournalName.ToLower().Trim() == journalValue
-                                               )
-                                      )
+                                      .Where(v => v.IsDeleted == false )
                                       .OrderBy(x => x.VoucherDate).ToList()
                                       );
+
+                //var voucherList = await Task.Run(() =>
+                //    _uow.GetDbContext().VoucherDetail
+                //                      .Include(o => o.OfficeDetails)
+                //                      .Include(j => j.JournalDetails)
+                //                      .Include(c => c.CurrencyDetail)
+                //                      .Include(f => f.FinancialYearDetails)
+                //                      .Where(v => v.IsDeleted == false &&
+                //                               (
+                //                               v.VoucherNo.ToString().Trim() == codeValue ||
+                //                               v.ReferenceNo.ToString().Trim() == nameValue ||
+                //                               v.VoucherDate.ToString().Trim() == dateValue ||
+                //                               v.JournalDetails.JournalName.ToLower().Trim() == journalValue
+                //                               )
+                //                      )
+                //                      .OrderBy(x => x.VoucherDate).ToList()
+                //                      );
                 var voucherdetaillist = voucherList.Select(v => new VoucherDetailModel
                 {
                     VoucherNo = v.VoucherNo,
@@ -109,31 +118,50 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
 
-                var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == model.OfficeId).Result.OfficeCode; //use OfficeCode
+                var officeCode = _uow.GetDbContext().OfficeDetail.FirstOrDefault(o => o.OfficeId == model.OfficeId)?.OfficeCode; //use OfficeCode
 
-                VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
-                obj.CreatedById = model.CreatedById;
-                obj.CreatedDate = DateTime.UtcNow;
-                obj.IsDeleted = false;
-                await _uow.VoucherDetailRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
+                if (officeCode != null)
+                {
+                    var fincancialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(o => o.IsDefault)?.FinancialYearId; //use OfficeCode
 
-                obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
-                await _uow.VoucherDetailRepository.UpdateAsyn(obj);
+                    if (fincancialYear != null)
+                    {
+                        VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
+                        obj.FinancialYearId = fincancialYear;
+                        obj.CreatedById = model.CreatedById;
+                        obj.CreatedDate = DateTime.UtcNow;
+                        obj.IsDeleted = false;
+                        await _uow.VoucherDetailRepository.AddAsyn(obj);
+                        await _uow.SaveAsync();
 
-                var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
+                        obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
+                        await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
-                LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
-                loggerObj.IsRead = false;
-                loggerObj.UserName = user.FirstName + " " + user.LastName;
-                loggerObj.UserId = model.CreatedById;
-                loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
-                loggerObj.CreatedDate = model.CreatedDate;
+                        var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
 
-                response.LoggerDetailsModel = loggerObj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                        LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                        loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
+                        loggerObj.IsRead = false;
+                        loggerObj.UserName = user.FirstName + " " + user.LastName;
+                        loggerObj.UserId = model.CreatedById;
+                        loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
+                        loggerObj.CreatedDate = model.CreatedDate;
+
+                        response.LoggerDetailsModel = loggerObj;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
+                    }
+                    else {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Default Financial year is not set";
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Office Code Not Found";
+                }
+
             }
             catch (Exception ex)
             {
