@@ -8,7 +8,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     {
         public long DistrictMultiSelectId { get; set; }
         public long ProjectId { get; set; }
-        public long DistrictID { get; set; }
+        public List<long?> DistrictID { get; set; }
         public long? DistrictSelectionId { get; set; }
 
     }
