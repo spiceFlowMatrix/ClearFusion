@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using AutoMapper;
 using DataAccess;
 using DataAccess.DbEntities;
@@ -91,6 +92,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
                             && x.IsDeleted == false
                             && x.ChartOfAccountNewId != null)
+                .Include(x => x.ChartOfAccountDetail)
                 .ToListAsync();
         }
 
@@ -103,7 +105,52 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
                             && x.IsDeleted == false
                             && x.ChartOfAccountNewId != null)
+                .Include(x => x.ChartOfAccountDetail)
                 .ToListAsync();
+        }
+
+        private double DetermineTransactionExrate(VoucherTransactions transaction,
+            List<ExchangeRateDetail> rates, int toCurrencyId)
+        {
+            double xExchangeRate = 0.0;
+            if (transaction.CurrencyId == toCurrencyId)
+                xExchangeRate = 1.0;
+            else
+            {
+                if (transaction.TransactionDate == null)
+                    throw new Exception("Transaction date is not set");
+                if (transaction.CurrencyId == null)
+                    throw new Exception("Transaction currency is not set");
+                var interxExchangeRate = (double)rates.OrderByDescending(x => x.Date)
+                    .FirstOrDefault(x => x.Date <= transaction.TransactionDate.GetValueOrDefault()
+                                         && x.FromCurrency == transaction.CurrencyId
+                                         && x.ToCurrency == toCurrencyId).Rate;
+            }
+
+            return xExchangeRate;
+
+        }
+
+        private double DetermineTransactionExrate(VoucherTransactions transaction,
+            List<ExchangeRateDetail> rates, int toCurrencyId, DateTime onDate)
+        {
+            double xExchangeRate = 0.0;
+            if (transaction.CurrencyId == toCurrencyId)
+                xExchangeRate = 1.0;
+            else
+            {
+                if (transaction.TransactionDate == null)
+                    throw new Exception("Transaction date is not set");
+                if (transaction.CurrencyId == null)
+                    throw new Exception("Transaction currency is not set");
+                var interxExchangeRate = (double)rates.OrderByDescending(x => x.Date)
+                    .FirstOrDefault(x => x.Date <= onDate
+                                         && x.FromCurrency == transaction.CurrencyId
+                                         && x.ToCurrency == toCurrencyId).Rate;
+            }
+
+            return xExchangeRate;
+
         }
 
         // Value after exchange on the transaction date
@@ -112,28 +159,78 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId);
             ratesQuery = ratesQuery.Where(x => transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency));
             ratesQuery = ratesQuery.Where(x => transactions.Select(y => y.TransactionDate).Any(z => z >= x.Date));
-            var ratesList = ratesQuery.ToListAsync();
+            var ratesList = await ratesQuery.ToListAsync();
+
+            List<VoucherTransactions> outputTransactions = new List<VoucherTransactions>();
 
             foreach (var transaction in transactions)
             {
-                
+                var rate = DetermineTransactionExrate(transaction, ratesList, toCurrencyId);
+
+                var outputTransaction = (transaction);
+                outputTransaction.Credit = rate * transaction.Credit;
+                outputTransaction.Debit = rate * transaction.Debit;
+                outputTransactions.Add(outputTransaction);
             }
-        }
 
-        private ExchangeRateDetail DetermineTransactionExrate(VoucherTransactions transaction,
-            List<ExchangeRateDetail> rates)
-        {
-
+            return outputTransactions;
         }
 
         // Value after exchange on the given onDate
         private async Task<List<VoucherTransactions>> GetTransactionValuesAfterExchange(List<VoucherTransactions> transactions, int toCurrencyId, DateTime onDate)
         {
+            var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId);
+            ratesQuery = ratesQuery.Where(x => transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency));
+            ratesQuery = ratesQuery.Where(x => x.Date == onDate);
+            var ratesList = await ratesQuery.ToListAsync();
 
+            List<VoucherTransactions> outputTransactions = new List<VoucherTransactions>();
+            
+            foreach (var transaction in transactions)
+            {
+                var rate = DetermineTransactionExrate(transaction, ratesList, toCurrencyId, onDate);
+
+                var outputTransaction = (transaction);
+                outputTransaction.Credit = rate * transaction.Credit;
+                outputTransaction.Debit = rate * transaction.Debit;
+                outputTransactions.Add(outputTransaction);
+            }
+
+            return outputTransactions;
         }
 
 
-        private void GetAccountBalances(List<ChartOfAccountNew> inputLevelAccount, DateTime startDate, DateTime endDate)
+        // thhis override calculates transaction credit/debit value after exchange on the transaction date
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime tillDate, int toCurrencyId)
+        {
+            var transactions = await GetAccountTransactions(inputLevelAccounts, tillDate);
+            var exchangeValuedTransactions = await GetTransactionValuesAfterExchange(transactions, toCurrencyId);
+
+            Dictionary<ChartOfAccountNew, double> accountBalances = new Dictionary<ChartOfAccountNew, double>();
+
+            foreach (var account in inputLevelAccounts)
+            {
+                var accountTransactions =
+                    exchangeValuedTransactions.Where(x => x.ChartOfAccountNewId == account.ChartOfAccountNewId).ToList();
+                var totalCredits = accountTransactions.Select(x => x.Credit.GetValueOrDefault()).Sum();
+                var totalDebits = accountTransactions.Select(x => x.Debit.GetValueOrDefault()).Sum();
+                if(account.IsCreditBalancetype.GetValueOrDefault())
+                    accountBalances.Add(account, totalCredits - totalDebits);
+                else
+                    accountBalances.Add(account, totalDebits - totalCredits);
+            }
+
+            return accountBalances;
+        }
+
+        // this override calculates transaction credit/debit values after exchange based on the given transactionCompareDate
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime tillDate, 
+            DateTime transactionCompareDate, int toCurrencyId, bool isCreditBalanceType)
+        {
+            var transactions = await GetAccountTransactions(inputLevelAccounts, tillDate);
+        }
+
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime startDate, DateTime endDate)
         {
 
         }
@@ -212,21 +309,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         }
 
 
-        /*
-        // Use this when getting transaction value after exchange on the transaction date.
-        private double GetTransactionValue(VoucherTransactions transaction, 
-            List<ExchangeRate> exRates, int toCurrencyId)
-        {
-
-        }
-
-        // Use this when getting transaction value after exchange on a specific date.
-        private double GetTransactionValue(VoucherTransactions transaction,
-            List<ExchangeRate> exRates, int toCurrencyId, DateTimeOffset exRateDate)
-        {
-
-        }
-        */
         public async Task<APIResponse> GetNoteBalanceById(int noteType)
         {
             APIResponse response = new APIResponse();
