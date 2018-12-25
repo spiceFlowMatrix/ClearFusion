@@ -290,7 +290,10 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectOtherDetail OtherProjectDetailById { get; set; }
         public SecurityConsiderationMultiSelect MultiSecurityConsiderationById { get; set; }
         public List<long> SecurityConsiderationMultiSelectById { get; set; }
+        public List<int> ProvinceMultiSelectById { get; set; }
+        public List<long> DistrictMultiSelectById { get; set; }
 
+        
         public List<ProjectCommunicationModel> ProjectCommunicationModel { get; set; }
         public ProjectProgram projectProgram { get; set; }
         public ProjectArea projectArea { get; set; }
