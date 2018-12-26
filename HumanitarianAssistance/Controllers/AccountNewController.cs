@@ -158,7 +158,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// Get All Voucher Transactions List
     /// </summary>
     /// <param name="voucherNewFilterModel"></param>
-    /// <returns></returns>
+    /// <returns>voucher transaction list</returns>
     [HttpPost]
     public async Task<object> GetAllTransactionsByVoucherId([FromBody]long id)
     {
@@ -174,15 +174,18 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     [HttpPost]
     public async Task<object> EditVoucherTransaction([FromBody]VoucherTransactionsModel voucherTransactions)
     {
-      APIResponse response = await _iVoucherNewService.EditTransactionDetail(voucherTransactions);
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      APIResponse response = await _iVoucherNewService.EditTransactionDetail(voucherTransactions, user.Id);
       return response;
     }
 
     /// <summary>
-    /// 
+    /// Delete a voucher transaction based on transaction id
     /// </summary>
     /// <param name="id"></param>
-    /// <returns></returns>
+    /// <returns>Success/Failure</returns>
     [HttpPost]
     public async Task<object> DeleteTransactionById([FromBody]long id)
     {

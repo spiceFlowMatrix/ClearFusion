@@ -316,8 +316,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         /// Edit Transaction Record on the basis of Transaction Id
         /// </summary>
         /// <param name="model"></param>
-        /// <returns></returns>
-        public async Task<APIResponse> EditTransactionDetail(VoucherTransactionsModel voucherTransactions)
+        /// <returns>Success/Failure</returns>
+        public async Task<APIResponse> EditTransactionDetail(VoucherTransactionsModel voucherTransactions, string userId)
         {
             APIResponse response = new APIResponse();
 
@@ -334,6 +334,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     transaction.Description = voucherTransactions.Description;
                     transaction.BudgetLineId = voucherTransactions.BudgetLineId;
                     transaction.ProjectId = voucherTransactions.ProjectId;
+                    transaction.ModifiedById = userId;
+                    transaction.ModifiedDate = DateTime.Now;
 
                     //update transaction as per new updated values
                     await _uow.VoucherTransactionsRepository.UpdateAsyn(transaction);
@@ -359,7 +361,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         /// Delete Transaction
         /// </summary>
         /// <param name="transactionId"></param>
-        /// <returns></returns>
+        /// <returns>Success/failure</returns>
         public async Task<APIResponse> DeleteTransactionById(long transactionId)
         {
             APIResponse response = new APIResponse();
