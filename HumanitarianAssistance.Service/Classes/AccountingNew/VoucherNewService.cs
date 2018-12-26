@@ -275,5 +275,123 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        /// <summary>
+        /// Get All Voucher Transaction List 
+        /// </summary>
+        /// <param name="VoucherNo"></param>
+        /// <returns>List of Voucher Transactions</returns>
+        public async Task<APIResponse> GetAllTransactionsByVoucherId(long VoucherNo)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+
+                List<VoucherTransactionsModel> voucherTransactionsList= await _uow.GetDbContext().VoucherTransactions
+                                   .Where(x => x.IsDeleted == false && x.VoucherNo == VoucherNo)
+                                   .Select(x => new VoucherTransactionsModel
+                                   {
+                                       AccountNo= x.ChartOfAccountNewId,
+                                       Debit= (x.Debit !=0 && x.Debit !=null)? x.Debit : 0,
+                                       Credit = (x.Credit != 0 && x.Credit != null) ? x.Credit : 0,
+                                       BudgetLineId= x.BudgetLineId,
+                                       ProjectId= x.ProjectId,
+                                       Description= x.Description,
+                                       TransactionId= x.TransactionId
+                                   }).ToListAsync();
+
+                response.data.VoucherTransactions = voucherTransactionsList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Edit Transaction Record on the basis of Transaction Id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> EditTransactionDetail(VoucherTransactionsModel voucherTransactions)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                //get Voucher transaction as per transactionId
+                VoucherTransactions transaction = await _uow.VoucherTransactionsRepository.FindAsync(c => c.TransactionId == voucherTransactions.TransactionId);
+
+                if (transaction != null)
+                {
+                    transaction.ChartOfAccountNewId = voucherTransactions.AccountNo;
+                    transaction.Debit = voucherTransactions.Debit;
+                    transaction.Credit = voucherTransactions.Credit;
+                    transaction.Description = voucherTransactions.Description;
+                    transaction.BudgetLineId = voucherTransactions.BudgetLineId;
+                    transaction.ProjectId = voucherTransactions.ProjectId;
+
+                    //update transaction as per new updated values
+                    await _uow.VoucherTransactionsRepository.UpdateAsyn(transaction);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Delete Transaction
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> DeleteTransactionById(long transactionId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                //get Voucher transaction as per transactionId
+                VoucherTransactions transaction = await _uow.VoucherTransactionsRepository.FindAsync(c => c.TransactionId == transactionId);
+
+                if (transaction != null)
+                {
+                    transaction.IsDeleted = true;
+
+                    //update transaction as per new updated values
+                    await _uow.VoucherTransactionsRepository.UpdateAsyn(transaction);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
     }
 }
