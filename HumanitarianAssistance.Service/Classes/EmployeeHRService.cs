@@ -1315,48 +1315,65 @@ namespace HumanitarianAssistance.Service.Classes
                 EmployeeDetail xEmployeeDetail = await _uow.EmployeeDetailRepository.FindAsync(x => x.EmployeeID == model.EmployeeId);
 
                 var previousPensionList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.FinancialYearDate.Value.Date.Year < financialYearList.StartDate.Year && x.IsDeleted == false);
-                epm.PreviousPensionRate = previousPensionList.Average(x => x.PensionRate);
 
-                List<ExchangeRate> exchangeRateList = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.Date.Value.Year == financialYearList.StartDate.Year && (x.Date.Value.Month == DateTime.Now.Month - 6)).OrderByDescending(x => x.Date).ToListAsync();
-
-                foreach (var item in previousPensionList)
+                if (previousPensionList.Any())
                 {
-                    if (item.CurrencyId == model.CurrencyId)
+
+                    epm.PreviousPensionRate = previousPensionList.Average(x => x.PensionRate);
+                    //List<ExchangeRate> exchangeRateList = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.Date.Value.Year == financialYearList.StartDate.Year && (x.Date.Value.Month == DateTime.Now.Month - 6)).OrderByDescending(x => x.Date).ToListAsync();
+
+
+                    foreach (var item in previousPensionList)
                     {
-                        epm.PreviousPensionDeduction += item.PensionAmount;
-                        epm.PreviousProfit += Math.Round(Convert.ToDouble(item.PensionAmount * item.PensionRate), 2);
-                        epm.PreviousTotal += Math.Round(Convert.ToDouble((item.PensionAmount * item.PensionRate) + item.PensionAmount), 2);
-                    }
-                    else
-                    {
-                        epm.PreviousPensionDeduction += item.PensionAmount * exchangeRateList.FirstOrDefault(x => x.FromCurrency == item.CurrencyId).Rate / exchangeRateList.FirstOrDefault(x => x.FromCurrency == model.CurrencyId).Rate;
-                        epm.PreviousProfit += Math.Round(Convert.ToDouble(item.PensionAmount * item.PensionRate), 2) * exchangeRateList.FirstOrDefault(x => x.FromCurrency == item.CurrencyId).Rate / exchangeRateList.FirstOrDefault(x => x.FromCurrency == model.CurrencyId).Rate;
-                        epm.PreviousTotal += Math.Round(Convert.ToDouble((item.PensionAmount * item.PensionRate) + item.PensionAmount), 2) * exchangeRateList.FirstOrDefault(x => x.FromCurrency == item.CurrencyId).Rate / exchangeRateList.FirstOrDefault(x => x.FromCurrency == model.CurrencyId).Rate;
+
+                        
+
+                        if (item.CurrencyId == model.CurrencyId)
+                        {
+                            epm.PreviousPensionDeduction += item.PensionAmount;
+                            epm.PreviousProfit += Math.Round(Convert.ToDouble(item.PensionAmount * item.PensionRate), 2);
+                            epm.PreviousTotal += Math.Round(Convert.ToDouble((item.PensionAmount * item.PensionRate) + item.PensionAmount), 2);
+                        }
+                        else
+                        {
+                            ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == item.CurrencyId && x.ToCurrency==model.CurrencyId);
+                            epm.PreviousPensionDeduction += item.PensionAmount * (double)exchangeRate.Rate / (double)exchangeRate.Rate;
+                            epm.PreviousProfit += Math.Round(Convert.ToDouble(item.PensionAmount * item.PensionRate), 2) * (double)exchangeRate.Rate / (double)exchangeRate.Rate;
+                            epm.PreviousTotal += Math.Round(Convert.ToDouble((item.PensionAmount * item.PensionRate) + item.PensionAmount), 2) * (double)exchangeRate.Rate / (double)exchangeRate.Rate;
+
+                        }
 
                     }
+                    foreach (var item in empList)
+                    {
+                        ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == item.CurrencyId && x.ToCurrency == model.CurrencyId);
+
+                        EmployeePensionReportModel obj = new EmployeePensionReportModel();
+                        obj.CurrencyId = item.CurrencyId.Value;
+                        obj.Date = new DateTime(item.PayrollYear.Value, item.PayrollMonth.Value, 1);
+                        obj.GrossSalary = Math.Round(Convert.ToDouble(item.GrossSalary), 2) * (double)exchangeRate.Rate / (double)exchangeRate.Rate;
+                        obj.PensionRate = pensionRateDetail.PensionRate;
+                        obj.PensionDeduction = Math.Round(Convert.ToDouble((item.GrossSalary * pensionRateDetail.PensionRate) / 100), 2) * (double)exchangeRate.Rate / (double)exchangeRate.Rate;
+                        obj.Profit = Math.Round(Convert.ToDouble((obj.PensionDeduction * pensionRateDetail.PensionRate)) / 100, 2);
+                        obj.Total = obj.Profit + obj.PensionDeduction;
+                        lst.Add(obj);
+
+                    }
+                    epm.EmployeePensionReportList = lst.OrderBy(x => x.Date.Date).ToList();
+                    epm.PensionTotal = lst.Sum(x => x.Total);
+                    epm.PensionProfitTotal = lst.Sum(x => x.Profit);
+                    epm.PensionDeductionTotal = Math.Round(Convert.ToDouble(lst.Sum(x => x.GrossSalary * pensionRateDetail.PensionRate / 100)), 2);
+                    epm.EmployeeCode = xEmployeeDetail.EmployeeCode;
+                    response.data.EmployeePensionModel = epm;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.NoPension;
 
                 }
-                foreach (var item in empList)
-                {
-                    EmployeePensionReportModel obj = new EmployeePensionReportModel();
-                    obj.CurrencyId = item.CurrencyId.Value;
-                    obj.Date = new DateTime(item.PayrollYear.Value, item.PayrollMonth.Value, 1);
-                    obj.GrossSalary = Math.Round(Convert.ToDouble(item.GrossSalary), 2) * exchangeRateList.FirstOrDefault(x => x.FromCurrency == item.CurrencyId).Rate / exchangeRateList.FirstOrDefault(x => x.FromCurrency == model.CurrencyId).Rate;
-                    obj.PensionRate = pensionRateDetail.PensionRate;
-                    obj.PensionDeduction = Math.Round(Convert.ToDouble((item.GrossSalary * pensionRateDetail.PensionRate) / 100), 2) * exchangeRateList.FirstOrDefault(x => x.FromCurrency == item.CurrencyId).Rate / exchangeRateList.FirstOrDefault(x => x.FromCurrency == model.CurrencyId).Rate;
-                    obj.Profit = Math.Round(Convert.ToDouble((obj.PensionDeduction * pensionRateDetail.PensionRate)) / 100, 2);
-                    obj.Total = obj.Profit + obj.PensionDeduction;
-                    lst.Add(obj);
-
-                }
-                epm.EmployeePensionReportList = lst.OrderBy(x => x.Date.Date).ToList();
-                epm.PensionTotal = lst.Sum(x => x.Total);
-                epm.PensionProfitTotal = lst.Sum(x => x.Profit);
-                epm.PensionDeductionTotal = Math.Round(Convert.ToDouble(lst.Sum(x => x.GrossSalary * pensionRateDetail.PensionRate / 100)), 2);
-                epm.EmployeeCode = xEmployeeDetail.EmployeeCode;
-                response.data.EmployeePensionModel = epm;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
             }
             catch (Exception ex)
             {
@@ -1385,14 +1402,13 @@ namespace HumanitarianAssistance.Service.Classes
                         TotalTax = x.SalaryTax
                     }).OrderBy(x => x.Date).ToList();
 
-                    List<ExchangeRate> exchangeRateList = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.Date.Value.Year == financialYear.StartDate.Year && (x.Date.Value.Month == DateTime.Now.Month - 6)).OrderByDescending(x => x.Date).ToListAsync();
-
                     foreach (SalaryTaxReportModel item in salaryTaxReportList)
                     {
+                        ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == item.CurrencyId && x.ToCurrency==model.CurrencyId );
+
                         if (item.CurrencyId != model.CurrencyId)
                         {
-
-                            item.TotalTax = item.TotalTax * exchangeRateList.FirstOrDefault(x => x.FromCurrency == item.CurrencyId).Rate / exchangeRateList.FirstOrDefault(x => x.FromCurrency == model.CurrencyId).Rate;
+                            item.TotalTax = item.TotalTax * (double)exchangeRate.Rate;
                         }
                     }
 

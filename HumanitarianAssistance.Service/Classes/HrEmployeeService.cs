@@ -4409,19 +4409,19 @@ namespace HumanitarianAssistance.Service.Classes
 
                     foreach (var item in empList1)
                     {
-                        var exchangeRateList = _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == item.Currency && x.ToCurrency == model.CurrencyId).OrderByDescending(x => x.Date).ToListAsync().Result.FirstOrDefault();
-                        TotalGrossSalary += item.TotalGrossSalary * exchangeRateList.Rate;
-                        TotalAllowances += item.TotalAllowances * exchangeRateList.Rate;
+                        var exchangeRateList = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.FromCurrency == item.Currency && x.ToCurrency == model.CurrencyId);
+                        TotalGrossSalary += item.TotalGrossSalary * (double)exchangeRateList.Rate;
+                        TotalAllowances += item.TotalAllowances * (double)exchangeRateList.Rate;
                         if (model.AllowanceId != null)
                         {
                             var allowanceTotal = allowanceList.Where(x => x.SalaryHeadId == model.AllowanceId).Sum(x => x.MonthlyAmount);
-                            TotalAllowances = allowanceTotal * exchangeRateList.Rate;
+                            TotalAllowances = allowanceTotal * (double)exchangeRateList.Rate;
                         }
-                        TotalDeductions += item.TotalDeductions * exchangeRateList.Rate;
+                        TotalDeductions += item.TotalDeductions * (double)exchangeRateList.Rate;
                         if (model.DeductionId != null)
                         {
                             var deductionTotal = deductionList.Where(x => x.SalaryHeadId == model.DeductionId).Sum(x => x.MonthlyAmount);
-                            TotalDeductions = deductionTotal * exchangeRateList.Rate;
+                            TotalDeductions = deductionTotal * (double)exchangeRateList.Rate;
                         }
                     }
                     response.data.TotalGrossSalary = TotalGrossSalary;

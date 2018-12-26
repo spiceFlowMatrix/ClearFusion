@@ -337,6 +337,7 @@ namespace HumanitarianAssistance.Common.Helpers
     public const string JobCodeExist = "Job Code Already Exist";
     public const string PurchaseVoucherCreated = "Purchase Voucher Created";
     public const string PurchaseVoucherUnverified = "Reverse Purchase Payments";
+    public const string NoPension = "Pension Record Not Found";
 
     public const string NameExist = "Name Already Exist";
     public const string SuccessText = "Success";
