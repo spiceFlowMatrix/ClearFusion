@@ -416,7 +416,7 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.TotalGeneralAmount = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).Sum(s => s.MonthlyAmount);
 
                             obj.GrossSalary = obj.TotalGeneralAmount * (obj.PresentDays + obj.LeaveHours + obj.OverTimeHours) + obj.TotalAllowance;
-                            obj.PensionAmount = (obj.GrossSalary * pensionRate) / 100; // i.e. 4.5 % => 0.045
+                            obj.PensionAmount = (obj.GrossSalary * payrollDetail.FirstOrDefault().PensionRate) / 100; // i.e. 4.5 % => 0.045
 
                             if (obj.GrossSalary > 5000)
                             {

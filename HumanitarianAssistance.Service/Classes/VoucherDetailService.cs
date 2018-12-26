@@ -630,8 +630,8 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         journalReportList.Add(new JournalReportViewModel
                         {
-                            ChartOfAccountNewId= accountItem.Key,
-                            AccountCode = accountItem.FirstOrDefault(x=> x.ChartOfAccountNewId== accountItem.Key).AccountCode,
+                            ChartOfAccountNewId = accountItem.Key,
+                            AccountCode = accountItem.FirstOrDefault(x => x.ChartOfAccountNewId == accountItem.Key).AccountCode,
                             AccountName = accountItem.FirstOrDefault()?.AccountName,
                             DebitAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount)), 4),
                             CreditAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.CreditAmount)), 4),
@@ -864,7 +864,7 @@ namespace HumanitarianAssistance.Service.Classes
                         model.FinancialYearId = voucherDetail.FinancialYearId;
                         model.CurrencyId = voucherDetail.CurrencyId;
 
-                       VoucherTransactions obj = _mapper.Map<VoucherTransactions>(model);
+                        VoucherTransactions obj = _mapper.Map<VoucherTransactions>(model);
 
                         obj.ChartOfAccountNewId = model.AccountNo;
                         obj.CreatedById = UserId;
@@ -2618,7 +2618,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                            CreditAmount = item.VoucherT.VoucherT.Credit,
                                                                            DebitAmount = item.VoucherT.VoucherT.Debit,
                                                                            TransactionDate = item.VoucherT.VoucherT.TransactionDate,
-                                                                           ChartOfAccountNewCode= item.ChartD.ChartOfAccountNewCode
+                                                                           ChartOfAccountNewCode = item.ChartD.ChartOfAccountNewCode
                                                                        }).ToListAsync();
 
 
@@ -2891,7 +2891,7 @@ namespace HumanitarianAssistance.Service.Classes
                     NoteId = x.NoteId,
                     Notes = x.Notes,
                     AccountCode = x.ChartOfAccountNewId,
-                    ChartOfAccountCode = x.ChartOfAccountNew.ChartOfAccountNewCode ,
+                    ChartOfAccountCode = x.ChartOfAccountNew.ChartOfAccountNewCode,
                     Narration = x.Narration,
                     BlanceType = x.BlanceType,
                     BlanceTypeName = x.BlanceType == (int)BalanceType.SUM ? "Sum" : x.BlanceType == (int)BalanceType.CR ? "Cr" : x.BlanceType == (int)BalanceType.DR ? "Dr" : "",
@@ -5136,7 +5136,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == EmployeePensionPayment.OfficeId).Result.OfficeCode; //use OfficeCode
                 var financialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
                 var EmployeeDetails = _uow.GetDbContext().EmployeeDetail.FirstOrDefault(x => x.EmployeeID == EmployeePensionPayment.EmployeeId && x.IsDeleted == false);
-                var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.OfficeId == 16).OrderByDescending(x => x.Date).ToListAsync();
+                //var exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).Where(x => x.OfficeId == 16).ToListAsync();
 
                 //Creating Voucher for Voucher transaction
                 VoucherDetail obj = new VoucherDetail();
@@ -5156,35 +5156,43 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
                 await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
-                VoucherTransactionModel xVoucherTransactionModel = new VoucherTransactionModel();
+                List<VoucherTransactions> VoucherTransactionsList = new List<VoucherTransactions>();
+
+                VoucherTransactions xVoucherTransactionCredit = new VoucherTransactions();
+                VoucherTransactions xVoucherTransactionDebit= new VoucherTransactions();
+
                 //Creating Voucher Transaction for Credit
-                xVoucherTransactionModel.IsDeleted = false;
-                xVoucherTransactionModel.VoucherNo = obj.VoucherNo;
-                xVoucherTransactionModel.FinancialYearId = financialYear.FinancialYearId;
-                xVoucherTransactionModel.AccountNo = EmployeePensionPayment.CreditAccount;
-                xVoucherTransactionModel.CreditAccount = EmployeePensionPayment.CreditAccount;
-                xVoucherTransactionModel.Credit = Convert.ToDouble(EmployeePensionPayment.PensionAmount);
-                xVoucherTransactionModel.Debit = 0;
-                xVoucherTransactionModel.CurrencyId = EmployeePensionPayment.CurrencyId;
-                xVoucherTransactionModel.Description = string.Format(StaticResource.PensionPaymentCreated, DateTime.Now.Date, EmployeeDetails.EmployeeName); ;
-                xVoucherTransactionModel.OfficeId = EmployeePensionPayment.OfficeId;
+                xVoucherTransactionCredit.IsDeleted = false;
+                xVoucherTransactionCredit.VoucherNo = obj.VoucherNo;
+                xVoucherTransactionCredit.FinancialYearId = financialYear.FinancialYearId;
+                xVoucherTransactionCredit.ChartOfAccountNewId = EmployeePensionPayment.CreditAccount;
+                xVoucherTransactionCredit.CreditAccount = EmployeePensionPayment.CreditAccount;
+                xVoucherTransactionCredit.Credit = Convert.ToDouble(EmployeePensionPayment.PensionAmount);
+                xVoucherTransactionCredit.Debit = 0;
+                xVoucherTransactionCredit.CurrencyId = EmployeePensionPayment.CurrencyId;
+                xVoucherTransactionCredit.Description = string.Format(StaticResource.PensionPaymentCreated, DateTime.Now.Date, EmployeeDetails.EmployeeName); ;
+                xVoucherTransactionCredit.OfficeId = EmployeePensionPayment.OfficeId;
 
-                //Transacting Credit
-                APIResponse xAPIResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
+                VoucherTransactionsList.Add(xVoucherTransactionCredit);
 
-                //When Transaction for Credit is Successful the proceed with Debit
-                if (xAPIResponse.StatusCode == 200)
-                {
-                    //Creating Voucher Transaction for Debit
-                    xVoucherTransactionModel.Debit = Convert.ToDouble(EmployeePensionPayment.PensionAmount);
-                    xVoucherTransactionModel.Credit = 0;
-                    xVoucherTransactionModel.AccountNo = EmployeePensionPayment.DebitAccount;
-                    xVoucherTransactionModel.DebitAccount = EmployeePensionPayment.DebitAccount;
-                    xVoucherTransactionModel.CreditAccount = 0;
+                //Creating Voucher Transaction for Debit
+                xVoucherTransactionDebit.IsDeleted = false;
+                xVoucherTransactionDebit.VoucherNo = obj.VoucherNo;
+                xVoucherTransactionDebit.FinancialYearId = financialYear.FinancialYearId;
+                xVoucherTransactionDebit.Debit = Convert.ToDouble(EmployeePensionPayment.PensionAmount);
+                xVoucherTransactionDebit.Credit = 0;
+                xVoucherTransactionDebit.ChartOfAccountNewId = EmployeePensionPayment.DebitAccount;
+                xVoucherTransactionDebit.DebitAccount = EmployeePensionPayment.DebitAccount;
+                xVoucherTransactionDebit.CreditAccount = 0;
+                xVoucherTransactionDebit.CurrencyId = EmployeePensionPayment.CurrencyId;
+                xVoucherTransactionDebit.Description = string.Format(StaticResource.PensionPaymentCreated, DateTime.Now.Date, EmployeeDetails.EmployeeName); ;
+                xVoucherTransactionDebit.OfficeId = EmployeePensionPayment.OfficeId;
 
-                    //Transacting Debit
-                    xAPIResponse = await AddVoucherTransactionConvertedToExchangeRate(xVoucherTransactionModel, exchangeRate);
-                }
+                VoucherTransactionsList.Add(xVoucherTransactionDebit);
+
+                //save voucher transactions to db
+                await _uow.GetDbContext().AddRangeAsync(VoucherTransactionsList);
+                await _uow.GetDbContext().SaveChangesAsync();
 
                 //Adding details to Pension Payment History Table
                 PensionPaymentHistory pensionPayments = new PensionPaymentHistory();
@@ -5211,6 +5219,7 @@ namespace HumanitarianAssistance.Service.Classes
                 response.LoggerDetailsModel = loggerObj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+
             }
             catch (Exception ex)
             {
@@ -5420,8 +5429,8 @@ namespace HumanitarianAssistance.Service.Classes
 
                     voucherTransactionsList.Add(xVoucherTransactions);
 
-                     await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(voucherTransactionsList);
-                     await _uow.SaveAsync();
+                    await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(voucherTransactionsList);
+                    await _uow.SaveAsync();
 
                 }
 
@@ -5454,7 +5463,7 @@ namespace HumanitarianAssistance.Service.Classes
                 response.LoggerDetailsModel = loggerObj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
-                
+
             }
             catch (Exception ex)
             {
