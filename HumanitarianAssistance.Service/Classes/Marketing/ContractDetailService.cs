@@ -266,7 +266,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 contractInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.ContractDetailsRepository.UpdateAsyn(contractInfo, contractInfo.ContractId);
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Contract Deleted Successfully";
             }
             catch (Exception ex)
             {

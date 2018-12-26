@@ -18,7 +18,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? VoucherTypeId { get; set; }
         public int? OfficeId { get; set; }
         public string OfficeName { get; set; }
-        public long ? ProjectId { get; set; }
+        public long? ProjectId { get; set; }
         public long? BudgetLineId { get; set; }
         public int? FinancialYearId { get; set; }
         public string FinancialYearName { get; set; }
@@ -103,8 +103,9 @@ namespace HumanitarianAssistance.ViewModels.Models
         public List<Transaction> Transactionlist { get; set; }
 		public double TotalCredit { get; set; }
 		public double TotalDebit { get; set; }
+        public string ChartOfAccountNewCode { get; set; }
 
-	}
+    }
 
 	public class AccountTransactionLogger {
 		public long AccountCode { get; set; }

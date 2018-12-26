@@ -86,13 +86,35 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       };
     }
 
-    [HttpGet]
-    public async Task<object> GetAllVoucherList(VoucherNewFilterModel voucherNewFilterModel)
+    /// <summary>
+    /// Get All Voucher List
+    /// </summary>
+    /// <param name="voucherNewFilterModel"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<object> GetAllVoucherList([FromBody]VoucherNewFilterModel voucherNewFilterModel)
     {
       APIResponse response = await _iVoucherNewService.GetAllNewVoucherList(voucherNewFilterModel);
       return response;
     }
 
+    /// <summary>
+    /// Get Voucher Detail By VoucherNo
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<object> GetVoucherDetailByVoucherNo([FromBody]long id)
+    {
+      APIResponse response = await _iVoucherNewService.GetVoucherDetailByVoucherNo(id);
+      return response;
+    }
+
+    /// <summary>
+    /// Add Voucher Detail
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddVoucherDetail([FromBody] VoucherDetailModel model)
@@ -110,6 +132,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    /// <summary>
+    /// Edit Voucher Detail
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> EditVoucherNewDetail([FromBody] VoucherDetailModel model)
