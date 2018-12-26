@@ -30,47 +30,44 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             this._userManager = userManager;
         }
 
-        // Get Account Balance
-        // get accounts
-        // get accounts transactions
-        // get exchange rate for each transaction
-        // get account balance by id
-
-        public async Task<APIResponse> GetNoteBalancesByHeadType(int headTypeId, int toCurrency)
+        public async Task<APIResponse> GetNoteBalancesByHeadType(int headTypeId, int toCurrency, DateTime reportDate)
         {
             APIResponse response = new APIResponse();
 
-            // TODO: get all input-level accounts that match the headTypeId
             try
             {
-
-                // Select all input level accounts where the account's parent exists in the sub-level list
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
                     .ToListAsync();
 
+                var accountBalances = GetAccountBalances(inputLevelList, reportDate, toCurrency);
 
-                var vTransactions = await _uow.GetDbContext().VoucherTransactions.Where(x =>
-                        inputLevelList.Select(a => (long)a.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId) 
-                        && x.ChartOfAccountNewId != null && x.IsDeleted == false)
+                // TODO: create appropriate APIResponse for returning note account balances
+                response.data.SubLevelAccountList = inputLevelList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> GetNoteBalancesByHeadType(int headTypeId, int toCurrencyId,
+            DateTime reportStartDate, DateTime reportEndDate)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                    .Where(x => x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
                     .ToListAsync();
 
-                var vouchers = await _uow.GetDbContext().VoucherDetail.Where(x =>
-                    vTransactions.Select(a => a.VoucherNo).Contains(x.VoucherNo)).ToListAsync();
-
-                // TODO: figure out where to get toCurrency for filtering exchange rates on.
-                // each transaction may have a different. we cannot assume a single fromCurrency
-                // only a single toCurrency
-                var exRates = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).Where(x =>
-                    vTransactions.Select(y => y.TransactionDate).Any(y => x.Date <= y)
-                    && vTransactions.Select(z => z.CurrencyId).Contains(x.FromCurrency)).ToListAsync();
-
-                var tasks = new List<double>();
-
-                foreach (var account in inputLevelList)
-                {
-                    tasks.Add(CalculateAccountBalanceByAccount(vTransactions, exRates, toCurrency, account));
-                }
+                var accountBalances = GetAccountBalances(inputLevelList, toCurrencyId, reportEndDate, reportEndDate);
 
                 response.data.SubLevelAccountList = inputLevelList;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -83,6 +80,78 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
 
             return response;
+        }
+
+        public async Task<APIResponse> GetAccountBalancesById(List<long> accountIds, int toCurrencyId,
+            DateTime reportDate)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                    .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
+
+                var accountBalances = GetAccountBalances(inputLevelList, reportDate, toCurrencyId);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public async Task<APIResponse> GetAccountBalancesById(List<long> accountIds, DateTime transactionExchangeDate, int toCurrencyId,
+            DateTime reportDate)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                    .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
+
+                var accountBalances = GetAccountBalances(inputLevelList, reportDate, transactionExchangeDate, toCurrencyId);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public async Task<APIResponse> GetAccountBalancesById(List<long> accountIds, int toCurrencyId,
+            DateTime reportStartDate, DateTime reportEndDate)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                    .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
+
+                var accountBalances = GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public async Task<APIResponse> GetAccountBalancesById(List<long> accountIds, DateTime transactionExchangeDate, int toCurrencyId,
+            DateTime reportStartDate, DateTime reportEndDate)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                    .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
+
+                var accountBalances = GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate, transactionExchangeDate);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime endDate)
@@ -199,22 +268,18 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return outputTransactions;
         }
 
-
-        // thhis override calculates transaction credit/debit value after exchange on the transaction date
-        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime tillDate, int toCurrencyId)
+        private Dictionary<ChartOfAccountNew, double> CalculateAccountBalances(
+            List<ChartOfAccountNew> inputLevelAccounts, List<VoucherTransactions> accountTransactions)
         {
-            var transactions = await GetAccountTransactions(inputLevelAccounts, tillDate);
-            var exchangeValuedTransactions = await GetTransactionValuesAfterExchange(transactions, toCurrencyId);
-
             Dictionary<ChartOfAccountNew, double> accountBalances = new Dictionary<ChartOfAccountNew, double>();
 
             foreach (var account in inputLevelAccounts)
             {
-                var accountTransactions =
-                    exchangeValuedTransactions.Where(x => x.ChartOfAccountNewId == account.ChartOfAccountNewId).ToList();
-                var totalCredits = accountTransactions.Select(x => x.Credit.GetValueOrDefault()).Sum();
-                var totalDebits = accountTransactions.Select(x => x.Debit.GetValueOrDefault()).Sum();
-                if(account.IsCreditBalancetype.GetValueOrDefault())
+                var currAccountTransactions =
+                    accountTransactions.Where(x => x.ChartOfAccountNewId == account.ChartOfAccountNewId).ToList();
+                var totalCredits = currAccountTransactions.Select(x => x.Credit.GetValueOrDefault()).Sum();
+                var totalDebits = currAccountTransactions.Select(x => x.Debit.GetValueOrDefault()).Sum();
+                if (account.IsCreditBalancetype.GetValueOrDefault())
                     accountBalances.Add(account, totalCredits - totalDebits);
                 else
                     accountBalances.Add(account, totalDebits - totalCredits);
@@ -223,16 +288,42 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return accountBalances;
         }
 
-        // this override calculates transaction credit/debit values after exchange based on the given transactionCompareDate
-        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime tillDate, 
-            DateTime transactionCompareDate, int toCurrencyId, bool isCreditBalanceType)
+        // thhis override calculates transaction credit/debit value after exchange on the transaction date
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime transactionsTillDate, 
+            int toCurrencyId)
         {
-            var transactions = await GetAccountTransactions(inputLevelAccounts, tillDate);
+            var transactions = await GetAccountTransactions(inputLevelAccounts, transactionsTillDate);
+            var exchangeValuedTransactions = await GetTransactionValuesAfterExchange(transactions, toCurrencyId);
+
+            return CalculateAccountBalances(inputLevelAccounts, exchangeValuedTransactions);
         }
 
-        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime startDate, DateTime endDate)
+        // this override calculates transaction credit/debit values after exchange based on the given transactionCompareDate
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime transactionsTillDate, 
+            DateTime transactionExchangeDate, int toCurrencyId)
         {
+            var transactions = await GetAccountTransactions(inputLevelAccounts, transactionsTillDate);
+            var exchangeValuedTransactions = await GetTransactionValuesAfterExchange(transactions, toCurrencyId, transactionExchangeDate);
 
+            return CalculateAccountBalances(inputLevelAccounts, exchangeValuedTransactions);
+        }
+
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, 
+            int toCurrencyId, DateTime transactionsStartingFrom, DateTime transactionsUntil)
+        {
+            var transactions = await GetAccountTransactions(inputLevelAccounts, transactionsStartingFrom, transactionsUntil);
+            var exchangeValuedTransactions = await GetTransactionValuesAfterExchange(transactions, toCurrencyId);
+
+            return CalculateAccountBalances(inputLevelAccounts, exchangeValuedTransactions);
+        }
+
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, 
+            int toCurrencyId, DateTime transactionsStartingFrom, DateTime transactionsUntil, DateTime transactionExchangeDate)
+        {
+            var transactions = await GetAccountTransactions(inputLevelAccounts, transactionsStartingFrom, transactionsUntil);
+            var exchangeValuedTransactions = await GetTransactionValuesAfterExchange(transactions, toCurrencyId, transactionExchangeDate);
+
+            return CalculateAccountBalances(inputLevelAccounts, exchangeValuedTransactions);
         }
 
         private double CalculateAccountBalanceByAccount(List<VoucherTransactions> transactions,
