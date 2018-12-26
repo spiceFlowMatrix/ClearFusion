@@ -91,7 +91,7 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetAllGenderConsiderationDetails();
         APIResponse GetAllSecurityDetails();
         APIResponse GetAllSecurityConsiderationDetails();
-        Task<APIResponse> GetAllDistrictvalueByProvinceId(int[] provinceId);
+        APIResponse GetAllDistrictvalueByProvinceId(int[] provinceId);
 
         APIResponse AddEditProjectproposals(long projectId, string UserId);
         APIResponse GetProjectproposalsById(long projectId);
@@ -160,8 +160,15 @@ namespace HumanitarianAssistance.Service.interfaces
 
 
         APIResponse AddEditSecurityConsidMultiDetail(SecurityConsiderationMultiSelectModel model, string UserId);
+        APIResponse AddEditProvinceMultiSelectDetail(ProvinceMultiSelectModel model, string UserId);
+
 
         APIResponse GetSecurityConsiMultiSelectByProjectId(long ProjectId);
+        APIResponse GetProvinceMultiSelectByProjectId(long ProjectId);
+        APIResponse GetDistrictMultiSelectByProjectId(long ProjectId);
+        APIResponse AddEditDistrictMultiSelectDetail(DistrictMultiSelectModel model, string UserId);
+
+
         #endregion
     }
 }

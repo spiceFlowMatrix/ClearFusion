@@ -11,6 +11,7 @@ using HumanitarianAssistance.ViewModels.Models;
 using Microsoft.EntityFrameworkCore;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
+using System.Collections.Generic;
 
 namespace HumanitarianAssistance.Service.Classes.AccountingNew
 {
@@ -58,7 +59,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                       .Include(j => j.JournalDetails)
                                       .Include(c => c.CurrencyDetail)
                                       .Include(f => f.FinancialYearDetails)
-                                      .Where(v => v.IsDeleted == false )
+                                      .Where(v => v.IsDeleted == false)
                                       .OrderBy(x => x.VoucherDate).ToList()
                                       );
 
@@ -108,6 +109,64 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         }
 
         /// <summary>
+        /// Get Voucher Detail By VoucherNo
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> GetVoucherDetailByVoucherNo(long id)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var voucherDetail = await _uow.GetDbContext().VoucherDetail
+                                              .Include(o => o.OfficeDetails).Include(j => j.JournalDetails)
+                                              .Include(c => c.CurrencyDetail)
+                                              .Include(f => f.FinancialYearDetails)
+                                              .FirstOrDefaultAsync(v => v.IsDeleted == false && v.VoucherNo == id);
+
+                if (voucherDetail != null)
+                {
+                    VoucherDetailModel obj = new VoucherDetailModel();
+
+                    obj.VoucherNo = voucherDetail.VoucherNo;
+                    obj.CurrencyCode = voucherDetail.CurrencyDetail?.CurrencyCode ?? null;
+                    obj.CurrencyId = voucherDetail.CurrencyDetail?.CurrencyId ?? 0;
+                    obj.VoucherDate = voucherDetail.VoucherDate;
+                    obj.ChequeNo = voucherDetail.ChequeNo;
+                    obj.ReferenceNo = voucherDetail.ReferenceNo;
+                    obj.Description = voucherDetail.Description;
+                    obj.JournalName = voucherDetail.JournalDetails?.JournalName ?? null;
+                    obj.JournalCode = voucherDetail.JournalDetails?.JournalCode ?? null;
+                    obj.VoucherTypeId = voucherDetail.VoucherTypeId;
+                    obj.OfficeId = voucherDetail.OfficeId;
+                    obj.ProjectId = voucherDetail.ProjectId;
+                    obj.BudgetLineId = voucherDetail.BudgetLineId;
+                    obj.OfficeName = voucherDetail.OfficeDetails?.OfficeName ?? null;
+                    obj.FinancialYearId = voucherDetail.FinancialYearId;
+                    obj.FinancialYearName = voucherDetail.FinancialYearDetails?.FinancialYearName ?? null;
+
+                    response.data.VoucherDetail = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.VoucherNotPresent;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        /// <summary>
         /// Add Voucher
         /// </summary>
         /// <param name="model"></param>
@@ -151,7 +210,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = "Success";
                     }
-                    else {
+                    else
+                    {
                         response.StatusCode = StaticResource.failStatusCode;
                         response.Message = "Default Financial year is not set";
                     }
@@ -197,20 +257,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     voucherdetailInfo.ModifiedById = model.ModifiedById;
                     voucherdetailInfo.ModifiedDate = model.ModifiedDate;
                     await _uow.VoucherDetailRepository.UpdateAsyn(voucherdetailInfo);
-
-                    var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
-
-                    LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                    loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherUpdate;
-                    loggerObj.IsRead = false;
-                    loggerObj.UserName = user.FirstName + " " + user.LastName;
-                    loggerObj.UserId = model.CreatedById;
-                    loggerObj.LoggedDetail = "Voucher " + voucherdetailInfo.ReferenceNo + " Updated";
-                    loggerObj.CreatedDate = model.CreatedDate;
-
-                    response.LoggerDetailsModel = loggerObj;
-
-                    await _uow.SaveAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
