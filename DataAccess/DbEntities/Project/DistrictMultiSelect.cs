@@ -20,6 +20,10 @@ namespace DataAccess.DbEntities.Project
         public long DistrictID { get; set; }
 
         public long? DistrictSelectionId { get; set; }
-        
+
+        [ForeignKey("ProvinceId")]
+        public ProvinceDetails ProvinceDetails { get; set; }
+        public int ProvinceId { get; set; }
+
     }
 }
