@@ -377,6 +377,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         conDetails.IsApproved = obj.IsApproved;
                     }
                     response.data.contractDetailsModel = conDetails;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Contract added successfully";
                 }
                 else
                 {
@@ -390,10 +392,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         existRecord.ModifiedDate = DateTime.Now;
                         await _uow.ContractDetailsRepository.UpdateAsyn(existRecord);
                         response.data.contractDetailsModel = model;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Contract updated successfully";
                     }
-                }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                }              
             }
             catch (Exception ex)
             {
@@ -424,7 +426,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     _uow.GetDbContext().ContractDetails.Update(existRecord);
                     _uow.GetDbContext().SaveChanges();
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    response.Message = "Contract approved successfully";
                 }
                 catch (Exception ex)
                 {
