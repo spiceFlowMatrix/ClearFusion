@@ -11,6 +11,12 @@ namespace HumanitarianAssistance.ViewModels.Models.AccountingNew
         public bool NameFlag  { get; set; }
         public bool JournalFlag  { get; set; }
         public bool DateFlag  { get; set; }
+
+
+        public int? pageIndex { get; set; }
+        public int? pageSize { get; set; }
+        public int? totalCount { get; set; }
+        
     }
 
     
