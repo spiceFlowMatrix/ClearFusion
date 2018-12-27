@@ -17,5 +17,6 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
         Task<APIResponse> GetAllTransactionsByVoucherId(long VoucherNo);
         Task<APIResponse> EditTransactionDetail(VoucherTransactionsModel voucherTransactions, string UserId);
         Task<APIResponse> DeleteTransactionById(long transactionId);
+        Task<APIResponse> AddTransactionDetail(VoucherTransactionsModel voucherTransactions, string userId);
     }
 }

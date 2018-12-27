@@ -395,5 +395,51 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        /// <summary>
+        /// Add Voucher Transaction
+        /// </summary>
+        /// <param name="voucherTransactions"></param>
+        /// <param name="userId"></param>
+        /// <returns>Success/Failure</returns>
+        public async Task<APIResponse> AddTransactionDetail(VoucherTransactionsModel voucherTransactions, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                //new voucher transaction object
+                VoucherTransactions transaction = new VoucherTransactions();
+
+                if (voucherTransactions != null)
+                {
+                    transaction.ChartOfAccountNewId = voucherTransactions.AccountNo;
+                    transaction.Debit = voucherTransactions.Debit;
+                    transaction.Credit = voucherTransactions.Credit;
+                    transaction.Description = voucherTransactions.Description;
+                    transaction.BudgetLineId = voucherTransactions.BudgetLineId;
+                    transaction.ProjectId = voucherTransactions.ProjectId;
+                    transaction.CreatedById = userId;
+                    transaction.CreatedDate = DateTime.Now;
+
+                    //Add transaction
+                    await _uow.VoucherTransactionsRepository.AddAsyn(transaction);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
     }
 }
