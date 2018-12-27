@@ -10,6 +10,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public long ProjectId { get; set; }
         public List<long?> DistrictID { get; set; }
         public long? DistrictSelectionId { get; set; }
+        public List<int> ProvinceId { get; set; }
 
     }
 }
