@@ -432,7 +432,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         transaction.ProjectId = voucherTransactions.ProjectId;
                         transaction.CreatedById = userId;
                         transaction.CreatedDate = DateTime.Now;
-
+                        transaction.VoucherNo = voucherTransactions.VoucherNo;
                         transactionsList.Add(transaction);
                     }
 
