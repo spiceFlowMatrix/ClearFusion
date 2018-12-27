@@ -53,15 +53,22 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
             try
             {
-                var voucherList = await Task.Run(() =>
-                    _uow.GetDbContext().VoucherDetail
+
+
+                int totalCount = await _uow.GetDbContext().VoucherDetail
+                                      .Where(v => v.IsDeleted == false)
+                                      .CountAsync();
+
+                var voucherList = await _uow.GetDbContext().VoucherDetail
                                       .Include(o => o.OfficeDetails)
                                       .Include(j => j.JournalDetails)
                                       .Include(c => c.CurrencyDetail)
                                       .Include(f => f.FinancialYearDetails)
                                       .Where(v => v.IsDeleted == false)
-                                      .OrderBy(x => x.VoucherDate).ToList()
-                                      );
+                                      .OrderBy(x => x.VoucherDate)
+                                      .Skip(voucherNewFilterModel.pageSize.Value * voucherNewFilterModel.pageIndex.Value)
+                                      .Take(voucherNewFilterModel.pageSize.Value)
+                                      .ToListAsync();
 
                 //var voucherList = await Task.Run(() =>
                 //    _uow.GetDbContext().VoucherDetail
@@ -97,6 +104,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     OfficeName = v.OfficeDetails?.OfficeName ?? null,
                 }).ToList();
                 response.data.VoucherDetailList = voucherdetaillist.OrderByDescending(x => x.VoucherDate).ToList();
+                response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -287,17 +295,17 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
 
-                List<VoucherTransactionsModel> voucherTransactionsList= await _uow.GetDbContext().VoucherTransactions
+                List<VoucherTransactionsModel> voucherTransactionsList = await _uow.GetDbContext().VoucherTransactions
                                    .Where(x => x.IsDeleted == false && x.VoucherNo == VoucherNo)
                                    .Select(x => new VoucherTransactionsModel
                                    {
-                                       AccountNo= x.ChartOfAccountNewId,
-                                       Debit= (x.Debit !=0 && x.Debit !=null)? x.Debit : 0,
+                                       AccountNo = x.ChartOfAccountNewId,
+                                       Debit = (x.Debit != 0 && x.Debit != null) ? x.Debit : 0,
                                        Credit = (x.Credit != 0 && x.Credit != null) ? x.Credit : 0,
-                                       BudgetLineId= x.BudgetLineId,
-                                       ProjectId= x.ProjectId,
-                                       Description= x.Description,
-                                       TransactionId= x.TransactionId
+                                       BudgetLineId = x.BudgetLineId,
+                                       ProjectId = x.ProjectId,
+                                       Description = x.Description,
+                                       TransactionId = x.TransactionId
                                    }).ToListAsync();
 
                 response.data.VoucherTransactions = voucherTransactionsList;
