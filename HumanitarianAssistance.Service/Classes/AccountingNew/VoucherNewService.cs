@@ -65,7 +65,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                       .Include(c => c.CurrencyDetail)
                                       .Include(f => f.FinancialYearDetails)
                                       .Where(v => v.IsDeleted == false)
-                                      .OrderBy(x => x.VoucherDate)
+                                      .OrderByDescending(x => x.VoucherDate)
                                       .Skip(voucherNewFilterModel.pageSize.Value * voucherNewFilterModel.pageIndex.Value)
                                       .Take(voucherNewFilterModel.pageSize.Value)
                                       .ToListAsync();
@@ -432,6 +432,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         transaction.ProjectId = voucherTransactions.ProjectId;
                         transaction.CreatedById = userId;
                         transaction.CreatedDate = DateTime.Now;
+                        transaction.IsDeleted = false;
                         transaction.VoucherNo = voucherTransactions.VoucherNo;
                         transactionsList.Add(transaction);
                     }
