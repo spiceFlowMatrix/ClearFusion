@@ -154,5 +154,59 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    /// <summary>
+    /// Get All Voucher Transactions List
+    /// </summary>
+    /// <param name="voucherNewFilterModel"></param>
+    /// <returns>voucher transaction list</returns>
+    [HttpPost]
+    public async Task<object> GetAllTransactionsByVoucherId([FromBody]long id)
+    {
+      APIResponse response = await _iVoucherNewService.GetAllTransactionsByVoucherId(id);
+      return response;
+    }
+
+    /// <summary>
+    /// Update the voucher transaction
+    /// </summary>
+    /// <param name="voucherTransactions"></param>
+    /// <returns>Success/Failure</returns>
+    [HttpPost]
+    public async Task<object> EditVoucherTransaction([FromBody]VoucherTransactionsModel voucherTransactions)
+    {
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      APIResponse response = await _iVoucherNewService.EditTransactionDetail(voucherTransactions, user.Id);
+      return response;
+    }
+
+    /// <summary>
+    /// Delete a voucher transaction based on transaction id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>Success/Failure</returns>
+    [HttpPost]
+    public async Task<object> DeleteTransactionById([FromBody]long id)
+    {
+      APIResponse response = await _iVoucherNewService.DeleteTransactionById(id);
+      return response;
+    }
+
+    /// <summary>
+    /// Add Voucher transaction
+    /// </summary>
+    /// <param name="voucherTransactions"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<object> AddVoucherTransaction([FromBody]List<VoucherTransactionsModel> voucherTransactions)
+    {
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      APIResponse response = await _iVoucherNewService.AddTransactionDetail(voucherTransactions, user.Id);
+      return response;
+    }
+
   }
 }
