@@ -409,28 +409,36 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         /// <param name="voucherTransactions"></param>
         /// <param name="userId"></param>
         /// <returns>Success/Failure</returns>
-        public async Task<APIResponse> AddTransactionDetail(VoucherTransactionsModel voucherTransactions, string userId)
+        public async Task<APIResponse> AddTransactionDetail(List<VoucherTransactionsModel> voucherTransactionsList, string userId)
         {
             APIResponse response = new APIResponse();
 
+            List<VoucherTransactions> transactionsList = new List<VoucherTransactions>();
+
             try
             {
-                //new voucher transaction object
-                VoucherTransactions transaction = new VoucherTransactions();
-
-                if (voucherTransactions != null)
+                if (voucherTransactionsList.Any())
                 {
-                    transaction.ChartOfAccountNewId = voucherTransactions.AccountNo;
-                    transaction.Debit = voucherTransactions.Debit;
-                    transaction.Credit = voucherTransactions.Credit;
-                    transaction.Description = voucherTransactions.Description;
-                    transaction.BudgetLineId = voucherTransactions.BudgetLineId;
-                    transaction.ProjectId = voucherTransactions.ProjectId;
-                    transaction.CreatedById = userId;
-                    transaction.CreatedDate = DateTime.Now;
+                    foreach(VoucherTransactionsModel voucherTransactions in voucherTransactionsList)
+                    {
+                        //new voucher transaction object
+                        VoucherTransactions transaction = new VoucherTransactions();
+
+                        transaction.ChartOfAccountNewId = voucherTransactions.AccountNo;
+                        transaction.Debit = voucherTransactions.Debit;
+                        transaction.Credit = voucherTransactions.Credit;
+                        transaction.Description = voucherTransactions.Description;
+                        transaction.BudgetLineId = voucherTransactions.BudgetLineId;
+                        transaction.ProjectId = voucherTransactions.ProjectId;
+                        transaction.CreatedById = userId;
+                        transaction.CreatedDate = DateTime.Now;
+
+                        transactionsList.Add(transaction);
+                    }
 
                     //Add transaction
-                    await _uow.VoucherTransactionsRepository.AddAsyn(transaction);
+                    await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(transactionsList);
+                    await _uow.SaveAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

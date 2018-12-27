@@ -199,7 +199,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="voucherTransactions"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<object> AddVoucherTransaction([FromBody]VoucherTransactionsModel voucherTransactions)
+    public async Task<object> AddVoucherTransaction([FromBody]List<VoucherTransactionsModel> voucherTransactions)
     {
 
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
