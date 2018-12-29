@@ -38,12 +38,26 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
+                    .Include(x => x.AccountType)
                     .ToListAsync();
 
-                var accountBalances = GetAccountBalances(inputLevelList, reportDate, toCurrency);
+                var accountBalances = await GetAccountBalances(inputLevelList, reportDate, toCurrency);
 
-                // TODO: create appropriate APIResponse for returning note account balances
-                response.data.SubLevelAccountList = inputLevelList;
+                var notes = inputLevelList.Select(x => x.AccountType);
+                List<NoteAccountBalances> noteAccountBalances = new List<NoteAccountBalances>();
+
+                foreach (var note in notes)
+                {
+                    var currNoteBalances = (Dictionary<ChartOfAccountNew, double>)accountBalances.Where(x => x.Key.AccountTypeId == note.AccountTypeId);
+
+                    var currNoteAccountBalances = new NoteAccountBalances();
+
+                    currNoteAccountBalances.NoteId = note.AccountTypeId;
+                    currNoteAccountBalances.NoteName = note.AccountTypeName;
+                    currNoteAccountBalances.AccountBalances = currNoteBalances;
+                }
+
+                response.data.NoteAccountBalances = noteAccountBalances;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -65,11 +79,26 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
+                    .Include(x => x.AccountType)
                     .ToListAsync();
 
-                var accountBalances = GetAccountBalances(inputLevelList, toCurrencyId, reportEndDate, reportEndDate);
+                var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportEndDate, reportEndDate);
 
-                response.data.SubLevelAccountList = inputLevelList;
+                var notes = inputLevelList.Select(x => x.AccountType);
+                List<NoteAccountBalances> noteAccountBalances = new List<NoteAccountBalances>();
+
+                foreach (var note in notes)
+                {
+                    var currNoteBalances = (Dictionary<ChartOfAccountNew, double>)accountBalances.Where(x => x.Key.AccountTypeId == note.AccountTypeId);
+
+                    var currNoteAccountBalances = new NoteAccountBalances();
+
+                    currNoteAccountBalances.NoteId = note.AccountTypeId;
+                    currNoteAccountBalances.NoteName = note.AccountTypeName;
+                    currNoteAccountBalances.AccountBalances = currNoteBalances;
+                }
+
+                response.data.NoteAccountBalances = noteAccountBalances;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -92,12 +121,19 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
 
-                var accountBalances = GetAccountBalances(inputLevelList, reportDate, toCurrencyId);
+                var accountBalances = await GetAccountBalances(inputLevelList, reportDate, toCurrencyId);
+
+                response.data.AccountBalances = accountBalances;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {
-
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
+
+            return response;
         }
 
         public async Task<APIResponse> GetAccountBalancesById(List<long> accountIds, DateTime transactionExchangeDate, int toCurrencyId,
@@ -110,12 +146,19 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
 
-                var accountBalances = GetAccountBalances(inputLevelList, reportDate, transactionExchangeDate, toCurrencyId);
+                var accountBalances = await GetAccountBalances(inputLevelList, reportDate, transactionExchangeDate, toCurrencyId);
+
+                response.data.AccountBalances = accountBalances;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {
-
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
+
+            return response;
         }
 
         public async Task<APIResponse> GetAccountBalancesById(List<long> accountIds, int toCurrencyId,
@@ -128,12 +171,19 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
 
-                var accountBalances = GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate);
+                var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate);
+
+                response.data.AccountBalances = accountBalances;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {
-
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
+
+            return response;
         }
 
         public async Task<APIResponse> GetAccountBalancesById(List<long> accountIds, DateTime transactionExchangeDate, int toCurrencyId,
@@ -146,12 +196,19 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
 
-                var accountBalances = GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate, transactionExchangeDate);
+                var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate, transactionExchangeDate);
+
+                response.data.AccountBalances = accountBalances;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {
-
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
+
+            return response;
         }
 
         private async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime endDate)
@@ -324,87 +381,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             var exchangeValuedTransactions = await GetTransactionValuesAfterExchange(transactions, toCurrencyId, transactionExchangeDate);
 
             return CalculateAccountBalances(inputLevelAccounts, exchangeValuedTransactions);
-        }
-
-        private double CalculateAccountBalanceByAccount(List<VoucherTransactions> transactions,
-            List<ExchangeRateDetail> exRates, int toCurrency, ChartOfAccountNew account)
-        {
-            List<VoucherTransactions> transactionsOriginal = new List<VoucherTransactions>();
-
-            // Get value of each transaction (debit or credit) in the given currency on the transaction date
-            foreach (var transaction in transactions)
-            {
-                double? exchangeRate = 0.0;
-                if (transaction.CurrencyId == toCurrency)
-                {
-                    exchangeRate = 1;
-                }
-                else
-                {
-                    if(transaction.TransactionDate == null)
-                        throw new Exception("Transaction date is not set");
-                    if(transaction.CurrencyId == null)
-                        throw new Exception("Transaction currency is not set");
-                    var interexchangeRate = exRates.OrderByDescending(x => x.Date)
-                        .FirstOrDefault(x => x.Date <= transaction.TransactionDate 
-                                             && x.FromCurrency == transaction.CurrencyId 
-                                             && x.ToCurrency == toCurrency).Rate;
-                }
-
-                var oTrans = (transaction);
-                oTrans.Credit = exchangeRate * transaction.Credit;
-                oTrans.Debit = exchangeRate * transaction.Debit;
-                transactionsOriginal.Add(oTrans);
-            }
-
-            var totalCredits = transactionsOriginal.Select(x => x.Credit).Sum();
-            var totalDebits = transactionsOriginal.Select(x => x.Debit).Sum();
-            double balance = 0;
-            if ((bool)account.IsCreditBalancetype)
-            {
-                balance = (double)totalCredits - (double)totalDebits;
-            }
-            else
-            {
-                balance = (double)totalDebits - (double)totalCredits;
-            }
-
-            return balance;
-
-        }
-
-        private async Task<double> CalculateAccountBalanceByAccount(long accountId)
-        {
-            // check if account exists
-            var accountTask = _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ChartOfAccountNewId == accountId).FirstOrDefaultAsync();
-            // get all transactions
-            var transactions = await _uow.VoucherTransactionsRepository.FindAllAsync(x => x.ChartOfAccountNewId == accountId);
-
-            //TODO: get the currency value of all transactions at a given toCurrency 
-            var account = await accountTask;
-            var transactionCredits = transactions.Select(x => x.Credit);
-            var transactionDebits = transactions.Select(x => x.Debit);
-            var totalCredits = transactionCredits.Sum();
-            var totalDebits = transactionDebits.Sum();
-            double balance = 0;
-            if ((bool)account.IsCreditBalancetype)
-            {
-                balance = (double)totalCredits - (double)totalDebits;
-            }
-            else
-            {
-                balance = (double)totalDebits - (double)totalCredits;
-            }
-
-            return balance;
-        }
-
-
-        public async Task<APIResponse> GetNoteBalanceById(int noteType)
-        {
-            APIResponse response = new APIResponse();
-
-            return response;
         }
     }
 }

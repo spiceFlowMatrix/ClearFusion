@@ -381,10 +381,18 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<VoucherTransactionsModel> VoucherTransactions { get; set; }
 
         public Dictionary<ChartOfAccountNew, double> AccountBalances { get; set; }
+        public List<NoteAccountBalances> NoteAccountBalances { get; set; }
 
         #endregion
 
 
+    }
+
+    public class NoteAccountBalances
+    {
+        public int NoteId { get; set; }
+        public string NoteName { get; set; }
+        public Dictionary<ChartOfAccountNew, double> AccountBalances { get; set; }
     }
 
     public class Roles
