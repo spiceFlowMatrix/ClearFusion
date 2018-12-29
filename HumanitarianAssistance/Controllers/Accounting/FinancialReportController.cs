@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using DataAccess;
 using DataAccess.DbEntities;
@@ -52,7 +53,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
     [HttpGet]
     public async Task<object> Get()
     {
-      var reportResult = await _financialReportService.GetNoteBalancesByHeadType(1, 2);
+      var reportResult = await _financialReportService.GetNoteBalancesByHeadType(1, 2, DateTime.Now);
       return reportResult;
     }
   }

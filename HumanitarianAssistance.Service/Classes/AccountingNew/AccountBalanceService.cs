@@ -40,6 +40,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     .Where(x => x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
                     .Include(x => x.AccountType)
                     .ToListAsync();
+                
+                if(inputLevelList.Any(x => x.AccountTypeId == null))
+                    throw new Exception("Some accounts do not have notes assigned to them!");
 
                 var accountBalances = await GetAccountBalances(inputLevelList, reportDate, toCurrency);
 
@@ -82,6 +85,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     .Include(x => x.AccountType)
                     .ToListAsync();
 
+
+                if (inputLevelList.Any(x => x.AccountTypeId == null))
+                    throw new Exception("Some accounts do not have notes assigned to them!");
+
                 var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportEndDate, reportEndDate);
 
                 var notes = inputLevelList.Select(x => x.AccountType);
@@ -121,6 +128,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
 
+
+                if (inputLevelList.Any(x => x.AccountTypeId == null))
+                    throw new Exception("Some accounts do not have notes assigned to them!");
+
                 var accountBalances = await GetAccountBalances(inputLevelList, reportDate, toCurrencyId);
 
                 response.data.AccountBalances = accountBalances;
@@ -145,6 +156,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
+
+
+                if (inputLevelList.Any(x => x.AccountTypeId == null))
+                    throw new Exception("Some accounts do not have notes assigned to them!");
 
                 var accountBalances = await GetAccountBalances(inputLevelList, reportDate, transactionExchangeDate, toCurrencyId);
 
@@ -171,6 +186,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
 
+
+                if (inputLevelList.Any(x => x.AccountTypeId == null))
+                    throw new Exception("Some accounts do not have notes assigned to them!");
+
                 var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate);
 
                 response.data.AccountBalances = accountBalances;
@@ -195,6 +214,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
                     .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
+
+
+                if (inputLevelList.Any(x => x.AccountTypeId == null))
+                    throw new Exception("Some accounts do not have notes assigned to them!");
 
                 var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate, transactionExchangeDate);
 
@@ -247,10 +270,13 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     throw new Exception("Transaction date is not set");
                 if (transaction.CurrencyId == null)
                     throw new Exception("Transaction currency is not set");
-                var interxExchangeRate = (double)rates.OrderByDescending(x => x.Date)
+                var interxExchangeRate = rates.OrderByDescending(x => x.Date)
                     .FirstOrDefault(x => x.Date <= transaction.TransactionDate.GetValueOrDefault()
                                          && x.FromCurrency == transaction.CurrencyId
-                                         && x.ToCurrency == toCurrencyId).Rate;
+                                         && x.ToCurrency == toCurrencyId);
+                if(interxExchangeRate == null)
+                    throw new Exception("No valid exchange rate exists for the given report's currency");
+                xExchangeRate = (double)interxExchangeRate.Rate;
             }
 
             return xExchangeRate;
@@ -269,10 +295,13 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     throw new Exception("Transaction date is not set");
                 if (transaction.CurrencyId == null)
                     throw new Exception("Transaction currency is not set");
-                var interxExchangeRate = (double)rates.OrderByDescending(x => x.Date)
+                var interxExchangeRate = rates.OrderByDescending(x => x.Date)
                     .FirstOrDefault(x => x.Date <= onDate
                                          && x.FromCurrency == transaction.CurrencyId
-                                         && x.ToCurrency == toCurrencyId).Rate;
+                                         && x.ToCurrency == toCurrencyId);
+                if(interxExchangeRate == null)
+                    throw new Exception("No valid exchange rate exists for the given report's currency");
+                xExchangeRate = (double) interxExchangeRate.Rate;
             }
 
             return xExchangeRate;
