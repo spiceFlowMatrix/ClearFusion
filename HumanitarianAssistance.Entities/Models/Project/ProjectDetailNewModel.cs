@@ -22,5 +22,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? IsCriteriaEvaluationSubmit { get; set; }
         public int? ReviewerId { get; set; }
         public int? DirectorId { get; set; }
+        public bool? IsDelete { get; set; }
     }
 }

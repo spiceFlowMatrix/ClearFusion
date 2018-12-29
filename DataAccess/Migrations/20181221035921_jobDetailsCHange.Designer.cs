@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181221035921_jobDetailsCHange")]
+    partial class jobDetailsCHange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,8 +32,6 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsCreditBalancetype");
-
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
@@ -47,11 +47,11 @@ namespace DataAccess.Migrations
                     b.ToTable("AccountHeadType");
 
                     b.HasData(
-                        new { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsCreditBalancetype = false, IsDeleted = false },
-                        new { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsCreditBalancetype = true, IsDeleted = false },
-                        new { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsCreditBalancetype = true, IsDeleted = false },
-                        new { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsCreditBalancetype = true, IsDeleted = false },
-                        new { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsCreditBalancetype = false, IsDeleted = false }
+                        new { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false },
+                        new { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false },
+                        new { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false },
+                        new { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false },
+                        new { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false }
                     );
                 });
 
@@ -109,8 +109,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsCreditBalancetype");
 
                     b.Property<bool?>("IsDeleted");
 
@@ -5265,45 +5263,6 @@ namespace DataAccess.Migrations
                     b.ToTable("CEOccupationDetail");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.DistrictMultiSelect", b =>
-                {
-                    b.Property<long>("DistrictMultiSelectId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<long>("DistrictID");
-
-                    b.Property<long?>("DistrictSelectionId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long>("ProjectId");
-
-                    b.Property<int>("ProvinceId");
-
-                    b.HasKey("DistrictMultiSelectId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("DistrictID");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("ProvinceId");
-
-                    b.ToTable("DistrictMultiSelect");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.DonorCriteriaDetails", b =>
                 {
                     b.Property<long>("DonorCEId")
@@ -6224,41 +6183,6 @@ namespace DataAccess.Migrations
                     b.ToTable("ProjectSector");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.ProvinceMultiSelect", b =>
-                {
-                    b.Property<long>("ProvinceMultiSelectId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long>("ProjectId");
-
-                    b.Property<int>("ProvinceId");
-
-                    b.Property<long?>("ProvinceSelectionId");
-
-                    b.HasKey("ProvinceMultiSelectId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("ProvinceId");
-
-                    b.ToTable("ProvinceMultiSelect");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.PurposeofInitiativeCriteria", b =>
                 {
                     b.Property<long>("ProductServiceId")
@@ -6495,41 +6419,6 @@ namespace DataAccess.Migrations
                         new { SecurityConsiderationId = 10L, IsDeleted = false, SecurityConsiderationName = "No obstacle for deploying Resources & office" },
                         new { SecurityConsiderationId = 11L, IsDeleted = false, SecurityConsiderationName = "Future Threats expected" }
                     );
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.SecurityConsiderationMultiSelect", b =>
-                {
-                    b.Property<long>("SecurityConsiderationMultiSelectId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long>("ProjectId");
-
-                    b.Property<long>("SecurityConsiderationId");
-
-                    b.Property<long?>("SecurityConsiderationSelectedId");
-
-                    b.HasKey("SecurityConsiderationMultiSelectId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("SecurityConsiderationId");
-
-                    b.ToTable("SecurityConsiderationMultiSelect");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.SecurityDetail", b =>
@@ -10139,32 +10028,6 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.DistrictMultiSelect", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.DistrictDetail", "DistrictDetail")
-                        .WithMany()
-                        .HasForeignKey("DistrictID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.ProvinceDetails", "ProvinceDetails")
-                        .WithMany()
-                        .HasForeignKey("ProvinceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.DonorCriteriaDetails", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -10515,27 +10378,6 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.ProvinceMultiSelect", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.ProvinceDetails", "ProvinceDetails")
-                        .WithMany()
-                        .HasForeignKey("ProvinceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.PurposeofInitiativeCriteria", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -10588,27 +10430,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.SecurityConsiderationMultiSelect", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.Project.SecurityConsiderationDetail", "SecurityConsiderationDetail")
-                        .WithMany()
-                        .HasForeignKey("SecurityConsiderationId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.SecurityDetail", b =>

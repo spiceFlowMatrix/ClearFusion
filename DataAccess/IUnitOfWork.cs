@@ -186,6 +186,9 @@ namespace DataAccess
         IGenericRepository<CEOccupationDetail> CEOccupationDetail { get; }
         IGenericRepository<CEAssumptionDetail> CEAssumptionDetail { get; }
         IGenericRepository<DonorEligibilityCriteria> DonorEligibilityCriteriaRepository { get; }
+        IGenericRepository<ProvinceMultiSelect> ProvinceMultiSelectRepository { get; }
+        IGenericRepository<DistrictMultiSelect> DistrictMultiSelectRepository { get; }
+        IGenericRepository<SecurityConsiderationMultiSelect> SecurityConsiderationMultiSelectRepository { get; }
 
 
 

@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181224093448_provinceMultiselct24122018")]
+    partial class provinceMultiselct24122018
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,8 +32,6 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool>("IsCreditBalancetype");
-
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
@@ -47,11 +47,11 @@ namespace DataAccess.Migrations
                     b.ToTable("AccountHeadType");
 
                     b.HasData(
-                        new { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsCreditBalancetype = false, IsDeleted = false },
-                        new { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsCreditBalancetype = true, IsDeleted = false },
-                        new { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsCreditBalancetype = true, IsDeleted = false },
-                        new { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsCreditBalancetype = true, IsDeleted = false },
-                        new { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsCreditBalancetype = false, IsDeleted = false }
+                        new { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false },
+                        new { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false },
+                        new { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false },
+                        new { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false },
+                        new { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false }
                     );
                 });
 
@@ -109,8 +109,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsCreditBalancetype");
 
                     b.Property<bool?>("IsDeleted");
 
@@ -3752,7 +3750,7 @@ namespace DataAccess.Migrations
                     b.Property<long>("JobId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long?>("ContractId");
+                    b.Property<int?>("ContractId");
 
                     b.Property<string>("CreatedById");
 
@@ -3763,8 +3761,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("EndDate");
 
                     b.Property<bool>("IsActive");
-
-                    b.Property<bool>("IsAgreementApproved");
 
                     b.Property<bool>("IsApproved");
 
@@ -3783,8 +3779,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("StartDate");
 
                     b.HasKey("JobId");
-
-                    b.HasIndex("ContractId");
 
                     b.HasIndex("CreatedById");
 
@@ -5287,8 +5281,6 @@ namespace DataAccess.Migrations
 
                     b.Property<long>("ProjectId");
 
-                    b.Property<int>("ProvinceId");
-
                     b.HasKey("DistrictMultiSelectId");
 
                     b.HasIndex("CreatedById");
@@ -5298,8 +5290,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("ProjectId");
-
-                    b.HasIndex("ProvinceId");
 
                     b.ToTable("DistrictMultiSelect");
                 });
@@ -9602,10 +9592,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.JobDetails", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.Marketing.ContractDetails", "ContractDetails")
-                        .WithMany()
-                        .HasForeignKey("ContractId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -10157,11 +10143,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.ProvinceDetails", "ProvinceDetails")
-                        .WithMany()
-                        .HasForeignKey("ProvinceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
