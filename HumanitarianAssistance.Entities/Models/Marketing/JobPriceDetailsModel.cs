@@ -39,5 +39,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long Minutes { get; set; }
         public bool IsApproved { get; set; }
         public bool IsAgreementApproved { get; set; }
+        public string CurrencyCode { get; set; }
     }
 }

@@ -143,6 +143,7 @@ namespace HumanitarianAssistance
       services.AddTransient<IChartOfAccountNewService, ChartOfAccountNewService>();
 
       services.AddTransient<IClientDetails, ClientDetailsService>();
+      services.AddTransient<IVoucherNewService, VoucherNewService>();
 
       services.AddTransient<IAccountBalance, AccountBalanceService>();
 

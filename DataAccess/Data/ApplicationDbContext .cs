@@ -230,6 +230,10 @@ namespace HumanitarianAssistance.Entities
         public DbSet<RiskCriteriaDetail> RiskCriteriaDetail { get; set; }
         public DbSet<TargetBeneficiaryDetail> TargetBeneficiaryDetail { get; set; }
         public DbSet<FinancialProjectDetail> FinancialProjectDetail { get; set; }
+        public DbSet<SecurityConsiderationMultiSelect> SecurityConsiderationMultiSelect { get; set; }
+        public DbSet<DistrictMultiSelect> DistrictMultiSelect { get; set; }
+
+        public DbSet<ProvinceMultiSelect> ProvinceMultiSelect { get; set; }
 
 
 
@@ -300,6 +304,9 @@ namespace HumanitarianAssistance.Entities
             modelBuilder.Entity<VoucherTransactions>().HasIndex(e => e.TransactionId).IsUnique();
             modelBuilder.Entity<VoucherTransactions>().HasIndex(e => new { e.TransactionDate, e.ChartOfAccountNewId });
             modelBuilder.Entity<FinancialProjectDetail>().HasQueryFilter(x => x.IsDeleted == false);
+            modelBuilder.Entity<ProvinceMultiSelect>().HasQueryFilter(x => x.IsDeleted == false);
+            modelBuilder.Entity<SecurityConsiderationMultiSelect>().HasQueryFilter(x => x.IsDeleted == false);
+            modelBuilder.Entity<DistrictMultiSelect>().HasQueryFilter(x => x.IsDeleted == false);
 
 
 

@@ -141,6 +141,8 @@ namespace HumanitarianAssistance.Service.Classes
                     mod.PhysicialAddress = ob.PhysicialAddress;
                     mod.Position = ob.Position;
                     response.data.clientDetailsById = mod;
+                    response.Message = "Client added successfully";
+                    response.StatusCode = StaticResource.successStatusCode;
                 }
                 else
                 {
@@ -154,21 +156,17 @@ namespace HumanitarianAssistance.Service.Classes
                         await _uow.ClientDetailsRepository.UpdateAsyn(existRecords);
                         model.type = "Edit";
                         response.data.clientDetailsById = model;
+                        response.Message = "Client updated successfully";
+                        response.StatusCode = StaticResource.successStatusCode;
                     }
-
                     LatestClientId = Convert.ToInt32(model.ClientId);
-                }
-
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-
+                }          
             }
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
-
             return response;
         }
 
@@ -267,7 +265,7 @@ namespace HumanitarianAssistance.Service.Classes
                 ClientInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.ClientDetailsRepository.UpdateAsyn(ClientInfo, ClientInfo.ClientId);
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = "Client Deleted Successfully";
             }
             catch (Exception ex)
             {
