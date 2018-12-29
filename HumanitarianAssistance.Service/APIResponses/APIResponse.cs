@@ -360,6 +360,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public Dictionary<string,List<string>> Permissions { get; set; }
 
 
+
         #region "Accounting New"
         public List<ChartOfAccountNew> AllAccountList { get; set; }
         public List<ChartOfAccountNew> MainLevelAccountList { get; set; }
@@ -369,6 +370,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<AccountFilterType> AllAccountFilterList { get; set; }
 
         public ChartOfAccountNew ChartOfAccountNewDetail { get; set; }
+
+        public Dictionary<ChartOfAccountNew, double> AccountBalances { get; set; }
 
         #endregion
 
