@@ -46,18 +46,19 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                 var accountBalances = await GetAccountBalances(inputLevelList, reportDate, toCurrency);
 
-                var notes = inputLevelList.Select(x => x.AccountType);
+                var notes = inputLevelList.Select(x => x.AccountType).Distinct().ToList();
                 List<NoteAccountBalances> noteAccountBalances = new List<NoteAccountBalances>();
 
                 foreach (var note in notes)
                 {
-                    var currNoteBalances = (Dictionary<ChartOfAccountNew, double>)accountBalances.Where(x => x.Key.AccountTypeId == note.AccountTypeId);
+                    var currNoteBalances = accountBalances.Where(x => x.Key.AccountTypeId == note.AccountTypeId).ToDictionary(x => x.Key, x => x.Value);
 
                     var currNoteAccountBalances = new NoteAccountBalances();
 
                     currNoteAccountBalances.NoteId = note.AccountTypeId;
                     currNoteAccountBalances.NoteName = note.AccountTypeName;
                     currNoteAccountBalances.AccountBalances = currNoteBalances;
+                    noteAccountBalances.Add(currNoteAccountBalances);
                 }
 
                 response.data.NoteAccountBalances = noteAccountBalances;
@@ -91,18 +92,19 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                 var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportEndDate, reportEndDate);
 
-                var notes = inputLevelList.Select(x => x.AccountType);
+                var notes = inputLevelList.Select(x => x.AccountType).Distinct().ToList();
                 List<NoteAccountBalances> noteAccountBalances = new List<NoteAccountBalances>();
 
                 foreach (var note in notes)
                 {
-                    var currNoteBalances = (Dictionary<ChartOfAccountNew, double>)accountBalances.Where(x => x.Key.AccountTypeId == note.AccountTypeId);
+                    var currNoteBalances = accountBalances.Where(x => x.Key.AccountTypeId == note.AccountTypeId).ToDictionary(x => x.Key, x => x.Value);
 
                     var currNoteAccountBalances = new NoteAccountBalances();
 
                     currNoteAccountBalances.NoteId = note.AccountTypeId;
                     currNoteAccountBalances.NoteName = note.AccountTypeName;
                     currNoteAccountBalances.AccountBalances = currNoteBalances;
+                    noteAccountBalances.Add(currNoteAccountBalances);
                 }
 
                 response.data.NoteAccountBalances = noteAccountBalances;
@@ -311,9 +313,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         // Value after exchange on the transaction date
         private async Task<List<VoucherTransactions>> GetTransactionValuesAfterExchange(List<VoucherTransactions> transactions, int toCurrencyId)
         {
-            var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId);
-            ratesQuery = ratesQuery.Where(x => transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency));
-            ratesQuery = ratesQuery.Where(x => transactions.Select(y => y.TransactionDate).Any(z => z >= x.Date));
+            var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId
+                                                                               && transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency) 
+                                                                               && transactions.Select(y => y.TransactionDate).Any(z => z >= x.Date));
             var ratesList = await ratesQuery.ToListAsync();
 
             List<VoucherTransactions> outputTransactions = new List<VoucherTransactions>();
@@ -334,9 +336,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         // Value after exchange on the given onDate
         private async Task<List<VoucherTransactions>> GetTransactionValuesAfterExchange(List<VoucherTransactions> transactions, int toCurrencyId, DateTime onDate)
         {
-            var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId);
-            ratesQuery = ratesQuery.Where(x => transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency));
-            ratesQuery = ratesQuery.Where(x => x.Date == onDate);
+            var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId 
+                                                                               && transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency)
+                                                                               && x.Date == onDate);
             var ratesList = await ratesQuery.ToListAsync();
 
             List<VoucherTransactions> outputTransactions = new List<VoucherTransactions>();
