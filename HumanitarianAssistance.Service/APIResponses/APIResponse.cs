@@ -380,7 +380,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ChartOfAccountNew ChartOfAccountNewDetail { get; set; }
         public List<VoucherTransactionsModel> VoucherTransactions { get; set; }
 
-        public Dictionary<ChartOfAccountNew, double> AccountBalances { get; set; }
+        public List<AccountBalance> AccountBalances { get; set; }
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
 
         #endregion
@@ -392,7 +392,16 @@ namespace HumanitarianAssistance.Service.APIResponses
     {
         public int NoteId { get; set; }
         public string NoteName { get; set; }
-        public Dictionary<ChartOfAccountNew, double> AccountBalances { get; set; }
+        public int NoteHeadId { get; set; }
+        public string NoteHeadName { get; set; }
+        public List<AccountBalance> AccountBalances { get; set; }
+    }
+
+    public class AccountBalance
+    {
+        public long AccountId { get; set; }
+        public string AccountName { get; set; }
+        public double Balance { get; set; }
     }
 
     public class Roles

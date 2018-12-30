@@ -30,6 +30,25 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             this._userManager = userManager;
         }
 
+        // Generate view models for key value pairs of accounts(full objects) and their balances.
+        // Dictionaries cannot be converted to json objects properly by the framework so use
+        // this helper function to prepare your account balances for json.
+        private List<AccountBalance> GenerateBalanceViewModels(Dictionary<ChartOfAccountNew, double> rawBalances)
+        {
+            List<AccountBalance> vmBalances = new List<AccountBalance>();
+            foreach (var balance in rawBalances)
+            {
+                var iVmBalance = new AccountBalance
+                {
+                    AccountId = balance.Key.ChartOfAccountNewId,
+                    AccountName = balance.Key.AccountName,
+                    Balance = balance.Value
+                };
+            }
+
+            return vmBalances;
+        }
+
         public async Task<APIResponse> GetNoteBalancesByHeadType(int headTypeId, int toCurrency, DateTime reportDate)
         {
             APIResponse response = new APIResponse();
@@ -53,11 +72,13 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 {
                     var currNoteBalances = accountBalances.Where(x => x.Key.AccountTypeId == note.AccountTypeId).ToDictionary(x => x.Key, x => x.Value);
 
+                    var vmNoteBalances = GenerateBalanceViewModels(currNoteBalances);
+
                     var currNoteAccountBalances = new NoteAccountBalances();
 
                     currNoteAccountBalances.NoteId = note.AccountTypeId;
                     currNoteAccountBalances.NoteName = note.AccountTypeName;
-                    currNoteAccountBalances.AccountBalances = currNoteBalances;
+                    currNoteAccountBalances.AccountBalances = vmNoteBalances;
                     noteAccountBalances.Add(currNoteAccountBalances);
                 }
 
@@ -99,11 +120,13 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 {
                     var currNoteBalances = accountBalances.Where(x => x.Key.AccountTypeId == note.AccountTypeId).ToDictionary(x => x.Key, x => x.Value);
 
+                    var vmNoteBalances = GenerateBalanceViewModels(currNoteBalances);
+
                     var currNoteAccountBalances = new NoteAccountBalances();
 
                     currNoteAccountBalances.NoteId = note.AccountTypeId;
                     currNoteAccountBalances.NoteName = note.AccountTypeName;
-                    currNoteAccountBalances.AccountBalances = currNoteBalances;
+                    currNoteAccountBalances.AccountBalances = vmNoteBalances;
                     noteAccountBalances.Add(currNoteAccountBalances);
                 }
 
@@ -135,8 +158,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     throw new Exception("Some accounts do not have notes assigned to them!");
 
                 var accountBalances = await GetAccountBalances(inputLevelList, reportDate, toCurrencyId);
+                var vmNoteBalances = GenerateBalanceViewModels(accountBalances);
 
-                response.data.AccountBalances = accountBalances;
+                response.data.AccountBalances = vmNoteBalances;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -164,8 +188,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     throw new Exception("Some accounts do not have notes assigned to them!");
 
                 var accountBalances = await GetAccountBalances(inputLevelList, reportDate, transactionExchangeDate, toCurrencyId);
+                var vmNoteBalances = GenerateBalanceViewModels(accountBalances);
 
-                response.data.AccountBalances = accountBalances;
+                response.data.AccountBalances = vmNoteBalances;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -193,8 +218,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     throw new Exception("Some accounts do not have notes assigned to them!");
 
                 var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate);
+                var vmNoteBalances = GenerateBalanceViewModels(accountBalances);
 
-                response.data.AccountBalances = accountBalances;
+                response.data.AccountBalances = vmNoteBalances;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -222,8 +248,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     throw new Exception("Some accounts do not have notes assigned to them!");
 
                 var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate, transactionExchangeDate);
+                var vmNoteBalances = GenerateBalanceViewModels(accountBalances);
 
-                response.data.AccountBalances = accountBalances;
+                response.data.AccountBalances = vmNoteBalances;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
