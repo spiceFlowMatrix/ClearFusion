@@ -31,6 +31,32 @@ namespace HumanitarianAssistance.Service.Classes
 
         #region Client
 
+        public async Task<APIResponse> GetClientsPaginatedList(ClientPaginationModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list =  _uow.GetDbContext().ClientDetails.Where(x=>x.IsDeleted==false).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+
+                //var JobList = (from j in _uow.GetDbContext().JobDetails
+                //               join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
+                //               where !j.IsDeleted.Value && !jp.IsDeleted.Value
+                //               select (new ClientDetailModel
+                //               {
+                //               })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+
+                response.data.ClientDetails = list;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         /// Get Client Details By Id
         /// </summary>
@@ -140,6 +166,7 @@ namespace HumanitarianAssistance.Service.Classes
                     mod.Phone = ob.Phone;
                     mod.PhysicialAddress = ob.PhysicialAddress;
                     mod.Position = ob.Position;
+                    mod.Count = await _uow.GetDbContext().ClientDetails.CountAsync(x => x.IsDeleted == false);
                     response.data.clientDetailsById = mod;
                     response.Message = "Client added successfully";
                     response.StatusCode = StaticResource.successStatusCode;
@@ -238,6 +265,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var list = await _uow.ClientDetailsRepository.FindAllAsync(x => !x.IsDeleted.Value);
                 response.data.ClientDetails = list;
                 response.StatusCode = 200;
+                response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -266,6 +294,7 @@ namespace HumanitarianAssistance.Service.Classes
                 await _uow.ClientDetailsRepository.UpdateAsyn(ClientInfo, ClientInfo.ClientId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Client Deleted Successfully";
+                response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
             }
             catch (Exception ex)
             {
