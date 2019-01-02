@@ -1381,20 +1381,26 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model.ProvinceId != null)
                 {
 
-                    bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                    
 
-                    if (securityPresent)
-                    {
-                        var securityExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-                        //if (securityExist != null)
-                        //{
-                        //    var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-                        //    _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
-                        //    _uow.GetDbContext().SaveChanges();
-                        //}
+                    //bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                    var securityExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).ToList();
+
+                    var noexistProvinceId = securityExist.Where(x => !model.ProvinceId.Contains(x.ProvinceId)).Select(x=> x.ProvinceId).ToList();
+
+                        if (securityExist.Any())
+                        {
+                            var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => noexistProvinceId.Contains(x.ProvinceId) && x.IsDeleted == false).ToList();
+                            if (districtExist.Any())
+                            {
+                                _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
+                                _uow.GetDbContext().SaveChanges();
+                            }
+                    }
+
                         _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(securityExist);
                         _uow.GetDbContext().SaveChanges();
-                    }
+                   
 
                     List<ProvinceMultiSelect> provinceList = new List<ProvinceMultiSelect>();
 
@@ -1415,8 +1421,6 @@ namespace HumanitarianAssistance.Service.Classes
                     _uow.GetDbContext().ProvinceMultiSelect.AddRange(provinceList);
                     _uow.GetDbContext().SaveChanges();
                 }
-
-
 
                 //response.CommonId.Id = Convert.ToInt32(_detail.SecurityConsiderationId);
                 response.StatusCode = StaticResource.successStatusCode;
@@ -1475,15 +1479,20 @@ namespace HumanitarianAssistance.Service.Classes
 
                     List<DistrictMultiSelect> districtList = new List<DistrictMultiSelect>();
 
-                    foreach (var item in model.DistrictID)
+                    var selectedDistricts =  _uow.GetDbContext().DistrictDetail.Where(x => model.DistrictID.Contains(x.DistrictID)).ToList();
+                     
+                    foreach (var item in selectedDistricts)
                     {
+                        
                         DistrictMultiSelect _data = new DistrictMultiSelect();
 
-                        _data.DistrictID = item.Value;
+                        _data.DistrictID = item.DistrictID;
                         _data.ProjectId = model.ProjectId;
                         _data.IsDeleted = false;
                         _data.CreatedById = UserId;
+                        _data.ProvinceId = item.ProvinceID.Value;
                         _data.CreatedDate = DateTime.Now;
+                        //_data.ProvinceId=model.ProvinceId
 
                         districtList.Add(_data);
                     }
@@ -1981,6 +1990,7 @@ namespace HumanitarianAssistance.Service.Classes
         {
             ProjectProposalDetail model = new ProjectProposalDetail();
             APIResponse response = new APIResponse();
+
             try
             {
                 var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
@@ -1995,24 +2005,52 @@ namespace HumanitarianAssistance.Service.Classes
                      result = o2["GoogleCredential"].ToObject<GoogleCredential>();
                 }
 
+                model = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.IsDeleted == false && x.ProjectId == Projectid);
 
-                string _detail;
-                _detail = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectName+"-"+x.ProjectCode+"-"+ "Proposal").FirstOrDefault();
-                response.data.ProjectProposalModel = ProposalDoc.userCredential(_detail, pathFile, result);
-                model.FolderName = response.data.ProjectProposalModel.FolderName;
-                model.FolderId = response.data.ProjectProposalModel.FolderId;
-                model.ProposalFileName = response.data.ProjectProposalModel.ProposalFileName;
-                model.ProposalFileId = response.data.ProjectProposalModel.ProposalFileId;
-                model.ProposalWebLink = response.data.ProjectProposalModel.ProposalWebLink;
-                model.ProjectId = Projectid;
-                model.IsDeleted = false;
-                model.CreatedById = userid;
-                model.CreatedDate = DateTime.Now;
-                _uow.ProjectProposalDetailRepository.Add(model);
-                _uow.Save();
+                if (model == null)
+                {
+                    model = new ProjectProposalDetail();
+                    string _detail;
+                    _detail = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectName + "-" + x.ProjectCode + "-" + "Proposal").FirstOrDefault();
 
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                    response.data.ProjectProposalModel = ProposalDoc.userCredential(_detail, pathFile, result);
+                    model.FolderName = response.data.ProjectProposalModel.FolderName;
+                    model.FolderId = response.data.ProjectProposalModel.FolderId;
+                    model.ProposalFileName = response.data.ProjectProposalModel.ProposalFileName;
+                    model.ProposalFileId = response.data.ProjectProposalModel.ProposalFileId;
+                    model.ProposalWebLink = response.data.ProjectProposalModel.ProposalWebLink;
+                    model.ProposalStartDate = DateTime.Now;
+                    model.ProjectId = Projectid;
+                    model.IsDeleted = false;
+                    model.CreatedById = userid;
+                    model.CreatedDate = DateTime.Now;
+                    _uow.ProjectProposalDetailRepository.Add(model);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    string _detail;
+                    _detail = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectName + "-" + x.ProjectCode + "-" + "Proposal").FirstOrDefault();
+
+                    response.data.ProjectProposalModel = ProposalDoc.userCredential(_detail, pathFile, result);
+                    model.FolderName = response.data.ProjectProposalModel.FolderName;
+                    model.FolderId = response.data.ProjectProposalModel.FolderId;
+                    model.ProposalFileName = response.data.ProjectProposalModel.ProposalFileName;
+                    model.ProposalFileId = response.data.ProjectProposalModel.ProposalFileId;
+                    model.ProposalWebLink = response.data.ProjectProposalModel.ProposalWebLink;
+                    model.ProposalStartDate = DateTime.Now;
+                    model.ProjectId = Projectid;
+                    model.IsDeleted = false;
+                    model.CreatedById = userid;
+                    model.CreatedDate = DateTime.Now;
+                    _uow.GetDbContext().ProjectProposalDetail.Update(model);
+                    _uow.Save();
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
             }
             catch (Exception ex)
             {
@@ -2055,7 +2093,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.BudgetFileExtType = detail.BudgetFileExtType;
                     obj.ConceptFileExtType = detail.ConceptFileExtType;
                     obj.PresentationExtType = detail.PresentationExtType;
-                    obj.ProposalStartDate = detail.CreatedDate;
+                    obj.ProposalStartDate = detail.ProposalStartDate;
                     obj.ProposalBudget = detail.ProposalBudget;
                     obj.ProposalDueDate = detail.ProposalDueDate;
                     obj.ProjectAssignTo = detail.ProjectAssignTo;
@@ -2181,7 +2219,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                details = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
                 var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
                 GoogleCredential Credential = new GoogleCredential();
 
@@ -2193,12 +2231,8 @@ namespace HumanitarianAssistance.Service.Classes
                     Credential = o2["GoogleCredential"].ToObject<GoogleCredential>();
                 }
 
-
-
-
                 if (details == null)
                 {
-                    details = new ProjectProposalDetail();
                     details.ProposalStartDate = model.ProposalStartDate;
                     details.ProposalBudget = model.ProposalBudget;
                     details.ProposalDueDate = model.ProposalDueDate;
@@ -2214,30 +2248,31 @@ namespace HumanitarianAssistance.Service.Classes
 
                     if (model.ProjectAssignTo != null)
                     {
-                        var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                        //var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
                         var EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == model.UserId).Select(p => p.Username).FirstOrDefault();
-                        if (proposaldetails != null && EmailID != null)
+
+                        if (details != null && EmailID != null)
                         {
-                            if (proposaldetails.FolderId != null)
+                            if (details.FolderId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.FolderId, EmailID, pathFile, Credential);
                             }
 
-                            if (proposaldetails.EdiFileId != null)
+                            if (details.EdiFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.EdiFileId, EmailID, pathFile, Credential);
                             }
-                            if (proposaldetails.BudgetFileId != null)
+                            if (details.BudgetFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.BudgetFileId, EmailID, pathFile, Credential);
                             }
-                            if (proposaldetails.ConceptFileId != null)
+                            if (details.ConceptFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.ConceptFileId, EmailID, pathFile, Credential);
                             }
-                            if (proposaldetails.PresentationFileId != null)
+                            if (details.PresentationFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.PresentationFileId, EmailID, pathFile, Credential);
                             }
                         }
                     }
@@ -2254,36 +2289,38 @@ namespace HumanitarianAssistance.Service.Classes
                     details.UserId = model.UserId;
                     details.ModifiedById = UserId;
                     details.ModifiedDate = DateTime.Now;
+
                     _uow.GetDbContext().SaveChanges();
+
                     if (details.ProjectAssignTo != null)
                     {
-                        var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                        //var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
                         var EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == details.UserId).Select(p => p.Username).FirstOrDefault();
-                        if (proposaldetails != null && EmailID != null)
+                        if (details != null && EmailID != null)
                         {
-                            if (proposaldetails.FolderId != null)
+                            if (details.FolderId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.FolderId, EmailID, pathFile, Credential);
                             }
-                            if (proposaldetails.ProposalFileId != null)
+                            if (details.ProposalFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ProposalFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.ProposalFileId, EmailID, pathFile, Credential);
                             }
-                            if (proposaldetails.EdiFileId != null)
+                            if (details.EdiFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.EdiFileId, EmailID, pathFile, Credential);
                             }
-                            if (proposaldetails.BudgetFileId != null)
+                            if (details.BudgetFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.BudgetFileId, EmailID, pathFile, Credential);
                             }
-                            if (proposaldetails.ConceptFileId != null)
+                            if (details.ConceptFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.ConceptFileId, EmailID, pathFile, Credential);
                             }
-                            if (proposaldetails.PresentationFileId != null)
+                            if (details.PresentationFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(details.FolderName, details.PresentationFileId, EmailID, pathFile, Credential);
                             }
                         }
                     }

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DataAccess.DbEntities.AccountingNew;
+using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 
 namespace HumanitarianAssistance.Service.APIResponses
 {
@@ -376,6 +377,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<AccountFilterType> AllAccountFilterList { get; set; }
 
         public ChartOfAccountNew ChartOfAccountNewDetail { get; set; }
+        public List<VoucherTransactionsModel> VoucherTransactions { get; set; }
 
         #endregion
 
