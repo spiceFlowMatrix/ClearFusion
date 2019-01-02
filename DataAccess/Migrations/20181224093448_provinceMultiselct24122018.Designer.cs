@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181224093448_provinceMultiselct24122018")]
+    partial class provinceMultiselct24122018
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3748,7 +3750,7 @@ namespace DataAccess.Migrations
                     b.Property<long>("JobId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long?>("ContractId");
+                    b.Property<int?>("ContractId");
 
                     b.Property<string>("CreatedById");
 
@@ -3759,8 +3761,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("EndDate");
 
                     b.Property<bool>("IsActive");
-
-                    b.Property<bool>("IsAgreementApproved");
 
                     b.Property<bool>("IsApproved");
 
@@ -3779,8 +3779,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("StartDate");
 
                     b.HasKey("JobId");
-
-                    b.HasIndex("ContractId");
 
                     b.HasIndex("CreatedById");
 
@@ -5283,8 +5281,6 @@ namespace DataAccess.Migrations
 
                     b.Property<long>("ProjectId");
 
-                    b.Property<int>("ProvinceId");
-
                     b.HasKey("DistrictMultiSelectId");
 
                     b.HasIndex("CreatedById");
@@ -5294,8 +5290,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("ProjectId");
-
-                    b.HasIndex("ProvinceId");
 
                     b.ToTable("DistrictMultiSelect");
                 });
@@ -9598,10 +9592,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.JobDetails", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.Marketing.ContractDetails", "ContractDetails")
-                        .WithMany()
-                        .HasForeignKey("ContractId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -10153,11 +10143,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.ProvinceDetails", "ProvinceDetails")
-                        .WithMany()
-                        .HasForeignKey("ProvinceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

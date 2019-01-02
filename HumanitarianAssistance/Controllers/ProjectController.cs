@@ -360,7 +360,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiresponse;
     }
+
+
    
+    
+
 
 
     #endregion
@@ -544,12 +548,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
     #region Other Details dropdown
-    [HttpGet]
-    public APIResponse GetAllProvinceDetails()
-    {
-      APIResponse response =  _iProject.GetAllProvinceDetails();
-      return response;
-    }
+  
     [HttpGet]
     public  APIResponse GetAllStrengthConsiderationDetails()
     {
@@ -570,15 +569,61 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    public APIResponse GetAllSecurityConsiderationDetails()
+    public APIResponse GetAllProvinceDetails()
     {
-      APIResponse response = _iProject.GetAllSecurityConsiderationDetails();
+      APIResponse response = _iProject.GetAllProvinceDetails();
       return response;
     }
+
     [HttpPost]
-    public async Task<APIResponse> GetAllDistrictvalueByProvinceId([FromBody]int[] ProvinceId)
+    public APIResponse GetProvinceMultiSelectByProjectId([FromBody]long Id)
     {
-      APIResponse response = await _iProject.GetAllDistrictvalueByProvinceId(ProvinceId);
+      APIResponse apiresponse = _iProject.GetProvinceMultiSelectByProjectId(Id);
+
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public APIResponse GetDistrictMultiSelectByProjectId([FromBody]long Id)
+    {
+      APIResponse apiresponse = _iProject.GetDistrictMultiSelectByProjectId(Id);
+
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> AddEditDistrictMultiselect([FromBody]DistrictMultiSelectModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditDistrictMultiSelectDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddEditProvinceMultiselect([FromBody]ProvinceMultiSelectModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditProvinceMultiSelectDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+
+    [HttpPost]
+    public  APIResponse GetAllDistrictvalueByProvinceId([FromBody]int[] ProvinceId)
+    {
+      APIResponse response =  _iProject.GetAllDistrictvalueByProvinceId(ProvinceId);
       return response;
     }
 
@@ -596,6 +641,33 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;      
     }
 
+    [HttpGet]
+    public APIResponse GetAllSecurityConsiderationDetails()
+    {
+      APIResponse response = _iProject.GetAllSecurityConsiderationDetails();
+      return response;
+    }
+    [HttpPost]
+    public APIResponse GetSecurityConsiMultiSelectByProjectId([FromBody]long Id)
+    {
+      APIResponse apiresponse = _iProject.GetSecurityConsiMultiSelectByProjectId(Id);
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddEditSecurityConsiMultiselect([FromBody]SecurityConsiderationMultiSelectModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = _iProject.AddEditSecurityConsidMultiDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
     //[HttpPost]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     //public APIResponse GetOtherProjectListById([FromBody]long Id)
@@ -608,7 +680,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #endregion
 
-    
+
     #region projectApproval
     [HttpPost]
     public async Task<APIResponse> AddApprovalProjectDetail([FromBody]ApproveProjectDetailModel model)
@@ -695,8 +767,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
             Directory.CreateDirectory(newPath);
           }
           string fileName = string.Empty;
-          if (file.Length > 0)
-          {
+          //if (file.Length > 0)
+          //{
             //ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
             fileName = DocType + "_" + fileNames;
             fullPath = Path.Combine(newPath, fileName);
@@ -704,7 +776,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
             {
               file.CopyTo(stream);
             }
-          }
+          //}
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
           if (user != null)
           {
@@ -1038,6 +1110,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
+
+
+
+   
+
     #endregion
 
     #region OccupationDetail
