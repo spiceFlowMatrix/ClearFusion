@@ -142,17 +142,33 @@ namespace HumanitarianAssistance.Service
                         res.FIleResponseMsg = error.Message;
                     }
                 };
-                Permission userPermission = new Permission()
-                {
-                    Type = "user",
-                    Role = "writer",
-                    EmailAddress = mailid
-                };
 
-                var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
-                Permissionrequest.Fields = "*";
-                batch.Queue(Permissionrequest, callback);
-                var task = batch.ExecuteAsync();
+                foreach (var item in mailid.Split(','))
+                {
+                    Permission userPermission = new Permission()
+                    {
+
+                        Type = "user",
+                        Role = "writer",
+                        EmailAddress = item
+                    };
+                    //var file = request.ResponseBody;
+                    var request1 = driveService.Permissions.Create(userPermission, file.Id);
+                    request1.Fields = "*";
+                    batch.Queue(request1, callback);
+                    var task = batch.ExecuteAsync();
+                }
+                //Permission userPermission = new Permission()
+                //{
+                //    Type = "user",
+                //    Role = "writer",
+                //    EmailAddress = mailid
+                //};
+
+                //var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
+                //Permissionrequest.Fields = "*";
+                //batch.Queue(Permissionrequest, callback);
+                //var task = batch.ExecuteAsync();
                 res.FIleResponseMsg = "File Created Succesfully";
                 res.StatusCode = StaticResource.successStatusCode;
             }
@@ -259,17 +275,36 @@ namespace HumanitarianAssistance.Service
                         res.FIleResponseMsg = error.Message;
                     }
                 };
-                Permission userPermission = new Permission()
-                {
-                    Type = "user",
-                    Role = "writer",
-                    EmailAddress = mailid
-                };
 
-                var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
-                Permissionrequest.Fields = "*";
-                batch.Queue(Permissionrequest, callback);
-                var task = batch.ExecuteAsync();
+                foreach (var item in mailid.Split(','))
+                {
+                    Permission userPermission = new Permission()
+                    {
+
+                        Type = "user",
+                        Role = "writer",
+                        EmailAddress = item
+                    };
+                   // var file = request.ResponseBody;
+                    var request1 = driveService.Permissions.Create(userPermission, file.Id);
+                    request1.Fields = "*";
+                    batch.Queue(request1, callback);
+                    var task = batch.ExecuteAsync();
+                }
+
+
+
+                //Permission userPermission = new Permission()
+                //{
+                //    Type = "user",
+                //    Role = "writer",
+                //    EmailAddress = mailid
+                //};
+
+                //var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
+                //Permissionrequest.Fields = "*";
+                //batch.Queue(Permissionrequest, callback);
+                //var task = batch.ExecuteAsync();
                 string fileType = file.Name.Trim('"').Split('_')[0];
                 res.FileType = fileType;
                 if (fileType == "EOI")
@@ -348,17 +383,36 @@ namespace HumanitarianAssistance.Service
                         res.FIleResponseMsg = error.Message;
                     }
                 };
-                Permission userPermission = new Permission()
-                {
-                    Type = "user",
-                    Role = "writer",
-                    EmailAddress = mailid
-                };
                 var file = request.ResponseBody;
-                var request1 = driveService.Permissions.Create(userPermission, file.Id);
-                request1.Fields = "*";
-                batch.Queue(request1, callback);
-                var task = batch.ExecuteAsync();
+                foreach (var item in mailid.Split(','))
+                {
+                    Permission userPermission = new Permission()
+                    {
+
+                        Type = "user",
+                        Role = "writer",
+                        EmailAddress = item
+                    };
+                    //var file = request.ResponseBody;
+                    var request1 = driveService.Permissions.Create(userPermission, file.Id);
+                    request1.Fields = "*";
+                    batch.Queue(request1, callback);
+                    var task = batch.ExecuteAsync();
+                }
+
+
+
+                //Permission userPermission = new Permission()
+                //{
+                //    Type = "user",
+                //    Role = "writer",
+                //    EmailAddress = mailid
+                //};
+                //var file = request.ResponseBody;
+                //var request1 = driveService.Permissions.Create(userPermission, file.Id);
+                //request1.Fields = "*";
+                //batch.Queue(request1, callback);
+                //var task = batch.ExecuteAsync();
                 string fileType = file.Name.Trim('"').Split('_')[0];
                 res.FileType = fileType;
                 if (fileType == "EOI")
@@ -430,7 +484,7 @@ namespace HumanitarianAssistance.Service
             }
             else
             {
-                mailid = EmailId + "," + Credential.EmailId;
+                mailid = EmailId + "," + Credential.EmailId ;
             }
             var batch = new BatchRequest(driveService);
             BatchRequest.OnResponse<Permission> callback = delegate (
@@ -446,18 +500,22 @@ namespace HumanitarianAssistance.Service
                 }
             };
 
-            Permission userPermission = new Permission()
+            foreach (var item in mailid.Split(','))
             {
-                
-                Type = "user",
-                Role = "writer",
-                EmailAddress = mailid
-            };
-            //var file = request.ResponseBody;
-            var request1 = driveService.Permissions.Create(userPermission, Fileid);
-            request1.Fields = "*";
-            batch.Queue(request1, callback);
-            var task = batch.ExecuteAsync();
+                Permission userPermission = new Permission()
+                {
+
+                    Type = "user",
+                    Role = "writer",
+                    EmailAddress = item
+                };
+                //var file = request.ResponseBody;
+                var request1 = driveService.Permissions.Create(userPermission, Fileid);
+                request1.Fields = "*";
+                batch.Queue(request1, callback);
+                var task = batch.ExecuteAsync();
+            }
+            
             return Message = "Success";
         }
     }
