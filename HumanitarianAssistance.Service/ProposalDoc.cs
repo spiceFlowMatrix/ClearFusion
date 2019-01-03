@@ -37,7 +37,8 @@ namespace HumanitarianAssistance.Service
                     GoogleClientSecrets.Load(stream).Secrets,
                     Scopes,
                    //"sdd.shared@gmail.com",
-                   Credential.EmailId,// "hamza@edgsolutions.net",
+                   // "hamza@edgsolutions.net",
+                   Credential.EmailId,
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
                 //Console.WriteLine("Credential file saved to: " + credPath);

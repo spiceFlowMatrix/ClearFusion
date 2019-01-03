@@ -19,6 +19,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long? CategoryId { get; set; }
         public string CategoryName { get; set; }
         public string type { get; set; }
+        public int? Count { get; set; }
     }
 
 
@@ -29,5 +30,11 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public string Email { get; set; }
         public long? CategoryId { get; set; }
         public string Position { get; set; }
+    }
+
+    public class ClientPaginationModel
+    {
+        public int pageIndex { get; set; }
+        public int pageSize { get; set; }
     }
 }

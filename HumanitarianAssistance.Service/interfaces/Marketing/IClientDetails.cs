@@ -11,6 +11,7 @@ namespace HumanitarianAssistance.Service.interfaces
     {
         #region Client
         Task<APIResponse> GetClientDetailsById(int ClientId, string UserId);
+        Task<APIResponse> GetClientsPaginatedList(ClientPaginationModel model, string UserId);
         Task<APIResponse> AddEditClientDetails(ClientDetailModel model, string UserId);
         Task<APIResponse> EditClientDetails(ClientDetailModel model, string UserId);
         Task<APIResponse> GetAllClient();

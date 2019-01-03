@@ -128,6 +128,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       return apiRespone;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetContractsPaginatedList([FromBody]ContractPaginationModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iContractDetailsService.GetContractsPaginatedList(model, id);
+      }
+      return apiRespone;
+    }
+
 
     /// <summary>
     /// Add And Update New Job

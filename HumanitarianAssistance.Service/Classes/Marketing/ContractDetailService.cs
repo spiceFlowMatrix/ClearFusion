@@ -123,6 +123,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 var list = await _uow.ContractDetailsRepository.FindAllAsync(x => !x.IsDeleted.Value);
                 response.data.ContractDetails = list;
+                response.data.jobListTotalCount = _uow.GetDbContext().ContractDetails.Count(x => x.IsDeleted == false);
                 response.StatusCode = 200;
                 response.Message = "Success";
             }
@@ -137,7 +138,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         public async Task<APIResponse> GetAllContractDetailsByClientId()
         {
             APIResponse response = new APIResponse();
-            
+
             List<ContractByClient> modelList = new List<ContractByClient>();
 
             try
@@ -154,7 +155,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     model.CurrencyId = item.CurrencyId;
                     modelList.Add(model);
                 }
-               
+
                 response.data.ContractByClientList = modelList;
                 response.StatusCode = 200;
                 response.Message = "Success";
@@ -249,6 +250,25 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
 
+        public async Task<APIResponse> GetContractsPaginatedList(ContractPaginationModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = _uow.GetDbContext().ContractDetails.Where(x => x.IsDeleted == false).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+                response.data.ContractDetails = list;
+                response.StatusCode = 200;
+                response.data.jobListTotalCount = _uow.GetDbContext().ContractDetails.Count(x => x.IsDeleted == false);
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         /// <summary>
         /// Delete Selected Contract
         /// </summary>
@@ -267,6 +287,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.ContractDetailsRepository.UpdateAsyn(contractInfo, contractInfo.ContractId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Contract Deleted Successfully";
+                response.data.jobListTotalCount = _uow.GetDbContext().ContractDetails.Count(x => x.IsDeleted == false);
             }
             catch (Exception ex)
             {
@@ -368,6 +389,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     conDetails.TimeCategoryId = obj.TimeCategoryId;
                     conDetails.UnitRate = obj.UnitRate;
                     conDetails.IsApproved = obj.IsApproved;
+                    conDetails.Count = _uow.GetDbContext().ContractDetails.Count(x => x.IsDeleted == false);
                     if (obj.IsDeclined == true)
                     {
                         conDetails.IsDeclined = obj.IsDeclined;
@@ -377,6 +399,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         conDetails.IsApproved = obj.IsApproved;
                     }
                     response.data.contractDetailsModel = conDetails;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Contract added successfully";
                 }
                 else
                 {
@@ -390,10 +414,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         existRecord.ModifiedDate = DateTime.Now;
                         await _uow.ContractDetailsRepository.UpdateAsyn(existRecord);
                         response.data.contractDetailsModel = model;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Contract updated successfully";
                     }
                 }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
             }
             catch (Exception ex)
             {
@@ -424,7 +448,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     _uow.GetDbContext().ContractDetails.Update(existRecord);
                     _uow.GetDbContext().SaveChanges();
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    response.Message = "Contract approved successfully";
                 }
                 catch (Exception ex)
                 {
