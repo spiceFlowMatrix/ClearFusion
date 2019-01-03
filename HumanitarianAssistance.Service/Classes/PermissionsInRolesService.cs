@@ -234,5 +234,53 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+        /// <summary>
+        /// Get Permissions For Selected Role
+        /// </summary>
+        /// <param name="RoleId"></param>
+        /// <returns>Permissions List</returns>
+        public async Task<APIResponse> GetPermissionsOnSelectedRole(string RoleId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (!string.IsNullOrEmpty(RoleId))
+                {
+                    List<RolePermissionViewModel> rolePermissionsList = new List<RolePermissionViewModel>();
+
+                    rolePermissionsList = await _uow.GetDbContext().RolePermissions
+                                                                   .Where(x => x.IsDeleted == false && x.RoleId == RoleId)
+                                                                   .Select(x=> new RolePermissionViewModel {
+                                                                       Edit= x.CanEdit,
+                                                                       View= x.CanView,
+                                                                       CurrentPermissionId= x.CurrentPermissionId,
+                                                                       IsGrant= x.IsGrant,
+                                                                       ModuleId= x.ModuleId,
+                                                                       PageId= x.PageId,
+                                                                       RoleId= x.RoleId,
+                                                                       RolesPermissionId= x.RolesPermissionId,
+                                                                       PageName= x.ApplicationPages.PageName
+
+                                                                   }) .ToListAsync();
+
+                    response.data.PermissionsInRole = rolePermissionsList;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.NoDataFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
     }
 }
