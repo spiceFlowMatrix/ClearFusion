@@ -56,19 +56,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
 
-                int totalCount = await _uow.GetDbContext().VoucherDetail
-                                       .Where(v => v.IsDeleted == false &&
-                                               !string.IsNullOrEmpty(voucherNewFilterModel.FilterValue) ? (
-                                               v.VoucherNo.ToString().Trim().Contains(voucherNoValue) ||
-                                               v.ReferenceNo.Trim().ToLower().Contains(referenceNoValue) ||
-                                               v.Description.Trim().ToLower().Contains(descriptionValue) ||
-                                               v.JournalDetails.JournalName.Trim().ToLower().Contains(journalNameValue) ||
-                                               v.VoucherDate.ToString().Trim().Contains(dateValue)
-                                               ) : true
-                                       )
-                                      .AsNoTracking()
-                                      .CountAsync();
-
                 var voucherList = await _uow.GetDbContext().VoucherDetail
                                       .Where(v => v.IsDeleted == false &&
                                                  !string.IsNullOrEmpty(voucherNewFilterModel.FilterValue) ? (
@@ -102,7 +89,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                       .AsNoTracking()
                                       .ToListAsync();
                 response.data.VoucherDetailList = voucherList;
-                response.data.TotalCount = totalCount;
+                response.data.TotalCount = voucherList.Count();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
