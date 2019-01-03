@@ -1379,24 +1379,27 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
 
-
                 if (model.ProvinceId != null)
                 {
 
-                    bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                    //bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                    var provinceExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).ToList();
 
-                    if (securityPresent)
+                    var noExistProvinceId = provinceExist.Where(x => !model.ProvinceId.Contains(x.ProvinceId)).Select(x => x.ProvinceId).ToList();
+
+                                                                                                                                                                                                                                                                                              if (provinceExist.Any())
                     {
-                        var securityExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-                        //if (securityExist != null)
-                        //{
-                        //    var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-                        //    _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
-                        //    _uow.GetDbContext().SaveChanges();
-                        //}
-                        _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(securityExist);
-                        _uow.GetDbContext().SaveChanges();
+                        var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => noExistProvinceId.Contains(x.ProvinceId) && x.IsDeleted == false).ToList();
+                        if (districtExist.Any())
+                        {
+                            _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
+                            _uow.GetDbContext().SaveChanges();
+                        }
                     }
+
+                    _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
+                    _uow.GetDbContext().SaveChanges();
+
 
                     List<ProvinceMultiSelect> provinceList = new List<ProvinceMultiSelect>();
 
@@ -1463,22 +1466,22 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (model.DistrictID != null)
                 {
+                    // bool districtPresent = _uow.GetDbContext().DistrictMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                    var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
 
-                    bool districtPresent = _uow.GetDbContext().DistrictMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-
-                    if (districtPresent)
+                    if (districtExist.Any())
                     {
-                        var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-
-
                         _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
                         _uow.GetDbContext().SaveChanges();
                     }
 
                     List<DistrictMultiSelect> districtList = new List<DistrictMultiSelect>();
 
-                    foreach (var item in model.DistrictID)
+                    var selectedDistricts = _uow.GetDbContext().DistrictDetail.Where(x => model.DistrictID.Contains(x.DistrictID)).ToList();
+
+                    foreach (var item in selectedDistricts)
                     {
+
                         DistrictMultiSelect _data = new DistrictMultiSelect();
 
                         _data.DistrictID = item.Value;
