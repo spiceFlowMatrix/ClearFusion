@@ -234,6 +234,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleModel> InterviewScheduleDirectorlist { get; set; }
         public IList<InterviewScheduleModel> InterviewScheduleGeneralAdminlist { get; set; }
         public IList<InterviewScheduleModel> InterviewScheduleFieldOfficelist { get; set; }
+        public IList<RolePermissionViewModel> PermissionsInRole { get; set; }
 
         public IList<EmployeeMonthlyPayrollModel> EmployeeMonthlyPayrolllist { get; set; }
 

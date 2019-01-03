@@ -1223,5 +1223,16 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<APIResponse> GetPermissionsOnSelectedRole([FromQuery]string RoleId)
+    {
+      APIResponse response = null;
+
+      response = await _ipermissionsInRoles.GetPermissionsOnSelectedRole(RoleId);
+
+      return response;
+    }
+
   }
 }
