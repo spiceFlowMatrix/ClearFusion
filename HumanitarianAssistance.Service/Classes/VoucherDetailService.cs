@@ -485,7 +485,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
                     var allCurrencies = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
-                    var baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
+                   var baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
 
                     if (model.fromdate == null && model.todate == null)
                     {
@@ -576,7 +576,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                   t.EURAmount,
                                                   a.ChartOfAccountNewCode
                                               }))
-                                                .OrderBy(x => x.TransactionDate)
+                                                .OrderBy(x => x.TransactionDate).AsNoTracking()
                                                 .ToList();
 
                         foreach (var item in VoucherDetails)

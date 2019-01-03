@@ -4787,7 +4787,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == model.FromCurrency && x.ToCurrency == model.ToCurrency).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+                var exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.FromCurrency == model.FromCurrency && x.ToCurrency == model.ToCurrency);
                 if (exchangeRate != null)
                 {
                     response.data.ExchangeRateLists = exchangeRate;
