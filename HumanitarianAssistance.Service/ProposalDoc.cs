@@ -55,18 +55,31 @@ namespace HumanitarianAssistance.Service
         public static ProjectProposalModel userCredential(string ProjectProposalfilename, string pathFile, ViewModels.Models.Project.GoogleCredential Credential,string EmailId,string FolderName)
         {
             var driveService = userGoogleCredential(ProjectProposalfilename, pathFile, Credential);
-            var resp = createfolder(driveService, ProjectProposalfilename, EmailId, FolderName);
+            var resp = createfolder(driveService, ProjectProposalfilename, EmailId, FolderName, Credential.EmailId);
             return resp;
         }
 
+        //private static object createfolder(DriveService driveService, string projectProposalfilename, string emailId1, string folderName, string emailId2)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public static ProjectProposalModel createfolder(DriveService driveService, string ProjectProposalfilename, string EmailId,string FolderName)
+        public static ProjectProposalModel createfolder(DriveService driveService, string ProjectProposalfilename, string EmailId,string FolderName, string Credential)
         {
             ProjectProposalModel res = new ProjectProposalModel();
             List<File> result = new List<File>();
             List<string> folderName = new List<string>();
             FilesResource.ListRequest Listrequest = driveService.Files.List();
             //request4.Corpora = "files/folders";
+            string mailid = string.Empty;
+            if (EmailId == null)
+            {
+                mailid = Credential;
+            }
+            else
+            {
+                mailid = EmailId + "," + Credential;
+            }
             Listrequest.Fields = "*";
             do
             {
@@ -131,9 +144,9 @@ namespace HumanitarianAssistance.Service
                 };
                 Permission userPermission = new Permission()
                 {
-                    Type = EmailId == null ? "anyone" : "user",
+                    Type = "user",
                     Role = "writer",
-                    EmailAddress = EmailId
+                    EmailAddress = mailid
                 };
 
                 var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
@@ -190,6 +203,15 @@ namespace HumanitarianAssistance.Service
             List<File> result = new List<File>();
             List<string> folderName = new List<string>();
             FilesResource.ListRequest request4 = driveService.Files.List();
+            string mailid = string.Empty;
+            if (EmailId == null)
+            {
+                mailid = Credential.EmailId;
+            }
+            else
+            {
+                mailid = EmailId + "," + Credential.EmailId;
+            }
             //request4.Corpora = "files/folders";
             request4.Fields = "*";
             do
@@ -239,9 +261,9 @@ namespace HumanitarianAssistance.Service
                 };
                 Permission userPermission = new Permission()
                 {
-                    Type = EmailId == null ? "anyone" : "user",
+                    Type = "user",
                     Role = "writer",
-                    EmailAddress = EmailId
+                    EmailAddress = mailid
                 };
 
                 var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
@@ -328,9 +350,9 @@ namespace HumanitarianAssistance.Service
                 };
                 Permission userPermission = new Permission()
                 {
-                    Type = EmailId == null ? "anyone" : "user",
+                    Type = "user",
                     Role = "writer",
-                    EmailAddress = EmailId
+                    EmailAddress = mailid
                 };
                 var file = request.ResponseBody;
                 var request1 = driveService.Permissions.Create(userPermission, file.Id);
@@ -401,6 +423,15 @@ namespace HumanitarianAssistance.Service
         {
             var driveService = userGoogleCredential(ProjectCode, pathFile, Credential);
             string Message = string.Empty;
+            string mailid = string.Empty;
+            if (EmailId == null)
+            {
+                mailid = Credential.EmailId;
+            }
+            else
+            {
+                mailid = EmailId + "," + Credential.EmailId;
+            }
             var batch = new BatchRequest(driveService);
             BatchRequest.OnResponse<Permission> callback = delegate (
                 Permission permission,
@@ -418,9 +449,9 @@ namespace HumanitarianAssistance.Service
             Permission userPermission = new Permission()
             {
                 
-                Type = EmailId==null?"anyone" :"user",
+                Type = "user",
                 Role = "writer",
-                EmailAddress = EmailId
+                EmailAddress = mailid
             };
             //var file = request.ResponseBody;
             var request1 = driveService.Permissions.Create(userPermission, Fileid);
