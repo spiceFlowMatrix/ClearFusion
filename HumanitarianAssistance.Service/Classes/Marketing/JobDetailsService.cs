@@ -286,6 +286,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 var JobList = (from j in _uow.GetDbContext().JobDetails
                                join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
                                join cd in _uow.GetDbContext().ContractDetails on j.ContractId equals cd.ContractId
+                               join cur in _uow.GetDbContext().CurrencyDetails on cd.CurrencyId equals cur.CurrencyId
                                where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.JobId == model
                                select (new JobPriceModel
                                {
@@ -305,6 +306,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    FinalPrice = jp.FinalPrice,
                                    TotalPrice = jp.TotalPrice,
                                    IsApproved = j.IsApproved,
+                                   CurrencyCode = cur.CurrencyCode,
                                    IsAgreementApproved = j.IsAgreementApproved
                                })).FirstOrDefault();
                 response.data.JobPriceDetail = JobList;
