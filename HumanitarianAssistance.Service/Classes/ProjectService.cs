@@ -1377,30 +1377,27 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
 
-
                 if (model.ProvinceId != null)
                 {
 
-                    
-
                     //bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-                    var securityExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).ToList();
+                    var provinceExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).ToList();
 
-                    var noexistProvinceId = securityExist.Where(x => !model.ProvinceId.Contains(x.ProvinceId)).Select(x=> x.ProvinceId).ToList();
+                    var noExistProvinceId = provinceExist.Where(x => !model.ProvinceId.Contains(x.ProvinceId)).Select(x => x.ProvinceId).ToList();
 
-                        if (securityExist.Any())
+                                                                                                                                                                                                                                                                                              if (provinceExist.Any())
+                    {
+                        var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => noExistProvinceId.Contains(x.ProvinceId) && x.IsDeleted == false).ToList();
+                        if (districtExist.Any())
                         {
-                            var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => noexistProvinceId.Contains(x.ProvinceId) && x.IsDeleted == false).ToList();
-                            if (districtExist.Any())
-                            {
-                                _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
-                                _uow.GetDbContext().SaveChanges();
-                            }
+                            _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
+                            _uow.GetDbContext().SaveChanges();
+                        }
                     }
 
-                        _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(securityExist);
-                        _uow.GetDbContext().SaveChanges();
-                   
+                    _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
+                    _uow.GetDbContext().SaveChanges();
+
 
                     List<ProvinceMultiSelect> provinceList = new List<ProvinceMultiSelect>();
 
@@ -1465,25 +1462,22 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (model.DistrictID != null)
                 {
+                    // bool districtPresent = _uow.GetDbContext().DistrictMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                    var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
 
-                    bool districtPresent = _uow.GetDbContext().DistrictMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-
-                    if (districtPresent)
+                    if (districtExist.Any())
                     {
-                        var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-
-
                         _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
                         _uow.GetDbContext().SaveChanges();
                     }
 
                     List<DistrictMultiSelect> districtList = new List<DistrictMultiSelect>();
 
-                    var selectedDistricts =  _uow.GetDbContext().DistrictDetail.Where(x => model.DistrictID.Contains(x.DistrictID)).ToList();
-                     
+                    var selectedDistricts = _uow.GetDbContext().DistrictDetail.Where(x => model.DistrictID.Contains(x.DistrictID)).ToList();
+
                     foreach (var item in selectedDistricts)
                     {
-                        
+
                         DistrictMultiSelect _data = new DistrictMultiSelect();
 
                         _data.DistrictID = item.DistrictID;
@@ -1865,7 +1859,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
 
-       
+
 
 
 
@@ -1996,17 +1990,17 @@ namespace HumanitarianAssistance.Service.Classes
                 var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
                 GoogleCredential result = new GoogleCredential();
 
-               using (StreamReader file = File.OpenText(GoogleCredentialsFile))
+                using (StreamReader file = File.OpenText(GoogleCredentialsFile))
                 using (JsonTextReader reader = new JsonTextReader(file))
                 {
-                  JObject o2 = (JObject)JToken.ReadFrom(reader);
+                    JObject o2 = (JObject)JToken.ReadFrom(reader);
 
-                     result = o2["GoogleCredential"].ToObject<GoogleCredential>();
+                    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
                 }
 
 
                 string _detail;
-                _detail = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectName+"-"+x.ProjectCode+"-"+ "Proposal").FirstOrDefault();
+                _detail = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectName + "-" + x.ProjectCode + "-" + "Proposal").FirstOrDefault();
                 response.data.ProjectProposalModel = ProposalDoc.userCredential(_detail, pathFile, result);
                 model.FolderName = response.data.ProjectProposalModel.FolderName;
                 model.FolderId = response.data.ProjectProposalModel.FolderId;
