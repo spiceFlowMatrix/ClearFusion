@@ -131,7 +131,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         //public List<BudgetLineEmployees> GetAllEmployeesInBudgetLine { get; set; }
         public List<EmployeeProjectModel> EmployeeProjectList { get; set; }
         public List<EmployeeSummaryDetails> EmployeeSummaryDetailsList { get; set; }
-        public ExchangeRate ExchangeRateLists { get; set; }
+        public ExchangeRateDetail ExchangeRateLists { get; set; }
         public List<ExchangeRate> ExchangeRates { get; set; }
         public AccountOpendingAndClosingBL AccountOpendingAndClosingBL { get; set; }
         //List Response result
