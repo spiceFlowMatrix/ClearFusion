@@ -1488,7 +1488,10 @@ namespace HumanitarianAssistance.Service.Classes
                         _data.ProjectId = model.ProjectId;
                         _data.IsDeleted = false;
                         _data.CreatedById = UserId;
+                        _data.ProvinceId = item.ProvinceID.Value;
                         _data.CreatedDate = DateTime.Now;
+
+                        //_data.ProvinceId=model.ProvinceId
 
                         districtList.Add(_data);
                     }
