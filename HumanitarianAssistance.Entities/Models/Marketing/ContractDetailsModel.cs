@@ -26,6 +26,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public bool IsApproved { get; set; }
         public bool IsDeclined { get; set; }
         public string Type { get; set; }
+        public int? Count { get; set; }
     }
 
     public class ApproveContractModel
@@ -55,5 +56,11 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public string ContractByClients { get; set; }
         public double UnitRate { get; set; }
         public int? CurrencyId { get; set; }
+    }
+
+    public class ContractPaginationModel
+    {
+        public int pageIndex { get; set; }
+        public int pageSize { get; set; }
     }
 }
