@@ -3451,19 +3451,19 @@ namespace HumanitarianAssistance.Service.Classes
                                 }
                                 else
                                 {
-                                    var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == items.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+                                    var conversionRate = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefault(x => x.ToCurrency == currencyid && x.FromCurrency == items.CurrencyId);
                                     items.TotalWorkHours = values.TotalWorkHours;
                                     items.OverTimeHours = values.OverTimeHours;
                                     items.PresentDays = values.PresentDays;
                                     items.AbsentDays = values.AbsentDays;
                                     items.LeaveDays = values.LeaveDays;
                                     items.LeaveHours = values.LeaveHours;
-                                    items.GrossSalary = (items.TotalGeneralAmount * (values.TotalWorkHours + values.LeaveHours + values.OverTimeHours) + items.TotalAllowance + items.AdvanceAmount) * conversionRate?.Rate ?? 0;
-                                    items.SalaryTax = SalaryCalculate(items.GrossSalary.Value, conversionRate?.Rate ?? 0);
+                                    items.GrossSalary = (items.TotalGeneralAmount * (values.TotalWorkHours + values.LeaveHours + values.OverTimeHours) + items.TotalAllowance + items.AdvanceAmount) * (double?)conversionRate?.Rate ?? 0;
+                                    items.SalaryTax = SalaryCalculate(items.GrossSalary.Value, (double?)conversionRate?.Rate ?? 0);
                                     items.AdvanceAmount = items.AdvanceAmount;
                                     items.AdvanceRecoveryAmount = items.AdvanceRecoveryAmount;
-                                    items.PensionAmount = ((items.TotalGeneralAmount * (values.TotalWorkHours + values.LeaveHours + values.OverTimeHours) + items.TotalAllowance + items.AdvanceAmount) * conversionRate?.Rate ?? 0) * items.employeepayrolllist[0].PensionRate;
-                                    items.NetSalary = ((items.TotalGeneralAmount * (values.TotalWorkHours + values.LeaveHours + values.OverTimeHours) + items.TotalAllowance + items.AdvanceAmount) * conversionRate?.Rate ?? 0) - items.TotalDeduction - items.SalaryTax - items.AdvanceRecoveryAmount - items.PensionAmount;
+                                    items.PensionAmount = ((items.TotalGeneralAmount * (values.TotalWorkHours + values.LeaveHours + values.OverTimeHours) + items.TotalAllowance + items.AdvanceAmount) * (double?)conversionRate?.Rate ?? 0) * items.employeepayrolllist[0].PensionRate;
+                                    items.NetSalary = ((items.TotalGeneralAmount * (values.TotalWorkHours + values.LeaveHours + values.OverTimeHours) + items.TotalAllowance + items.AdvanceAmount) * (double?)conversionRate?.Rate ?? 0) - items.TotalDeduction - items.SalaryTax - items.AdvanceRecoveryAmount - items.PensionAmount;
                                 }
                             }
                         }
@@ -3514,8 +3514,8 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             if (element.CurrencyId != currencyid)
                             {
-                                var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
-                                advance += element.AdvanceAmount * conversionRate.Rate;
+                                var conversionRate = _uow.ExchangeRateDetailRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+                                advance += element.AdvanceAmount * (double?)conversionRate.Rate;
                             }
                             else
                             {
@@ -3529,8 +3529,8 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             if (element.CurrencyId != currencyid)
                             {
-                                var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
-                                advanceRecovery += element.AdvanceAmount * conversionRate.Rate;
+                                var conversionRate = _uow.ExchangeRateDetailRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+                                advanceRecovery += element.AdvanceAmount * (double?)conversionRate.Rate;
                             }
                             else
                             {
@@ -3610,7 +3610,7 @@ namespace HumanitarianAssistance.Service.Classes
                         // TO CONVERT AMOUNT USING CONVERSION RATE
                         else
                         {
-                            var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+                            var conversionRate = _uow.ExchangeRateDetailRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == payrolllist[i].FirstOrDefault().EmployeeDetails.EmployeeSalaryDetails.CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
                             payrollmodel = payrolllist[i].Select(x => new EmployeeMonthlyPayrollModel
                             {
                                 employeepayrolllist = _uow.GetDbContext().EmployeePayroll.Include(o => o.SalaryHeadDetails).Where(c => c.EmployeeID == x.EmployeeId && c.SalaryHeadDetails.IsDeleted == false).ToList().Select(e => new EmployeePayrollModel
@@ -3620,7 +3620,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     EmployeeId = e.EmployeeID,
                                     CurrencyId = e.CurrencyId ?? 0,
                                     PaymentType = e.PaymentType ?? 0,
-                                    MonthlyAmount = e.MonthlyAmount * conversionRate?.Rate ?? 0,
+                                    MonthlyAmount = e.MonthlyAmount * (double?)conversionRate?.Rate ?? 0,
                                     PensionRate = pensionrateamount,
                                     SalaryHead = e.SalaryHeadDetails.HeadName,
                                     HeadTypeId = e.SalaryHeadDetails.HeadTypeId,
@@ -3636,22 +3636,22 @@ namespace HumanitarianAssistance.Service.Classes
                                 LeaveHours = leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)),
                                 TotalWorkHours = totalhours,
                                 OverTimeHours = overtimehours,
-                                TotalGeneralAmount = x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate?.Rate ?? 0,
-                                TotalAllowance = x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0,
-                                GrossSalary = x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * conversionRate?.Rate ?? 0), 2)
+                                TotalGeneralAmount = x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (double?)conversionRate?.Rate ?? 0,
+                                TotalAllowance = x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * (double?)conversionRate?.Rate ?? 0,
+                                GrossSalary = x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * (double?)conversionRate?.Rate ?? 0), 2)
                                 :
-                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0)), 2),
+                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * (double?)conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * (double?)conversionRate?.Rate ?? 0)), 2),
 
-                                SalaryTax = SalaryCalculate(x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * conversionRate?.Rate ?? 0), 2) :
-                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0)), 2), conversionRate?.Rate ?? 0),
+                                SalaryTax = SalaryCalculate(x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * (double?)conversionRate?.Rate ?? 0), 2) :
+                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * (double?)conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * (double?)conversionRate?.Rate ?? 0)), 2), (double?)conversionRate?.Rate ?? 0),
 
                                 PensionAmount = x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ?
-                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * conversionRate?.Rate ?? 0) * pensionrateamount), 2)
+                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance) * (double?)conversionRate?.Rate ?? 0) * pensionrateamount), 2)
                                 :
-                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0) * pensionrateamount), 2),
+                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * (double?)conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * (double?)conversionRate?.Rate ?? 0) * pensionrateamount), 2),
 
                                 // Deduction Starts
-                                TotalDeduction = (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate?.Rate ?? 0),
+                                TotalDeduction = (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * (double?)conversionRate?.Rate ?? 0),
                                 //+ (x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ?
                                 //Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate.Rate + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate)
                                 //* pensionrateamount), 2)
@@ -3661,13 +3661,13 @@ namespace HumanitarianAssistance.Service.Classes
                                 // Deduction Ends
 
                                 // Net Salary Starts
-                                NetSalary = x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate?.Rate ?? 0
-                                + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0) - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate?.Rate ?? 0 + Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * conversionRate?.Rate ?? 0 + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0)
-                                * pensionrateamount) - SalaryCalculate(Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), conversionRate?.Rate ?? 0), 2))), 2)
+                                NetSalary = x.EmployeeDetails.EmployeeSalaryDetails.PaymentType == 1 ? Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (double?)conversionRate?.Rate ?? 0
+                                + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * (double?)conversionRate?.Rate ?? 0) - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * (double?)conversionRate?.Rate ?? 0 + Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (double?)conversionRate?.Rate ?? 0 + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * (double?)conversionRate?.Rate ?? 0)
+                                * pensionrateamount) - SalaryCalculate(Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), (double?)conversionRate?.Rate ?? 0), 2))), 2)
                                 :
-                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0)), 2)
-                                - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate?.Rate ?? 0) - Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0) * pensionrateamount), 2)
-                                - SalaryCalculate(Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate?.Rate ?? 0)), 2), conversionRate?.Rate ?? 0),
+                                Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * (double?)conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * (double?)conversionRate?.Rate ?? 0)), 2)
+                                - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * (double?)conversionRate?.Rate ?? 0) - Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * (double?)conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * (double?)conversionRate?.Rate ?? 0) * pensionrateamount), 2)
+                                - SalaryCalculate(Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * (totalhours + overtimehours + (leavedays * Convert.ToInt32((Convert.ToDateTime(dailyHours.OutTime) - Convert.ToDateTime(dailyHours.InTime)).ToString().Substring(0, 2)))) * (double?)conversionRate?.Rate ?? 0) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * (double?)conversionRate?.Rate ?? 0)), 2), (double?)conversionRate?.Rate ?? 0),
                                 //Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate) - (x.EmployeeDetails.EmployeeSalaryDetails.Totalduduction * conversionRate.Rate + Math.Round(Convert.ToDouble(((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount * totalhours * conversionRate.Rate) + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance * conversionRate.Rate)
                                 //* pensionrateamount) - SalaryCalculate(Math.Round(Convert.ToDouble((x.EmployeeDetails.EmployeeSalaryDetails.TotalGeneralAmount + x.EmployeeDetails.EmployeeSalaryDetails.TotalAllowance)), 2), conversionRate.Rate), 2))), 2),
                                 // Net Salary End
@@ -3693,8 +3693,8 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         if (element.CurrencyId != currencyid)
                         {
-                            var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == item.employeepayrolllist[0].CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
-                            advance += element.AdvanceAmount * conversionRate.Rate;
+                            var conversionRate = _uow.ExchangeRateDetailRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == item.employeepayrolllist[0].CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+                            advance += element.AdvanceAmount * (double?)conversionRate.Rate;
                         }
                         else
                         {
@@ -3723,8 +3723,8 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         if (element.CurrencyId != currencyid)
                         {
-                            var conversionRate = _uow.ExchangeRateRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == item.employeepayrolllist[0].CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
-                            advanceRecovery += element.AdvanceAmount * conversionRate.Rate;
+                            var conversionRate = _uow.ExchangeRateDetailRepository.FindAll(x => x.ToCurrency == currencyid && x.FromCurrency == item.employeepayrolllist[0].CurrencyId).OrderByDescending(x => x.Date).FirstOrDefault();
+                            advanceRecovery += element.AdvanceAmount * (double?)conversionRate.Rate;
                         }
                         else
                         {
