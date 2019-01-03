@@ -131,8 +131,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                          FinalRate = jp.FinalRate,
                                          FinalPrice = jp.FinalPrice,
                                          TotalPrice = jp.TotalPrice,
+                                         CreatedDate = j.CreatedDate,
                                          IsInvoiceApproved = jp.IsInvoiceApproved
-                                     })).Take(10).Skip(0).ToListAsync();
+                                     })).Take(10).Skip(0).OrderByDescending(x => x.CreatedDate).ToListAsync();
 
 
 
@@ -421,7 +422,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         response.StatusCode = StaticResource.failStatusCode;
                         response.Message = "Job Name already exists. Please try again with other job name.";
                     }
-                    
+
                 }
                 else
                 {
@@ -454,7 +455,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         response.Message = "Job Updated Successfully";
                         response.StatusCode = StaticResource.successStatusCode;
                     }
-                }             
+                }
             }
             catch (Exception ex)
             {
@@ -589,53 +590,54 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             string jobNameValue = null;
             string ApprovedValue = null;
 
+            if (!string.IsNullOrEmpty(model.Value))
+            {
+                finalPriceValue = model.FinalPrice ? model.Value.ToLower().Trim() : null;
+                jobIdValue = model.JobId ? model.Value.ToLower().Trim() : null;
+                jobNameValue = model.JobName ? model.Value.ToLower().Trim() : null;
+                ApprovedValue = model.Approved ? model.Value.ToLower().Trim() : null;
+            }
+
             APIResponse response = new APIResponse();
             try
             {
-                if (!string.IsNullOrEmpty(model.Value))
-                {
-                    finalPriceValue = model.FinalPrice ? model.Value.ToLower().Trim() : null;
-                    jobIdValue = model.JobId ? model.Value.ToLower().Trim() : null;
-                    jobNameValue = model.JobName ? model.Value.ToLower().Trim() : null;
-                    ApprovedValue = model.Approved ? model.Value.ToLower().Trim() : null;
-                    var JobList = (from j in _uow.GetDbContext().JobDetails
-                                   join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
-                                   where (jp.FinalPrice.ToString().ToLower().Trim() == finalPriceValue ||
-                                          j.JobId.ToString().ToLower().Trim() == jobIdValue ||
-                                          j.JobName.ToString().ToLower().Trim() == jobNameValue ||
-                                          j.IsApproved.ToString().ToLower().Trim() == ApprovedValue) &&
-                                          j.IsDeleted == false
-                                   select (new JobDetailsModel
-                                   {
-                                       JobId = j.JobId,
-                                       JobCode = j.JobCode,
-                                       JobName = j.JobName,
-                                       EndDate = j.EndDate,
-                                       IsActive = j.IsActive,
-                                       IsApproved = j.IsApproved,
-                                       UnitRate = jp.UnitRate,
-                                       Units = jp.Units,
-                                       FinalRate = jp.FinalRate,
-                                       FinalPrice = jp.FinalPrice,
-                                       TotalPrice = jp.TotalPrice,
-                                       IsInvoiceApproved = jp.IsInvoiceApproved,
-                                       ContractId = j.ContractId,
-                                       Discount = jp.Discount,
-                                       DiscountPercent = jp.DiscountPercent,
-                                       Minutes = jp.Minutes
-                                   })).ToList();
-                    response.data.jobListTotalCount = JobList.Count();
-                    response.data.JobPriceDetailList = JobList;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "No Entries Found.Try Different Filters";
-                }
-
-
+                var voucherList = await _uow.GetDbContext().JobPriceDetails
+                                    .Where(v => v.IsDeleted == false &&
+                                          (!string.IsNullOrEmpty(model.Value) ?
+                                             (
+                                                   v.JobDetails.JobId.ToString().Trim().ToLower().Contains(jobIdValue) ||
+                                                   v.FinalPrice.ToString().Trim().ToLower().Contains(finalPriceValue) ||
+                                                   v.JobDetails.JobName.Trim().ToLower().Contains(jobNameValue) ||
+                                                   v.JobDetails.IsApproved.ToString().Trim().ToLower().Contains(ApprovedValue)
+                                              ) : true
+                                           )
+                                     )
+                                    .OrderByDescending(x => x.JobDetails.CreatedDate)
+                                    .Select(x => new JobDetailsModel
+                                    {
+                                        JobId = x.JobId,
+                                        JobCode = x.JobDetails.JobCode,
+                                        JobName = x.JobDetails.JobName,
+                                        EndDate = x.JobDetails.EndDate,
+                                        IsActive = x.JobDetails.IsActive,
+                                        IsApproved = x.JobDetails.IsApproved,
+                                        UnitRate = x.UnitRate,
+                                        Units = x.Units,
+                                        FinalRate = x.FinalRate,
+                                        FinalPrice = x.FinalPrice,
+                                        TotalPrice = x.TotalPrice,
+                                        IsInvoiceApproved = x.IsInvoiceApproved,
+                                        ContractId = x.JobDetails.ContractId,
+                                        Discount = x.Discount,
+                                        DiscountPercent = x.DiscountPercent,
+                                        Minutes = x.Minutes
+                                    })
+                                    .AsNoTracking()
+                                    .ToListAsync();
+                response.data.jobListTotalCount = voucherList.Count();
+                response.data.JobPriceDetailList = voucherList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {

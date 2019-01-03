@@ -52,21 +52,34 @@ namespace HumanitarianAssistance.Service
         }
 
 
-        public static ProjectProposalModel userCredential(string ProjectCode, string pathFile, ViewModels.Models.Project.GoogleCredential Credential)
+        public static ProjectProposalModel userCredential(string ProjectProposalfilename, string pathFile, ViewModels.Models.Project.GoogleCredential Credential,string EmailId,string FolderName)
         {
-            var driveService = userGoogleCredential(ProjectCode, pathFile, Credential);
-            var resp = createfolder(driveService, ProjectCode);
+            var driveService = userGoogleCredential(ProjectProposalfilename, pathFile, Credential);
+            var resp = createfolder(driveService, ProjectProposalfilename, EmailId, FolderName, Credential.EmailId);
             return resp;
         }
 
+        //private static object createfolder(DriveService driveService, string projectProposalfilename, string emailId1, string folderName, string emailId2)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public static ProjectProposalModel createfolder(DriveService driveService, string ProjectCode)
+        public static ProjectProposalModel createfolder(DriveService driveService, string ProjectProposalfilename, string EmailId,string FolderName, string Credential)
         {
             ProjectProposalModel res = new ProjectProposalModel();
             List<File> result = new List<File>();
             List<string> folderName = new List<string>();
             FilesResource.ListRequest Listrequest = driveService.Files.List();
             //request4.Corpora = "files/folders";
+            string mailid = string.Empty;
+            if (EmailId == null)
+            {
+                mailid = Credential;
+            }
+            else
+            {
+                mailid = EmailId + "," + Credential;
+            }
             Listrequest.Fields = "*";
             do
             {
@@ -77,11 +90,11 @@ namespace HumanitarianAssistance.Service
                 Listrequest.PageToken = files.NextPageToken;
             } while (!String.IsNullOrEmpty(Listrequest.PageToken));
 
-            if (folderName.Contains(ProjectCode))
+            if (folderName.Contains(FolderName))
             {
-                res.FIleResponseMsg = "File already exist with name " + ProjectCode;
+                res.FIleResponseMsg = "File already exist with name " + FolderName;
                 res.StatusCode = StaticResource.NameAlreadyExist;
-                File fileDetail = result.FirstOrDefault(p => p.Name == ProjectCode);
+                File fileDetail = result.FirstOrDefault(p => p.Name == FolderName);
                 res.ProposalWebLink = fileDetail.WebViewLink;
                 //Console.WriteLine("File already exist with name {0}.", nameFile);
             }
@@ -89,7 +102,7 @@ namespace HumanitarianAssistance.Service
             {
                 var fileFolderMetadata = new File()
                 {
-                    Name = ProjectCode,
+                    Name = FolderName,
                     MimeType = "application/vnd.google-apps.folder"
                 };
                 var folderrequest = driveService.Files.Create(fileFolderMetadata);
@@ -103,7 +116,7 @@ namespace HumanitarianAssistance.Service
 
                 var fileMetadata = new File()
                 {
-                    Name = ProjectCode,
+                    Name = ProjectProposalfilename,
                     MimeType = "application/vnd.google-apps.document",
                     Parents = new List<string>
                 {
@@ -129,17 +142,33 @@ namespace HumanitarianAssistance.Service
                         res.FIleResponseMsg = error.Message;
                     }
                 };
-                Permission userPermission = new Permission()
-                {
-                    Type = "anyone", //user
-                    Role = "writer",
-                    //EmailAddress = "anveshkjain@gmail.com"
-                };
 
-                var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
-                Permissionrequest.Fields = "*";
-                batch.Queue(Permissionrequest, callback);
-                var task = batch.ExecuteAsync();
+                foreach (var item in mailid.Split(','))
+                {
+                    Permission userPermission = new Permission()
+                    {
+
+                        Type = "user",
+                        Role = "writer",
+                        EmailAddress = item
+                    };
+                    //var file = request.ResponseBody;
+                    var request1 = driveService.Permissions.Create(userPermission, file.Id);
+                    request1.Fields = "*";
+                    batch.Queue(request1, callback);
+                    var task = batch.ExecuteAsync();
+                }
+                //Permission userPermission = new Permission()
+                //{
+                //    Type = "user",
+                //    Role = "writer",
+                //    EmailAddress = mailid
+                //};
+
+                //var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
+                //Permissionrequest.Fields = "*";
+                //batch.Queue(Permissionrequest, callback);
+                //var task = batch.ExecuteAsync();
                 res.FIleResponseMsg = "File Created Succesfully";
                 res.StatusCode = StaticResource.successStatusCode;
             }
@@ -153,35 +182,35 @@ namespace HumanitarianAssistance.Service
         //    return resp;
         //}
 
-        public static ProjectProposalModel GetProposalwebLink(DriveService driveService, string ProjectCode)
-        {
-            ProjectProposalModel res = new ProjectProposalModel();
-            List<File> result = new List<File>();
-            List<string> folderName = new List<string>();
-            FilesResource.ListRequest Listrequest = driveService.Files.List();
-            //request4.Corpora = "files/folders";
-            Listrequest.Fields = "*";
-            do
-            {
-                FileList files = Listrequest.Execute();
-                result.AddRange(files.Files);
-                result = result.Where(p => p.MimeType == "application/vnd.google-apps.document" && p.Trashed == false).ToList();
-                folderName = result.Select(p => p.Name).Distinct().ToList();
-                Listrequest.PageToken = files.NextPageToken;
-            } while (!String.IsNullOrEmpty(Listrequest.PageToken));
+        //public static ProjectProposalModel GetProposalwebLink(DriveService driveService, string ProjectCode)
+        //{
+        //    ProjectProposalModel res = new ProjectProposalModel();
+        //    List<File> result = new List<File>();
+        //    List<string> folderName = new List<string>();
+        //    FilesResource.ListRequest Listrequest = driveService.Files.List();
+        //    //request4.Corpora = "files/folders";
+        //    Listrequest.Fields = "*";
+        //    do
+        //    {
+        //        FileList files = Listrequest.Execute();
+        //        result.AddRange(files.Files);
+        //        result = result.Where(p => p.MimeType == "application/vnd.google-apps.document" && p.Trashed == false).ToList();
+        //        folderName = result.Select(p => p.Name).Distinct().ToList();
+        //        Listrequest.PageToken = files.NextPageToken;
+        //    } while (!String.IsNullOrEmpty(Listrequest.PageToken));
 
-            if (folderName.Contains(ProjectCode))
-            {
-                res.FIleResponseMsg = "File already exist with name " + ProjectCode;
-                res.StatusCode = StaticResource.NameAlreadyExist;
-                File fileDetail = result.FirstOrDefault(p => p.Name == ProjectCode);
-                res.ProposalWebLink = fileDetail.WebViewLink;
-                //Console.WriteLine("File already exist with name {0}.", nameFile);
-            }
-            return res;
-        }
+        //    if (folderName.Contains(ProjectCode))
+        //    {
+        //        res.FIleResponseMsg = "File already exist with name " + ProjectCode;
+        //        res.StatusCode = StaticResource.NameAlreadyExist;
+        //        File fileDetail = result.FirstOrDefault(p => p.Name == ProjectCode);
+        //        res.ProposalWebLink = fileDetail.WebViewLink;
+        //        //Console.WriteLine("File already exist with name {0}.", nameFile);
+        //    }
+        //    return res;
+        //}
 
-        public static ProjectProposalModel uploadOtherProposaldoc(string ProjectCode, IFormFile filedata, string fileName, string pathFile, string uploadfilelocalpath, ViewModels.Models.Project.GoogleCredential Credential)
+        public static ProjectProposalModel uploadOtherProposaldoc(string ProjectCode, IFormFile filedata, string fileName, string pathFile, string uploadfilelocalpath, ViewModels.Models.Project.GoogleCredential Credential,string EmailId)
         {
             ProjectProposalModel res = new ProjectProposalModel();
             string exten = System.IO.Path.GetExtension(fileName).ToLower();
@@ -190,6 +219,15 @@ namespace HumanitarianAssistance.Service
             List<File> result = new List<File>();
             List<string> folderName = new List<string>();
             FilesResource.ListRequest request4 = driveService.Files.List();
+            string mailid = string.Empty;
+            if (EmailId == null)
+            {
+                mailid = Credential.EmailId;
+            }
+            else
+            {
+                mailid = EmailId + "," + Credential.EmailId;
+            }
             //request4.Corpora = "files/folders";
             request4.Fields = "*";
             do
@@ -237,17 +275,36 @@ namespace HumanitarianAssistance.Service
                         res.FIleResponseMsg = error.Message;
                     }
                 };
-                Permission userPermission = new Permission()
-                {
-                    Type = "anyone", //user
-                    Role = "writer",
-                    //EmailAddress = "anveshkjain@gmail.com"
-                };
 
-                var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
-                Permissionrequest.Fields = "*";
-                batch.Queue(Permissionrequest, callback);
-                var task = batch.ExecuteAsync();
+                foreach (var item in mailid.Split(','))
+                {
+                    Permission userPermission = new Permission()
+                    {
+
+                        Type = "user",
+                        Role = "writer",
+                        EmailAddress = item
+                    };
+                   // var file = request.ResponseBody;
+                    var request1 = driveService.Permissions.Create(userPermission, file.Id);
+                    request1.Fields = "*";
+                    batch.Queue(request1, callback);
+                    var task = batch.ExecuteAsync();
+                }
+
+
+
+                //Permission userPermission = new Permission()
+                //{
+                //    Type = "user",
+                //    Role = "writer",
+                //    EmailAddress = mailid
+                //};
+
+                //var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
+                //Permissionrequest.Fields = "*";
+                //batch.Queue(Permissionrequest, callback);
+                //var task = batch.ExecuteAsync();
                 string fileType = file.Name.Trim('"').Split('_')[0];
                 res.FileType = fileType;
                 if (fileType == "EOI")
@@ -326,16 +383,36 @@ namespace HumanitarianAssistance.Service
                         res.FIleResponseMsg = error.Message;
                     }
                 };
-                Permission userPermission = new Permission()
-                {
-                    Type = "anyone", //user
-                    Role = "writer",
-                };
                 var file = request.ResponseBody;
-                var request1 = driveService.Permissions.Create(userPermission, file.Id);
-                request1.Fields = "*";
-                batch.Queue(request1, callback);
-                var task = batch.ExecuteAsync();
+                foreach (var item in mailid.Split(','))
+                {
+                    Permission userPermission = new Permission()
+                    {
+
+                        Type = "user",
+                        Role = "writer",
+                        EmailAddress = item
+                    };
+                    //var file = request.ResponseBody;
+                    var request1 = driveService.Permissions.Create(userPermission, file.Id);
+                    request1.Fields = "*";
+                    batch.Queue(request1, callback);
+                    var task = batch.ExecuteAsync();
+                }
+
+
+
+                //Permission userPermission = new Permission()
+                //{
+                //    Type = "user",
+                //    Role = "writer",
+                //    EmailAddress = mailid
+                //};
+                //var file = request.ResponseBody;
+                //var request1 = driveService.Permissions.Create(userPermission, file.Id);
+                //request1.Fields = "*";
+                //batch.Queue(request1, callback);
+                //var task = batch.ExecuteAsync();
                 string fileType = file.Name.Trim('"').Split('_')[0];
                 res.FileType = fileType;
                 if (fileType == "EOI")
@@ -400,6 +477,15 @@ namespace HumanitarianAssistance.Service
         {
             var driveService = userGoogleCredential(ProjectCode, pathFile, Credential);
             string Message = string.Empty;
+            string mailid = string.Empty;
+            if (EmailId == null)
+            {
+                mailid = Credential.EmailId;
+            }
+            else
+            {
+                mailid = EmailId + "," + Credential.EmailId ;
+            }
             var batch = new BatchRequest(driveService);
             BatchRequest.OnResponse<Permission> callback = delegate (
                 Permission permission,
@@ -414,18 +500,22 @@ namespace HumanitarianAssistance.Service
                 }
             };
 
-            Permission userPermission = new Permission()
+            foreach (var item in mailid.Split(','))
             {
-                
-                Type = EmailId==null?"anyone" :"user",
-                Role = "writer",
-                EmailAddress = EmailId
-            };
-            //var file = request.ResponseBody;
-            var request1 = driveService.Permissions.Create(userPermission, Fileid);
-            request1.Fields = "*";
-            batch.Queue(request1, callback);
-            var task = batch.ExecuteAsync();
+                Permission userPermission = new Permission()
+                {
+
+                    Type = "user",
+                    Role = "writer",
+                    EmailAddress = item
+                };
+                //var file = request.ResponseBody;
+                var request1 = driveService.Permissions.Create(userPermission, Fileid);
+                request1.Fields = "*";
+                batch.Queue(request1, callback);
+                var task = batch.ExecuteAsync();
+            }
+            
             return Message = "Success";
         }
     }

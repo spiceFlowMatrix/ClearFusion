@@ -28,6 +28,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public bool IsInvoiceApproved { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsAgreementApproved { get; set; }
+        public DateTime? CreatedDate { get; set; }
     }
 
     public class JobFilterModel
