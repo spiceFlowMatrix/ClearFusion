@@ -1484,7 +1484,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                         DistrictMultiSelect _data = new DistrictMultiSelect();
 
-                        _data.DistrictID = item.Value;
+                        _data.DistrictID = item.DistrictID;
                         _data.ProjectId = model.ProjectId;
                         _data.IsDeleted = false;
                         _data.CreatedById = UserId;
