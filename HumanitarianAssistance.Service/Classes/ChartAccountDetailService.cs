@@ -33,23 +33,32 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var charlist = await Task.Run(() =>
-                  _uow.GetDbContext().ChartOfAccountNew.Include(c => c.AccountType).Where(a => a.IsDeleted == false).ToList()
-                    );
-                var chartaccountlist = charlist.Select(blog => new ChartAccountDetailModel
-                {
-                    ChartOfAccountNewId = blog.ChartOfAccountNewId,
-                    AccountName = blog.AccountName,
-                    AccountLevelId = blog.AccountLevelId,
-                    AccountTypeName = blog.AccountType.AccountTypeName,
-                    AccountTypeId = blog.AccountType.AccountTypeId,
-                    ParentID = blog.ParentID,
-                    ChartOfAccountNewCode = blog.ChartOfAccountNewCode
-                    //DepRate = blog.DepRate,
-                    //DepMethod = blog.DepMethod,
-                    //MDCode = blog.MDCode,
-                    //Show = blog.Show
-                }).ToList();
+                var chartaccountlist = await _uow.GetDbContext().ChartOfAccountNew.Include(c => c.AccountType)
+                                                       .Where(a => a.IsDeleted == false)
+                                                       .Select(blog=> new ChartAccountDetailModel {
+                                                           ChartOfAccountNewId = blog.ChartOfAccountNewId,
+                                                           AccountName = blog.AccountName,
+                                                           AccountLevelId = blog.AccountLevelId,
+                                                           AccountTypeName = blog.AccountType.AccountTypeName,
+                                                           AccountTypeId = blog.AccountType.AccountTypeId,
+                                                           ParentID = blog.ParentID,
+                                                           ChartOfAccountNewCode = blog.ChartOfAccountNewCode
+
+                                                       }).ToListAsync();
+                //var chartaccountlist = charlist.Select(blog => new ChartAccountDetailModel
+                //{
+                //    ChartOfAccountNewId = blog.ChartOfAccountNewId,
+                //    AccountName = blog.AccountName,
+                //    AccountLevelId = blog.AccountLevelId,
+                //    AccountTypeName = blog.AccountType.AccountTypeName,
+                //    AccountTypeId = blog.AccountType.AccountTypeId,
+                //    ParentID = blog.ParentID,
+                //    ChartOfAccountNewCode = blog.ChartOfAccountNewCode
+                //    //DepRate = blog.DepRate,
+                //    //DepMethod = blog.DepMethod,
+                //    //MDCode = blog.MDCode,
+                //    //Show = blog.Show
+                //}).ToList();
                 response.data.ChartAccountList = chartaccountlist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

@@ -93,12 +93,12 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetAllSecurityConsiderationDetails();
         APIResponse GetAllDistrictvalueByProvinceId(int[] provinceId);
 
-        APIResponse AddEditProjectproposals(long projectId, string UserId);
+        APIResponse AddEditProjectproposals(long projectId, string UserId,string logginUserEmailId);
         APIResponse GetProjectproposalsById(long projectId);
 
         APIResponse AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
-        APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileNames);
-        APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId);
+        APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileNames, string logginUserEmailId);
+        APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId);
         APIResponse GetOtherProjectListById(long ProjectId);
         APIResponse AddEditDonorCriteria(DonorCriteriaModel model, string UserId);
         APIResponse AddEditPurposeofInitiativeCriteria(PurposeofInitiativeCriteriaModel model, string UserId);
