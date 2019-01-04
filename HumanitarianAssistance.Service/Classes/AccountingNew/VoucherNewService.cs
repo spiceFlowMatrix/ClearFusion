@@ -38,72 +38,70 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         {
             APIResponse response = new APIResponse();
 
-            //string codeValue = null;
-            //string journalValue = null;
-            //string dateValue = null;
-            //string nameValue = null;
+            string voucherNoValue = null;
+            string referenceNoValue = null;
+            string descriptionValue = null;
+            string journalNameValue = null;
+            string dateValue = null;
 
-            //if (!string.IsNullOrEmpty(voucherNewFilterModel.FilterValue))
-            //{
-            //    codeValue = voucherNewFilterModel.CodeFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
-            //    nameValue = voucherNewFilterModel.NameFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
-            //    dateValue = voucherNewFilterModel.DateFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
-            //    journalValue = voucherNewFilterModel.JournalFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
-            //}
+            if (!string.IsNullOrEmpty(voucherNewFilterModel.FilterValue))
+            {
+                voucherNoValue = voucherNewFilterModel.VoucherNoFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
+                referenceNoValue = voucherNewFilterModel.ReferenceNoFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
+                descriptionValue = voucherNewFilterModel.DescriptionFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
+                journalNameValue = voucherNewFilterModel.JournalNameFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
+                dateValue = voucherNewFilterModel.DateFlag ? voucherNewFilterModel.FilterValue.ToLower().Trim() : null;
+            }
 
             try
             {
 
-
                 int totalCount = await _uow.GetDbContext().VoucherDetail
-                                      .Where(v => v.IsDeleted == false)
+                                       .Where(v => v.IsDeleted == false &&
+                                               !string.IsNullOrEmpty(voucherNewFilterModel.FilterValue) ? (
+                                               v.VoucherNo.ToString().Trim().Contains(voucherNoValue) ||
+                                               v.ReferenceNo.Trim().ToLower().Contains(referenceNoValue) ||
+                                               v.Description.Trim().ToLower().Contains(descriptionValue) ||
+                                               v.JournalDetails.JournalName.Trim().ToLower().Contains(journalNameValue) ||
+                                               v.VoucherDate.ToString().Trim().Contains(dateValue)
+                                               ) : true
+                                       )
+                                      .AsNoTracking()
                                       .CountAsync();
 
                 var voucherList = await _uow.GetDbContext().VoucherDetail
-                                      .Include(o => o.OfficeDetails)
-                                      .Include(j => j.JournalDetails)
-                                      .Include(c => c.CurrencyDetail)
-                                      .Include(f => f.FinancialYearDetails)
-                                      .Where(v => v.IsDeleted == false)
-                                      .OrderByDescending(x => x.VoucherDate)
+                                      .Where(v => v.IsDeleted == false &&
+                                                 !string.IsNullOrEmpty(voucherNewFilterModel.FilterValue) ? (
+                                                   v.VoucherNo.ToString().Trim().Contains(voucherNoValue) ||
+                                                   v.ReferenceNo.Trim().ToLower().Contains(referenceNoValue) ||
+                                                   v.Description.Trim().ToLower().Contains(descriptionValue) ||
+                                                   v.JournalDetails.JournalName.Trim().ToLower().Contains(journalNameValue) ||
+                                                   v.VoucherDate.ToString().Trim().ToLower().Contains(dateValue)
+                                                   ) : true
+                                       )
+                                      .OrderByDescending(x => x.CreatedDate)
                                       .Skip(voucherNewFilterModel.pageSize.Value * voucherNewFilterModel.pageIndex.Value)
                                       .Take(voucherNewFilterModel.pageSize.Value)
+                                      .Select(x => new VoucherDetailModel
+                                      {
+                                          VoucherNo = x.VoucherNo,
+                                          CurrencyCode = x.CurrencyDetail.CurrencyCode,
+                                          CurrencyId = x.CurrencyDetail.CurrencyId,
+                                          VoucherDate = x.VoucherDate,
+                                          ChequeNo = x.ChequeNo,
+                                          ReferenceNo = x.ReferenceNo,
+                                          Description = x.Description,
+                                          JournalName = x.JournalDetails.JournalName,
+                                          JournalCode = x.JournalDetails.JournalCode,
+                                          VoucherTypeId = x.VoucherTypeId,
+                                          OfficeId = x.OfficeId,
+                                          ProjectId = x.ProjectId,
+                                          BudgetLineId = x.BudgetLineId,
+                                          OfficeName = x.OfficeDetails.OfficeName,
+                                      })
+                                      .AsNoTracking()
                                       .ToListAsync();
-
-                //var voucherList = await Task.Run(() =>
-                //    _uow.GetDbContext().VoucherDetail
-                //                      .Include(o => o.OfficeDetails)
-                //                      .Include(j => j.JournalDetails)
-                //                      .Include(c => c.CurrencyDetail)
-                //                      .Include(f => f.FinancialYearDetails)
-                //                      .Where(v => v.IsDeleted == false &&
-                //                               (
-                //                               v.VoucherNo.ToString().Trim() == codeValue ||
-                //                               v.ReferenceNo.ToString().Trim() == nameValue ||
-                //                               v.VoucherDate.ToString().Trim() == dateValue ||
-                //                               v.JournalDetails.JournalName.ToLower().Trim() == journalValue
-                //                               )
-                //                      )
-                //                      .OrderBy(x => x.VoucherDate).ToList()
-                //                      );
-                var voucherdetaillist = voucherList.Select(v => new VoucherDetailModel
-                {
-                    VoucherNo = v.VoucherNo,
-                    CurrencyCode = v.CurrencyDetail?.CurrencyCode ?? null,
-                    CurrencyId = v.CurrencyDetail?.CurrencyId ?? 0,
-                    VoucherDate = v.VoucherDate,
-                    ChequeNo = v.ChequeNo,
-                    ReferenceNo = v.ReferenceNo,
-                    Description = v.Description,
-                    JournalName = v.JournalDetails?.JournalName ?? null,
-                    JournalCode = v.JournalDetails?.JournalCode ?? null,
-                    VoucherTypeId = v.VoucherTypeId,
-                    OfficeId = v.OfficeId,
-                    ProjectId = v.ProjectId,
-                    BudgetLineId = v.BudgetLineId,
-                    OfficeName = v.OfficeDetails?.OfficeName ?? null,
-                }).ToList();
-                response.data.VoucherDetailList = voucherdetaillist.OrderByDescending(x => x.VoucherDate).ToList();
+                response.data.VoucherDetailList = voucherList;
                 response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -196,6 +194,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
                         obj.FinancialYearId = fincancialYear;
                         obj.CreatedById = model.CreatedById;
+                        obj.VoucherDate = DateTime.UtcNow;
                         obj.CreatedDate = DateTime.UtcNow;
                         obj.IsDeleted = false;
                         await _uow.VoucherDetailRepository.AddAsyn(obj);
@@ -419,7 +418,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 if (voucherTransactionsList.Any())
                 {
-                    foreach(VoucherTransactionsModel voucherTransactions in voucherTransactionsList)
+                    foreach (VoucherTransactionsModel voucherTransactions in voucherTransactionsList)
                     {
                         //new voucher transaction object
                         VoucherTransactions transaction = new VoucherTransactions();

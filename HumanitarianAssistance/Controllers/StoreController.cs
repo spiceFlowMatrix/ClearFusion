@@ -607,7 +607,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     public async Task<APIResponse> VerifyPurchase([FromBody] ItemPurchaseModel model)
     {
       APIResponse apiRespone = null;
-      APIResponse xApiRespone = null;
+
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
@@ -615,36 +615,33 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         model.ModifiedDate = DateTime.Now;
         apiRespone = await _iStore.VerifyPurchase(model);
 
-        if (apiRespone.StatusCode == 200 && apiRespone.Message.ToLower() == "success")
-        {
+        //if (apiRespone.StatusCode == 200 && apiRespone.Message.ToLower() == "success" && apiRespone.data.VoucherTransactionModel != null)
+        //{
 
-          if (apiRespone.data.VoucherTransactionModel != null && apiRespone.data.ExchangeRates.Any())
-          {
+        //    long? debitAccount = apiRespone.data.VoucherTransactionModel.DebitAccount;
+        //    apiRespone.data.VoucherTransactionModel.DebitAccount = 0;
 
-            long? debitAccount = apiRespone.data.VoucherTransactionModel.DebitAccount;
-            apiRespone.data.VoucherTransactionModel.DebitAccount = 0;
+        //    //Credit
+        //    xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(apiRespone.data.VoucherTransactionModel, apiRespone.data.ExchangeRates);
 
-            //Credit
-            xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(apiRespone.data.VoucherTransactionModel, apiRespone.data.ExchangeRates);
+        //    apiRespone.data.VoucherTransactionModel.CreditAccount = 0;
+        //    apiRespone.data.VoucherTransactionModel.DebitAccount = debitAccount;
+        //    apiRespone.data.VoucherTransactionModel.AccountNo = debitAccount;
+        //    apiRespone.data.VoucherTransactionModel.Debit = apiRespone.data.VoucherTransactionModel.Credit;
+        //    apiRespone.data.VoucherTransactionModel.Credit = 0;
 
-            apiRespone.data.VoucherTransactionModel.CreditAccount = 0;
-            apiRespone.data.VoucherTransactionModel.DebitAccount = debitAccount;
-            apiRespone.data.VoucherTransactionModel.AccountNo = debitAccount;
-            apiRespone.data.VoucherTransactionModel.Debit = apiRespone.data.VoucherTransactionModel.Credit;
-            apiRespone.data.VoucherTransactionModel.Credit = 0;
-
-            xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(apiRespone.data.VoucherTransactionModel, apiRespone.data.ExchangeRates);
-          }
-        }
+        //    //Debit
+        //    xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(apiRespone.data.VoucherTransactionModel, apiRespone.data.ExchangeRates);
+        //}
       }
-      return xApiRespone;
+      return apiRespone;
     }
 
     [HttpPost]
     public async Task<APIResponse> UnverifyPurchase([FromBody] ItemPurchaseModel model)
     {
       APIResponse apiRespone = null;
-      APIResponse xApiRespone = null;
+      //APIResponse xApiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
@@ -652,20 +649,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         model.ModifiedDate = DateTime.Now;
         apiRespone = await _iStore.UnverifyPurchase(model);
 
-        if (apiRespone.StatusCode == 200 && apiRespone.Message.ToLower() == "success")
-        {
+        //if (apiRespone.StatusCode == 200 && apiRespone.Message.ToLower() == "success")
+        //{
 
-          if (apiRespone.data.VoucherTransactionModelList.Any() && apiRespone.data.ExchangeRates.Any())
-          {
+        //  if (apiRespone.data.VoucherTransactionModelList.Any() && apiRespone.data.ExchangeRates.Any())
+        //  {
 
-            foreach (var item in apiRespone.data.VoucherTransactionModelList)
-            {
+        //    foreach (var item in apiRespone.data.VoucherTransactionModelList)
+        //    {
 
-              xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(item, apiRespone.data.ExchangeRates);
+        //      xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(item, apiRespone.data.ExchangeRates);
 
-            }
-          }
-        }
+        //    }
+        //  }
+        //}
       }
       return apiRespone;
     }

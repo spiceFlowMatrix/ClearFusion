@@ -7,11 +7,11 @@ namespace HumanitarianAssistance.ViewModels.Models.AccountingNew
    public class VoucherNewFilterModel
     {
         public string FilterValue { get; set; }
-        public bool CodeFlag { get; set; }
-        public bool NameFlag  { get; set; }
-        public bool JournalFlag  { get; set; }
-        public bool DateFlag  { get; set; }
-
+        public bool VoucherNoFlag { get; set; }
+        public bool ReferenceNoFlag { get; set; }
+        public bool DescriptionFlag { get; set; }
+        public bool JournalNameFlag { get; set; }
+        public bool DateFlag { get; set; }
 
         public int? pageIndex { get; set; }
         public int? pageSize { get; set; }
