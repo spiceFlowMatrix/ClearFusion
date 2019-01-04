@@ -7,6 +7,7 @@ namespace HumanitarianAssistance.ViewModels.Models
     public class RolesWithPagePermissionsModel
     {
         public string RoleName { get; set; }
+        public string RoleId { get; set; }
         public List<ApplicationPagesModel> Permissions { get; set; }
     }
 
