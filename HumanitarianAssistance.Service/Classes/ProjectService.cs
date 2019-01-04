@@ -201,7 +201,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var list = await _uow.SectorDetailsRepository.FindAllAsync(x => !x.IsDeleted.Value);
                 response.data.sectorDetails = list;
-                response.StatusCode = 200;
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -343,7 +343,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var list = await _uow.ProgramDetailRepository.FindAllAsync(x => !x.IsDeleted.Value);
                 response.data.programDetails = list;
-                response.StatusCode = 200;
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -945,6 +945,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
+
         #region Project AssignToEmployee
         public async Task<APIResponse> AddEditProjectAssignToEmployee(ProjectAssignToModel model, string UserId)
         {
@@ -1005,13 +1006,15 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
         #endregion
+
         #region Project Program
         public async Task<APIResponse> AddEditProjectProgram(ProjectProgramModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                if (model.ProjectProgramId == 0)
+                var existRecord = await _uow.ProjectProgramRepository.FindAsync(x => x.IsDeleted == false && x.ProjectId == model.ProjectId);
+                if (existRecord == null)
                 {
                     ProjectProgram obj = new ProjectProgram();
                     obj.ProjectId = model.ProjectId;
@@ -1024,7 +1027,6 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 else
                 {
-                    var existRecord = await _uow.ProjectProgramRepository.FindAsync(x => x.IsDeleted == false && x.ProjectId == model.ProjectId);
                     if (existRecord != null)
                     {
                         existRecord.ProjectId = model.ProjectId;
@@ -1035,6 +1037,8 @@ namespace HumanitarianAssistance.Service.Classes
                         _uow.GetDbContext().SaveChanges();
                     }
                 }
+                response.StatusCode = 200;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {
@@ -1090,7 +1094,8 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                if (model.ProjectSectorId == 0)
+                var existRecord = await _uow.ProjectSectorRepository.FindAsync(x => x.IsDeleted == false && x.ProjectId == model.ProjectId);
+                if (existRecord == null)
                 {
                     ProjectSector obj = new ProjectSector();
                     obj.ProjectId = model.ProjectId;
@@ -1103,16 +1108,19 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 else
                 {
-                    var existRecord = await _uow.ProjectSectorRepository.FindAsync(x => x.IsDeleted == false && x.ProjectSectorId == model.ProjectSectorId && x.ProjectId == model.ProjectId);
                     if (existRecord != null)
                     {
-                        _mapper.Map(model, existRecord);
+                        // _mapper.Map(model, existRecord);
+                        existRecord.ProjectId = model.ProjectId;
+                        existRecord.SectorId = model.SectorId;
                         existRecord.IsDeleted = false;
                         existRecord.ModifiedById = UserId;
                         existRecord.ModifiedDate = DateTime.Now;
                         await _uow.ProjectSectorRepository.UpdateAsyn(existRecord);
                     }
                 }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {
@@ -1129,7 +1137,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var Projectsector = await _uow.GetDbContext().ProjectSector
                        .FirstOrDefaultAsync(x => !x.IsDeleted.Value && x.ProjectId == ProjectId);
                 response.data.projectSector = Projectsector;
-                response.StatusCode = 200;
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -1168,7 +1176,8 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                if (model.ProjectAreaId == 0)
+                var existRecord = await _uow.ProjectAreaRepository.FindAsync(x => x.IsDeleted == false && x.ProjectId == model.ProjectId);
+                if (existRecord == null)
                 {
                     ProjectArea obj = new ProjectArea();
                     obj.ProjectId = model.ProjectId;
@@ -1181,18 +1190,17 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 else
                 {
-                    var existRecord = await _uow.ProjectAreaRepository.FindAsync(x => x.IsDeleted == false && x.ProjectAreaId == model.ProjectAreaId && x.ProjectId == model.ProjectId);
-                    if (existRecord != null)
-                    {
-                        // _mapper.Map(model, existRecord);
-                        existRecord.ProjectId = model.ProjectId;
-                        existRecord.AreaId = model.AreaId;
-                        existRecord.IsDeleted = false;
-                        existRecord.ModifiedById = UserId;
-                        existRecord.ModifiedDate = DateTime.Now;
-                        _uow.GetDbContext().SaveChanges();
-                    }
+                    // _mapper.Map(model, existRecord);
+                    existRecord.ProjectId = model.ProjectId;
+                    existRecord.AreaId = model.AreaId;
+                    existRecord.IsDeleted = false;
+                    existRecord.ModifiedById = UserId;
+                    existRecord.ModifiedDate = DateTime.Now;
+                    _uow.GetDbContext().SaveChanges();
+
                 }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {
@@ -1209,7 +1217,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var Projectarea = await _uow.GetDbContext().ProjectArea
                        .FirstOrDefaultAsync(x => !x.IsDeleted.Value && x.ProjectId == ProjectId);
                 response.data.projectArea = Projectarea;
-                response.StatusCode = 200;
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -1274,7 +1282,7 @@ namespace HumanitarianAssistance.Service.Classes
                             }).ToList();
 
                 response.data.ProjectCommunicationModel = resp;
-                response.StatusCode = 200;
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -1362,7 +1370,7 @@ namespace HumanitarianAssistance.Service.Classes
                 //details.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
 
                 response.data.ProvinceMultiSelectById = SelectedProvinceList;
-                response.StatusCode = 200;
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
@@ -1387,7 +1395,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     var noExistProvinceId = provinceExist.Where(x => !model.ProvinceId.Contains(x.ProvinceId)).Select(x => x.ProvinceId).ToList();
 
-                                                                                                                                                                                                                                                                                              if (provinceExist.Any())
+                    if (provinceExist.Any())
                     {
                         var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => noExistProvinceId.Contains(x.ProvinceId) && x.IsDeleted == false).ToList();
                         if (districtExist.Any())
@@ -1447,7 +1455,7 @@ namespace HumanitarianAssistance.Service.Classes
                 //details.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
 
                 response.data.DistrictMultiSelectById = SelectedProvinceList;
-                response.StatusCode = 200;
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
