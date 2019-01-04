@@ -731,8 +731,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
+        string logginUserEmailId = user.Email;
         var id = user.Id;
-        apiRespone =  _iProject.AddEditProjectproposals(ProjectId, id);
+        apiRespone =  _iProject.AddEditProjectproposals(ProjectId, id, logginUserEmailId);
       }
       return apiRespone;
     }
@@ -780,8 +781,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
           if (user != null)
           {
+            string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, fullPath, fileName);
+            apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, fullPath, fileName, logginUserEmailId);
             if (apiRespone.StatusCode == StaticResource.successStatusCode)
             {
               DirectoryInfo di = new DirectoryInfo(folderName);
@@ -813,8 +815,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
+        string logginUserEmailId = user.Email;
         var id = user.Id;
-        apiRespone = _iProject.AddEditProjectProposalDetail(model, id);
+        apiRespone = _iProject.AddEditProjectProposalDetail(model, id, logginUserEmailId);
       }
       return apiRespone;
     }

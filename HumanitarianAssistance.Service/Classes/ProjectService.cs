@@ -1985,7 +1985,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        public APIResponse AddEditProjectproposals(long Projectid, string userid)
+        public APIResponse AddEditProjectproposals(long Projectid, string userid, string logginUserEmailId)
         {
             ProjectProposalDetail model = new ProjectProposalDetail();
             APIResponse response = new APIResponse();
@@ -2015,13 +2015,13 @@ namespace HumanitarianAssistance.Service.Classes
                         EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == proposaldata.UserId).Select(p => p.Username).FirstOrDefault();
                         if (proposaldata != null && EmailID != null)
                         {
-                            response.data.ProjectProposalModel = ProposalDoc.userCredential(ProjectProposalfilename, pathFile, result, EmailID, FolderName);
+                            response.data.ProjectProposalModel = ProposalDoc.userCredential(ProjectProposalfilename, pathFile, result, EmailID, FolderName, logginUserEmailId);
                         }
                     }
                 }
                 else
                 {
-                    response.data.ProjectProposalModel = ProposalDoc.userCredential(ProjectProposalfilename, pathFile, result, null, FolderName);
+                    response.data.ProjectProposalModel = ProposalDoc.userCredential(ProjectProposalfilename, pathFile, result, null, FolderName, logginUserEmailId);
                 }
                 if (proposaldata == null)
                 {
@@ -2119,7 +2119,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        public APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileNames)
+        public APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileNames, string logginUserEmailId)
         {
             APIResponse response = new APIResponse();
             try
@@ -2149,13 +2149,13 @@ namespace HumanitarianAssistance.Service.Classes
                         EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == proposaldata.UserId).Select(p => p.Username).FirstOrDefault();
                         if (proposaldata != null && EmailID != null)
                         {
-                            response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID);
+                            response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID, logginUserEmailId);
                         }
                     }
                 }
                 else
                 {
-                    response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID);
+                    response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID, logginUserEmailId);
                 }
                 var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).FirstOrDefault();
                 if (proposaldetails == null)
@@ -2226,7 +2226,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId)
+        public APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId)
         {
             APIResponse response = new APIResponse();
             ProjectProposalDetail details = new ProjectProposalDetail();
@@ -2269,24 +2269,24 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             if (proposaldetails.FolderId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
 
                             if (proposaldetails.EdiFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
                             if (proposaldetails.BudgetFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
                             if (proposaldetails.ConceptFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
                             if (proposaldetails.PresentationFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
                         }
                     }
@@ -2312,27 +2312,27 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             if (proposaldetails.FolderId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
                             if (proposaldetails.ProposalFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ProposalFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ProposalFileId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
                             if (proposaldetails.EdiFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
                             if (proposaldetails.BudgetFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
                             if (proposaldetails.ConceptFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
                             if (proposaldetails.PresentationFileId != null)
                             {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile, Credential);
+                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile, Credential, logginUserEmailId);
                             }
                         }
                     }
