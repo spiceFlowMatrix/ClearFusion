@@ -363,15 +363,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.NatureId = model.NatureId;
                     obj.QualityId = model.QualityId;
                     obj.TimeCategoryId = model.TimeCategoryId;
-                    obj.IsApproved = model.IsApproved;
-                    if (model.Type == "Approve")
-                    {
-                        obj.IsApproved = true;
-                    }
-                    if (model.Type == "Rejected")
-                    {
-                        obj.IsDeclined = true;
-                    }
+                   
                     await _uow.ContractDetailsRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
                     conDetails.ActivityTypeId = obj.ActivityTypeId;
@@ -439,16 +431,17 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     {
                         existRecord.IsApproved = true;
                     }
-                    if (model.Type == "Decline")
+                    if (model.Type == "Rejected")
                     {
                         existRecord.IsDeclined = true;
                     }
                     existRecord.ModifiedDate = DateTime.UtcNow;
-                    existRecord.ModifiedById = "aaaaaa";
+                    existRecord.ModifiedById = UserId;
                     _uow.GetDbContext().ContractDetails.Update(existRecord);
                     _uow.GetDbContext().SaveChanges();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Contract approved successfully";
+                    response.data.contractDetails = existRecord;
                 }
                 catch (Exception ex)
                 {
