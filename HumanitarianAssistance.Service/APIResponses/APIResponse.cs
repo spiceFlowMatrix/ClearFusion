@@ -131,7 +131,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         //public List<BudgetLineEmployees> GetAllEmployeesInBudgetLine { get; set; }
         public List<EmployeeProjectModel> EmployeeProjectList { get; set; }
         public List<EmployeeSummaryDetails> EmployeeSummaryDetailsList { get; set; }
-        public ExchangeRate ExchangeRateLists { get; set; }
+        public ExchangeRateDetail ExchangeRateLists { get; set; }
         public List<ExchangeRate> ExchangeRates { get; set; }
         public AccountOpendingAndClosingBL AccountOpendingAndClosingBL { get; set; }
         //List Response result
@@ -234,6 +234,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleModel> InterviewScheduleDirectorlist { get; set; }
         public IList<InterviewScheduleModel> InterviewScheduleGeneralAdminlist { get; set; }
         public IList<InterviewScheduleModel> InterviewScheduleFieldOfficelist { get; set; }
+        public IList<RolePermissionViewModel> PermissionsInRole { get; set; }
 
         public IList<EmployeeMonthlyPayrollModel> EmployeeMonthlyPayrolllist { get; set; }
 
@@ -325,6 +326,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<Quality> Qualities { get; set; }
         public ICollection<CurrencyDetails> Currencies { get; set; }
         public ICollection<ContractDetails> ContractDetails { get; set; }
+        public ContractDetails contractDetails { get; set; }
         public ContractDetailsModel contractDetailsModel { get; set; }
         public ICollection<LanguageDetail> Languages { get; set; }
         public ICollection<Medium> Mediums { get; set; }

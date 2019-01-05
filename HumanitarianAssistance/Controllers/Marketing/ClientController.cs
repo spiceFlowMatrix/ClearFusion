@@ -36,6 +36,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     #region Client
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetClientsPaginatedList([FromBody]ClientPaginationModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iclientDetailService.GetClientsPaginatedList(model, id);
+      }
+      return apiRespone;
+    }
+
     /// <summary>
     /// get Client Details By Id
     /// </summary>

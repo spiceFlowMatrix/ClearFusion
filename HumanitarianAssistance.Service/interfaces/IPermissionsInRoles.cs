@@ -14,6 +14,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetPermissionsAsync();
         Task<APIResponse> GetAllApplicationPages();
         Task<APIResponse> AddRoleWithPagePermissions(RolesWithPagePermissionsModel rolesWithPagePermissionsModel, string RoleId);
+        Task<APIResponse> GetPermissionsOnSelectedRole(string RoleId);
+        Task<APIResponse> UpdatePermissionsOnSelectedRole(RolesWithPagePermissionsModel rolesWithPagePermissionsModel);
 
     }
 }

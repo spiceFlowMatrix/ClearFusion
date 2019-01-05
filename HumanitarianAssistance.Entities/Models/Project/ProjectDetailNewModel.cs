@@ -23,5 +23,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public int? ReviewerId { get; set; }
         public int? DirectorId { get; set; }
         public bool? IsDelete { get; set; }
+       
     }
 }
