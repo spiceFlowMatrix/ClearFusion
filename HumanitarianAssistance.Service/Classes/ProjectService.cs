@@ -2162,12 +2162,12 @@ namespace HumanitarianAssistance.Service.Classes
                     }
                     else
                     {
-                        response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID, logginUserEmailId);
+                        response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, null, logginUserEmailId);
                     }
                 }
                 else
                 {
-                    response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID, logginUserEmailId);
+                    response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, null, logginUserEmailId);
                 }
                 var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).FirstOrDefault();
                 if (proposaldetails == null)
