@@ -2160,6 +2160,10 @@ namespace HumanitarianAssistance.Service.Classes
                             response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID, logginUserEmailId);
                         }
                     }
+                    else
+                    {
+                        response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID, logginUserEmailId);
+                    }
                 }
                 else
                 {
