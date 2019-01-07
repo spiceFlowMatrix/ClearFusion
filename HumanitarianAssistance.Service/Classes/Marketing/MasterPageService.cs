@@ -1270,6 +1270,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 if (unitRateById == null)
                 {
                     response.StatusCode = StaticResource.notFoundCode;
+                    response.data.UnitRateByActivityId = unitRateById;
                     response.Message = StaticResource.unitRateNotFound;
                 }
                 else
