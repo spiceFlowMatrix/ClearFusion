@@ -351,6 +351,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.ContractCode = contractcode;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
+                    obj.UnitRateId = model.UnitRateId == 0 ? null : model.UnitRateId;
                     obj.UnitRate = model.UnitRate;
                     obj.CreatedDate = DateTime.Now;
                     obj.CurrencyId = model.CurrencyId;
@@ -363,7 +364,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.NatureId = model.NatureId;
                     obj.QualityId = model.QualityId;
                     obj.TimeCategoryId = model.TimeCategoryId;
-                   
+
                     await _uow.ContractDetailsRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
                     conDetails.ActivityTypeId = obj.ActivityTypeId;
