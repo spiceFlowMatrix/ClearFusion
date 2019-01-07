@@ -441,7 +441,14 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     _uow.GetDbContext().ContractDetails.Update(existRecord);
                     _uow.GetDbContext().SaveChanges();
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Contract approved successfully";
+                    if (model.Type == "Approve")
+                    {
+                        response.Message = "Contract approved successfully";
+                    }
+                    if (model.Type == "Rejected")
+                    {
+                        response.Message = "Contract rejected successfully";
+                    }                   
                     response.data.contractDetails = existRecord;
                 }
                 catch (Exception ex)
