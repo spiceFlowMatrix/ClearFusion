@@ -48,17 +48,29 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                int totalCount = await _uow.GetDbContext().DonorDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
 
-                var list = await _uow.GetDbContext().DonorDetail.Where(x => !x.IsDeleted.Value)
-                    .OrderByDescending(x => x.DonorId)
-                    .Skip(donorFilterModel.pageSize.Value * donorFilterModel.pageIndex.Value)
-                    .Take(donorFilterModel.pageSize.Value)
-                    .ToListAsync();
-                response.data.DonorDetail = list;
-                response.data.TotalCount = totalCount;
-                response.StatusCode = 200;
-                response.Message = "Success";
+                if (donorFilterModel == null)
+                {
+                    var list = await _uow.GetDbContext().DonorDetail.Where(x => !x.IsDeleted.Value)
+                   .OrderByDescending(x => x.DonorId).ToListAsync();
+                    response.data.DonorDetail = list;
+                }
+                else
+                {
+                    int totalCount = await _uow.GetDbContext().DonorDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+
+                    var list = await _uow.GetDbContext().DonorDetail.Where(x => !x.IsDeleted.Value)
+                        .OrderByDescending(x => x.DonorId)
+                        .Skip(donorFilterModel.pageSize.Value * donorFilterModel.pageIndex.Value)
+                        .Take(donorFilterModel.pageSize.Value)
+                        .ToListAsync();
+
+                    response.data.DonorDetail = list;
+                    response.data.TotalCount = totalCount;
+                }
+                    response.StatusCode = 200;
+                    response.Message = "Success";
+                
             }
             catch (Exception ex)
             {
