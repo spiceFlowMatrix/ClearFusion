@@ -43,14 +43,20 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
         #region Donor Details
-        public async Task<APIResponse> GetAllDonorList()
+        public async Task<APIResponse> GetAllDonorList(DonorFilterModel donorFilterModel)
         {
             APIResponse response = new APIResponse();
             try
             {
+                int totalCount = await _uow.GetDbContext().DonorDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+
                 var list = await _uow.GetDbContext().DonorDetail.Where(x => !x.IsDeleted.Value)
-                    .OrderByDescending(x => x.DonorId).ToListAsync();
+                    .OrderByDescending(x => x.DonorId)
+                    .Skip(donorFilterModel.pageSize.Value * donorFilterModel.pageIndex.Value)
+                    .Take(donorFilterModel.pageSize.Value)
+                    .ToListAsync();
                 response.data.DonorDetail = list;
+                response.data.TotalCount = totalCount;
                 response.StatusCode = 200;
                 response.Message = "Success";
             }
@@ -83,6 +89,7 @@ namespace HumanitarianAssistance.Service.Classes
                     //var DonarDetail = await _uow.GetDbContext().DonorDetail
                     //  .FirstOrDefaultAsync(x => !x.IsDeleted.Value && x.DonorId == obj.DonorId);
                     response.data.DonorDetailById = obj;
+                    response.data.TotalCount = await _uow.GetDbContext().DonorDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
 
                 }
                 else
@@ -161,6 +168,8 @@ namespace HumanitarianAssistance.Service.Classes
                 await _uow.DonorDetailRepository.UpdateAsyn(DonorInfo, DonorInfo.DonorId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+                response.data.TotalCount = await _uow.GetDbContext().DonorDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+
             }
             catch (Exception ex)
             {
@@ -864,15 +873,22 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllProjectList()
+        public async Task<APIResponse> GetAllProjectList(ProjectFilterModel projectFilterModel)
         {
             APIResponse response = new APIResponse();
             try
             {
+
+                int totalCount = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+
+
                 var ProjectList = await _uow.GetDbContext().ProjectDetail
                                           .Include(x => x.ProjectPhaseDetails)
                                           .Where(x => !x.IsDeleted.Value)
-                                          .OrderByDescending(x => x.ProjectId).Select(x => new ProjectDetailNewModel
+                                          .OrderByDescending(x => x.ProjectId)
+                                          .Skip(projectFilterModel.pageSize.Value * projectFilterModel.pageIndex.Value)
+                                          .Take(projectFilterModel.pageSize.Value)
+                                          .Select(x => new ProjectDetailNewModel
                                           {
                                               ProjectId = x.ProjectId,
                                               ProjectCode = x.ProjectCode,
@@ -889,6 +905,7 @@ namespace HumanitarianAssistance.Service.Classes
                                               TotalDaysinHours = x.EndDate == null ? (Convert.ToString(Math.Round(DateTime.Now.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + DateTime.Now.Subtract(x.StartDate.Value).Minutes)) : (Convert.ToString(Math.Round(x.EndDate.Value.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + x.EndDate.Value.Subtract(x.StartDate.Value).Minutes))
                                           }).ToListAsync();
                 response.data.ProjectDetailModel = ProjectList;
+                response.data.TotalCount = totalCount;
                 response.StatusCode = 200;
                 response.Message = "Success";
             }

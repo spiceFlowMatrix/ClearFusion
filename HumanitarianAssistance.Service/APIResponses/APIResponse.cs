@@ -326,6 +326,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<Quality> Qualities { get; set; }
         public ICollection<CurrencyDetails> Currencies { get; set; }
         public ICollection<ContractDetails> ContractDetails { get; set; }
+        public ContractDetails contractDetails { get; set; }
         public ContractDetailsModel contractDetailsModel { get; set; }
         public ICollection<LanguageDetail> Languages { get; set; }
         public ICollection<Medium> Mediums { get; set; }
