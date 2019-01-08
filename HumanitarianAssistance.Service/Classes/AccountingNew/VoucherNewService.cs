@@ -80,8 +80,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                                    ) : true
                                        )
                                       .OrderByDescending(x => x.CreatedDate)
-                                      .Skip(voucherNewFilterModel.pageSize.Value * voucherNewFilterModel.pageIndex.Value)
-                                      .Take(voucherNewFilterModel.pageSize.Value)
                                       .Select(x => new VoucherDetailModel
                                       {
                                           VoucherNo = x.VoucherNo,
@@ -99,6 +97,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                           BudgetLineId = x.BudgetLineId,
                                           OfficeName = x.OfficeDetails.OfficeName,
                                       })
+                                      .Skip(voucherNewFilterModel.pageSize.Value * voucherNewFilterModel.pageIndex.Value)
+                                      .Take(voucherNewFilterModel.pageSize.Value)
                                       .AsNoTracking()
                                       .ToListAsync();
                 response.data.VoucherDetailList = voucherList;
