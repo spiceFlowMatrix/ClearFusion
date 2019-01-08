@@ -46,11 +46,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       };
     }
     #region Donor information
-    [HttpGet]
+    [HttpPost]
     
-    public async Task<APIResponse> GetAllDonorList()
+    public async Task<APIResponse> GetAllDonorList([FromBody] DonorFilterModel donorFilterModel)
     {
-      APIResponse apiresponse = await _iProject.GetAllDonorList();
+      APIResponse apiresponse = await _iProject.GetAllDonorList(donorFilterModel);
       return apiresponse;
     }
     [HttpPost]
@@ -337,10 +337,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
 
-    [HttpGet]
-    public async Task<APIResponse> GetAllProjectList()
+    [HttpPost]
+    public async Task<APIResponse> GetAllProjectList([FromBody]ProjectFilterModel projectFilterModel)
     {
-      APIResponse apiresponse = await _iProject.GetAllProjectList();
+      APIResponse apiresponse = await _iProject.GetAllProjectList(projectFilterModel);
       return apiresponse;
     }
 

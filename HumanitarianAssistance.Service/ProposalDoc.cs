@@ -70,7 +70,7 @@ namespace HumanitarianAssistance.Service
             if (EmailId == null)
             {
                 mailid = Credential + "," + logginUserEmailId;
-            }
+            } 
             else
             {
                 mailid = EmailId + "," + Credential + "," + logginUserEmailId;
