@@ -403,6 +403,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         _mapper.Map(model, existRecord);
                         existRecord.IsCompleted = true;
                         existRecord.IsDeleted = false;
+                        existRecord.UnitRateId = model.UnitRateId == 0 ? null : model.UnitRateId;
+                        existRecord.UnitRate = model.UnitRate;
                         existRecord.ModifiedById = UserId;
                         existRecord.ModifiedDate = DateTime.Now;
                         await _uow.ContractDetailsRepository.UpdateAsyn(existRecord);
