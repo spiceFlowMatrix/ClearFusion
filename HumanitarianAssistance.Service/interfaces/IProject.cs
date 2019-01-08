@@ -13,7 +13,9 @@ namespace HumanitarianAssistance.Service.interfaces
     public interface IProject
     {
         #region Donor Info
-        Task<APIResponse> GetAllDonorList(DonorFilterModel donorFilterModel);
+        Task<APIResponse> GetAllDonorList();
+        Task<APIResponse> GetAllDonorFilterList(DonorFilterModel donorFilterModel);
+
         Task<APIResponse> AddEditDonorDetails(DonorModel model, string UserId);
         // Task<APIResponse> EditDonorDetails(DonorModel model, string UserId);
         Task<APIResponse> DeleteDonorDetails(long DonarId, string UserId);
@@ -54,7 +56,9 @@ namespace HumanitarianAssistance.Service.interfaces
         #region AddEditProjectDetail
         APIResponse AddEditProjectDetail(ProjectDetailNewModel model, string UserId);
         Task<APIResponse> DeleteProjectDetail(long ProjectId, string UserId);
-        Task<APIResponse> GetAllProjectList(ProjectFilterModel projectFilterModel );
+        Task<APIResponse> GetAllProjectFilterList(ProjectFilterModel projectFilterModel );
+        Task<APIResponse> GetAllProjectList();
+
         APIResponse GetProjectListById(long ProjectId);
 
         Task<APIResponse> AddEditProjectAssignToEmployee(ProjectAssignToModel model, string UserId);
