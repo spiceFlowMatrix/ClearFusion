@@ -43,34 +43,26 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
         #region Donor Details
-        public async Task<APIResponse> GetAllDonorList(DonorFilterModel donorFilterModel)
+        public async Task<APIResponse> GetAllDonorFilterList(DonorFilterModel donorFilterModel)
         {
             APIResponse response = new APIResponse();
             try
             {
 
-                if (donorFilterModel == null)
-                {
-                    var list = await _uow.GetDbContext().DonorDetail.Where(x => !x.IsDeleted.Value)
-                   .OrderByDescending(x => x.DonorId).ToListAsync();
-                    response.data.DonorDetail = list;
-                }
-                else
-                {
-                    int totalCount = await _uow.GetDbContext().DonorDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+                int totalCount = await _uow.GetDbContext().DonorDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
 
-                    var list = await _uow.GetDbContext().DonorDetail.Where(x => !x.IsDeleted.Value)
-                        .OrderByDescending(x => x.DonorId)
-                        .Skip(donorFilterModel.pageSize.Value * donorFilterModel.pageIndex.Value)
-                        .Take(donorFilterModel.pageSize.Value)
-                        .ToListAsync();
+                var list = await _uow.GetDbContext().DonorDetail.Where(x => !x.IsDeleted.Value)
+                    .OrderByDescending(x => x.DonorId)
+                    .Skip(donorFilterModel.pageSize.Value * donorFilterModel.pageIndex.Value)
+                    .Take(donorFilterModel.pageSize.Value)
+                    .ToListAsync();
 
-                    response.data.DonorDetail = list;
-                    response.data.TotalCount = totalCount;
-                }
-                    response.StatusCode = 200;
-                    response.Message = "Success";
-                
+                response.data.DonorDetail = list;
+                response.data.TotalCount = totalCount;
+
+                response.StatusCode = 200;
+                response.Message = "Success";
+
             }
             catch (Exception ex)
             {
@@ -79,6 +71,28 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+        public async Task<APIResponse> GetAllDonorList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().DonorDetail.Where(x => !x.IsDeleted.Value)
+                    .OrderByDescending(x => x.DonorId).ToListAsync();
+                response.data.DonorDetail = list;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+
         public async Task<APIResponse> AddEditDonorDetails(DonorModel model, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -885,12 +899,11 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllProjectList(ProjectFilterModel projectFilterModel)
+        public async Task<APIResponse> GetAllProjectFilterList(ProjectFilterModel projectFilterModel)
         {
             APIResponse response = new APIResponse();
             try
             {
-
                 int totalCount = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
 
 
@@ -909,15 +922,16 @@ namespace HumanitarianAssistance.Service.Classes
                                               IsWin = _uow.GetDbContext().WinProjectDetails.Where(y => y.ProjectId == x.ProjectId).Select(y => y.IsWin).FirstOrDefault(),
                                               IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
                                               ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
-                                              //? "Data Entry"
-                                              // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
-                                              //   ? ""
-                                              // : "",
+                                                  //? "Data Entry"
+                                                  // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
+                                                  //   ? ""
+                                                  // : "",
 
-                                              TotalDaysinHours = x.EndDate == null ? (Convert.ToString(Math.Round(DateTime.Now.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + DateTime.Now.Subtract(x.StartDate.Value).Minutes)) : (Convert.ToString(Math.Round(x.EndDate.Value.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + x.EndDate.Value.Subtract(x.StartDate.Value).Minutes))
+                                                  TotalDaysinHours = x.EndDate == null ? (Convert.ToString(Math.Round(DateTime.Now.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + DateTime.Now.Subtract(x.StartDate.Value).Minutes)) : (Convert.ToString(Math.Round(x.EndDate.Value.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + x.EndDate.Value.Subtract(x.StartDate.Value).Minutes))
                                           }).ToListAsync();
                 response.data.ProjectDetailModel = ProjectList;
                 response.data.TotalCount = totalCount;
+
                 response.StatusCode = 200;
                 response.Message = "Success";
             }
@@ -928,6 +942,44 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+
+        public async Task<APIResponse> GetAllProjectList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var ProjectList = await _uow.GetDbContext().ProjectDetail
+                                          .Include(x => x.ProjectPhaseDetails)
+                                          .Where(x => !x.IsDeleted.Value)
+                                          .OrderByDescending(x => x.ProjectId).Select(x => new ProjectDetailNewModel
+                                          {
+                                              ProjectId = x.ProjectId,
+                                              ProjectCode = x.ProjectCode,
+                                              ProjectName = x.ProjectName,
+                                              ProjectDescription = x.ProjectDescription,
+                                              IsWin = _uow.GetDbContext().WinProjectDetails.Where(y => y.ProjectId == x.ProjectId).Select(y => y.IsWin).FirstOrDefault(),
+                                              IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
+                                              ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
+                                              //? "Data Entry"
+                                              // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
+                                              //   ? ""
+                                              // : "",
+
+                                              TotalDaysinHours = x.EndDate == null ? (Convert.ToString(Math.Round(DateTime.Now.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + DateTime.Now.Subtract(x.StartDate.Value).Minutes)) : (Convert.ToString(Math.Round(x.EndDate.Value.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + x.EndDate.Value.Subtract(x.StartDate.Value).Minutes))
+                                          }).ToListAsync();
+                response.data.ProjectDetailModel = ProjectList;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         public APIResponse GetProjectListById(long ProjectId)
         {
             APIResponse response = new APIResponse();
