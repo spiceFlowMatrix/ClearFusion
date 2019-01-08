@@ -485,7 +485,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
                     var allCurrencies = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
-                   var baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
+                    var baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
 
                     if (model.fromdate == null && model.todate == null)
                     {
@@ -2585,41 +2585,39 @@ namespace HumanitarianAssistance.Service.Classes
                     if (model.RecordType == 1)
                     {
 
+
+                        //var spJournalReport = await _uow.GetDbContext().LoadStoredProc("get_trial_balance_report")
+                        //                                            .WithSqlParam("currencyid", model.CurrencyId)
+                        //                                            .WithSqlParam("recordtype", model.RecordType)
+                        //                                            .WithSqlParam("fromdate", model.fromdate.ToString())
+                        //                                            .WithSqlParam("todate", model.todate.ToString())
+                        //                                            .WithSqlParam("officelist", model.OfficesList)
+                        //                                            .WithSqlParam("journalno", model.JournalCode)
+                        //                                            .WithSqlParam("accountslist", model.AccountLists)
+                        //                                            .ExecuteStoredProc<SP_TrialBalanceModel>();
+
+
+
                         List<LedgerModel> transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                      .Join(_uow.GetDbContext().CurrencyDetails,
-                                                                              x => x.CurrencyId, //Primary
-                                                                              y => y.CurrencyId, //Foreign
-                                                                              (x, y) => new
-                                                                              {
-                                                                                  VoucherT = x,
-                                                                                  CurrencyD = y
-                                                                              })
-                                                                        .Join(_uow.GetDbContext().ChartOfAccountNew,
-                                                                               Vt => Vt.VoucherT.ChartOfAccountNewId, //Primary
-                                                                               Ch => Ch.ChartOfAccountNewId, //Foreign
-                                                                              (Vt, Ch) => new
-                                                                              {
-                                                                                  VoucherT = Vt,
-                                                                                  ChartD = Ch
-                                                                              })
-                                                                      .Where(x => x.VoucherT.VoucherT.IsDeleted == false &&
-                                                                                  accountFourthLevel.Contains(x.VoucherT.VoucherT.ChartOfAccountNewId.Value) && //x.AccountNo == accountItem.AccountCode &&
-                                                                                  model.OfficesList.Contains(x.VoucherT.VoucherT.OfficeId) &&
-                                                                                  x.VoucherT.VoucherT.CurrencyId == model.CurrencyId &&
-                                                                                  x.VoucherT.VoucherT.TransactionDate.Value.Date >= model.fromdate.Date &&
-                                                                                  x.VoucherT.VoucherT.TransactionDate.Value.Date <= model.todate.Date)
+                                                                        .Where(x => x.IsDeleted == false &&
+                                                                              accountFourthLevel.Contains(x.ChartOfAccountNewId) && //x.AccountNo == accountItem.AccountCode &&
+                                                                              model.OfficesList.Contains(x.OfficeId) &&
+                                                                              x.CurrencyId == model.CurrencyId &&
+                                                                              x.TransactionDate.Value.Date >= model.fromdate.Date &&
+                                                                              x.TransactionDate.Value.Date <= model.todate.Date)
                                                                        .Select(item => new LedgerModel
                                                                        {
-                                                                           ChartOfAccountNewId = item.VoucherT.VoucherT.ChartOfAccountNewId.Value,
-                                                                           AccountName = item.ChartD.AccountName,
-                                                                           ChartAccountName = item.ChartD.AccountName,
-                                                                           Description = item.VoucherT.VoucherT.Description,
-                                                                           CurrencyName = item.VoucherT.CurrencyD.CurrencyName,
-                                                                           CreditAmount = item.VoucherT.VoucherT.Credit,
-                                                                           DebitAmount = item.VoucherT.VoucherT.Debit,
-                                                                           TransactionDate = item.VoucherT.VoucherT.TransactionDate,
-                                                                           ChartOfAccountNewCode = item.ChartD.ChartOfAccountNewCode
+                                                                           ChartOfAccountNewId = item.ChartOfAccountNewId.Value,
+                                                                           AccountName = item.ChartOfAccountDetail.AccountName,
+                                                                           ChartAccountName = item.ChartOfAccountDetail.AccountName,
+                                                                           Description = item.Description,
+                                                                           CurrencyName = item.CurrencyDetails.CurrencyName,
+                                                                           CreditAmount = item.Credit,
+                                                                           DebitAmount = item.Debit,
+                                                                           TransactionDate = item.TransactionDate,
+                                                                           ChartOfAccountNewCode = item.ChartOfAccountDetail.ChartOfAccountNewCode
                                                                        }).ToListAsync();
+
 
 
                         List<LedgerModel> transactionDetail1 = new List<LedgerModel>();
@@ -5178,7 +5176,7 @@ namespace HumanitarianAssistance.Service.Classes
                 List<VoucherTransactions> VoucherTransactionsList = new List<VoucherTransactions>();
 
                 VoucherTransactions xVoucherTransactionCredit = new VoucherTransactions();
-                VoucherTransactions xVoucherTransactionDebit= new VoucherTransactions();
+                VoucherTransactions xVoucherTransactionDebit = new VoucherTransactions();
 
                 //Creating Voucher Transaction for Credit
                 xVoucherTransactionCredit.IsDeleted = false;
