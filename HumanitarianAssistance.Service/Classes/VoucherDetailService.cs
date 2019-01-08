@@ -483,146 +483,211 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model != null)
                 {
 
+                    #region Commented code
+                    // var allCurrencies = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
+                    //var baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
 
-                    var allCurrencies = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
-                   var baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
+                    // if (model.fromdate == null && model.todate == null)
+                    // {
+                    //     model.fromdate = new DateTime(DateTime.UtcNow.Year, 1, 1);
+                    //     model.todate = DateTime.UtcNow;
+                    // }
 
-                    if (model.fromdate == null && model.todate == null)
+                    // //NOTE: Take only particular currency
+                    // if (model.RecordType == 1)
+                    // {
+                    //     var VoucherDetails = (from v in _uow.GetDbContext().VoucherDetail
+                    //                           join t in _uow.GetDbContext().VoucherTransactions on v.VoucherNo equals t.VoucherNo
+                    //                           join a in _uow.GetDbContext().ChartOfAccountNew on t.ChartOfAccountNewId equals a.ChartOfAccountNewId
+                    //                           where model.JournalCode.Contains(v.JournalCode) &&
+                    //                                 model.OfficesList.Contains(v.OfficeId) &&
+                    //                                 model.AccountLists.Contains(t.ChartOfAccountNewId) &&
+                    //                                 v.IsDeleted == false &&
+                    //                                 v.CurrencyId == model.CurrencyId &&       // for particular currency
+                    //                                 v.VoucherDate.Value.Date >= model.fromdate.Date &&
+                    //                                 v.VoucherDate.Value.Date <= model.todate.Date
+                    //                           orderby t.TransactionDate
+                    //                           select (new
+                    //                           {
+                    //                               t.TransactionDate,
+                    //                               v.VoucherNo,
+                    //                               v.ReferenceNo,
+                    //                               t.Description,
+                    //                               t.CurrencyId,
+                    //                               t.Program,
+                    //                               t.Project,
+                    //                               t.ChartOfAccountNewId,
+                    //                               t.Debit,
+                    //                               t.Credit,
+                    //                               a.AccountName,
+                    //                               a.ChartOfAccountNewCode,
+                    //                               v.JournalCode
+                    //                           })).ToList();
+
+                    //     foreach (var item in VoucherDetails)
+                    //     {
+                    //         if (model.CurrencyId == item.CurrencyId)
+                    //         {
+                    //             // Credit
+                    //             JournalVoucherViewModel obj = new JournalVoucherViewModel();
+                    //             obj.TransactionDate = item.TransactionDate;
+                    //             obj.VoucherNo = item?.VoucherNo ?? 0;
+                    //             obj.TransactionDescription = item?.Description ?? null;
+                    //             obj.CurrencyId = item.CurrencyId;
+                    //             obj.AccountCode = item.ChartOfAccountNewCode;
+                    //             obj.AccountName = item.AccountName;
+                    //             obj.CreditAmount = item.Credit;
+                    //             obj.DebitAmount = item.Debit;
+                    //             obj.ReferenceNo = item.ReferenceNo;
+                    //             obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
+                    //             obj.JournalCode = item.JournalCode;
+                    //             listJournalView.Add(obj);
+                    //         }
+                    //     }
+                    // }
+                    // else
+                    // {
+
+                    //     var VoucherDetails = (from v in _uow.GetDbContext().VoucherDetail
+                    //                           join t in _uow.GetDbContext().VoucherTransactions on v.VoucherNo equals t.VoucherNo
+                    //                           join a in _uow.GetDbContext().ChartOfAccountNew on t.ChartOfAccountNewId equals a.ChartOfAccountNewId
+                    //                           where model.JournalCode.Contains(v.JournalCode) &&
+                    //                                 model.OfficesList.Contains(v.OfficeId) &&
+                    //                                 model.AccountLists.Contains(t.ChartOfAccountNewId) &&
+                    //                                 v.IsDeleted == false &&
+                    //                                 v.VoucherDate.Value.Date >= model.fromdate.Date &&
+                    //                                 v.VoucherDate.Value.Date <= model.todate.Date
+                    //                           select (new
+                    //                           {
+                    //                               t.TransactionDate,
+                    //                               v.VoucherNo,
+                    //                               t.Description,
+                    //                               t.CurrencyId,
+                    //                               t.Program,
+                    //                               t.Project,
+                    //                               t.ChartOfAccountNewId,
+                    //                               t.Debit,
+                    //                               t.Credit,
+                    //                               a.AccountName,
+                    //                               v.ReferenceNo,
+                    //                               t.AFGAmount,
+                    //                               t.PKRAmount,
+                    //                               t.USDAmount,
+                    //                               t.EURAmount,
+                    //                               a.ChartOfAccountNewCode
+                    //                           }))
+                    //                             .OrderBy(x => x.TransactionDate).AsNoTracking()
+                    //                             .ToList();
+
+                    //     foreach (var item in VoucherDetails)
+                    //     {
+
+                    //         ExchangeRateDetail exchangeRateDetail = _uow.GetDbContext().ExchangeRateDetail
+                    //                                                                    .OrderByDescending(x => x.Date)
+                    //                                                                    .FirstOrDefault(x => x.Date == item.TransactionDate && x.IsDeleted== false 
+                    //                                                                     && x.FromCurrency== item.CurrencyId && x.ToCurrency== model.CurrencyId);
+
+                    //         if (exchangeRateDetail == null)
+                    //         {
+                    //             exchangeRateDetail = _uow.GetDbContext().ExchangeRateDetail
+                    //                                                     .OrderByDescending(x => x.Date)
+                    //                                                     .FirstOrDefault(x => x.IsDeleted == false
+                    //                                                     && x.FromCurrency == item.CurrencyId && x.ToCurrency == model.CurrencyId);
+                    //         }
+
+                    //         JournalVoucherViewModel obj = new JournalVoucherViewModel();
+
+                    //         obj.TransactionDate = item.TransactionDate;
+                    //         obj.VoucherNo = item.VoucherNo;
+                    //         obj.TransactionDescription = item.Description;
+                    //         obj.CurrencyId = item.CurrencyId;
+                    //         obj.ReferenceNo = item.ReferenceNo;
+                    //         obj.AccountCode = item.ChartOfAccountNewCode;
+                    //         obj.AccountName = item.AccountName;
+                    //         obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
+
+                    //         if (model.CurrencyId == (int)Currency.PKR)
+                    //         {
+                    //             obj.CreditAmount = item.Credit * (double)exchangeRateDetail.Rate;
+                    //             obj.DebitAmount = item.Debit * (double)exchangeRateDetail.Rate;
+                    //         }
+                    //         else if (model.CurrencyId == (int)Currency.AFG)
+                    //         {
+                    //             obj.CreditAmount = item.Credit * (double)exchangeRateDetail.Rate;
+                    //             obj.DebitAmount = item.Debit * (double)exchangeRateDetail.Rate;
+
+                    //         }
+                    //         else if (model.CurrencyId == (int)Currency.EUR)
+                    //         {
+                    //             obj.CreditAmount = item.Credit * (double)exchangeRateDetail.Rate;
+                    //             obj.DebitAmount = item.Debit * (double)exchangeRateDetail.Rate;
+
+                    //         }
+                    //         else
+                    //         {
+                    //             obj.CreditAmount = item.Credit * (double)exchangeRateDetail.Rate;
+                    //             obj.DebitAmount = item.Debit * (double)exchangeRateDetail.Rate;
+
+                    //         }
+
+                    //         listJournalView.Add(obj);
+                    //     }
+
+                    // }
+
+                    // var journalReport = listJournalView.GroupBy(x => x.ChartOfAccountNewId).ToList();
+
+                    // List<JournalReportViewModel> journalReportList = new List<JournalReportViewModel>();
+
+                    // foreach (var accountItem in journalReport)
+                    // {
+                    //     journalReportList.Add(new JournalReportViewModel
+                    //     {
+                    //         ChartOfAccountNewId = accountItem.Key,
+                    //         AccountCode = accountItem.FirstOrDefault(x => x.ChartOfAccountNewId == accountItem.Key).AccountCode,
+                    //         AccountName = accountItem.FirstOrDefault()?.AccountName,
+                    //         DebitAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount)), 4),
+                    //         CreditAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.CreditAmount)), 4),
+                    //         Balance = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount) - accountItem.Sum(x => x.CreditAmount)), 4)
+                    //     });
+                    // }
+
+
+                    // response.data.JournalVoucherViewList = listJournalView;
+                    // response.data.JournalReportList = journalReportList; //Report
+                    // response.data.TotalCount = voucherDetailsCount;
+                    // response.StatusCode = StaticResource.successStatusCode;
+                    // response.Message = "Success";
+                    #endregion
+
+                    //get Journal Report from sp get_journal_report by passing parameters
+                    var spJournalReport = await _uow.GetDbContext().LoadStoredProc("get_journal_report")
+                                          .WithSqlParam("currencyid", model.CurrencyId)
+                                          .WithSqlParam("recordtype", model.RecordType)
+                                          .WithSqlParam("fromdate", model.fromdate.ToString())
+                                          .WithSqlParam("todate", model.todate.ToString())
+                                          .WithSqlParam("officelist", model.OfficesList)
+                                          .WithSqlParam("journalno", model.JournalCode)
+                                          .WithSqlParam("accountslist", model.AccountLists)
+                                          .ExecuteStoredProc<SPJournalReport>();
+
+
+                    listJournalView= spJournalReport.Select(x => new JournalVoucherViewModel
                     {
-                        model.fromdate = new DateTime(DateTime.UtcNow.Year, 1, 1);
-                        model.todate = DateTime.UtcNow;
-                    }
+                        AccountCode = x.AccountCode,
+                        ChartOfAccountNewId = x.ChartOfAccountNewId,
+                        JournalCode = x.JournalCode,
+                        CreditAmount = x.CreditAmount,
+                        CurrencyId = x.Currency,
+                        DebitAmount = x.DebitAmount,
+                        ReferenceNo = x.ReferenceNo,
+                        TransactionDate = x.TransactionDate,
+                        TransactionDescription = x.TransactionDescription,
+                        VoucherNo = x.VoucherNo,
+                        AccountName= x.AccountName
+                    }).ToList();
 
-                    //NOTE: Take only particular currency
-                    if (model.RecordType == 1)
-                    {
-                        var VoucherDetails = (from v in _uow.GetDbContext().VoucherDetail
-                                              join t in _uow.GetDbContext().VoucherTransactions on v.VoucherNo equals t.VoucherNo
-                                              join a in _uow.GetDbContext().ChartOfAccountNew on t.ChartOfAccountNewId equals a.ChartOfAccountNewId
-                                              where model.JournalCode.Contains(v.JournalCode) &&
-                                                    model.OfficesList.Contains(v.OfficeId) &&
-                                                    model.AccountLists.Contains(t.ChartOfAccountNewId) &&
-                                                    v.IsDeleted == false &&
-                                                    v.CurrencyId == model.CurrencyId &&       // for particular currency
-                                                    v.VoucherDate.Value.Date >= model.fromdate.Date &&
-                                                    v.VoucherDate.Value.Date <= model.todate.Date
-                                              orderby t.TransactionDate
-                                              select (new
-                                              {
-                                                  t.TransactionDate,
-                                                  v.VoucherNo,
-                                                  v.ReferenceNo,
-                                                  t.Description,
-                                                  t.CurrencyId,
-                                                  t.Program,
-                                                  t.Project,
-                                                  t.ChartOfAccountNewId,
-                                                  t.Debit,
-                                                  t.Credit,
-                                                  a.AccountName,
-                                                  a.ChartOfAccountNewCode,
-                                                  v.JournalCode
-                                              })).ToList();
-
-                        foreach (var item in VoucherDetails)
-                        {
-                            if (model.CurrencyId == item.CurrencyId)
-                            {
-                                // Credit
-                                JournalVoucherViewModel obj = new JournalVoucherViewModel();
-                                obj.TransactionDate = item.TransactionDate;
-                                obj.VoucherNo = item?.VoucherNo ?? 0;
-                                obj.TransactionDescription = item?.Description ?? null;
-                                obj.CurrencyId = item.CurrencyId;
-                                obj.AccountCode = item.ChartOfAccountNewCode;
-                                obj.AccountName = item.AccountName;
-                                obj.CreditAmount = item.Credit;
-                                obj.DebitAmount = item.Debit;
-                                obj.ReferenceNo = item.ReferenceNo;
-                                obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
-                                obj.JournalCode = item.JournalCode;
-                                listJournalView.Add(obj);
-                            }
-                        }
-                    }
-                    else
-                    {
-
-                        var VoucherDetails = (from v in _uow.GetDbContext().VoucherDetail
-                                              join t in _uow.GetDbContext().VoucherTransactions on v.VoucherNo equals t.VoucherNo
-                                              join a in _uow.GetDbContext().ChartOfAccountNew on t.ChartOfAccountNewId equals a.ChartOfAccountNewId
-                                              where model.JournalCode.Contains(v.JournalCode) &&
-                                                    model.OfficesList.Contains(v.OfficeId) &&
-                                                    model.AccountLists.Contains(t.ChartOfAccountNewId) &&
-                                                    v.IsDeleted == false &&
-                                                    v.VoucherDate.Value.Date >= model.fromdate.Date &&
-                                                    v.VoucherDate.Value.Date <= model.todate.Date
-                                              select (new
-                                              {
-                                                  t.TransactionDate,
-                                                  v.VoucherNo,
-                                                  t.Description,
-                                                  t.CurrencyId,
-                                                  t.Program,
-                                                  t.Project,
-                                                  t.ChartOfAccountNewId,
-                                                  t.Debit,
-                                                  t.Credit,
-                                                  a.AccountName,
-                                                  v.ReferenceNo,
-                                                  t.AFGAmount,
-                                                  t.PKRAmount,
-                                                  t.USDAmount,
-                                                  t.EURAmount,
-                                                  a.ChartOfAccountNewCode
-                                              }))
-                                                .OrderBy(x => x.TransactionDate).AsNoTracking()
-                                                .ToList();
-
-                        foreach (var item in VoucherDetails)
-                        {
-
-                            JournalVoucherViewModel obj = new JournalVoucherViewModel();
-
-                            obj.TransactionDate = item.TransactionDate;
-                            obj.VoucherNo = item.VoucherNo;
-                            obj.TransactionDescription = item.Description;
-                            obj.CurrencyId = item.CurrencyId;
-                            obj.ReferenceNo = item.ReferenceNo;
-                            obj.AccountCode = item.ChartOfAccountNewCode;
-                            obj.AccountName = item.AccountName;
-                            obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
-
-                            if (model.CurrencyId == (int)Currency.PKR)
-                            {
-                                obj.CreditAmount = item.PKRAmount;
-                                obj.DebitAmount = item.PKRAmount;
-                            }
-                            else if (model.CurrencyId == (int)Currency.AFG)
-                            {
-                                obj.CreditAmount = item.AFGAmount;
-                                obj.DebitAmount = item.AFGAmount;
-
-                            }
-                            else if (model.CurrencyId == (int)Currency.EUR)
-                            {
-                                obj.CreditAmount = item.EURAmount;
-                                obj.DebitAmount = item.EURAmount;
-
-                            }
-                            else
-                            {
-                                obj.CreditAmount = item.USDAmount;
-                                obj.DebitAmount = item.USDAmount;
-
-                            }
-
-                            listJournalView.Add(obj);
-                        }
-
-                    }
-
-                    var journalReport = listJournalView.GroupBy(x => x.ChartOfAccountNewId).ToList();
+                    var journalReport= spJournalReport.GroupBy(x => x.ChartOfAccountNewId).ToList();
 
                     List<JournalReportViewModel> journalReportList = new List<JournalReportViewModel>();
 
@@ -632,7 +697,7 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             ChartOfAccountNewId = accountItem.Key,
                             AccountCode = accountItem.FirstOrDefault(x => x.ChartOfAccountNewId == accountItem.Key).AccountCode,
-                            AccountName = accountItem.FirstOrDefault()?.AccountName,
+                            AccountName = accountItem.FirstOrDefault().AccountName,
                             DebitAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount)), 4),
                             CreditAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.CreditAmount)), 4),
                             Balance = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount) - accountItem.Sum(x => x.CreditAmount)), 4)
@@ -645,6 +710,8 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.TotalCount = voucherDetailsCount;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
+
+
                 }
                 else
                 {
