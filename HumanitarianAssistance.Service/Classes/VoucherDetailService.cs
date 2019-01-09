@@ -1287,12 +1287,6 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 List<LedgerModel> closingLedgerList = new List<LedgerModel>();
                 List<LedgerModel> openingLedgerList = new List<LedgerModel>();
-                //List<long> accountLevelFour = new List<long>();
-
-                ICollection<VoucherTransactions> openingTransactionDetail = null;
-                ICollection<VoucherTransactions> closingTransactionDetail = null;
-
-                //List<int> officesList = await _uow.GetDbContext().OfficeDetail.Where(x => x.IsDeleted == false).Select(x => x.OfficeId).ToListAsync();
 
                 if (model != null)
                 {
@@ -1300,124 +1294,67 @@ namespace HumanitarianAssistance.Service.Classes
                     var allCurrencies = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
                     var baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
 
-                    //ICollection<ChartOfAccountNew> accountDetail = await _uow.ChartOfAccountNewRepository.FindAllAsync(x => x.IsDeleted == false && model.accountLists.Contains(x.ChartOfAccountNewId));
-
-                    Boolean isRecordPresenntForOffice = await _uow.GetDbContext().VoucherTransactions
+                    Boolean isRecordPresenntForOffice = await _uow.GetDbContext().VoucherDetail
                                                                 .AnyAsync(x => x.IsDeleted == false &&
                                                                           model.OfficeIdList.Contains(x.OfficeId.Value) &&
-                                                                          x.TransactionDate.Value.Date >= model.fromdate.Date &&
-                                                                          x.TransactionDate.Value.Date <= model.todate.Date);
+                                                                          x.VoucherDate.Value.Date >= model.fromdate.Date &&
+                                                                          x.VoucherDate.Value.Date <= model.todate.Date);
 
                     if (isRecordPresenntForOffice)
                     {
-
-                        //foreach (var accountItem in accountDetail)
-                        //{
-                        //    if (accountItem.AccountLevelId == 4)
-                        //    {
-                        //        // Gets the fourth level accounts  
-                        //        var fourL = await _uow.GetDbContext().ChartOfAccountNew.Where(x => accountItem.ChartOfAccountNewId == x.ChartOfAccountNewId && x.AccountLevelId == 4).Select(x => x.ChartOfAccountNewId).ToListAsync();
-
-                        //        accountLevelFour.AddRange(fourL);
-                        //    }
-                        //    else if (accountItem.AccountLevelId == 3)
-                        //    {
-                        //        var threeL = await _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ParentID == accountItem.ChartOfAccountNewId && x.AccountLevelId == 4).Select(x => x.ChartOfAccountNewId).ToListAsync();
-
-                        //        accountLevelFour.AddRange(threeL);
-                        //    }
-                        //    else if (accountItem.AccountLevelId == 2)
-                        //    {
-                        //        // Gets the third level accounts
-                        //        var thirdL = await _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ParentID == accountItem.ChartOfAccountNewId && x.AccountLevelId == 3).Select(x => x.ChartOfAccountNewId).ToListAsync();
-                        //        // Gets the fourth level accounts
-                        //        var fourL = await _uow.GetDbContext().ChartOfAccountNew.Where(x => x.AccountLevelId == 4 && thirdL.Contains(x.ParentID)).Select(x => x.ChartOfAccountNewId).ToListAsync();
-
-                        //        accountLevelFour.AddRange(fourL);
-                        //    }
-                        //    else if (accountItem.AccountLevelId == 1)
-                        //    {
-                        //        // Gets the second level accounts
-                        //        var secondL = await _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ParentID == accountItem.ChartOfAccountNewId && x.AccountLevelId == 2).Select(x => x.ChartOfAccountNewId).ToListAsync();
-
-                        //        // Gets the level 3rd accounts
-                        //        var thirdL = await _uow.GetDbContext().ChartOfAccountNew.Where(x => secondL.Contains(x.ParentID) && x.AccountLevelId == 3).Select(x => x.ChartOfAccountNewId).ToListAsync();
-
-                        //        // Gets the fourth level accounts
-                        //        var fourthL = await _uow.GetDbContext().ChartOfAccountNew.Where(x => thirdL.Contains(x.ParentID) && x.AccountLevelId == 4).Select(x => x.ChartOfAccountNewId).ToListAsync();
-
-                        //        accountLevelFour.AddRange(fourthL);
-                        //    }
-                        //}
-
-                        //accountLevelFour = accountLevelFour.Distinct().ToList();
-                        //var accountLevel4 = accountLevelFour.ConvertAll(x => Convert.ToInt32(x));
-
                         if (model.RecordType == 1)
                         {
 
-                            openingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(c => c.ChartOfAccountDetail)
-                                                       .Where(x => x.IsDeleted == false &&
-                                                                        model.accountLists.Contains(x.ChartOfAccountNewId.Value) &&
-                                                                        model.OfficeIdList.Contains(x.OfficeId.Value) &&
-                                                                        x.CurrencyId == model.CurrencyId &&
-                                                                        x.TransactionDate.Value.Date < model.fromdate.Date).ToListAsync();
-
-                            closingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(c => c.ChartOfAccountDetail)
-                                                   .Where(x => x.IsDeleted == false &&
-                                                                    model.accountLists.Contains(x.ChartOfAccountNewId.Value) &&
-                                                                    model.OfficeIdList.Contains(x.OfficeId.Value) &&
-                                                                    x.CurrencyId == model.CurrencyId &&
-                                                                    x.TransactionDate.Value.Date >= model.fromdate.Date &&
-                                                                    x.TransactionDate.Value.Date <= model.todate.Date).ToListAsync();
+                            var spLedgerReportOpening = await _uow.GetDbContext().LoadStoredProc("get_ledger_report")
+                                                                  .WithSqlParam("currency", model.CurrencyId)
+                                                                  .WithSqlParam("recordtype", model.RecordType)
+                                                                  .WithSqlParam("fromdate", model.fromdate.ToString())
+                                                                  .WithSqlParam("todate", model.todate.ToString())
+                                                                  .WithSqlParam("officelist", model.OfficeIdList)
+                                                                  .WithSqlParam("accountslist", model.accountLists)
+                                                                  .WithSqlParam("openingbalance", true)
+                                                                  .ExecuteStoredProc<SPLedgerReport>();
 
                             //Opening Calculation
-                            foreach (var item in openingTransactionDetail)
+                            openingLedgerList = spLedgerReportOpening.Select(x => new LedgerModel
                             {
-                                if (model.CurrencyId == item.CurrencyId)
-                                {
-                                    LedgerModel obj = new LedgerModel();
+                                ChartOfAccountNewId = x.ChartOfAccountNewId,
+                                AccountName = x.AccountName,
+                                VoucherNo = x.VoucherNo.ToString(),
+                                ChartAccountName = x.AccountName,
+                                Description = x.Description,
+                                VoucherReferenceNo = x.VoucherReferenceNo,
+                                CurrencyName = x.CurrencyName,
+                                TransactionDate = x.TransactionDate,
+                                ChartOfAccountNewCode = x.ChartOfAccountNewCode,
+                                CreditAmount = x.CreditAmount,
+                                DebitAmount = x.DebitAmount
+                            }).ToList();
 
-                                    obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
-                                    //obj.AccountName = accountItem.AccountName;
-                                    obj.AccountName = item.ChartOfAccountDetail.AccountName;
-                                    obj.VoucherNo = item.VoucherNo.ToString();
-                                    obj.ChartAccountName = item.ChartOfAccountDetail.AccountName;
-                                    obj.Description = item.Description;
-                                    obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
-                                    obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
-                                    obj.CreditAmount = Math.Round(Convert.ToDouble(item.Credit));
-                                    obj.DebitAmount = Math.Round(Convert.ToDouble(item.Debit));
-                                    obj.TransactionDate = item.TransactionDate;
-                                    obj.ChartOfAccountNewCode = item.ChartOfAccountDetail.ChartOfAccountNewCode;
+                            var spLedgerReportClosing = await _uow.GetDbContext().LoadStoredProc("get_ledger_report")
+                                                                 .WithSqlParam("currency", model.CurrencyId)
+                                                                 .WithSqlParam("recordtype", model.RecordType)
+                                                                 .WithSqlParam("fromdate", model.fromdate.ToString())
+                                                                 .WithSqlParam("todate", model.todate.ToString())
+                                                                 .WithSqlParam("officelist", model.OfficeIdList)
+                                                                 .WithSqlParam("accountslist", model.accountLists)
+                                                                 .WithSqlParam("openingbalance", false)
+                                                                 .ExecuteStoredProc<SPLedgerReport>();
 
-                                    openingLedgerList.Add(obj);
-                                }
-                            }
-
-                            //Closing Calculation
-                            foreach (var item in closingTransactionDetail)
+                            closingLedgerList = spLedgerReportClosing.Select(x => new LedgerModel
                             {
-                                if (model.CurrencyId == item.CurrencyId)
-                                {
-                                    LedgerModel obj = new LedgerModel();
-
-                                    obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
-                                    //obj.AccountName = accountItem.AccountName;
-                                    obj.AccountName = item.ChartOfAccountDetail.AccountName;
-                                    obj.VoucherNo = item.VoucherNo.ToString();
-                                    obj.ChartAccountName = item.ChartOfAccountDetail.AccountName;
-                                    obj.Description = item.Description;
-                                    obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
-                                    obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
-                                    obj.CreditAmount = Math.Round(Convert.ToDouble(item.Credit));
-                                    obj.DebitAmount = Math.Round(Convert.ToDouble(item.Debit));
-                                    obj.TransactionDate = item.TransactionDate;
-                                    obj.ChartOfAccountNewCode = item.ChartOfAccountDetail.ChartOfAccountNewCode;
-
-                                    closingLedgerList.Add(obj);
-                                }
-                            }
+                                ChartOfAccountNewId = x.ChartOfAccountNewId,
+                                AccountName = x.AccountName,
+                                VoucherNo = x.VoucherNo.ToString(),
+                                ChartAccountName = x.AccountName,
+                                Description = x.Description,
+                                VoucherReferenceNo = x.VoucherReferenceNo,
+                                CurrencyName = x.CurrencyName,
+                                TransactionDate = x.TransactionDate,
+                                ChartOfAccountNewCode = x.ChartOfAccountNewCode,
+                                CreditAmount = x.CreditAmount,
+                                DebitAmount = x.DebitAmount
+                            }).ToList();
 
                             #region old code for single
 
@@ -1721,104 +1658,56 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             //Consolidate
 
-                            openingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(x => x.ChartOfAccountDetail)
-                                                                        .Where(x => x.IsDeleted == false &&
-                                                                        model.accountLists.Contains(x.ChartOfAccountNewId.Value) &&
-                                                                        model.OfficeIdList.Contains(x.OfficeId.Value) &&
-                                                                        x.TransactionDate.Value.Date < model.fromdate.Date).ToListAsync();
+                            var spLedgerReportOpening = await _uow.GetDbContext().LoadStoredProc("get_ledger_report")
+                                                                   .WithSqlParam("currency", model.CurrencyId)
+                                                                   .WithSqlParam("recordtype", model.RecordType)
+                                                                   .WithSqlParam("fromdate", model.fromdate.ToString())
+                                                                   .WithSqlParam("todate", "")
+                                                                   .WithSqlParam("officelist", model.OfficeIdList)
+                                                                   .WithSqlParam("accountslist", model.accountLists)
+                                                                   .WithSqlParam("openingbalance", true)
+                                                                   .ExecuteStoredProc<SPLedgerReport>();
 
-                            closingTransactionDetail = await _uow.GetDbContext().VoucherTransactions.Include(x => x.VoucherDetails).Include(x => x.ChartOfAccountDetail)
-                                                                    .Where(x => x.IsDeleted == false &&
-                                                                    model.accountLists.Contains(x.ChartOfAccountNewId.Value) &&
-                                                                    model.OfficeIdList.Contains(x.OfficeId.Value) &&
-                                                                    x.TransactionDate.Value.Date >= model.fromdate.Date &&
-                                                                    x.TransactionDate.Value.Date <= model.todate.Date).ToListAsync();
-
-
-                            foreach (var item in openingTransactionDetail)
+                            openingLedgerList = spLedgerReportOpening.Select(x => new LedgerModel
                             {
-                                LedgerModel obj = new LedgerModel();
+                                ChartOfAccountNewId = x.ChartOfAccountNewId,
+                                AccountName= x.AccountName,
+                                VoucherNo= x.VoucherNo.ToString(),
+                                ChartAccountName= x.AccountName,
+                                Description= x.Description,
+                                VoucherReferenceNo= x.VoucherReferenceNo,
+                                CurrencyName= x.CurrencyName,
+                                TransactionDate= x.TransactionDate,
+                                ChartOfAccountNewCode= x.ChartOfAccountNewCode,
+                                CreditAmount= x.CreditAmount,
+                                DebitAmount= x.DebitAmount
+                            }).ToList();
 
-                                obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
-                                obj.AccountName = item.ChartOfAccountDetail.AccountName;
-                                obj.VoucherNo = item.VoucherNo.ToString();
-                                obj.ChartAccountName = item.ChartOfAccountDetail.AccountName;
-                                obj.Description = item.Description;
-                                obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
-                                obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
-                                obj.TransactionDate = item.TransactionDate;
-                                obj.ChartOfAccountNewCode = item.ChartOfAccountDetail.ChartOfAccountNewCode;
 
-                                if (model.CurrencyId == (int)Currency.PKR)
-                                {
+                            var spLedgerReportClosing = await _uow.GetDbContext().LoadStoredProc("get_ledger_report")
+                                                                  .WithSqlParam("currency", model.CurrencyId)
+                                                                  .WithSqlParam("recordtype", model.RecordType)
+                                                                  .WithSqlParam("fromdate", model.fromdate.ToString())
+                                                                  .WithSqlParam("todate", model.todate.ToString())
+                                                                  .WithSqlParam("officelist", model.OfficeIdList)
+                                                                  .WithSqlParam("accountslist", model.accountLists)
+                                                                  .WithSqlParam("openingbalance", false)
+                                                                  .ExecuteStoredProc<SPLedgerReport>();
 
-                                    obj.CreditAmount = item.Credit != 0 ? item.PKRAmount : 0;
-                                    obj.DebitAmount = item.Debit != 0 ? item.PKRAmount : 0;
-                                }
-                                else if (model.CurrencyId == (int)Currency.AFG)
-                                {
-
-                                    obj.CreditAmount = item.Credit != 0 ? item.AFGAmount : 0;
-                                    obj.DebitAmount = item.Debit != 0 ? item.AFGAmount : 0;
-                                }
-                                else if (model.CurrencyId == (int)Currency.EUR)
-                                {
-
-                                    obj.CreditAmount = item.Credit != 0 ? item.EURAmount : 0;
-                                    obj.DebitAmount = item.Debit != 0 ? item.EURAmount : 0;
-                                }
-                                else
-                                {
-
-                                    obj.CreditAmount = item.Credit != 0 ? item.USDAmount : 0;
-                                    obj.DebitAmount = item.Debit != 0 ? item.USDAmount : 0;
-                                }
-
-                                openingLedgerList.Add(obj);
-                            }
-
-                            //Closing Calculation
-                            foreach (var item in closingTransactionDetail)
+                            closingLedgerList= spLedgerReportClosing.Select(x => new LedgerModel
                             {
-                                LedgerModel obj = new LedgerModel();
-
-                                obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
-                                obj.AccountName = item.ChartOfAccountDetail.AccountName;
-                                obj.VoucherNo = item.VoucherNo.ToString();
-                                obj.VoucherReferenceNo = item.VoucherDetails.ReferenceNo;
-                                obj.ChartAccountName = item.ChartOfAccountDetail.AccountName;
-                                obj.Description = item.Description;
-                                obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == item.CurrencyId)?.CurrencyName;
-                                obj.TransactionDate = item.TransactionDate;
-                                obj.ChartOfAccountNewCode = item.ChartOfAccountDetail.ChartOfAccountNewCode;
-
-                                if (model.CurrencyId == (int)Currency.PKR)
-                                {
-
-                                    obj.CreditAmount = item.Credit != 0 ? item.PKRAmount : 0;
-                                    obj.DebitAmount = item.Debit != 0 ? item.PKRAmount : 0;
-                                }
-                                else if (model.CurrencyId == (int)Currency.USD)
-                                {
-
-                                    obj.CreditAmount = item.Credit != 0 ? item.USDAmount : 0;
-                                    obj.DebitAmount = item.Debit != 0 ? item.USDAmount : 0;
-                                }
-                                else if (model.CurrencyId == (int)Currency.AFG)
-                                {
-
-                                    obj.CreditAmount = item.Credit != 0 ? item.AFGAmount : 0;
-                                    obj.DebitAmount = item.Debit != 0 ? item.AFGAmount : 0;
-                                }
-                                else
-                                {
-
-                                    obj.CreditAmount = item.Credit != 0 ? item.EURAmount : 0;
-                                    obj.DebitAmount = item.Debit != 0 ? item.EURAmount : 0;
-                                }
-
-                                closingLedgerList.Add(obj);
-                            }
+                                ChartOfAccountNewId = x.ChartOfAccountNewId,
+                                AccountName = x.AccountName,
+                                VoucherNo = x.VoucherNo.ToString(),
+                                ChartAccountName = x.AccountName,
+                                Description = x.Description,
+                                VoucherReferenceNo = x.VoucherReferenceNo,
+                                CurrencyName = x.CurrencyName,
+                                TransactionDate = x.TransactionDate,
+                                ChartOfAccountNewCode = x.ChartOfAccountNewCode,
+                                CreditAmount = x.CreditAmount,
+                                DebitAmount = x.DebitAmount
+                            }).ToList();
 
                             #region Old Code for consolidated
 
@@ -2594,9 +2483,9 @@ namespace HumanitarianAssistance.Service.Classes
                     List<LedgerModel> finalTrialBalanceList = new List<LedgerModel>();
 
                     ICollection<CurrencyDetails> allCurrencies = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
-                    CurrencyDetails baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
+                    //CurrencyDetails baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
 
-                    ICollection<ChartOfAccountNew> accountDetail = await _uow.ChartOfAccountNewRepository.FindAllAsync(x => model.accountLists.Contains(x.ChartOfAccountNewId));
+                    //ICollection<ChartOfAccountNew> accountDetail = await _uow.ChartOfAccountNewRepository.FindAllAsync(x => model.accountLists.Contains(x.ChartOfAccountNewId));
 
                     #region Commented code for selecting 4th level accounts from level 1, 2, 3 Accounts when UI dropdown contains All Accounts(Level 1, 2, 3, 4)
 
@@ -2651,41 +2540,28 @@ namespace HumanitarianAssistance.Service.Classes
                     // Single
                     if (model.RecordType == 1)
                     {
+                        //get trialbalance report from Stored Procedure get_trialbalance_report
+                        var spTrialBalanceReport = await _uow.GetDbContext().LoadStoredProc("get_trialbalance_report")
+                                                                    .WithSqlParam("currency", model.CurrencyId)
+                                                                    .WithSqlParam("recordtype", model.RecordType)
+                                                                    .WithSqlParam("fromdate", model.fromdate.ToString())
+                                                                    .WithSqlParam("todate", model.todate.ToString())
+                                                                    .WithSqlParam("officelist", model.OfficesList)
+                                                                    .WithSqlParam("accountslist", model.accountLists)
+                                                                    .ExecuteStoredProc<SP_TrialBalanceModel>();
 
+                        var transactionDetail = spTrialBalanceReport.Select(x => new LedgerModel
+                        {
+                            AccountName = x.AccountName,
+                            ChartOfAccountNewId = x.ChartOfAccountNewId,
+                            Description = x.Description,
+                            CurrencyName = x.CurrencyName,
+                            CreditAmount = x.CreditAmount,
+                            DebitAmount = x.DebitAmount,
+                            TransactionDate = x.TransactionDate,
+                            ChartOfAccountNewCode = x.ChartOfAccountNewCode
 
-                        //var spJournalReport = await _uow.GetDbContext().LoadStoredProc("get_trial_balance_report")
-                        //                                            .WithSqlParam("currencyid", model.CurrencyId)
-                        //                                            .WithSqlParam("recordtype", model.RecordType)
-                        //                                            .WithSqlParam("fromdate", model.fromdate.ToString())
-                        //                                            .WithSqlParam("todate", model.todate.ToString())
-                        //                                            .WithSqlParam("officelist", model.OfficesList)
-                        //                                            .WithSqlParam("journalno", model.JournalCode)
-                        //                                            .WithSqlParam("accountslist", model.AccountLists)
-                        //                                            .ExecuteStoredProc<SP_TrialBalanceModel>();
-
-
-
-                        List<LedgerModel> transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                        .Where(x => x.IsDeleted == false &&
-                                                                              accountFourthLevel.Contains(x.ChartOfAccountNewId) && //x.AccountNo == accountItem.AccountCode &&
-                                                                              model.OfficesList.Contains(x.OfficeId) &&
-                                                                              x.CurrencyId == model.CurrencyId &&
-                                                                              x.TransactionDate.Value.Date >= model.fromdate.Date &&
-                                                                              x.TransactionDate.Value.Date <= model.todate.Date)
-                                                                       .Select(item => new LedgerModel
-                                                                       {
-                                                                           ChartOfAccountNewId = item.ChartOfAccountNewId.Value,
-                                                                           AccountName = item.ChartOfAccountDetail.AccountName,
-                                                                           ChartAccountName = item.ChartOfAccountDetail.AccountName,
-                                                                           Description = item.Description,
-                                                                           CurrencyName = item.CurrencyDetails.CurrencyName,
-                                                                           CreditAmount = item.Credit,
-                                                                           DebitAmount = item.Debit,
-                                                                           TransactionDate = item.TransactionDate,
-                                                                           ChartOfAccountNewCode = item.ChartOfAccountDetail.ChartOfAccountNewCode
-                                                                       }).ToListAsync();
-
-
+                        }).ToList();
 
                         List<LedgerModel> transactionDetail1 = new List<LedgerModel>();
 
@@ -2717,71 +2593,37 @@ namespace HumanitarianAssistance.Service.Classes
                             }
 
                             finalTrialBalanceList.Add(obj);
-
                         }
-
-
-                        //finalTrialBalanceList.AddRange(transactionDetail);
-
                     }
                     else
                     {
-                        var accountFourthLevelNotNull = accountFourthLevel.ConvertAll(x => x.Value);
+                        var accountFourthLevelNotNull = accountFourthLevel.ConvertAll(x => x);
 
 
                         List<LedgerModel> trialBalanceList = new List<LedgerModel>();
                         finalTrialBalanceList = new List<LedgerModel>();
 
-                        var transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                            .Include(x => x.ChartOfAccountDetail)
-                                                            .Where(x => model.OfficesList.Contains(x.OfficeId) &&
-                                                                       accountFourthLevelNotNull.Contains(x.ChartOfAccountNewId.Value) && //change the accountNo to long datatype
-                                                                       x.TransactionDate.Value.Date >= model.fromdate.Date &&
-                                                                       x.TransactionDate.Value.Date <= model.todate.Date &&
-                                                                       x.IsDeleted == false)
-                                                            .OrderBy(x => x.ChartOfAccountNewId)
-                                                            //.Take(100)
-                                                            .ToListAsync();
+                        var spTrialbalanceReport = await _uow.GetDbContext().LoadStoredProc("get_trialbalance_report")
+                                                                    .WithSqlParam("currency", model.CurrencyId)
+                                                                    .WithSqlParam("recordtype", model.RecordType)
+                                                                    .WithSqlParam("fromdate", model.fromdate.ToString())
+                                                                    .WithSqlParam("todate", model.todate.ToString())
+                                                                    .WithSqlParam("officelist", model.OfficesList)
+                                                                    .WithSqlParam("accountslist", model.accountLists)
+                                                                    .ExecuteStoredProc<SP_TrialBalanceModel>();
 
-
-                        foreach (var item in transactionDetail)
+                        trialBalanceList= spTrialbalanceReport.Select(x=> new LedgerModel
                         {
-                            LedgerModel obj = new LedgerModel();
-
-                            obj.ChartOfAccountNewId = item.ChartOfAccountNewId.Value;
-                            obj.AccountName = item.ChartOfAccountDetail.AccountName;
-                            obj.ChartAccountName = item.ChartOfAccountDetail.AccountName;
-                            obj.Description = item.Description;
-                            obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == model.CurrencyId)?.CurrencyName;
-                            obj.TransactionDate = item.TransactionDate;
-                            obj.ChartOfAccountNewCode = item.ChartOfAccountDetail.ChartOfAccountNewCode;
-
-                            if (model.CurrencyId == (int)Currency.PKR)
-                            {
-                                obj.CreditAmount = item.Credit != 0 ? item.PKRAmount : 0;
-                                obj.DebitAmount = item.Debit != 0 ? item.PKRAmount : 0;
-                            }
-                            else if (model.CurrencyId == (int)Currency.AFG)
-                            {
-                                obj.CreditAmount = item.Credit != 0 ? item.AFGAmount : 0;
-                                obj.DebitAmount = item.Debit != 0 ? item.AFGAmount : 0;
-                            }
-                            else if (model.CurrencyId == (int)Currency.EUR)
-                            {
-                                obj.CreditAmount = item.Credit != 0 ? item.EURAmount : 0;
-                                obj.DebitAmount = item.Debit != 0 ? item.EURAmount : 0;
-                            }
-                            else
-                            {
-                                obj.CreditAmount = item.Credit != 0 ? item.USDAmount : 0;
-                                obj.DebitAmount = item.Debit != 0 ? item.USDAmount : 0;
-                            }
-
-                            trialBalanceList.Add(obj);
-                        }
-
-
-                        //List<LedgerModel> transactionDetail1 = new List<LedgerModel>();
+                        ChartOfAccountNewId = x.ChartOfAccountNewId,
+                        AccountName = x.AccountName,
+                        ChartAccountName = x.AccountName,
+                        Description = x.Description,
+                        CurrencyName = x.CurrencyName,
+                        TransactionDate = x.TransactionDate,
+                        ChartOfAccountNewCode = x.ChartOfAccountNewCode,
+                        CreditAmount = x.CreditAmount,
+                        DebitAmount = x.DebitAmount
+                        }).ToList();
 
                         var accountGroup = trialBalanceList.GroupBy(x => x.ChartOfAccountNewId);
 
@@ -2834,7 +2676,6 @@ namespace HumanitarianAssistance.Service.Classes
                             finalTrialBalanceList.Add(obj);
                         }
                     }
-
 
                     response.data.TrailBlanceList = finalTrialBalanceList;
                     response.StatusCode = StaticResource.successStatusCode;
