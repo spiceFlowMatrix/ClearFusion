@@ -70,7 +70,7 @@ namespace HumanitarianAssistance.Service
             if (EmailId == null)
             {
                 mailid = Credential + "," + logginUserEmailId;
-            }
+            } 
             else
             {
                 mailid = EmailId + "," + Credential + "," + logginUserEmailId;
@@ -381,10 +381,10 @@ namespace HumanitarianAssistance.Service
             {
                 mimeType = "application/vnd.google-apps.spreadsheet";
             }
-            //else if (ext == ".jpeg" || ext == ".png")
-            //{
-            //    mimeType = "application/vnd.google-apps.photo";
-            //}
+            else if (ext == ".jpeg" || ext == ".png")
+            {
+                mimeType = "application/vnd.google-apps.photo";
+            }
             return mimeType;
         }
         public static string FilePermission(string ProjectCode, string Fileid, string EmailId, string pathFile, ViewModels.Models.Project.GoogleCredential Credential, string logginUserEmailId)

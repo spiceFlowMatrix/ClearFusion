@@ -304,7 +304,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ProjectProposalModel ProjectProposalModel { get; set; }
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
-
+        public EligibilityCriteriaDetail eligibilityCriteriaDetail { get; set; }
         public CriteriaEveluationModel CriteriaEveluationModel { get; set; }
         public List<ApplicationPages> ApplicationPagesList { get; set; }
         public List<UserRolePermissionsModel> UserRolePermissions { get; set; }

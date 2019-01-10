@@ -351,6 +351,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.ContractCode = contractcode;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
+                    obj.UnitRateId = model.UnitRateId == 0 ? null : model.UnitRateId;
                     obj.UnitRate = model.UnitRate;
                     obj.CreatedDate = DateTime.Now;
                     obj.CurrencyId = model.CurrencyId;
@@ -363,7 +364,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.NatureId = model.NatureId;
                     obj.QualityId = model.QualityId;
                     obj.TimeCategoryId = model.TimeCategoryId;
-                   
+
                     await _uow.ContractDetailsRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
                     conDetails.ActivityTypeId = obj.ActivityTypeId;
@@ -402,6 +403,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         _mapper.Map(model, existRecord);
                         existRecord.IsCompleted = true;
                         existRecord.IsDeleted = false;
+                        existRecord.UnitRateId = model.UnitRateId == 0 ? null : model.UnitRateId;
+                        existRecord.UnitRate = model.UnitRate;
                         existRecord.ModifiedById = UserId;
                         existRecord.ModifiedDate = DateTime.Now;
                         await _uow.ContractDetailsRepository.UpdateAsyn(existRecord);
@@ -440,7 +443,14 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     _uow.GetDbContext().ContractDetails.Update(existRecord);
                     _uow.GetDbContext().SaveChanges();
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Contract approved successfully";
+                    if (model.Type == "Approve")
+                    {
+                        response.Message = "Contract approved successfully";
+                    }
+                    if (model.Type == "Rejected")
+                    {
+                        response.Message = "Contract rejected successfully";
+                    }                   
                     response.data.contractDetails = existRecord;
                 }
                 catch (Exception ex)
