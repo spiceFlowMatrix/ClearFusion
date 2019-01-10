@@ -2644,6 +2644,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ModifiedDate = DateTime.Now;
                     _uow.GetDbContext().SaveChanges();
                 }
+                response.data.eligibilityCriteriaDetail = _detail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
