@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace HumanitarianAssistance.Common.Enums
@@ -173,5 +174,20 @@ namespace HumanitarianAssistance.Common.Enums
     ControlLevel = 99,
     SubLevel = 999,
     InputLevel = 999999
+  }
+  public enum ProposalDocumentType
+  {
+    [Description("EOI")]
+    edifile,
+    [Description("BUDGET")]
+    budgetfile,
+    [Description("CONCEPT")]
+    conceptfile,
+    [Description("PRESENTATION")]
+    presentationfile
+    //edifile = "EOI",
+    //budgetfile = 'BUDGET',
+    //conceptfile = 'CONCEPT',
+    //presentationfile = 'PRESENTATION'
   }
 }

@@ -23,6 +23,20 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public int? ReviewerId { get; set; }
         public int? DirectorId { get; set; }
         public bool? IsDelete { get; set; }
+
+
        
     }
+   public class ProjectFilterModel
+    {
+        public string FilterValue { get; set; }
+        public bool? ProjectNameFlag { get; set; }
+        public bool? DateFlag { get; set; }
+
+        public int? pageIndex { get; set; }
+        public int? pageSize { get; set; }
+        public int? totalCount { get; set; }
+
+    }
+
 }
