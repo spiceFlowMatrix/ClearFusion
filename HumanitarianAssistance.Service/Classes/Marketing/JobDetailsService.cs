@@ -336,7 +336,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 if (model.JobId == 0)
                 {
-                    var jobList = _uow.GetDbContext().JobDetails.Where(x => x.JobName == model.JobName).FirstOrDefault();
+                    var jobList = _uow.GetDbContext().JobDetails.Where(x => x.JobName == model.JobName && x.IsDeleted == false).FirstOrDefault();
                     if (jobList == null)
                     {
                         var jobDetail = _uow.GetDbContext().JobDetails
