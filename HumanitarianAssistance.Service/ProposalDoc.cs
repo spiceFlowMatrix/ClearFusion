@@ -163,7 +163,7 @@ namespace HumanitarianAssistance.Service
             var driveService = userGoogleCredential(ProjectCode, pathFile, Credential);
             List<File> result = new List<File>();
             List<string> folderName = new List<string>();
-            FilesResource.ListRequest request4 = driveService.Files.List();
+            FilesResource.ListRequest GetAllFileListRequest = driveService.Files.List();
             string mailid = string.Empty;
             if (EmailId == null)
             {
@@ -173,15 +173,15 @@ namespace HumanitarianAssistance.Service
             {
                 mailid = EmailId + "," + Credential.EmailId + "," + logginUserEmailId;
             }
-            request4.Fields = "*";
+            GetAllFileListRequest.Fields = "*";
             do
             {
-                FileList files = request4.Execute();
+                FileList files = GetAllFileListRequest.Execute();
                 result.AddRange(files.Files);
                 result = result.Where(p => p.MimeType == "application/vnd.google-apps.folder" && p.Trashed == false).ToList();
                 folderName = result.Select(p => p.Name).Distinct().ToList();
-                request4.PageToken = files.NextPageToken;
-            } while (!String.IsNullOrEmpty(request4.PageToken));          
+                GetAllFileListRequest.PageToken = files.NextPageToken;
+            } while (!String.IsNullOrEmpty(GetAllFileListRequest.PageToken));          
             string folder = ProjectCode;
             if (folderName.Contains(folder))
             {
@@ -228,9 +228,9 @@ namespace HumanitarianAssistance.Service
                         Role = "writer",
                         EmailAddress = item
                     };                  
-                    var request1 = driveService.Permissions.Create(userPermission, file.Id);
-                    request1.Fields = "*";
-                    batch.Queue(request1, callback);
+                    var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
+                    Permissionrequest.Fields = "*";
+                    batch.Queue(Permissionrequest, callback);
                     var task = batch.ExecuteAsync();
                 }
 
@@ -273,9 +273,9 @@ namespace HumanitarianAssistance.Service
                     Name = folder,
                     MimeType = "application/vnd.google-apps.folder"
                 };
-                var request3 = driveService.Files.Create(fileMetadata1);
-                request3.Fields = "id";
-                var folder1 = request3.Execute();
+                var fileMetarequest = driveService.Files.Create(fileMetadata1);
+                fileMetarequest.Fields = "id";
+                var folder1 = fileMetarequest.Execute();
                 Console.WriteLine("Folder ID: " + folder1.Id);
 
                 var fileMetadata = new File()
@@ -322,9 +322,9 @@ namespace HumanitarianAssistance.Service
                         EmailAddress = item
                     };
                     //var file = request.ResponseBody;
-                    var request1 = driveService.Permissions.Create(userPermission, file.Id);
-                    request1.Fields = "*";
-                    batch.Queue(request1, callback);
+                    var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
+                    Permissionrequest.Fields = "*";
+                    batch.Queue(Permissionrequest, callback);
                     var task = batch.ExecuteAsync();
                 }
                 string fileType = file.Name.Trim('"').Split('_')[0];
