@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HumanitarianAssistance.Service.Classes.AccountingNew
 {
@@ -80,8 +81,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                                    ) : true
                                        )
                                       .OrderByDescending(x => x.CreatedDate)
-                                      .Skip(voucherNewFilterModel.pageSize.Value * voucherNewFilterModel.pageIndex.Value)
-                                      .Take(voucherNewFilterModel.pageSize.Value)
                                       .Select(x => new VoucherDetailModel
                                       {
                                           VoucherNo = x.VoucherNo,
@@ -99,6 +98,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                           BudgetLineId = x.BudgetLineId,
                                           OfficeName = x.OfficeDetails.OfficeName,
                                       })
+                                      .Skip(voucherNewFilterModel.pageSize.Value * voucherNewFilterModel.pageIndex.Value)
+                                      .Take(voucherNewFilterModel.pageSize.Value)
                                       .AsNoTracking()
                                       .ToListAsync();
                 response.data.VoucherDetailList = voucherList;
@@ -433,6 +434,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         transaction.CreatedDate = DateTime.Now;
                         transaction.IsDeleted = false;
                         transaction.VoucherNo = voucherTransactions.VoucherNo;
+
                         transactionsList.Add(transaction);
                     }
 
@@ -456,6 +458,124 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
             return response;
         }
+
+        /// <summary>
+        /// Add/Edit Voucher Transaction
+        /// </summary>
+        /// <param name="voucherTransactions"></param>
+        /// <param name="userId"></param>
+        /// <returns>Success/Failure</returns>
+        public APIResponse AddEditTransactionList(List<VoucherTransactionsModel> voucherTransactionsList, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            List<VoucherTransactions> transactionsListAdd = new List<VoucherTransactions>();
+            List<VoucherTransactions> transactionsListEdit = new List<VoucherTransactions>();
+
+            try
+            {
+                if (voucherTransactionsList.Any())
+                {
+
+                    var editList = voucherTransactionsList.Where(w => w.TransactionId != 0)
+                                                          .Select(s => s.TransactionId);
+
+                    var editTransactionList = _uow.GetDbContext().VoucherTransactions
+                                                                 .Where(x => editList
+                                                                            .Contains(x.TransactionId))
+                                                                 .ToList();
+
+
+                    foreach (VoucherTransactionsModel voucherTransactions in voucherTransactionsList)
+                    {
+                        // Add
+                        if (voucherTransactions.TransactionId == 0 && voucherTransactions.IsDeleted == false)
+                        {
+                            //new voucher transaction object
+                            VoucherTransactions transaction = new VoucherTransactions();
+
+                            transaction.ChartOfAccountNewId = voucherTransactions.AccountNo;
+                            transaction.Debit = voucherTransactions.Debit;
+                            transaction.Credit = voucherTransactions.Credit;
+                            transaction.Description = voucherTransactions.Description;
+                            transaction.BudgetLineId = voucherTransactions.BudgetLineId;
+                            transaction.ProjectId = voucherTransactions.ProjectId;
+                            transaction.CreatedById = userId;
+                            transaction.CreatedDate = DateTime.Now;
+                            transaction.IsDeleted = false;
+                            transaction.VoucherNo = voucherTransactions.VoucherNo;
+
+                            transactionsListAdd.Add(transaction);
+                        }
+                        // edit
+                        else
+                        {
+                            VoucherTransactions transaction = editTransactionList.FirstOrDefault(x => x.TransactionId == voucherTransactions.TransactionId);
+
+                            if (transaction != null) {
+                                if (voucherTransactions.IsDeleted == false)
+                                {
+                                    transaction.IsDeleted = false;
+                                }
+                                else
+                                {
+                                    transaction.IsDeleted = true;
+                                }
+                                transaction.TransactionId = voucherTransactions.TransactionId;
+                                transaction.ChartOfAccountNewId = voucherTransactions.AccountNo;
+                                transaction.Debit = voucherTransactions.Debit;
+                                transaction.Credit = voucherTransactions.Credit;
+                                transaction.Description = voucherTransactions.Description;
+                                transaction.BudgetLineId = voucherTransactions.BudgetLineId;
+                                transaction.ProjectId = voucherTransactions.ProjectId;
+                                transaction.ModifiedById = userId;
+                                transaction.ModifiedDate = DateTime.Now;
+                                //transaction.VoucherNo = voucherTransactions.VoucherNo;
+
+                                transactionsListEdit.Add(transaction);
+                            }
+                        }
+                    }
+
+                    using (IDbContextTransaction tran = _uow.GetDbContext().Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            _uow.GetDbContext().VoucherTransactions.AddRange(transactionsListAdd);
+                            _uow.GetDbContext().VoucherTransactions.UpdateRange(transactionsListEdit);
+
+                            _uow.GetDbContext().SaveChanges();
+                            tran.Commit();
+                        }
+
+                        catch (Exception ex)
+                        {
+                            tran.Rollback();
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = StaticResource.SomethingWrong + ex.Message;
+                            return response;
+                        }
+                    }
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+
 
     }
 }

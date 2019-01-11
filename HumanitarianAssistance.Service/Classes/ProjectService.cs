@@ -908,7 +908,6 @@ namespace HumanitarianAssistance.Service.Classes
 
 
                 var ProjectList = await _uow.GetDbContext().ProjectDetail
-                                          .Include(x => x.ProjectPhaseDetails)
                                           .Where(x => !x.IsDeleted.Value)
                                           .OrderByDescending(x => x.ProjectId)
                                           .Skip(projectFilterModel.pageSize.Value * projectFilterModel.pageIndex.Value)
@@ -950,7 +949,6 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var ProjectList = await _uow.GetDbContext().ProjectDetail
-                                          .Include(x => x.ProjectPhaseDetails)
                                           .Where(x => !x.IsDeleted.Value)
                                           .OrderByDescending(x => x.ProjectId).Select(x => new ProjectDetailNewModel
                                           {
@@ -1966,6 +1964,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ApproveProjectDetails obj = new ApproveProjectDetails();
+                
                 obj = _uow.GetDbContext().ApproveProjectDetails.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
                 if (obj == null)
                 {
