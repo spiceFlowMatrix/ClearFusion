@@ -293,6 +293,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                {
                                    CreatedBy = j.CreatedBy.ToString(),
                                    ClientId = cd.ClientId,
+                                   ClientName = cd.ClientName,
                                    Minutes = jp.Minutes,
                                    JobId = j.JobId,
                                    ContractId = j.ContractId,
@@ -308,6 +309,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    TotalPrice = jp.TotalPrice,
                                    IsApproved = j.IsApproved,
                                    CurrencyCode = cur.CurrencyCode,
+                                   StartDate = cd.StartDate,
                                    IsAgreementApproved = j.IsAgreementApproved
                                })).FirstOrDefault();
                 response.data.JobPriceDetail = JobList;
