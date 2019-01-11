@@ -34,6 +34,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long JobId { get; set; }
         public double FinalRate { get; set; }
         public DateTime EndDate { get; set; }
+        public DateTime StartDate { get; set; }
         public string JobName { get; set; }
         public string JobCode { get; set; }
         public long Minutes { get; set; }
