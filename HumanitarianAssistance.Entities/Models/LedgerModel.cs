@@ -7,12 +7,12 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class LedgerModels: PaginationModel
     {
-        public List<int?> OfficesList { get; set; }
+        public List<int> OfficesList { get; set; }
         public List<int> OfficeIdList { get; set; }
         public int CurrencyId { get; set; }
         public DateTime fromdate { get; set; }
         public DateTime todate { get; set; }
         public int RecordType { get; set; }
-        public List<long?> accountLists { get; set; }
+        public List<long> accountLists { get; set; }
     }
 }
