@@ -14,5 +14,6 @@ namespace HumanitarianAssistance.ViewModels.Models.AccountingNew
         public double? Credit { get; set; }
         public double? Debit { get; set; }
         public long? VoucherNo { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }
