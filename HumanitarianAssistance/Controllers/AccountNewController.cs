@@ -208,5 +208,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    /// <summary>
+    /// Add/Edir Voucher transaction list
+    /// </summary>
+    /// <param name="voucherTransactions"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<APIResponse> AddEditTransactionList([FromBody]List<VoucherTransactionsModel> voucherTransactions)
+    {
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      APIResponse response = _iVoucherNewService.AddEditTransactionList(voucherTransactions, user.Id);
+      return response;
+    }
+
   }
 }
