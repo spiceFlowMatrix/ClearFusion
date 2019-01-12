@@ -81,7 +81,7 @@ jobs:
           name: Push image to GRC & update k8s
           command: |
             gcloud auth configure-docker
-            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}:${CIRCLE_SHA1}
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}:${CIRCLE_SHA1}-${CIRCLE_BUILD_NUM}
             kubectl patch deployment ${KUBDEPLOYMENT_API_STAGING} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'-'"$CIRCLE_BUILD_NUM"'"}]}}}}'
             kubectl rollout status deployment/${KUBDEPLOYMENT_API_STAGING}
             kubectl get pods
@@ -115,7 +115,7 @@ jobs:
           name: Push image to GRC & update k8s
           command: |
             gcloud auth configure-docker
-            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}-cha:${CIRCLE_SHA1}
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}-cha:${CIRCLE_SHA1}-${CIRCLE_BUILD_NUM}
             kubectl patch deployment ${KUBDEPLOYMENT_CHAAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'-cha","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"'-cha:'"$CIRCLE_SHA1"'-'"$CIRCLE_BUILD_NUM"'"}]}}}}'
             kubectl rollout status deployment/${KUBDEPLOYMENT_CHAAPI_PROD}
             kubectl get pods
@@ -149,7 +149,7 @@ jobs:
           name: Push image to GRC & update k8s
           command: |
             gcloud auth configure-docker
-            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}-smo:${CIRCLE_SHA1}
+            docker push eu.gcr.io/${GOOGLE_PROJECT_ID}/${APPLICATION_NAME}-smo:${CIRCLE_SHA1}-${CIRCLE_BUILD_NUM}
             kubectl patch deployment ${KUBDEPLOYMENT_SMOAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'-smo","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"'-smo:'"$CIRCLE_SHA1"'-'"$CIRCLE_BUILD_NUM"'"}]}}}}'
             kubectl rollout status deployment/${KUBDEPLOYMENT_SMOAPI_PROD}
             kubectl get pods
