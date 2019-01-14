@@ -24,6 +24,7 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using DataAccess.DbEntities.ErrorLog;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -921,12 +922,12 @@ namespace HumanitarianAssistance.Service.Classes
                                               IsWin = _uow.GetDbContext().WinProjectDetails.Where(y => y.ProjectId == x.ProjectId).Select(y => y.IsWin).FirstOrDefault(),
                                               IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
                                               ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
-                                                  //? "Data Entry"
-                                                  // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
-                                                  //   ? ""
-                                                  // : "",
+                                              //? "Data Entry"
+                                              // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
+                                              //   ? ""
+                                              // : "",
 
-                                                  TotalDaysinHours = x.EndDate == null ? (Convert.ToString(Math.Round(DateTime.Now.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + DateTime.Now.Subtract(x.StartDate.Value).Minutes)) : (Convert.ToString(Math.Round(x.EndDate.Value.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + x.EndDate.Value.Subtract(x.StartDate.Value).Minutes))
+                                              TotalDaysinHours = x.EndDate == null ? (Convert.ToString(Math.Round(DateTime.Now.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + DateTime.Now.Subtract(x.StartDate.Value).Minutes)) : (Convert.ToString(Math.Round(x.EndDate.Value.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + x.EndDate.Value.Subtract(x.StartDate.Value).Minutes))
                                           }).ToListAsync();
                 response.data.ProjectDetailModel = ProjectList;
                 response.data.TotalCount = totalCount;
@@ -1964,7 +1965,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ApproveProjectDetails obj = new ApproveProjectDetails();
-                
+
                 obj = _uow.GetDbContext().ApproveProjectDetails.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
                 if (obj == null)
                 {
@@ -2077,8 +2078,8 @@ namespace HumanitarianAssistance.Service.Classes
         {
             ProjectProposalDetail model = new ProjectProposalDetail();
             APIResponse response = new APIResponse();
-            try
-            {
+            //try
+            //{
                 var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
                 var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
                 GoogleCredential result = new GoogleCredential();
@@ -2100,12 +2101,12 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     if (proposaldata.UserId != null)
                     {
-                        EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == proposaldata.UserId).Select(p => p.Username).FirstOrDefault();
-                        if (proposaldata != null && EmailID != null)
-                        {
-                            response.data.ProjectProposalModel = ProposalDoc.userCredential(ProjectProposalfilename, pathFile, result, EmailID, FolderName, logginUserEmailId);
-                        }
+                    EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == proposaldata.UserId).Select(p => p.Username).FirstOrDefault();
+                    if (proposaldata != null && EmailID != null)
+                    {
+                        response.data.ProjectProposalModel = ProposalDoc.userCredential(ProjectProposalfilename, pathFile, result, EmailID, FolderName, logginUserEmailId);
                     }
+                  }
                 }
                 else
                 {
@@ -2140,12 +2141,12 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    response.StatusCode = StaticResource.failStatusCode;
+            //    response.Message = StaticResource.SomethingWrong + ex.Message;
+            //}
             return response;
         }
         public APIResponse GetProjectproposalsById(long Projectid)
@@ -4001,6 +4002,27 @@ namespace HumanitarianAssistance.Service.Classes
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
+        }
+        #endregion
+
+        #region ErrorLog
+        public void SaveErrorlog(int status, string message, string userName, string userId)
+        {
+            APIResponse response = new APIResponse();
+            Errorlog obj = new Errorlog();
+            obj.Status = status;
+            obj.UserName = userName;
+            obj.IsActive = true;
+            obj.stackTrace = message;
+            obj.IsDeleted = false;
+            obj.CreatedById = userId;
+            obj.CreatedDate = DateTime.Now;
+            _uow.ErrorlogRepository.AddAsyn(obj);
+            _uow.SaveAsync();
+
+
+
+
         }
         #endregion
         #endregion

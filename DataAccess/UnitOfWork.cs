@@ -9,6 +9,7 @@ using DataAccess.DbEntities.Store;
 using DataAccess.DbEntities.Project;
 using DataAccess.DbEntities.Marketing;
 using DataAccess.DbEntities.AccountingNew;
+using DataAccess.DbEntities.ErrorLog;
 
 namespace DataAccess
 {
@@ -221,7 +222,7 @@ namespace DataAccess
         #endregion
 
 
-
+        private IGenericRepository<Errorlog> _errorlogRepository { get; set; }
 
 
         public UnitOfWork(ApplicationDbContext mschaContext)
@@ -1725,8 +1726,15 @@ namespace DataAccess
                     _securityConsiderationMultiSelectRepository ?? new GenericRepository<SecurityConsiderationMultiSelect>(_mschaContext);
             }
         }
-       
 
+        public IGenericRepository<Errorlog> ErrorlogRepository
+        {
+            get
+            {
+                return _errorlogRepository =
+                    _errorlogRepository ?? new GenericRepository<Errorlog>(_mschaContext);
+            }
+        }
 
         public void Save()
         {

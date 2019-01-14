@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.DbEntities;
@@ -1325,6 +1324,16 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     #endregion
-
+    #region Error Log
+    //public async void SaveErrorlog(int status, string message)
+    //{
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    _iProject.SaveErrorlog(status, message, null, id);
+    //  }
+    //}
+    #endregion
   }
 }
