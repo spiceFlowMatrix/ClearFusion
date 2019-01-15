@@ -1,5 +1,6 @@
 ﻿using DataAccess.DbEntities;
 using DataAccess.DbEntities.AccountingNew;
+using DataAccess.DbEntities.ErrorLog;
 using DataAccess.DbEntities.Marketing;
 using DataAccess.DbEntities.Project;
 using DataAccess.DbEntities.Store;
@@ -189,8 +190,7 @@ namespace DataAccess
         IGenericRepository<ProvinceMultiSelect> ProvinceMultiSelectRepository { get; }
         IGenericRepository<DistrictMultiSelect> DistrictMultiSelectRepository { get; }
         IGenericRepository<SecurityConsiderationMultiSelect> SecurityConsiderationMultiSelectRepository { get; }
-
-
+        IGenericRepository<Errorlog> ErrorlogRepository { get; }
 
         #endregion
 
