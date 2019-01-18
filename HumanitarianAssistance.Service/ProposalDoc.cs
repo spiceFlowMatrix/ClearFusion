@@ -5,6 +5,7 @@ using Google.Apis.Drive.v3.Data;
 using Google.Apis.Requests;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models.Project;
@@ -26,13 +27,13 @@ namespace HumanitarianAssistance.Service
         static string ApplicationName = string.Empty;
         public static DriveService userGoogleCredential(string ProjectCode, string pathFile, ViewModels.Models.Project.GoogleCredential Credential)
         {
+            
             UserCredential credential;
             using (var stream =
                 new FileStream(pathFile, FileMode.Open, FileAccess.Read))
             {
                 // The file token.json stores the user's access and refresh tokens, and is created
-                // automatically when the authorization flow completes for the first time.
-                string credPath = "token.json";
+                // automatically when the authorization flow completes for the first time.               
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
                     Scopes,
@@ -40,8 +41,8 @@ namespace HumanitarianAssistance.Service
                    // "hamza@edgsolutions.net",
                    Credential.EmailId,
                     CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-                
+                    new FileDataStore("Drive.Api.Auth.Store", true)).Result;
+
             }
             var driveService = new DriveService(new BaseClientService.Initializer()
             {

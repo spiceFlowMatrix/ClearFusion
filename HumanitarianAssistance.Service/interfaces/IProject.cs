@@ -1,4 +1,5 @@
 ﻿using DataAccess.DbEntities;
+using DataAccess.DbEntities.ErrorLog;
 using DataAccess.DbEntities.Project;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models.Project;
@@ -44,6 +45,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddAreaDetails(AreaModel model, string UserId);
         Task<APIResponse> EditAreaDetails(AreaModel model, string UserId);
         Task<APIResponse> DeleteAreaDetails(AreaDetail model);
+        void SaveErrorlog(int status, string message, string userName, string userId);
         #endregion
 
         #region Consideration
@@ -171,6 +173,7 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetProvinceMultiSelectByProjectId(long ProjectId);
         APIResponse GetDistrictMultiSelectByProjectId(long ProjectId);
         APIResponse AddEditDistrictMultiSelectDetail(DistrictMultiSelectModel model, string UserId);
+       // APIResponse SaveErrorlog(Errorlog obj, string UserId);
 
 
         #endregion
