@@ -55,7 +55,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetJobsPaginatedList([FromBody]JobPaginationModel model)
     {
       APIResponse apiRespone = null;
