@@ -293,6 +293,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                {
                                    CreatedBy = j.CreatedBy.ToString(),
                                    ClientId = cd.ClientId,
+                                   ClientName = cd.ClientName,
                                    Minutes = jp.Minutes,
                                    JobId = j.JobId,
                                    ContractId = j.ContractId,
@@ -308,6 +309,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    TotalPrice = jp.TotalPrice,
                                    IsApproved = j.IsApproved,
                                    CurrencyCode = cur.CurrencyCode,
+                                   StartDate = cd.StartDate,
                                    IsAgreementApproved = j.IsAgreementApproved
                                })).FirstOrDefault();
                 response.data.JobPriceDetail = JobList;
@@ -336,7 +338,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 if (model.JobId == 0)
                 {
-                    var jobList = _uow.GetDbContext().JobDetails.Where(x => x.JobName == model.JobName).FirstOrDefault();
+                    var jobList = _uow.GetDbContext().JobDetails.Where(x => x.JobName == model.JobName && x.IsDeleted == false).FirstOrDefault();
                     if (jobList == null)
                     {
                         var jobDetail = _uow.GetDbContext().JobDetails

@@ -1,5 +1,6 @@
 using DataAccess.DbEntities;
 using DataAccess.DbEntities.AccountingNew;
+using DataAccess.DbEntities.ErrorLog;
 using DataAccess.DbEntities.Marketing;
 using DataAccess.DbEntities.OnlyForDT;
 using DataAccess.DbEntities.Project;
@@ -190,7 +191,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public DbSet<ApproveRejectPermission> ApproveRejectPermission { get; set; }
 
-
+        public DbSet<Errorlog> errorlog { get; set; }
 
 
         #region Project

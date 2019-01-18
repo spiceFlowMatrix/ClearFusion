@@ -24,7 +24,6 @@ namespace HumanitarianAssistance
           var context = services.GetRequiredService<ApplicationDbContext>();
           var userManager = services.GetRequiredService<UserManager<AppUser>>();
           var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
           var dbInitializerLogger = services.GetRequiredService<ILogger<DbInitializer>>();
           // DbInitializer.Initialize(context, userManager, roleManager, dbInitializerLogger).Wait();
         }

@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190114055927_errorlog")]
+    partial class errorlog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -444,30 +446,7 @@ namespace DataAccess.Migrations
                         new { PageId = 45, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "PaymentTypes" },
                         new { PageId = 46, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "Store" },
                         new { PageId = 47, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "ProcurementSummary" },
-                        new { PageId = 48, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "DepreciationReport" },
-                        new { PageId = 49, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "TimeCategory" },
-                        new { PageId = 50, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Quality" },
-                        new { PageId = 51, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Phase" },
-                        new { PageId = 52, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Nature" },
-                        new { PageId = 53, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Medium" },
-                        new { PageId = 54, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "MediaCategory" },
-                        new { PageId = 55, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "ActivityType" },
-                        new { PageId = 56, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "Assets" },
-                        new { PageId = 57, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "Liabilities" },
-                        new { PageId = 58, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "Income" },
-                        new { PageId = 59, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "Expense" },
-                        new { PageId = 60, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "BalanceSheet" },
-                        new { PageId = 61, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "IncomeExpenseReport" },
-                        new { PageId = 62, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "Vouchers" },
-                        new { PageId = 63, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Clients" },
-                        new { PageId = 64, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "UnitRates" },
-                        new { PageId = 65, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Jobs" },
-                        new { PageId = 66, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Contracts" },
-                        new { PageId = 67, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "MyProjects" },
-                        new { PageId = 68, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "Donors" },
-                        new { PageId = 69, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectDetails" },
-                        new { PageId = 70, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "Proposal" },
-                        new { PageId = 71, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "CriteriaEvaluation" }
+                        new { PageId = 48, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "DepreciationReport" }
                     );
                 });
 
@@ -502,41 +481,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("AppraisalGeneralQuestions");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.ApproveRejectPermission", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<bool>("Approve");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("PageId");
-
-                    b.Property<bool>("Reject");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("PageId");
-
-                    b.ToTable("ApproveRejectPermission");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AppUser", b =>
@@ -8553,22 +8497,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.ApproveRejectPermission", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.ApplicationPages", "ApplicationPages")
-                        .WithMany()
-                        .HasForeignKey("PageId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AssignActivity", b =>
