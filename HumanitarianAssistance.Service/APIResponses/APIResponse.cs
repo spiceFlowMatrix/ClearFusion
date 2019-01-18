@@ -320,7 +320,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
 
 
-        #region Marketing
+        #region Marketing       
         public ICollection<JobDetails> JobDetails { get; set; }
         public JobDetails JobDetailModel { get; set; }
         public ICollection<Quality> Qualities { get; set; }
