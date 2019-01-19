@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Entities.Models;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models;
@@ -374,6 +375,13 @@ namespace HumanitarianAssistance.Controllers
     public async Task<object> GetAllAccountTypeByCategory([FromBody]int id)
     {
       APIResponse response = await _ichartAccoutDetail.GetAllAccountTypeByCategory(id);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<object> GetAllAccountBalancesByCategory([FromBody]BalanceRequestModel model)
+    {
+      APIResponse response = await _ichartAccoutDetail.GetAllAccountBalancesByCategory(model);
       return response;
     }
 
