@@ -3,6 +3,8 @@ using DataAccess;
 using DataAccess.DbEntities;
 using DataAccess.DbEntities.AccountingNew;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Entities;
+using HumanitarianAssistance.Entities.Models;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models;
@@ -116,7 +118,43 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllAccountByAccountHeadTypeId(int id)
+    public async Task<APIResponse> GetAllAccountBalancesByCategory(BalanceRequestModel model)
+    {
+      APIResponse response = new APIResponse();
+      try
+      {
+
+        ApplicationDbContext ctx = _uow.GetDbContext();
+
+        List<Entities.Models.AccountBalance> accountbalancelist = await (from atp in ctx.AccountType
+                                                                         where !atp.IsDeleted.Value && atp.AccountCategory == model.id
+                                                         select new Entities.Models.AccountBalance()
+                                                         {
+                                                           AccountCategory = atp.AccountCategory,
+                                                           AccountHeadType = new Entities.Models.AccountHeadType() { 
+                                                           AccountHeadTypeId = atp.AccountHeadTypeId,
+                                                           AccountHeadTypeName = atp.AccountHeadType.AccountHeadTypeName,
+                                                           },
+                                                           AccountTypeName = atp.AccountTypeName,
+                                                           AccountHeadTypeId = atp.AccountHeadTypeId,
+                                                           AccountTypeId = atp.AccountTypeId,
+                                                           Balance = 0.00M
+                                                         }).ToListAsync<Entities.Models.AccountBalance>();
+
+        response.data.AccountBalanceList = accountbalancelist;
+        response.StatusCode = StaticResource.successStatusCode;
+        response.Message = "Success";
+      }
+      catch (Exception ex)
+      {
+        response.StatusCode = StaticResource.failStatusCode;
+        response.Message = StaticResource.SomethingWrong + ex.Message;
+      }
+      return response;
+    }
+
+
+    public async Task<APIResponse> GetAllAccountByAccountHeadTypeId(int id)
         {
             APIResponse response = new APIResponse();
             try

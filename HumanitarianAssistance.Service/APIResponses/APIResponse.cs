@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using DataAccess.DbEntities.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
+using HumanitarianAssistance.Entities.Models;
 
 namespace HumanitarianAssistance.Service.APIResponses
 {
@@ -380,13 +381,14 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ChartOfAccountNew ChartOfAccountNewDetail { get; set; }
         public List<VoucherTransactionsModel> VoucherTransactions { get; set; }
+        public List<AccountBalance> AccountBalanceList { get; internal set; }
 
-        #endregion
+    #endregion
 
 
-    }
+  }
 
-    public class Roles
+  public class Roles
     {
         public string RoleName { get; set; }
         public string Id { get; set; }

@@ -177,7 +177,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistory { get; set; }
         public DbSet<AccountLevel> AccountLevel { get; set; }
         public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
-        public DbSet<AccountHeadType> AccountHeadType { get; set; }
+        public DbSet<DataAccess.DbEntities.AccountHeadType> AccountHeadType { get; set; }
         public DbSet<PaymentTypes> PaymentTypes { get; set; }
         public DbSet<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public DbSet<ApplicationPages> ApplicationPages { get; set; }
@@ -356,12 +356,12 @@ namespace HumanitarianAssistance.Entities
                new StatusAtTimeOfIssue { IsDeleted = false, StatusAtTimeOfIssueId = 9, StatusName = "Broken" }
             );
 
-            modelBuilder.Entity<AccountHeadType>().HasData(
-               new AccountHeadType { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false },
-               new AccountHeadType { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false },
-               new AccountHeadType { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false },
-               new AccountHeadType { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false },
-               new AccountHeadType { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false }
+            modelBuilder.Entity<DataAccess.DbEntities.AccountHeadType>().HasData(
+               new DataAccess.DbEntities.AccountHeadType { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false },
+               new DataAccess.DbEntities.AccountHeadType { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false },
+               new DataAccess.DbEntities.AccountHeadType { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false },
+               new DataAccess.DbEntities.AccountHeadType { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false },
+               new DataAccess.DbEntities.AccountHeadType { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false }
             );
 
             modelBuilder.Entity<EmployeeContractType>().HasData(

@@ -1,4 +1,5 @@
-﻿using HumanitarianAssistance.Service.APIResponses;
+﻿using HumanitarianAssistance.Entities.Models;
+using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllChartAccountDetail();
         Task<APIResponse> GetAllAccountLevel();
         Task<APIResponse> GetAllAccountTypeByCategory(int id);
+        Task<APIResponse> GetAllAccountBalancesByCategory(BalanceRequestModel model);
         Task<APIResponse> GetAllAccountByAccountHeadTypeId(int id);
         Task<APIResponse> AddAccountType(AccountTypeModel model);
         Task<APIResponse> EditAccountType(AccountTypeModel model);
