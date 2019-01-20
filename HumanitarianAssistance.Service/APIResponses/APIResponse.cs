@@ -371,6 +371,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public Dictionary<string,List<string>> Permissions { get; set; }
 
 
+
         #region "Accounting New"
         public List<ChartOfAccountNew> AllAccountList { get; set; }
         public List<ChartOfAccountNew> MainLevelAccountList { get; set; }
@@ -383,12 +384,34 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<VoucherTransactionsModel> VoucherTransactions { get; set; }
         public List<AccountBalance> AccountBalanceList { get; internal set; }
 
-    #endregion
+
+        public List<AccountBalance> AccountBalances { get; set; }
+        public List<NoteAccountBalances> NoteAccountBalances { get; set; }
+
+        #endregion
+
 
 
   }
 
-  public class Roles
+
+    public class NoteAccountBalances
+    {
+        public int NoteId { get; set; }
+        public string NoteName { get; set; }
+        public int NoteHeadId { get; set; }
+        public string NoteHeadName { get; set; }
+        public List<AccountBalance> AccountBalances { get; set; }
+    }
+
+    public class AccountBalance
+    {
+        public long AccountId { get; set; }
+        public string AccountName { get; set; }
+        public decimal Balance { get; set; }
+    }
+
+    public class Roles
     {
         public string RoleName { get; set; }
         public string Id { get; set; }

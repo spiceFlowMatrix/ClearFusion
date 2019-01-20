@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HumanitarianAssistance.Entities.Models
 {
-    public class AccountHeadType
+    public class AccountHeadTypeModel
     {
         public int AccountHeadTypeId { get; set; }
         public string AccountHeadTypeName { get; set; }

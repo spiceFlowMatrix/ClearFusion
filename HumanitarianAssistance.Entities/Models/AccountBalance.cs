@@ -12,14 +12,10 @@ namespace HumanitarianAssistance.Entities.Models
         public string AccountTypeName { get; set; }
         public int? AccountCategory { get; set; }
         public int AccountHeadTypeId { get; set; }
-        public AccountHeadType AccountHeadType { get; set; }
+        public AccountHeadTypeModel AccountHeadType { get; set; }
         public decimal Balance { get; set; }
   }
 
-  public partial class BalanceRequestModel {
-    public int id { get; set; }
-    public DateTime asOfDate { get; set; }
-  }
 
 
 }

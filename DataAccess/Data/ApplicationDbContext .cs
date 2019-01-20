@@ -356,12 +356,12 @@ namespace HumanitarianAssistance.Entities
                new StatusAtTimeOfIssue { IsDeleted = false, StatusAtTimeOfIssueId = 9, StatusName = "Broken" }
             );
 
-            modelBuilder.Entity<DataAccess.DbEntities.AccountHeadType>().HasData(
-               new DataAccess.DbEntities.AccountHeadType { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false },
-               new DataAccess.DbEntities.AccountHeadType { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false },
-               new DataAccess.DbEntities.AccountHeadType { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false },
-               new DataAccess.DbEntities.AccountHeadType { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false },
-               new DataAccess.DbEntities.AccountHeadType { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false }
+            modelBuilder.Entity<AccountHeadType>().HasData(
+               new AccountHeadType { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false, IsCreditBalancetype = false},
+               new AccountHeadType { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false, IsCreditBalancetype = true},
+               new AccountHeadType { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false, IsCreditBalancetype = true},
+               new AccountHeadType { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false, IsCreditBalancetype = true},
+               new AccountHeadType { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false, IsCreditBalancetype = false}
             );
 
             modelBuilder.Entity<EmployeeContractType>().HasData(

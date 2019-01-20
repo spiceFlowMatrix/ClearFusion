@@ -30,6 +30,8 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
+                    b.Property<bool>("IsCreditBalancetype");
+
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
@@ -45,11 +47,11 @@ namespace DataAccess.Migrations
                     b.ToTable("AccountHeadType");
 
                     b.HasData(
-                        new { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false },
-                        new { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false },
-                        new { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false },
-                        new { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false },
-                        new { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false }
+                        new { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsCreditBalancetype = false, IsDeleted = false },
+                        new { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsCreditBalancetype = true, IsDeleted = false },
+                        new { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsCreditBalancetype = true, IsDeleted = false },
+                        new { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsCreditBalancetype = true, IsDeleted = false },
+                        new { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsCreditBalancetype = false, IsDeleted = false }
                     );
                 });
 
@@ -107,6 +109,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("IsCreditBalancetype");
 
                     b.Property<bool?>("IsDeleted");
 
