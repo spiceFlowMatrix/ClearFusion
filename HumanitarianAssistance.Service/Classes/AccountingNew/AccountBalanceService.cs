@@ -42,8 +42,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 {
                     AccountId = balance.Key.ChartOfAccountNewId,
                     AccountName = balance.Key.AccountName,
-                    Balance = balance.Value
+                    Balance = new Decimal(balance.Value)
                 };
+                vmBalances.Add(iVmBalance);
             }
 
             return vmBalances;
@@ -78,6 +79,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                     currNoteAccountBalances.NoteId = note.AccountTypeId;
                     currNoteAccountBalances.NoteName = note.AccountTypeName;
+                    currNoteAccountBalances.NoteHeadId = note.AccountHeadTypeId;
                     currNoteAccountBalances.AccountBalances = vmNoteBalances;
                     noteAccountBalances.Add(currNoteAccountBalances);
                 }
@@ -127,6 +129,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     currNoteAccountBalances.NoteId = note.AccountTypeId;
                     currNoteAccountBalances.NoteName = note.AccountTypeName;
                     currNoteAccountBalances.AccountBalances = vmNoteBalances;
+                    currNoteAccountBalances.NoteHeadId = note.AccountHeadTypeId;
                     noteAccountBalances.Add(currNoteAccountBalances);
                 }
 

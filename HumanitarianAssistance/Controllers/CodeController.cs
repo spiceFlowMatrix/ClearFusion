@@ -5,8 +5,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Entities.Models;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
+using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -29,6 +31,7 @@ namespace HumanitarianAssistance.Controllers
     private IJournalDetail _ijournalDetail;
     private IEmailSetting _iemailSetting;
     private IChartAccoutDetail _ichartAccoutDetail;
+    private IAccountBalance _accountBalance;
     private IExchangeRate _iexchangeRate;
     private IDesignation _idesignation;
     //private IProjectBudget _iProjectBudget;
@@ -46,7 +49,8 @@ namespace HumanitarianAssistance.Controllers
       IDesignation idesignation,
       //IProjectBudget iProjectBudget,
       IProfession iprofession,
-      ICode icode
+      ICode icode,
+      IAccountBalance accountBalance
       //IProjectDetails iProjectDetails
       )
     {
@@ -58,6 +62,7 @@ namespace HumanitarianAssistance.Controllers
       _ichartAccoutDetail = ichartAccoutDetail;
       _iexchangeRate = iexchangeRate;
       _idesignation = idesignation;
+      _accountBalance = accountBalance;
       //_iProjectBudget = iProjectBudget;
       _iprofession = iprofession;
       _icode = icode;
@@ -374,6 +379,13 @@ namespace HumanitarianAssistance.Controllers
     public async Task<object> GetAllAccountTypeByCategory([FromBody]int id)
     {
       APIResponse response = await _ichartAccoutDetail.GetAllAccountTypeByCategory(id);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<object> GetAllAccountBalancesByCategory([FromBody]BalanceRequestModel model)
+    {
+      APIResponse response = await _accountBalance.GetNoteBalancesByHeadType(model.id, model.currency, model.asOfDate);
       return response;
     }
 

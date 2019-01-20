@@ -128,6 +128,7 @@ namespace HumanitarianAssistance
       services.AddTransient<IExchangeRate, ExchangeRateService>();
       services.AddTransient<IHREmployee, HREmployeeService>();
       services.AddTransient<IDesignation, DesignationService>();
+      services.AddTransient<IAccountBalance, AccountBalanceService>();
       //services.AddTransient<IProjectBudget, ProjectBudgetService>();
       //services.AddTransient<IProjectDetails, ProjectDetailService>();
       services.AddTransient<IProfession, ProfessionService>();

@@ -178,7 +178,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistory { get; set; }
         public DbSet<AccountLevel> AccountLevel { get; set; }
         public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
-        public DbSet<AccountHeadType> AccountHeadType { get; set; }
+        public DbSet<DataAccess.DbEntities.AccountHeadType> AccountHeadType { get; set; }
         public DbSet<PaymentTypes> PaymentTypes { get; set; }
         public DbSet<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public DbSet<ApplicationPages> ApplicationPages { get; set; }
