@@ -34,7 +34,10 @@ using HumanitarianAssistance.Service.interfaces.Marketing;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.Service.Classes.AccountingNew;
 using Microsoft.Extensions.Logging;
+using HumanitarianAssistance.WebAPI.Filter;
 using Newtonsoft.Json;
+using DinkToPdf.Contracts;
+using DinkToPdf;
 
 namespace HumanitarianAssistance
 {
@@ -241,8 +244,7 @@ namespace HumanitarianAssistance
           p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
         });
       });
-
-
+      services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
       services.AddTransient<IUnitOfWork, UnitOfWork>();
       services.AddMvc()
           .AddJsonOptions(config =>
@@ -251,7 +253,9 @@ namespace HumanitarianAssistance
             config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
             config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
           });
-
+      services.AddMvc(
+               config => { config.Filters.Add(typeof(CustomException)); }
+               ).AddJsonOptions(a => a.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
       //Mapper.Initialize(cfg => cfg.AddProfile<AutoMapperProfile>());
       services.AddRouting();
 
@@ -263,7 +267,7 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
 
-      //UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
       if (env.IsDevelopment())
       {
@@ -271,6 +275,7 @@ namespace HumanitarianAssistance
       }
       else
       {
+        
         app.UseExceptionHandler(
             builder =>
             {
@@ -283,6 +288,7 @@ namespace HumanitarianAssistance
                    var error = context.Features.Get<IExceptionHandlerFeature>();
                    if (error != null)
                    {
+                    
                      var err = $"<h1>Error: {error.Error.Message}</h1>{error.Error.StackTrace }";
                      // context.Response.AddApplicationError(error.Error.Message);
                      await context.Response.WriteAsync(error.Error.Message).ConfigureAwait(false);

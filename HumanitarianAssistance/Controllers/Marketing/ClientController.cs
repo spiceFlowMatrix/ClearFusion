@@ -37,7 +37,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #region Client
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetClientsPaginatedList([FromBody]ClientPaginationModel model)
     {
       APIResponse apiRespone = null;

@@ -277,6 +277,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<Category> Categories { get; set; }
         public ICollection<SectorDetails> sectorDetails { get; set; }
         public ICollection<ProgramDetail> programDetails { get; set; }
+        public ProgramDetail ProgramDetail { get; set; }
         public ICollection<AreaDetail> AreaDetail { get; set; }
         //public ICollection<DistrictDetail> DistrictDetail { get; }
         public int TotalCount { get; set; }
@@ -304,7 +305,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ProjectProposalModel ProjectProposalModel { get; set; }
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
-
+        public EligibilityCriteriaDetail eligibilityCriteriaDetail { get; set; }
         public CriteriaEveluationModel CriteriaEveluationModel { get; set; }
         public List<ApplicationPages> ApplicationPagesList { get; set; }
         public List<UserRolePermissionsModel> UserRolePermissions { get; set; }
@@ -320,7 +321,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
 
 
-        #region Marketing
+        #region Marketing       
         public ICollection<JobDetails> JobDetails { get; set; }
         public JobDetails JobDetailModel { get; set; }
         public ICollection<Quality> Qualities { get; set; }

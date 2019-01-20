@@ -24,6 +24,7 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using DataAccess.DbEntities.ErrorLog;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -43,6 +44,35 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
         #region Donor Details
+        public async Task<APIResponse> GetAllDonorFilterList(DonorFilterModel donorFilterModel)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                int totalCount = await _uow.GetDbContext().DonorDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+
+                var list = await _uow.GetDbContext().DonorDetail.Where(x => !x.IsDeleted.Value)
+                    .OrderByDescending(x => x.DonorId)
+                    .Skip(donorFilterModel.pageSize.Value * donorFilterModel.pageIndex.Value)
+                    .Take(donorFilterModel.pageSize.Value)
+                    .ToListAsync();
+
+                response.data.DonorDetail = list;
+                response.data.TotalCount = totalCount;
+
+                response.StatusCode = 200;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> GetAllDonorList()
         {
             APIResponse response = new APIResponse();
@@ -61,6 +91,9 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+
+
         public async Task<APIResponse> AddEditDonorDetails(DonorModel model, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -83,6 +116,7 @@ namespace HumanitarianAssistance.Service.Classes
                     //var DonarDetail = await _uow.GetDbContext().DonorDetail
                     //  .FirstOrDefaultAsync(x => !x.IsDeleted.Value && x.DonorId == obj.DonorId);
                     response.data.DonorDetailById = obj;
+                    response.data.TotalCount = await _uow.GetDbContext().DonorDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
 
                 }
                 else
@@ -161,6 +195,8 @@ namespace HumanitarianAssistance.Service.Classes
                 await _uow.DonorDetailRepository.UpdateAsyn(DonorInfo, DonorInfo.DonorId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+                response.data.TotalCount = await _uow.GetDbContext().DonorDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+
             }
             catch (Exception ex)
             {
@@ -394,6 +430,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreatedDate = DateTime.Now;
                     await _uow.ProgramDetailRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
+                    response.data.ProgramDetail = obj;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
@@ -864,13 +901,56 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetAllProjectFilterList(ProjectFilterModel projectFilterModel)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                int totalCount = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+
+
+                var ProjectList = await _uow.GetDbContext().ProjectDetail
+                                          .Where(x => !x.IsDeleted.Value)
+                                          .OrderByDescending(x => x.ProjectId)
+                                          .Skip(projectFilterModel.pageSize.Value * projectFilterModel.pageIndex.Value)
+                                          .Take(projectFilterModel.pageSize.Value)
+                                          .Select(x => new ProjectDetailNewModel
+                                          {
+                                              ProjectId = x.ProjectId,
+                                              ProjectCode = x.ProjectCode,
+                                              ProjectName = x.ProjectName,
+                                              ProjectDescription = x.ProjectDescription,
+                                              IsWin = _uow.GetDbContext().WinProjectDetails.Where(y => y.ProjectId == x.ProjectId).Select(y => y.IsWin).FirstOrDefault(),
+                                              IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
+                                              ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
+                                              //? "Data Entry"
+                                              // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
+                                              //   ? ""
+                                              // : "",
+
+                                              TotalDaysinHours = x.EndDate == null ? (Convert.ToString(Math.Round(DateTime.Now.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + DateTime.Now.Subtract(x.StartDate.Value).Minutes)) : (Convert.ToString(Math.Round(x.EndDate.Value.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + x.EndDate.Value.Subtract(x.StartDate.Value).Minutes))
+                                          }).ToListAsync();
+                response.data.ProjectDetailModel = ProjectList;
+                response.data.TotalCount = totalCount;
+
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
         public async Task<APIResponse> GetAllProjectList()
         {
             APIResponse response = new APIResponse();
             try
             {
                 var ProjectList = await _uow.GetDbContext().ProjectDetail
-                                          .Include(x => x.ProjectPhaseDetails)
                                           .Where(x => !x.IsDeleted.Value)
                                           .OrderByDescending(x => x.ProjectId).Select(x => new ProjectDetailNewModel
                                           {
@@ -899,6 +979,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
         public APIResponse GetProjectListById(long ProjectId)
         {
             APIResponse response = new APIResponse();
@@ -1885,6 +1966,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ApproveProjectDetails obj = new ApproveProjectDetails();
+
                 obj = _uow.GetDbContext().ApproveProjectDetails.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
                 if (obj == null)
                 {
@@ -1997,8 +2079,8 @@ namespace HumanitarianAssistance.Service.Classes
         {
             ProjectProposalDetail model = new ProjectProposalDetail();
             APIResponse response = new APIResponse();
-            try
-            {
+            //try
+            //{
                 var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
                 var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
                 GoogleCredential result = new GoogleCredential();
@@ -2020,12 +2102,12 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     if (proposaldata.UserId != null)
                     {
-                        EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == proposaldata.UserId).Select(p => p.Username).FirstOrDefault();
-                        if (proposaldata != null && EmailID != null)
-                        {
-                            response.data.ProjectProposalModel = ProposalDoc.userCredential(ProjectProposalfilename, pathFile, result, EmailID, FolderName, logginUserEmailId);
-                        }
+                    EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == proposaldata.UserId).Select(p => p.Username).FirstOrDefault();
+                    if (proposaldata != null && EmailID != null)
+                    {
+                        response.data.ProjectProposalModel = ProposalDoc.userCredential(ProjectProposalfilename, pathFile, result, EmailID, FolderName, logginUserEmailId);
                     }
+                  }
                 }
                 else
                 {
@@ -2060,12 +2142,12 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    response.StatusCode = StaticResource.failStatusCode;
+            //    response.Message = StaticResource.SomethingWrong + ex.Message;
+            //}
             return response;
         }
         public APIResponse GetProjectproposalsById(long Projectid)
@@ -2160,10 +2242,14 @@ namespace HumanitarianAssistance.Service.Classes
                             response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID, logginUserEmailId);
                         }
                     }
+                    else
+                    {
+                        response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, null, logginUserEmailId);
+                    }
                 }
                 else
                 {
-                    response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID, logginUserEmailId);
+                    response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, null, logginUserEmailId);
                 }
                 var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).FirstOrDefault();
                 if (proposaldetails == null)
@@ -2560,6 +2646,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ModifiedDate = DateTime.Now;
                     _uow.GetDbContext().SaveChanges();
                 }
+                response.data.eligibilityCriteriaDetail = _detail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -3916,6 +4003,27 @@ namespace HumanitarianAssistance.Service.Classes
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
+        }
+        #endregion
+
+        #region ErrorLog
+        public void SaveErrorlog(int status, string message, string userName, string userId)
+        {
+            APIResponse response = new APIResponse();
+            Errorlog obj = new Errorlog();
+            obj.Status = status;
+            obj.UserName = userName;
+            obj.IsActive = true;
+            obj.stackTrace = message;
+            obj.IsDeleted = false;
+            obj.CreatedById = userId;
+            obj.CreatedDate = DateTime.Now;
+            _uow.ErrorlogRepository.AddAsyn(obj);
+            _uow.SaveAsync();
+
+
+
+
         }
         #endregion
         #endregion

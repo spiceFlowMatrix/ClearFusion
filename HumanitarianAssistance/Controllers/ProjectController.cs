@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.DbEntities;
@@ -46,13 +45,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       };
     }
     #region Donor information
-    [HttpGet]
+    [HttpPost]
     
+    public async Task<APIResponse> GetAllDonorFilterList([FromBody] DonorFilterModel donorFilterModel)
+    {
+      APIResponse apiresponse = await _iProject.GetAllDonorFilterList(donorFilterModel);
+      return apiresponse;
+    }
+    [HttpGet]
     public async Task<APIResponse> GetAllDonorList()
     {
       APIResponse apiresponse = await _iProject.GetAllDonorList();
       return apiresponse;
     }
+
+
     [HttpPost]
     public async Task<APIResponse> AddEditDonorDetails([FromBody]DonorModel model)
     {
@@ -337,13 +344,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
 
+    [HttpPost]
+    public async Task<APIResponse> GetAllProjectFilterList([FromBody]ProjectFilterModel projectFilterModel)
+    {
+      APIResponse apiresponse = await _iProject.GetAllProjectFilterList(projectFilterModel);
+      return apiresponse;
+    }
+
     [HttpGet]
     public async Task<APIResponse> GetAllProjectList()
     {
       APIResponse apiresponse = await _iProject.GetAllProjectList();
       return apiresponse;
     }
-
     [HttpPost]
     public APIResponse GetProjectListById([FromBody]long Id)
     {
@@ -1311,6 +1324,16 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     #endregion
-
+    #region Error Log
+    //public async void SaveErrorlog(int status, string message)
+    //{
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    _iProject.SaveErrorlog(status, message, null, id);
+    //  }
+    //}
+    #endregion
   }
 }
