@@ -406,6 +406,13 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpPost]
+    public async Task<object> GetAllAccountIncomeExpensesByCategory([FromBody]BalanceRequestModel model)
+    {
+      APIResponse response = await _accountBalance.GetNoteBalancesByHeadType(model.id, model.currency, model.asOfDate, model.upToDate);
+      return response;
+    }
+
+    [HttpPost]
     public async Task<object> EditChartAccountDetail([FromBody] ChartAccountDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
