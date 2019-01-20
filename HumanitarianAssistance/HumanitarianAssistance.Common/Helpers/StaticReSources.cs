@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Common.Helpers
     public const string NoStateFound = "No State found";
     public const string InvalidCompanyTypeId = "Invalid Company type id";
     public const string InvalidRole = "Invalid Role";
-    public const string SomethingWrong = "Something went wrong";
+    public const string SomethingWrong = "Something went wrong: ";
     public const string RoleCreated = "Role Created";
     public const string RoleAlreadyExist = "Role already exists";
     public const string InvalidUser = "Invalid User";
