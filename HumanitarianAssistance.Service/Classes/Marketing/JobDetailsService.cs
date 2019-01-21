@@ -291,26 +291,27 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.JobId == model
                                select (new JobPriceModel
                                {
-                                   CreatedBy = j.CreatedBy.ToString(),
-                                   ClientId = cd.ClientId,
-                                   ClientName = cd.ClientName,
-                                   Minutes = jp.Minutes,
                                    JobId = j.JobId,
-                                   ContractId = j.ContractId,
-                                   JobCode = j.JobCode,
                                    JobName = j.JobName,
-                                   EndDate = j.EndDate,
-                                   JobPriceId = jp.JobPriceId,
-                                   Discount = jp.Discount,
-                                   DiscountPercent = jp.DiscountPercent,
+                                   JobCode = j.JobCode,
                                    UnitRate = jp.UnitRate,
                                    FinalRate = jp.FinalRate,
                                    FinalPrice = jp.FinalPrice,
                                    TotalPrice = jp.TotalPrice,
-                                   IsApproved = j.IsApproved,
-                                   CurrencyCode = cur.CurrencyCode,
+                                   Discount = jp.Discount,
+                                   DiscountPercent = jp.DiscountPercent,
+                                   EndDate = j.EndDate,
                                    StartDate = cd.StartDate,
-                                   IsAgreementApproved = j.IsAgreementApproved
+                                   ContractId = j.ContractId,
+                                   Minutes = jp.Minutes,
+                                   IsApproved = j.IsApproved,
+                                   CreatedBy = j.CreatedBy.ToString(),
+                                   IsAgreementApproved = j.IsAgreementApproved,
+                                   ClientId = cd.ClientId,
+                                   ClientName = cd.ClientName,
+                                   JobPriceId = jp.JobPriceId,
+                                   CurrencyCode = cur.CurrencyCode                                 
+                                  
                                })).FirstOrDefault();
                 response.data.JobPriceDetail = JobList;
                 response.StatusCode = 200;
@@ -677,7 +678,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    FinalPrice = jp.FinalPrice,
                                    TotalPrice = jp.TotalPrice,
                                    IsInvoiceApproved = jp.IsInvoiceApproved
-                               })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+                               })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).OrderByDescending(x => x.CreatedDate).ToList();
 
                 response.data.JobDetailsModel = JobList;
                 response.StatusCode = 200;
