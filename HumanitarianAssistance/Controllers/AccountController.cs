@@ -1243,12 +1243,40 @@ namespace HumanitarianAssistance.Controllers
 
       if (rolesWithPagePermissionsModel != null)
       {
-          response = await _ipermissionsInRoles.UpdatePermissionsOnSelectedRole(rolesWithPagePermissionsModel);
+
+        bool result = await UpdateRole(rolesWithPagePermissionsModel.RoleId, rolesWithPagePermissionsModel.RoleName);
+
+        response = await _ipermissionsInRoles.UpdatePermissionsOnSelectedRole(rolesWithPagePermissionsModel);
       }
 
       return response;
 
     }
+
+    [HttpPost]
+    public async Task<bool> UpdateRole(string RoleId, string RoleName)
+    {
+
+      IdentityResult identityResult = null;
+
+      try
+      {
+        var roleExists = await _roleManager.FindByIdAsync(RoleId);
+
+        if (roleExists != null)
+        {
+          //var role = new IdentityRole();
+          roleExists.Name = RoleName;
+          identityResult = await _roleManager.UpdateAsync(roleExists);
+        }
+      }
+      catch (Exception exception)
+      {
+
+      }
+      return identityResult.Succeeded;
+    }
+
 
   }
 }

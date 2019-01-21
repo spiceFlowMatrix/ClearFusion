@@ -2594,6 +2594,28 @@ namespace HumanitarianAssistance.Service.Classes
 
                             finalTrialBalanceList.Add(obj);
                         }
+
+                        var noTransactionAccounts = accountFourthLevel.Except(accountGroup.Select(x => (x.Key)));
+
+                        var allAccountDetails = _uow.ChartOfAccountNewRepository.FindAll(x => x.IsDeleted == false);
+
+                        foreach (var detail in noTransactionAccounts)
+                        {
+                            LedgerModel obj = new LedgerModel();
+                            var noTransactionAccount = allAccountDetails.FirstOrDefault(x => x.ChartOfAccountNewId == detail);
+
+                            obj.ChartOfAccountNewId = noTransactionAccount.ChartOfAccountNewId;
+                            obj.AccountName = noTransactionAccount.AccountName;
+                            obj.ChartAccountName = noTransactionAccount.AccountName;
+                            obj.Description = "";
+                            obj.CurrencyName = allCurrencies.FirstOrDefault(x => x.CurrencyId == model.CurrencyId)?.CurrencyName;
+                            obj.TransactionDate = null;
+                            obj.DebitAmount = 0;
+                            obj.CreditAmount = 0;
+                            obj.ChartOfAccountNewCode = noTransactionAccount.ChartOfAccountNewCode;
+
+                            finalTrialBalanceList.Add(obj);
+                        }
                     }
                     else
                     {
@@ -2658,10 +2680,12 @@ namespace HumanitarianAssistance.Service.Classes
 
                         }
 
+                        var allAccountDetails = _uow.ChartOfAccountNewRepository.FindAll(x => x.IsDeleted == false);
+
                         foreach (var detail in noTransactionAccounts)
                         {
                             LedgerModel obj = new LedgerModel();
-                            var noTransactionAccount = _uow.ChartOfAccountNewRepository.Find(x => x.ChartOfAccountNewId == detail);
+                            var noTransactionAccount = allAccountDetails.FirstOrDefault(x => x.ChartOfAccountNewId == detail);
 
                             obj.ChartOfAccountNewId = noTransactionAccount.ChartOfAccountNewId;
                             obj.AccountName = noTransactionAccount.AccountName;

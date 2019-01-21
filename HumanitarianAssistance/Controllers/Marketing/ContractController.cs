@@ -129,7 +129,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> GetContractsPaginatedList([FromBody]ContractPaginationModel model)
     {
       APIResponse apiRespone = null;
