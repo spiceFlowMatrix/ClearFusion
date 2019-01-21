@@ -298,6 +298,12 @@ namespace HumanitarianAssistance.Service.Classes
                     //get all permissions that exists for the role
                     List<RolePermissions> rolePermissionsList = await _uow.GetDbContext().RolePermissions.Where(x=> x.IsDeleted== false && x.RoleId== rolesWithPagePermissionsModel.RoleId).ToListAsync();
 
+                    List<RolePermissions> removedPermissions = rolePermissionsList.Where(x => !rolesWithPagePermissionsModel.Permissions.Select(y=> y.PageId).Contains(x.PageId.Value)).ToList();
+
+                    removedPermissions.ForEach(x => x.IsDeleted = true);
+                    _uow.GetDbContext().RolePermissions.UpdateRange(removedPermissions);
+                    _uow.GetDbContext().SaveChanges();
+
                     foreach (ApplicationPagesModel item in rolesWithPagePermissionsModel.Permissions)
                     {
                         //get the previous permission set for the pageId if exists

@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190118103842_addtableApproveRejectPermission")]
+    partial class addtableApproveRejectPermission
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3123,47 +3125,6 @@ namespace DataAccess.Migrations
                         new { EmployeeTypeId = 2, EmployeeTypeName = "Active", IsDeleted = false },
                         new { EmployeeTypeId = 3, EmployeeTypeName = "Terminated", IsDeleted = false }
                     );
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.ErrorLog.Errorlog", b =>
-                {
-                    b.Property<long>("ExceptionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("DataXml");
-
-                    b.Property<string>("FileName");
-
-                    b.Property<bool?>("IsActive");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("ModuleName");
-
-                    b.Property<int?>("Section");
-
-                    b.Property<int?>("Status");
-
-                    b.Property<string>("UserName");
-
-                    b.Property<string>("stackTrace");
-
-                    b.HasKey("ExceptionId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("errorlog");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.ExchangeRate", b =>
@@ -9468,17 +9429,6 @@ namespace DataAccess.Migrations
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeType", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.ErrorLog.Errorlog", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()

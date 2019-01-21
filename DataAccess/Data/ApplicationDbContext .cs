@@ -189,9 +189,9 @@ namespace HumanitarianAssistance.Entities
 
         public DbSet<CEAssumptionDetail> CEAssumptionDetail { get; set; }
         public DbSet<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
+        public DbSet<ApproveRejectPermission> ApproveRejectPermission { get; set; }
 
         public DbSet<Errorlog> errorlog { get; set; }
-
 
 
         #region Project
@@ -621,7 +621,30 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 45, PageName = "PaymentTypes", ModuleId = 5, ModuleName = "Store" },
                 new ApplicationPages { IsDeleted = false, PageId = 46, PageName = "Store", ModuleId = 5, ModuleName = "Store" },
                 new ApplicationPages { IsDeleted = false, PageId = 47, PageName = "ProcurementSummary", ModuleId = 5, ModuleName = "Store" },
-                new ApplicationPages { IsDeleted = false, PageId = 48, PageName = "DepreciationReport", ModuleId = 5, ModuleName = "Store" }
+                new ApplicationPages { IsDeleted = false, PageId = 48, PageName = "DepreciationReport", ModuleId = 5, ModuleName = "Store" },
+                new ApplicationPages { IsDeleted = false, PageId = 49, PageName = "TimeCategory", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 50, PageName = "Quality", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 51, PageName = "Phase", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 52, PageName = "Nature", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 53, PageName = "Medium", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 54, PageName = "MediaCategory", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 55, PageName = "ActivityType", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 56, PageName = "Assets", ModuleId = 7, ModuleName = "AccountingNew" },
+                new ApplicationPages { IsDeleted = false, PageId = 57, PageName = "Liabilities", ModuleId = 7, ModuleName = "AccountingNew" },
+                new ApplicationPages { IsDeleted = false, PageId = 58, PageName = "Income", ModuleId = 7, ModuleName = "AccountingNew" },
+                new ApplicationPages { IsDeleted = false, PageId = 59, PageName = "Expense", ModuleId = 7, ModuleName = "AccountingNew" },
+                new ApplicationPages { IsDeleted = false, PageId = 60, PageName = "BalanceSheet", ModuleId = 7, ModuleName = "AccountingNew" },
+                new ApplicationPages { IsDeleted = false, PageId = 61, PageName = "IncomeExpenseReport", ModuleId = 7, ModuleName = "AccountingNew" },
+                new ApplicationPages { IsDeleted = false, PageId = 62, PageName = "Vouchers", ModuleId = 7, ModuleName = "AccountingNew" },
+                new ApplicationPages { IsDeleted = false, PageId = 63, PageName = "Clients", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 64, PageName = "UnitRates", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 65, PageName = "Jobs", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 66, PageName = "Contracts", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 67, PageName = "MyProjects", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 68, PageName = "Donors", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 69, PageName = "ProjectDetails", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 70, PageName = "Proposal", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 71, PageName = "CriteriaEvaluation", ModuleId = 8, ModuleName = "Projects" }
                 );
             #endregion
 

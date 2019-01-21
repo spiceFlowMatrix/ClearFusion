@@ -430,6 +430,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreatedDate = DateTime.Now;
                     await _uow.ProgramDetailRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
+                    response.data.ProgramDetail = obj;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
