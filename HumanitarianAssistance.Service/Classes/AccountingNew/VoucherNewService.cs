@@ -199,7 +199,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         obj.CreatedDate = DateTime.UtcNow;
                         obj.IsDeleted = false;
                         await _uow.VoucherDetailRepository.AddAsyn(obj);
-                        await _uow.SaveAsync();
 
                         obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
                         await _uow.VoucherDetailRepository.UpdateAsyn(obj);

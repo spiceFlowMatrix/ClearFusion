@@ -944,6 +944,7 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateAFG.Rate) / (double)exchangeRateEUR.Rate), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateAFG.Rate) / (double)exchangeRateEUR.Rate), 4);
                             obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateAFG.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateAFG.Rate)), 4);
                             obj.USDAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateAFG.Rate) / (double)(exchangeRateUSD.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateAFG.Rate) / (double)exchangeRateUSD.Rate), 4);
+
                         }
                         if (obj.CurrencyId == (int)Currency.EUR)
                         {
@@ -966,10 +967,12 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.AFGAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateUSD.Rate) / (double)(exchangeRateAFG.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateUSD.Rate) / (double)(exchangeRateAFG.Rate)), 4);
                             obj.PKRAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateUSD.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateUSD.Rate)), 4);
                             obj.EURAmount = obj.Debit != 0 ? Math.Round(Convert.ToDouble((obj.Debit * (double)exchangeRateUSD.Rate) / (double)(exchangeRateEUR.Rate)), 4) : Math.Round(Convert.ToDouble((obj.Credit * (double)exchangeRateUSD.Rate) / (double)(exchangeRateEUR.Rate)), 4);
+
                         }
 
                         obj.ProjectId = model.ProjectId;
                         obj.BudgetLineId = model.BudgetLineId;
+                        obj.ChartOfAccountNewId = model.AccountNo;
 
                         await _uow.GetDbContext().VoucherTransactions.AddAsync(obj);
                         await _uow.SaveAsync();
