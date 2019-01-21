@@ -26,11 +26,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
   {
     private IConverter _converter;
     private IHostingEnvironment _hostingEnvironment;
-    public PdfController(IConverter converter, IHostingEnvironment environment)
-    {
-      _converter = converter;
-      _hostingEnvironment = environment;
-    }
+    // private HttpContext currentContext;
+
+
+
     [BindProperty]
     public string TxtHtmlCode { get; set; }
 
@@ -43,12 +42,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     {
       DdlPageSize = "A4";
       DdlPageOrientation = "Portrait";
-      TxtHtmlCode = @"
-      <html>
-        <body>
-          Hello World from selectpdf.com.
-        </body>
-     </html>";
+      TxtHtmlCode = @"<html>
+    <body>
+        Hello World from selectpdf.com.
+    </body>
+</html>
+";
     }
     [BindProperty]
     public string DdlPageOrientation { get; set; }
@@ -75,12 +74,26 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [BindProperty]
     public string TxtHeight { get; set; }
+    public PdfController(IConverter converter, IHostingEnvironment environment)
+    {
+      _converter = converter;
+      _hostingEnvironment = environment;
+      //this.currentContext = currentContext;
+    }
+    // GET: api/<controller>
+    [HttpGet]
+    public IEnumerable<string> Get(string html)
+    {
+
+      return new string[] { "value1", "value2" };
+    }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public HttpResponseMessage CreatePDF(string GetHTMLString)
+    //[Route("CreatePDF")]
+    public byte[] CreatePDF()
     {
-      string path = Path.Combine(_hostingEnvironment.WebRootPath, "export.pdf");
+      var path = Path.Combine(_hostingEnvironment.WebRootPath, "export.pdf");
+      var downloadpath = Path.Combine(_hostingEnvironment.WebRootPath, "exportss.pdf");
       var imagepath = Path.Combine(_hostingEnvironment.WebRootPath, "agreement-logo.png");
       DdlPageSize = "A4";
       PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
@@ -112,149 +125,192 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       converter.Options.PdfPageOrientation = pdfOrientation;
       converter.Options.WebPageWidth = webPageWidth;
       converter.Options.WebPageHeight = webPageHeight;
-      TxtHtmlCode = @"<div class='container-fluid'>
-                       <div id='jobReportPdf' align='center'>
+      TxtHtmlCode = @"<div id='jobReportPdf' align='center'>
                         <div class='col-md-12'>
                             <table align = 'center' width='700px;' style='margin:0 auto; vertical-align: middle; font-family: Arial, Helvetica, sans-serif;'>
-                            <tbody><tr>
-              <td colspan = '2'>
-                <table width='100%' cellpadding='0' cellspacing='0'>
-                  <tbody><tr>
-                    <td width = '80%' style='font-size:16px; font-weight:700; vertical-align:top; text-align: center;'>NAWA RADIO<br>
-                          <p style = 'margin:5px 0;'> Marketing Department</p>
-                          Broadcasting Agreement Paper
-                    </td>
-                    <td width = '20%' style= 'text-align:right;'>
-  
-                        <img width= '100' height= '100' src=" + imagepath + @">
-                      </td>
-                    </tr>
-                  </tbody></table>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colspan= '2'>
-                  <table width= '100%' style= 'border: 1px solid; padding: 5px;'>
-                    <tbody><tr>
-                      <td colspan= '2' style= 'font-size:14px; text-align:center;'>
-                          Add: Khushhal Khan Meena in front of Dawat University<br>
-                          Kabul, Afghanistan<br>
-                          Email: Marketing @sabacent.org<br>
-                          Phone # 0703141414<br>
-                    </td>
-                  </tr>
-                </tbody></table>
-              </td>
-            </tr>
-            <tr>
-              <td colspan = '2'>
-                      <table width= '100%' cellpadding= '0' cellspacing= '0'>
-                    <tbody><tr>
-                      <td colspan= '2' style= 'font-size:13px;' ><b> Contractor:</b><br>
-                        <b>Subject of Contract:</b> Broadcasting of Spots<br>
-                          This contract is between NAWA RADIO 103.1FM as vender and (
-                              <b>{ { jobDetails.ClientName } }</b> ) as a client.<br>
-The contract is based on: <b>{ { jobDetails.StartDate } }</b> up
-to <b>{{ jobDetails.EndDate } }</b><br>
-                    </td>
-                  </tr>
-             <tr>
-                    <td colspan = '2' style='font-size:15px;font-weight: 700; color:#000;'>
-                        <p style = 'padding:10px  0;' > Both parties' responsibilities are as follow:</p>
-                 </td>
-             </tr>
-             <tr>
-                    <td colspan = '2' style='font-size:13px; color:#000;padding-left:20px;'>
-                        <p>1. Broadcasting of(Spots) in NAWA Radio.</p>
-                        <p>2. Radio airtimes should be in Flat time.</p>
-                        <p>3. Programs status : ( )</p>
-                        <p>4. The broadcasting will be provided by</p>
-                        <p>The broadcasting cost of one month will be (
-                                <b>{ { jobDetails.UnitRate } }</b> )</p>
-                 </td>
-             </tr>
-             <tr>
-                    <td colspan = '2' style='font-size:15px;font-weight: 700; color:#000;'>
-                        <p style = 'padding:10px  0;' > Both parties' responsibilities are as follow:</p>
-                 </td>
-             </tr>
-             <tr>
-                    <td colspan = '2' style='font-size:13px; color:#000;padding-left:20px;'>
-                        <p style = 'font-weight:700;' > 1 - Customer:</p>
-                        <p>- Payment of amount.before the starting of broadcasting.<br>
-                            - If client once approve the program format it will be his/her
-                            responsibility even if any mistakes were there.<br>
-                            - Provision of the schedule.<br>
-                                    - The programs should not be against National benefits and Radio
-                                    Nawa policies.
-                        </p>
-                        <p style = 'font-weight:700;' > 2 - NAWA RADIO</p>
-                        <p>  - Broadcasting of (Spots) Audio programs in Flat times as per
-                                the approved schedule.<br>
-                            </p>
-                 </td>
-             </tr>
-                  <tr>
-                    <td colspan = '2' style= 'font-size:15px;padding-top:10px;' >
-                      <b> Note:</b>  NAWA RADIO has no legal responsibility for the subjects and
-                      contents of the programs and advertisements.
-                    </td>
-                  </tr>
-                </tbody></table>
-              </td>
-            </tr>
-            <tr>
-              <td colspan = '2' ><hr></td>
-            </tr>
-            <tr>
-              <td colspan= '2' >
-                <p style= 'font-size:13px;' > Both parties are agreed to terms and conditions in the contract stated above.</p>
-              </td>
-            </tr>
-            <tr>
-              <td style = 'font-size: 15px;padding-top:10px;' >
-                <p><b> NAWA RADIO</b></p>
-                <p><b>Representative Name:</b></p>
-                <p><b>Signature:</b>------</p>
-                <p><b>Date:</b></p>
-              </td>
-
-              <td>
-                <p><b>Customer's Name</b></p>
-
-                <p><b>Signature:</b>-------</p>
-              </td>
-            </tr>
-          </tbody></table>
-    </div>
-  </div>
-</div>
-";
-      // create a new pdf document converting an url
+                               <tbody>
+                                  <tr>
+                                      <td colspan = '2'>
+                                         <table width='100%' cellpadding='0' cellspacing='0'>
+                                            <tbody>
+                                               <tr>
+                                                  <td width = '80%' style='font-size:16px; font-weight:700; vertical-align:top; text-align: center;'>NAWA RADIO<br>
+                                                      <p style = 'margin:5px 0;'> Marketing Department</p>
+                                                      Broadcasting Agreement Paper
+                                                  </td>
+                                                  <td width = '20%' style= 'text-align:right;'>  
+                                                      <img width= '100' height= '100' src=" + imagepath + @">
+                                                  </td>
+                                              </tr>
+                                          </tbody>
+                                       </table>
+                                    </td>
+                                   <td></td>
+                               </tr>
+                               <tr>
+                                  <td colspan= '2'>
+                                      <table width= '100%' style= 'border: 1px solid; padding: 5px;'>
+                                          <tbody>
+                                              <tr>
+                                                 <td colspan= '2' style= 'font-size:14px; text-align:center;'>
+                                                    Add: Khushhal Khan Meena in front of Dawat University<br>
+                                                    Kabul, Afghanistan<br>
+                                                    Email: Marketing @sabacent.org<br>
+                                                    Phone # 0703141414<br>
+                                                 </td>
+                                             </tr>
+                                         </tbody>
+                                     </table>
+                                  </td>
+                               </tr>
+                               <tr>
+                                  <td colspan = '2'>
+                                     <table width= '100%' cellpadding= '0' cellspacing= '0'>
+                                        <tbody>
+                                           <tr>
+                                              <td colspan= '2' style= 'font-size:13px;' ><b> Contractor:</b><br>
+                                                 <b>Subject of Contract:</b> Broadcasting of Spots<br>
+                                                 This contract is between NAWA RADIO 103.1FM as vender and (
+                                                 <b>{ { jobDetails.ClientName } }</b> ) as a client.<br>
+                                                 The contract is based on: <b>{ { jobDetails.StartDate } }</b> up
+                                                 to <b>{{ jobDetails.EndDate } }</b><br>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                             <td colspan = '2' style='font-size:15px;font-weight: 700; color:#000;'>
+                                                <p style = 'padding:10px  0;' > Both parties' responsibilities are as follow:</p>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                              <td colspan = '2' style='font-size:13px; color:#000;padding-left:20px;'>
+                                                  <p>1. Broadcasting of(Spots) in NAWA Radio.</p>
+                                                  <p>2. Radio airtimes should be in Flat time.</p>
+                                                  <p>3. Programs status : ( )</p>
+                                                  <p>4. The broadcasting will be provided by</p>
+                                                  <p>The broadcasting cost of one month will be (
+                                                  <b>{ { jobDetails.UnitRate } }</b> )</p>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                             <td colspan = '2' style='font-size:15px;font-weight: 700; color:#000;'>
+                                                 <p style = 'padding:10px  0;'> Both parties' responsibilities are as follow:</p>
+                                             </td>
+                                          </tr>
+                                          <tr>
+                                             <td colspan = '2' style='font-size:13px; color:#000;padding-left:20px;'>
+                                                <p style = 'font-weight:700;' > 1 - Customer:</p>
+                                                <p>- Payment of amount.before the starting of broadcasting.<br>
+                                                   - If client once approve the program format it will be his/her
+                                                   responsibility even if any mistakes were there.<br>
+                                                   - Provision of the schedule.<br>
+                                                   - The programs should not be against National benefits and Radio
+                                                   Nawa policies.
+                                                </p>
+                                                <p style = 'font-weight:700;' > 2 - NAWA RADIO</p>
+                                                <p>  - Broadcasting of (Spots) Audio programs in Flat times as per
+                                                     the approved schedule.<br>
+                                                </p>
+                                            </td>
+                                         </tr>
+                                         <tr>
+                                           <td colspan = '2' style= 'font-size:15px;padding-top:10px;'>
+                                             <b> Note:</b>  NAWA RADIO has no legal responsibility for the subjects and
+                                             contents of the programs and advertisements.
+                                           </td>
+                                         </tr>
+                                      </tbody>
+                                   </table>
+                                 </td>
+                               </tr>
+                               <tr>
+                                 <td colspan = '2'>< hr ></td>
+                               </tr>
+                               <tr>
+                                 <td colspan= '2'>
+                                    <p style= 'font-size:13px;' > Both parties are agreed to terms and conditions in the contract stated above.</p>
+                                 </td>
+                               </tr>
+                               <tr>
+                                  <td style = 'font-size: 15px;padding-top:10px;'>
+                                     <p><b> NAWA RADIO</b></p>
+                                     <p><b>Representative Name:</b></p>
+                                     <p><b>Signature:</b>------</p>
+                                     <p><b>Date:</b></p>
+                                  </td>
+                                  <td>
+                                     <p><b>Customer's Name</b></p>
+                                     <p><b>Signature:</b>-------</p>
+                                  </td>
+                               </tr>
+                            </tbody>
+                        </table>
+                     </div>
+                 </div>";
       PdfDocument doc = converter.ConvertHtmlString(TxtHtmlCode);
-
-      // save pdf document
       byte[] pdf = doc.Save();
-
-      // close pdf document
-      doc.Close();
-
-      System.IO.File.WriteAllBytes(path, pdf);
-      var result = new HttpResponseMessage(HttpStatusCode.OK)
+      // create a new pdf document converting an url
+      try
       {
-        Content = new ByteArrayContent(pdf)
-      };
-      result.Content.Headers.ContentDisposition =
-          new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
-          {
-            FileName = path
-          };
-      result.Content.Headers.ContentType =
-          new MediaTypeHeaderValue("application/pdf");
-      
-      return result;
+
+        doc.Close();
+        System.IO.File.WriteAllBytes(path, pdf);
+        FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+        fileResult.FileDownloadName = "Document.pdf";
+        return pdf;
+      }
+      catch (Exception ex)
+      {
+        return pdf; //return ex;
+      }
     }
 
+    private string GetContentType(string path)
+    {
+      var types = GetMimeTypes();
+      var ext = Path.GetExtension(path).ToLowerInvariant();
+      return types[ext];
+    }
+    private Dictionary<string, string> GetMimeTypes()
+    {
+      return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+    }
+
+    // GET api/<controller>/5
+    [HttpGet("{id}")]
+    public string Get(int id)
+    {
+      return "value";
+    }
+
+    // POST api/<controller>
+    [HttpPost]
+    public void Post([FromBody]string html)
+    {
+    }
+
+    // PUT api/<controller>/5
+    [HttpPut("{id}")]
+    public void Put(int id, [FromBody]string value)
+    {
+    }
+
+    // DELETE api/<controller>/5
+    [HttpDelete("{id}")]
+    public void Delete(int id)
+    {
+    }
   }
 }
