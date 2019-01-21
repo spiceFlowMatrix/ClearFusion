@@ -5,14 +5,20 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using DataAccess;
+using DataAccess.DbEntities;
 using DinkToPdf.Contracts;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
+using HumanitarianAssistance.Service.interfaces.Marketing;
+using HumanitarianAssistance.ViewModels.Models.Marketing;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SelectPdf;
@@ -24,7 +30,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class PdfController : Controller
   {
+    IUnitOfWork _uow;
+    private readonly UserManager<AppUser> _userManager;
     private IConverter _converter;
+    private IJobDetailsService _iJobDetailsService;
     private IHostingEnvironment _hostingEnvironment;
     // private HttpContext currentContext;
 
@@ -74,8 +83,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [BindProperty]
     public string TxtHeight { get; set; }
-    public PdfController(IConverter converter, IHostingEnvironment environment)
+    public PdfController(IUnitOfWork uow, UserManager<AppUser> userManager, IJobDetailsService iJobDetailsService, IConverter converter, IHostingEnvironment environment)
     {
+      this._uow = uow;
       _converter = converter;
       _hostingEnvironment = environment;
       //this.currentContext = currentContext;
@@ -90,10 +100,28 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [HttpPost]
     //[Route("CreatePDF")]
-    public byte[] CreatePDF()
+    public byte[] CreatePDF([FromBody]int JobId)
     {
-      var path = Path.Combine(_hostingEnvironment.WebRootPath, "export.pdf");
-      var downloadpath = Path.Combine(_hostingEnvironment.WebRootPath, "exportss.pdf");
+      JobPriceModel JobDetails = null;
+      try
+      {
+        JobDetails = (from j in _uow.GetDbContext().JobDetails
+                      join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
+                      join cd in _uow.GetDbContext().ContractDetails on j.ContractId equals cd.ContractId
+                      join cur in _uow.GetDbContext().CurrencyDetails on cd.CurrencyId equals cur.CurrencyId
+                      where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.JobId == JobId
+                      select (new JobPriceModel
+                      {
+                        JobName = j.JobName,
+                        JobCode = j.JobCode,
+                        UnitRate = jp.UnitRate,
+                        EndDate = j.EndDate,
+                        StartDate = cd.StartDate,
+                        IsApproved = j.IsApproved,
+                        ClientName = cd.ClientName
+                      })).FirstOrDefault();
+      }
+      catch(Exception ex) { }
       var imagepath = Path.Combine(_hostingEnvironment.WebRootPath, "agreement-logo.png");
       DdlPageSize = "A4";
       PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
@@ -125,7 +153,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       converter.Options.PdfPageOrientation = pdfOrientation;
       converter.Options.WebPageWidth = webPageWidth;
       converter.Options.WebPageHeight = webPageHeight;
-      TxtHtmlCode = @"<div id='jobReportPdf' align='center'>
+      TxtHtmlCode = @"<div style='padding-left:40px !important' id='jobReportPdf' align='center'>
+                        <div class='container-fluid'>
                         <div class='col-md-12'>
                             <table align = 'center' width='700px;' style='margin:0 auto; vertical-align: middle; font-family: Arial, Helvetica, sans-serif;'>
                                <tbody>
@@ -171,9 +200,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
                                               <td colspan= '2' style= 'font-size:13px;' ><b> Contractor:</b><br>
                                                  <b>Subject of Contract:</b> Broadcasting of Spots<br>
                                                  This contract is between NAWA RADIO 103.1FM as vender and (
-                                                 <b>{ { jobDetails.ClientName } }</b> ) as a client.<br>
-                                                 The contract is based on: <b>{ { jobDetails.StartDate } }</b> up
-                                                 to <b>{{ jobDetails.EndDate } }</b><br>
+                                                 <b>"+ JobDetails.ClientName +@"</b> ) as a client.<br>
+                                                 The contract is based on: <b>"+JobDetails.StartDate.ToShortDateString()+@"</b> up
+                                                 to <b>"+ JobDetails.EndDate.ToShortDateString() +@"</b><br>
                                               </td>
                                           </tr>
                                           <tr>
@@ -185,10 +214,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
                                               <td colspan = '2' style='font-size:13px; color:#000;padding-left:20px;'>
                                                   <p>1. Broadcasting of(Spots) in NAWA Radio.</p>
                                                   <p>2. Radio airtimes should be in Flat time.</p>
-                                                  <p>3. Programs status : ( )</p>
+                                                  <p>3. Programs status : ( Active )</p>
                                                   <p>4. The broadcasting will be provided by</p>
                                                   <p>The broadcasting cost of one month will be (
-                                                  <b>{ { jobDetails.UnitRate } }</b> )</p>
+                                                  <b>"+ JobDetails.UnitRate + @"</b> )</p>
                                               </td>
                                           </tr>
                                           <tr>
@@ -223,7 +252,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
                                  </td>
                                </tr>
                                <tr>
-                                 <td colspan = '2'>< hr ></td>
+                                 <td colspan = '2'><hr></td>
                                </tr>
                                <tr>
                                  <td colspan= '2'>
@@ -234,16 +263,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
                                   <td style = 'font-size: 15px;padding-top:10px;'>
                                      <p><b> NAWA RADIO</b></p>
                                      <p><b>Representative Name:</b></p>
-                                     <p><b>Signature:</b>------</p>
-                                     <p><b>Date:</b></p>
+                                     <p><b>Signature:</b></p>
+                                     <p><b>Date:</b>"+DateTime.UtcNow.ToShortDateString()+@"</p>
                                   </td>
                                   <td>
-                                     <p><b>Customer's Name</b></p>
+                                     <p><b>Customer's Name: </b>" + JobDetails.ClientName + @"</p>
                                      <p><b>Signature:</b>-------</p>
                                   </td>
                                </tr>
                             </tbody>
                         </table>
+                     </div>
                      </div>
                  </div>";
       PdfDocument doc = converter.ConvertHtmlString(TxtHtmlCode);
@@ -253,7 +283,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       {
 
         doc.Close();
-        System.IO.File.WriteAllBytes(path, pdf);
         FileResult fileResult = new FileContentResult(pdf, "application/pdf");
         fileResult.FileDownloadName = "Document.pdf";
         return pdf;
