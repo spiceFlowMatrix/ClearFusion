@@ -279,6 +279,19 @@ namespace HumanitarianAssistance.Service.Classes
                     voucherdetailInfo.ModifiedDate = model.ModifiedDate;
                     await _uow.VoucherDetailRepository.UpdateAsyn(voucherdetailInfo);
 
+                    if (_uow.GetDbContext().VoucherTransactions.Any(x => x.VoucherNo == voucherdetailInfo.VoucherNo))
+                    {
+                        var voucherTransactions =
+                            await _uow.VoucherTransactionsRepository.FindAllAsync(x =>
+                                x.VoucherNo == voucherdetailInfo.VoucherNo);
+                        foreach (var transaction in voucherTransactions)
+                        {
+                            transaction.TransactionDate = voucherdetailInfo.VoucherDate;
+                        }
+
+                        _uow.GetDbContext().VoucherTransactions.UpdateRange(voucherTransactions);
+                    }
+
                     var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
 
                     LoggerDetailsModel loggerObj = new LoggerDetailsModel();
@@ -1014,7 +1027,7 @@ namespace HumanitarianAssistance.Service.Classes
                     vouchertransactionInfo.Description = model.Description;
                     vouchertransactionInfo.CurrencyId = model.CurrencyId;
 
-                    //vouchertransactionInfo.TransactionDate = model.TransactionDate; //should be equals to Voucher Date so don't EDIT 
+                    //vouchertransactionInfo.TransactionDate = model.TransactionDate; //should be equals to Voucher Date so don't EDIT
 
                     //In-Use
                     vouchertransactionInfo.ChartOfAccountNewId = model.AccountNo;
