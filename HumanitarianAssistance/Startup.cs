@@ -36,8 +36,8 @@ using HumanitarianAssistance.Service.Classes.AccountingNew;
 using Microsoft.Extensions.Logging;
 using HumanitarianAssistance.WebAPI.Filter;
 using Newtonsoft.Json;
-using DinkToPdf.Contracts;
-using DinkToPdf;
+// using DinkToPdf.Contracts;
+// using DinkToPdf;
 
 namespace HumanitarianAssistance
 {
@@ -242,7 +242,7 @@ namespace HumanitarianAssistance
           p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
         });
       });
-      services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+      // services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
       services.AddTransient<IUnitOfWork, UnitOfWork>();
       services.AddMvc()
           .AddJsonOptions(config =>
