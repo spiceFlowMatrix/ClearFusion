@@ -3,6 +3,7 @@ using DataAccess;
 using DataAccess.DbEntities;
 using DataAccess.DbEntities.AccountingNew;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Entities;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models;
@@ -116,7 +117,10 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllAccountByAccountHeadTypeId(int id)
+
+
+
+    public async Task<APIResponse> GetAllAccountByAccountHeadTypeId(int id)
         {
             APIResponse response = new APIResponse();
             try
