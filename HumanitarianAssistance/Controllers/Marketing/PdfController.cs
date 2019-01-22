@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using DinkToPdf.Contracts;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,11 +23,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class PdfController : Controller
   {
-    private IConverter _converter;
     private IHostingEnvironment _hostingEnvironment;
-    public PdfController(IConverter converter, IHostingEnvironment environment)
+    public PdfController(IHostingEnvironment environment)
     {
-      _converter = converter;
       _hostingEnvironment = environment;
     }
     [BindProperty]
