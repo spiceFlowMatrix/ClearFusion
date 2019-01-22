@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using DataAccess.DbEntities.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
+using HumanitarianAssistance.Entities.Models;
 
 namespace HumanitarianAssistance.Service.APIResponses
 {
@@ -371,6 +372,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public Dictionary<string,List<string>> Permissions { get; set; }
 
 
+
         #region "Accounting New"
         public List<ChartOfAccountNew> AllAccountList { get; set; }
         public List<ChartOfAccountNew> MainLevelAccountList { get; set; }
@@ -381,10 +383,35 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ChartOfAccountNew ChartOfAccountNewDetail { get; set; }
         public List<VoucherTransactionsModel> VoucherTransactions { get; set; }
+        public List<AccountBalance> AccountBalanceList { get; internal set; }
+
+
+        public List<AccountBalance> AccountBalances { get; set; }
+        public List<NoteAccountBalances> NoteAccountBalances { get; set; }
+        public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
 
         #endregion
 
 
+
+    }
+
+
+    public class NoteAccountBalances
+    {
+        public int NoteId { get; set; }
+        public string NoteName { get; set; }
+        public int NoteHeadId { get; set; }
+        public string NoteHeadName { get; set; }
+        public List<AccountBalance> AccountBalances { get; set; }
+    }
+
+    public class AccountBalance
+    {
+        public long AccountId { get; set; }
+        public string AccountName { get; set; }
+        public decimal Balance { get; set; }
+        public string AccountCode { get; set; }
     }
 
     public class Roles

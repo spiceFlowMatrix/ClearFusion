@@ -36,6 +36,8 @@ using HumanitarianAssistance.Service.Classes.AccountingNew;
 using Microsoft.Extensions.Logging;
 using HumanitarianAssistance.WebAPI.Filter;
 using Newtonsoft.Json;
+ using DinkToPdf.Contracts;
+ using DinkToPdf;
 
 namespace HumanitarianAssistance
 {
@@ -126,6 +128,7 @@ namespace HumanitarianAssistance
       services.AddTransient<IExchangeRate, ExchangeRateService>();
       services.AddTransient<IHREmployee, HREmployeeService>();
       services.AddTransient<IDesignation, DesignationService>();
+      services.AddTransient<IAccountBalance, AccountBalanceService>();
       //services.AddTransient<IProjectBudget, ProjectBudgetService>();
       //services.AddTransient<IProjectDetails, ProjectDetailService>();
       services.AddTransient<IProfession, ProfessionService>();
@@ -145,6 +148,8 @@ namespace HumanitarianAssistance
 
       services.AddTransient<IClientDetails, ClientDetailsService>();
       services.AddTransient<IVoucherNewService, VoucherNewService>();
+
+      services.AddTransient<IAccountBalance, AccountBalanceService>();
 
       //services.AddTransient<UserManager<AppUser>>();
 
@@ -240,13 +245,14 @@ namespace HumanitarianAssistance
           p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
         });
       });
-     
+       services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
       services.AddTransient<IUnitOfWork, UnitOfWork>();
       services.AddMvc()
           .AddJsonOptions(config =>
           {
             // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+            config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
           });
       services.AddMvc(
                config => { config.Filters.Add(typeof(CustomException)); }
@@ -262,7 +268,7 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
 
-     // UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+      //UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
       if (env.IsDevelopment())
       {

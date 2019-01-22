@@ -178,7 +178,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistory { get; set; }
         public DbSet<AccountLevel> AccountLevel { get; set; }
         public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
-        public DbSet<AccountHeadType> AccountHeadType { get; set; }
+        public DbSet<DataAccess.DbEntities.AccountHeadType> AccountHeadType { get; set; }
         public DbSet<PaymentTypes> PaymentTypes { get; set; }
         public DbSet<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public DbSet<ApplicationPages> ApplicationPages { get; set; }
@@ -358,11 +358,11 @@ namespace HumanitarianAssistance.Entities
             );
 
             modelBuilder.Entity<AccountHeadType>().HasData(
-               new AccountHeadType { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false },
-               new AccountHeadType { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false },
-               new AccountHeadType { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false },
-               new AccountHeadType { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false },
-               new AccountHeadType { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false }
+               new AccountHeadType { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false, IsCreditBalancetype = false},
+               new AccountHeadType { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false, IsCreditBalancetype = true},
+               new AccountHeadType { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false, IsCreditBalancetype = true},
+               new AccountHeadType { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false, IsCreditBalancetype = true},
+               new AccountHeadType { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false, IsCreditBalancetype = false}
             );
 
             modelBuilder.Entity<EmployeeContractType>().HasData(

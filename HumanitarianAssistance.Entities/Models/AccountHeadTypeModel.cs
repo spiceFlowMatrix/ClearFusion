@@ -4,15 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace DataAccess.DbEntities
+namespace HumanitarianAssistance.Entities.Models
 {
-    public class AccountHeadType: BaseEntityWithoutId
+    public class AccountHeadTypeModel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 1, TypeName = "serial")]
         public int AccountHeadTypeId { get; set; }
         public string AccountHeadTypeName { get; set; }
-        public bool IsCreditBalancetype { get; set; }
+
     }
 }

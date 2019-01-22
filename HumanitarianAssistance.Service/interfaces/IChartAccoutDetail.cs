@@ -1,4 +1,5 @@
-﻿using HumanitarianAssistance.Service.APIResponses;
+﻿using HumanitarianAssistance.Entities.Models;
+using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
 using System;
 using System.Collections.Generic;
