@@ -5,20 +5,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using DataAccess;
-using DataAccess.DbEntities;
 using DinkToPdf.Contracts;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
-using HumanitarianAssistance.Service.interfaces.Marketing;
-using HumanitarianAssistance.ViewModels.Models.Marketing;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SelectPdf;
@@ -30,20 +24,18 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class PdfController : Controller
   {
-    IUnitOfWork _uow;
-    private readonly UserManager<AppUser> _userManager;
     private IConverter _converter;
-    private IJobDetailsService _iJobDetailsService;
     private IHostingEnvironment _hostingEnvironment;
-    // private HttpContext currentContext;
-
-
-
+    public PdfController(IConverter converter, IHostingEnvironment environment)
+    {
+      _converter = converter;
+      _hostingEnvironment = environment;
+    }
     [BindProperty]
     public string TxtHtmlCode { get; set; }
 
-    [BindProperty]
-    public string TxtBaseUrl { get; set; }
+//    [BindProperty]
+//    public string TxtBaseUrl { get; set; }
 
     [BindProperty]
     public string DdlPageSize { get; set; }
@@ -51,12 +43,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     {
       DdlPageSize = "A4";
       DdlPageOrientation = "Portrait";
-      TxtHtmlCode = @"<html>
-    <body>
-        Hello World from selectpdf.com.
-    </body>
-</html>
-";
+      TxtHtmlCode = @"
+      <html>
+        <body>
+          Hello World from selectpdf.com.
+        </body>
+     </html>";
     }
     [BindProperty]
     public string DdlPageOrientation { get; set; }
@@ -83,45 +75,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [BindProperty]
     public string TxtHeight { get; set; }
-    public PdfController(IUnitOfWork uow, UserManager<AppUser> userManager, IJobDetailsService iJobDetailsService, IConverter converter, IHostingEnvironment environment)
-    {
-      this._uow = uow;
-      _converter = converter;
-      _hostingEnvironment = environment;
-      //this.currentContext = currentContext;
-    }
-    // GET: api/<controller>
-    [HttpGet]
-    public IEnumerable<string> Get(string html)
-    {
-
-      return new string[] { "value1", "value2" };
-    }
 
     [HttpPost]
-    //[Route("CreatePDF")]
-    public byte[] CreatePDF([FromBody]int JobId)
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public HttpResponseMessage CreatePDF(string GetHTMLString)
     {
-      JobPriceModel JobDetails = null;
-      try
-      {
-        JobDetails = (from j in _uow.GetDbContext().JobDetails
-                      join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
-                      join cd in _uow.GetDbContext().ContractDetails on j.ContractId equals cd.ContractId
-                      join cur in _uow.GetDbContext().CurrencyDetails on cd.CurrencyId equals cur.CurrencyId
-                      where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.JobId == JobId
-                      select (new JobPriceModel
-                      {
-                        JobName = j.JobName,
-                        JobCode = j.JobCode,
-                        UnitRate = jp.UnitRate,
-                        EndDate = j.EndDate,
-                        StartDate = cd.StartDate,
-                        IsApproved = j.IsApproved,
-                        ClientName = cd.ClientName
-                      })).FirstOrDefault();
-      }
-      catch(Exception ex) { }
+      string path = Path.Combine(_hostingEnvironment.WebRootPath, "export.pdf");
       var imagepath = Path.Combine(_hostingEnvironment.WebRootPath, "agreement-logo.png");
       DdlPageSize = "A4";
       PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
