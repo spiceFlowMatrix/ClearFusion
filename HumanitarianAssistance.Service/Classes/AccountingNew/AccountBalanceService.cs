@@ -371,7 +371,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         {
             var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId 
                                                                                && transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency)
-                                                                               && x.Date == onDate);
+                                                                               && x.Date.ToShortDateString() == onDate.ToShortDateString());
             var ratesList = await ratesQuery.ToListAsync();
 
             List<VoucherTransactions> outputTransactions = new List<VoucherTransactions>();
@@ -458,7 +458,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             && x.ChartOfAccountNewId != null
                             && officeList.Contains(x.VoucherDetails.OfficeId)
                             && journalList.Contains(x.VoucherDetails.JournalCode)
-                            && projectIdList.Contains(x.VoucherDetails.ProjectId))
+                            //&& projectIdList.Contains(x.VoucherDetails.ProjectId)
+                            )
                 .Include(x => x.ChartOfAccountDetail)
                 .Include(x=> x.VoucherDetails)
                 .ToListAsync();
@@ -552,30 +553,53 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 try
                 {
-                    var originalBalance= await GetAccountBalancesById(exchangeGainLossFilterModel.AccountIdList, exchangeGainLossFilterModel.ToCurrencyId, exchangeGainLossFilterModel.FromDate,
-                        exchangeGainLossFilterModel.ToDate, exchangeGainLossFilterModel.JournalIdList, exchangeGainLossFilterModel.OfficeIdList, exchangeGainLossFilterModel.ProjectIdList);
+                    var originalBalance= await GetAccountBalancesById(
+                                                            exchangeGainLossFilterModel.AccountIdList, 
+                                                            exchangeGainLossFilterModel.ToCurrencyId, 
+                                                            exchangeGainLossFilterModel.FromDate,
+                                                            exchangeGainLossFilterModel.ToDate, 
+                                                            exchangeGainLossFilterModel.JournalIdList, 
+                                                            exchangeGainLossFilterModel.OfficeIdList, 
+                                                            exchangeGainLossFilterModel.ProjectIdList
+                                                );
 
-                    var currentBalance= await GetAccountBalancesById(exchangeGainLossFilterModel.AccountIdList, exchangeGainLossFilterModel.ComparisionDate, exchangeGainLossFilterModel.ToCurrencyId, exchangeGainLossFilterModel.FromDate,
-                        exchangeGainLossFilterModel.ToDate, exchangeGainLossFilterModel.JournalIdList, exchangeGainLossFilterModel.OfficeIdList, exchangeGainLossFilterModel.ProjectIdList);
+                    var currentBalance = await GetAccountBalancesById(
+                                                            exchangeGainLossFilterModel.AccountIdList, 
+                                                            exchangeGainLossFilterModel.ComparisionDate, 
+                                                            exchangeGainLossFilterModel.ToCurrencyId, 
+                                                            exchangeGainLossFilterModel.FromDate,
+                                                            exchangeGainLossFilterModel.ToDate, 
+                                                            exchangeGainLossFilterModel.JournalIdList, 
+                                                            exchangeGainLossFilterModel.OfficeIdList, 
+                                                            exchangeGainLossFilterModel.ProjectIdList
+                                               );
 
-                    foreach (var balance in originalBalance.data.AccountBalances)
+                    if (originalBalance.StatusCode == 200 && originalBalance.StatusCode == 200)
                     {
-                        ExchangeGainLossReportViewModel exchangeGainLossReport = new ExchangeGainLossReportViewModel();
-                        var currentDateBalance= currentBalance.data.AccountBalances.FirstOrDefault(x => x.AccountId == balance.AccountId);
+                        foreach (var balance in originalBalance.data.AccountBalances)
+                        {
+                            ExchangeGainLossReportViewModel exchangeGainLossReport = new ExchangeGainLossReportViewModel();
+                            var currentDateBalance = currentBalance.data.AccountBalances.FirstOrDefault(x => x.AccountId == balance.AccountId);
 
 
-                        exchangeGainLossReport.AccountCode = balance.AccountCode;
-                        exchangeGainLossReport.AccountCodeName = balance.AccountCode + "-" + balance.AccountName;
-                        exchangeGainLossReport.AccountName = balance.AccountName;
-                        exchangeGainLossReport.BalanceOnCurrentDate = currentDateBalance.Balance;
-                        exchangeGainLossReport.BalanceOnOriginalDate = balance.Balance;
-                        exchangeGainLossReport.GainLossAmount = currentDateBalance.Balance - balance.Balance;
-                        exchangeGainLossReportData.Add(exchangeGainLossReport);
+                            exchangeGainLossReport.AccountCode = balance.AccountCode;
+                            exchangeGainLossReport.AccountCodeName = balance.AccountCode + "-" + balance.AccountName;
+                            exchangeGainLossReport.AccountName = balance.AccountName;
+                            exchangeGainLossReport.BalanceOnCurrentDate = currentDateBalance.Balance;
+                            exchangeGainLossReport.BalanceOnOriginalDate = balance.Balance;
+                            exchangeGainLossReport.GainLossAmount = currentDateBalance.Balance - balance.Balance;
+                            exchangeGainLossReportData.Add(exchangeGainLossReport);
+                        }
+
+                        response.data.ExchangeGainLossReportList = exchangeGainLossReportData;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "success";
                     }
-
-                    response.data.ExchangeGainLossReportList = exchangeGainLossReportData;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "success";
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = originalBalance.Message;
+                    }
 
                 }
                 catch (Exception exception)
