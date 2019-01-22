@@ -52,11 +52,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       DdlPageSize = "A4";
       DdlPageOrientation = "Portrait";
       TxtHtmlCode = @"<html>
-    <body>
-        Hello World from selectpdf.com.
-    </body>
-</html>
-";
+          <body>
+              Hello World from selectpdf.com.
+          </body>
+      </html>
+      ";
     }
     [BindProperty]
     public string DdlPageOrientation { get; set; }
