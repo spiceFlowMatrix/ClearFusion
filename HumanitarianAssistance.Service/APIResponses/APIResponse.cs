@@ -388,12 +388,13 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public List<AccountBalance> AccountBalances { get; set; }
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
+        public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
 
         #endregion
 
 
 
-  }
+    }
 
 
     public class NoteAccountBalances
@@ -410,6 +411,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public long AccountId { get; set; }
         public string AccountName { get; set; }
         public decimal Balance { get; set; }
+        public string AccountCode { get; set; }
     }
 
     public class Roles
