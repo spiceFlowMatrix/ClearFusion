@@ -268,7 +268,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
                                   </td>
                                   <td>
                                      <p><b>Customer's Name: </b>" + JobDetails.ClientName + @"</p>
-                                     <p><b>Signature:</b>-------</p>
+                                     <p><b>Signature:</b></p>
                                   </td>
                                </tr>
                             </tbody>
