@@ -29,7 +29,8 @@ namespace DataAccess.DbEntities
         public OfficeDetail OfficeDetails { get; set; }
         public int? OfficeId { get; set; }
         public long ? ProjectId { get; set; }
-        public ProjectDetails ProjectDetails { get; set; }
+        [ForeignKey("ProjectId")]
+        public ProjectDetail ProjectDetail { get; set; }
         public long ? BudgetLineId { get; set; }
         public ProjectBudgetLine ProjectBudgetLine { get; set; }
 
