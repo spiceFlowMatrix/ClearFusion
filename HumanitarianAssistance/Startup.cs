@@ -36,8 +36,8 @@ using HumanitarianAssistance.Service.Classes.AccountingNew;
 using Microsoft.Extensions.Logging;
 using HumanitarianAssistance.WebAPI.Filter;
 using Newtonsoft.Json;
-using DinkToPdf.Contracts;
-using DinkToPdf;
+// using DinkToPdf.Contracts;
+// using DinkToPdf;
 
 namespace HumanitarianAssistance
 {
@@ -242,7 +242,7 @@ namespace HumanitarianAssistance
           p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
         });
       });
-      services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+      // services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
       services.AddTransient<IUnitOfWork, UnitOfWork>();
       services.AddMvc()
           .AddJsonOptions(config =>
@@ -264,7 +264,7 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
 
-     // UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
       if (env.IsDevelopment())
       {
