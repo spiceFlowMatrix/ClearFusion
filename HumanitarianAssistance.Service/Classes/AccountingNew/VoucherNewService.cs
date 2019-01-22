@@ -265,6 +265,20 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     voucherdetailInfo.ModifiedDate = model.ModifiedDate;
                     await _uow.VoucherDetailRepository.UpdateAsyn(voucherdetailInfo);
 
+                    if (_uow.GetDbContext().VoucherTransactions.Any(x => x.VoucherNo == voucherdetailInfo.VoucherNo))
+                    {
+                        var voucherTransactions =
+                            await _uow.VoucherTransactionsRepository.FindAllAsync(x =>
+                                x.VoucherNo == voucherdetailInfo.VoucherNo);
+                        foreach (var transaction in voucherTransactions)
+                        {
+                            transaction.TransactionDate = voucherdetailInfo.VoucherDate;
+                        }
+
+                        _uow.GetDbContext().VoucherTransactions.UpdateRange(voucherTransactions);
+                        await _uow.SaveAsync();
+                    }
+
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
