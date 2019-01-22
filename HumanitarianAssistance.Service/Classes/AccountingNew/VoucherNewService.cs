@@ -199,7 +199,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         obj.CreatedDate = DateTime.UtcNow;
                         obj.IsDeleted = false;
                         await _uow.VoucherDetailRepository.AddAsyn(obj);
-                        await _uow.SaveAsync();
 
                         obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
                         await _uow.VoucherDetailRepository.UpdateAsyn(obj);
@@ -419,6 +418,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 if (voucherTransactionsList.Any())
                 {
+
+                    var voucherDetail = await _uow.VoucherDetailRepository.FindAsync(x => x.IsDeleted == false && x.VoucherNo == voucherTransactionsList.FirstOrDefault().VoucherNo);
+
                     foreach (VoucherTransactionsModel voucherTransactions in voucherTransactionsList)
                     {
                         //new voucher transaction object
@@ -434,6 +436,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         transaction.CreatedDate = DateTime.Now;
                         transaction.IsDeleted = false;
                         transaction.VoucherNo = voucherTransactions.VoucherNo;
+                        transaction.CurrencyId = voucherDetail.CurrencyId;
+                        transaction.TransactionDate = voucherDetail.VoucherDate;
 
                         transactionsList.Add(transaction);
                     }
@@ -485,6 +489,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                                                             .Contains(x.TransactionId))
                                                                  .ToList();
 
+                    var voucherDetail = _uow.VoucherDetailRepository.Find(x => x.IsDeleted == false && x.VoucherNo == voucherTransactionsList.FirstOrDefault().VoucherNo);
 
                     foreach (VoucherTransactionsModel voucherTransactions in voucherTransactionsList)
                     {
@@ -504,6 +509,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             transaction.CreatedDate = DateTime.Now;
                             transaction.IsDeleted = false;
                             transaction.VoucherNo = voucherTransactions.VoucherNo;
+                            transaction.CurrencyId = voucherDetail.CurrencyId;
+                            transaction.TransactionDate = voucherDetail.VoucherDate;
 
                             transactionsListAdd.Add(transaction);
                         }
@@ -528,6 +535,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                 transaction.Description = voucherTransactions.Description;
                                 transaction.BudgetLineId = voucherTransactions.BudgetLineId;
                                 transaction.ProjectId = voucherTransactions.ProjectId;
+
+                                transaction.CurrencyId = voucherDetail.CurrencyId;
+                                transaction.TransactionDate = voucherDetail.VoucherDate;
+
                                 transaction.ModifiedById = userId;
                                 transaction.ModifiedDate = DateTime.Now;
                                 //transaction.VoucherNo = voucherTransactions.VoucherNo;
