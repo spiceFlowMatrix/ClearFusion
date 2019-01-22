@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
 {
   [Produces("application/json")]
-  [Route("api/[controller]/")]
+  [Route("api/FinancialReport/[Action]/")]
   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class FinancialReportController : Controller
   {
@@ -62,8 +62,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
       return reportResult;
     }
 
-    [HttpGet]
-    public async Task<APIResponse> GetExchangeGainLossReport(ExchangeGainLossFilterModel exchangeGainLossReport)
+    [HttpPost]
+    public async Task<APIResponse> GetExchangeGainLossReport([FromBody]ExchangeGainLossFilterModel exchangeGainLossReport)
     {
       APIResponse response = new APIResponse();
       response = await _financialReportService.GetExchangeGainLossReport(exchangeGainLossReport);

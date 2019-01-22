@@ -573,16 +573,16 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         exchangeGainLossReportData.Add(exchangeGainLossReport);
                     }
 
+                    response.data.ExchangeGainLossReportList = exchangeGainLossReportData;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "success";
+
                 }
                 catch (Exception exception)
                 {
                     response.StatusCode = StaticResource.failStatusCode;
                     response.Message = exception.Message;
                 }
-
-                response.data.ExchangeGainLossReportList = exchangeGainLossReportData;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "success";
             }
 
             return response;
