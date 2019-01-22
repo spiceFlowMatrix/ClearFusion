@@ -128,6 +128,7 @@ namespace HumanitarianAssistance
       services.AddTransient<IExchangeRate, ExchangeRateService>();
       services.AddTransient<IHREmployee, HREmployeeService>();
       services.AddTransient<IDesignation, DesignationService>();
+      services.AddTransient<IAccountBalance, AccountBalanceService>();
       //services.AddTransient<IProjectBudget, ProjectBudgetService>();
       //services.AddTransient<IProjectDetails, ProjectDetailService>();
       services.AddTransient<IProfession, ProfessionService>();
@@ -147,6 +148,8 @@ namespace HumanitarianAssistance
 
       services.AddTransient<IClientDetails, ClientDetailsService>();
       services.AddTransient<IVoucherNewService, VoucherNewService>();
+
+      services.AddTransient<IAccountBalance, AccountBalanceService>();
 
       //services.AddTransient<UserManager<AppUser>>();
 
@@ -249,6 +252,7 @@ namespace HumanitarianAssistance
           {
             // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+            config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
           });
       services.AddMvc(
                config => { config.Filters.Add(typeof(CustomException)); }
@@ -264,7 +268,7 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
 
-     // UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
       if (env.IsDevelopment())
       {
