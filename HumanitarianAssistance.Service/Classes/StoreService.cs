@@ -239,6 +239,201 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetInventoryCode(int Id)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                StoreInventory storeInventories = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.AssetType == Id && x.IsDeleted == false);
+
+                if (storeInventories != null)
+                {
+                    int InventoryNumber = Convert.ToInt32(storeInventories.InventoryCode.Substring(1));
+
+                    if (Id == (int)InventoryMasterType.Consumables)
+                    {
+                        response.data.InventoryCode = "C" + String.Format("{0:D4}", ++InventoryNumber);
+                    }
+                    else if (Id == (int)InventoryMasterType.Expendables)
+                    {
+                        response.data.InventoryCode = "E" + String.Format("{0:D4}", ++InventoryNumber);
+                    }
+                    else
+                    {
+                        response.data.InventoryCode = "N" + String.Format("{0:D4}", ++InventoryNumber);
+                    }
+                }
+                else
+                {
+                    if (Id == (int)InventoryMasterType.Consumables)
+                    {
+                        response.data.InventoryCode = "C" + String.Format("{0:D4}", 1);
+                    }
+                    else if (Id == (int)InventoryMasterType.Expendables)
+                    {
+                        response.data.InventoryCode = "E" + String.Format("{0:D4}", 1);
+                    }
+                    else
+                    {
+                        response.data.InventoryCode = "N" + String.Format("{0:D4}", 1);
+                    }
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        #endregion
+
+        #region Store Item Group
+
+        public async Task<APIResponse> GetStoreGroupItemCode(string inventoryId)
+        {
+            APIResponse response = new APIResponse();
+            string ItemGroupCode = "";
+            try
+            {
+                if (inventoryId != null)
+                {
+                    StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups
+                                                                             .OrderByDescending(x => x.CreatedDate)
+                                                                             .Include(x => x.StoreInventory)
+                                                                             .FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
+                    if (storeItemGroup != null)
+                    {
+                        long count = Convert.ToInt64(storeItemGroup.ItemGroupCode.Substring(5));
+                        ItemGroupCode = storeItemGroup.StoreInventory.InventoryCode + String.Format("{0:D4}", ++count);
+                    }
+                    else
+                    {
+                        StoreInventory storeInventory = await _uow.GetDbContext().StoreInventories.FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
+
+                        ItemGroupCode = storeInventory.InventoryCode + String.Format("{0:D4}", 1);
+                    }
+                }
+
+                response.data.ItemGroupCode = ItemGroupCode;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> AddStoreItemGroup(StoreItemGroupModel storeGroupItem, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (storeGroupItem != null)
+                {
+                    StoreItemGroup storeItemGroup = new StoreItemGroup();
+
+                    storeItemGroup.CreatedById = userId;
+                    storeItemGroup.CreatedDate = DateTime.Now;
+                    storeItemGroup.IsDeleted = false;
+                    storeItemGroup.Description = storeGroupItem.Description;
+                    storeItemGroup.InventoryId = storeGroupItem.InventoryId;
+                    storeItemGroup.ItemGroupCode = storeGroupItem.ItemGroupCode;
+                    storeItemGroup.ItemGroupName = storeGroupItem.ItemGroupName;
+
+                    await _uow.GetDbContext().StoreItemGroups.AddAsync(storeItemGroup);
+                    await _uow.GetDbContext().SaveChangesAsync();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> EditStoreItemGroup(StoreItemGroupModel storeGroupItem, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (storeGroupItem != null)
+                {
+                    StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == storeGroupItem.ItemGroupId);
+
+                    storeItemGroup.ModifiedById = userId;
+                    storeItemGroup.ModifiedDate = DateTime.Now;
+                    storeItemGroup.IsDeleted = false;
+                    storeItemGroup.Description = storeGroupItem.Description;
+                    storeItemGroup.InventoryId = storeGroupItem.InventoryId;
+                    storeItemGroup.ItemGroupCode = storeGroupItem.ItemGroupCode;
+                    storeItemGroup.ItemGroupName = storeGroupItem.ItemGroupName;
+
+                    _uow.GetDbContext().StoreItemGroups.Update(storeItemGroup);
+                    await _uow.GetDbContext().SaveChangesAsync();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> GetAllStoreItemGroups(string inventoryId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                List<StoreItemGroupModel> storeItemGroupList = new List<StoreItemGroupModel>();
+
+                if (inventoryId != null)
+                {
+                    storeItemGroupList = await _uow.GetDbContext().StoreItemGroups.Where(x => x.IsDeleted == false && x.InventoryId == inventoryId).Select(x => new StoreItemGroupModel
+                    {
+                        Description = x.Description,
+                        InventoryId = x.InventoryId,
+                        ItemGroupCode = x.ItemGroupCode,
+                        ItemGroupId = x.ItemGroupId,
+                        ItemGroupName = x.ItemGroupName
+                    }).ToListAsync();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+                response.data.storeItemGroupList = storeItemGroupList;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
         #endregion
 
 
@@ -387,6 +582,81 @@ namespace HumanitarianAssistance.Service.Classes
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
                 return response;
+            }
+
+            return response;
+        }
+        public async Task<APIResponse> GetInventoryItemCode(long groupItemId)
+        {
+            APIResponse response = new APIResponse();
+            string InventoryItemCode = "";
+
+            try
+            {
+                if (groupItemId != 0)
+                {
+                    StoreInventoryItem storeInventoryItem = await _uow.GetDbContext().InventoryItems
+                                                                      .OrderByDescending(x => x.CreatedDate)
+                                                                      .Include(x => x.StoreItemGroup)
+                                                                      .FirstOrDefaultAsync(x => x.IsDeleted == false
+                                                                      && x.ItemGroupId == groupItemId);
+
+
+                    if (storeInventoryItem != null)
+                    {
+                        int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(10));
+                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D4}", ++count);
+                    }
+                    else
+                    {
+                        StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
+                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D4}", 1);
+                    }
+                }
+
+                response.data.InventoryItemCode = InventoryItemCode;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+        public async Task<APIResponse> GetStoreItemCode(long groupItemId)
+        {
+            APIResponse response = new APIResponse();
+            string InventoryItemCode = "";
+
+            try
+            {
+                if (groupItemId != 0)
+                {
+                    StoreInventoryItem storeInventoryItem = await _uow.GetDbContext().InventoryItems.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
+
+                    if (storeInventoryItem != null)
+                    {
+                        int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(10));
+                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D4}", ++count);
+                    }
+                    else
+                    {
+                        StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
+                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D4}", 1);
+                    }
+                }
+
+                response.data.InventoryItemCode = InventoryItemCode;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
 
             return response;
@@ -1299,10 +1569,7 @@ namespace HumanitarianAssistance.Service.Classes
         #endregion
 
 
-
-        // Depreciation
-
-        // Must filter on store name, inventory, item, and purchase
+        #region Depreciation
         public async Task<APIResponse> GetAllDepreciationByFilter(DepreciationReportFilter depretiationFilter)
         {
             var response = new APIResponse();
@@ -1380,50 +1647,8 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+        #endregion
 
-        //public async Task<APIResponse> GetAllDepreciationByFilter(DateTime currentDate)
-        //{
-        //    var response = new APIResponse();
-        //    try
-        //    {
-        //        var depData = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false).ToListAsync();
-
-        //        List<DepreciationReportModel> depreciationList = new List<DepreciationReportModel>();
-
-        //        foreach (var item in depData)
-        //        {
-        //            DepreciationReportModel obj = new DepreciationReportModel();
-
-        //            //double hoursSincePurchase;
-        //            //double depreciationAmount;
-        //            //double currentValue;
-
-        //            obj.ItemName = item.StoreInventoryItem.ItemName;
-        //            obj.PurchaseId = item.PurchaseId;
-        //            obj.PurchaseDate = item.PurchaseDate;
-
-        //            obj.HoursSincePurchase = currentDate.Date.Subtract(item.PurchaseDate.Date).TotalHours;
-        //            obj.DepreciationRate = item.DepreciationRate;
-        //            obj.DepreciationAmount = (obj.HoursSincePurchase * item.DepreciationRate * item.UnitCost) / 100;
-        //            obj.CurrentValue = item.UnitCost - obj.DepreciationAmount;
-
-        //            obj.PurchasedCost = item.UnitCost;
-
-        //            depreciationList.Add(obj);
-
-        //        }
-        //        response.data.DepreciationReportList = depreciationList.ToList();
-        //        response.StatusCode = StaticResource.successStatusCode;
-        //        response.Message = "Success";
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.StatusCode = StaticResource.failStatusCode;
-        //        response.Message = StaticResource.SomethingWrong + ex.Message;
-        //        return response;
-        //    }
-        //    return response;
-        //}
 
         #region "Update Invoice"
 
@@ -1804,170 +2029,7 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
-        #region Get Codes
-        public async Task<APIResponse> GetInventoryCode(int Id)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                StoreInventory storeInventories = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.AssetType == Id && x.IsDeleted == false);
-
-                if (storeInventories != null)
-                {
-                    int InventoryNumber = Convert.ToInt32(storeInventories.InventoryCode.Substring(1));
-
-                    if (Id == (int)InventoryMasterType.Consumables)
-                    {
-                        response.data.InventoryCode = "C" + String.Format("{0:D4}", ++InventoryNumber);
-                    }
-                    else if (Id == (int)InventoryMasterType.Expendables)
-                    {
-                        response.data.InventoryCode = "E" + String.Format("{0:D4}", ++InventoryNumber);
-                    }
-                    else
-                    {
-                        response.data.InventoryCode = "N" + String.Format("{0:D4}", ++InventoryNumber);
-                    }
-                }
-                else
-                {
-                    if (Id == (int)InventoryMasterType.Consumables)
-                    {
-                        response.data.InventoryCode = "C" + String.Format("{0:D4}", 1);
-                    }
-                    else if (Id == (int)InventoryMasterType.Expendables)
-                    {
-                        response.data.InventoryCode = "E" + String.Format("{0:D4}", 1);
-                    }
-                    else
-                    {
-                        response.data.InventoryCode = "N" + String.Format("{0:D4}", 1);
-                    }
-                }
-
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
-        public async Task<APIResponse> GetInventoryItemCode(long groupItemId)
-        {
-            APIResponse response = new APIResponse();
-            string InventoryItemCode = "";
-
-            try
-            {
-                if (groupItemId != 0)
-                {
-                    StoreInventoryItem storeInventoryItem = await _uow.GetDbContext().InventoryItems
-                                                                      .OrderByDescending(x => x.CreatedDate)
-                                                                      .Include(x => x.StoreItemGroup)
-                                                                      .FirstOrDefaultAsync(x => x.IsDeleted == false
-                                                                      && x.ItemGroupId == groupItemId);
-
-
-                    if (storeInventoryItem != null)
-                    {
-                        int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(10));
-                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D4}", ++count);
-                    }
-                    else
-                    {
-                        StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
-                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D4}", 1);
-                    }
-                }
-
-                response.data.InventoryItemCode = InventoryItemCode;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-        public async Task<APIResponse> GetStoreGroupItemCode(string inventoryId)
-        {
-            APIResponse response = new APIResponse();
-            string ItemGroupCode = "";
-            try
-            {
-                if (inventoryId != null)
-                {
-                    StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups
-                                                                             .OrderByDescending(x => x.CreatedDate)
-                                                                             .Include(x => x.StoreInventory)
-                                                                             .FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
-                    if (storeItemGroup != null)
-                    {
-                        long count = Convert.ToInt64(storeItemGroup.ItemGroupCode.Substring(5));
-                        ItemGroupCode = storeItemGroup.StoreInventory.InventoryCode + String.Format("{0:D4}", ++count);
-                    }
-                    else
-                    {
-                        StoreInventory storeInventory = await _uow.GetDbContext().StoreInventories.FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
-
-                        ItemGroupCode = storeInventory.InventoryCode + String.Format("{0:D4}", 1);
-                    }
-                }
-
-                response.data.ItemGroupCode = ItemGroupCode;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-        public async Task<APIResponse> GetStoreItemCode(long groupItemId)
-        {
-            APIResponse response = new APIResponse();
-            string InventoryItemCode = "";
-
-            try
-            {
-                if (groupItemId != 0)
-                {
-                    StoreInventoryItem storeInventoryItem = await _uow.GetDbContext().InventoryItems.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
-
-                    if (storeInventoryItem != null)
-                    {
-                        int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(10));
-                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D4}", ++count);
-                    }
-                    else
-                    {
-                        StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
-                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D4}", 1);
-                    }
-                }
-
-                response.data.InventoryItemCode = InventoryItemCode;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-        #endregion
+        
 
 
         #region Store Item Puchase
@@ -2403,7 +2465,8 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
-        #region Store
+       
+        #region Store Source Code
         /// <summary>
         /// Get All Store Source Types
         /// </summary>
@@ -2671,106 +2734,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> AddStoreItemGroup(StoreItemGroupModel storeGroupItem, string userId)
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                if (storeGroupItem != null)
-                {
-                    StoreItemGroup storeItemGroup = new StoreItemGroup();
-
-                    storeItemGroup.CreatedById = userId;
-                    storeItemGroup.CreatedDate = DateTime.Now;
-                    storeItemGroup.IsDeleted = false;
-                    storeItemGroup.Description = storeGroupItem.Description;
-                    storeItemGroup.InventoryId = storeGroupItem.InventoryId;
-                    storeItemGroup.ItemGroupCode = storeGroupItem.ItemGroupCode;
-                    storeItemGroup.ItemGroupName = storeGroupItem.ItemGroupName;
-
-                    await _uow.GetDbContext().StoreItemGroups.AddAsync(storeItemGroup);
-                    await _uow.GetDbContext().SaveChangesAsync();
-                }
-
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-
-        public async Task<APIResponse> EditStoreItemGroup(StoreItemGroupModel storeGroupItem, string userId)
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                if (storeGroupItem != null)
-                {
-                    StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == storeGroupItem.ItemGroupId);
-
-                    storeItemGroup.ModifiedById = userId;
-                    storeItemGroup.ModifiedDate = DateTime.Now;
-                    storeItemGroup.IsDeleted = false;
-                    storeItemGroup.Description = storeGroupItem.Description;
-                    storeItemGroup.InventoryId = storeGroupItem.InventoryId;
-                    storeItemGroup.ItemGroupCode = storeGroupItem.ItemGroupCode;
-                    storeItemGroup.ItemGroupName = storeGroupItem.ItemGroupName;
-
-                    _uow.GetDbContext().StoreItemGroups.Update(storeItemGroup);
-                    await _uow.GetDbContext().SaveChangesAsync();
-                }
-
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-
-        public async Task<APIResponse> GetAllStoreItemGroups(string inventoryId)
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                List<StoreItemGroupModel> storeItemGroupList = new List<StoreItemGroupModel>();
-
-                if (inventoryId != null)
-                {
-                    storeItemGroupList = await _uow.GetDbContext().StoreItemGroups.Where(x => x.IsDeleted == false && x.InventoryId == inventoryId).Select(x => new StoreItemGroupModel
-                    {
-                        Description = x.Description,
-                        InventoryId = x.InventoryId,
-                        ItemGroupCode = x.ItemGroupCode,
-                        ItemGroupId = x.ItemGroupId,
-                        ItemGroupName = x.ItemGroupName
-                    }).ToListAsync();
-                }
-
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-                response.data.storeItemGroupList = storeItemGroupList;
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
+       
 
         #endregion
 
