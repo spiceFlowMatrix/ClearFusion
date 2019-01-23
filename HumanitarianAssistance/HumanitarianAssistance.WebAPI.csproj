@@ -22,8 +22,6 @@
 
     <PackageReference Include="AppDomainToolkit" Version="1.0.4.3" />
 
-    <PackageReference Include="DinkToPdf" Version="1.0.8" />
-
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.36.1.1407" />
 
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
@@ -68,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Documents\" />
+    <Folder Include="Proposal\" />
     <Folder Include="UploadotherDoc\" />
   </ItemGroup>
   <ItemGroup>
