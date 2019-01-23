@@ -761,50 +761,26 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     public async Task<APIResponse> UploadEDIProposalFile()
     {
       APIResponse apiRespone = new APIResponse();
-      string fullPath = string.Empty;
+      
       try
       {
         var file = Request.Form.Files[0];
-        string folderName = Path.Combine(Directory.GetCurrentDirectory(), "UploadotherDoc/");
-        long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_').Length;
-        string ProjectId  = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[count - 2];
-        string DocType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[count - 1];
-        string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
-        string ext = System.IO.Path.GetExtension(fileNames).ToLower();
-        if (ext != ".jpeg" && ext != ".png")
-        {
-          //fileNames =fileNames;
-          string webRootPath = _hostingEnvironment.WebRootPath;
-          string newPath = Path.Combine(webRootPath, folderName);
-          if (!Directory.Exists(newPath))
-          {
-            Directory.CreateDirectory(newPath);
-          }
-          string fileName = string.Empty;
-          //if (file.Length > 0)
-          //{
-            //ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
-            fileName = DocType + "_" + fileNames;
-            fullPath = Path.Combine(newPath, fileName);
-            using (var stream = new FileStream(fullPath, FileMode.Create))
-            {
-              file.CopyTo(stream);
-            }
+       
           //}
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
           if (user != null)
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, fullPath, fileName, logginUserEmailId);
-            if (apiRespone.StatusCode == StaticResource.successStatusCode)
-            {
-              DirectoryInfo di = new DirectoryInfo(folderName);
-              FileInfo[] fi = di.GetFiles();
-              FileInfo f = fi.Where(p => p.Name == fileName).FirstOrDefault();
-              f.Delete();
-            }
-          }
+            apiRespone = _iProject.UploadOtherProposalFile(file, id);
+            //if (apiRespone.StatusCode == StaticResource.successStatusCode)
+            //{
+            //  DirectoryInfo di = new DirectoryInfo(folderName);
+            //  FileInfo[] fi = di.GetFiles();
+            //  FileInfo f = fi.Where(p => p.Name == fileName).FirstOrDefault();
+            //  f.Delete();
+            //}
+          
         }
         else
         {

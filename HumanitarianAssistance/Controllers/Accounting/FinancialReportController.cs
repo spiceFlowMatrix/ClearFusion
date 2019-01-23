@@ -5,6 +5,10 @@ using DataAccess.DbEntities;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
+using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.AccountingNew;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +17,8 @@ using Newtonsoft.Json;
 namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
 {
   [Produces("application/json")]
-  [Route("api/[controller]/")]
+  [Route("api/FinancialReport/[Action]/")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class FinancialReportController : Controller
   {
 
@@ -55,6 +60,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
     {
       var reportResult = await _financialReportService.GetNoteBalancesByHeadType(1, 3, DateTime.Now);
       return reportResult;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetExchangeGainLossReport([FromBody]ExchangeGainLossFilterModel exchangeGainLossReport)
+    {
+      APIResponse response = new APIResponse();
+      response = await _financialReportService.GetExchangeGainLossReport(exchangeGainLossReport);
+      return response;
     }
   }
 }

@@ -12,6 +12,8 @@ using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
+using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,7 +44,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 {
                     AccountId = balance.Key.ChartOfAccountNewId,
                     AccountName = balance.Key.AccountName,
-                    Balance = new Decimal(balance.Value)
+                    Balance = new Decimal(balance.Value),
+                    AccountCode= balance.Key.ChartOfAccountNewCode
                 };
                 vmBalances.Add(iVmBalance);
             }
@@ -368,7 +371,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         {
             var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId 
                                                                                && transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency)
-                                                                               && x.Date == onDate);
+                                                                               && x.Date.ToShortDateString() == onDate.ToShortDateString());
             var ratesList = await ratesQuery.ToListAsync();
 
             List<VoucherTransactions> outputTransactions = new List<VoucherTransactions>();
@@ -442,6 +445,171 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             var exchangeValuedTransactions = await GetTransactionValuesAfterExchange(transactions, toCurrencyId, transactionExchangeDate);
 
             return CalculateAccountBalances(inputLevelAccounts, exchangeValuedTransactions);
+        }
+
+        private async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime startDate,
+            DateTime endDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
+        {
+            return await _uow.GetDbContext().VoucherTransactions
+                .Where(x => x.TransactionDate <= endDate
+                            && x.TransactionDate >= startDate
+                            && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
+                            && x.IsDeleted == false
+                            && x.ChartOfAccountNewId != null
+                            && officeList.Contains(x.VoucherDetails.OfficeId)
+                            && journalList.Contains(x.VoucherDetails.JournalCode)
+                            //&& projectIdList.Contains(x.VoucherDetails.ProjectId)
+                            )
+                .Include(x => x.ChartOfAccountDetail)
+                .Include(x=> x.VoucherDetails)
+                .ToListAsync();
+        }
+
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts,
+           int toCurrencyId, DateTime transactionsStartingFrom, DateTime transactionsUntil, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
+        {
+            var transactions = await GetAccountTransactions(inputLevelAccounts, transactionsStartingFrom, transactionsUntil, journalList, officeList, projectIdList);
+            var exchangeValuedTransactions = await GetTransactionValuesAfterExchange(transactions, toCurrencyId);
+
+            return CalculateAccountBalances(inputLevelAccounts, exchangeValuedTransactions);
+        }
+
+        public async Task<APIResponse> GetAccountBalancesById(List<long?> accountIds, int toCurrencyId,
+            DateTime reportStartDate, DateTime reportEndDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                    .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
+
+
+                if (inputLevelList.Any(x => x.AccountTypeId == null))
+                    throw new Exception("Some accounts do not have notes assigned to them!");
+
+                var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate, journalList, officeList, projectIdList);
+                var vmNoteBalances = GenerateBalanceViewModels(accountBalances);
+
+                response.data.AccountBalances = vmNoteBalances;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+        
+        public async Task<APIResponse> GetAccountBalancesById(List<long?> accountIds, DateTime transactionExchangeDate, int toCurrencyId,
+           DateTime reportStartDate, DateTime reportEndDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                    .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
+
+
+                if (inputLevelList.Any(x => x.AccountTypeId == null))
+                    throw new Exception("Some accounts do not have notes assigned to them!");
+
+                var accountBalances = await GetAccountBalances(inputLevelList, toCurrencyId, reportStartDate, reportEndDate, transactionExchangeDate, journalList, officeList, projectIdList);
+                var vmNoteBalances = GenerateBalanceViewModels(accountBalances);
+
+                response.data.AccountBalances = vmNoteBalances;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts,
+            int toCurrencyId, DateTime transactionsStartingFrom, DateTime transactionsUntil, DateTime transactionExchangeDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
+        {
+            var transactions = await GetAccountTransactions(inputLevelAccounts, transactionsStartingFrom, transactionsUntil, journalList, officeList, projectIdList);
+            var exchangeValuedTransactions = await GetTransactionValuesAfterExchange(transactions, toCurrencyId, transactionExchangeDate);
+
+            return CalculateAccountBalances(inputLevelAccounts, exchangeValuedTransactions);
+        }
+
+        public async Task<APIResponse> GetExchangeGainLossReport(ExchangeGainLossFilterModel exchangeGainLossFilterModel)
+        {
+            List<ExchangeGainLossReportViewModel> exchangeGainLossReportData = new List<ExchangeGainLossReportViewModel>();
+
+            APIResponse response = new APIResponse();
+
+            if (exchangeGainLossFilterModel != null)
+            {
+                try
+                {
+                    var originalBalance= await GetAccountBalancesById(
+                                                            exchangeGainLossFilterModel.AccountIdList, 
+                                                            exchangeGainLossFilterModel.ToCurrencyId, 
+                                                            exchangeGainLossFilterModel.FromDate,
+                                                            exchangeGainLossFilterModel.ToDate, 
+                                                            exchangeGainLossFilterModel.JournalIdList, 
+                                                            exchangeGainLossFilterModel.OfficeIdList, 
+                                                            exchangeGainLossFilterModel.ProjectIdList
+                                                );
+
+                    var currentBalance = await GetAccountBalancesById(
+                                                            exchangeGainLossFilterModel.AccountIdList, 
+                                                            exchangeGainLossFilterModel.ComparisionDate, 
+                                                            exchangeGainLossFilterModel.ToCurrencyId, 
+                                                            exchangeGainLossFilterModel.FromDate,
+                                                            exchangeGainLossFilterModel.ToDate, 
+                                                            exchangeGainLossFilterModel.JournalIdList, 
+                                                            exchangeGainLossFilterModel.OfficeIdList, 
+                                                            exchangeGainLossFilterModel.ProjectIdList
+                                               );
+
+                    if (originalBalance.StatusCode == 200 && originalBalance.StatusCode == 200)
+                    {
+                        foreach (var balance in originalBalance.data.AccountBalances)
+                        {
+                            ExchangeGainLossReportViewModel exchangeGainLossReport = new ExchangeGainLossReportViewModel();
+                            var currentDateBalance = currentBalance.data.AccountBalances.FirstOrDefault(x => x.AccountId == balance.AccountId);
+
+
+                            exchangeGainLossReport.AccountCode = balance.AccountCode;
+                            exchangeGainLossReport.AccountCodeName = balance.AccountCode + "-" + balance.AccountName;
+                            exchangeGainLossReport.AccountName = balance.AccountName;
+                            exchangeGainLossReport.BalanceOnCurrentDate = currentDateBalance.Balance;
+                            exchangeGainLossReport.BalanceOnOriginalDate = balance.Balance;
+                            exchangeGainLossReport.GainLossAmount = currentDateBalance.Balance - balance.Balance;
+                            exchangeGainLossReportData.Add(exchangeGainLossReport);
+                        }
+
+                        response.data.ExchangeGainLossReportList = exchangeGainLossReportData;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "success";
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = originalBalance.Message;
+                    }
+
+                }
+                catch (Exception exception)
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = exception.Message;
+                }
+            }
+
+            return response;
         }
     }
 }
