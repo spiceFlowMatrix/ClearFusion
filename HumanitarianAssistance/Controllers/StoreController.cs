@@ -667,6 +667,51 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> AddStoreItemGroup([FromBody] StoreItemGroupModel storeGroupItem)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.AddStoreItemGroup(storeGroupItem, user.Id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetStoreGroupItemCode([FromBody] string inventoryId)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.GetStoreGroupItemCode(inventoryId);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditStoreItemGroup([FromBody] StoreItemGroupModel storeGroupItem)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.EditStoreItemGroup(storeGroupItem, user.Id);
+      }
+
+      return apiresponse;
+    }
+
 
   }
 }
