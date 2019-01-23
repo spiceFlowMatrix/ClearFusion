@@ -341,31 +341,26 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllInventoryItems(string ItemInventory)
+        public async Task<APIResponse> GetAllInventoryItems(long ItemGroupId)
         {
             var response = new APIResponse();
             try
             {
                 List<StoreInventoryItem> inventoryItemsList = new List<StoreInventoryItem>();
-                if (ItemInventory != null)
+
+                if (ItemGroupId != 0)
                 {
 
-                    inventoryItemsList = await Task.Run(() =>
-                       _uow.GetDbContext().InventoryItems
-                           .Where(c => c.IsDeleted == false && c.ItemInventory == ItemInventory)
-                           .OrderByDescending(c => c.CreatedDate).ToListAsync());
+                    inventoryItemsList = await _uow.GetDbContext().InventoryItems
+                                                   .Where(x => x.IsDeleted == false && x.ItemGroupId == ItemGroupId)
+                                                   .ToListAsync();
                 }
                 else
                 {
-                    inventoryItemsList = await Task.Run(() =>
-                    _uow.GetDbContext().InventoryItems
-                        .Where(c => c.IsDeleted == false)
-                        .OrderByDescending(c => c.CreatedDate).ToListAsync());
+                    inventoryItemsList = await _uow.GetDbContext().InventoryItems
+                                                   .Where(x => x.IsDeleted == false)
+                                                   .ToListAsync();
                 }
-
-
-
-
 
                 var invModelList = inventoryItemsList.Select(v => new StoreInventoryItemModel
                 {
@@ -374,9 +369,10 @@ namespace HumanitarianAssistance.Service.Classes
                     ItemName = v.ItemName,
                     ItemCode = v.ItemCode,
                     Description = v.Description,
-                    //Voucher = v.Voucher,
-                    ItemType = v.ItemType
+                    ItemType = v.ItemType,
+                    ItemGroupId= (long)v.ItemGroupId
                 }).ToList();
+
                 response.data.InventoryItemList = invModelList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

@@ -21,7 +21,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddInventoryItems(StoreInventoryItemModel model);
         Task<APIResponse> EditInventoryItems(StoreInventoryItemModel model);
         Task<APIResponse> DeleteInventoryItems(StoreInventoryItemModel model);
-        Task<APIResponse> GetAllInventoryItems(string ItemInventory);
+        Task<APIResponse> GetAllInventoryItems(long Id);
 
         Task<APIResponse> AddInventoryItemsType(InventoryItemTypeModel model);
         Task<APIResponse> EditInventoryItemsType(InventoryItemTypeModel model);
