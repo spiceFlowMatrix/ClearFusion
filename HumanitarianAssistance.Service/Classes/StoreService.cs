@@ -1851,41 +1851,32 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetInventoryItemCode(string InventoryId, int TypeId)
+        public async Task<APIResponse> GetInventoryItemCode(long groupItemId)
         {
             APIResponse response = new APIResponse();
+            string InventoryItemCode = "";
 
             try
             {
-                StoreInventoryItem storeInventoryItem = await _uow.GetDbContext().InventoryItems.Include(x => x.Inventory).OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.ItemInventory == InventoryId);
-
-                string inventoryItemCode = string.Empty;
-
-                if (storeInventoryItem != null)
+                if (groupItemId != 0)
                 {
-                    string InventoryCode = storeInventoryItem.Inventory.InventoryCode;
+                    StoreInventoryItem storeInventoryItem = await _uow.GetDbContext().InventoryItems.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
 
-                    int storeItemNumber = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(6));
-
-                    response.data.InventoryItemCode = InventoryCode + String.Format("{0:D5}", ++storeItemNumber);
-                }
-                else
-                {
-                    StoreInventory storeInventory = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.AssetType == TypeId);
-
-                    if (storeInventory != null)
+                    if (storeInventoryItem != null)
                     {
-                        response.data.InventoryItemCode = storeInventory.InventoryCode + "00001";
+                        int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(10));
+                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D4}", ++count);
                     }
                     else
                     {
-                        throw new Exception("No Master Invenmtory found");
+                        StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
+                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D4}", 1);
                     }
                 }
 
+                response.data.InventoryItemCode = InventoryItemCode;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
-
             }
             catch (Exception ex)
             {

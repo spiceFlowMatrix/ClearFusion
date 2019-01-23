@@ -482,9 +482,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    public async Task<APIResponse> GetInventoryItemCode([FromQuery] string Id, int TypeId)
+    public async Task<APIResponse> GetInventoryItemCode([FromQuery] long Id)
     {
-      APIResponse apiresponse = await _iStore.GetInventoryItemCode(Id, TypeId);
+      APIResponse apiresponse = await _iStore.GetInventoryItemCode(Id);
       return apiresponse;
     }
 
