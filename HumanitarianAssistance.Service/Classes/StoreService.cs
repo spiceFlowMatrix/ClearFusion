@@ -2706,5 +2706,44 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
+
+        public async Task<APIResponse> GetStoreItemCode(long groupItemId)
+        {
+            APIResponse response = new APIResponse();
+            string InventoryItemCode = "";
+
+            try
+            {
+                if (groupItemId != 0)
+                {
+                    StoreInventoryItem storeInventoryItem = await _uow.GetDbContext().InventoryItems.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
+
+                    if(storeInventoryItem != null)
+                    {
+                        int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(10));
+                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D4}", ++count);
+                    }
+                    else
+                    {
+                        StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
+                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D4}", 1);
+                    }
+                }
+
+                response.data.InventoryItemCode = InventoryItemCode;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+
+
     }
 }
