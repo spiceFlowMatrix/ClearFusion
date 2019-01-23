@@ -286,7 +286,12 @@ namespace HumanitarianAssistance.Service.Classes
                 var editItem = await _uow.StoreInventoryItemRepository.FindAsync(x => x.ItemId == model.ItemId);
                 if (editItem != null)
                 {
-                    _mapper.Map(model, editItem);
+                    editItem.ModifiedDate = DateTime.Now;
+                    editItem.Description = model.Description;
+                    editItem.ItemCode = model.ItemCode;
+                    editItem.ItemGroupId = model.ItemGroupId;
+                    editItem.ItemName = model.ItemName;
+                    editItem.ItemType = model.ItemType;
                     editItem.IsDeleted = false;
 
                     await _uow.StoreInventoryItemRepository.UpdateAsyn(editItem);
@@ -1797,15 +1802,15 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-
         #endregion
 
+        #region Get Codes
         public async Task<APIResponse> GetInventoryCode(int Id)
         {
             APIResponse response = new APIResponse();
             try
             {
-                StoreInventory storeInventories = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.AssetType == Id && x.IsDeleted== false);
+                StoreInventory storeInventories = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.AssetType == Id && x.IsDeleted == false);
 
                 if (storeInventories != null)
                 {
@@ -1850,8 +1855,84 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-
         public async Task<APIResponse> GetInventoryItemCode(long groupItemId)
+        {
+            APIResponse response = new APIResponse();
+            string InventoryItemCode = "";
+
+            try
+            {
+                if (groupItemId != 0)
+                {
+                    StoreInventoryItem storeInventoryItem = await _uow.GetDbContext().InventoryItems
+                                                                      .OrderByDescending(x => x.CreatedDate)
+                                                                      .Include(x => x.StoreItemGroup)
+                                                                      .FirstOrDefaultAsync(x => x.IsDeleted == false
+                                                                      && x.ItemGroupId == groupItemId);
+
+
+                    if (storeInventoryItem != null)
+                    {
+                        int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(10));
+                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D4}", ++count);
+                    }
+                    else
+                    {
+                        StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
+                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D4}", 1);
+                    }
+                }
+
+                response.data.InventoryItemCode = InventoryItemCode;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+        public async Task<APIResponse> GetStoreGroupItemCode(string inventoryId)
+        {
+            APIResponse response = new APIResponse();
+            string ItemGroupCode = "";
+            try
+            {
+                if (inventoryId != null)
+                {
+                    StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups
+                                                                             .OrderByDescending(x => x.CreatedDate)
+                                                                             .Include(x => x.StoreInventory)
+                                                                             .FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
+                    if (storeItemGroup != null)
+                    {
+                        long count = Convert.ToInt64(storeItemGroup.ItemGroupCode.Substring(5));
+                        ItemGroupCode = storeItemGroup.StoreInventory.InventoryCode + String.Format("{0:D4}", ++count);
+                    }
+                    else
+                    {
+                        StoreInventory storeInventory = await _uow.GetDbContext().StoreInventories.FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
+
+                        ItemGroupCode = storeInventory.InventoryCode + String.Format("{0:D4}", 1);
+                    }
+                }
+
+                response.data.ItemGroupCode = ItemGroupCode;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+        public async Task<APIResponse> GetStoreItemCode(long groupItemId)
         {
             APIResponse response = new APIResponse();
             string InventoryItemCode = "";
@@ -1886,7 +1967,443 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
+        #endregion
 
+
+        #region Store Item Puchase
+        /// <summary>
+        /// Get All Store Payment Types
+        /// </summary>
+        /// <returns>Payment Type List</returns>
+        public async Task<APIResponse> GetAllPaymentTypes()
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                //Get List of Store Payment Types
+                ICollection<PaymentTypes> paymentTypesList = await _uow.PaymentTypesRepository.FindAllAsync(x => x.IsDeleted == false);
+
+                response.data.PaymentTypesList = paymentTypesList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+        /// <summary>
+        /// Add Store Payment Type
+        /// </summary>
+        /// <param name="model">Payment type Model</param>
+        /// <param name="UserId"></param>
+        /// <returns>Succuss/Failure</returns>
+        public async Task<APIResponse> AddPaymentTypes(PaymentTypes model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (model != null)
+                {
+                    PaymentTypes storePaymentTypes = new PaymentTypes();
+
+                    storePaymentTypes.IsDeleted = false;
+                    storePaymentTypes.CreatedById = UserId;
+                    storePaymentTypes.CreatedDate = DateTime.Now;
+                    storePaymentTypes.Name = model.Name;
+                    storePaymentTypes.ChartOfAccountNewId = model.ChartOfAccountNewId;
+
+                    await _uow.PaymentTypesRepository.AddAsyn(storePaymentTypes);
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+        /// <summary>
+        /// Update Store Payment Type
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns>Success/Failure</returns>
+        public async Task<APIResponse> EditPaymentTypes(PaymentTypes model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (model != null)
+                {
+                    //Get Payment Type Record based on payment id
+                    PaymentTypes storePaymentTypes = await _uow.PaymentTypesRepository.FindAsync(x => x.IsDeleted == false && x.PaymentId == model.PaymentId);
+
+                    if (storePaymentTypes != null)
+                    {
+                        storePaymentTypes.ModifiedById = UserId;
+                        storePaymentTypes.ModifiedDate = DateTime.Now;
+                        storePaymentTypes.Name = model.Name;
+                        storePaymentTypes.ChartOfAccountNewId = model.ChartOfAccountNewId;
+                    }
+
+                    //update PaymentType Record
+                    await _uow.PaymentTypesRepository.UpdateAsyn(storePaymentTypes);
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+        /// <summary>
+        /// Delete Payment Type Record
+        /// </summary>
+        /// <param name="PaymentId"></param>
+        /// <param name="UserId"></param>
+        /// <returns>Success/Failure</returns>
+        public async Task<APIResponse> DeletePaymentTypes(int PaymentId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (PaymentId != 0)
+                {
+                    //Get Payment Type Record based on payment id
+                    PaymentTypes storePaymentTypes = await _uow.PaymentTypesRepository.FindAsync(x => x.IsDeleted == false && x.PaymentId == PaymentId);
+
+                    if (storePaymentTypes != null)
+                    {
+                        storePaymentTypes.ModifiedById = UserId;
+                        storePaymentTypes.ModifiedDate = DateTime.Now;
+                        storePaymentTypes.IsDeleted = true;
+                    }
+
+                    //update PaymentType Record
+                    await _uow.PaymentTypesRepository.UpdateAsyn(storePaymentTypes);
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+        public async Task<APIResponse> VerifyPurchase(ItemPurchaseModel model)
+        {
+            var response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
+                    if (purchaseRecord != null)
+                    {
+                        _mapper.Map(model, purchaseRecord);
+
+                        if (!string.IsNullOrEmpty(model.ImageFileName))
+                        {
+                            if (model.ImageFileName.Contains(","))
+                            {
+                                string[] str = model.ImageFileName.Split(",");
+                                byte[] filepath = Convert.FromBase64String(str[1]);
+                                string ex = str[0].Split("/")[1].Split(";")[0];
+                                string guidname = Guid.NewGuid().ToString();
+                                string filename = guidname + "." + ex;
+                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                                File.WriteAllBytes(@"Documents/" + filename, filepath);
+
+                                purchaseRecord.ImageFileName = guidname;
+                                purchaseRecord.ImageFileType = "." + ex;
+                            }
+                        }
+
+                        if (model.InvoiceFileName != null && model.InvoiceFileName != "")
+                        {
+                            if (model.InvoiceFileName.Contains(","))
+                            {
+                                string[] str = model.InvoiceFileName.Split(",");
+                                byte[] filepath = Convert.FromBase64String(str[1]);
+                                string ex = str[0].Split("/")[1].Split(";")[0];
+                                string guidname = Guid.NewGuid().ToString();
+                                string filename = guidname + "." + ex;
+                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                                File.WriteAllBytes(@"Documents/" + filename, filepath);
+
+                                purchaseRecord.InvoiceFileName = guidname;
+                                purchaseRecord.InvoiceFileType = "." + ex;
+                            }
+                        }
+
+                        purchaseRecord.IsDeleted = false;
+
+
+                        //List<ExchangeRate> exchangeRate = new List<ExchangeRate>();
+
+                        if (model.IsPurchaseVerified.HasValue && model.IsPurchaseVerified.Value)
+                        {
+
+                            var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == model.OfficeId).Result.OfficeCode; //use OfficeCode
+                            var financialYearDetails = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDeleted == false && x.StartDate.Date.Year == DateTime.Now.Year);
+                            var inventory = _uow.GetDbContext().InventoryItems.Include(x => x.Inventory).FirstOrDefault(x => x.ItemId == model.InventoryItem);
+                            var paymentTypes = _uow.GetDbContext().PaymentTypes.FirstOrDefault(x => x.PaymentId == model.PaymentTypeId);
+                            //exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false).OrderByDescending(x => x.Date).ToListAsync();
+
+                            VoucherDetail obj = new VoucherDetail();
+                            obj.CreatedById = model.CreatedById;
+                            obj.CreatedDate = DateTime.UtcNow;
+                            obj.IsDeleted = false;
+                            obj.FinancialYearId = financialYearDetails.FinancialYearId;
+                            obj.VoucherTypeId = (int)VoucherTypes.Journal;
+                            obj.Description = StaticResource.PurchaseVoucherCreated;
+                            obj.CurrencyId = model.Currency;
+                            obj.VoucherDate = DateTime.Now;
+                            //obj.ChequeNo = model.ChequeNo;
+                            obj.JournalCode = model.JournalCode;
+                            obj.OfficeId = model.OfficeId;
+                            obj.ProjectId = model.ProjectId;
+                            obj.BudgetLineId = model.BudgetLineId;
+                            obj.IsExchangeGainLossVoucher = false;
+
+                            await _uow.VoucherDetailRepository.AddAsyn(obj);
+
+                            obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
+                            await _uow.VoucherDetailRepository.UpdateAsyn(obj);
+
+                            purchaseRecord.VerifiedPurchaseVoucher = obj.VoucherNo;
+                            await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
+
+                            List<VoucherTransactions> voucherTransactionsList = new List<VoucherTransactions>();
+
+                            //Credit
+                            VoucherTransactions voucherTransactionCredit = new VoucherTransactions();
+                            //Debit
+                            VoucherTransactions voucherTransactionDebit = new VoucherTransactions();
+
+                            voucherTransactionCredit.IsDeleted = false;
+                            voucherTransactionCredit.VoucherNo = obj.VoucherNo;
+                            voucherTransactionCredit.FinancialYearId = financialYearDetails.FinancialYearId;
+                            voucherTransactionCredit.ChartOfAccountNewId = paymentTypes.ChartOfAccountNewId;
+                            voucherTransactionCredit.CreditAccount = paymentTypes.ChartOfAccountNewId;
+                            voucherTransactionCredit.DebitAccount = inventory.Inventory.InventoryDebitAccount;
+                            voucherTransactionCredit.Credit = model.UnitCost * model.Quantity;
+                            voucherTransactionCredit.Debit = 0;
+                            voucherTransactionCredit.CurrencyId = model.Currency;
+                            voucherTransactionCredit.Description = StaticResource.PurchaseVoucherCreated;
+                            voucherTransactionCredit.OfficeId = model.OfficeId;
+                            voucherTransactionCredit.TransactionDate = obj.VoucherDate;
+
+                            voucherTransactionsList.Add(voucherTransactionCredit);
+
+                            //Debit
+                            voucherTransactionDebit.IsDeleted = false;
+                            voucherTransactionDebit.VoucherNo = obj.VoucherNo;
+                            voucherTransactionDebit.FinancialYearId = financialYearDetails.FinancialYearId;
+                            //voucherTransactionCredit.ChartOfAccountNewId = paymentTypes.ChartOfAccountNewId;
+                            //voucherTransactionCredit.CreditAccount = paymentTypes.ChartOfAccountNewId;
+                            //voucherTransactionCredit.DebitAccount = inventory.Inventory.InventoryDebitAccount;
+                            //voucherTransactionCredit.Credit = model.UnitCost * model.Quantity;
+                            //voucherTransactionCredit.Debit = 0;
+                            voucherTransactionDebit.CurrencyId = model.Currency;
+                            voucherTransactionDebit.Description = StaticResource.PurchaseVoucherCreated;
+                            voucherTransactionDebit.OfficeId = model.OfficeId;
+                            voucherTransactionDebit.TransactionDate = obj.VoucherDate;
+                            voucherTransactionDebit.CreditAccount = 0;
+                            voucherTransactionDebit.DebitAccount = voucherTransactionCredit.DebitAccount;
+                            voucherTransactionDebit.ChartOfAccountNewId = voucherTransactionCredit.DebitAccount;
+                            voucherTransactionDebit.Debit = voucherTransactionCredit.Credit;
+                            voucherTransactionDebit.Credit = 0;
+
+                            voucherTransactionsList.Add(voucherTransactionDebit);
+
+                            await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(voucherTransactionsList);
+                            await _uow.SaveAsync();
+
+                            ////Passing Voucher Transaction model for Credit
+                            //response.data.VoucherTransactionModel = xVoucherTransactionModel;
+                            //response.data.VoucherReferenceNo = obj.ReferenceNo;
+                            ////response.data.ExchangeRates = exchangeRate;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Success";
+
+                        }
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Record cannot be updated";
+                        return response;
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model values are inappropriate";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+            return response;
+        }
+        public async Task<APIResponse> UnverifyPurchase(ItemPurchaseModel model)
+        {
+            var response = new APIResponse();
+
+            try
+            {
+                if (model != null)
+                {
+                    var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
+
+                    if (purchaseRecord != null)
+                    {
+                        _mapper.Map(model, purchaseRecord);
+
+                        if (!string.IsNullOrEmpty(model.ImageFileName))
+                        {
+                            if (model.ImageFileName.Contains(","))
+                            {
+                                string[] str = model.ImageFileName.Split(",");
+                                byte[] filepath = Convert.FromBase64String(str[1]);
+                                string ex = str[0].Split("/")[1].Split(";")[0];
+                                string guidname = Guid.NewGuid().ToString();
+                                string filename = guidname + "." + ex;
+                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                                File.WriteAllBytes(@"Documents/" + filename, filepath);
+
+                                purchaseRecord.ImageFileName = guidname;
+                                purchaseRecord.ImageFileType = "." + ex;
+                            }
+                        }
+
+                        if (model.InvoiceFileName != null && model.InvoiceFileName != "")
+                        {
+                            if (model.InvoiceFileName.Contains(","))
+                            {
+                                string[] str = model.InvoiceFileName.Split(",");
+                                byte[] filepath = Convert.FromBase64String(str[1]);
+                                string ex = str[0].Split("/")[1].Split(";")[0];
+                                string guidname = Guid.NewGuid().ToString();
+                                string filename = guidname + "." + ex;
+                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                                File.WriteAllBytes(@"Documents/" + filename, filepath);
+
+                                purchaseRecord.InvoiceFileName = guidname;
+                                purchaseRecord.InvoiceFileType = "." + ex;
+                            }
+                        }
+
+                        purchaseRecord.IsDeleted = false;
+
+                        List<VoucherTransactions> newVoucherTransactionList = new List<VoucherTransactions>();
+
+                        if (model.IsPurchaseVerified.HasValue && !model.IsPurchaseVerified.Value)
+                        {
+
+                            VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == model.VerifiedPurchaseVoucher);
+
+                            if (voucherDetail != null)
+                            {
+                                List<VoucherTransactions> voucherTransactionsList = await _uow.GetDbContext().VoucherTransactions.Where(x => x.IsDeleted == false && x.VoucherNo == model.VerifiedPurchaseVoucher).ToListAsync();
+
+                                foreach (VoucherTransactions transaction in voucherTransactionsList)
+                                {
+                                    VoucherTransactions voucherTransaction = new VoucherTransactions();
+
+                                    voucherTransaction.IsDeleted = false;
+                                    voucherTransaction.VoucherNo = model.VerifiedPurchaseVoucher;
+                                    voucherTransaction.FinancialYearId = voucherDetail.FinancialYearId;
+                                    voucherTransaction.ChartOfAccountNewId = transaction.ChartOfAccountNewId;
+                                    voucherTransaction.CurrencyId = transaction.CurrencyId;
+                                    voucherTransaction.Description = StaticResource.PurchaseVoucherUnverified;
+                                    voucherTransaction.OfficeId = model.OfficeId;
+                                    voucherTransaction.TransactionDate = DateTime.Now;
+
+                                    if (transaction.Credit != 0 && transaction.Credit != null)
+                                    {
+
+                                        voucherTransaction.Debit = transaction.Credit;
+                                        voucherTransaction.Credit = 0;
+                                        voucherTransaction.DebitAccount = transaction.CreditAccount;
+                                    }
+                                    else if (transaction.Debit != 0 && transaction.Debit != null)
+                                    {
+                                        voucherTransaction.Credit = transaction.Debit;
+                                        voucherTransaction.Debit = 0;
+                                        voucherTransaction.CreditAccount = transaction.DebitAccount;
+                                    }
+
+                                    newVoucherTransactionList.Add(voucherTransaction);
+                                }
+
+                                await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(newVoucherTransactionList);
+                                await _uow.SaveAsync();
+
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Success";
+                            }
+                            else
+                            {
+                                throw new Exception(" Voucher Not Found on Verified Purchase");
+                            }
+                        }
+                        else
+                        {
+                            await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
+                        }
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Record cannot be updated";
+                        return response;
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model values are inappropriate";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+            return response;
+        }
+        #endregion
+
+        #region Store
         /// <summary>
         /// Get All Store Source Types
         /// </summary>
@@ -1929,7 +2446,7 @@ namespace HumanitarianAssistance.Service.Classes
                 //Get Store Source Code Detail based on source code type selected
                 if (typeId != null)
                 {
-                   StoreSourceCodeDetailList = await _uow.GetDbContext().StoreSourceCodeDetail.Where(x => x.IsDeleted == false && x.CodeTypeId == typeId).ToListAsync();
+                    StoreSourceCodeDetailList = await _uow.GetDbContext().StoreSourceCodeDetail.Where(x => x.IsDeleted == false && x.CodeTypeId == typeId).ToListAsync();
                 }
                 else //Source Code Type is empty so Get all Store Source Code Detail
                 {
@@ -2088,7 +2605,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 //Retrieving the Old storeSourceCode record from  db
-                StoreSourceCodeDetail storeSourceCodeDetail = await _uow.GetDbContext().StoreSourceCodeDetail.FirstOrDefaultAsync(x=> x.IsDeleted== false && x.SourceCodeId== storeSourceCodeDetailModel.SourceCodeId);
+                StoreSourceCodeDetail storeSourceCodeDetail = await _uow.GetDbContext().StoreSourceCodeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.SourceCodeId == storeSourceCodeDetailModel.SourceCodeId);
 
                 //Mapping new values in old storeSourceCode record
                 storeSourceCodeDetail.Address = storeSourceCodeDetailModel.Address;
@@ -2132,7 +2649,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 //Returning the storeSourceCodeDetail record based on storeSourceCodeId received
-                StoreSourceCodeDetail storeSourceCodeDetail = _uow.StoreSourceCodeRepository.Find(x=> x.SourceCodeId== storeSourceCodeId && x.IsDeleted== false);
+                StoreSourceCodeDetail storeSourceCodeDetail = _uow.StoreSourceCodeRepository.Find(x => x.SourceCodeId == storeSourceCodeId && x.IsDeleted == false);
 
                 //Deleting record
                 storeSourceCodeDetail.IsDeleted = true;
@@ -2151,442 +2668,6 @@ namespace HumanitarianAssistance.Service.Classes
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
 
-            return response;
-        }
-
-        /// <summary>
-        /// Get All Store Payment Types
-        /// </summary>
-        /// <returns>Payment Type List</returns>
-        public async Task<APIResponse> GetAllPaymentTypes()
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                //Get List of Store Payment Types
-                ICollection<PaymentTypes> paymentTypesList = await _uow.PaymentTypesRepository.FindAllAsync(x => x.IsDeleted == false);
-
-                response.data.PaymentTypesList = paymentTypesList;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-
-        /// <summary>
-        /// Add Store Payment Type
-        /// </summary>
-        /// <param name="model">Payment type Model</param>
-        /// <param name="UserId"></param>
-        /// <returns>Succuss/Failure</returns>
-        public async Task<APIResponse> AddPaymentTypes(PaymentTypes model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                if (model != null)
-                {
-                    PaymentTypes storePaymentTypes = new PaymentTypes();
-
-                    storePaymentTypes.IsDeleted = false;
-                    storePaymentTypes.CreatedById = UserId;
-                    storePaymentTypes.CreatedDate = DateTime.Now;
-                    storePaymentTypes.Name = model.Name;
-                    storePaymentTypes.ChartOfAccountNewId = model.ChartOfAccountNewId;
-
-                    await _uow.PaymentTypesRepository.AddAsyn(storePaymentTypes);
-                }
-
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-
-        /// <summary>
-        /// Update Store Payment Type
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="UserId"></param>
-        /// <returns>Success/Failure</returns>
-        public async Task<APIResponse> EditPaymentTypes(PaymentTypes model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                if (model != null)
-                {
-                    //Get Payment Type Record based on payment id
-                    PaymentTypes storePaymentTypes = await _uow.PaymentTypesRepository.FindAsync(x => x.IsDeleted == false && x.PaymentId == model.PaymentId);
-
-                    if (storePaymentTypes != null)
-                    {
-                        storePaymentTypes.ModifiedById = UserId;
-                        storePaymentTypes.ModifiedDate = DateTime.Now;
-                        storePaymentTypes.Name = model.Name;
-                        storePaymentTypes.ChartOfAccountNewId = model.ChartOfAccountNewId;
-                    }
-
-                    //update PaymentType Record
-                    await _uow.PaymentTypesRepository.UpdateAsyn(storePaymentTypes);
-                }
-
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-
-        /// <summary>
-        /// Delete Payment Type Record
-        /// </summary>
-        /// <param name="PaymentId"></param>
-        /// <param name="UserId"></param>
-        /// <returns>Success/Failure</returns>
-        public async Task<APIResponse> DeletePaymentTypes(int PaymentId, string UserId)
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                if (PaymentId != 0)
-                {
-                    //Get Payment Type Record based on payment id
-                    PaymentTypes storePaymentTypes = await _uow.PaymentTypesRepository.FindAsync(x => x.IsDeleted == false && x.PaymentId == PaymentId);
-
-                    if (storePaymentTypes != null)
-                    {
-                        storePaymentTypes.ModifiedById = UserId;
-                        storePaymentTypes.ModifiedDate = DateTime.Now;
-                        storePaymentTypes.IsDeleted = true;
-                    }
-
-                    //update PaymentType Record
-                    await _uow.PaymentTypesRepository.UpdateAsyn(storePaymentTypes);
-                }
-
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-
-        public async Task<APIResponse> VerifyPurchase(ItemPurchaseModel model)
-        {
-            var response = new APIResponse();
-            try
-            {
-                if (model != null)
-                {
-                    var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
-                    if (purchaseRecord != null)
-                    {
-                        _mapper.Map(model, purchaseRecord);
-
-                        if (!string.IsNullOrEmpty(model.ImageFileName))
-                        {
-                            if (model.ImageFileName.Contains(","))
-                            {
-                                string[] str = model.ImageFileName.Split(",");
-                                byte[] filepath = Convert.FromBase64String(str[1]);
-                                string ex = str[0].Split("/")[1].Split(";")[0];
-                                string guidname = Guid.NewGuid().ToString();
-                                string filename = guidname + "." + ex;
-                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                                File.WriteAllBytes(@"Documents/" + filename, filepath);
-
-                                purchaseRecord.ImageFileName = guidname;
-                                purchaseRecord.ImageFileType = "." + ex;
-                            }
-                        }
-
-                        if (model.InvoiceFileName != null && model.InvoiceFileName != "")
-                        {
-                            if (model.InvoiceFileName.Contains(","))
-                            {
-                                string[] str = model.InvoiceFileName.Split(",");
-                                byte[] filepath = Convert.FromBase64String(str[1]);
-                                string ex = str[0].Split("/")[1].Split(";")[0];
-                                string guidname = Guid.NewGuid().ToString();
-                                string filename = guidname + "." + ex;
-                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                                File.WriteAllBytes(@"Documents/" + filename, filepath);
-
-                                purchaseRecord.InvoiceFileName = guidname;
-                                purchaseRecord.InvoiceFileType = "." + ex;
-                            }
-                        }
-
-                        purchaseRecord.IsDeleted = false;
-
-                        
-                        //List<ExchangeRate> exchangeRate = new List<ExchangeRate>();
-
-                        if (model.IsPurchaseVerified.HasValue && model.IsPurchaseVerified.Value)
-                        {
-
-                            var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == model.OfficeId).Result.OfficeCode; //use OfficeCode
-                            var financialYearDetails = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDeleted == false && x.StartDate.Date.Year == DateTime.Now.Year);
-                            var inventory = _uow.GetDbContext().InventoryItems.Include(x => x.Inventory).FirstOrDefault(x => x.ItemId == model.InventoryItem);
-                            var paymentTypes = _uow.GetDbContext().PaymentTypes.FirstOrDefault(x => x.PaymentId == model.PaymentTypeId);
-                            //exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false).OrderByDescending(x => x.Date).ToListAsync();
-
-                            VoucherDetail obj = new VoucherDetail();
-                            obj.CreatedById = model.CreatedById;
-                            obj.CreatedDate = DateTime.UtcNow;
-                            obj.IsDeleted = false;
-                            obj.FinancialYearId = financialYearDetails.FinancialYearId;
-                            obj.VoucherTypeId = (int)VoucherTypes.Journal;
-                            obj.Description = StaticResource.PurchaseVoucherCreated;
-                            obj.CurrencyId = model.Currency;
-                            obj.VoucherDate = DateTime.Now;
-                            //obj.ChequeNo = model.ChequeNo;
-                            obj.JournalCode = model.JournalCode;
-                            obj.OfficeId = model.OfficeId;
-                            obj.ProjectId = model.ProjectId;
-                            obj.BudgetLineId = model.BudgetLineId;
-                            obj.IsExchangeGainLossVoucher = false;
-
-                            await _uow.VoucherDetailRepository.AddAsyn(obj);
-
-                            obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
-                            await _uow.VoucherDetailRepository.UpdateAsyn(obj);
-
-                            purchaseRecord.VerifiedPurchaseVoucher = obj.VoucherNo;
-                            await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
-
-                            List<VoucherTransactions> voucherTransactionsList = new List<VoucherTransactions>();
-
-                            //Credit
-                            VoucherTransactions voucherTransactionCredit = new VoucherTransactions();
-                            //Debit
-                            VoucherTransactions voucherTransactionDebit = new VoucherTransactions();
-
-                            voucherTransactionCredit.IsDeleted = false;
-                            voucherTransactionCredit.VoucherNo = obj.VoucherNo;
-                            voucherTransactionCredit.FinancialYearId = financialYearDetails.FinancialYearId;
-                            voucherTransactionCredit.ChartOfAccountNewId = paymentTypes.ChartOfAccountNewId;
-                            voucherTransactionCredit.CreditAccount = paymentTypes.ChartOfAccountNewId;
-                            voucherTransactionCredit.DebitAccount = inventory.Inventory.InventoryDebitAccount;
-                            voucherTransactionCredit.Credit = model.UnitCost * model.Quantity;
-                            voucherTransactionCredit.Debit = 0;
-                            voucherTransactionCredit.CurrencyId = model.Currency;
-                            voucherTransactionCredit.Description = StaticResource.PurchaseVoucherCreated;
-                            voucherTransactionCredit.OfficeId = model.OfficeId;
-                            voucherTransactionCredit.TransactionDate = obj.VoucherDate;
-
-                            voucherTransactionsList.Add(voucherTransactionCredit);
-
-                            //Debit
-                            voucherTransactionDebit.IsDeleted = false;
-                            voucherTransactionDebit.VoucherNo = obj.VoucherNo;
-                            voucherTransactionDebit.FinancialYearId = financialYearDetails.FinancialYearId;
-                            //voucherTransactionCredit.ChartOfAccountNewId = paymentTypes.ChartOfAccountNewId;
-                            //voucherTransactionCredit.CreditAccount = paymentTypes.ChartOfAccountNewId;
-                            //voucherTransactionCredit.DebitAccount = inventory.Inventory.InventoryDebitAccount;
-                            //voucherTransactionCredit.Credit = model.UnitCost * model.Quantity;
-                            //voucherTransactionCredit.Debit = 0;
-                            voucherTransactionDebit.CurrencyId = model.Currency;
-                            voucherTransactionDebit.Description = StaticResource.PurchaseVoucherCreated;
-                            voucherTransactionDebit.OfficeId = model.OfficeId;
-                            voucherTransactionDebit.TransactionDate = obj.VoucherDate;
-                            voucherTransactionDebit.CreditAccount = 0;
-                            voucherTransactionDebit.DebitAccount = voucherTransactionCredit.DebitAccount;
-                            voucherTransactionDebit.ChartOfAccountNewId = voucherTransactionCredit.DebitAccount;
-                            voucherTransactionDebit.Debit = voucherTransactionCredit.Credit;
-                            voucherTransactionDebit.Credit = 0;
-
-                            voucherTransactionsList.Add(voucherTransactionDebit);
-
-                            await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(voucherTransactionsList);
-                            await _uow.SaveAsync();
-
-                            ////Passing Voucher Transaction model for Credit
-                            //response.data.VoucherTransactionModel = xVoucherTransactionModel;
-                            //response.data.VoucherReferenceNo = obj.ReferenceNo;
-                            ////response.data.ExchangeRates = exchangeRate;
-                            response.StatusCode = StaticResource.successStatusCode;
-                            response.Message = "Success";
-
-                        }
-                    }
-                    else
-                    {
-                        response.StatusCode = StaticResource.failStatusCode;
-                        response.Message = "Record cannot be updated";
-                        return response;
-                    }
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "Model values are inappropriate";
-                    return response;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-                return response;
-            }
-            return response;
-        }
-
-        public async Task<APIResponse> UnverifyPurchase(ItemPurchaseModel model)
-        {
-            var response = new APIResponse();
-
-            try
-            {
-                if (model != null)
-                {
-                    var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
-
-                    if (purchaseRecord != null)
-                    {
-                        _mapper.Map(model, purchaseRecord);
-
-                        if (!string.IsNullOrEmpty(model.ImageFileName))
-                        {
-                            if (model.ImageFileName.Contains(","))
-                            {
-                                string[] str = model.ImageFileName.Split(",");
-                                byte[] filepath = Convert.FromBase64String(str[1]);
-                                string ex = str[0].Split("/")[1].Split(";")[0];
-                                string guidname = Guid.NewGuid().ToString();
-                                string filename = guidname + "." + ex;
-                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                                File.WriteAllBytes(@"Documents/" + filename, filepath);
-
-                                purchaseRecord.ImageFileName = guidname;
-                                purchaseRecord.ImageFileType = "." + ex;
-                            }
-                        }
-
-                        if (model.InvoiceFileName != null && model.InvoiceFileName != "")
-                        {
-                            if (model.InvoiceFileName.Contains(","))
-                            {
-                                string[] str = model.InvoiceFileName.Split(",");
-                                byte[] filepath = Convert.FromBase64String(str[1]);
-                                string ex = str[0].Split("/")[1].Split(";")[0];
-                                string guidname = Guid.NewGuid().ToString();
-                                string filename = guidname + "." + ex;
-                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                                File.WriteAllBytes(@"Documents/" + filename, filepath);
-
-                                purchaseRecord.InvoiceFileName = guidname;
-                                purchaseRecord.InvoiceFileType = "." + ex;
-                            }
-                        }
-
-                        purchaseRecord.IsDeleted = false;
-
-                        List<VoucherTransactions> newVoucherTransactionList = new List<VoucherTransactions>();
-
-                        if (model.IsPurchaseVerified.HasValue && !model.IsPurchaseVerified.Value)
-                        {
-                            
-                            VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == model.VerifiedPurchaseVoucher);
-
-                            if (voucherDetail != null)
-                            {
-                                List<VoucherTransactions> voucherTransactionsList = await _uow.GetDbContext().VoucherTransactions.Where(x => x.IsDeleted == false && x.VoucherNo == model.VerifiedPurchaseVoucher).ToListAsync();
-
-                                foreach (VoucherTransactions transaction in voucherTransactionsList)
-                                {
-                                    VoucherTransactions voucherTransaction = new VoucherTransactions();
-
-                                    voucherTransaction.IsDeleted = false;
-                                    voucherTransaction.VoucherNo = model.VerifiedPurchaseVoucher;
-                                    voucherTransaction.FinancialYearId = voucherDetail.FinancialYearId;
-                                    voucherTransaction.ChartOfAccountNewId = transaction.ChartOfAccountNewId;
-                                    voucherTransaction.CurrencyId = transaction.CurrencyId;
-                                    voucherTransaction.Description = StaticResource.PurchaseVoucherUnverified;
-                                    voucherTransaction.OfficeId = model.OfficeId;
-                                    voucherTransaction.TransactionDate = DateTime.Now;
-
-                                    if (transaction.Credit != 0 && transaction.Credit != null)
-                                    {
-
-                                        voucherTransaction.Debit = transaction.Credit;
-                                        voucherTransaction.Credit = 0;
-                                        voucherTransaction.DebitAccount = transaction.CreditAccount;
-                                    }
-                                    else if (transaction.Debit != 0 && transaction.Debit != null)
-                                    {
-                                        voucherTransaction.Credit = transaction.Debit;
-                                        voucherTransaction.Debit = 0;
-                                        voucherTransaction.CreditAccount= transaction.DebitAccount;
-                                    }
-
-                                    newVoucherTransactionList.Add(voucherTransaction);
-                                }
-
-                                await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(newVoucherTransactionList);
-                                await _uow.SaveAsync();
-
-                                response.StatusCode = StaticResource.successStatusCode;
-                                response.Message = "Success";
-                            }
-                            else
-                            {
-                                throw new Exception(" Voucher Not Found on Verified Purchase");
-                            }
-                        }
-                        else
-                        {
-                            await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
-                        }
-                    }
-                    else
-                    {
-                        response.StatusCode = StaticResource.failStatusCode;
-                        response.Message = "Record cannot be updated";
-                        return response;
-                    }
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "Model values are inappropriate";
-                    return response;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-                return response;
-            }
             return response;
         }
 
@@ -2612,44 +2693,6 @@ namespace HumanitarianAssistance.Service.Classes
                     await _uow.GetDbContext().SaveChangesAsync();
                 }
 
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-
-        public async Task<APIResponse> GetStoreGroupItemCode(string inventoryId)
-        {
-            APIResponse response = new APIResponse();
-            string ItemGroupCode = "";
-            try
-            {
-                if (inventoryId != null)
-                {
-                    StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups
-                                                                             .OrderByDescending(x => x.CreatedDate)
-                                                                             .Include(x => x.StoreInventory)
-                                                                             .FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
-                    if (storeItemGroup != null)
-                    {
-                        long count = Convert.ToInt64(storeItemGroup.ItemGroupCode.Substring(5));
-                        ItemGroupCode = storeItemGroup.StoreInventory.InventoryCode + String.Format("{0:D4}", ++count);
-                    }
-                    else
-                    {
-                       StoreInventory storeInventory= await _uow.GetDbContext().StoreInventories.FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
-
-                        ItemGroupCode = storeInventory.InventoryCode + String.Format("{0:D4}", 1);
-                    }
-                }
-
-                response.data.ItemGroupCode = ItemGroupCode;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -2696,42 +2739,6 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetStoreItemCode(long groupItemId)
-        {
-            APIResponse response = new APIResponse();
-            string InventoryItemCode = "";
-
-            try
-            {
-                if (groupItemId != 0)
-                {
-                    StoreInventoryItem storeInventoryItem = await _uow.GetDbContext().InventoryItems.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
-
-                    if(storeInventoryItem != null)
-                    {
-                        int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(10));
-                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D4}", ++count);
-                    }
-                    else
-                    {
-                        StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
-                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D4}", 1);
-                    }
-                }
-
-                response.data.InventoryItemCode = InventoryItemCode;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-
         public async Task<APIResponse> GetAllStoreItemGroups(string inventoryId)
         {
             APIResponse response = new APIResponse();
@@ -2742,12 +2749,13 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (inventoryId != null)
                 {
-                    storeItemGroupList = await _uow.GetDbContext().StoreItemGroups.Where(x=> x.IsDeleted== false && x.InventoryId== inventoryId).Select(x=> new StoreItemGroupModel {
-                        Description= x.Description,
-                        InventoryId= x.InventoryId,
-                        ItemGroupCode= x.ItemGroupCode,
-                        ItemGroupId= x.ItemGroupId,
-                        ItemGroupName= x.ItemGroupName
+                    storeItemGroupList = await _uow.GetDbContext().StoreItemGroups.Where(x => x.IsDeleted == false && x.InventoryId == inventoryId).Select(x => new StoreItemGroupModel
+                    {
+                        Description = x.Description,
+                        InventoryId = x.InventoryId,
+                        ItemGroupCode = x.ItemGroupCode,
+                        ItemGroupId = x.ItemGroupId,
+                        ItemGroupName = x.ItemGroupName
                     }).ToListAsync();
                 }
 
@@ -2763,5 +2771,9 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
+
+        #endregion
+
+
     }
 }
