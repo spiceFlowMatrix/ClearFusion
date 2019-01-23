@@ -2641,11 +2641,13 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 if (inventoryId != null)
                 {
-                    StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
-
+                    StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups
+                                                                             .OrderByDescending(x => x.CreatedDate)
+                                                                             .Include(x => x.StoreInventory)
+                                                                             .FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
                     if (storeItemGroup != null)
                     {
-                        int count = Convert.ToInt32(storeItemGroup.ItemGroupCode.Substring(5));
+                        long count = Convert.ToInt64(storeItemGroup.ItemGroupCode.Substring(5));
                         ItemGroupCode = storeItemGroup.StoreInventory.InventoryCode + String.Format("{0:D4}", ++count);
                     }
                     else

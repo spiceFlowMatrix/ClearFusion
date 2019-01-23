@@ -728,8 +728,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
-    [HttpPost]
-    public async Task<APIResponse> GetAllStoreItemGroups(string Id)
+    [HttpGet]
+    public async Task<APIResponse> GetAllStoreItemGroups([FromQuery]string Id)
     {
       APIResponse apiresponse = new APIResponse();
 
