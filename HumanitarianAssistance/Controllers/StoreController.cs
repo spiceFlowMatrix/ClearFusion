@@ -682,8 +682,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
-    [HttpPost]
-    public async Task<APIResponse> GetStoreGroupItemCode([FromBody] string inventoryId)
+    [HttpGet]
+    public async Task<APIResponse> GetStoreGroupItemCode([FromQuery] string Id)
     {
       APIResponse apiresponse = new APIResponse();
 
@@ -691,7 +691,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       if (user != null)
       {
-        apiresponse = await _iStore.GetStoreGroupItemCode(inventoryId);
+        apiresponse = await _iStore.GetStoreGroupItemCode(Id);
       }
 
       return apiresponse;

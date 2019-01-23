@@ -6,10 +6,10 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
 {
     public class StoreItemGroupModel
     {
-        public long GroupItemId { get; set; }
+        public long ItemGroupId { get; set; }
         public string InventoryId { get; set; }
-        public string GroupItemName { get; set; }
-        public string GroupCode { get; set; }
+        public string ItemGroupName { get; set; }
+        public string ItemGroupCode { get; set; }
         public string Description { get; set; }
     }
 }

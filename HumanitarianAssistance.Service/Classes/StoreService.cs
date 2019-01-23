@@ -2618,8 +2618,8 @@ namespace HumanitarianAssistance.Service.Classes
                     storeItemGroup.IsDeleted = false;
                     storeItemGroup.Description = storeGroupItem.Description;
                     storeItemGroup.InventoryId = storeGroupItem.InventoryId;
-                    storeItemGroup.ItemGroupCode = storeGroupItem.GroupCode;
-                    storeItemGroup.ItemGroupName = storeGroupItem.GroupItemName;
+                    storeItemGroup.ItemGroupCode = storeGroupItem.ItemGroupCode;
+                    storeItemGroup.ItemGroupName = storeGroupItem.ItemGroupName;
 
                     await _uow.GetDbContext().StoreItemGroups.AddAsync(storeItemGroup);
                     await _uow.GetDbContext().SaveChangesAsync();
@@ -2681,15 +2681,15 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 if (storeGroupItem != null)
                 {
-                    StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == storeGroupItem.GroupItemId);
+                    StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == storeGroupItem.ItemGroupId);
 
                     storeItemGroup.ModifiedById = userId;
                     storeItemGroup.ModifiedDate = DateTime.Now;
                     storeItemGroup.IsDeleted = false;
                     storeItemGroup.Description = storeGroupItem.Description;
                     storeItemGroup.InventoryId = storeGroupItem.InventoryId;
-                    storeItemGroup.ItemGroupCode = storeGroupItem.GroupCode;
-                    storeItemGroup.ItemGroupName = storeGroupItem.GroupItemName;
+                    storeItemGroup.ItemGroupCode = storeGroupItem.ItemGroupCode;
+                    storeItemGroup.ItemGroupName = storeGroupItem.ItemGroupName;
 
                     _uow.GetDbContext().StoreItemGroups.Update(storeItemGroup);
                     await _uow.GetDbContext().SaveChangesAsync();
