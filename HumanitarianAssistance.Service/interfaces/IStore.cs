@@ -84,5 +84,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetStoreGroupItemCode(string inventoryId);
         Task<APIResponse> EditStoreItemGroup(StoreItemGroupModel storeGroupItem, string userId);
         Task<APIResponse> GetStoreItemCode(long groupItemId);
+        Task<APIResponse> GetAllStoreItemGroups(string inventoryId);
     }
 }

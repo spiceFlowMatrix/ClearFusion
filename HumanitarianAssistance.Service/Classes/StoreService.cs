@@ -2743,7 +2743,36 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetAllStoreItemGroups(string inventoryId)
+        {
+            APIResponse response = new APIResponse();
 
+            try
+            {
+                List<StoreItemGroupModel> storeItemGroupList = new List<StoreItemGroupModel>();
 
+                if (inventoryId != null)
+                {
+                    storeItemGroupList = await _uow.GetDbContext().StoreItemGroups.Where(x=> x.IsDeleted== false && x.InventoryId== inventoryId).Select(x=> new StoreItemGroupModel {
+                        Description= x.Description,
+                        InventoryId= x.InventoryId,
+                        ItemGroupCode= x.ItemGroupCode,
+                        ItemGroupId= x.ItemGroupId,
+                        ItemGroupName= x.ItemGroupName
+                    }).ToListAsync();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+                response.data.storeItemGroupList = storeItemGroupList;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
     }
 }

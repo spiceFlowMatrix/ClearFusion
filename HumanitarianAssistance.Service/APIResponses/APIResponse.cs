@@ -265,6 +265,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<StatusAtTimeOfIssue> StatusAtTimeOfIssueList { get; set; }
         public List<ReceiptType> ReceiptTypeList { get; set; }
         public List<EmployeeMonthlyPayrollModelApproved> EmployeeMonthlyPayrollApprovedList { get; set; }
+        public List<StoreItemGroupModel> storeItemGroupList { get; set; }
 
 
         public int notificationIsReadCount { get; set; }

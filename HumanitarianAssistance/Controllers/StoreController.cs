@@ -728,20 +728,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
-    //[HttpPost]
-    //public async Task<APIResponse> GetAllStoreGroupItem(string Id)
-    //{
-    //  APIResponse apiresponse = new APIResponse();
+    [HttpPost]
+    public async Task<APIResponse> GetAllStoreItemGroups(string Id)
+    {
+      APIResponse apiresponse = new APIResponse();
 
-    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-    //  if (user != null)
-    //  {
-    //    apiresponse = await _iStore.GetStoreItemCode(Id);
-    //  }
+      if (user != null)
+      {
+        apiresponse = await _iStore.GetAllStoreItemGroups(Id);
+      }
 
-    //  return apiresponse;
-    //}
+      return apiresponse;
+    }
 
   }
 }
