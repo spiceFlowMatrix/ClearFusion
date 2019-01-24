@@ -37,9 +37,7 @@ namespace HumanitarianAssistance.Service
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
                     Scopes,
-                   //"sdd.shared@gmail.com",
-                   // "hamza@edgsolutions.net",
-                   Credential.EmailId,
+                   "sdd.shared@gmail.com",
                     CancellationToken.None,
                     new FileDataStore("Drive.Api.Auth.Store", true)).Result;
 

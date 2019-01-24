@@ -64,8 +64,7 @@
     <ProjectReference Include="..\HumanitarianAssistance.Service\HumanitarianAssistance.Service.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Documents\" />
-    <Folder Include="Proposal\" />
+    <Folder Include="Documents\Proposal\" />
     <Folder Include="UploadotherDoc\" />
   </ItemGroup>
   <ItemGroup>
