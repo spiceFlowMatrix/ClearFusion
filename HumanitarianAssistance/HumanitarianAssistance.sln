@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumanitarianAssistance.View
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumanitarianAssistance.Service", "..\HumanitarianAssistance.Service\HumanitarianAssistance.Service.csproj", "{42DDBBB7-7944-4F1D-AC7E-0907E1589477}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumanitarianAssistance.Common", "HumanitarianAssistance.Common\HumanitarianAssistance.Common.csproj", "{C71A0A54-7932-433D-971D-A4A7FBF67E8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumanitarianAssistance.Common", "..\HumanitarianAssistance.Common\HumanitarianAssistance.Common.csproj", "{39AA2D2C-A117-4D0F-9E1D-3F07D3658F6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{42DDBBB7-7944-4F1D-AC7E-0907E1589477}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42DDBBB7-7944-4F1D-AC7E-0907E1589477}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42DDBBB7-7944-4F1D-AC7E-0907E1589477}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C71A0A54-7932-433D-971D-A4A7FBF67E8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C71A0A54-7932-433D-971D-A4A7FBF67E8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C71A0A54-7932-433D-971D-A4A7FBF67E8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C71A0A54-7932-433D-971D-A4A7FBF67E8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AA2D2C-A117-4D0F-9E1D-3F07D3658F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AA2D2C-A117-4D0F-9E1D-3F07D3658F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AA2D2C-A117-4D0F-9E1D-3F07D3658F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AA2D2C-A117-4D0F-9E1D-3F07D3658F6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

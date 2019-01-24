@@ -26,8 +26,8 @@
   </ItemGroup>-->
 
   <ItemGroup>
+    <ProjectReference Include="..\HumanitarianAssistance.Common\HumanitarianAssistance.Common.csproj" />
     <ProjectReference Include="..\HumanitarianAssistance.Entities\HumanitarianAssistance.ViewModels.csproj" />
-    <ProjectReference Include="..\HumanitarianAssistance\HumanitarianAssistance.Common\HumanitarianAssistance.Common.csproj" />
   </ItemGroup>
 
 </Project>
