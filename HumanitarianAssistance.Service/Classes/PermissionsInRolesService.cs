@@ -195,7 +195,6 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> AddRoleWithPagePermissions(RolesWithPagePermissionsModel rolesWithPagePermissionsModel, string RoleId)
         {
             APIResponse response = new APIResponse();
-
             try
             {
                 if (rolesWithPagePermissionsModel !=null)
@@ -203,20 +202,35 @@ namespace HumanitarianAssistance.Service.Classes
                    List<RolePermissions> rolePermissionsList = new List<RolePermissions>();
 
                     foreach (ApplicationPagesModel item in rolesWithPagePermissionsModel.Permissions)
-                    {
-                        RolePermissions rolePermissions = new RolePermissions();
-                        rolePermissions.CanEdit = item.Edit;
-                        rolePermissions.CanView = item.View;
-                        rolePermissions.CreatedDate = DateTime.Now;
-                        rolePermissions.IsDeleted = false;
-                        rolePermissions.PageId = item.PageId;
-                        rolePermissions.RoleId = RoleId;
-                        rolePermissions.ModuleId = item.ModuleId;
-                        _uow.GetDbContext().RolePermissions.Add(rolePermissions);
-                        _uow.GetDbContext().SaveChanges();
-                        _uow.GetDbContext().Entry<RolePermissions>(rolePermissions).State = EntityState.Detached;
+                    { 
+                        if(item.Edit == true || item.View == true)
+                        {
+                            RolePermissions rolePermissions = new RolePermissions();
+                            rolePermissions.CanEdit = item.Edit;
+                            rolePermissions.CanView = item.View;
+                            rolePermissions.CreatedDate = DateTime.Now;
+                            rolePermissions.IsDeleted = false;
+                            rolePermissions.PageId = item.PageId;
+                            rolePermissions.RoleId = RoleId;
+                            rolePermissions.ModuleId = item.ModuleId;
+                            _uow.GetDbContext().RolePermissions.Add(rolePermissions);
+                            _uow.GetDbContext().SaveChanges();
+                            _uow.GetDbContext().Entry<RolePermissions>(rolePermissions).State = EntityState.Detached;
+                        }
+                        if(item.Approve == true || item.Reject == true)
+                        {
+                            ApproveRejectPermission rolePermission = new ApproveRejectPermission();
+                            rolePermission.Approve = item.Approve;
+                            rolePermission.Reject = item.Reject;
+                            rolePermission.CreatedDate = DateTime.UtcNow;
+                            rolePermission.IsDeleted = false;
+                            rolePermission.PageId = item.PageId;
+                            rolePermission.RoleId = RoleId;
+                            _uow.GetDbContext().ApproveRejectPermission.Add(rolePermission);
+                            _uow.GetDbContext().SaveChanges();
+                            _uow.GetDbContext().Entry<ApproveRejectPermission>(rolePermission).State = EntityState.Detached;
+                        }                        
                     }
-
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;
                 }
@@ -253,7 +267,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                    .Where(x => x.IsDeleted == false && x.RoleId == RoleId)
                                                                    .Select(x=> new RolePermissionViewModel {
                                                                        Edit= x.CanEdit,
-                                                                       View= x.CanView,
+                                                                       View= x.CanView,                                                                    
                                                                        CurrentPermissionId= x.CurrentPermissionId,
                                                                        IsGrant= x.IsGrant,
                                                                        ModuleId= x.ModuleId,
@@ -263,8 +277,30 @@ namespace HumanitarianAssistance.Service.Classes
                                                                        PageName= x.ApplicationPages.PageName
 
                                                                    }) .ToListAsync();
+                    List<ApproveRejectPermissionModel> approveRejectPermissionList = (from ur in _uow.GetDbContext().ApproveRejectPermission
+                                                                                      join at in _uow.GetDbContext().ApplicationPages on ur.PageId equals at.PageId
+                                                                                      where !ur.IsDeleted.Value && !at.IsDeleted.Value && ur.RoleId == RoleId
+                                                                                      select (new ApproveRejectPermissionModel
+                                                                                      {
+                                                                                          Approve = ur.Approve,
+                                                                                          Reject = ur.Reject,
+                                                                                          Id = ur.Id,
+                                                                                          PageId = ur.PageId,
+                                                                                          RoleId = RoleId,
+                                                                                          PageName = at.PageName 
+                                                                                      })).ToList();
+                                                                                     // await _uow.GetDbContext().ApproveRejectPermission
+                                                                                     //.Where(x => x.IsDeleted == false && x.RoleId == RoleId)
+                                                                                     // .Select(x => new ApproveRejectPermissionModel {
+                                                                                     // Approve = x.Approve,
+                                                                                     // Reject = x.Reject,
+                                                                                     // Id = x.Id,
+                                                                                     // PageId = x.PageId,
+                                                                                     // RoleId = x.RoleId
+                                                                                     // }).ToListAsync();
 
                     response.data.PermissionsInRole = rolePermissionsList;
+                    response.data.ApproveRejectPermissionsInRole = approveRejectPermissionList;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;
                 }
@@ -297,43 +333,77 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     //get all permissions that exists for the role
                     List<RolePermissions> rolePermissionsList = await _uow.GetDbContext().RolePermissions.Where(x=> x.IsDeleted== false && x.RoleId== rolesWithPagePermissionsModel.RoleId).ToListAsync();
-
                     List<RolePermissions> removedPermissions = rolePermissionsList.Where(x => !rolesWithPagePermissionsModel.Permissions.Select(y=> y.PageId).Contains(x.PageId.Value)).ToList();
-
+                    List<ApproveRejectPermission> approveRejectRolePermissionsList = await _uow.GetDbContext().ApproveRejectPermission.Where(x=> x.IsDeleted== false && x.RoleId== rolesWithPagePermissionsModel.RoleId).ToListAsync();
+                    List<ApproveRejectPermission> approveRejectRemovePermissions = approveRejectRolePermissionsList.Where(x => !rolesWithPagePermissionsModel.Permissions.Select(y=> y.PageId).Contains(x.PageId)).ToList();
                     removedPermissions.ForEach(x => x.IsDeleted = true);
+                    approveRejectRemovePermissions.ForEach(x => x.IsDeleted = true);
                     _uow.GetDbContext().RolePermissions.UpdateRange(removedPermissions);
+                    _uow.GetDbContext().ApproveRejectPermission.UpdateRange(approveRejectRemovePermissions);
                     _uow.GetDbContext().SaveChanges();
 
                     foreach (ApplicationPagesModel item in rolesWithPagePermissionsModel.Permissions)
                     {
-                        //get the previous permission set for the pageId if exists
-                        RolePermissions rolePermissions = rolePermissionsList.FirstOrDefault(x => x.PageId == item.PageId);
-
-                        //If permission for the page does not exist then initialize object
-                        rolePermissions = rolePermissions ?? new RolePermissions() ;
-
-                        rolePermissions.CanEdit = item.Edit;
-                        rolePermissions.CanView = item.View;
-                        rolePermissions.CreatedDate = rolePermissions.CreatedDate?? DateTime.Now;
-                        rolePermissions.IsDeleted = false;
-                        rolePermissions.PageId = item.PageId;
-                        rolePermissions.RoleId = rolesWithPagePermissionsModel.RoleId;
-                        rolePermissions.ModuleId = item.ModuleId;
-
-                        //save a new entry in the rolepermissions table
-                        if (rolePermissions.RolesPermissionId==0)
+                        if(item.View == true || item.Edit == true)
                         {
-                            _uow.GetDbContext().RolePermissions.Add(rolePermissions);
-                            _uow.GetDbContext().SaveChanges();
-                            _uow.GetDbContext().Entry<RolePermissions>(rolePermissions).State = EntityState.Detached;
+                            //get the previous permission set for the pageId if exists
+                            RolePermissions rolePermissions = rolePermissionsList.FirstOrDefault(x => x.PageId == item.PageId);
+
+                            //If permission for the page does not exist then initialize object
+                            rolePermissions = rolePermissions ?? new RolePermissions();
+
+                            rolePermissions.CanEdit = item.Edit;
+                            rolePermissions.CanView = item.View;
+                            rolePermissions.CreatedDate = rolePermissions.CreatedDate ?? DateTime.Now;
+                            rolePermissions.IsDeleted = false;
+                            rolePermissions.PageId = item.PageId;
+                            rolePermissions.RoleId = rolesWithPagePermissionsModel.RoleId;
+                            rolePermissions.ModuleId = item.ModuleId;
+
+                            //save a new entry in the rolepermissions table
+                            if (rolePermissions.RolesPermissionId == 0)
+                            {
+                                _uow.GetDbContext().RolePermissions.Add(rolePermissions);
+                                _uow.GetDbContext().SaveChanges();
+                                _uow.GetDbContext().Entry<RolePermissions>(rolePermissions).State = EntityState.Detached;
+                            }
+                            else//update existing permissions record for the page
+                            {
+                                rolePermissions.ModifiedDate = DateTime.Now;
+                                _uow.GetDbContext().RolePermissions.Update(rolePermissions);
+                                _uow.GetDbContext().SaveChanges();
+                                _uow.GetDbContext().Entry<RolePermissions>(rolePermissions).State = EntityState.Detached;
+                            }
                         }
-                        else//update existing permissions record for the page
+                        if(item.Approve == true || item.Reject == true)
                         {
-                            rolePermissions.ModifiedDate = DateTime.Now;
-                            _uow.GetDbContext().RolePermissions.Update(rolePermissions);
-                            _uow.GetDbContext().SaveChanges();
-                            _uow.GetDbContext().Entry<RolePermissions>(rolePermissions).State = EntityState.Detached;
+                            ApproveRejectPermission approveRejectRolePermissions = approveRejectRolePermissionsList.FirstOrDefault(x => x.PageId == item.PageId);
+
+                            //If permission for the page does not exist then initialize object
+                            approveRejectRolePermissions = approveRejectRolePermissions ?? new ApproveRejectPermission();
+                            approveRejectRolePermissions.Approve = item.Approve;
+                            approveRejectRolePermissions.Reject = item.Reject;
+                            approveRejectRolePermissions.CreatedDate = approveRejectRolePermissions.CreatedDate ?? DateTime.UtcNow;
+                            approveRejectRolePermissions.IsDeleted = false;
+                            approveRejectRolePermissions.PageId = item.PageId;
+                            approveRejectRolePermissions.RoleId = rolesWithPagePermissionsModel.RoleId;
+
+                            //save a new entry in the rolepermissions table
+                            if (approveRejectRolePermissions.Id == 0)
+                            {
+                                _uow.GetDbContext().ApproveRejectPermission.Add(approveRejectRolePermissions);
+                                _uow.GetDbContext().SaveChanges();
+                                _uow.GetDbContext().Entry<ApproveRejectPermission>(approveRejectRolePermissions).State = EntityState.Detached;
+                            }
+                            else//update existing permissions record for the page
+                            {
+                                approveRejectRolePermissions.ModifiedDate = DateTime.Now;
+                                _uow.GetDbContext().ApproveRejectPermission.Update(approveRejectRolePermissions);
+                                _uow.GetDbContext().SaveChanges();
+                                _uow.GetDbContext().Entry<ApproveRejectPermission>(approveRejectRolePermissions).State = EntityState.Detached;
+                            }
                         }
+                       
                     }
 
                     response.StatusCode = StaticResource.successStatusCode;
