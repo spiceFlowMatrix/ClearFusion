@@ -229,6 +229,7 @@ namespace HumanitarianAssistance.Controllers
           List<UserRolePermissionsModel> userRolePermissionsList = new List<UserRolePermissionsModel>();
 
           List<RolePermissionModel> RolePermissionModelList = new List<RolePermissionModel>();
+          List<ApproveRejectPermissionModel> ApproveRejectRolePermissionModelList = new List<ApproveRejectPermissionModel>();
 
           foreach (var role in roles)
           {
@@ -305,6 +306,82 @@ namespace HumanitarianAssistance.Controllers
             userRolePermissionsList.Add(userRolePermissions);
 
           }
+          foreach (var role in roles)
+          {
+            UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
+
+            //userClaims.Add(new Claim("Roles", role)); //imp
+
+            var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
+
+            //userRolePermissions.RoleName = role;
+            //userRolePermissions.RoleId = roleid.Id;
+
+            List<ApproveRejectPermission> approveRejectRolePermissionsList = _uow.GetDbContext().ApproveRejectPermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
+
+            if (approveRejectRolePermissionsList.Any())
+            {
+
+              //userRolePermissions.RolePagePermission = new List<RolePermissionModel>();
+
+              //foreach (RolePermissions rolePermissions in rolePermissionsList)
+              //{
+              //  RolePermissionModel rolePermissionModel = new RolePermissionModel();
+              //  rolePermissionModel.CanEdit = rolePermissions.CanEdit;
+              //  rolePermissionModel.CanView = rolePermissions.CanView;
+              //  rolePermissionModel.ModuleId = rolePermissions.ModuleId;
+              //  rolePermissionModel.PageId = rolePermissions.PageId;
+              //  rolePermissionModel.RolesPermissionId = rolePermissions.RolesPermissionId;
+              //  userRolePermissions.RolePagePermission.Add(rolePermissionModel);
+              //}
+
+              foreach (ApproveRejectPermission rolePermissions in approveRejectRolePermissionsList)
+              {
+                if (ApproveRejectRolePermissionModelList.Any())
+                {
+                  ApproveRejectPermissionModel rolePermissionModel = ApproveRejectRolePermissionModelList.FirstOrDefault(x => x.PageId == rolePermissions.PageId);
+
+                  if (rolePermissionModel == null)
+                  {
+                    ApproveRejectPermissionModel rolePermission = new ApproveRejectPermissionModel();
+                    rolePermission.Approve = rolePermissions.Approve;
+                    rolePermission.Id = rolePermissions.Id;
+                    rolePermission.PageId = rolePermissions.PageId;
+                    rolePermission.PageId = rolePermissions.PageId;
+                    rolePermission.Reject = rolePermissions.Reject;
+                    rolePermission.RoleId = rolePermissions.RoleId;
+                    ApproveRejectRolePermissionModelList.Add(rolePermission);
+                  }
+                  else
+                  {
+                    if (rolePermissionModel.Approve && !rolePermissionModel.Reject && rolePermissions.Reject)
+                    {
+                      rolePermissionModel.Reject = rolePermissions.Reject;
+                    }
+                    else if (!rolePermissionModel.Approve && !rolePermissionModel.Reject && rolePermissions.Reject)
+                    {
+                      rolePermissionModel.Approve = true;
+                      rolePermissionModel.Reject = true;
+                    }
+
+                  }
+                }
+                else
+                {
+                  ApproveRejectPermissionModel rolePermissionModel = new ApproveRejectPermissionModel();
+                  rolePermissionModel.Approve = rolePermissions.Approve;
+                  rolePermissionModel.Reject = rolePermissions.Reject;
+                  rolePermissionModel.PageId = rolePermissions.PageId;
+                  rolePermissionModel.Id = rolePermissions.Id;
+                  rolePermissionModel.RoleId = rolePermissions.RoleId;
+                  ApproveRejectRolePermissionModelList.Add(rolePermissionModel);
+                }
+              }
+            }
+
+            userRolePermissionsList.Add(userRolePermissions);
+
+          }
 
           //_ipermissions.GetPermissionsByRoleId()
 
@@ -330,6 +407,7 @@ namespace HumanitarianAssistance.Controllers
           response.data.Roles = roles.ToList();
           //response.data.UserRolePermissions = userRolePermissionsList;
           response.data.RolePermissionModelList = RolePermissionModelList;
+          response.data.ApproveRejectPermissionsInRole = ApproveRejectRolePermissionModelList;
 
 
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
