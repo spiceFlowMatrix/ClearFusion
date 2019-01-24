@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190122134821_removeforeignkey")]
+    partial class removeforeignkey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7555,41 +7557,6 @@ namespace DataAccess.Migrations
                     );
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Store.StoreItemGroup", b =>
-                {
-                    b.Property<long>("ItemGroupId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("InventoryId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ItemGroupCode");
-
-                    b.Property<string>("ItemGroupName");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("ItemGroupId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("InventoryId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("StoreItemGroups");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Store.StoreItemPurchase", b =>
                 {
                     b.Property<string>("PurchaseId")
@@ -7861,8 +7828,6 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("ItemCode");
 
-                    b.Property<long?>("ItemGroupId");
-
                     b.Property<string>("ItemInventory");
 
                     b.Property<string>("ItemName");
@@ -7878,8 +7843,6 @@ namespace DataAccess.Migrations
                     b.HasKey("ItemId");
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("ItemGroupId");
 
                     b.HasIndex("ItemInventory");
 
@@ -8153,8 +8116,6 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("OfficeId");
 
-                    b.Property<long?>("ProjectId");
-
                     b.Property<string>("ReferenceNo")
                         .HasMaxLength(20);
 
@@ -8181,8 +8142,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("OfficeId");
-
-                    b.HasIndex("ProjectId");
 
                     b.HasIndex("VoucherNo")
                         .IsUnique();
@@ -11106,21 +11065,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Store.StoreItemGroup", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.StoreInventory", "StoreInventory")
-                        .WithMany()
-                        .HasForeignKey("InventoryId");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Store.StoreItemPurchase", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -11234,10 +11178,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("DataAccess.DbEntities.Store.StoreItemGroup", "StoreItemGroup")
-                        .WithMany()
-                        .HasForeignKey("ItemGroupId");
-
                     b.HasOne("DataAccess.DbEntities.StoreInventory", "Inventory")
                         .WithMany("InventoryItems")
                         .HasForeignKey("ItemInventory");
@@ -11345,10 +11285,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetails")
                         .WithMany()
                         .HasForeignKey("OfficeId");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
 
                     b.HasOne("DataAccess.DbEntities.VoucherType", "VoucherTypes")
                         .WithMany()

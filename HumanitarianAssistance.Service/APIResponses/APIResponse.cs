@@ -92,6 +92,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public string StoreSourceCode { get; set; }
         public bool isSalaryHeadSaved { get; set; }
         public bool isPayrollHeadSaved { get; set; }
+        public string ItemGroupCode { get; set; }
         public VoucherTransactionModel VoucherTransactionModel { get; set; }
         public List<VoucherTransactionModel> VoucherTransactionModelList { get; set; }
         public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
@@ -236,7 +237,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleModel> InterviewScheduleGeneralAdminlist { get; set; }
         public IList<InterviewScheduleModel> InterviewScheduleFieldOfficelist { get; set; }
         public IList<RolePermissionViewModel> PermissionsInRole { get; set; }
-
+        public IList<ApproveRejectPermissionModel> ApproveRejectPermissionsInRole { get; set; }
         public IList<EmployeeMonthlyPayrollModel> EmployeeMonthlyPayrolllist { get; set; }
 
         public IList<HolidayDetails> HolidayDetailsList { get; set; }
@@ -264,6 +265,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<StatusAtTimeOfIssue> StatusAtTimeOfIssueList { get; set; }
         public List<ReceiptType> ReceiptTypeList { get; set; }
         public List<EmployeeMonthlyPayrollModelApproved> EmployeeMonthlyPayrollApprovedList { get; set; }
+        public List<StoreItemGroupModel> storeItemGroupList { get; set; }
 
 
         public int notificationIsReadCount { get; set; }
