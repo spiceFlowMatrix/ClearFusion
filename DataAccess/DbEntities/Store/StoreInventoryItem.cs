@@ -25,6 +25,9 @@ namespace DataAccess.DbEntities
         public string ItemName { get; set; }
         public string ItemCode { get; set; }
         public string Description { get; set; }
+        public long? ItemGroupId { get; set; }
+        [ForeignKey("ItemGroupId")]
+        public StoreItemGroup StoreItemGroup { get; set; }
 
         //public long Voucher { get; set; }
         public int ItemType { get; set; } // This must be used by the front-end to determine the UI to present for the item type

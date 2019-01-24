@@ -130,9 +130,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    public async Task<APIResponse> GetAllInventoryItems(string ItemInventory)
+    public async Task<APIResponse> GetAllInventoryItems(long Id)
     {
-      APIResponse apiresponse = await _iStore.GetAllInventoryItems(ItemInventory);
+      APIResponse apiresponse = await _iStore.GetAllInventoryItems(Id);
       return apiresponse;
     }
 
@@ -482,9 +482,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    public async Task<APIResponse> GetInventoryItemCode([FromQuery] string Id, int TypeId)
+    public async Task<APIResponse> GetInventoryItemCode([FromQuery] long Id)
     {
-      APIResponse apiresponse = await _iStore.GetInventoryItemCode(Id, TypeId);
+      APIResponse apiresponse = await _iStore.GetInventoryItemCode(Id);
       return apiresponse;
     }
 
@@ -667,6 +667,81 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> AddStoreItemGroup([FromBody] StoreItemGroupModel storeGroupItem)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.AddStoreItemGroup(storeGroupItem, user.Id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpGet]
+    public async Task<APIResponse> GetStoreGroupItemCode([FromQuery] string Id)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.GetStoreGroupItemCode(Id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditStoreItemGroup([FromBody] StoreItemGroupModel storeGroupItem)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.EditStoreItemGroup(storeGroupItem, user.Id);
+      }
+
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> GetStoreItemCode([FromQuery] long Id)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.GetStoreItemCode(Id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpGet]
+    public async Task<APIResponse> GetAllStoreItemGroups([FromQuery]string Id)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        apiresponse = await _iStore.GetAllStoreItemGroups(Id);
+      }
+
+      return apiresponse;
+    }
 
   }
 }

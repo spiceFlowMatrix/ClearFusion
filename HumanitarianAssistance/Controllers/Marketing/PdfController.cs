@@ -73,7 +73,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [BindProperty]
     public string TxtHeight { get; set; }
-    public PdfController(IUnitOfWork uow, UserManager<AppUser> userManager, IJobDetailsService iJobDetailsService,  IHostingEnvironment environment)
+    public PdfController(IUnitOfWork uow, UserManager<AppUser> userManager, IJobDetailsService iJobDetailsService, IHostingEnvironment environment)
     {
       this._uow = uow;
       _hostingEnvironment = environment;
