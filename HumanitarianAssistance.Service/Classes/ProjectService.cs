@@ -2081,11 +2081,15 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Proposal/");
+
+
+                //File.WriteAllBytes(@"Documents/" + filename, filepath);
+
+                //string folderPath =  @"Documents/Proposal/";
                 var EmailID = string.Empty;
                 string FolderName = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectCode).FirstOrDefault();
                 //create folder name 
-                string subPath = System.IO.Path.Combine(folderPath, FolderName);
+                string subPath = System.IO.Path.Combine(@"Documents/Proposal/", FolderName);
                 if (!Directory.Exists(subPath))
                     Directory.CreateDirectory(subPath);
 
@@ -2095,13 +2099,15 @@ namespace HumanitarianAssistance.Service.Classes
                 var stream = new FileStream(fullPath, FileMode.Create);
                 stream.Flush();
                 stream.Close();
-                model = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == Projectid && x.IsDeleted == false).FirstOrDefault();               
+                model = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == Projectid && x.IsDeleted == false).FirstOrDefault();                
+                string filepathsave = System.IO.Path.Combine(@"Proposal/", FolderName);
+                filepathsave = filepathsave + "/" + filename;
                 if (model == null)
                 {
                     model = new ProjectProposalDetail();
                     model.FolderName = subPath;
                     model.ProposalFileName = filename;
-                    model.ProposalWebLink = fullPath;
+                    model.ProposalWebLink = filepathsave;
                     model.ProjectId = Projectid;
                     model.IsDeleted = false;
                     model.CreatedById = userid;
@@ -2113,7 +2119,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     model.FolderName = subPath;
                     model.ProposalFileName = filename;
-                    model.ProposalWebLink = fullPath;
+                    model.ProposalWebLink = filepathsave;
                     model.ProjectId = Projectid;
                     model.CreatedDate = DateTime.Now;
                     model.IsDeleted = false;
@@ -2196,16 +2202,18 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 string fullPath = string.Empty;
-                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Proposal/");
-                long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_').Length;
-                string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[count - 2];
-                string DocType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[count - 1];
-                string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
+                //string folderPath = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/Proposal/");                
+                long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
+                string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
+                string DocType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
+                string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
                 string ext = System.IO.Path.GetExtension(fileNames).ToLower();
                 long _ProjectId = long.Parse(ProjectId);
                 string FolderName = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == _ProjectId && !x.IsDeleted.Value).Select(x => x.ProjectCode).FirstOrDefault();
                 //create folder name 
-                string subPath = System.IO.Path.Combine(folderPath, FolderName);
+                string subPath = System.IO.Path.Combine(@"Documents/Proposal/", FolderName);
+                if (!Directory.Exists(subPath))
+                    Directory.CreateDirectory(subPath);
                 //delete file if already exist
                 DirectoryInfo di = new DirectoryInfo(subPath);
                 FileInfo[] fi = di.GetFiles();
@@ -2214,52 +2222,49 @@ namespace HumanitarianAssistance.Service.Classes
                 f.Delete();
                 if (ext != ".jpeg" && ext != ".png")
                 {
-                    string webRootPath = _hostingEnvironment.WebRootPath;
-                    string newPath = Path.Combine(webRootPath, subPath);
-                    if (!Directory.Exists(newPath))
-                    {
-                        Directory.CreateDirectory(newPath);
-                    }                   
-                    fullPath = Path.Combine(newPath, fileNames);
 
-                    
+                     fullPath = subPath + "/" + fileNames;
+
+
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
                         file.CopyTo(stream);
                         stream.Flush();
                         stream.Close();
                     }
+                    string filepathsave = System.IO.Path.Combine(@"Proposal/", FolderName);
+                    filepathsave = filepathsave + "/" + fileNames;
                     var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == _ProjectId && x.IsDeleted == false).FirstOrDefault();
                     if (proposaldetails == null)
                     {
                         if (DocType == "Proposal")
                         {
                             proposaldetails.ProposalFileName = fileNames;
-                            proposaldetails.ProposalWebLink = fullPath;
+                            proposaldetails.ProposalWebLink = filepathsave;
                             proposaldetails.ProposalExtType = ext;
                         }
                         if (DocType == "EOI")
                         {
                             proposaldetails.EDIFileName = fileNames;
-                            proposaldetails.EDIFileWebLink = fullPath;
+                            proposaldetails.EDIFileWebLink = filepathsave;
                             proposaldetails.EDIFileExtType = ext;
                         }
                         else if (DocType == "BUDGET")
                         {
                             proposaldetails.BudgetFileName = fileNames;
-                            proposaldetails.BudgetFileWebLink = fullPath;
+                            proposaldetails.BudgetFileWebLink = filepathsave;
                             proposaldetails.BudgetFileExtType = ext;
                         }
                         else if (DocType == "CONCEPT")
                         {
                             proposaldetails.ConceptFileName = fileNames;
-                            proposaldetails.ConceptFileWebLink = fullPath;
+                            proposaldetails.ConceptFileWebLink = filepathsave;
                             proposaldetails.ConceptFileExtType = ext;
                         }
                         else if (DocType == "PRESENTATION")
                         {
                             proposaldetails.PresentationFileName = fileNames;
-                            proposaldetails.PresentationFileWebLink = fullPath;
+                            proposaldetails.PresentationFileWebLink = filepathsave;
                             proposaldetails.PresentationExtType = ext;
                         }
                         proposaldetails.ProjectId = _ProjectId;
@@ -2272,32 +2277,32 @@ namespace HumanitarianAssistance.Service.Classes
                         if (DocType == "Proposal")
                         {
                             proposaldetails.ProposalFileName = fileNames;
-                            proposaldetails.ProposalWebLink = fullPath;
+                            proposaldetails.ProposalWebLink = filepathsave;
                             proposaldetails.ProposalExtType = ext;
 
                         }
                         if (DocType == "EOI")
                         {
                             proposaldetails.EDIFileName = fileNames;
-                            proposaldetails.EDIFileWebLink = fullPath;
+                            proposaldetails.EDIFileWebLink = filepathsave;
                             proposaldetails.EDIFileExtType = ext;
                         }
                         else if (DocType == "BUDGET")
                         {
                             proposaldetails.BudgetFileName = fileNames;
-                            proposaldetails.BudgetFileWebLink = fullPath;
+                            proposaldetails.BudgetFileWebLink = filepathsave;
                             proposaldetails.BudgetFileExtType = ext;
                         }
                         else if (DocType == "CONCEPT")
                         {
                             proposaldetails.ConceptFileName = fileNames;
-                            proposaldetails.ConceptFileWebLink = fullPath;
+                            proposaldetails.ConceptFileWebLink = filepathsave;
                             proposaldetails.ConceptFileExtType = ext;
                         }
                         else if (DocType == "PRESENTATION")
                         {
                             proposaldetails.PresentationFileName = fileNames;
-                            proposaldetails.PresentationFileWebLink = fullPath;
+                            proposaldetails.PresentationFileWebLink = filepathsave;
                             proposaldetails.PresentationExtType = ext;
                         }
                         proposaldetails.ProjectId = _ProjectId;
