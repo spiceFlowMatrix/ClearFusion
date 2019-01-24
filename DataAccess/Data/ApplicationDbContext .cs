@@ -149,6 +149,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<PurchaseGenerator> PurchaseGenerators { get; set; }
         public DbSet<MotorMaintenance> MotorMaintenances { get; set; }
         public DbSet<MotorSparePart> MotorSpareParts { get; set; }
+        public DbSet<StoreItemGroup> StoreItemGroups { get; set; }
         //
 
         public DbSet<EmployeePayrollForMonth> EmployeePayrollForMonth { get; set; }

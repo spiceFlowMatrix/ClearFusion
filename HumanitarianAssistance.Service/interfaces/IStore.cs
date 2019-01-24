@@ -21,7 +21,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddInventoryItems(StoreInventoryItemModel model);
         Task<APIResponse> EditInventoryItems(StoreInventoryItemModel model);
         Task<APIResponse> DeleteInventoryItems(StoreInventoryItemModel model);
-        Task<APIResponse> GetAllInventoryItems(string ItemInventory);
+        Task<APIResponse> GetAllInventoryItems(long Id);
 
         Task<APIResponse> AddInventoryItemsType(InventoryItemTypeModel model);
         Task<APIResponse> EditInventoryItemsType(InventoryItemTypeModel model);
@@ -67,7 +67,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllReceiptType();
         Task<APIResponse> GetAllStatusAtTimeOfIssue();
         Task<APIResponse> GetInventoryCode(int Id);
-        Task<APIResponse> GetInventoryItemCode(string InventoryId, int TypeId);
+        Task<APIResponse> GetInventoryItemCode(long Id);
         Task<APIResponse> GetAllStoreSourceType();
         Task<APIResponse> GetAllStoreSourceCode(int? typeId);
         Task<APIResponse> AddStoreSourceCode(StoreSourceCodeDetailModel storeSourceCodeDetailModel, string userId);
@@ -80,5 +80,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeletePaymentTypes(int PaymentId, string UserId);
         Task<APIResponse> VerifyPurchase(ItemPurchaseModel model);
         Task<APIResponse> UnverifyPurchase(ItemPurchaseModel model);
+        Task<APIResponse> AddStoreItemGroup(StoreItemGroupModel storeGroupItem, string userId);
+        Task<APIResponse> GetStoreGroupItemCode(string inventoryId);
+        Task<APIResponse> EditStoreItemGroup(StoreItemGroupModel storeGroupItem, string userId);
+        Task<APIResponse> GetStoreItemCode(long groupItemId);
+        Task<APIResponse> GetAllStoreItemGroups(string inventoryId);
     }
 }
