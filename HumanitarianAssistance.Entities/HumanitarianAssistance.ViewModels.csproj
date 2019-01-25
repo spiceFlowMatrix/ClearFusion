@@ -5,9 +5,6 @@
     <ApplicationIcon />
     <StartupObject />
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HumanitarianAssistance\HumanitarianAssistance.Common\HumanitarianAssistance.Common.csproj" />
-  </ItemGroup>
   <!--<ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />

@@ -62,7 +62,6 @@
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\HumanitarianAssistance.Entities\HumanitarianAssistance.ViewModels.csproj" />
     <ProjectReference Include="..\HumanitarianAssistance.Service\HumanitarianAssistance.Service.csproj" />
-    <ProjectReference Include="HumanitarianAssistance.Common\HumanitarianAssistance.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Documents\Proposal\" />
