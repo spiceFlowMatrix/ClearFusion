@@ -46,7 +46,7 @@ namespace HumanitarianAssistance
 
     
       //phase 2
-      //.UseUrls("http://*:5004");        // 1102  backend-> 1102 , frontend -> 1101   
+      .UseUrls("http://*:5004");        // 1102  backend-> 1102 , frontend -> 1101   
 
   }
 }
