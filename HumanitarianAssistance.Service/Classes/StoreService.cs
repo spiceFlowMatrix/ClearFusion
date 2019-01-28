@@ -252,30 +252,30 @@ namespace HumanitarianAssistance.Service.Classes
 
                     if (Id == (int)InventoryMasterType.Consumables)
                     {
-                        response.data.InventoryCode = "C" + String.Format("{0:D4}", ++InventoryNumber);
+                        response.data.InventoryCode = "C" + String.Format("{0:D2}", ++InventoryNumber);
                     }
                     else if (Id == (int)InventoryMasterType.Expendables)
                     {
-                        response.data.InventoryCode = "E" + String.Format("{0:D4}", ++InventoryNumber);
+                        response.data.InventoryCode = "E" + String.Format("{0:D2}", ++InventoryNumber);
                     }
                     else
                     {
-                        response.data.InventoryCode = "N" + String.Format("{0:D4}", ++InventoryNumber);
+                        response.data.InventoryCode = "N" + String.Format("{0:D2}", ++InventoryNumber);
                     }
                 }
                 else
                 {
                     if (Id == (int)InventoryMasterType.Consumables)
                     {
-                        response.data.InventoryCode = "C" + String.Format("{0:D4}", 1);
+                        response.data.InventoryCode = "C" + String.Format("{0:D2}", 1);
                     }
                     else if (Id == (int)InventoryMasterType.Expendables)
                     {
-                        response.data.InventoryCode = "E" + String.Format("{0:D4}", 1);
+                        response.data.InventoryCode = "E" + String.Format("{0:D2}", 1);
                     }
                     else
                     {
-                        response.data.InventoryCode = "N" + String.Format("{0:D4}", 1);
+                        response.data.InventoryCode = "N" + String.Format("{0:D2}", 1);
                     }
                 }
 
@@ -309,14 +309,14 @@ namespace HumanitarianAssistance.Service.Classes
                                                                              .FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
                     if (storeItemGroup != null)
                     {
-                        long count = Convert.ToInt64(storeItemGroup.ItemGroupCode.Substring(5));
-                        ItemGroupCode = storeItemGroup.StoreInventory.InventoryCode + String.Format("{0:D4}", ++count);
+                        long count = Convert.ToInt64(storeItemGroup.ItemGroupCode.Substring(4));
+                        ItemGroupCode = storeItemGroup.StoreInventory.InventoryCode+"-" + String.Format("{0:D2}", ++count);
                     }
                     else
                     {
                         StoreInventory storeInventory = await _uow.GetDbContext().StoreInventories.FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == inventoryId);
 
-                        ItemGroupCode = storeInventory.InventoryCode + String.Format("{0:D4}", 1);
+                        ItemGroupCode = storeInventory.InventoryCode + "-" + String.Format("{0:D2}", 1);
                     }
                 }
 
@@ -604,13 +604,13 @@ namespace HumanitarianAssistance.Service.Classes
 
                     if (storeInventoryItem != null)
                     {
-                        int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(10));
-                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D4}", ++count);
+                        int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(7));
+                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + "-" + String.Format("{0:D2}", ++count);
                     }
                     else
                     {
                         StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
-                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D4}", 1);
+                        InventoryItemCode = storeItemGroup.ItemGroupCode + "-" + String.Format("{0:D2}", 1);
                     }
                 }
 
@@ -640,12 +640,12 @@ namespace HumanitarianAssistance.Service.Classes
                     if (storeInventoryItem != null)
                     {
                         int count = Convert.ToInt32(storeInventoryItem.ItemCode.Substring(10));
-                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D4}", ++count);
+                        InventoryItemCode = storeInventoryItem.StoreItemGroup.ItemGroupCode + String.Format("{0:D2}", ++count);
                     }
                     else
                     {
                         StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ItemGroupId == groupItemId);
-                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D4}", 1);
+                        InventoryItemCode = storeItemGroup.ItemGroupCode + String.Format("{0:D2}", 1);
                     }
                 }
 
