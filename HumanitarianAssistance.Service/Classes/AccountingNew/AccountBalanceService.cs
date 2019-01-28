@@ -374,6 +374,11 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                                                                && x.Date.ToShortDateString() == onDate.ToShortDateString());
             var ratesList = await ratesQuery.ToListAsync();
 
+            if (!ratesList.Any())
+            {
+                throw new Exception("Exchange Rate Not Defined On Selected Comparision Date");
+            }
+
             List<VoucherTransactions> outputTransactions = new List<VoucherTransactions>();
             
             foreach (var transaction in transactions)
@@ -574,7 +579,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                                             exchangeGainLossFilterModel.ProjectIdList
                                                );
 
-                    if (originalBalance.StatusCode == 200 && originalBalance.StatusCode == 200)
+                    if (originalBalance.StatusCode == 200 && currentBalance.StatusCode == 200)
                     {
                         foreach (var balance in originalBalance.data.AccountBalances)
                         {
@@ -598,7 +603,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     else
                     {
                         response.StatusCode = StaticResource.failStatusCode;
-                        response.Message = originalBalance.Message;
+                        response.Message = originalBalance.StatusCode != 200 ? originalBalance.Message : currentBalance.Message;
                     }
 
                 }
