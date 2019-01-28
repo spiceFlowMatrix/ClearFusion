@@ -904,16 +904,46 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> GetAllProjectFilterList(ProjectFilterModel projectFilterModel)
         {
             APIResponse response = new APIResponse();
+            string projectCodeValue = null;
+            string projectIdValue = null;
+            string descriptionValue = null;
+            string projectNameValue = null;
+
+            if (!string.IsNullOrEmpty(projectFilterModel.FilterValue))
+            {
+                projectCodeValue = projectFilterModel.ProjectCodeFlag ? projectFilterModel.FilterValue.ToLower().Trim() : null;
+                projectIdValue = projectFilterModel.ProjectIdFlag ? projectFilterModel.FilterValue.ToLower().Trim() : null;
+                descriptionValue = projectFilterModel.DescriptionFlag ? projectFilterModel.FilterValue.ToLower().Trim() : null;
+                projectNameValue = projectFilterModel.ProjectNameFlag ? projectFilterModel.FilterValue.ToLower().Trim() : null;
+
+            }
+
             try
             {
-                int totalCount = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
-
+               
+                int totalCount = await _uow.GetDbContext().ProjectDetail
+                                       .Where(v => v.IsDeleted == false &&
+                                               !string.IsNullOrEmpty(projectFilterModel.FilterValue) ? (
+                                               v.ProjectId.ToString().Trim().Contains(projectIdValue) ||
+                                               v.ProjectCode.Trim().ToLower().Contains(projectCodeValue) ||
+                                               v.ProjectDescription.Trim().ToLower().Contains(descriptionValue) ||
+                                               v.ProjectName.Trim().ToLower().Contains(projectNameValue)
+                                               ) : true
+                                       )
+                                      .AsNoTracking()
+                                      .CountAsync();
 
                 var ProjectList = await _uow.GetDbContext().ProjectDetail
-                                          .Where(x => !x.IsDeleted.Value)
-                                          .OrderByDescending(x => x.ProjectId)
-                                          .Skip(projectFilterModel.pageSize.Value * projectFilterModel.pageIndex.Value)
-                                          .Take(projectFilterModel.pageSize.Value)
+
+                                      .Where(v => v.IsDeleted == false &&
+                                                 !string.IsNullOrEmpty(projectFilterModel.FilterValue) ? (
+                                                 v.ProjectId.ToString().Trim().Contains(projectIdValue) ||
+                                                 v.ProjectCode.Trim().ToLower().Contains(projectCodeValue) ||
+                                                 v.ProjectDescription.Trim().ToLower().Contains(descriptionValue) ||
+                                                 v.ProjectName.Trim().ToLower().Contains(projectNameValue)
+                                                   ) : true
+                                          )
+                                          .OrderByDescending(x => x.ProjectId)                                          
                                           .Select(x => new ProjectDetailNewModel
                                           {
                                               ProjectId = x.ProjectId,
@@ -922,14 +952,12 @@ namespace HumanitarianAssistance.Service.Classes
                                               ProjectDescription = x.ProjectDescription,
                                               IsWin = _uow.GetDbContext().WinProjectDetails.Where(y => y.ProjectId == x.ProjectId).Select(y => y.IsWin).FirstOrDefault(),
                                               IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
-                                              ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
-                                              //? "Data Entry"
-                                              // : x.ProjectPhaseDetailsId == (long)ProjectPhaseType.DataEntryPhase
-                                              //   ? ""
-                                              // : "",
-
+                                              ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",                                             
                                               TotalDaysinHours = x.EndDate == null ? (Convert.ToString(Math.Round(DateTime.Now.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + DateTime.Now.Subtract(x.StartDate.Value).Minutes)) : (Convert.ToString(Math.Round(x.EndDate.Value.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + x.EndDate.Value.Subtract(x.StartDate.Value).Minutes))
-                                          }).ToListAsync();
+                                          })
+                                          .Skip(projectFilterModel.pageSize.Value * projectFilterModel.pageIndex.Value)
+                                          .Take(projectFilterModel.pageSize.Value)
+                                          .ToListAsync();
                 response.data.ProjectDetailModel = ProjectList;
                 response.data.TotalCount = totalCount;
 
@@ -2099,7 +2127,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var stream = new FileStream(fullPath, FileMode.Create);
                 stream.Flush();
                 stream.Close();
-                model = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == Projectid && x.IsDeleted == false).FirstOrDefault();                
+                model = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == Projectid && x.IsDeleted == false).FirstOrDefault();
                 string filepathsave = System.IO.Path.Combine(@"Proposal/", FolderName);
                 filepathsave = filepathsave + "/" + filename;
                 if (model == null)
@@ -2218,12 +2246,12 @@ namespace HumanitarianAssistance.Service.Classes
                 DirectoryInfo di = new DirectoryInfo(subPath);
                 FileInfo[] fi = di.GetFiles();
                 FileInfo f = fi.Where(p => p.Name == fileNames).FirstOrDefault();
-                if(f!=null)
-                f.Delete();
+                if (f != null)
+                    f.Delete();
                 if (ext != ".jpeg" && ext != ".png")
                 {
 
-                     fullPath = subPath + "/" + fileNames;
+                    fullPath = subPath + "/" + fileNames;
 
 
                     using (var stream = new FileStream(fullPath, FileMode.Create))
