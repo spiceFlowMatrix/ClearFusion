@@ -533,7 +533,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         {
                             VoucherTransactions transaction = editTransactionList.FirstOrDefault(x => x.TransactionId == voucherTransactions.TransactionId);
 
-                            if (transaction != null) {
+                            if (transaction != null)
+                            {
                                 if (voucherTransactions.IsDeleted == false)
                                 {
                                     transaction.IsDeleted = false;
@@ -599,6 +600,42 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        /// <summary>
+        /// Verify Voucher and we will consider only verified vouchers for transactions
+        /// </summary>
+        /// <param name="voucherNo"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> VerifyVoucher(long voucherNo, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var voucherDetail = await _uow.VoucherDetailRepository.FindAsync(x => x.VoucherNo == voucherNo);
+                if (voucherDetail != null)
+                {
+                    voucherDetail.IsVoucherVerified = !voucherDetail.IsVoucherVerified;
+                    voucherDetail.ModifiedById = userId;
+                    voucherDetail.ModifiedDate = DateTime.Now;
+
+                    await _uow.VoucherDetailRepository.UpdateAsyn(voucherDetail);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
 
 
