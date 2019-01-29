@@ -230,6 +230,7 @@ namespace HumanitarianAssistance.Controllers
 
           List<RolePermissionModel> RolePermissionModelList = new List<RolePermissionModel>();
           List<ApproveRejectPermissionModel> ApproveRejectRolePermissionModelList = new List<ApproveRejectPermissionModel>();
+          List<AgreeDisagreePermissionModel> AgreeDisagreeRolePermissionModelList = new List<AgreeDisagreePermissionModel>();
 
           foreach (var role in roles)
           {
@@ -382,7 +383,82 @@ namespace HumanitarianAssistance.Controllers
             userRolePermissionsList.Add(userRolePermissions);
 
           }
+          foreach (var role in roles)
+          {
+            UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
 
+            //userClaims.Add(new Claim("Roles", role)); //imp
+
+            var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
+
+            //userRolePermissions.RoleName = role;
+            //userRolePermissions.RoleId = roleid.Id;
+
+            List<AgreeDisagreePermission> agreeDisagreeRolePermissionsList = _uow.GetDbContext().AgreeDisagreePermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
+
+            if (agreeDisagreeRolePermissionsList.Any())
+            {
+
+              //userRolePermissions.RolePagePermission = new List<RolePermissionModel>();
+
+              //foreach (RolePermissions rolePermissions in rolePermissionsList)
+              //{
+              //  RolePermissionModel rolePermissionModel = new RolePermissionModel();
+              //  rolePermissionModel.CanEdit = rolePermissions.CanEdit;
+              //  rolePermissionModel.CanView = rolePermissions.CanView;
+              //  rolePermissionModel.ModuleId = rolePermissions.ModuleId;
+              //  rolePermissionModel.PageId = rolePermissions.PageId;
+              //  rolePermissionModel.RolesPermissionId = rolePermissions.RolesPermissionId;
+              //  userRolePermissions.RolePagePermission.Add(rolePermissionModel);
+              //}
+
+              foreach (AgreeDisagreePermission rolePermissions in agreeDisagreeRolePermissionsList)
+              {
+                if (AgreeDisagreeRolePermissionModelList.Any())
+                {
+                  AgreeDisagreePermissionModel rolePermissionModel = AgreeDisagreeRolePermissionModelList.FirstOrDefault(x => x.PageId == rolePermissions.PageId);
+
+                  if (rolePermissionModel == null)
+                  {
+                    AgreeDisagreePermissionModel rolePermission = new AgreeDisagreePermissionModel();
+                    rolePermission.Agree = rolePermissions.Agree;
+                    rolePermission.Id = rolePermissions.Id;
+                    rolePermission.PageId = rolePermissions.PageId;
+                    rolePermission.PageId = rolePermissions.PageId;
+                    rolePermission.Disagree = rolePermissions.Disagree;
+                    rolePermission.RoleId = rolePermissions.RoleId;
+                    AgreeDisagreeRolePermissionModelList.Add(rolePermission);
+                  }
+                  else
+                  {
+                    if (rolePermissionModel.Agree && !rolePermissionModel.Disagree && rolePermissions.Disagree)
+                    {
+                      rolePermissionModel.Disagree = rolePermissions.Disagree;
+                    }
+                    else if (!rolePermissionModel.Agree && !rolePermissionModel.Disagree && rolePermissions.Disagree)
+                    {
+                      rolePermissionModel.Agree = true;
+                      rolePermissionModel.Disagree = true;
+                    }
+
+                  }
+                }
+                else
+                {
+                  AgreeDisagreePermissionModel rolePermissionModel = new AgreeDisagreePermissionModel();
+                  rolePermissionModel.Agree = rolePermissions.Agree;
+                  rolePermissionModel.Disagree = rolePermissions.Disagree;
+                  rolePermissionModel.PageId = rolePermissions.PageId;
+                  rolePermissionModel.Id = rolePermissions.Id;
+                  rolePermissionModel.RoleId = rolePermissions.RoleId;
+                  AgreeDisagreeRolePermissionModelList.Add(rolePermissionModel);
+                }
+              }
+            }
+
+            userRolePermissionsList.Add(userRolePermissions);
+
+          }
           //_ipermissions.GetPermissionsByRoleId()
 
           string k = _configuration["JwtKey"];
@@ -408,6 +484,7 @@ namespace HumanitarianAssistance.Controllers
           //response.data.UserRolePermissions = userRolePermissionsList;
           response.data.RolePermissionModelList = RolePermissionModelList;
           response.data.ApproveRejectPermissionsInRole = ApproveRejectRolePermissionModelList;
+          response.data.AgreeDisagreePermissionsInRole = AgreeDisagreeRolePermissionModelList;
 
 
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
