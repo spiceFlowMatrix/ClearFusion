@@ -191,6 +191,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<CEAssumptionDetail> CEAssumptionDetail { get; set; }
         public DbSet<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public DbSet<ApproveRejectPermission> ApproveRejectPermission { get; set; }
+        public DbSet<AgreeDisagreePermission> AgreeDisagreePermission { get; set; }
 
         public DbSet<Errorlog> errorlog { get; set; }
 
