@@ -44,5 +44,6 @@ namespace DataAccess.DbEntities
 		public string VoucherMode { get; set; }
 		public string OfficeCode { get; set; }
         public bool IsExchangeGainLossVoucher { get; set; } = false;
-	}
+        public bool IsVoucherVerified { get; set; } = false;
+    }
 }

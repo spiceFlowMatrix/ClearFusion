@@ -203,34 +203,41 @@ namespace HumanitarianAssistance.Controllers
       {
         response = new APIResponse();
 
-        if (!ModelState.IsValid) return BadRequest("Could not create token");
+        // model validate
+        if (!ModelState.IsValid) {
+          response.StatusCode = StaticResource.failStatusCode;
+          response.Message = StaticResource.InvalidUserCredentials;
+
+          return response;
+        }
+
         var user = await _userManager.FindByNameAsync(model.UserName.Trim());
-        //if (user == null) return BadRequest("Could not create token");
+
         if (user != null)
         {
-
+          List<UserRolePermissionsModel> userRolePermissionsList = new List<UserRolePermissionsModel>();
+          List<RolePermissionModel> RolePermissionModelList = new List<RolePermissionModel>();
+          List<ApproveRejectPermissionModel> ApproveRejectRolePermissionModelList = new List<ApproveRejectPermissionModel>();
 
           var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-          //Comment
-          if (!result.Succeeded) return BadRequest("Could not create token");
 
+          #region "Check wrong credientials"
+          if (!result.Succeeded) {
+            response.StatusCode = StaticResource.failStatusCode;
+            response.Message = StaticResource.InvalidUserCredentials;
+            return response;
+          }
+          #endregion
+
+          #region "Get CLAIMS & ROLES"
           var userClaims = await _userManager.GetClaimsAsync(user);
-
-
-
-          //var officedetais = await _uow.UserDetailsRepository.FindAsync(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
-
           var roles = await _userManager.GetRolesAsync(user);
 
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
           userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-          //Dictionary<string, List<string>> dic = new Dictionary<string, List<string>>();
+          #endregion
 
-          List<UserRolePermissionsModel> userRolePermissionsList = new List<UserRolePermissionsModel>();
-
-          List<RolePermissionModel> RolePermissionModelList = new List<RolePermissionModel>();
-          List<ApproveRejectPermissionModel> ApproveRejectRolePermissionModelList = new List<ApproveRejectPermissionModel>();
-
+          #region "Set role permissions"
           foreach (var role in roles)
           {
             UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
@@ -238,28 +245,10 @@ namespace HumanitarianAssistance.Controllers
             //userClaims.Add(new Claim("Roles", role)); //imp
 
             var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
-
-            //userRolePermissions.RoleName = role;
-            //userRolePermissions.RoleId = roleid.Id;
-
             List<RolePermissions> rolePermissionsList = _uow.GetDbContext().RolePermissions.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
 
             if (rolePermissionsList.Any())
             {
-
-              //userRolePermissions.RolePagePermission = new List<RolePermissionModel>();
-
-              //foreach (RolePermissions rolePermissions in rolePermissionsList)
-              //{
-              //  RolePermissionModel rolePermissionModel = new RolePermissionModel();
-              //  rolePermissionModel.CanEdit = rolePermissions.CanEdit;
-              //  rolePermissionModel.CanView = rolePermissions.CanView;
-              //  rolePermissionModel.ModuleId = rolePermissions.ModuleId;
-              //  rolePermissionModel.PageId = rolePermissions.PageId;
-              //  rolePermissionModel.RolesPermissionId = rolePermissions.RolesPermissionId;
-              //  userRolePermissions.RolePagePermission.Add(rolePermissionModel);
-              //}
-
               foreach (RolePermissions rolePermissions in rolePermissionsList)
               {
                 if (RolePermissionModelList.Any())
@@ -306,6 +295,9 @@ namespace HumanitarianAssistance.Controllers
             userRolePermissionsList.Add(userRolePermissions);
 
           }
+          #endregion
+
+          #region "Approve / reject permissions"
           foreach (var role in roles)
           {
             UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
@@ -314,27 +306,11 @@ namespace HumanitarianAssistance.Controllers
 
             var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
 
-            //userRolePermissions.RoleName = role;
-            //userRolePermissions.RoleId = roleid.Id;
-
             List<ApproveRejectPermission> approveRejectRolePermissionsList = _uow.GetDbContext().ApproveRejectPermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
+
 
             if (approveRejectRolePermissionsList.Any())
             {
-
-              //userRolePermissions.RolePagePermission = new List<RolePermissionModel>();
-
-              //foreach (RolePermissions rolePermissions in rolePermissionsList)
-              //{
-              //  RolePermissionModel rolePermissionModel = new RolePermissionModel();
-              //  rolePermissionModel.CanEdit = rolePermissions.CanEdit;
-              //  rolePermissionModel.CanView = rolePermissions.CanView;
-              //  rolePermissionModel.ModuleId = rolePermissions.ModuleId;
-              //  rolePermissionModel.PageId = rolePermissions.PageId;
-              //  rolePermissionModel.RolesPermissionId = rolePermissions.RolesPermissionId;
-              //  userRolePermissions.RolePagePermission.Add(rolePermissionModel);
-              //}
-
               foreach (ApproveRejectPermission rolePermissions in approveRejectRolePermissionsList)
               {
                 if (ApproveRejectRolePermissionModelList.Any())
@@ -379,12 +355,13 @@ namespace HumanitarianAssistance.Controllers
               }
             }
 
+           
             userRolePermissionsList.Add(userRolePermissions);
 
           }
+          #endregion
 
-          //_ipermissions.GetPermissionsByRoleId()
-
+          #region "Generate token"
           string k = _configuration["JwtKey"];
           var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(k));
           var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -397,7 +374,9 @@ namespace HumanitarianAssistance.Controllers
             expires: DateTime.Now.AddYears(1),
             signingCredentials: creds
           );
-          //response = new APIResponse();
+          #endregion
+
+          #region "Set responses"
           var User = _uow.GetDbContext().UserDetails.AsNoTracking().Where(x => x.IsDeleted == false && x.AspNetUserId == user.Id).Select(x => x.UserID).FirstOrDefault();
           var Offices = _uow.GetDbContext().UserDetailOffices.Where(x => x.IsDeleted == false && x.UserId == User).Select(x => x.OfficeId).ToList();
           response.data.AspNetUserId = user.Id;
@@ -405,12 +384,10 @@ namespace HumanitarianAssistance.Controllers
           response.Message = "Success";
           response.data.Token = new JwtSecurityTokenHandler().WriteToken(token);
           response.data.Roles = roles.ToList();
-          //response.data.UserRolePermissions = userRolePermissionsList;
           response.data.RolePermissionModelList = RolePermissionModelList;
           response.data.ApproveRejectPermissionsInRole = ApproveRejectRolePermissionModelList;
-
-
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
+          #endregion
         }
         else
         {

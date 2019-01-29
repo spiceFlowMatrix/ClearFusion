@@ -223,5 +223,15 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    
+    [HttpPost]
+    public async Task<APIResponse> VerifyVoucher([FromBody]long id)
+    {
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      APIResponse response = await _iVoucherNewService.VerifyVoucher(id, user.Id);
+      return response;
+    }
   }
 }
