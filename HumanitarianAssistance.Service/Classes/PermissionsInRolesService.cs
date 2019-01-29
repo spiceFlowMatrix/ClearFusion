@@ -233,8 +233,8 @@ namespace HumanitarianAssistance.Service.Classes
                         if (item.Agree == true || item.Disagree == true)
                         {
                             AgreeDisagreePermission rolePermission = new AgreeDisagreePermission();
-                            rolePermission.Agree = item.Approve;
-                            rolePermission.Disagree = item.Reject;
+                            rolePermission.Agree = item.Agree;
+                            rolePermission.Disagree = item.Disagree;
                             rolePermission.CreatedDate = DateTime.UtcNow;
                             rolePermission.IsDeleted = false;
                             rolePermission.PageId = item.PageId;
