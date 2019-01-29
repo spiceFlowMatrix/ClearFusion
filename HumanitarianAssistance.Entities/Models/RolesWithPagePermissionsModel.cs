@@ -21,6 +21,8 @@ namespace HumanitarianAssistance.ViewModels.Models
         public bool View { get; set; }
         public bool Approve { get; set; }
         public bool Reject { get; set; }
+        public bool Agree { get; set; }
+        public bool Disagree { get; set; }
     }
 
     public class RolePermissionViewModel {
@@ -44,4 +46,14 @@ namespace HumanitarianAssistance.ViewModels.Models
         public bool Reject { get; set; }
         public string RoleId { get; set; }
     }
+    public class AgreeDisagreePermissionModel
+    {
+        public long Id { get; set; }
+        public int PageId { get; set; }
+        public string PageName { get; set; }
+        public bool Agree { get; set; }
+        public bool Disagree { get; set; }
+        public string RoleId { get; set; }
+    }
+
 }

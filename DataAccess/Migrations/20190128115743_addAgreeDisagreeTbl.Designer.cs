@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190128115743_addAgreeDisagreeTbl")]
+    partial class addAgreeDisagreeTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1157,132 +1159,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("DistrictDetail");
-
-                    b.HasData(
-                        new { DistrictID = 1L, District = "Jawand", IsDeleted = false, ProvinceID = 1 },
-                        new { DistrictID = 2L, District = "Muqur", IsDeleted = false, ProvinceID = 1 },
-                        new { DistrictID = 3L, District = "Qadis", IsDeleted = false, ProvinceID = 1 },
-                        new { DistrictID = 4L, District = "Baghlani Jadid", IsDeleted = false, ProvinceID = 2 },
-                        new { DistrictID = 5L, District = "Dahana i Ghuri", IsDeleted = false, ProvinceID = 2 },
-                        new { DistrictID = 6L, District = "Chahar Bolak", IsDeleted = false, ProvinceID = 3 },
-                        new { DistrictID = 7L, District = "Chahar Kint", IsDeleted = false, ProvinceID = 3 },
-                        new { DistrictID = 8L, District = "Panjab", IsDeleted = false, ProvinceID = 4 },
-                        new { DistrictID = 9L, District = "Shibar", IsDeleted = false, ProvinceID = 4 },
-                        new { DistrictID = 10L, District = "Bamyan", IsDeleted = false, ProvinceID = 4 },
-                        new { DistrictID = 11L, District = "Gizab", IsDeleted = false, ProvinceID = 5 },
-                        new { DistrictID = 12L, District = "Bala Buluk", IsDeleted = false, ProvinceID = 6 },
-                        new { DistrictID = 13L, District = "Bakwa", IsDeleted = false, ProvinceID = 6 },
-                        new { DistrictID = 14L, District = "Andkhoy", IsDeleted = false, ProvinceID = 7 },
-                        new { DistrictID = 15L, District = "Almar", IsDeleted = false, ProvinceID = 7 },
-                        new { DistrictID = 16L, District = "Bilchiragh", IsDeleted = false, ProvinceID = 7 },
-                        new { DistrictID = 17L, District = "Ajristan", IsDeleted = false, ProvinceID = 8 },
-                        new { DistrictID = 18L, District = "Andar", IsDeleted = false, ProvinceID = 8 },
-                        new { DistrictID = 19L, District = "Shahrak", IsDeleted = false, ProvinceID = 9 },
-                        new { DistrictID = 20L, District = "Tulak", IsDeleted = false, ProvinceID = 9 },
-                        new { DistrictID = 21L, District = "Baghran", IsDeleted = false, ProvinceID = 10 },
-                        new { DistrictID = 22L, District = "Garmsir", IsDeleted = false, ProvinceID = 10 },
-                        new { DistrictID = 23L, District = "Chishti Sharif", IsDeleted = false, ProvinceID = 11 },
-                        new { DistrictID = 24L, District = "Aqcha", IsDeleted = false, ProvinceID = 12 },
-                        new { DistrictID = 25L, District = "Fayzabad", IsDeleted = false, ProvinceID = 12 },
-                        new { DistrictID = 26L, District = "GuzDarzabara", IsDeleted = false, ProvinceID = 12 },
-                        new { DistrictID = 27L, District = "Chahar Asyab", IsDeleted = false, ProvinceID = 13 },
-                        new { DistrictID = 28L, District = "Deh Sabz", IsDeleted = false, ProvinceID = 13 },
-                        new { DistrictID = 29L, District = "Bagrami", IsDeleted = false, ProvinceID = 13 },
-                        new { DistrictID = 30L, District = "Daman", IsDeleted = false, ProvinceID = 14 },
-                        new { DistrictID = 31L, District = "Ghorak", IsDeleted = false, ProvinceID = 14 },
-                        new { DistrictID = 32L, District = "Alasay", IsDeleted = false, ProvinceID = 15 },
-                        new { DistrictID = 33L, District = "Bak", IsDeleted = false, ProvinceID = 16 },
-                        new { DistrictID = 34L, District = "Gurbuz", IsDeleted = false, ProvinceID = 16 },
-                        new { DistrictID = 35L, District = "Asadabad", IsDeleted = false, ProvinceID = 17 },
-                        new { DistrictID = 36L, District = "Bar Kunar", IsDeleted = false, ProvinceID = 17 },
-                        new { DistrictID = 37L, District = "Ali Abad", IsDeleted = false, ProvinceID = 18 },
-                        new { DistrictID = 38L, District = "Archi", IsDeleted = false, ProvinceID = 18 },
-                        new { DistrictID = 39L, District = "Alingar", IsDeleted = false, ProvinceID = 19 },
-                        new { DistrictID = 40L, District = "Alishing", IsDeleted = false, ProvinceID = 19 },
-                        new { DistrictID = 41L, District = "Baraki Barak", IsDeleted = false, ProvinceID = 20 },
-                        new { DistrictID = 42L, District = "Charkh", IsDeleted = false, ProvinceID = 20 },
-                        new { DistrictID = 43L, District = "Maidan Wardak", IsDeleted = false, ProvinceID = 21 },
-                        new { DistrictID = 44L, District = "Achin", IsDeleted = false, ProvinceID = 22 },
-                        new { DistrictID = 45L, District = "Bati Kot", IsDeleted = false, ProvinceID = 22 },
-                        new { DistrictID = 46L, District = "Kang", IsDeleted = false, ProvinceID = 23 },
-                        new { DistrictID = 47L, District = "Chakhansur", IsDeleted = false, ProvinceID = 23 },
-                        new { DistrictID = 48L, District = "Kamdesh", IsDeleted = false, ProvinceID = 24 },
-                        new { DistrictID = 49L, District = "Mandol", IsDeleted = false, ProvinceID = 24 },
-                        new { DistrictID = 50L, District = "Gardez", IsDeleted = false, ProvinceID = 25 },
-                        new { DistrictID = 51L, District = "Jaji", IsDeleted = false, ProvinceID = 25 },
-                        new { DistrictID = 52L, District = "Zurmat", IsDeleted = false, ProvinceID = 25 },
-                        new { DistrictID = 53L, District = "Wuza Zadran", IsDeleted = false, ProvinceID = 25 },
-                        new { DistrictID = 54L, District = "Dila", IsDeleted = false, ProvinceID = 26 },
-                        new { DistrictID = 55L, District = "Barmal", IsDeleted = false, ProvinceID = 26 },
-                        new { DistrictID = 56L, District = "Kal", IsDeleted = false, ProvinceID = 26 },
-                        new { DistrictID = 57L, District = "Chang", IsDeleted = false, ProvinceID = 26 },
-                        new { DistrictID = 58L, District = "Anaba", IsDeleted = false, ProvinceID = 27 },
-                        new { DistrictID = 59L, District = "Bagram", IsDeleted = false, ProvinceID = 28 },
-                        new { DistrictID = 60L, District = "Chaharikar", IsDeleted = false, ProvinceID = 28 },
-                        new { DistrictID = 61L, District = "Jabal Saraj", IsDeleted = false, ProvinceID = 28 },
-                        new { DistrictID = 62L, District = "Kohi Safi", IsDeleted = false, ProvinceID = 28 },
-                        new { DistrictID = 63L, District = "Salang", IsDeleted = false, ProvinceID = 28 },
-                        new { DistrictID = 64L, District = "Aybak", IsDeleted = false, ProvinceID = 29 },
-                        new { DistrictID = 65L, District = "Balkhab", IsDeleted = false, ProvinceID = 30 },
-                        new { DistrictID = 66L, District = "Bangi", IsDeleted = false, ProvinceID = 31 },
-                        new { DistrictID = 67L, District = "Uakhar", IsDeleted = false, ProvinceID = 32 },
-                        new { DistrictID = 68L, District = "Argahandab", IsDeleted = false, ProvinceID = 33 },
-                        new { DistrictID = 69L, District = "Atghar", IsDeleted = false, ProvinceID = 33 },
-                        new { DistrictID = 70L, District = "Alabama", IsDeleted = false, ProvinceID = 34 },
-                        new { DistrictID = 71L, District = "Arizona", IsDeleted = false, ProvinceID = 35 },
-                        new { DistrictID = 72L, District = "Jurors", IsDeleted = false, ProvinceID = 35 },
-                        new { DistrictID = 73L, District = "Arona", IsDeleted = false, ProvinceID = 35 },
-                        new { DistrictID = 74L, District = "Arkansas", IsDeleted = false, ProvinceID = 36 },
-                        new { DistrictID = 75L, District = "California", IsDeleted = false, ProvinceID = 37 },
-                        new { DistrictID = 76L, District = "Califor", IsDeleted = false, ProvinceID = 37 },
-                        new { DistrictID = 77L, District = "Colorado", IsDeleted = false, ProvinceID = 38 },
-                        new { DistrictID = 78L, District = "Connecticut", IsDeleted = false, ProvinceID = 39 },
-                        new { DistrictID = 79L, District = "Aelaware", IsDeleted = false, ProvinceID = 40 },
-                        new { DistrictID = 80L, District = "Florida", IsDeleted = false, ProvinceID = 41 },
-                        new { DistrictID = 81L, District = "Georia", IsDeleted = false, ProvinceID = 42 },
-                        new { DistrictID = 82L, District = "Hawaii", IsDeleted = false, ProvinceID = 43 },
-                        new { DistrictID = 83L, District = "Idaho", IsDeleted = false, ProvinceID = 44 },
-                        new { DistrictID = 84L, District = "Illinois", IsDeleted = false, ProvinceID = 45 },
-                        new { DistrictID = 85L, District = "Indiana", IsDeleted = false, ProvinceID = 46 },
-                        new { DistrictID = 86L, District = "Undia", IsDeleted = false, ProvinceID = 46 },
-                        new { DistrictID = 87L, District = "Iowa", IsDeleted = false, ProvinceID = 47 },
-                        new { DistrictID = 88L, District = "Lansa", IsDeleted = false, ProvinceID = 48 },
-                        new { DistrictID = 89L, District = "Kentucky", IsDeleted = false, ProvinceID = 49 },
-                        new { DistrictID = 90L, District = "Louisiana", IsDeleted = false, ProvinceID = 50 },
-                        new { DistrictID = 91L, District = "Maine", IsDeleted = false, ProvinceID = 51 },
-                        new { DistrictID = 92L, District = "Maryland", IsDeleted = false, ProvinceID = 52 },
-                        new { DistrictID = 93L, District = "Massachusetts", IsDeleted = false, ProvinceID = 53 },
-                        new { DistrictID = 94L, District = "Michigan", IsDeleted = false, ProvinceID = 54 },
-                        new { DistrictID = 95L, District = "Minnesota", IsDeleted = false, ProvinceID = 55 },
-                        new { DistrictID = 96L, District = "Mississippi", IsDeleted = false, ProvinceID = 56 },
-                        new { DistrictID = 97L, District = "Missouri", IsDeleted = false, ProvinceID = 57 },
-                        new { DistrictID = 98L, District = "Montana", IsDeleted = false, ProvinceID = 58 },
-                        new { DistrictID = 99L, District = "Nebraska", IsDeleted = false, ProvinceID = 59 },
-                        new { DistrictID = 100L, District = "Yevada", IsDeleted = false, ProvinceID = 60 },
-                        new { DistrictID = 101L, District = "New Hampshire", IsDeleted = false, ProvinceID = 61 },
-                        new { DistrictID = 102L, District = "New Jersey", IsDeleted = false, ProvinceID = 62 },
-                        new { DistrictID = 103L, District = "New Mexico", IsDeleted = false, ProvinceID = 63 },
-                        new { DistrictID = 104L, District = "New York", IsDeleted = false, ProvinceID = 64 },
-                        new { DistrictID = 105L, District = "North Carolina", IsDeleted = false, ProvinceID = 65 },
-                        new { DistrictID = 106L, District = "North Dakota", IsDeleted = false, ProvinceID = 66 },
-                        new { DistrictID = 107L, District = "Ohio", IsDeleted = false, ProvinceID = 67 },
-                        new { DistrictID = 108L, District = "Oklahoma", IsDeleted = false, ProvinceID = 68 },
-                        new { DistrictID = 109L, District = "Tregon", IsDeleted = false, ProvinceID = 69 },
-                        new { DistrictID = 110L, District = "Pennsylvania", IsDeleted = false, ProvinceID = 70 },
-                        new { DistrictID = 111L, District = "Rhode Island", IsDeleted = false, ProvinceID = 71 },
-                        new { DistrictID = 112L, District = "South Carolina", IsDeleted = false, ProvinceID = 72 },
-                        new { DistrictID = 113L, District = "South Dakota", IsDeleted = false, ProvinceID = 73 },
-                        new { DistrictID = 114L, District = "Tennessee", IsDeleted = false, ProvinceID = 74 },
-                        new { DistrictID = 115L, District = "Texas", IsDeleted = false, ProvinceID = 75 },
-                        new { DistrictID = 116L, District = "Wtaha", IsDeleted = false, ProvinceID = 76 },
-                        new { DistrictID = 117L, District = "Oermont", IsDeleted = false, ProvinceID = 77 },
-                        new { DistrictID = 118L, District = "Virginia", IsDeleted = false, ProvinceID = 78 },
-                        new { DistrictID = 119L, District = "Washinn", IsDeleted = false, ProvinceID = 79 },
-                        new { DistrictID = 120L, District = "West Virginia", IsDeleted = false, ProvinceID = 80 },
-                        new { DistrictID = 121L, District = "Nouit Vinia", IsDeleted = false, ProvinceID = 80 },
-                        new { DistrictID = 122L, District = "Wisconsin", IsDeleted = false, ProvinceID = 81 },
-                        new { DistrictID = 123L, District = "Wyoming", IsDeleted = false, ProvinceID = 82 }
-                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.DonorDetail", b =>
@@ -3578,10 +3454,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("FinancialYearDetail");
-
-                    b.HasData(
-                        new { FinancialYearId = 1, EndDate = new DateTime(2019, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), IsDefault = true, IsDeleted = false, StartDate = new DateTime(2019, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
-                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.HolidayDetails", b =>

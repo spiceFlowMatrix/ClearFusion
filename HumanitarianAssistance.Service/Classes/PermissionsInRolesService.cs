@@ -229,7 +229,20 @@ namespace HumanitarianAssistance.Service.Classes
                             _uow.GetDbContext().ApproveRejectPermission.Add(rolePermission);
                             _uow.GetDbContext().SaveChanges();
                             _uow.GetDbContext().Entry<ApproveRejectPermission>(rolePermission).State = EntityState.Detached;
-                        }                        
+                        }
+                        if (item.Agree == true || item.Disagree == true)
+                        {
+                            AgreeDisagreePermission rolePermission = new AgreeDisagreePermission();
+                            rolePermission.Agree = item.Approve;
+                            rolePermission.Disagree = item.Reject;
+                            rolePermission.CreatedDate = DateTime.UtcNow;
+                            rolePermission.IsDeleted = false;
+                            rolePermission.PageId = item.PageId;
+                            rolePermission.RoleId = RoleId;
+                            _uow.GetDbContext().AgreeDisagreePermission.Add(rolePermission);
+                            _uow.GetDbContext().SaveChanges();
+                            _uow.GetDbContext().Entry<AgreeDisagreePermission>(rolePermission).State = EntityState.Detached;
+                        }
                     }
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;
@@ -289,16 +302,28 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                           RoleId = RoleId,
                                                                                           PageName = at.PageName 
                                                                                       })).ToList();
-                                                                                     // await _uow.GetDbContext().ApproveRejectPermission
-                                                                                     //.Where(x => x.IsDeleted == false && x.RoleId == RoleId)
-                                                                                     // .Select(x => new ApproveRejectPermissionModel {
-                                                                                     // Approve = x.Approve,
-                                                                                     // Reject = x.Reject,
-                                                                                     // Id = x.Id,
-                                                                                     // PageId = x.PageId,
-                                                                                     // RoleId = x.RoleId
-                                                                                     // }).ToListAsync();
-
+                    List<AgreeDisagreePermissionModel> agreeDisagreePermissionList = (from ur in _uow.GetDbContext().AgreeDisagreePermission
+                                                                                      join at in _uow.GetDbContext().ApplicationPages on ur.PageId equals at.PageId
+                                                                                      where !ur.IsDeleted.Value && !at.IsDeleted.Value && ur.RoleId == RoleId
+                                                                                      select (new AgreeDisagreePermissionModel
+                                                                                      {
+                                                                                          Agree = ur.Agree,
+                                                                                          Disagree = ur.Disagree,
+                                                                                          Id = ur.Id,
+                                                                                          PageId = ur.PageId,
+                                                                                          RoleId = RoleId,
+                                                                                          PageName = at.PageName
+                                                                                      })).ToList();
+                    // await _uow.GetDbContext().ApproveRejectPermission
+                    //.Where(x => x.IsDeleted == false && x.RoleId == RoleId)
+                    // .Select(x => new ApproveRejectPermissionModel {
+                    // Approve = x.Approve,
+                    // Reject = x.Reject,
+                    // Id = x.Id,
+                    // PageId = x.PageId,
+                    // RoleId = x.RoleId
+                    // }).ToListAsync();
+                    response.data.AgreeDisagreePermissionsInRole = agreeDisagreePermissionList;
                     response.data.PermissionsInRole = rolePermissionsList;
                     response.data.ApproveRejectPermissionsInRole = approveRejectPermissionList;
                     response.StatusCode = StaticResource.successStatusCode;
