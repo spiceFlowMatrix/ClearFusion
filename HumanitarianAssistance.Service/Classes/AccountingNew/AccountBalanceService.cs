@@ -369,6 +369,11 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         // Value after exchange on the given onDate
         private async Task<List<VoucherTransactions>> GetTransactionValuesAfterExchange(List<VoucherTransactions> transactions, int toCurrencyId, DateTime onDate)
         {
+            if (!transactions.Any())
+            {
+                throw new Exception("Transaction not found");
+            }
+
             var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId
                                                                                && transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency)
                                                                                && x.Date.ToShortDateString() == onDate.ToShortDateString());
@@ -455,7 +460,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         private async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime startDate,
             DateTime endDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
         {
-            return await _uow.GetDbContext().VoucherTransactions
+            var data =  await _uow.GetDbContext().VoucherTransactions
                 .Where(x => x.TransactionDate <= endDate
                             && x.TransactionDate >= startDate
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
@@ -464,10 +469,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             && officeList.Contains(x.VoucherDetails.OfficeId)
                             && journalList.Contains(x.VoucherDetails.JournalCode)
                             //&& projectIdList.Contains(x.VoucherDetails.ProjectId)
+                            && projectIdList.Contains(x.ProjectId)
                             )
                 .Include(x => x.ChartOfAccountDetail)
                 .Include(x => x.VoucherDetails)
                 .ToListAsync();
+            return data;
         }
 
         private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts,
@@ -550,6 +557,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
         public async Task<APIResponse> GetExchangeGainLossReport(ExchangeGainLossFilterModel exchangeGainLossFilterModel)
         {
+            // var dgff = await GetAllTransaction(exchangeGainLossFilterModel.AccountIdList, exchangeGainLossFilterModel.FromDate, exchangeGainLossFilterModel.ToDate, exchangeGainLossFilterModel.OfficeIdList, exchangeGainLossFilterModel.JournalIdList, exchangeGainLossFilterModel.ProjectIdList);
+
             List<ExchangeGainLossReportViewModel> exchangeGainLossReportData = new List<ExchangeGainLossReportViewModel>();
 
             APIResponse response = new APIResponse();
@@ -616,5 +625,179 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
             return response;
         }
+
+
+        #region "Test code"
+
+        #region "GetAllTransaction"
+        public async Task<APIResponse> GetAllTransaction(
+                                        List<long?> accountIds,
+                                        DateTime fromDate,
+                                        DateTime toDate,
+                                        List<int?> officeIds,
+                                        List<int?> journalIds,
+                                        List<long?> projectsIds
+            )
+        {
+
+            APIResponse response = new APIResponse();
+            try
+            {
+                var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                  .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
+
+                if (inputLevelList.Any(x => x.AccountTypeId == null))
+                    throw new Exception("Some accounts do not have notes assigned to them!");
+
+                var transactionList = await _uow.GetDbContext().VoucherTransactions
+                                       .Where(x => x.IsDeleted == false &&
+                                                    x.TransactionDate.Value.Date >= fromDate.Date &&
+                                                    x.TransactionDate.Value.Date <= toDate.Date &&
+                                                    accountIds.Contains(x.ChartOfAccountNewId) &&
+                                                    officeIds.Contains(x.VoucherDetails.OfficeId) &&
+                                                    journalIds.Contains(x.VoucherDetails.JournalCode) &&
+                                                    projectsIds.Contains(x.ProjectId)
+                                             )
+                                      .Select(x => new VoucherTransactionModel
+                                      {
+                                          TransactionId = x.TransactionId,
+                                          VoucherNo = x.VoucherNo,
+                                          AccountNo = x.ChartOfAccountNewId,
+                                          AccountCode = x.ChartOfAccountDetail.ChartOfAccountNewCode,
+                                          AccountName = x.ChartOfAccountDetail.AccountName,
+                                          OfficeId = x.OfficeId,
+                                          JournalId = x.VoucherDetails.JournalCode,
+                                          FinancialYearId = x.FinancialYearId,
+                                          ProjectId = x.ProjectId,
+                                          BudgetLineId = x.BudgetLineId,
+                                          TransactionDate = x.TransactionDate,
+                                          CurrencyId = x.CurrencyId,
+                                          Debit = x.Debit,
+                                          Credit = x.Credit,
+                                      })
+                                      .ToListAsync();
+
+                response.data.VoucherTransactionList = transactionList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        #endregion
+
+        #region "FetchAllDatesFromTransactions"
+        public List<DateTime?> FetchAllDatesFromTransactions(IList<VoucherTransactionModel> transactions)
+        {
+            return transactions.GroupBy(p => new { p.TransactionDate })
+                                      .Select(g => g.First().TransactionDate)
+                                      .ToList();
+        }
+        #endregion
+
+        #region "GetAllExchageRates"
+        public async Task<APIResponse> GetAllExchageRatesByDates(List<DateTime?> dateList)
+        {
+
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                var exchangeRates = await _uow.GetDbContext().ExchangeRateDetail
+                                       .Where(x => x.IsDeleted == false &&
+                                                    dateList.Contains(x.Date)
+                                             )
+                                      .Select(x => new ExchangeRateDetail
+                                      {
+                                          Date = x.Date,
+                                          ExchangeRateId = x.ExchangeRateId,
+                                          FromCurrency = x.FromCurrency,
+                                          ToCurrency = x.ToCurrency,
+                                          Rate = x.Rate,
+                                          OfficeId = x.OfficeId
+                                      })
+                                      .ToListAsync();
+
+                response.data.ExchangeRateDetailList = exchangeRates;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        #endregion
+
+        #region "GroupByAccount"
+        public List<VoucherTransactionModel> GroupByAccount(List<VoucherTransactionModel> transactions)
+        {
+            var detail = transactions.GroupBy(p => new { p.AccountNo })
+                                      .Select(g => new VoucherTransactionModel
+                                      {
+                                          AccountNo = g.First().AccountNo,
+                                          AccountName = g.First().AccountName,
+                                          BudgetLineId = g.First().BudgetLineId,
+                                          Credit = g.Sum(x => x.Credit),
+                                          Debit = g.Sum(x => x.Debit),
+                                      })
+                                      .ToList();
+            return detail;
+        }
+        #endregion
+
+        #region "GetCurrencyGainLossReport"
+        public async Task<APIResponse> GetCurrencyGainLossReport(ExchangeGainLossFilterModel exchangeGainLossFilterModel)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                // Transaction List
+                var transactionList = await GetAllTransaction(
+                                                exchangeGainLossFilterModel.AccountIdList,
+                                                exchangeGainLossFilterModel.FromDate,
+                                                exchangeGainLossFilterModel.ToDate,
+                                                exchangeGainLossFilterModel.OfficeIdList,
+                                                exchangeGainLossFilterModel.JournalIdList,
+                                                exchangeGainLossFilterModel.ProjectIdList
+                                            );
+
+                var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == exchangeGainLossFilterModel.ToCurrencyId
+                                                                              && transactionList.data.VoucherTransactionList.Select(y => y.CurrencyId).Contains(x.FromCurrency)
+                                                                              && transactionList.data.VoucherTransactionList.Select(y => y.TransactionDate)
+                                                                       .Any(z => z >= x.Date));
+
+                //var comparisonDateRates = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == exchangeGainLossFilterModel.ToCurrencyId
+                //                                                              && transactionList.data.VoucherTransactionList.Select(y => y.CurrencyId).Contains(x.FromCurrency)
+                //                                                              && transactionList.data.VoucherTransactionList.Select(y => y.TransactionDate).Where(z => z.Equals(exchangeGainLossFilterModel.ComparisionDate.ToLongDateString()));
+
+
+                //// Filter transaction Dates
+                //var dateListExchagneRates = FetchAllDatesFromTransactions(transactionList.data.VoucherTransactionList);
+                //dateListExchagneRates.Add(exchangeGainLossFilterModel.ComparisionDate); // Add Comparison Date
+                //// Exchagne Rate List
+                //var exchangeRateList = await GetAllExchageRatesByDates(dateListExchagneRates);
+
+
+                //response.data.VoucherTransactionList = transactionList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        #endregion
+
+        #endregion
     }
 }
