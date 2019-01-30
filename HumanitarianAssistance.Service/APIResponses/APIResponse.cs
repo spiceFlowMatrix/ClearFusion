@@ -392,6 +392,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<AccountBalance> AccountBalances { get; set; }
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
+        public bool IsVoucherVerified { get; set; }
 
         #endregion
 

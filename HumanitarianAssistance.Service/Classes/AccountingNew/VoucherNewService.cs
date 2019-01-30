@@ -151,6 +151,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     obj.OfficeName = voucherDetail.OfficeDetails?.OfficeName ?? null;
                     obj.FinancialYearId = voucherDetail.FinancialYearId;
                     obj.FinancialYearName = voucherDetail.FinancialYearDetails?.FinancialYearName ?? null;
+                    obj.IsVoucherVerified = voucherDetail.IsVoucherVerified;
 
                     response.data.VoucherDetail = obj;
                     response.StatusCode = StaticResource.successStatusCode;
@@ -189,44 +190,55 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 if (officeCode != null)
                 {
                     var fincancialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(o => o.IsDefault)?.FinancialYearId; //use OfficeCode
+                    var currencyCode = _uow.GetDbContext().CurrencyDetails.FirstOrDefault(o => o.CurrencyId == model.CurrencyId)?.CurrencyCode; //use OfficeCode
 
                     if (fincancialYear != null)
                     {
-                        VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
-                        obj.FinancialYearId = fincancialYear;
-                        obj.CreatedById = model.CreatedById;
-                        obj.VoucherDate = DateTime.UtcNow;
-                        obj.CreatedDate = DateTime.UtcNow;
-                        obj.IsDeleted = false;
-                        await _uow.VoucherDetailRepository.AddAsyn(obj);
+                        if (currencyCode != null)
+                        {
+                            VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
+                            obj.FinancialYearId = fincancialYear;
+                            obj.CreatedById = model.CreatedById;
+                            obj.VoucherDate = DateTime.UtcNow;
+                            obj.CreatedDate = DateTime.UtcNow;
+                            obj.IsDeleted = false;
+                            await _uow.VoucherDetailRepository.AddAsyn(obj);
 
-                        obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
-                        await _uow.VoucherDetailRepository.UpdateAsyn(obj);
+                            // Pattern: Office Code - Currency Code - Month Number - Voucher Primary Key (sequential) - Year
+                            obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year;
 
-                        var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
+                            await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
-                        LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                        loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
-                        loggerObj.IsRead = false;
-                        loggerObj.UserName = user.FirstName + " " + user.LastName;
-                        loggerObj.UserId = model.CreatedById;
-                        loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
-                        loggerObj.CreatedDate = model.CreatedDate;
+                            var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
 
-                        response.LoggerDetailsModel = loggerObj;
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Success";
+                            LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                            loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
+                            loggerObj.IsRead = false;
+                            loggerObj.UserName = user.FirstName + " " + user.LastName;
+                            loggerObj.UserId = model.CreatedById;
+                            loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
+                            loggerObj.CreatedDate = model.CreatedDate;
+
+                            response.LoggerDetailsModel = loggerObj;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Success";
+                        }
+                        else
+                        {
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = StaticResource.CurrencyNotFound;
+                        }
                     }
                     else
                     {
                         response.StatusCode = StaticResource.failStatusCode;
-                        response.Message = "Default Financial year is not set";
+                        response.Message = StaticResource.defaultFinancialYearIsNotSet;
                     }
                 }
                 else
                 {
                     response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "Office Code Not Found";
+                    response.Message = StaticResource.officeCodeNotFound;
                 }
 
             }
@@ -318,7 +330,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                        BudgetLineId = x.BudgetLineId,
                                        ProjectId = x.ProjectId,
                                        Description = x.Description,
-                                       TransactionId = x.TransactionId
+                                       TransactionId = x.TransactionId,
+                                       VoucherNo = x.VoucherNo
                                    }).ToListAsync();
 
                 response.data.VoucherTransactions = voucherTransactionsList;
@@ -483,7 +496,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         /// <param name="voucherTransactions"></param>
         /// <param name="userId"></param>
         /// <returns>Success/Failure</returns>
-        public APIResponse AddEditTransactionList(List<VoucherTransactionsModel> voucherTransactionsList, string userId)
+        public APIResponse AddEditTransactionList(AddEditTransactionModel voucherTransactions, string userId)
         {
             APIResponse response = new APIResponse();
 
@@ -492,10 +505,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
             try
             {
-                if (voucherTransactionsList.Any())
+                if (voucherTransactions.VoucherTransactions.Any())
                 {
 
-                    var editList = voucherTransactionsList.Where(w => w.TransactionId != 0)
+                    var editList = voucherTransactions.VoucherTransactions.Where(w => w.TransactionId != 0)
                                                           .Select(s => s.TransactionId);
 
                     var editTransactionList = _uow.GetDbContext().VoucherTransactions
@@ -503,88 +516,96 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                                                             .Contains(x.TransactionId))
                                                                  .ToList();
 
-                    var voucherDetail = _uow.VoucherDetailRepository.Find(x => x.IsDeleted == false && x.VoucherNo == voucherTransactionsList.FirstOrDefault().VoucherNo);
+                    var voucherDetail = _uow.VoucherDetailRepository.Find(x => x.IsDeleted == false && x.VoucherNo == voucherTransactions.VoucherNo);
 
-                    foreach (VoucherTransactionsModel voucherTransactions in voucherTransactionsList)
+                    if (voucherDetail != null)
                     {
-                        // Add
-                        if (voucherTransactions.TransactionId == 0 && voucherTransactions.IsDeleted == false)
+                        foreach (VoucherTransactionsModel item in voucherTransactions.VoucherTransactions)
                         {
-                            //new voucher transaction object
-                            VoucherTransactions transaction = new VoucherTransactions();
-
-                            transaction.ChartOfAccountNewId = voucherTransactions.AccountNo;
-                            transaction.Debit = voucherTransactions.Debit;
-                            transaction.Credit = voucherTransactions.Credit;
-                            transaction.Description = voucherTransactions.Description;
-                            transaction.BudgetLineId = voucherTransactions.BudgetLineId;
-                            transaction.ProjectId = voucherTransactions.ProjectId;
-                            transaction.CreatedById = userId;
-                            transaction.CreatedDate = DateTime.Now;
-                            transaction.IsDeleted = false;
-                            transaction.VoucherNo = voucherTransactions.VoucherNo;
-                            transaction.CurrencyId = voucherDetail.CurrencyId;
-                            transaction.TransactionDate = voucherDetail.VoucherDate;
-
-                            transactionsListAdd.Add(transaction);
-                        }
-                        // edit
-                        else
-                        {
-                            VoucherTransactions transaction = editTransactionList.FirstOrDefault(x => x.TransactionId == voucherTransactions.TransactionId);
-
-                            if (transaction != null)
+                            // Add
+                            if (item.TransactionId == 0 && item.IsDeleted == false)
                             {
-                                if (voucherTransactions.IsDeleted == false)
-                                {
-                                    transaction.IsDeleted = false;
-                                }
-                                else
-                                {
-                                    transaction.IsDeleted = true;
-                                }
-                                transaction.TransactionId = voucherTransactions.TransactionId;
-                                transaction.ChartOfAccountNewId = voucherTransactions.AccountNo;
-                                transaction.Debit = voucherTransactions.Debit;
-                                transaction.Credit = voucherTransactions.Credit;
-                                transaction.Description = voucherTransactions.Description;
-                                transaction.BudgetLineId = voucherTransactions.BudgetLineId;
-                                transaction.ProjectId = voucherTransactions.ProjectId;
+                                //new voucher transaction object
+                                VoucherTransactions transaction = new VoucherTransactions();
 
+                                transaction.ChartOfAccountNewId = item.AccountNo;
+                                transaction.Debit = item.Debit;
+                                transaction.Credit = item.Credit;
+                                transaction.Description = item.Description;
+                                transaction.BudgetLineId = item.BudgetLineId;
+                                transaction.ProjectId = item.ProjectId;
+                                transaction.CreatedById = userId;
+                                transaction.CreatedDate = DateTime.Now;
+                                transaction.IsDeleted = false;
+                                transaction.VoucherNo = item.VoucherNo;
                                 transaction.CurrencyId = voucherDetail.CurrencyId;
                                 transaction.TransactionDate = voucherDetail.VoucherDate;
 
-                                transaction.ModifiedById = userId;
-                                transaction.ModifiedDate = DateTime.Now;
-                                //transaction.VoucherNo = voucherTransactions.VoucherNo;
+                                transactionsListAdd.Add(transaction);
+                            }
+                            // edit
+                            else
+                            {
+                                VoucherTransactions transaction = editTransactionList.FirstOrDefault(x => x.TransactionId == item.TransactionId);
 
-                                transactionsListEdit.Add(transaction);
+                                if (transaction != null)
+                                {
+                                    if (item.IsDeleted == false)
+                                    {
+                                        transaction.IsDeleted = false;
+                                    }
+                                    else
+                                    {
+                                        transaction.IsDeleted = true;
+                                    }
+                                    transaction.TransactionId = item.TransactionId;
+                                    transaction.ChartOfAccountNewId = item.AccountNo;
+                                    transaction.Debit = item.Debit;
+                                    transaction.Credit = item.Credit;
+                                    transaction.Description = item.Description;
+                                    transaction.BudgetLineId = item.BudgetLineId;
+                                    transaction.ProjectId = item.ProjectId;
+
+                                    transaction.CurrencyId = voucherDetail.CurrencyId;
+                                    transaction.TransactionDate = voucherDetail.VoucherDate;
+
+                                    transaction.ModifiedById = userId;
+                                    transaction.ModifiedDate = DateTime.Now;
+                                    //transaction.VoucherNo = voucherTransactions.VoucherNo;
+
+                                    transactionsListEdit.Add(transaction);
+                                }
                             }
                         }
-                    }
 
-                    using (IDbContextTransaction tran = _uow.GetDbContext().Database.BeginTransaction())
+                        using (IDbContextTransaction tran = _uow.GetDbContext().Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                _uow.GetDbContext().VoucherTransactions.AddRange(transactionsListAdd);
+                                _uow.GetDbContext().VoucherTransactions.UpdateRange(transactionsListEdit);
+
+                                _uow.GetDbContext().SaveChanges();
+                                tran.Commit();
+                            }
+
+                            catch (Exception ex)
+                            {
+                                tran.Rollback();
+                                response.StatusCode = StaticResource.failStatusCode;
+                                response.Message = StaticResource.SomethingWrong + ex.Message;
+                                return response;
+                            }
+                        }
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = StaticResource.SuccessText;
+                    }
+                    else
                     {
-                        try
-                        {
-                            _uow.GetDbContext().VoucherTransactions.AddRange(transactionsListAdd);
-                            _uow.GetDbContext().VoucherTransactions.UpdateRange(transactionsListEdit);
-
-                            _uow.GetDbContext().SaveChanges();
-                            tran.Commit();
-                        }
-
-                        catch (Exception ex)
-                        {
-                            tran.Rollback();
-                            response.StatusCode = StaticResource.failStatusCode;
-                            response.Message = StaticResource.SomethingWrong + ex.Message;
-                            return response;
-                        }
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.VoucherNotPresent;
                     }
-
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
                 }
                 else
                 {
@@ -620,8 +641,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                     await _uow.VoucherDetailRepository.UpdateAsyn(voucherDetail);
 
+                    response.data.IsVoucherVerified = voucherDetail.IsVoucherVerified;
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = StaticResource.SuccessText;
+                    response.Message = voucherDetail.IsVoucherVerified ? StaticResource.VoucherVerified : StaticResource.VoucherUnVerified;
                 }
                 else
                 {
