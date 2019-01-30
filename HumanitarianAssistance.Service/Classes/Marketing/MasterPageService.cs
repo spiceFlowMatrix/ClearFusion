@@ -1092,7 +1092,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                         MediaCategoryId = ur.MediaCategoryId
                                     })).ToList();
 
-
+                response.data.TotalCount = unitRateList.Count(x => x.IsDeleted == false);
                 response.data.UnitRateDetails = unitRateList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1283,6 +1283,41 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetUnitRatePaginatedList(UnitRatePaginationModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = _uow.GetDbContext().UnitRates.Where(x => x.IsDeleted == false).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+                response.data.UnitRates = list;
+                response.StatusCode = 200;
+                var unitRateList = (from ur in _uow.GetDbContext().UnitRates
+                                    join at in _uow.GetDbContext().ActivityTypes on ur.ActivityTypeId equals at.ActivityTypeId
+                                    where !ur.IsDeleted.Value && !at.IsDeleted.Value
+                                    select (new UnitRateDetailsModel
+                                    {
+                                        UnitRateId = ur.UnitRateId,
+                                        ActivityTypeId = at.ActivityTypeId,
+                                        ActivityName = at.ActivityName,
+                                        UnitRates = ur.UnitRates,
+                                        CurrencyId = ur.CurrencyId,
+                                        MediumId = ur.MediumId,
+                                        NatureId = ur.NatureId,
+                                        QualityId = ur.QualityId,
+                                        TimeCategoryId = ur.TimeCategoryId,
+                                        MediaCategoryId = ur.MediaCategoryId
+                                    })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+                response.data.TotalCount = unitRateList.Count(x => x.IsDeleted == false);
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
         }

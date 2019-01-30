@@ -853,6 +853,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     #region Unit Rate
 
+    [HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetUnitRatePaginatedList([FromBody]UnitRatePaginationModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iMasterPageService.GetUnitRatePaginatedList(model, id);
+      }
+      return apiRespone;
+    }
+
     /// <summary>
     /// Get Unit Rate List
     /// </summary>

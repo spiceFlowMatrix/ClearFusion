@@ -74,6 +74,7 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> GetUnitRateById(int id, string UserId);
         Task<APIResponse> GetUnitRateByActivityTypeId(UnitRateModel model, string UserId);
         Task<APIResponse> DeleteUnitRate(int id, string UserId);
+        Task<APIResponse> GetUnitRatePaginatedList(UnitRatePaginationModel model, string UserId);
         #endregion
     }
 }
