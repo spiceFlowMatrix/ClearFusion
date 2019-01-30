@@ -445,7 +445,7 @@ namespace HumanitarianAssistance.Controllers
           response.data.Roles = roles.ToList();
           response.data.RolePermissionModelList = RolePermissionModelList;
           response.data.ApproveRejectPermissionsInRole = ApproveRejectRolePermissionModelList;
-
+          response.data.AgreeDisagreePermissionsInRole = AgreeDisagreeRolePermissionModelList;
 
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
           #endregion
