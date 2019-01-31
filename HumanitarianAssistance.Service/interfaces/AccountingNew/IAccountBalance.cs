@@ -25,5 +25,8 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
            DateTime reportStartDate, DateTime reportEndDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList);
         Task<APIResponse> GetAccountBalancesById(List<long?> accountIds, int toCurrencyId,
             DateTime reportStartDate, DateTime reportEndDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList);
+
+        Task<APIResponse> SaveGainLossAccountList(List<long> accountIds);
+        Task<APIResponse> GetExchangeGainLossFilterAccountList();
     }
 }

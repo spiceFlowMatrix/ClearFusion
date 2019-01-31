@@ -324,6 +324,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<CEAssumptionDetail> CEAssumptionDetail { get; set; }
 
         public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
+        public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
 
 
         #region Marketing       
