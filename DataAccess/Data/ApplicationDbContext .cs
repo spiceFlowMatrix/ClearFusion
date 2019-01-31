@@ -263,6 +263,8 @@ namespace HumanitarianAssistance.Entities
         #region "Accounting New"
         public DbSet<AccountFilterType> AccountFilterType { get; set; }
         public DbSet<ChartOfAccountNew> ChartOfAccountNew { get; set; }
+        public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
+        
         #endregion
 
 

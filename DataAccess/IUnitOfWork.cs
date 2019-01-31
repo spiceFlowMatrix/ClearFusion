@@ -215,6 +215,7 @@ namespace DataAccess
         #region "Accounting New"
         IGenericRepository<AccountFilterType> AccountFilterTypeRepository { get; }
         IGenericRepository<ChartOfAccountNew> ChartOfAccountNewRepository { get; }
+        IGenericRepository<GainLossSelectedAccounts> GainLossSelectedAccountsRepository { get; }
 
         #endregion
 

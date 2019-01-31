@@ -166,6 +166,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<LedgerModel> TrailBlanceList { get; set; }
 
         public IList<ExchangeRateModel> ExchangeRateList { get; set; }
+        public IList<ExchangeRateDetail> ExchangeRateDetailList { get; set; }
         public IList<EmployeeDetailModel> EmployeeDetailList { get; set; }
         //public IList<ProjectBudget> ProjectBudgetList { get; set; }
         public IList<EmployeeDetailsAllModel> ActiveEmployeeDetailsList { get; set; }
@@ -394,6 +395,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<AccountBalance> AccountBalances { get; set; }
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
+        public bool IsVoucherVerified { get; set; }
 
         #endregion
 
