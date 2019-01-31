@@ -109,6 +109,32 @@ namespace DataAccess.Data
             await context.UserDetails.AddAsync(userDetails);
             context.SaveChanges();
 
+            //modelBuilder.Entity<OfficeDetail>().HasData(
+            //     new OfficeDetail { OfficeId = 1, OfficeCode = "A0001", OfficeKey = "AF", OfficeName = "Afghanistan", IsDeleted = false }
+            //);
+
+            OfficeDetail officeDetail = new OfficeDetail
+            {
+                IsDeleted= false,
+                CreatedDate= DateTime.Now,
+                OfficeId = 1,
+                OfficeCode = "A0001",
+                OfficeKey = "AF",
+                OfficeName = "Afghanistan",
+            };
+
+            await context.OfficeDetail.AddAsync(officeDetail);
+            context.SaveChanges();
+
+            UserDetailOffices userDetailOffices = new UserDetailOffices();
+            userDetailOffices.IsDeleted = false;
+            userDetailOffices.CreatedDate = DateTime.Now;
+            userDetailOffices.OfficeId = officeDetail.OfficeId;
+            userDetailOffices.UserId = userDetails.UserID;
+
+            await context.UserDetailOffices.AddAsync(userDetailOffices);
+            context.SaveChanges();
+
             if (ir.Succeeded)
             {
                 logger.LogDebug($"Created default user `{email}` successfully");

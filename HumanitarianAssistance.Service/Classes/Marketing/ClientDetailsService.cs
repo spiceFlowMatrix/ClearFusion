@@ -48,6 +48,7 @@ namespace HumanitarianAssistance.Service.Classes
                 response.data.ClientDetails = list;
                 response.StatusCode = 200;
                 response.Message = "Success";
+                response.data.TotalCount = await _uow.GetDbContext().ClientDetails.CountAsync(x => x.IsDeleted == false);
             }
             catch (Exception ex)
             {
@@ -265,7 +266,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var list = await _uow.ClientDetailsRepository.FindAllAsync(x => !x.IsDeleted.Value);
                 response.data.ClientDetails = list;
                 response.StatusCode = 200;
-                response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+                response.data.jobListTotalCount = await _uow.GetDbContext().ClientDetails.CountAsync(x => x.IsDeleted == false);
                 response.Message = "Success";
             }
             catch (Exception ex)

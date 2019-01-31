@@ -237,36 +237,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if (model.ActivityTypeId == null)
-        {
-          apiResponse = await _iMasterPageService.AddActivityType(model, id);
-        }
-        else
-        {
-          apiResponse = await _iMasterPageService.EditActivityType(model, id);
-        }
-
+        apiResponse = await _iMasterPageService.AddEditActivityType(model, id);       
       }
       return apiResponse;
-    }
-
-    /// <summary>
-    /// Edit Selected Activity Type
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public async Task<APIResponse> EditActivityType([FromBody]ActivityTypeModel model)
-    {
-      APIResponse apiResponse = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiResponse = await _iMasterPageService.EditActivityType(model, id);
-      }
-      return apiResponse;
-    }
+    }    
 
     /// <summary>
     /// Delete Selected Activity Type
@@ -327,33 +301,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if (model.QualityId == null)
-        {
-          apiResponse = await _iMasterPageService.AddQuality(model, id);
-        }
-        else
-        {
-          apiResponse = await _iMasterPageService.EditQuality(model, id);
-        }
-
-      }
-      return apiResponse;
-    }
-
-    /// <summary>
-    /// Edit Selected Quality
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public async Task<APIResponse> EditQuality([FromBody]QualityModel model)
-    {
-      APIResponse apiResponse = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiResponse = await _iMasterPageService.EditQuality(model, id);
+        apiResponse = await _iMasterPageService.AddEditQuality(model, id);      
       }
       return apiResponse;
     }
@@ -485,36 +433,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
-        var id = user.Id;
-        if (model.MediumId == null)
-        {
-          apiResponse = await _iMasterPageService.AddMedium(model, id);
-        }
-        else
-        {
-          apiResponse = await _iMasterPageService.EditMedium(model, id);
-        }
+        var id = user.Id;       
+        apiResponse = await _iMasterPageService.AddEditMedium(model, id);        
       }
       return apiResponse;
-    }
-
-    /// <summary>
-    /// Edit selected medium
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public async Task<APIResponse> EditMedium([FromBody]MediumModel model)
-    {
-      APIResponse apiResponse = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiResponse = await _iMasterPageService.EditMedium(model, id);
-      }
-      return apiResponse;
-    }
+    }    
 
     /// <summary>
     /// Delete Selected Medium
@@ -575,32 +498,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if (model.TimeCategoryId == null)
-        {
-          apiResponse = await _iMasterPageService.AddTimeCategory(model, id);
-        }
-        else
-        {
-          apiResponse = await _iMasterPageService.EditTimeCategory(model, id);
-        }
-      }
-      return apiResponse;
-    }
-
-    /// <summary>
-    /// Edit selected time category
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public async Task<APIResponse> EditTimeCategory([FromBody]TimeCategoryModel model)
-    {
-      APIResponse apiResponse = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiResponse = await _iMasterPageService.EditTimeCategory(model, id);
+        apiResponse = await _iMasterPageService.AddEditTimeCategory(model, id);        
       }
       return apiResponse;
     }
@@ -664,32 +562,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if (model.NatureId == null)
-        {
-          apiResponse = await _iMasterPageService.AddNature(model, id);
-        }
-        else
-        {
-          apiResponse = await _iMasterPageService.EditNature(model, id);
-        }
-      }
-      return apiResponse;
-    }
-
-    /// <summary>
-    /// Edit selected Nature
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public async Task<APIResponse> EditNature([FromBody]NatureModel model)
-    {
-      APIResponse apiResponse = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiResponse = await _iMasterPageService.EditNature(model, id);
+        apiResponse = await _iMasterPageService.AddEditNature(model, id);        
       }
       return apiResponse;
     }
@@ -753,35 +626,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if (model.MediaCategoryId == 0 || model.MediaCategoryId == null)
-        {
-          apiResponse = await _iMasterPageService.AddMediaCategory(model, id);
-        }
-        else
-        {
-          apiResponse = await _iMasterPageService.EditMediaCategory(model, id);
-        }
+        apiResponse = await _iMasterPageService.AddEditMediaCategory(model, id);        
       }
       return apiResponse;
-    }
-
-    /// <summary>
-    /// edit selected media category
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public async Task<APIResponse> EditMediaCategory([FromBody]MediaCategoryModel model)
-    {
-      APIResponse apiResponse = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiResponse = await _iMasterPageService.EditMediaCategory(model, id);
-      }
-      return apiResponse;
-    }
+    }   
 
     /// <summary>
     /// Delete Selected media category
@@ -852,6 +700,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     #endregion
 
     #region Unit Rate
+
+    [HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetUnitRatePaginatedList([FromBody]UnitRatePaginationModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iMasterPageService.GetUnitRatePaginatedList(model, id);
+      }
+      return apiRespone;
+    }
 
     /// <summary>
     /// Get Unit Rate List

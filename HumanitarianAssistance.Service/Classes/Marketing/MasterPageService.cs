@@ -99,36 +99,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.Message = ex.Message;
             }
             return response;
-        }
-
-        /// <summary>
-        /// Edit Selected Quality
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="UserId"></param>
-        /// <returns></returns>
-        public async Task<APIResponse> EditQuality(QualityModel model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                Quality obj = await _uow.QualityRepository.FindAsync(x => x.QualityId == model.QualityId);
-                obj.ModifiedById = UserId;
-                obj.ModifiedDate = DateTime.Now;
-                _mapper.Map(model, obj);
-                await _uow.QualityRepository.UpdateAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.qualityById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Quality updated successfully";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
+        }        
 
         /// <summary>
         /// Add New Quality
@@ -136,21 +107,36 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         /// <param name="model"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public async Task<APIResponse> AddQuality(QualityModel model, string UserId)
+        public async Task<APIResponse> AddEditQuality(QualityModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                Quality obj = _mapper.Map<QualityModel, Quality>(model);
-                obj.CreatedById = UserId;
-                obj.CreatedDate = DateTime.Now;
-                obj.IsDeleted = false;
-                obj.QualityName = model.QualityName;
-                await _uow.QualityRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.qualityById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Quality added successfully";
+                if (model.QualityId == 0 || model.QualityId == null)
+                {
+                    Quality obj = _mapper.Map<QualityModel, Quality>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.QualityName = model.QualityName;
+                    await _uow.QualityRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.qualityById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Quality added successfully";
+                }                
+                else
+                {
+                    Quality obj = await _uow.QualityRepository.FindAsync(x => x.QualityId == model.QualityId);
+                    obj.ModifiedById = UserId;
+                    obj.ModifiedDate = DateTime.Now;
+                    _mapper.Map(model, obj);
+                    await _uow.QualityRepository.UpdateAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.qualityById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Quality updated successfully";
+                }
             }
             catch (Exception ex)
             {
@@ -235,55 +221,41 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         }
 
         /// <summary>
-        /// Edit Selected Medium
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="UserId"></param>
-        /// <returns></returns>
-        public async Task<APIResponse> EditMedium(MediumModel model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                Medium obj = await _uow.MediumRepository.FindAsync(x => x.MediumId == model.MediumId);
-                obj.ModifiedById = UserId;
-                obj.ModifiedDate = DateTime.Now;
-                _mapper.Map(model, obj);
-                await _uow.MediumRepository.UpdateAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.mediumById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Medium updated successfully";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
-
-        /// <summary>
         /// Add New Medium
         /// </summary>
         /// <param name="model"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public async Task<APIResponse> AddMedium(MediumModel model, string UserId)
+        public async Task<APIResponse> AddEditMedium(MediumModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                Medium obj = _mapper.Map<MediumModel, Medium>(model);
-                obj.CreatedById = UserId;
-                obj.CreatedDate = DateTime.Now;
-                obj.IsDeleted = false;
-                obj.MediumName = model.MediumName;
-                await _uow.MediumRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.mediumById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Medium added successfully";
+                if (model.MediumId == 0 || model.MediumId == null)
+                {
+                    Medium obj = _mapper.Map<MediumModel, Medium>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.MediumName = model.MediumName;
+                    await _uow.MediumRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.mediumById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Medium added successfully";
+                }
+                else
+                {
+                    Medium obj = await _uow.MediumRepository.FindAsync(x => x.MediumId == model.MediumId);
+                    obj.ModifiedById = UserId;
+                    obj.ModifiedDate = DateTime.Now;
+                    _mapper.Map(model, obj);
+                    await _uow.MediumRepository.UpdateAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.mediumById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Medium updated successfully";
+                }                
             }
             catch (Exception ex)
             {
@@ -368,55 +340,41 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         }
 
         /// <summary>
-        /// Edit Selected Nature
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="UserId"></param>
-        /// <returns></returns>
-        public async Task<APIResponse> EditNature(NatureModel model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                Nature obj = await _uow.NatureRepository.FindAsync(x => x.NatureId == model.NatureId);
-                obj.ModifiedById = UserId;
-                obj.ModifiedDate = DateTime.Now;
-                _mapper.Map(model, obj);
-                await _uow.NatureRepository.UpdateAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.natureById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Nature updated successfully";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
-
-        /// <summary>
         /// Add New Nature
         /// </summary>
         /// <param name="model"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public async Task<APIResponse> AddNature(NatureModel model, string UserId)
+        public async Task<APIResponse> AddEditNature(NatureModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                Nature obj = _mapper.Map<NatureModel, Nature>(model);
-                obj.CreatedById = UserId;
-                obj.CreatedDate = DateTime.Now;
-                obj.IsDeleted = false;
-                obj.NatureName = model.NatureName;
-                await _uow.NatureRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.natureById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Nature added successfully";
+                if (model.NatureId == 0 || model.NatureId == null)
+                {
+                    Nature obj = _mapper.Map<NatureModel, Nature>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.NatureName = model.NatureName;
+                    await _uow.NatureRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.natureById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Nature added successfully";
+                }                
+                else
+                {
+                    Nature obj = await _uow.NatureRepository.FindAsync(x => x.NatureId == model.NatureId);
+                    obj.ModifiedById = UserId;
+                    obj.ModifiedDate = DateTime.Now;
+                    _mapper.Map(model, obj);
+                    await _uow.NatureRepository.UpdateAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.natureById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Nature updated successfully";
+                }
             }
             catch (Exception ex)
             {
@@ -499,57 +457,43 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-
-        /// <summary>
-        /// Edit Selected Phase
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="UserId"></param>
-        /// <returns></returns>
-        public async Task<APIResponse> EditPhase(JobPhaseModel model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                JobPhase obj = await _uow.JobPhaseRepository.FindAsync(x => x.JobPhaseId == model.JobPhaseId);
-                obj.ModifiedById = UserId;
-                obj.ModifiedDate = DateTime.Now;
-                _mapper.Map(model, obj);
-                await _uow.JobPhaseRepository.UpdateAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.phaseById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Phase updated successfully";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
-
+        
         /// <summary>
         /// Add New Phase
         /// </summary>
         /// <param name="model"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public async Task<APIResponse> AddPhase(JobPhaseModel model, string UserId)
+        public async Task<APIResponse> AddEditPhase(JobPhaseModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                JobPhase obj = _mapper.Map<JobPhaseModel, JobPhase>(model);
-                obj.CreatedById = UserId;
-                obj.CreatedDate = DateTime.Now;
-                obj.IsDeleted = false;
-                obj.Phase = model.Phase;
-                await _uow.JobPhaseRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.phaseById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Phase added Successfully";
+                if (model.JobPhaseId == 0 || model.JobPhaseId == null)
+                {
+                    JobPhase obj = _mapper.Map<JobPhaseModel, JobPhase>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.Phase = model.Phase;
+                    await _uow.JobPhaseRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.phaseById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Phase added Successfully";
+                }
+                else 
+                {
+                    JobPhase obj = await _uow.JobPhaseRepository.FindAsync(x => x.JobPhaseId == model.JobPhaseId);
+                    obj.ModifiedById = UserId;
+                    obj.ModifiedDate = DateTime.Now;
+                    _mapper.Map(model, obj);
+                    await _uow.JobPhaseRepository.UpdateAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.phaseById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Phase updated successfully";
+                }
             }
             catch (Exception ex)
             {
@@ -632,57 +576,43 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-
-        /// <summary>
-        /// Edit Selected activity Type
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="UserId"></param>
-        /// <returns></returns>
-        public async Task<APIResponse> EditActivityType(ActivityTypeModel model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                ActivityType obj = await _uow.ActivityTypeRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId);
-                obj.ModifiedById = UserId;
-                obj.ModifiedDate = DateTime.Now;
-                _mapper.Map(model, obj);
-                await _uow.ActivityTypeRepository.UpdateAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.activityById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
-
+        
         /// <summary>
         /// Add New Activity Type
         /// </summary>
         /// <param name="model"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public async Task<APIResponse> AddActivityType(ActivityTypeModel model, string UserId)
+        public async Task<APIResponse> AddEditActivityType(ActivityTypeModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                ActivityType obj = _mapper.Map<ActivityTypeModel, ActivityType>(model);
-                obj.CreatedById = UserId;
-                obj.CreatedDate = DateTime.Now;
-                obj.IsDeleted = false;
-                obj.ActivityName = model.ActivityName;
-                await _uow.ActivityTypeRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.activityById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                if (model.ActivityTypeId == 0 || model.ActivityTypeId == null)
+                {
+                    ActivityType obj = _mapper.Map<ActivityTypeModel, ActivityType>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.ActivityName = model.ActivityName;
+                    await _uow.ActivityTypeRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.activityById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    ActivityType obj = await _uow.ActivityTypeRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId);
+                    obj.ModifiedById = UserId;
+                    obj.ModifiedDate = DateTime.Now;
+                    _mapper.Map(model, obj);
+                    await _uow.ActivityTypeRepository.UpdateAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.activityById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }                
             }
             catch (Exception ex)
             {
@@ -764,57 +694,43 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-
-        /// <summary>
-        /// Edit Selected Media Category
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="UserId"></param>
-        /// <returns></returns>
-        public async Task<APIResponse> EditMediaCategory(MediaCategoryModel model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                MediaCategory obj = await _uow.MediaCategoryRepository.FindAsync(x => x.MediaCategoryId == model.MediaCategoryId);
-                obj.ModifiedById = UserId;
-                obj.ModifiedDate = DateTime.Now;
-                _mapper.Map(model, obj);
-                await _uow.MediaCategoryRepository.UpdateAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.mediaCategoryById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Media Category updated successfully";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
-
+        
         /// <summary>
         /// Add New Media Category
         /// </summary>
         /// <param name="model"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public async Task<APIResponse> AddMediaCategory(MediaCategoryModel model, string UserId)
+        public async Task<APIResponse> AddEditMediaCategory(MediaCategoryModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                MediaCategory obj = _mapper.Map<MediaCategoryModel, MediaCategory>(model);
-                obj.CreatedById = UserId;
-                obj.CreatedDate = DateTime.Now;
-                obj.IsDeleted = false;
-                obj.CategoryName = model.CategoryName;
-                await _uow.MediaCategoryRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Media Category Added successfully";
-                response.data.mediaCategoryById = obj;
+               if (model.MediaCategoryId == 0 || model.MediaCategoryId == null)
+                {
+                    MediaCategory obj = _mapper.Map<MediaCategoryModel, MediaCategory>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.CategoryName = model.CategoryName;
+                    await _uow.MediaCategoryRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Media Category Added successfully";
+                    response.data.mediaCategoryById = obj;
+                }
+                else
+                {
+                    MediaCategory obj = await _uow.MediaCategoryRepository.FindAsync(x => x.MediaCategoryId == model.MediaCategoryId);
+                    obj.ModifiedById = UserId;
+                    obj.ModifiedDate = DateTime.Now;
+                    _mapper.Map(model, obj);
+                    await _uow.MediaCategoryRepository.UpdateAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.mediaCategoryById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Media Category updated successfully";
+                }
             }
             catch (Exception ex)
             {
@@ -936,36 +852,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.Message = ex.Message;
             }
             return response;
-        }
-
-        /// <summary>
-        /// Edit Selected Time Category
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="UserId"></param>
-        /// <returns></returns>
-        public async Task<APIResponse> EditTimeCategory(TimeCategoryModel model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                TimeCategory obj = await _uow.TimeCategoryRepository.FindAsync(x => x.TimeCategoryId == model.TimeCategoryId);
-                obj.ModifiedById = UserId;
-                obj.ModifiedDate = DateTime.Now;
-                _mapper.Map(model, obj);
-                await _uow.TimeCategoryRepository.UpdateAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.timeCatergoryById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Time category updated successfully";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
+        }       
 
         /// <summary>
         /// Add New Time Category
@@ -973,21 +860,36 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         /// <param name="model"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public async Task<APIResponse> AddTimeCategory(TimeCategoryModel model, string UserId)
+        public async Task<APIResponse> AddEditTimeCategory(TimeCategoryModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                TimeCategory obj = _mapper.Map<TimeCategoryModel, TimeCategory>(model);
-                obj.CreatedById = UserId;
-                obj.CreatedDate = DateTime.Now;
-                obj.IsDeleted = false;
-                obj.TimeCategoryName = model.TimeCategoryName;
-                await _uow.TimeCategoryRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                response.data.timeCatergoryById = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Time Category added successfully";
+                if(model.TimeCategoryId == 0 || model.TimeCategoryId == null)
+                {
+                    TimeCategory obj = _mapper.Map<TimeCategoryModel, TimeCategory>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.TimeCategoryName = model.TimeCategoryName;
+                    await _uow.TimeCategoryRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.timeCatergoryById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Time Category added successfully";
+                }
+                else
+                {
+                    TimeCategory obj = await _uow.TimeCategoryRepository.FindAsync(x => x.TimeCategoryId == model.TimeCategoryId);
+                    obj.ModifiedById = UserId;
+                    obj.ModifiedDate = DateTime.Now;
+                    _mapper.Map(model, obj);
+                    await _uow.TimeCategoryRepository.UpdateAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.timeCatergoryById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Time category updated successfully";
+                }               
             }
             catch (Exception ex)
             {
@@ -1000,6 +902,79 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         #endregion
 
         #region Unit Rate
+        public async Task<APIResponse> GetUnitRateByActivityTypeId(UnitRateModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var activity = await _uow.ActivityTypeRepository.FindAllAsync(x => x.IsDeleted == false);
+                var activityDetails = activity.Where(x => x.ActivityTypeId == model.ActivityTypeId).FirstOrDefault();
+                string activityName = activityDetails.ActivityName;
+                UnitRate unitRateById = new UnitRate();
+                if (activityName == "Broadcasting")
+                {
+                    unitRateById = _uow.GetDbContext().UnitRates.Where(x => x.ActivityTypeId == model.ActivityTypeId && x.TimeCategoryId == model.TimeCategoryId && x.MediumId == model.MediumId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false).FirstOrDefault();
+                    //await _uow.UnitRateRepository.FindAsync(x => x.TimeCategoryId == model.TimeCategoryId && x.MediumId == model.MediumId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false);
+                }
+                if (activityName == "Production")
+                {
+                    unitRateById = _uow.GetDbContext().UnitRates.Where(x => x.ActivityTypeId == model.ActivityTypeId && x.MediumId == model.MediumId && x.NatureId == model.NatureId && x.QualityId == model.QualityId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false).FirstOrDefault();
+                    //await _uow.UnitRateRepository.FindAsync(x=>x.MediumId == model.MediumId && x.NatureId == model.NatureId && x.QualityId == model.QualityId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false);
+                }
+                if (unitRateById == null)
+                {
+                    response.StatusCode = StaticResource.notFoundCode;
+                    response.data.UnitRateByActivityId = unitRateById;
+                    response.Message = StaticResource.unitRateNotFound;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.data.UnitRateByActivityId = unitRateById;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetUnitRatePaginatedList(UnitRatePaginationModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = _uow.GetDbContext().UnitRates.Where(x => x.IsDeleted == false).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+                response.data.UnitRates = list;
+                response.StatusCode = 200;
+                var unitRateList = (from ur in _uow.GetDbContext().UnitRates
+                                    join at in _uow.GetDbContext().ActivityTypes on ur.ActivityTypeId equals at.ActivityTypeId
+                                    where !ur.IsDeleted.Value && !at.IsDeleted.Value
+                                    select (new UnitRateDetailsModel
+                                    {
+                                        UnitRateId = ur.UnitRateId,
+                                        ActivityTypeId = at.ActivityTypeId,
+                                        ActivityName = at.ActivityName,
+                                        UnitRates = ur.UnitRates,
+                                        CurrencyId = ur.CurrencyId,
+                                        MediumId = ur.MediumId,
+                                        NatureId = ur.NatureId,
+                                        QualityId = ur.QualityId,
+                                        TimeCategoryId = ur.TimeCategoryId,
+                                        MediaCategoryId = ur.MediaCategoryId
+                                    })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+                response.data.TotalCount = unitRateList.Count(x => x.IsDeleted == false);
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
         /// <summary>
         /// Get Unit Rate By Id
@@ -1061,7 +1036,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
         }
@@ -1092,7 +1067,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                         MediaCategoryId = ur.MediaCategoryId
                                     })).ToList();
 
-
+                response.data.TotalCount = unitRateList.Count(x => x.IsDeleted == false);
                 response.data.UnitRateDetails = unitRateList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1248,35 +1223,74 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
         #endregion
 
-        public async Task<APIResponse> GetUnitRateByActivityTypeId(UnitRateModel model, string UserId)
+        #region Producer
+        /// <summary>
+        /// get Producer By Id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> GetProducerById(int model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var activity = await _uow.ActivityTypeRepository.FindAllAsync(x => x.IsDeleted == false);
-                var activityDetails = activity.Where(x => x.ActivityTypeId == model.ActivityTypeId).FirstOrDefault();
-                string activityName = activityDetails.ActivityName;
-                UnitRate unitRateById = new UnitRate();
-                if (activityName == "Broadcasting")
+                Producer obj = await _uow.ProducerRepository.FindAsync(x => x.ProducerId == model && x.IsDeleted == false);
+                response.data.producerById = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// get Producer List
+        /// </summary>
+        /// <returns></returns>
+        public async Task<APIResponse> GetAllProducers()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ICollection<Producer> Producers = await _uow.ProducerRepository.FindAllAsync(x => x.IsDeleted == false);
+                response.data.Producers = Producers;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Delete Selected Producer
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> DeleteProducer(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var producerDetails = await _uow.ProducerRepository.FindAsync(x => x.IsDeleted == false && x.ProducerId == model);
+                if (producerDetails != null)
                 {
-                    unitRateById = _uow.GetDbContext().UnitRates.Where(x => x.ActivityTypeId == model.ActivityTypeId && x.TimeCategoryId == model.TimeCategoryId && x.MediumId == model.MediumId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false).FirstOrDefault();
-                    //await _uow.UnitRateRepository.FindAsync(x => x.TimeCategoryId == model.TimeCategoryId && x.MediumId == model.MediumId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false);
-                }
-                if (activityName == "Production")
-                {
-                    unitRateById = _uow.GetDbContext().UnitRates.Where(x => x.ActivityTypeId == model.ActivityTypeId && x.MediumId == model.MediumId && x.NatureId == model.NatureId && x.QualityId == model.QualityId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false).FirstOrDefault();
-                    //await _uow.UnitRateRepository.FindAsync(x=>x.MediumId == model.MediumId && x.NatureId == model.NatureId && x.QualityId == model.QualityId && x.CurrencyId == model.CurrencyId && x.IsDeleted == false);
-                }
-                if (unitRateById == null)
-                {
-                    response.StatusCode = StaticResource.notFoundCode;
-                    response.data.UnitRateByActivityId = unitRateById;
-                    response.Message = StaticResource.unitRateNotFound;
-                }
-                else
-                {
+                    producerDetails.ModifiedById = UserId;
+                    producerDetails.ModifiedDate = DateTime.UtcNow;
+                    producerDetails.IsDeleted = true;
+                    await _uow.ProducerRepository.UpdateAsyn(producerDetails);
+
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.data.UnitRateByActivityId = unitRateById;
+                    response.Message = "Producer deleted successfully";
                 }
             }
             catch (Exception ex)
@@ -1286,5 +1300,52 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
+        
+        /// <summary>
+        /// Add New Producer
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> AddEditProducer(ProducerModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if(model.ProducerId == 0 || model.ProducerId == null)
+                {
+                    Producer obj = _mapper.Map<ProducerModel, Producer>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.ProducerName = model.ProducerName;
+                    await _uow.ProducerRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.producerById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Producer added Successfully";
+                }
+                else
+                {
+                    Producer obj1 = await _uow.ProducerRepository.FindAsync(x => x.ProducerId == model.ProducerId);
+                    obj1.ModifiedById = UserId;
+                    obj1.ModifiedDate = DateTime.Now;
+                    _mapper.Map(model, obj1);
+                    await _uow.ProducerRepository.UpdateAsyn(obj1);
+                    await _uow.SaveAsync();
+                    response.data.producerById = obj1;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Producer updated successfully";
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+        #endregion      
     }
 }
