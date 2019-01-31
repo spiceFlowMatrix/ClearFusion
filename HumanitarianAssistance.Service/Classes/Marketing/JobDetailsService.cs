@@ -679,7 +679,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    TotalPrice = jp.TotalPrice,
                                    IsInvoiceApproved = jp.IsInvoiceApproved
                                })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).OrderByDescending(x => x.CreatedDate).ToList();
-
+                response.data.TotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
                 response.data.JobDetailsModel = JobList;
                 response.StatusCode = 200;
                 response.Message = "Success";

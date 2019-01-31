@@ -32,4 +32,10 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long? NatureId { get; set; }
         public long? QualityId { get; set; }
     }
+
+    public class UnitRatePaginationModel
+    {
+        public int pageIndex { get; set; }
+        public int pageSize { get; set; }
+    }
 }
