@@ -45,7 +45,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     AccountId = balance.Key.ChartOfAccountNewId,
                     AccountName = balance.Key.AccountName,
                     Balance = new Decimal(balance.Value),
-                    AccountCode= balance.Key.ChartOfAccountNewCode
+                    AccountCode = balance.Key.ChartOfAccountNewCode
                 };
                 vmBalances.Add(iVmBalance);
             }
@@ -63,8 +63,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     .Where(x => x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
                     .Include(x => x.AccountType)
                     .ToListAsync();
-                
-                if(inputLevelList.Any(x => x.AccountTypeId == null))
+
+                if (inputLevelList.Any(x => x.AccountTypeId == null))
                     throw new Exception("Some accounts do not have notes assigned to them!");
 
                 var accountBalances = await GetAccountBalances(inputLevelList, reportDate, toCurrency);
@@ -272,7 +272,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         private async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime endDate)
         {
             return await _uow.GetDbContext().VoucherTransactions
-                .Where(x => x.TransactionDate <= endDate 
+                .Where(x => x.TransactionDate <= endDate
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
                             && x.IsDeleted == false
                             && x.ChartOfAccountNewId != null)
@@ -309,7 +309,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     .FirstOrDefault(x => x.Date <= transaction.TransactionDate.GetValueOrDefault()
                                          && x.FromCurrency == transaction.CurrencyId
                                          && x.ToCurrency == toCurrencyId);
-                if(interxExchangeRate == null)
+                if (interxExchangeRate == null)
                     throw new Exception("No valid exchange rate exists for the given report's currency");
                 xExchangeRate = (double)interxExchangeRate.Rate;
             }
@@ -334,9 +334,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     .FirstOrDefault(x => x.Date <= onDate
                                          && x.FromCurrency == transaction.CurrencyId
                                          && x.ToCurrency == toCurrencyId);
-                if(interxExchangeRate == null)
+                if (interxExchangeRate == null)
                     throw new Exception("No valid exchange rate exists for the given report's currency");
-                xExchangeRate = (double) interxExchangeRate.Rate;
+                xExchangeRate = (double)interxExchangeRate.Rate;
             }
 
             return xExchangeRate;
@@ -347,7 +347,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         private async Task<List<VoucherTransactions>> GetTransactionValuesAfterExchange(List<VoucherTransactions> transactions, int toCurrencyId)
         {
             var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId
-                                                                               && transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency) 
+                                                                               && transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency)
                                                                                && transactions.Select(y => y.TransactionDate).Any(z => z >= x.Date));
             var ratesList = await ratesQuery.ToListAsync();
 
@@ -369,7 +369,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         // Value after exchange on the given onDate
         private async Task<List<VoucherTransactions>> GetTransactionValuesAfterExchange(List<VoucherTransactions> transactions, int toCurrencyId, DateTime onDate)
         {
-            var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId 
+            if (!transactions.Any())
+            {
+                throw new Exception("Transaction not found");
+            }
+
+            var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId
                                                                                && transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency)
                                                                                && x.Date.ToShortDateString() == onDate.ToShortDateString());
             var ratesList = await ratesQuery.ToListAsync();
@@ -380,7 +385,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
 
             List<VoucherTransactions> outputTransactions = new List<VoucherTransactions>();
-            
+
             foreach (var transaction in transactions)
             {
                 var rate = DetermineTransactionExrate(transaction, ratesList, toCurrencyId, onDate);
@@ -415,7 +420,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         }
 
         // thhis override calculates transaction credit/debit value after exchange on the transaction date
-        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime transactionsTillDate, 
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime transactionsTillDate,
             int toCurrencyId)
         {
             var transactions = await GetAccountTransactions(inputLevelAccounts, transactionsTillDate);
@@ -425,7 +430,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         }
 
         // this override calculates transaction credit/debit values after exchange based on the given transactionCompareDate
-        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime transactionsTillDate, 
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, DateTime transactionsTillDate,
             DateTime transactionExchangeDate, int toCurrencyId)
         {
             var transactions = await GetAccountTransactions(inputLevelAccounts, transactionsTillDate);
@@ -434,7 +439,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return CalculateAccountBalances(inputLevelAccounts, exchangeValuedTransactions);
         }
 
-        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, 
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts,
             int toCurrencyId, DateTime transactionsStartingFrom, DateTime transactionsUntil)
         {
             var transactions = await GetAccountTransactions(inputLevelAccounts, transactionsStartingFrom, transactionsUntil);
@@ -443,7 +448,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return CalculateAccountBalances(inputLevelAccounts, exchangeValuedTransactions);
         }
 
-        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts, 
+        private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts,
             int toCurrencyId, DateTime transactionsStartingFrom, DateTime transactionsUntil, DateTime transactionExchangeDate)
         {
             var transactions = await GetAccountTransactions(inputLevelAccounts, transactionsStartingFrom, transactionsUntil);
@@ -455,7 +460,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         private async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime startDate,
             DateTime endDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
         {
-            return await _uow.GetDbContext().VoucherTransactions
+            var data =  await _uow.GetDbContext().VoucherTransactions
                 .Where(x => x.TransactionDate <= endDate
                             && x.TransactionDate >= startDate
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
@@ -464,10 +469,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             && officeList.Contains(x.VoucherDetails.OfficeId)
                             && journalList.Contains(x.VoucherDetails.JournalCode)
                             //&& projectIdList.Contains(x.VoucherDetails.ProjectId)
+                            && projectIdList.Contains(x.ProjectId)
                             )
                 .Include(x => x.ChartOfAccountDetail)
-                .Include(x=> x.VoucherDetails)
+                .Include(x => x.VoucherDetails)
                 .ToListAsync();
+            return data;
         }
 
         private async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts,
@@ -508,7 +515,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
             return response;
         }
-        
+
         public async Task<APIResponse> GetAccountBalancesById(List<long?> accountIds, DateTime transactionExchangeDate, int toCurrencyId,
            DateTime reportStartDate, DateTime reportEndDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
         {
@@ -550,6 +557,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
         public async Task<APIResponse> GetExchangeGainLossReport(ExchangeGainLossFilterModel exchangeGainLossFilterModel)
         {
+            // var dgff = await GetAllTransaction(exchangeGainLossFilterModel.AccountIdList, exchangeGainLossFilterModel.FromDate, exchangeGainLossFilterModel.ToDate, exchangeGainLossFilterModel.OfficeIdList, exchangeGainLossFilterModel.JournalIdList, exchangeGainLossFilterModel.ProjectIdList);
+
             List<ExchangeGainLossReportViewModel> exchangeGainLossReportData = new List<ExchangeGainLossReportViewModel>();
 
             APIResponse response = new APIResponse();
@@ -558,24 +567,24 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 try
                 {
-                    var originalBalance= await GetAccountBalancesById(
-                                                            exchangeGainLossFilterModel.AccountIdList, 
-                                                            exchangeGainLossFilterModel.ToCurrencyId, 
+                    var originalBalance = await GetAccountBalancesById(
+                                                            exchangeGainLossFilterModel.AccountIdList,
+                                                            exchangeGainLossFilterModel.ToCurrencyId,
                                                             exchangeGainLossFilterModel.FromDate,
-                                                            exchangeGainLossFilterModel.ToDate, 
-                                                            exchangeGainLossFilterModel.JournalIdList, 
-                                                            exchangeGainLossFilterModel.OfficeIdList, 
+                                                            exchangeGainLossFilterModel.ToDate,
+                                                            exchangeGainLossFilterModel.JournalIdList,
+                                                            exchangeGainLossFilterModel.OfficeIdList,
                                                             exchangeGainLossFilterModel.ProjectIdList
                                                 );
 
                     var currentBalance = await GetAccountBalancesById(
-                                                            exchangeGainLossFilterModel.AccountIdList, 
-                                                            exchangeGainLossFilterModel.ComparisionDate, 
-                                                            exchangeGainLossFilterModel.ToCurrencyId, 
+                                                            exchangeGainLossFilterModel.AccountIdList,
+                                                            exchangeGainLossFilterModel.ComparisionDate,
+                                                            exchangeGainLossFilterModel.ToCurrencyId,
                                                             exchangeGainLossFilterModel.FromDate,
-                                                            exchangeGainLossFilterModel.ToDate, 
-                                                            exchangeGainLossFilterModel.JournalIdList, 
-                                                            exchangeGainLossFilterModel.OfficeIdList, 
+                                                            exchangeGainLossFilterModel.ToDate,
+                                                            exchangeGainLossFilterModel.JournalIdList,
+                                                            exchangeGainLossFilterModel.OfficeIdList,
                                                             exchangeGainLossFilterModel.ProjectIdList
                                                );
 
@@ -616,5 +625,179 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
             return response;
         }
+
+
+        #region "Test code"
+
+        #region "GetAllTransaction"
+        public async Task<APIResponse> GetAllTransaction(
+                                        List<long?> accountIds,
+                                        DateTime fromDate,
+                                        DateTime toDate,
+                                        List<int?> officeIds,
+                                        List<int?> journalIds,
+                                        List<long?> projectsIds
+            )
+        {
+
+            APIResponse response = new APIResponse();
+            try
+            {
+                var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
+                  .Where(x => accountIds.Contains(x.ChartOfAccountNewId)).ToListAsync();
+
+                if (inputLevelList.Any(x => x.AccountTypeId == null))
+                    throw new Exception("Some accounts do not have notes assigned to them!");
+
+                var transactionList = await _uow.GetDbContext().VoucherTransactions
+                                       .Where(x => x.IsDeleted == false &&
+                                                    x.TransactionDate.Value.Date >= fromDate.Date &&
+                                                    x.TransactionDate.Value.Date <= toDate.Date &&
+                                                    accountIds.Contains(x.ChartOfAccountNewId) &&
+                                                    officeIds.Contains(x.VoucherDetails.OfficeId) &&
+                                                    journalIds.Contains(x.VoucherDetails.JournalCode) &&
+                                                    projectsIds.Contains(x.ProjectId)
+                                             )
+                                      .Select(x => new VoucherTransactionModel
+                                      {
+                                          TransactionId = x.TransactionId,
+                                          VoucherNo = x.VoucherNo,
+                                          AccountNo = x.ChartOfAccountNewId,
+                                          AccountCode = x.ChartOfAccountDetail.ChartOfAccountNewCode,
+                                          AccountName = x.ChartOfAccountDetail.AccountName,
+                                          OfficeId = x.OfficeId,
+                                          JournalId = x.VoucherDetails.JournalCode,
+                                          FinancialYearId = x.FinancialYearId,
+                                          ProjectId = x.ProjectId,
+                                          BudgetLineId = x.BudgetLineId,
+                                          TransactionDate = x.TransactionDate,
+                                          CurrencyId = x.CurrencyId,
+                                          Debit = x.Debit,
+                                          Credit = x.Credit,
+                                      })
+                                      .ToListAsync();
+
+                response.data.VoucherTransactionList = transactionList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        #endregion
+
+        #region "FetchAllDatesFromTransactions"
+        public List<DateTime?> FetchAllDatesFromTransactions(IList<VoucherTransactionModel> transactions)
+        {
+            return transactions.GroupBy(p => new { p.TransactionDate })
+                                      .Select(g => g.First().TransactionDate)
+                                      .ToList();
+        }
+        #endregion
+
+        #region "GetAllExchageRates"
+        public async Task<APIResponse> GetAllExchageRatesByDates(List<DateTime?> dateList)
+        {
+
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                var exchangeRates = await _uow.GetDbContext().ExchangeRateDetail
+                                       .Where(x => x.IsDeleted == false &&
+                                                    dateList.Contains(x.Date)
+                                             )
+                                      .Select(x => new ExchangeRateDetail
+                                      {
+                                          Date = x.Date,
+                                          ExchangeRateId = x.ExchangeRateId,
+                                          FromCurrency = x.FromCurrency,
+                                          ToCurrency = x.ToCurrency,
+                                          Rate = x.Rate,
+                                          OfficeId = x.OfficeId
+                                      })
+                                      .ToListAsync();
+
+                response.data.ExchangeRateDetailList = exchangeRates;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        #endregion
+
+        #region "GroupByAccount"
+        public List<VoucherTransactionModel> GroupByAccount(List<VoucherTransactionModel> transactions)
+        {
+            var detail = transactions.GroupBy(p => new { p.AccountNo })
+                                      .Select(g => new VoucherTransactionModel
+                                      {
+                                          AccountNo = g.First().AccountNo,
+                                          AccountName = g.First().AccountName,
+                                          BudgetLineId = g.First().BudgetLineId,
+                                          Credit = g.Sum(x => x.Credit),
+                                          Debit = g.Sum(x => x.Debit),
+                                      })
+                                      .ToList();
+            return detail;
+        }
+        #endregion
+
+        #region "GetCurrencyGainLossReport"
+        public async Task<APIResponse> GetCurrencyGainLossReport(ExchangeGainLossFilterModel exchangeGainLossFilterModel)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                // Transaction List
+                var transactionList = await GetAllTransaction(
+                                                exchangeGainLossFilterModel.AccountIdList,
+                                                exchangeGainLossFilterModel.FromDate,
+                                                exchangeGainLossFilterModel.ToDate,
+                                                exchangeGainLossFilterModel.OfficeIdList,
+                                                exchangeGainLossFilterModel.JournalIdList,
+                                                exchangeGainLossFilterModel.ProjectIdList
+                                            );
+
+                var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == exchangeGainLossFilterModel.ToCurrencyId
+                                                                              && transactionList.data.VoucherTransactionList.Select(y => y.CurrencyId).Contains(x.FromCurrency)
+                                                                              && transactionList.data.VoucherTransactionList.Select(y => y.TransactionDate)
+                                                                       .Any(z => z >= x.Date));
+
+                //var comparisonDateRates = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == exchangeGainLossFilterModel.ToCurrencyId
+                //                                                              && transactionList.data.VoucherTransactionList.Select(y => y.CurrencyId).Contains(x.FromCurrency)
+                //                                                              && transactionList.data.VoucherTransactionList.Select(y => y.TransactionDate).Where(z => z.Equals(exchangeGainLossFilterModel.ComparisionDate.ToLongDateString()));
+
+
+                //// Filter transaction Dates
+                //var dateListExchagneRates = FetchAllDatesFromTransactions(transactionList.data.VoucherTransactionList);
+                //dateListExchagneRates.Add(exchangeGainLossFilterModel.ComparisionDate); // Add Comparison Date
+                //// Exchagne Rate List
+                //var exchangeRateList = await GetAllExchageRatesByDates(dateListExchagneRates);
+
+
+                //response.data.VoucherTransactionList = transactionList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        #endregion
+
+        #endregion
     }
 }

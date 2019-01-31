@@ -203,6 +203,7 @@ namespace DataAccess
         private IGenericRepository<ContractDetails> _contractDetailsRepository;
         private IGenericRepository<JobDetails> _jobDetailsRepository;
         private IGenericRepository<JobPhase> _jobPhaseRepository;
+        private IGenericRepository<Producer> _producerRepository;
         private IGenericRepository<JobPriceDetails> _jobPriceDetailsRepository;
         private IGenericRepository<LanguageDetail> _languageRepository;
         private IGenericRepository<MediaCategory> _mediaCategoryRepository;
@@ -218,6 +219,7 @@ namespace DataAccess
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
         private IGenericRepository<ChartOfAccountNew> _chartOfAccountNewRepository;
+        private IGenericRepository<GainLossSelectedAccounts> _gainLossSelectedAccountsRepositoryRepository;
 
         #endregion
 
@@ -249,6 +251,15 @@ namespace DataAccess
             GC.SuppressFinalize(this);
         }
 
+
+        public IGenericRepository<GainLossSelectedAccounts> GainLossSelectedAccountsRepository
+        {
+            get
+            {
+                return _gainLossSelectedAccountsRepositoryRepository =
+                    _gainLossSelectedAccountsRepositoryRepository ?? new GenericRepository<GainLossSelectedAccounts>(_mschaContext);
+            }
+        }
 
         public IGenericRepository<ChartOfAccountNew> ChartOfAccountNewRepository
         {
@@ -1426,6 +1437,14 @@ namespace DataAccess
             get
             {
                 return _jobPhaseRepository = _jobPhaseRepository ?? new GenericRepository<JobPhase>(_mschaContext);
+            }
+        }
+        
+         public IGenericRepository<Producer> ProducerRepository
+        {
+            get
+            {
+                return _producerRepository = _producerRepository ?? new GenericRepository<Producer>(_mschaContext);
             }
         }
 

@@ -166,6 +166,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<LedgerModel> TrailBlanceList { get; set; }
 
         public IList<ExchangeRateModel> ExchangeRateList { get; set; }
+        public IList<ExchangeRateDetail> ExchangeRateDetailList { get; set; }
         public IList<EmployeeDetailModel> EmployeeDetailList { get; set; }
         //public IList<ProjectBudget> ProjectBudgetList { get; set; }
         public IList<EmployeeDetailsAllModel> ActiveEmployeeDetailsList { get; set; }
@@ -337,6 +338,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<Medium> Mediums { get; set; }
         public ICollection<Nature> Natures { get; set; }
         public ICollection<JobPhase> JobPhases { get; set; }
+        public ICollection<Producer> Producers { get; set; }
         public ICollection<UnitRate> UnitRates { get; set; }
         public UnitRate UnitRateByActivityId { get; set; }
         public ICollection<JobPriceDetails> JobPriceDetails { get; set; }
@@ -362,6 +364,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public Nature natureById { get; set; }
         public Quality qualityById { get; set; }
         public JobPhase phaseById { get; set; }
+        public Producer producerById { get; set; }
         public ActivityType activityById { get; set; }
         public TimeCategory timeCatergoryById { get; set; }
         #endregion
@@ -392,6 +395,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<AccountBalance> AccountBalances { get; set; }
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
+        public bool IsVoucherVerified { get; set; }
 
         #endregion
 
