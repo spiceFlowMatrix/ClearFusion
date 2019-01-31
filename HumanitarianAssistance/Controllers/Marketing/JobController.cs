@@ -205,14 +205,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        if (model.JobPhaseId == null)
-        {
-          apiResponse = await _iMasterPageService.AddPhase(model, id);
-        }
-        else
-        {
-          apiResponse = await _iMasterPageService.EditPhase(model, id);
-        }
+        apiResponse = await _iMasterPageService.AddEditPhase(model, id);       
       }
       return apiResponse;
     }
@@ -226,24 +219,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       {
         var id = user.Id;
         apiResponse = await _iMasterPageService.GetPhaseById(model, id);
-      }
-      return apiResponse;
-    }
-
-    /// <summary>
-    /// edit selected phase
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public async Task<APIResponse> EditPhase([FromBody]JobPhaseModel model)
-    {
-      APIResponse apiResponse = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiResponse = await _iMasterPageService.EditPhase(model, id);
       }
       return apiResponse;
     }

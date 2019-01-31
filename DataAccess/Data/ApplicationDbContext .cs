@@ -245,6 +245,7 @@ namespace HumanitarianAssistance.Entities
         #region Marketing
         public DbSet<UnitRate> UnitRates { get; set; }
         public DbSet<ActivityType> ActivityTypes { get; set; }
+        public DbSet<Producer> Producers { get; set; }
         public DbSet<Quality> Qualities { get; set; }
         public DbSet<ContractDetails> ContractDetails { get; set; }
         public DbSet<JobDetails> JobDetails { get; set; }
@@ -646,7 +647,8 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 68, PageName = "Donors", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 69, PageName = "ProjectDetails", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 70, PageName = "Proposal", ModuleId = 8, ModuleName = "Projects" },
-                new ApplicationPages { IsDeleted = false, PageId = 71, PageName = "CriteriaEvaluation", ModuleId = 8, ModuleName = "Projects" }
+                new ApplicationPages { IsDeleted = false, PageId = 71, PageName = "CriteriaEvaluation", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 72, PageName = "Producer", ModuleId = 6, ModuleName = "Marketing" }
             );
 
             modelBuilder.Entity<FinancialYearDetail>().HasData(
