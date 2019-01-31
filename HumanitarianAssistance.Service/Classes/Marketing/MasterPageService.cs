@@ -1061,7 +1061,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
         }

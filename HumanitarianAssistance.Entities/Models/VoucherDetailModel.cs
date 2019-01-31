@@ -22,6 +22,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public long? BudgetLineId { get; set; }
         public int? FinancialYearId { get; set; }
         public string FinancialYearName { get; set; }
+        public bool? IsVoucherVerified { get; set; }
 
     }
 
@@ -61,8 +62,10 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? CurrencyId { get; set; }
         public int? OfficeId { get; set; }
         public int? FinancialYearId { get; set; }
+        public int? JournalId { get; set; }
 
         public string AccountName { get; set; }
+        public string AccountCode { get; set; }
         public double? DebitAmount { get; set; }
         public double? CreditAmount { get; set; }
 

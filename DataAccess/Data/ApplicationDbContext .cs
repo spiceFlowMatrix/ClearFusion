@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Entities
 
         //DataTransfer
         public DbSet<EmployeeDetailDT> EmployeeDetailDT { get; set; }
-       
+
 
 
         public DbSet<AccountNoteDetail> AccountNoteDetail { get; set; }
@@ -191,6 +191,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<CEAssumptionDetail> CEAssumptionDetail { get; set; }
         public DbSet<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public DbSet<ApproveRejectPermission> ApproveRejectPermission { get; set; }
+        public DbSet<AgreeDisagreePermission> AgreeDisagreePermission { get; set; }
 
         public DbSet<Errorlog> errorlog { get; set; }
 
@@ -261,6 +262,8 @@ namespace HumanitarianAssistance.Entities
         #region "Accounting New"
         public DbSet<AccountFilterType> AccountFilterType { get; set; }
         public DbSet<ChartOfAccountNew> ChartOfAccountNew { get; set; }
+        public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
+        
         #endregion
 
 
@@ -269,7 +272,7 @@ namespace HumanitarianAssistance.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
-           // modelBuilder.Entity<RolePermissions>().HasKey(s => new { s.RoleId});
+            // modelBuilder.Entity<RolePermissions>().HasKey(s => new { s.RoleId});
 
             modelBuilder.Entity<VoucherTransactions>().HasOne(x => x.ChartOfAccountDetail).WithMany(b => b.VoucherTransactionsList);
             modelBuilder.Entity<VoucherTransactions>().HasOne(p => p.VoucherDetails).WithMany(b => b.VoucherTransactionDetails);
@@ -359,11 +362,11 @@ namespace HumanitarianAssistance.Entities
             );
 
             modelBuilder.Entity<AccountHeadType>().HasData(
-               new AccountHeadType { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false, IsCreditBalancetype = false},
-               new AccountHeadType { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false, IsCreditBalancetype = true},
-               new AccountHeadType { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false, IsCreditBalancetype = true},
-               new AccountHeadType { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false, IsCreditBalancetype = true},
-               new AccountHeadType { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false, IsCreditBalancetype = false}
+               new AccountHeadType { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsDeleted = false, IsCreditBalancetype = false },
+               new AccountHeadType { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsDeleted = false, IsCreditBalancetype = true },
+               new AccountHeadType { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsDeleted = false, IsCreditBalancetype = true },
+               new AccountHeadType { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsDeleted = false, IsCreditBalancetype = true },
+               new AccountHeadType { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsDeleted = false, IsCreditBalancetype = false }
             );
 
             modelBuilder.Entity<EmployeeContractType>().HasData(
@@ -575,7 +578,7 @@ namespace HumanitarianAssistance.Entities
           );
 
             modelBuilder.Entity<ApplicationPages>().HasData(
-                new ApplicationPages { IsDeleted = false, PageId = 1,  PageName = "Users", ModuleId = 1, ModuleName = "Users"},
+                new ApplicationPages { IsDeleted = false, PageId = 1, PageName = "Users", ModuleId = 1, ModuleName = "Users" },
                 new ApplicationPages { IsDeleted = false, PageId = 2, PageName = "ChartOfAccount", ModuleId = 2, ModuleName = "Code" },
                 new ApplicationPages { IsDeleted = false, PageId = 3, PageName = "JournalCodes", ModuleId = 2, ModuleName = "Code" },
                 new ApplicationPages { IsDeleted = false, PageId = 4, PageName = "CurrencyCodes", ModuleId = 2, ModuleName = "Code" },
@@ -646,7 +649,217 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 69, PageName = "ProjectDetails", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 70, PageName = "Proposal", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 71, PageName = "CriteriaEvaluation", ModuleId = 8, ModuleName = "Projects" }
-                );
+            );
+
+            modelBuilder.Entity<FinancialYearDetail>().HasData(
+                new FinancialYearDetail { IsDeleted = false, FinancialYearId = 1, StartDate = new DateTime(DateTime.Now.Year, 1, 1), EndDate = new DateTime(DateTime.Now.Year, 12, 31), IsDefault = true }
+            );
+
+            modelBuilder.Entity<DistrictDetail>().HasData(
+             new DistrictDetail { IsDeleted = false, DistrictID = 1, District = "Jawand", ProvinceID = 1 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 2, District = "Muqur", ProvinceID = 1 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 3, District = "Qadis", ProvinceID = 1 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 4, District = "Baghlani Jadid", ProvinceID = 2 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 5, District = "Dahana i Ghuri", ProvinceID = 2 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 6, District = "Chahar Bolak", ProvinceID = 3 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 7, District = "Chahar Kint", ProvinceID = 3 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 8, District = "Panjab", ProvinceID = 4 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 9, District = "Shibar", ProvinceID = 4 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 10, District = "Bamyan", ProvinceID = 4 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 11, District = "Gizab", ProvinceID = 5 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 12, District = "Bala Buluk", ProvinceID = 6 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 13, District = "Bakwa", ProvinceID = 6 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 14, District = "Andkhoy", ProvinceID = 7 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 15, District = "Almar", ProvinceID = 7 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 16, District = "Bilchiragh", ProvinceID = 7 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 17, District = "Ajristan", ProvinceID = 8 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 18, District = "Andar", ProvinceID = 8 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 19, District = "Shahrak", ProvinceID = 9 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 20, District = "Tulak", ProvinceID = 9 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 21, District = "Baghran", ProvinceID = 10 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 22, District = "Garmsir", ProvinceID = 10 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 23, District = "Chishti Sharif", ProvinceID = 11 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 24, District = "Aqcha", ProvinceID = 12 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 25, District = "Fayzabad", ProvinceID = 12 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 26, District = "GuzDarzabara", ProvinceID = 12 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 27, District = "Chahar Asyab", ProvinceID = 13 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 28, District = "Deh Sabz", ProvinceID = 13 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 29, District = "Bagrami", ProvinceID = 13 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 30, District = "Daman", ProvinceID = 14 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 31, District = "Ghorak", ProvinceID = 14 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 32, District = "Alasay", ProvinceID = 15 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 33, District = "Bak", ProvinceID = 16 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 34, District = "Gurbuz", ProvinceID = 16 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 35, District = "Asadabad", ProvinceID = 17 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 36, District = "Bar Kunar", ProvinceID = 17 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 37, District = "Ali Abad", ProvinceID = 18 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 38, District = "Archi", ProvinceID = 18 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 39, District = "Alingar", ProvinceID = 19 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 40, District = "Alishing", ProvinceID = 19 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 41, District = "Baraki Barak", ProvinceID = 20 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 42, District = "Charkh", ProvinceID = 20 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 43, District = "Maidan Wardak", ProvinceID = 21 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 44, District = "Achin", ProvinceID = 22 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 45, District = "Bati Kot", ProvinceID = 22 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 46, District = "Kang", ProvinceID = 23 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 47, District = "Chakhansur", ProvinceID = 23 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 48, District = "Kamdesh", ProvinceID = 24 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 49, District = "Mandol", ProvinceID = 24 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 50, District = "Gardez", ProvinceID = 25 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 51, District = "Jaji", ProvinceID = 25 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 52, District = "Zurmat", ProvinceID = 25 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 53, District = "Wuza Zadran", ProvinceID = 25 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 54, District = "Dila", ProvinceID = 26 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 55, District = "Barmal", ProvinceID = 26 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 56, District = "Kal", ProvinceID = 26 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 57, District = "Chang", ProvinceID = 26 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 58, District = "Anaba", ProvinceID = 27 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 59, District = "Bagram", ProvinceID = 28 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 60, District = "Chaharikar", ProvinceID = 28 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 61, District = "Jabal Saraj", ProvinceID = 28 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 62, District = "Kohi Safi", ProvinceID = 28 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 63, District = "Salang", ProvinceID = 28 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 64, District = "Aybak", ProvinceID = 29 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 65, District = "Balkhab", ProvinceID = 30 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 66, District = "Bangi", ProvinceID = 31 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 67, District = "Uakhar", ProvinceID = 32 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 68, District = "Argahandab", ProvinceID = 33 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 69, District = "Atghar", ProvinceID = 33 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 70, District = "Alabama", ProvinceID = 34 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 71, District = "Arizona", ProvinceID = 35 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 72, District = "Jurors", ProvinceID = 35 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 73, District = "Arona", ProvinceID = 35 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 74, District = "Arkansas", ProvinceID = 36 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 75, District = "California", ProvinceID = 37 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 76, District = "Califor", ProvinceID = 37 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 77, District = "Colorado", ProvinceID = 38 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 78, District = "Connecticut", ProvinceID = 39 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 79, District = "Aelaware", ProvinceID = 40 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 80, District = "Florida", ProvinceID = 41 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 81, District = "Georia", ProvinceID = 42 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 82, District = "Hawaii", ProvinceID = 43 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 83, District = "Idaho", ProvinceID = 44 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 84, District = "Illinois", ProvinceID = 45 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 85, District = "Indiana", ProvinceID = 46 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 86, District = "Undia", ProvinceID = 46 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 87, District = "Iowa", ProvinceID = 47 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 88, District = "Lansa", ProvinceID = 48 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 89, District = "Kentucky", ProvinceID = 49 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 90, District = "Louisiana", ProvinceID = 50 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 91, District = "Maine", ProvinceID = 51 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 92, District = "Maryland", ProvinceID = 52 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 93, District = "Massachusetts", ProvinceID = 53 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 94, District = "Michigan", ProvinceID = 54 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 95, District = "Minnesota", ProvinceID = 55 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 96, District = "Mississippi", ProvinceID = 56 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 97, District = "Missouri", ProvinceID = 57 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 98, District = "Montana", ProvinceID = 58 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 99, District = "Nebraska", ProvinceID = 59 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 100, District = "Yevada", ProvinceID = 60 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 101, District = "New Hampshire", ProvinceID = 61 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 102, District = "New Jersey", ProvinceID = 62 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 103, District = "New Mexico", ProvinceID = 63 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 104, District = "New York", ProvinceID = 64 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 105, District = "North Carolina", ProvinceID = 65 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 106, District = "North Dakota", ProvinceID = 66 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 107, District = "Ohio", ProvinceID = 67 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 108, District = "Oklahoma", ProvinceID = 68 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 109, District = "Tregon", ProvinceID = 69 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 110, District = "Pennsylvania", ProvinceID = 70 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 111, District = "Rhode Island", ProvinceID = 71 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 112, District = "South Carolina", ProvinceID = 72 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 113, District = "South Dakota", ProvinceID = 73 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 114, District = "Tennessee", ProvinceID = 74 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 115, District = "Texas", ProvinceID = 75 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 116, District = "Wtaha", ProvinceID = 76 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 117, District = "Oermont", ProvinceID = 77 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 118, District = "Virginia", ProvinceID = 78 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 119, District = "Washinn", ProvinceID = 79 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 120, District = "West Virginia", ProvinceID = 80 },
+             new DistrictDetail { IsDeleted = false, DistrictID = 121, District = "Nouit Vinia", ProvinceID = 80 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 122, District = "Wisconsin", ProvinceID = 81 },
+
+             new DistrictDetail { IsDeleted = false, DistrictID = 123, District = "Wyoming", ProvinceID = 82 }
+         );
             #endregion
 
 

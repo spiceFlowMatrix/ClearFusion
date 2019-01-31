@@ -218,6 +218,7 @@ namespace DataAccess
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
         private IGenericRepository<ChartOfAccountNew> _chartOfAccountNewRepository;
+        private IGenericRepository<GainLossSelectedAccounts> _gainLossSelectedAccountsRepositoryRepository;
 
         #endregion
 
@@ -249,6 +250,15 @@ namespace DataAccess
             GC.SuppressFinalize(this);
         }
 
+
+        public IGenericRepository<GainLossSelectedAccounts> GainLossSelectedAccountsRepository
+        {
+            get
+            {
+                return _gainLossSelectedAccountsRepositoryRepository =
+                    _gainLossSelectedAccountsRepositoryRepository ?? new GenericRepository<GainLossSelectedAccounts>(_mschaContext);
+            }
+        }
 
         public IGenericRepository<ChartOfAccountNew> ChartOfAccountNewRepository
         {

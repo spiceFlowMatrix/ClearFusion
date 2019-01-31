@@ -214,7 +214,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="voucherTransactions"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<APIResponse> AddEditTransactionList([FromBody]List<VoucherTransactionsModel> voucherTransactions)
+    public async Task<APIResponse> AddEditTransactionList([FromBody]AddEditTransactionModel voucherTransactions)
     {
 
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -223,5 +223,15 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    
+    [HttpPost]
+    public async Task<APIResponse> VerifyVoucher([FromBody]long id)
+    {
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      APIResponse response = await _iVoucherNewService.VerifyVoucher(id, user.Id);
+      return response;
+    }
   }
 }

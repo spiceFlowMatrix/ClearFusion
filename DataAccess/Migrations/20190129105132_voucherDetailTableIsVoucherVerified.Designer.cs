@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190129105132_voucherDetailTableIsVoucherVerified")]
+    partial class voucherDetailTableIsVoucherVerified
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3582,35 +3584,6 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new { FinancialYearId = 1, EndDate = new DateTime(2019, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), IsDefault = true, IsDeleted = false, StartDate = new DateTime(2019, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                     );
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.GainLossSelectedAccounts", b =>
-                {
-                    b.Property<int>("GainLossSelectedAccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<long>("ChartOfAccountNewId");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("GainLossSelectedAccountId");
-
-                    b.HasIndex("ChartOfAccountNewId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("GainLossSelectedAccounts");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.HolidayDetails", b =>
@@ -9796,22 +9769,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.FinancialYearDetail", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.GainLossSelectedAccounts", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AccountingNew.ChartOfAccountNew", "ChartOfAccountNew")
-                        .WithMany()
-                        .HasForeignKey("ChartOfAccountNewId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
