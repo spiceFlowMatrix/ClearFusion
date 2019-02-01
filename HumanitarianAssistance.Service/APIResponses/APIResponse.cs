@@ -347,6 +347,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<MediaCategory> MediaCategories { get; set; }
         public ICollection<TimeCategory> TimeCategories { get; set; }
         public List<JobDetailsModel> JobDetailsModel { get; set; }
+        public List<PolicyModel> policyList { get; set; }
         public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
         public List<ContractByClient> ContractByClientList { get; set; }
@@ -367,6 +368,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public JobPhase phaseById { get; set; }
         public Producer producerById { get; set; }
         public ActivityType activityById { get; set; }
+        public PolicyDetail policyDetails { get; set; }
         public TimeCategory timeCatergoryById { get; set; }
         #endregion
 

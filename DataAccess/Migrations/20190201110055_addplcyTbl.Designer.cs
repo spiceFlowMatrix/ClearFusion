@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190201110055_addplcyTbl")]
+    partial class addplcyTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4680,8 +4682,6 @@ namespace DataAccess.Migrations
 
                     b.Property<long?>("LanguageId");
 
-                    b.Property<int?>("LanguagesLanguageId");
-
                     b.Property<long?>("MediaCategoryId");
 
                     b.Property<long?>("MediumId");
@@ -4702,7 +4702,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("LanguagesLanguageId");
+                    b.HasIndex("LanguageId");
 
                     b.HasIndex("MediaCategoryId");
 
@@ -10337,9 +10337,9 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("DataAccess.DbEntities.LanguageDetail", "Languages")
+                    b.HasOne("DataAccess.DbEntities.Marketing.Language", "Languages")
                         .WithMany()
-                        .HasForeignKey("LanguagesLanguageId");
+                        .HasForeignKey("LanguageId");
 
                     b.HasOne("DataAccess.DbEntities.Marketing.MediaCategory", "MediaCategories")
                         .WithMany()
