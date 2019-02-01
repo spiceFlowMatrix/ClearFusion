@@ -484,10 +484,9 @@ namespace HumanitarianAssistance.Entities
             );
 
 
-            //moved to dbinitializer file
-            //modelBuilder.Entity<OfficeDetail>().HasData(
-            //     new OfficeDetail { OfficeId = 1, OfficeCode = "A0001", OfficeKey = "AF", OfficeName = "Afghanistan", IsDeleted = false }
-            //);
+            modelBuilder.Entity<OfficeDetail>().HasData(
+                 new OfficeDetail { OfficeId = 1, OfficeCode = "A0001", OfficeKey = "AF", OfficeName = "Afghanistan", IsDeleted = false }
+            );
 
             modelBuilder.Entity<Department>().HasData(
                  new Department { DepartmentId = 1, DepartmentName = "Administration", OfficeId = 1, IsDeleted = false }
