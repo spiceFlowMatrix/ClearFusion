@@ -8,9 +8,13 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
     {
         public long? PolicyId { get; set; }
         public string PolicyName { get; set; }
+        public string PolicyCode { get; set; }
         public long? LanguageId { get; set; }
+        public string LanguageName { get; set; }
         public long? MediumId { get; set; }
+        public string MediumName { get; set; }
         public long? MediaCategoryId { get; set; }
+        public string MediaCategoryName { get; set; }
         public string CreatedById { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }

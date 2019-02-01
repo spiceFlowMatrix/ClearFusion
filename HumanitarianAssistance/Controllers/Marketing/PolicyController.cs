@@ -48,5 +48,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       return apiRespone;
     }
 
+    [HttpGet]
+    public async Task<APIResponse> GetPolicyList()
+    {
+      APIResponse apiRespone = null;      
+      apiRespone = await _iPolicyService.GetAllPolicyList();
+      return apiRespone;
+    }
+
   }
 }
