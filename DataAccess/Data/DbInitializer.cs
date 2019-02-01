@@ -113,23 +113,20 @@ namespace DataAccess.Data
             //     new OfficeDetail { OfficeId = 1, OfficeCode = "A0001", OfficeKey = "AF", OfficeName = "Afghanistan", IsDeleted = false }
             //);
 
-            OfficeDetail officeDetail = new OfficeDetail
-            {
-                IsDeleted= false,
-                CreatedDate= DateTime.Now,
-                OfficeId = 1,
-                OfficeCode = "A0001",
-                OfficeKey = "AF",
-                OfficeName = "Afghanistan",
-            };
-
-            await context.OfficeDetail.AddAsync(officeDetail);
-            context.SaveChanges();
+            //OfficeDetail officeDetail = new OfficeDetail
+            //{
+            //    IsDeleted= false,
+            //    CreatedDate= DateTime.Now,
+            //    OfficeId = 1,
+            //    OfficeCode = "A0001",
+            //    OfficeKey = "AF",
+            //    OfficeName = "Afghanistan",
+            //};
 
             UserDetailOffices userDetailOffices = new UserDetailOffices();
             userDetailOffices.IsDeleted = false;
             userDetailOffices.CreatedDate = DateTime.Now;
-            userDetailOffices.OfficeId = officeDetail.OfficeId;
+            userDetailOffices.OfficeId = 1;
             userDetailOffices.UserId = userDetails.UserID;
 
             await context.UserDetailOffices.AddAsync(userDetailOffices);
