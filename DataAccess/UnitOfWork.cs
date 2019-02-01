@@ -215,6 +215,7 @@ namespace DataAccess
         private IGenericRepository<UnitRate> _unitRateRepository;
         private IGenericRepository<Category> _categoryRepository;
         private IGenericRepository<PaymentTypes> _paymentTypesRepository;
+        private IGenericRepository<PolicyDetail> _policyRepository;
 
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
@@ -1413,6 +1414,14 @@ namespace DataAccess
             get
             {
                 return _activityTypeRepository = _activityTypeRepository ?? new GenericRepository<ActivityType>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<PolicyDetail> PolicyRepository
+        {
+            get
+            {
+                return _policyRepository = _policyRepository ?? new GenericRepository<PolicyDetail>(_mschaContext);
             }
         }
 
