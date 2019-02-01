@@ -244,6 +244,7 @@ namespace HumanitarianAssistance.Entities
 
         #region Marketing
         public DbSet<UnitRate> UnitRates { get; set; }
+        public DbSet<PolicyDetail> PolicyDetails { get; set; }
         public DbSet<ActivityType> ActivityTypes { get; set; }
         public DbSet<Producer> Producers { get; set; }
         public DbSet<Quality> Qualities { get; set; }
