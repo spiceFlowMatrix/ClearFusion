@@ -119,7 +119,6 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<LanguageModel, Language>().ReverseMap();
       CreateMap<MediaCategoryModel, MediaCategory>().ReverseMap();
       CreateMap<MediumModel, Medium>().ReverseMap();
-      CreateMap<PolicyModel, PolicyDetail>().ReverseMap();
       CreateMap<ContractDetailsModel, ContractDetails>().ReverseMap();
       CreateMap<NatureModel, Nature>().ReverseMap();
       CreateMap<QualityModel, Quality>().ReverseMap();

@@ -257,7 +257,6 @@ namespace HumanitarianAssistance.Entities
         public DbSet<Nature> Natures { get; set; }
         public DbSet<TimeCategory> TimeCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<PolicyDetail> PolicyDetails { get; set; }
         #endregion
 
 
