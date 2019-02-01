@@ -571,9 +571,9 @@ namespace HumanitarianAssistance.Entities
           );
 
             modelBuilder.Entity<LeaveReasonDetail>().HasData(
-              new LeaveReasonDetail { IsDeleted = false, CreatedDate= DateTime.Now, LeaveReasonId=1, ReasonName="Casual Leave", Unit= 12 },
-              new LeaveReasonDetail { IsDeleted = false, CreatedDate = DateTime.Now, LeaveReasonId = 2, ReasonName = "Emergency Leave", Unit = 6 },
-              new LeaveReasonDetail { IsDeleted = false, CreatedDate = DateTime.Now, LeaveReasonId = 3, ReasonName = "Maternity Leave", Unit = 90 }
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId=1, ReasonName="Casual Leave", Unit= 12 },
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 2, ReasonName = "Emergency Leave", Unit = 6 },
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 3, ReasonName = "Maternity Leave", Unit = 90 }
           );
 
             modelBuilder.Entity<ProjectPhaseDetails>().HasData(
