@@ -17,7 +17,7 @@ namespace DataAccess.DbEntities.Marketing
         public string PolicyCode { get; set; }
         [ForeignKey("LanguageId")]
         public long? LanguageId { get; set; }
-        public Language Languages { get; set; }
+        public LanguageDetail Languages { get; set; }
         [ForeignKey("MediumId")]
         public long? MediumId { get; set; }
         public Medium Mediums { get; set; }

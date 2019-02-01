@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190201102707_SeedDataEmployeeLeaveReason1")]
+    partial class SeedDataEmployeeLeaveReason1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4659,58 +4661,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("Natures");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyDetail", b =>
-                {
-                    b.Property<long>("PolicyId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("Description");
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<long?>("LanguageId");
-
-                    b.Property<int?>("LanguagesLanguageId");
-
-                    b.Property<long?>("MediaCategoryId");
-
-                    b.Property<long?>("MediumId");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("PolicyCode");
-
-                    b.Property<string>("PolicyName");
-
-                    b.Property<string>("RepeatDays");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.HasKey("PolicyId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("LanguagesLanguageId");
-
-                    b.HasIndex("MediaCategoryId");
-
-                    b.HasIndex("MediumId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("PolicyDetails");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.Producer", b =>
@@ -10325,29 +10275,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.LanguageDetail", "Languages")
-                        .WithMany()
-                        .HasForeignKey("LanguagesLanguageId");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.MediaCategory", "MediaCategories")
-                        .WithMany()
-                        .HasForeignKey("MediaCategoryId");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.Medium", "Mediums")
-                        .WithMany()
-                        .HasForeignKey("MediumId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()

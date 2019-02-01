@@ -244,6 +244,7 @@ namespace HumanitarianAssistance.Entities
 
         #region Marketing
         public DbSet<UnitRate> UnitRates { get; set; }
+        public DbSet<PolicyDetail> PolicyDetails { get; set; }
         public DbSet<ActivityType> ActivityTypes { get; set; }
         public DbSet<Producer> Producers { get; set; }
         public DbSet<Quality> Qualities { get; set; }
@@ -484,10 +485,9 @@ namespace HumanitarianAssistance.Entities
             );
 
 
-            //moved to dbinitializer file
-            //modelBuilder.Entity<OfficeDetail>().HasData(
-            //     new OfficeDetail { OfficeId = 1, OfficeCode = "A0001", OfficeKey = "AF", OfficeName = "Afghanistan", IsDeleted = false }
-            //);
+            modelBuilder.Entity<OfficeDetail>().HasData(
+                 new OfficeDetail { OfficeId = 1, OfficeCode = "A0001", OfficeKey = "AF", OfficeName = "Afghanistan", IsDeleted = false }
+            );
 
             modelBuilder.Entity<Department>().HasData(
                  new Department { DepartmentId = 1, DepartmentName = "Administration", OfficeId = 1, IsDeleted = false }
@@ -572,9 +572,9 @@ namespace HumanitarianAssistance.Entities
           );
 
             modelBuilder.Entity<LeaveReasonDetail>().HasData(
-              new LeaveReasonDetail { IsDeleted = false, CreatedDate= DateTime.Now, LeaveReasonId=1, ReasonName="Casual Leave", Unit= 12 },
-              new LeaveReasonDetail { IsDeleted = false, CreatedDate = DateTime.Now, LeaveReasonId = 2, ReasonName = "Emergency Leave", Unit = 6 },
-              new LeaveReasonDetail { IsDeleted = false, CreatedDate = DateTime.Now, LeaveReasonId = 3, ReasonName = "Maternity Leave", Unit = 90 }
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId=1, ReasonName="Casual Leave", Unit= 12 },
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 2, ReasonName = "Emergency Leave", Unit = 6 },
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 3, ReasonName = "Maternity Leave", Unit = 90 }
           );
 
             modelBuilder.Entity<ProjectPhaseDetails>().HasData(
