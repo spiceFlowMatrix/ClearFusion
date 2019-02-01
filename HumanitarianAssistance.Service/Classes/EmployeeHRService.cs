@@ -365,27 +365,34 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     List<EmployeePayrollModel> payrollDetail = new List<EmployeePayrollModel>();
 
-                    payrollDetail = await _uow.GetDbContext().EmployeePayroll.Include(x => x.SalaryHeadDetails).Where(x => x.EmployeeID == payrollAttendance.EmployeeId && x.IsDeleted == false).Select(x => new EmployeePayrollModel
+                    var payroll = await _uow.GetDbContext().EmployeePayroll.Include(x => x.SalaryHeadDetails).Where(x => x.EmployeeID == payrollAttendance.EmployeeId && x.IsDeleted == false).ToListAsync();
+
+                    if (payroll.Any(x => x.AccountNo == null))
+                    {
+                        throw new Exception($"Payroll details not set for Employee Id: {payrollAttendance.EmployeeId}");
+                    }
+
+                    payrollDetail = payroll.Select(x => new EmployeePayrollModel
                     {
                         PayrollId = x.PayrollId,
                         //CreatedById = x.CreatedById,
-                       // CreatedDate = x.CreatedDate,
-                        CurrencyId = x.CurrencyId.Value,
+                        // CreatedDate = x.CreatedDate,
+                        CurrencyId = x.CurrencyId ?? 0,
                         EmployeeId = x.EmployeeID,
                         //ModifiedById = x.ModifiedById,
                         HeadTypeId = x.SalaryHeadDetails.HeadTypeId,
                         IsDeleted = x.IsDeleted,
                         //ModifiedDate = x.ModifiedDate,
-                        MonthlyAmount = x.MonthlyAmount.Value,
+                        MonthlyAmount = x.MonthlyAmount ?? 0,
                         PaymentType = 2, //hourly
                         PensionRate = pensionRate != null ? pensionRate : DefaultValues.DefaultPensionRate,
-                        SalaryHeadId = x.SalaryHeadId.Value,
+                        SalaryHeadId = x.SalaryHeadId ?? 0,
                         SalaryHeadType = x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
                         SalaryHead = x.SalaryHeadDetails.HeadName,
                         //BasicPay = x.BasicPay,
-                        AccountNo= x.AccountNo,
-                        TransactionTypeId= x.TransactionTypeId
-                    }).ToListAsync();
+                        AccountNo = x.AccountNo,
+                        TransactionTypeId = x.TransactionTypeId
+                    }).ToList();
 
                     if (payrollDetail.Count > 0)
                     {

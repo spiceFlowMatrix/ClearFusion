@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataAccess;
 using DataAccess.DbEntities;
@@ -69,5 +70,22 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
       response = await _financialReportService.GetExchangeGainLossReport(exchangeGainLossReport);
       return response;
     }
+
+    [HttpPost]
+    public async Task<APIResponse> SaveGainLossAccountList([FromBody] List<long> accountIds)
+    {
+      APIResponse response = new APIResponse();
+      response = await _financialReportService.SaveGainLossAccountList(accountIds);
+      return response;
+    }
+
+    [HttpGet]
+    public async Task<APIResponse> GetExchangeGainLossFilterAccountList()
+    {
+      APIResponse response = new APIResponse();
+      response = await _financialReportService.GetExchangeGainLossFilterAccountList();
+      return response;
+    }
+
   }
 }
