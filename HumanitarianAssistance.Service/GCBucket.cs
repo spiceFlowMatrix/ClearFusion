@@ -201,7 +201,7 @@ namespace HumanitarianAssistance.Service
 
 
         //upload files 
-        public static async Task<ProjectProposalDetail> uploadOtherProposaldoc(string ProjectCode, IFormFile filedata, string fileName, ViewModels.Models.Project.GoogleCredential googleCredential, string EmailId, string logginUserEmailId, string ext, string GoogleCredentialsFile,string ProposalType)
+        public static async Task<ProjectProposalDetail> uploadOtherProposaldoc(string folderName, IFormFile filedata, string fileName, ViewModels.Models.Project.GoogleCredential googleCredential, string EmailId, string logginUserEmailId, string ext, string googleCredentialPathFile, string ProposalType)
         {
             ProjectProposalModel res = new ProjectProposalModel();
             string exten = System.IO.Path.GetExtension(fileName).ToLower();
@@ -218,7 +218,7 @@ namespace HumanitarianAssistance.Service
 
 
             UserCredential credential;
-            using (var stream = new FileStream(GoogleCredentialsFile, FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(googleCredentialPathFile, FileMode.Open, FileAccess.Read))
             {
                 credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                       GoogleClientSecrets.Load(stream).Secrets,
@@ -251,7 +251,7 @@ namespace HumanitarianAssistance.Service
                 var newObject = new Google.Apis.Storage.v1.Data.Object()
                 {
                     Bucket = googleCredential.BucketName,
-                    Name = "" + "/" + fileName + ext
+                    Name = folderName + "/" + "test-00030-Proposal" + ext
 
                 };
                var mimetype= GetMimeType(ext);
@@ -280,13 +280,13 @@ namespace HumanitarianAssistance.Service
                 var bucketFolderWithFilePath = newObject.Bucket + "/" + newObject.Name;
                 if (fileResponse.Status.ToString() == "Completed" && fileResponse.Exception == null)
                 {
-                    //model.FolderName = folderName;
-                    //model.ProposalFileName = projectProposalfilename;
-                    //model.ProposalWebLink = bucketFolderWithFilePath;
-                    //model.ProjectId = Projectid;
-                    //model.IsDeleted = false;
-                    //model.CreatedById = userid;
-                    //model.CreatedDate = DateTime.Now;
+                    model.FolderName = folderName;
+                    model.ProposalFileName = "test-00030-Proposal";
+                    model.ProposalWebLink = bucketFolderWithFilePath;
+                   //model.ProjectId = ;
+                    model.IsDeleted = false;
+                    //model.CreatedById = logginUserEmailId;
+                    model.CreatedDate = DateTime.Now;
                 }
                 else
                 {
@@ -361,7 +361,7 @@ namespace HumanitarianAssistance.Service
                 //    res.PresentationFileWebLink = file.WebViewLink;
                 //    res.PresentationExtType = ext;
                 //}
-                return null;
+                
             }
             catch (Exception ex)
             {
@@ -375,8 +375,8 @@ namespace HumanitarianAssistance.Service
                 }
             }
 
-            return model;
 
+            return model;
 
         }
         private static string GetMimeType(string extension)

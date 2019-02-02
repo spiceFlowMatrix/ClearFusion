@@ -806,59 +806,76 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       string localFolderfullPath = string.Empty;
       try
       {
-        var file = Request.Form.Files[0];
-        //string localfolderName = Path.Combine(Directory.GetCurrentDirectory(), "UploadotherDoc/");
-        long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
-        string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
-        string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
-        string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
-        string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('_')[0];
 
-        string ext = System.IO.Path.GetExtension(fileNames).ToLower();
-        if (ext != ".jpeg" && ext != ".png")
+        if (Request.Form.Files.Count > 0)
         {
 
-          ////fileNames =fileNames;
-          //string webRootPath = _hostingEnvironment.WebRootPath;
-          //string newPath = Path.Combine(webRootPath, localfolderName);
-          //if (!Directory.Exists(newPath))
-          //{
-          //  Directory.CreateDirectory(newPath);
-          //}
-          //string fileName = string.Empty;         
-          //localFolderfullPath = Path.Combine(newPath, fileNames);
-          //DirectoryInfo dir = new DirectoryInfo(localFolderfullPath);
-          //FileInfo[] fil = dir.GetFiles();
-          //FileInfo fileinfo = fil.Where(p => p.Name == fileNames).FirstOrDefault();
-          //if (fileinfo != null)
-          //  fileinfo.Delete();
-          //using (var stream = new FileStream(localFolderfullPath, FileMode.Create))
-          //{
-          //  file.CopyTo(stream);
-          //}
 
-          //}
-          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-          if (user != null)
+          var file =  Request.Form.Files[0] ;
+          
+          //string localfolderName = Path.Combine(Directory.GetCurrentDirectory(), "UploadotherDoc/");
+          long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
+          string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
+          string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
+          string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
+
+          string fileName = "";
+
+          if (fileNames.Contains('_'))
           {
-            string logginUserEmailId = user.Email;
-            var id = user.Id;
-            apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, localFolderfullPath, fileNames, logginUserEmailId, ProposalType, ext);
-            //if (apiRespone.StatusCode == StaticResource.successStatusCode)
-            //{
-            //  DirectoryInfo di = new DirectoryInfo(localfolderName);
-            //  FileInfo[] fi = di.GetFiles();
-            //  FileInfo f = fi.Where(p => p.Name == fileName).FirstOrDefault();
-            //  f.Delete();
-            //}
+            fileName = fileNames.Split('_')[1];
           }
-        }
-        else
-        {
-          apiRespone.StatusCode = StaticResource.FileNotSupported;
-          apiRespone.Message = StaticResource.FileText;
-        }
+          else
+          {
+            fileName = fileNames;
+          }
+        
+          string ext = System.IO.Path.GetExtension(fileName).ToLower();
+          if (ext != ".jpeg" && ext != ".png")
+          {
 
+            ////fileNames =fileNames;
+            //string webRootPath = _hostingEnvironment.WebRootPath;
+            //string newPath = Path.Combine(webRootPath, localfolderName);
+            //if (!Directory.Exists(newPath))
+            //{
+            //  Directory.CreateDirectory(newPath);
+            //}
+            //string fileName = string.Empty;         
+            //localFolderfullPath = Path.Combine(newPath, fileNames);
+            //DirectoryInfo dir = new DirectoryInfo(localFolderfullPath);
+            //FileInfo[] fil = dir.GetFiles();
+            //FileInfo fileinfo = fil.Where(p => p.Name == fileNames).FirstOrDefault();
+            //if (fileinfo != null)
+            //  fileinfo.Delete();
+            //using (var stream = new FileStream(localFolderfullPath, FileMode.Create))
+            //{
+            //  file.CopyTo(stream);
+            //}
+
+            //}
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (user != null)
+            {
+              string logginUserEmailId = user.Email;
+              var id = user.Id;
+              apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, localFolderfullPath, fileName, logginUserEmailId, ProposalType, ext);
+              //if (apiRespone.StatusCode == StaticResource.successStatusCode)
+              //{
+              //  DirectoryInfo di = new DirectoryInfo(localfolderName);
+              //  FileInfo[] fi = di.GetFiles();
+              //  FileInfo f = fi.Where(p => p.Name == fileName).FirstOrDefault();
+              //  f.Delete();
+              //}
+            }
+          }
+          else
+          {
+            apiRespone.StatusCode = StaticResource.FileNotSupported;
+            apiRespone.Message = StaticResource.FileText;
+          }
+
+        }
       }
       catch (System.Exception ex)
       {

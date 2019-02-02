@@ -2322,7 +2322,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileNames, string logginUserEmailId, string ProposalType, string ext)
+        public APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileName, string logginUserEmailId, string ProposalType, string ext)
         {
             APIResponse response = new APIResponse();
             try
@@ -2331,7 +2331,7 @@ namespace HumanitarianAssistance.Service.Classes
                 long ProjectId = long.Parse(Projectid);
                 ProjectProposalDetail model = new ProjectProposalDetail();
                 string folderName = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && !x.IsDeleted.Value)?.FolderName;
-                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                var googleCredentialPathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
                 var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
 
                 GoogleCredential result = new GoogleCredential();
@@ -2352,19 +2352,19 @@ namespace HumanitarianAssistance.Service.Classes
                         EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == proposaldata.UserId).Select(p => p.Username).FirstOrDefault();
                         if (proposaldata != null && EmailID != null)
                         {
-                            model = GCBucket.uploadOtherProposaldoc(folderName, file, fileNames, result, EmailID, logginUserEmailId, ext, GoogleCredentialsFile, ProposalType).Result;
+                            model = GCBucket.uploadOtherProposaldoc(folderName, file, fileNames, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile, ProposalType).Result;
 
                             // response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID, logginUserEmailId);
                         }
                     }
                     else
                     {
-                        model = GCBucket.uploadOtherProposaldoc(folderName, file, fileNames, result, EmailID, logginUserEmailId, ext, GoogleCredentialsFile, ProposalType).Result;
+                        model = GCBucket.uploadOtherProposaldoc(folderName, file, fileNames, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile, ProposalType).Result;
                     }
                 }
                 else
                 {
-                    response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(folderName, file, fileNames, pathFile, fullPath, result, null, logginUserEmailId);
+                    //response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(folderName, file, fileNames, pathFile, fullPath, result, null, logginUserEmailId);
                 }
                 var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).FirstOrDefault();
                 if (proposaldetails == null)
