@@ -107,6 +107,28 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
 
+        public async Task<APIResponse> DeletePolicy(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var policyInfo = await _uow.PolicyRepository.FindAsync(c => c.PolicyId == model);
+                policyInfo.IsDeleted = true;
+                policyInfo.ModifiedById = UserId;
+                policyInfo.ModifiedDate = DateTime.UtcNow;
+                await _uow.PolicyRepository.UpdateAsyn(policyInfo, policyInfo.PolicyId);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Policy Deleted Successfully";
+                //response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> GetAllPolicyList()
         {
             APIResponse response = new APIResponse();
