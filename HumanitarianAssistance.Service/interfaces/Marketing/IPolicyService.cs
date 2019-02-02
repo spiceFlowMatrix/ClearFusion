@@ -11,5 +11,6 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
     {
         Task<APIResponse> AddEditPolicy(PolicyModel model, string UserId);
         Task<APIResponse> GetAllPolicyList();
+        Task<APIResponse> DeletePolicy(int model, string UserId);
     }
 }
