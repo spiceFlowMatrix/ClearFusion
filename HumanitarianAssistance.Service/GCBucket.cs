@@ -251,7 +251,7 @@ namespace HumanitarianAssistance.Service
                 var newObject = new Google.Apis.Storage.v1.Data.Object()
                 {
                     Bucket = googleCredential.BucketName,
-                    Name = folderName + "/" + "test-00030-Proposal" + ext
+                    Name = folderName + "/" + fileName
 
                 };
                var mimetype= GetMimeType(ext);
@@ -280,13 +280,51 @@ namespace HumanitarianAssistance.Service
                 var bucketFolderWithFilePath = newObject.Bucket + "/" + newObject.Name;
                 if (fileResponse.Status.ToString() == "Completed" && fileResponse.Exception == null)
                 {
-                    model.FolderName = folderName;
-                    model.ProposalFileName = "test-00030-Proposal";
-                    model.ProposalWebLink = bucketFolderWithFilePath;
-                   //model.ProjectId = ;
-                    model.IsDeleted = false;
-                    //model.CreatedById = logginUserEmailId;
-                    model.CreatedDate = DateTime.Now;
+                    if (ProposalType == "Proposal")
+                    {
+                        model.FolderName = folderName;
+                        model.ProposalFileName = fileName;
+                        model.ProposalWebLink = bucketFolderWithFilePath;
+                        //model.ProjectId = ;
+                        model.IsDeleted = false;
+                        //model.CreatedById = logginUserEmailId;
+                        model.CreatedDate = DateTime.Now;
+
+                    }
+                   
+                        if (ProposalType == "EOI")
+                        {
+                            res.EDIFileName = fileName;
+                            res.EDIFileWebLink = bucketFolderWithFilePath;
+                            res.EDIFileExtType = ext;
+
+                        }
+                        else if (ProposalType == "BUDGET")
+                        {
+                            res.BudgetFileName = fileName;
+                            // res.BudgetFileId = file.Id;
+                            res.BudgetFileWebLink = bucketFolderWithFilePath;
+                            res.BudgetFileExtType = ext;
+                        }
+                        else if (ProposalType == "CONCEPT")
+                        {
+                            res.ConceptFileName = fileName;
+                            //  res.ConceptFileId = file.Id;
+                            res.ConceptFileWebLink = bucketFolderWithFilePath;
+                            res.ConceptFileExtType = ext;
+                        }
+                        else if (ProposalType == "PRESENTATION")
+                        {
+                            res.PresentationFileName = fileName;
+                            //res.PresentationFileId = file.Id;
+                            res.PresentationFileWebLink = bucketFolderWithFilePath;
+                            res.PresentationExtType = ext;
+                        }
+
+
+                    
+
+
                 }
                 else
                 {
@@ -333,34 +371,6 @@ namespace HumanitarianAssistance.Service
 
 
 
-                //if (ProposalType == "EOI")
-                //{
-                //    res.EDIFileName = file.Name;
-                //    res.EDIFileWebLink = file.WebViewLink;
-                //    res.EDIFileExtType = ext;
-
-                //}
-                //else if (ProposalType == "BUDGET")
-                //{
-                //    res.BudgetFileName = file.Name;
-                //    res.BudgetFileId = file.Id;
-                //    res.BudgetFileWebLink = file.WebViewLink;
-                //    res.BudgetFileExtType = ext;
-                //}
-                //else if (ProposalType == "CONCEPT")
-                //{
-                //    res.ConceptFileName = file.Name;
-                //    res.ConceptFileId = file.Id;
-                //    res.ConceptFileWebLink = file.WebViewLink;
-                //    res.ConceptFileExtType = ext;
-                //}
-                //else if (ProposalType == "PRESENTATION")
-                //{
-                //    res.PresentationFileName = file.Name;
-                //    res.PresentationFileId = file.Id;
-                //    res.PresentationFileWebLink = file.WebViewLink;
-                //    res.PresentationExtType = ext;
-                //}
                 
             }
             catch (Exception ex)
