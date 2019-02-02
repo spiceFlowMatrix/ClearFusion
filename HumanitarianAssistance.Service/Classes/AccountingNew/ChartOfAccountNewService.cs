@@ -390,13 +390,18 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         accountDetail.ModifiedDate = model.ModifiedDate;
                         accountDetail.IsDeleted = false;
 
-
                         await _uow.ChartOfAccountNewRepository.UpdateAsyn(accountDetail);
 
                         if (accountDetail.AccountLevelId == (int)AccountLevels.SubLevel)
                         {
-                            // Updated all input-level accounts' account types and balance types if true
-                            await UpdateBalanceMetadataForInputAccounts(accountDetail);
+                            bool inputLevelAccountExists = _uow.GetDbContext().ChartOfAccountNew.Any(x => x.IsDeleted == false && x.ParentID == accountDetail.ChartOfAccountNewId);
+
+                            //Update only if input level account exists on sub level account
+                            if (inputLevelAccountExists)
+                            {
+                                // Updated all input-level accounts' account types and balance types if true
+                                await UpdateBalanceMetadataForInputAccounts(accountDetail);
+                            }
                         }
 
                         response.StatusCode = StaticResource.successStatusCode;

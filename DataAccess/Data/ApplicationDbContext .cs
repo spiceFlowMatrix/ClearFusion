@@ -244,7 +244,9 @@ namespace HumanitarianAssistance.Entities
 
         #region Marketing
         public DbSet<UnitRate> UnitRates { get; set; }
+        public DbSet<PolicyDetail> PolicyDetails { get; set; }
         public DbSet<ActivityType> ActivityTypes { get; set; }
+        public DbSet<Producer> Producers { get; set; }
         public DbSet<Quality> Qualities { get; set; }
         public DbSet<ContractDetails> ContractDetails { get; set; }
         public DbSet<JobDetails> JobDetails { get; set; }
@@ -482,6 +484,7 @@ namespace HumanitarianAssistance.Entities
                  new EmployeeType { EmployeeTypeId = 3, EmployeeTypeName = "Terminated", IsDeleted = false }
             );
 
+
             modelBuilder.Entity<OfficeDetail>().HasData(
                  new OfficeDetail { OfficeId = 1, OfficeCode = "A0001", OfficeKey = "AF", OfficeName = "Afghanistan", IsDeleted = false }
             );
@@ -568,6 +571,12 @@ namespace HumanitarianAssistance.Entities
               new AccountFilterType { IsDeleted = false, AccountFilterTypeId = 2, AccountFilterTypeName = "Salary Account" }
           );
 
+            modelBuilder.Entity<LeaveReasonDetail>().HasData(
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId=1, ReasonName="Casual Leave", Unit= 12 },
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 2, ReasonName = "Emergency Leave", Unit = 6 },
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 3, ReasonName = "Maternity Leave", Unit = 90 }
+          );
+
             modelBuilder.Entity<ProjectPhaseDetails>().HasData(
               new ProjectPhaseDetails { IsDeleted = false, ProjectPhaseDetailsId = 1, ProjectPhase = "Data Entry" }
           );
@@ -599,13 +608,13 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 19, PageName = "SalaryHead", ModuleId = 2, ModuleName = "Code" },
                 new ApplicationPages { IsDeleted = false, PageId = 20, PageName = "SalaryTaxReportContent", ModuleId = 2, ModuleName = "Code" },
                 new ApplicationPages { IsDeleted = false, PageId = 21, PageName = "SetPayrollAccount", ModuleId = 2, ModuleName = "Code" },
-                new ApplicationPages { IsDeleted = false, PageId = 22, PageName = "Vouchers", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = true, PageId = 22, PageName = "Vouchers", ModuleId = 3, ModuleName = "Accounting" },
                 new ApplicationPages { IsDeleted = false, PageId = 23, PageName = "Journal", ModuleId = 3, ModuleName = "Accounting" },
                 new ApplicationPages { IsDeleted = false, PageId = 24, PageName = "LedgerStatement", ModuleId = 3, ModuleName = "Accounting" },
                 new ApplicationPages { IsDeleted = false, PageId = 25, PageName = "BudgetBalance", ModuleId = 3, ModuleName = "Accounting" },
                 new ApplicationPages { IsDeleted = false, PageId = 26, PageName = "TrialBalance", ModuleId = 3, ModuleName = "Accounting" },
                 new ApplicationPages { IsDeleted = false, PageId = 27, PageName = "FinancialReport", ModuleId = 3, ModuleName = "Accounting" },
-                new ApplicationPages { IsDeleted = false, PageId = 28, PageName = "CategoryPopulator", ModuleId = 3, ModuleName = "Accounting" },
+                new ApplicationPages { IsDeleted = true, PageId = 28, PageName = "CategoryPopulator", ModuleId = 3, ModuleName = "Accounting" },
                 new ApplicationPages { IsDeleted = false, PageId = 29, PageName = "ExchangeGainLoss", ModuleId = 3, ModuleName = "Accounting" },
                 new ApplicationPages { IsDeleted = false, PageId = 30, PageName = "GainLossTransaction", ModuleId = 3, ModuleName = "Accounting" },
                 new ApplicationPages { IsDeleted = false, PageId = 31, PageName = "PensionPayments", ModuleId = 3, ModuleName = "Accounting" },
@@ -648,11 +657,12 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 68, PageName = "Donors", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 69, PageName = "ProjectDetails", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 70, PageName = "Proposal", ModuleId = 8, ModuleName = "Projects" },
-                new ApplicationPages { IsDeleted = false, PageId = 71, PageName = "CriteriaEvaluation", ModuleId = 8, ModuleName = "Projects" }
+                new ApplicationPages { IsDeleted = false, PageId = 71, PageName = "CriteriaEvaluation", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 72, PageName = "Producer", ModuleId = 6, ModuleName = "Marketing" }
             );
 
             modelBuilder.Entity<FinancialYearDetail>().HasData(
-                new FinancialYearDetail { IsDeleted = false, FinancialYearId = 1, StartDate = new DateTime(DateTime.Now.Year, 1, 1), EndDate = new DateTime(DateTime.Now.Year, 12, 31), IsDefault = true }
+                new FinancialYearDetail { IsDeleted = false, FinancialYearId = 1, StartDate = new DateTime(DateTime.Now.Year, 1, 1), EndDate = new DateTime(DateTime.Now.Year, 12, 31), FinancialYearName= DateTime.Now.Year+" Financial Year", IsDefault = true }
             );
 
             modelBuilder.Entity<DistrictDetail>().HasData(

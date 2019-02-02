@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190130124412_producerTbl")]
+    partial class producerTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -457,13 +459,13 @@ namespace DataAccess.Migrations
                         new { PageId = 19, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SalaryHead" },
                         new { PageId = 20, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SalaryTaxReportContent" },
                         new { PageId = 21, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SetPayrollAccount" },
-                        new { PageId = 22, IsDeleted = true, ModuleId = 3, ModuleName = "Accounting", PageName = "Vouchers" },
+                        new { PageId = 22, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "Vouchers" },
                         new { PageId = 23, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "Journal" },
                         new { PageId = 24, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "LedgerStatement" },
                         new { PageId = 25, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "BudgetBalance" },
                         new { PageId = 26, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "TrialBalance" },
                         new { PageId = 27, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "FinancialReport" },
-                        new { PageId = 28, IsDeleted = true, ModuleId = 3, ModuleName = "Accounting", PageName = "CategoryPopulator" },
+                        new { PageId = 28, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "CategoryPopulator" },
                         new { PageId = 29, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "ExchangeGainLoss" },
                         new { PageId = 30, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "GainLossTransaction" },
                         new { PageId = 31, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "PensionPayments" },
@@ -506,8 +508,7 @@ namespace DataAccess.Migrations
                         new { PageId = 68, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "Donors" },
                         new { PageId = 69, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectDetails" },
                         new { PageId = 70, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "Proposal" },
-                        new { PageId = 71, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "CriteriaEvaluation" },
-                        new { PageId = 72, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Producer" }
+                        new { PageId = 71, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "CriteriaEvaluation" }
                     );
                 });
 
@@ -3581,37 +3582,8 @@ namespace DataAccess.Migrations
                     b.ToTable("FinancialYearDetail");
 
                     b.HasData(
-                        new { FinancialYearId = 1, EndDate = new DateTime(2019, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), FinancialYearName = "2019 Financial Year", IsDefault = true, IsDeleted = false, StartDate = new DateTime(2019, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                        new { FinancialYearId = 1, EndDate = new DateTime(2019, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), IsDefault = true, IsDeleted = false, StartDate = new DateTime(2019, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                     );
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.GainLossSelectedAccounts", b =>
-                {
-                    b.Property<int>("GainLossSelectedAccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<long>("ChartOfAccountNewId");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("GainLossSelectedAccountId");
-
-                    b.HasIndex("ChartOfAccountNewId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("GainLossSelectedAccounts");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.HolidayDetails", b =>
@@ -4285,12 +4257,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("LeaveReasonDetail");
-
-                    b.HasData(
-                        new { LeaveReasonId = 1, IsDeleted = false, ReasonName = "Casual Leave", Unit = 12 },
-                        new { LeaveReasonId = 2, IsDeleted = false, ReasonName = "Emergency Leave", Unit = 6 },
-                        new { LeaveReasonId = 3, IsDeleted = false, ReasonName = "Maternity Leave", Unit = 90 }
-                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.LoggerDetails", b =>
@@ -4659,58 +4625,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("Natures");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyDetail", b =>
-                {
-                    b.Property<long>("PolicyId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("Description");
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<long?>("LanguageId");
-
-                    b.Property<int?>("LanguagesLanguageId");
-
-                    b.Property<long?>("MediaCategoryId");
-
-                    b.Property<long?>("MediumId");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("PolicyCode");
-
-                    b.Property<string>("PolicyName");
-
-                    b.Property<string>("RepeatDays");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.HasKey("PolicyId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("LanguagesLanguageId");
-
-                    b.HasIndex("MediaCategoryId");
-
-                    b.HasIndex("MediumId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("PolicyDetails");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.Producer", b =>
@@ -9890,22 +9804,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.GainLossSelectedAccounts", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AccountingNew.ChartOfAccountNew", "ChartOfAccountNew")
-                        .WithMany()
-                        .HasForeignKey("ChartOfAccountNewId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.HolidayDetails", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -10325,29 +10223,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.LanguageDetail", "Languages")
-                        .WithMany()
-                        .HasForeignKey("LanguagesLanguageId");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.MediaCategory", "MediaCategories")
-                        .WithMany()
-                        .HasForeignKey("MediaCategoryId");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.Medium", "Mediums")
-                        .WithMany()
-                        .HasForeignKey("MediumId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()

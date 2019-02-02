@@ -627,6 +627,113 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         }
 
 
+        public async Task<APIResponse> SaveGainLossAccountList(List<long> accountIds)
+        {
+
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (accountIds.Any())
+                {
+                    //Get all Accounts that are already saved
+                    List<GainLossSelectedAccounts> gainLossSelectedAccountsList =  _uow.GetDbContext().GainLossSelectedAccounts.Where(x => x.IsDeleted == false).ToList();
+
+                    if (gainLossSelectedAccountsList.Any())
+                    {
+
+                        //Get List of Removed Accounts
+                        List<GainLossSelectedAccounts> removedGainLossSelectedAccounts = gainLossSelectedAccountsList.Where(x => !accountIds.Contains(x.ChartOfAccountNewId)).ToList();
+
+                        if (removedGainLossSelectedAccounts.Any())
+                        {
+                            removedGainLossSelectedAccounts.ForEach(x => x.IsDeleted = true);
+
+                            //Delete and update the table with the accounts already deleted
+                            _uow.GetDbContext().UpdateRange(removedGainLossSelectedAccounts);
+                            _uow.GetDbContext().SaveChanges();
+                        }
+
+                        //Get List of Accounts that are to be added
+                        List<long> addGainLossSelectedAccounts = accountIds.Where(x => !gainLossSelectedAccountsList.Select(y => y.ChartOfAccountNewId).Contains(x)).ToList();
+
+                        gainLossSelectedAccountsList = new List<GainLossSelectedAccounts>();
+
+                        foreach (long accountId in addGainLossSelectedAccounts)
+                        {
+                            GainLossSelectedAccounts gainLossSelectedAccounts = new GainLossSelectedAccounts
+                            {
+                                IsDeleted = false,
+                                CreatedDate = DateTime.Now,
+                                ChartOfAccountNewId = accountId,
+                            };
+
+                            gainLossSelectedAccountsList.Add(gainLossSelectedAccounts);
+
+                        }
+                    }
+                    else //table is empty so it is safe to save all the accounts
+                    {
+                        gainLossSelectedAccountsList = new List<GainLossSelectedAccounts>();
+
+                        foreach (long accountId in accountIds)
+                        {
+                            GainLossSelectedAccounts gainLossSelectedAccounts = new GainLossSelectedAccounts
+                            {
+                                IsDeleted = false,
+                                CreatedDate = DateTime.Now,
+                                ChartOfAccountNewId = accountId,
+                            };
+
+                            gainLossSelectedAccountsList.Add(gainLossSelectedAccounts);
+                        }
+                    }
+
+                    //Save Accounts to the DB
+                    if (gainLossSelectedAccountsList.Any())
+                    {
+                        _uow.GetDbContext().GainLossSelectedAccounts.AddRange(gainLossSelectedAccountsList);
+                        _uow.GetDbContext().SaveChanges();
+                    }
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "success";
+                }
+                else
+                {
+                    throw new Exception("No Account Selected");
+                }
+            }
+            catch (Exception exception)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = exception.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> GetExchangeGainLossFilterAccountList()
+        {
+
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                List<GainLossSelectedAccounts> gainLossSelectedAccountsList = await _uow.GetDbContext().GainLossSelectedAccounts.Where(x => x.IsDeleted == false).ToListAsync();
+                response.data.GainLossSelectedAccounts = gainLossSelectedAccountsList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "success";
+            }
+            catch (Exception exception)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = exception.Message;
+            }
+
+            return response;
+        }
+
         #region "Test code"
 
         #region "GetAllTransaction"

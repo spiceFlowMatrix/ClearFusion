@@ -127,6 +127,8 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<ProjectPhaseTimeModel, ProjectPhaseTime>().ReverseMap();
       CreateMap<ClientDetailModel, ClientDetails>().ReverseMap();
       CreateMap<CategoryModel, Category>().ReverseMap();
+      CreateMap<ProducerModel, Producer>().ReverseMap();
+      CreateMap<PolicyModel, PolicyDetail>().ReverseMap();
       CreateMap<ApproveProjectDetailModel, ApproveProjectDetails>().ReverseMap();
       CreateMap<WinApprovalProjectModel, WinProjectDetails>().ReverseMap();
     }

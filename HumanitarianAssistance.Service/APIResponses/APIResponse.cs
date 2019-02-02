@@ -324,6 +324,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<CEAssumptionDetail> CEAssumptionDetail { get; set; }
 
         public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
+        public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
 
 
         #region Marketing       
@@ -338,6 +339,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<Medium> Mediums { get; set; }
         public ICollection<Nature> Natures { get; set; }
         public ICollection<JobPhase> JobPhases { get; set; }
+        public ICollection<Producer> Producers { get; set; }
         public ICollection<UnitRate> UnitRates { get; set; }
         public UnitRate UnitRateByActivityId { get; set; }
         public ICollection<JobPriceDetails> JobPriceDetails { get; set; }
@@ -345,6 +347,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<MediaCategory> MediaCategories { get; set; }
         public ICollection<TimeCategory> TimeCategories { get; set; }
         public List<JobDetailsModel> JobDetailsModel { get; set; }
+        public List<PolicyModel> policyList { get; set; }
         public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
         public List<ContractByClient> ContractByClientList { get; set; }
@@ -363,7 +366,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public Nature natureById { get; set; }
         public Quality qualityById { get; set; }
         public JobPhase phaseById { get; set; }
+        public Producer producerById { get; set; }
         public ActivityType activityById { get; set; }
+        public PolicyDetail policyDetails { get; set; }
         public TimeCategory timeCatergoryById { get; set; }
         #endregion
 

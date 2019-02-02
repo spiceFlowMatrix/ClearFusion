@@ -143,7 +143,7 @@ namespace HumanitarianAssistance
       services.AddTransient<IJobDetailsService, JobDetailsService>();
       services.AddTransient<IContractDetailsService, ContractDetailService>();
       services.AddTransient<IChartOfAccountNewService, ChartOfAccountNewService>();
-
+      services.AddTransient<IPolicyService, PolicyService>();
       services.AddTransient<IClientDetails, ClientDetailsService>();
       services.AddTransient<IVoucherNewService, VoucherNewService>();
 
@@ -265,7 +265,7 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
 
-    //  UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
       if (env.IsDevelopment())
       {

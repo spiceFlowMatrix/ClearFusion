@@ -203,6 +203,7 @@ namespace DataAccess
         private IGenericRepository<ContractDetails> _contractDetailsRepository;
         private IGenericRepository<JobDetails> _jobDetailsRepository;
         private IGenericRepository<JobPhase> _jobPhaseRepository;
+        private IGenericRepository<Producer> _producerRepository;
         private IGenericRepository<JobPriceDetails> _jobPriceDetailsRepository;
         private IGenericRepository<LanguageDetail> _languageRepository;
         private IGenericRepository<MediaCategory> _mediaCategoryRepository;
@@ -214,6 +215,7 @@ namespace DataAccess
         private IGenericRepository<UnitRate> _unitRateRepository;
         private IGenericRepository<Category> _categoryRepository;
         private IGenericRepository<PaymentTypes> _paymentTypesRepository;
+        private IGenericRepository<PolicyDetail> _policyRepository;
 
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
@@ -806,6 +808,13 @@ namespace DataAccess
             get
             {
                 return _accountNoteDetail = _accountNoteDetail ?? new GenericRepository<AccountNoteDetail>(_mschaContext);
+            }
+        }
+        public IGenericRepository<PolicyDetail> PolicyRepository
+        {
+            get
+            {
+                return _policyRepository = _policyRepository ?? new GenericRepository<PolicyDetail>(_mschaContext);
             }
         }
 
@@ -1436,6 +1445,14 @@ namespace DataAccess
             get
             {
                 return _jobPhaseRepository = _jobPhaseRepository ?? new GenericRepository<JobPhase>(_mschaContext);
+            }
+        }
+        
+         public IGenericRepository<Producer> ProducerRepository
+        {
+            get
+            {
+                return _producerRepository = _producerRepository ?? new GenericRepository<Producer>(_mschaContext);
             }
         }
 
