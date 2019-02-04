@@ -69,5 +69,32 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       return apiRespone;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetFilteredPolicylist([FromBody]PolicyFilterModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.FilterPolicyList(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetPolicyPaginatedList([FromBody]PolicyPaginationModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.GetPolicyPaginatedList(model, id);
+      }
+      return apiRespone;
+    }
+
   }
 }
