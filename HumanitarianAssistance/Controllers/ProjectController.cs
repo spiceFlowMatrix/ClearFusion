@@ -807,8 +807,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       try
       {
 
-        if (Request.Form.Files.Count > 0)
-        {
+        //if (Request.Form.Files.Count > 0)
+        //{
 
 
           var file =  Request.Form.Files[0] ;
@@ -834,39 +834,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
           if (ext != ".jpeg" && ext != ".png")
           {
 
-            ////fileNames =fileNames;
-            //string webRootPath = _hostingEnvironment.WebRootPath;
-            //string newPath = Path.Combine(webRootPath, localfolderName);
-            //if (!Directory.Exists(newPath))
-            //{
-            //  Directory.CreateDirectory(newPath);
-            //}
-            //string fileName = string.Empty;         
-            //localFolderfullPath = Path.Combine(newPath, fileNames);
-            //DirectoryInfo dir = new DirectoryInfo(localFolderfullPath);
-            //FileInfo[] fil = dir.GetFiles();
-            //FileInfo fileinfo = fil.Where(p => p.Name == fileNames).FirstOrDefault();
-            //if (fileinfo != null)
-            //  fileinfo.Delete();
-            //using (var stream = new FileStream(localFolderfullPath, FileMode.Create))
-            //{
-            //  file.CopyTo(stream);
-            //}
-
-            //}
+           
             var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (user != null)
             {
               string logginUserEmailId = user.Email;
               var id = user.Id;
               apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, localFolderfullPath, fileName, logginUserEmailId, ProposalType, ext);
-              //if (apiRespone.StatusCode == StaticResource.successStatusCode)
-              //{
-              //  DirectoryInfo di = new DirectoryInfo(localfolderName);
-              //  FileInfo[] fi = di.GetFiles();
-              //  FileInfo f = fi.Where(p => p.Name == fileName).FirstOrDefault();
-              //  f.Delete();
-              //}
+             
             }
           }
           else
@@ -875,7 +850,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
             apiRespone.Message = StaticResource.FileText;
           }
 
-        }
+        //}
       }
       catch (System.Exception ex)
       {
