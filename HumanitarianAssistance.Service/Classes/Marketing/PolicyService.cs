@@ -76,7 +76,12 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj.Description = model.Description;
                         await _uow.PolicyRepository.AddAsyn(obj);
                         await _uow.SaveAsync();
+                        int totalCount = await _uow.GetDbContext().PolicyDetails
+                                      .Where(v => v.IsDeleted == false)
+                                     .AsNoTracking()
+                                     .CountAsync();
                         response.data.policyDetails = obj;
+                        response.data.TotalCount = totalCount;
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = "Policy created successfully";
                     }
@@ -119,7 +124,44 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 await _uow.PolicyRepository.UpdateAsyn(policyInfo, policyInfo.PolicyId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Policy Deleted Successfully";
-                //response.data.jobListTotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
+                int totalCount = await _uow.GetDbContext().PolicyDetails
+                                      .Where(v => v.IsDeleted == false)
+                                     .AsNoTracking()
+                                     .CountAsync();
+                response.data.TotalCount = totalCount;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetPolicyPaginatedList(PolicyPaginationModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                int totalCount = await _uow.GetDbContext().PolicyDetails
+                                       .Where(v => v.IsDeleted == false)
+                                      .AsNoTracking()
+                                      .CountAsync();
+
+                var policyList = await _uow.GetDbContext().PolicyDetails
+                                       .Where(v => v.IsDeleted == false).Select(x=>new PolicyModel
+                                       {
+                                          PolicyId = x.PolicyId,
+                                          PolicyCode = x.PolicyCode,
+                                          PolicyName = x.PolicyName,
+                                          MediumName = x.Mediums.MediumName,
+                                          MediumId = x.MediumId
+                                       }).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).OrderByDescending(x => x.CreatedDate).AsNoTracking()
+                                    .ToListAsync();
+                response.data.TotalCount = totalCount;
+                response.data.policyFilterList = policyList;
+                response.StatusCode = 200;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {
@@ -134,7 +176,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                //int count = await _uow.GetDbContext().PolicyDetails.CountAsync(x => x.IsDeleted == false);
+                int count = await _uow.GetDbContext().PolicyDetails.CountAsync(x => x.IsDeleted == false);
                 var policyDetail = await (from j in _uow.GetDbContext().PolicyDetails
                                      join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
                                      join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
@@ -156,8 +198,58 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                      })).Take(10).Skip(0).OrderByDescending(x => x.CreatedDate).ToListAsync();
                 
                 response.data.policyList = policyDetail;
-                //response.data.jobListTotalCount = count;
+                response.data.TotalCount = count;
                 response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> FilterPolicyList(PolicyFilterModel model, string userId)
+        {
+            string policyIdValue = null;
+            string policyNameValue = null;
+            string mediumValue = null;
+
+            if (!string.IsNullOrEmpty(model.Value))
+            {
+                policyIdValue = model.PolicyId ? model.Value.ToLower().Trim() : null;
+                policyNameValue = model.PolicyName ? model.Value.ToLower().Trim() : null;
+                mediumValue = model.Medium ? model.Value.ToLower().Trim() : null;
+            }
+
+            APIResponse response = new APIResponse();
+            try
+            {
+                var policyList = await _uow.GetDbContext().PolicyDetails
+                                    .Where(v => v.IsDeleted == false &&
+                                          (!string.IsNullOrEmpty(model.Value) ?
+                                             (
+                                               v.PolicyId.ToString().Trim().ToLower().Contains(policyIdValue) ||
+                                               v.PolicyName.Trim().ToLower().Contains(policyNameValue) ||
+                                               v.Mediums.MediumName.Trim().ToLower().Contains(mediumValue)                                                  
+                                              ) : true
+                                           )
+                                     )
+                                    //.OrderByDescending(x => x.CreatedDate)
+                                    .Select(x => new PolicyModel
+                                    {
+                                        PolicyId = x.PolicyId,
+                                        PolicyName = x.PolicyName,
+                                        MediumName = x.Mediums.MediumName,
+                                        MediumId = x.MediumId,
+                                        PolicyCode = x.PolicyCode
+                                    })
+                                    .AsNoTracking()
+                                    .ToListAsync();
+               // response.data.jobListTotalCount = voucherList.Count();
+                response.data.PolicyFilteredList = policyList;
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
