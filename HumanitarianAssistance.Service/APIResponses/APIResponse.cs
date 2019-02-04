@@ -361,6 +361,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public JobDetailsModel JobDetail { get; set; }
         public JobPriceModel JobPriceDetail { get; set; }
         public List<JobDetailsModel> JobPriceDetailList { get; set; }
+        public List<PolicyModel> PolicyFilteredList { get; set; }
         public MediaCategory mediaCategoryById { get; set; }
         public Medium mediumById { get; set; }
         public Nature natureById { get; set; }
@@ -369,6 +370,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public Producer producerById { get; set; }
         public ActivityType activityById { get; set; }
         public PolicyDetail policyDetails { get; set; }
+        public List<PolicyModel> policyFilterList { get; set; }
         public TimeCategory timeCatergoryById { get; set; }
         #endregion
 
