@@ -8,5 +8,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     {
         public string EmailId { get; set; }
         public string ApplicationName { get; set; }
+        public string ProjectId { get; set; }
+        public string BucketName { get; set; }
     }
 }
