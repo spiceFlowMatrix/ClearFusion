@@ -230,6 +230,8 @@ namespace HumanitarianAssistance.Service
                         model.EDIFileWebLink = bucketFolderWithFilePath;
                         model.EDIFileExtType = ext;
                         model.IsDeleted = false;
+                        model.ModifiedDate = DateTime.Now;
+
 
                     }
                     else if (ProposalType == "BUDGET")
@@ -240,6 +242,8 @@ namespace HumanitarianAssistance.Service
                         // res.BudgetFileId = file.Id;
                         model.BudgetFileWebLink = bucketFolderWithFilePath;
                         model.BudgetFileExtType = ext;
+                        model.ModifiedDate = DateTime.Now;
+
                     }
                     else if (ProposalType == "CONCEPT")
                     {
@@ -249,6 +253,7 @@ namespace HumanitarianAssistance.Service
                         // res.ConceptFileId = file.Id;
                         model.ConceptFileWebLink = bucketFolderWithFilePath;
                         model.ConceptFileExtType = ext;
+                        model.ModifiedDate = DateTime.Now;
                     }
                     else if (ProposalType == "PRESENTATION")
                     {
@@ -258,6 +263,7 @@ namespace HumanitarianAssistance.Service
                         //res.PresentationFileId = file.Id;
                         model.PresentationFileWebLink = bucketFolderWithFilePath;
                         model.PresentationExtType = ext;
+                        model.ModifiedDate = DateTime.Now;
                     }
 
 
@@ -341,9 +347,9 @@ namespace HumanitarianAssistance.Service
             {
                 mimeType = "application/vnd.google-apps.photo";
             }
-            else if(ext== ".ppt")
+            else if(ext== ".pptx")
             {
-                mimeType = "application/vnd.google-apps.photo";
+                mimeType = "application/vnd.google-apps.presentation";
             }
             return mimeType;
         }
