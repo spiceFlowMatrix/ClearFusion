@@ -358,5 +358,9 @@ namespace HumanitarianAssistance.Common.Helpers
 
         #endregion
 
+        #region "Exception Throw Error Text"
+        public const string UnableToUploadFile = "Unable To Upload File";
+
+        #endregion
     }
 }
