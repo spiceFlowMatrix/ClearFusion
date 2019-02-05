@@ -11,6 +11,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public string PolicyCode { get; set; }
         public long? LanguageId { get; set; }
         public string LanguageName { get; set; }
+        public long? ProducerId { get; set; }
+        public string ProducerName { get; set; }
         public long? MediumId { get; set; }
         public string MediumName { get; set; }
         public long? MediaCategoryId { get; set; }

@@ -24,6 +24,9 @@ namespace DataAccess.DbEntities.Marketing
         [ForeignKey("MediaCategoryId")]
         public long? MediaCategoryId { get; set; }
         public MediaCategory MediaCategories { get; set; }
+        [ForeignKey("ProducerId")]
+        public long? ProducerId { get; set; }
+        public Producer Producers { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsActive { get; set; }

@@ -760,6 +760,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 ICollection<CurrencyDetails> currency = await _uow.CurrencyDetailsRepository.FindAllAsync(x => x.IsDeleted == false && x.CurrencyName != null && x.CurrencyName != "");
                 ICollection<Quality> quality = await _uow.QualityRepository.FindAllAsync(x => x.IsDeleted == false && x.QualityName != null && x.QualityName != "");
                 ICollection<ActivityType> activityType = await _uow.ActivityTypeRepository.FindAllAsync(x => x.IsDeleted == false);
+                ICollection<Producer> producer = await _uow.ProducerRepository.FindAllAsync(x => x.IsDeleted == false);
                 response.data.Qualities = quality;
                 response.data.Mediums = Mediums;
                 response.data.Currencies = currency;
@@ -768,6 +769,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.data.ActivityTypes = activityType;
                 response.data.MediaCategories = mediaCategories;
                 response.data.TimeCategories = timeCategories;
+                response.data.Producers = producer;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
