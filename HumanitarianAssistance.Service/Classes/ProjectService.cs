@@ -2596,18 +2596,18 @@ namespace HumanitarianAssistance.Service.Classes
             ProjectProposalDetail details = new ProjectProposalDetail();
             try
             {
-                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
-                var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
-                GoogleCredential Credential = new GoogleCredential();
+                //var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                details = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                //var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+                //GoogleCredential Credential = new GoogleCredential();
 
-                using (StreamReader files = File.OpenText(GoogleCredentialsFile))
-                using (JsonTextReader reader = new JsonTextReader(files))
-                {
-                    JObject o2 = (JObject)JToken.ReadFrom(reader);
+                //using (StreamReader files = File.OpenText(GoogleCredentialsFile))
+                //using (JsonTextReader reader = new JsonTextReader(files))
+                //{
+                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
 
-                    Credential = o2["GoogleCredential"].ToObject<GoogleCredential>();
-                }
+                //    Credential = o2["GoogleCredential"].ToObject<GoogleCredential>();
+                //}
 
                 if (details == null)
                 {
@@ -2627,32 +2627,32 @@ namespace HumanitarianAssistance.Service.Classes
 
                     if (model.ProjectAssignTo != null)
                     {
-                        var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
-                        var EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == model.UserId).Select(p => p.Username).FirstOrDefault();
-                        if (proposaldetails != null && EmailID != null)
-                        {
-                            if (proposaldetails.FolderId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
+                        //var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                        //var EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == model.UserId).Select(p => p.Username).FirstOrDefault();
+                        //if (proposaldetails != null && EmailID != null)
+                        //{
+                        //    if (proposaldetails.FolderId != null)
+                        //    {
+                        //      //  ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile, Credential, logginUserEmailId);
+                        //    }
 
-                            if (proposaldetails.EdiFileId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
-                            if (proposaldetails.BudgetFileId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
-                            if (proposaldetails.ConceptFileId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
-                            if (proposaldetails.PresentationFileId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
-                        }
+                        //    if (proposaldetails.EdiFileId != null)
+                        //    {
+                        //      //  ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile, Credential, logginUserEmailId);
+                        //    }
+                        //    if (proposaldetails.BudgetFileId != null)
+                        //    {
+                        //       // ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile, Credential, logginUserEmailId);
+                        //    }
+                        //    if (proposaldetails.ConceptFileId != null)
+                        //    {
+                        //       // ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile, Credential, logginUserEmailId);
+                        //    }
+                        //    if (proposaldetails.PresentationFileId != null)
+                        //    {
+                        //       // ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile, Credential, logginUserEmailId);
+                        //    }
+                        //}
                     }
                 }
                 else
@@ -2667,38 +2667,39 @@ namespace HumanitarianAssistance.Service.Classes
                     details.UserId = model.UserId;
                     details.ModifiedById = UserId;
                     details.ModifiedDate = DateTime.Now;
+                    _uow.GetDbContext().ProjectProposalDetail.Update(details);
                     _uow.GetDbContext().SaveChanges();
                     if (details.ProjectAssignTo != null)
                     {
-                        var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
-                        var EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == details.UserId).Select(p => p.Username).FirstOrDefault();
-                        if (proposaldetails != null && EmailID != null)
-                        {
-                            if (proposaldetails.FolderId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
-                            if (proposaldetails.ProposalFileId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ProposalFileId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
-                            if (proposaldetails.EdiFileId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
-                            if (proposaldetails.BudgetFileId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
-                            if (proposaldetails.ConceptFileId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
-                            if (proposaldetails.PresentationFileId != null)
-                            {
-                                ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile, Credential, logginUserEmailId);
-                            }
-                        }
+                    //    var proposaldetails = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                    //    var EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == details.UserId).Select(p => p.Username).FirstOrDefault();
+                    //    if (proposaldetails != null && EmailID != null)
+                    //    {
+                    //        if (proposaldetails.FolderId != null)
+                    //        {
+                    //            ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.FolderId, EmailID, pathFile, Credential, logginUserEmailId);
+                    //        }
+                    //        if (proposaldetails.ProposalFileId != null)
+                    //        {
+                    //            ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ProposalFileId, EmailID, pathFile, Credential, logginUserEmailId);
+                    //        }
+                    //        if (proposaldetails.EdiFileId != null)
+                    //        {
+                    //            ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.EdiFileId, EmailID, pathFile, Credential, logginUserEmailId);
+                    //        }
+                    //        if (proposaldetails.BudgetFileId != null)
+                    //        {
+                    //            ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.BudgetFileId, EmailID, pathFile, Credential, logginUserEmailId);
+                    //        }
+                    //        if (proposaldetails.ConceptFileId != null)
+                    //        {
+                    //            ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.ConceptFileId, EmailID, pathFile, Credential, logginUserEmailId);
+                    //        }
+                    //        if (proposaldetails.PresentationFileId != null)
+                    //        {
+                    //            ProposalDoc.FilePermission(proposaldetails.FolderName, proposaldetails.PresentationFileId, EmailID, pathFile, Credential, logginUserEmailId);
+                    //        }
+                    //    }
                     }
                 }
                 response.StatusCode = StaticResource.successStatusCode;
