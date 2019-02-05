@@ -2321,19 +2321,18 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
         public APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileName, string logginUserEmailId, string ProposalType, string ext)
-        {
+         {
             APIResponse response = new APIResponse();
             try
             {
-                //string fileName = string.Empty;
                 long ProjectId = long.Parse(Projectid);
                 ProjectProposalDetail model = new ProjectProposalDetail();
                 string folderName = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && !x.IsDeleted.Value)?.FolderName;
+
+                // read credientials
                 var googleCredentialPathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
                 var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
-
                 GoogleCredential result = new GoogleCredential();
-
                 using (StreamReader files = File.OpenText(GoogleCredentialsFile))
                 using (JsonTextReader reader = new JsonTextReader(files))
                 {
@@ -2341,6 +2340,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     result = o2["GoogleCredential"].ToObject<GoogleCredential>();
                 }
+
                 var EmailID = string.Empty;
                 var proposaldata = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && x.IsDeleted == false);
                 if (proposaldata != null)
@@ -2351,8 +2351,6 @@ namespace HumanitarianAssistance.Service.Classes
                         if (proposaldata != null && EmailID != null)
                         {
                             model = GCBucket.uploadOtherProposaldoc(folderName, file, fileName, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile, ProposalType).Result;
-
-                            // response.data.ProjectProposalModel = ProposalDoc.uploadOtherProposaldoc(_detail, file, fileNames, pathFile, fullPath, result, EmailID, logginUserEmailId);
                         }
                     }
                     else
@@ -2373,14 +2371,16 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     proposaldetails.CreatedDate = DateTime.Now;
                     proposaldetails.FolderName = model.FolderName;
-                    //proposaldata.FolderId = model.FolderId;
                     proposaldetails.ProposalFileName = model.ProposalFileName;
-                    //proposaldata.ProposalFileId = model.ProposalFileId;
                     proposaldetails.ProposalWebLink = model.ProposalWebLink;
                     proposaldetails.ProjectId = Convert.ToInt64(Projectid);
                     proposaldetails.CreatedDate = DateTime.Now;
                     proposaldetails.IsDeleted = false;
                     proposaldetails.CreatedById = UserId;
+
+                    // response folder path
+                    response.data.ProposalWebLink = model.ProposalWebLink;
+                    response.data.ProposalWebLinkExtType = model.ProposalExtType;
                 }
                 else
                 {
@@ -2393,6 +2393,9 @@ namespace HumanitarianAssistance.Service.Classes
                         proposaldetails.EDIFileWebLink = model.EDIFileWebLink;
                         proposaldetails.EDIFileExtType = model.EDIFileExtType;
 
+                        // response folder path
+                        response.data.EDIWebLink = model.EDIFileWebLink;
+                        response.data.EDIWebLinkExtType = model.EDIFileExtType;
                     }
                     else if (ProposalType == "BUDGET")
                     {
@@ -2402,6 +2405,10 @@ namespace HumanitarianAssistance.Service.Classes
                         proposaldetails.BudgetFileName = model.BudgetFileName;
                         proposaldetails.BudgetFileWebLink = model.BudgetFileWebLink;
                         proposaldetails.BudgetFileExtType = model.BudgetFileExtType;
+
+                        // response folder path
+                        response.data.BudgetWebLink = model.BudgetFileWebLink;
+                        response.data.BudgetWebLinkExtType = model.BudgetFileExtType;
                     }
                     else if (ProposalType == "CONCEPT")
                     {
@@ -2412,6 +2419,9 @@ namespace HumanitarianAssistance.Service.Classes
                         proposaldetails.ConceptFileWebLink = model.ConceptFileWebLink;
                         proposaldetails.ConceptFileExtType = model.ConceptFileExtType;
 
+                        // response folder path
+                        response.data.ConceptWebLink = model.ConceptFileWebLink;
+                        response.data.ConceptWebLinkExtType = model.ConceptFileExtType;
                     }
                     else if (ProposalType == "PRESENTATION")
                     {
@@ -2422,10 +2432,12 @@ namespace HumanitarianAssistance.Service.Classes
                         proposaldetails.PresentationFileWebLink = model.PresentationFileWebLink;
                         proposaldetails.PresentationExtType = model.PresentationExtType;
 
+                        // response folder path
+                        response.data.PresentationWebLink = model.PresentationFileWebLink;
+                        response.data.PresentationWebLinkExtType = model.PresentationExtType;
                     }
                     proposaldata.ProjectId = Convert.ToInt64(Projectid);
                     proposaldata.ModifiedDate = DateTime.Now;
-                   
                 }
 
                 if (proposaldetails.ProjectProposaldetailId == 0)
@@ -2441,7 +2453,6 @@ namespace HumanitarianAssistance.Service.Classes
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
-                //return Json("Upload Successful.");
             }
             catch (Exception ex)
             {
