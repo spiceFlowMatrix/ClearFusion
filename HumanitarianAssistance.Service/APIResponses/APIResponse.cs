@@ -406,6 +406,21 @@ namespace HumanitarianAssistance.Service.APIResponses
         #endregion
 
 
+        #region "Web link URl"
+        public string ProposalWebLink { get; set; }
+        public string EDIWebLink { get; set; }
+        public string BudgetWebLink { get; set; }
+        public string ConceptWebLink { get; set; }
+        public string PresentationWebLink { get; set; }
+
+        public string ProposalWebLinkExtType { get; set; }
+        public string EDIWebLinkExtType { get; set; }
+        public string BudgetWebLinkExtType { get; set; }
+        public string ConceptWebLinkExtType { get; set; }
+        public string PresentationWebLinkExtType { get; set; }
+
+        #endregion
+
 
     }
 
