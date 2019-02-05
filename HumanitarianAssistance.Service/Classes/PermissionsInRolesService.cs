@@ -360,11 +360,14 @@ namespace HumanitarianAssistance.Service.Classes
                     List<RolePermissions> rolePermissionsList = await _uow.GetDbContext().RolePermissions.Where(x=> x.IsDeleted== false && x.RoleId== rolesWithPagePermissionsModel.RoleId).ToListAsync();
                     List<RolePermissions> removedPermissions = rolePermissionsList.Where(x => !rolesWithPagePermissionsModel.Permissions.Select(y=> y.PageId).Contains(x.PageId.Value)).ToList();
                     List<ApproveRejectPermission> approveRejectRolePermissionsList = await _uow.GetDbContext().ApproveRejectPermission.Where(x=> x.IsDeleted== false && x.RoleId== rolesWithPagePermissionsModel.RoleId).ToListAsync();
+                    List<AgreeDisagreePermission> agreeDisagreeRolePermissionsList = await _uow.GetDbContext().AgreeDisagreePermission.Where(x => x.IsDeleted == false && x.RoleId == rolesWithPagePermissionsModel.RoleId).ToListAsync();
                     List<ApproveRejectPermission> approveRejectRemovePermissions = approveRejectRolePermissionsList.Where(x => !rolesWithPagePermissionsModel.Permissions.Select(y=> y.PageId).Contains(x.PageId)).ToList();
+                    List<AgreeDisagreePermission> agreeDisagreeRemovePermissions = agreeDisagreeRolePermissionsList.Where(x => !rolesWithPagePermissionsModel.Permissions.Select(y => y.PageId).Contains(x.PageId)).ToList();
                     removedPermissions.ForEach(x => x.IsDeleted = true);
                     approveRejectRemovePermissions.ForEach(x => x.IsDeleted = true);
                     _uow.GetDbContext().RolePermissions.UpdateRange(removedPermissions);
                     _uow.GetDbContext().ApproveRejectPermission.UpdateRange(approveRejectRemovePermissions);
+                    _uow.GetDbContext().AgreeDisagreePermission.UpdateRange(agreeDisagreeRemovePermissions);
                     _uow.GetDbContext().SaveChanges();
 
                     foreach (ApplicationPagesModel item in rolesWithPagePermissionsModel.Permissions)
@@ -428,7 +431,35 @@ namespace HumanitarianAssistance.Service.Classes
                                 _uow.GetDbContext().Entry<ApproveRejectPermission>(approveRejectRolePermissions).State = EntityState.Detached;
                             }
                         }
-                       
+                        if (item.Agree == true || item.Disagree == true)
+                        {
+                            AgreeDisagreePermission agreeDisagreeRolePermissions = agreeDisagreeRolePermissionsList.FirstOrDefault(x => x.PageId == item.PageId);
+
+                            //If permission for the page does not exist then initialize object
+                            agreeDisagreeRolePermissions = agreeDisagreeRolePermissions ?? new AgreeDisagreePermission();
+                            agreeDisagreeRolePermissions.Agree = item.Agree;
+                            agreeDisagreeRolePermissions.Disagree = item.Disagree;
+                            agreeDisagreeRolePermissions.CreatedDate = agreeDisagreeRolePermissions.CreatedDate ?? DateTime.UtcNow;
+                            agreeDisagreeRolePermissions.IsDeleted = false;
+                            agreeDisagreeRolePermissions.PageId = item.PageId;
+                            agreeDisagreeRolePermissions.RoleId = rolesWithPagePermissionsModel.RoleId;
+
+                            //save a new entry in the rolepermissions table
+                            if (agreeDisagreeRolePermissions.Id == 0)
+                            {
+                                _uow.GetDbContext().AgreeDisagreePermission.Add(agreeDisagreeRolePermissions);
+                                _uow.GetDbContext().SaveChanges();
+                                _uow.GetDbContext().Entry<AgreeDisagreePermission>(agreeDisagreeRolePermissions).State = EntityState.Detached;
+                            }
+                            else//update existing permissions record for the page
+                            {
+                                agreeDisagreeRolePermissions.ModifiedDate = DateTime.Now;
+                                _uow.GetDbContext().AgreeDisagreePermission.Update(agreeDisagreeRolePermissions);
+                                _uow.GetDbContext().SaveChanges();
+                                _uow.GetDbContext().Entry<AgreeDisagreePermission>(agreeDisagreeRolePermissions).State = EntityState.Detached;
+                            }
+                        }
+
                     }
 
                     response.StatusCode = StaticResource.successStatusCode;
