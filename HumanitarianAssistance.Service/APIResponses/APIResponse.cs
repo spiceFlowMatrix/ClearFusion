@@ -371,6 +371,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ActivityType activityById { get; set; }
         public PolicyDetail policyDetails { get; set; }
         public List<PolicyModel> policyFilterList { get; set; }
+        public PolicyModel policyDetailsById { get; set; }
         public TimeCategory timeCatergoryById { get; set; }
         #endregion
 
