@@ -265,7 +265,7 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
 
-     // UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
       if (env.IsDevelopment())
       {
@@ -343,9 +343,22 @@ namespace HumanitarianAssistance
         {
           context.Database.Migrate();
 
+          // check if user present
           if (!context.Users.Any())
           {
             await DbInitializer.CreateDefaultUserAndRoleForApplication(um, rm, context, logger);
+          }
+
+          // check if Contract Content present or not
+          if (!context.ContractTypeContent.Any())
+          {
+            await DbInitializer.AddContractClauses(context);
+          }
+
+          // check if JobGrade present or not
+          if (!context.JobGrade.Any())
+          {
+            await DbInitializer.AddJobGrades(context);
           }
         }
       }

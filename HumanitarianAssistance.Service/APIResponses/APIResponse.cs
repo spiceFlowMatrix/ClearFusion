@@ -88,6 +88,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
         public string InventoryCode { get; set; }
+        public string JobCode { get; set; }
         public string InventoryItemCode { get; set; }
         public string StoreSourceCode { get; set; }
         public bool isSalaryHeadSaved { get; set; }

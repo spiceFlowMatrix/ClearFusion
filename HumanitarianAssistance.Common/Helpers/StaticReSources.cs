@@ -331,7 +331,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
 
         //Salary Payment
-        public const string SalaryPaymentDone = "Salary Payment:"; //EmpCode-EmpName-Month-<salary payment>
+        public const string SalaryPaymentDone = "Salary Payment: "; //EmpCode-EmpName-Month-<salary payment>
         public const string SalaryHeadAllowances = "{0} has been debited towards Gross Salary";
         public const string SalaryHeadDeductions = "{0} has been credited towards Net Salary";
         public const string JobCodeExist = "Job Code Already Exist";
