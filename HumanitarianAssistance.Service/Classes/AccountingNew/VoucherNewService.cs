@@ -190,13 +190,17 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 if (officeCode != null)
                 {
                     var fincancialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(o => o.IsDefault)?.FinancialYearId; //use OfficeCode
-                    var currencyCode = _uow.GetDbContext().CurrencyDetails.FirstOrDefault(o => o.CurrencyId == model.CurrencyId)?.CurrencyCode; //use OfficeCode
+                    var currencyCode = _uow.GetDbContext().CurrencyDetails.FirstOrDefault(o => o.CurrencyId == model.CurrencyId)?.CurrencyCode;
+
+                    // NOTE: Dont remove this as we will need journal details in response
+                    var journaldetail = _uow.GetDbContext().JournalDetail.FirstOrDefault(o => o.JournalCode == model.JournalCode);
 
                     if (fincancialYear != null)
                     {
                         if (currencyCode != null)
                         {
                             VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
+                            obj.JournalCode = journaldetail != null ? journaldetail.JournalCode : model.JournalCode;
                             obj.FinancialYearId = fincancialYear;
                             obj.CreatedById = model.CreatedById;
                             obj.VoucherDate = DateTime.UtcNow;
@@ -209,17 +213,19 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                             await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
-                            var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
+                            //var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
 
-                            LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                            loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
-                            loggerObj.IsRead = false;
-                            loggerObj.UserName = user.FirstName + " " + user.LastName;
-                            loggerObj.UserId = model.CreatedById;
-                            loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
-                            loggerObj.CreatedDate = model.CreatedDate;
+                            //LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                            //loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
+                            //loggerObj.IsRead = false;
+                            //loggerObj.UserName = user.FirstName + " " + user.LastName;
+                            //loggerObj.UserId = model.CreatedById;
+                            //loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
+                            //loggerObj.CreatedDate = model.CreatedDate;
 
-                            response.LoggerDetailsModel = loggerObj;
+                            //response.LoggerDetailsModel = loggerObj;
+
+                            response.data.VoucherDetailEntity = obj;
                             response.StatusCode = StaticResource.successStatusCode;
                             response.Message = "Success";
                         }
@@ -659,7 +665,92 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        public async Task<APIResponse> CreateGainLossTransaction(ExchangeGainLossVoucherDetails model, string userId)
+        {
+            APIResponse response = new APIResponse();
 
+            #region "Generate Voucher"
+            VoucherDetailModel voucherModel = new VoucherDetailModel
+            {
+                VoucherNo = model.VoucherNo,
+                CurrencyId = model.CurrencyId,
+                Description = model.Description,
+                JournalCode = model.JournalId,
+                VoucherTypeId = model.VoucherType,
+                OfficeId = model.OfficeId,
+                ProjectId = model.ProjectId,
+                BudgetLineId = model.BudgetLineId,
+            };
 
+            var responseVoucher = await AddVoucherNewDetail(voucherModel);
+
+            #endregion
+
+            #region "Generate Transaction"
+
+            if (responseVoucher.StatusCode == 200)
+            {
+                List<VoucherTransactionsModel> transactions = new List<VoucherTransactionsModel>();
+
+                // Credit
+                transactions.Add(new VoucherTransactionsModel
+                {
+                    TransactionId = 0,
+                    VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                    AccountNo = model.CreditAccount,
+                    Debit = 0,
+                    Credit = Math.Abs(model.Amount),
+                    Description = "Gain-Loss-Voucher-Credit",
+                    IsDeleted = false
+                });
+
+                // Debit
+                transactions.Add(new VoucherTransactionsModel
+                {
+                    TransactionId = 0,
+                    VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                    AccountNo = model.DebitAccount,
+                    Debit = Math.Abs(model.Amount),
+                    Credit = 0,
+                    Description = "Gain-Loss-Voucher-Debit",
+                    IsDeleted = false
+                });
+
+                AddEditTransactionModel transactionVoucherDetail = new AddEditTransactionModel
+                {
+                    VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                    VoucherTransactions = transactions
+                };
+
+                var responseTransaction = AddEditTransactionList(transactionVoucherDetail, userId);
+
+                if (responseTransaction.StatusCode == 200)
+                {
+                    response.data.GainLossVoucherDetail = new GainLossVoucherList
+                    {
+                        VoucherId = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                        JournalName = responseVoucher.data.VoucherDetailEntity.JournalDetails != null ? responseVoucher.data.VoucherDetailEntity.JournalDetails.JournalName : "",
+                        VoucherName = responseVoucher.data.VoucherDetailEntity.ReferenceNo,
+                        VoucherDate = responseVoucher.data.VoucherDetailEntity.VoucherDate
+                    };
+                }
+                else
+                {
+                    throw new Exception(responseTransaction.Message);
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            else
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = responseVoucher.Message;
+            }
+
+            #endregion
+
+            return response;
+        }
     }
 }
