@@ -680,6 +680,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 OfficeId = model.OfficeId,
                 ProjectId = model.ProjectId,
                 BudgetLineId = model.BudgetLineId,
+                IsExchangeGainLossVoucher = true
             };
 
             var responseVoucher = await AddVoucherNewDetail(voucherModel);

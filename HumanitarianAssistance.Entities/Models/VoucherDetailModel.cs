@@ -23,6 +23,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? FinancialYearId { get; set; }
         public string FinancialYearName { get; set; }
         public bool? IsVoucherVerified { get; set; }
+        public bool IsExchangeGainLossVoucher { get; set; } = false;
 
     }
 
