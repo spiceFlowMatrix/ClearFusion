@@ -68,6 +68,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         PolicyDetail obj = _mapper.Map<PolicyModel, PolicyDetail>(model);
                         obj.CreatedById = UserId;
                         obj.MediumId = model.MediumId;
+                        obj.ProducerId = model.ProducerId;
                         obj.MediaCategoryId = model.MediaCategoryId;
                         obj.PolicyName = model.PolicyName;
                         obj.CreatedDate = DateTime.Now;
@@ -93,15 +94,24 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 }
                 else
                 {
-                    //ActivityType obj = await _uow.ActivityTypeRepository.FindAsync(x => x.ActivityTypeId == model.ActivityTypeId);
-                    //obj.ModifiedById = UserId;
-                    //obj.ModifiedDate = DateTime.Now;
-                    //_mapper.Map(model, obj);
-                    //await _uow.ActivityTypeRepository.UpdateAsyn(obj);
-                    //await _uow.SaveAsync();
-                    //response.data.activityById = obj;
-                    //response.StatusCode = StaticResource.successStatusCode;
-                    //response.Message = "Success";
+                    var existRecord = await _uow.PolicyRepository.FindAsync(x => x.IsDeleted == false && x.PolicyId == model.PolicyId);
+                    if (existRecord != null)
+                    {
+                        _mapper.Map(model, existRecord);
+                        existRecord.IsDeleted = false;
+                        existRecord.Description = model.Description;
+                        existRecord.ModifiedById = UserId;
+                        existRecord.ModifiedDate = DateTime.Now;
+                        existRecord.LanguageId = model.LanguageId;
+                        existRecord.MediaCategoryId = model.MediaCategoryId;
+                        existRecord.MediumId = model.MediumId;
+                        existRecord.PolicyName = model.PolicyName;
+                        existRecord.ProducerId = model.ProducerId;
+                        await _uow.PolicyRepository.UpdateAsyn(existRecord);
+                        response.data.policyDetails = existRecord;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Policy updated successfully";
+                    }
                 }
             }
             catch (Exception ex)
@@ -250,6 +260,40 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                // response.data.jobListTotalCount = voucherList.Count();
                 response.data.PolicyFilteredList = policyList;
                 response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetPolicyById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var policyList = await _uow.GetDbContext().PolicyDetails
+                                       .Where(v => v.IsDeleted == false && v.PolicyId == model).Select(x => new PolicyModel
+                                       {
+                                           PolicyId = x.PolicyId,
+                                           PolicyCode = x.PolicyCode,
+                                           PolicyName = x.PolicyName,
+                                           Description = x.Description,
+                                           MediumName = x.Mediums.MediumName,
+                                           MediumId = x.MediumId,
+                                           ProducerId = x.ProducerId,
+                                           ProducerName = x.Producers.ProducerName,
+                                           MediaCategoryId = x.MediaCategoryId,
+                                           MediaCategoryName = x.MediaCategories.CategoryName,
+                                           LanguageId = x.LanguageId,
+                                           LanguageName = x.Languages.LanguageName
+                                       }).AsNoTracking().FirstOrDefaultAsync();
+                //response.data.TotalCount = totalCount;
+                response.data.policyDetailsById = policyList;
+                response.StatusCode = 200;
                 response.Message = "Success";
             }
             catch (Exception ex)

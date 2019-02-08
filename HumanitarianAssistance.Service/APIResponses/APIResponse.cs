@@ -326,6 +326,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
+        public VoucherDetail VoucherDetailEntity { get; set; }
 
 
         #region Marketing       
@@ -372,6 +373,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ActivityType activityById { get; set; }
         public PolicyDetail policyDetails { get; set; }
         public List<PolicyModel> policyFilterList { get; set; }
+        public PolicyModel policyDetailsById { get; set; }
         public TimeCategory timeCatergoryById { get; set; }
         #endregion
 
@@ -402,9 +404,25 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
+        public GainLossVoucherList GainLossVoucherDetail { get; set; }
 
         #endregion
 
+
+        #region "Web link URl"
+        public string ProposalWebLink { get; set; }
+        public string EDIWebLink { get; set; }
+        public string BudgetWebLink { get; set; }
+        public string ConceptWebLink { get; set; }
+        public string PresentationWebLink { get; set; }
+
+        public string ProposalWebLinkExtType { get; set; }
+        public string EDIWebLinkExtType { get; set; }
+        public string BudgetWebLinkExtType { get; set; }
+        public string ConceptWebLinkExtType { get; set; }
+        public string PresentationWebLinkExtType { get; set; }
+
+        #endregion
 
 
     }
