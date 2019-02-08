@@ -916,5 +916,242 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        /// <summary>
+        /// Generating Salary Voucher for an employee
+        /// </summary>
+        /// <param name="EmployeePensionPayment"></param>
+        /// <returns>Boolean</returns>
+        public async Task<APIResponse> GenerateSalaryVoucher(EmployeeSalaryVoucherModel EmployeeSalaryVoucher)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                List<VoucherTransactionsModel> transactions = new List<VoucherTransactionsModel>();
+
+                //for gross salary= basicpay * totalworkhours
+                decimal? grossSalary = EmployeeSalaryVoucher.EmployeePayrollLists.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).Sum(x => x.MonthlyAmount) * EmployeeSalaryVoucher.PresentHours;
+
+                //total Allowances of an employee over a month
+                decimal? totalAllowance = EmployeeSalaryVoucher.EmployeePayrollLists.Where(x => x.HeadTypeId == (int)SalaryHeadType.ALLOWANCE).Sum(x => x.MonthlyAmount);
+
+                //total deductions of an employee over a month
+                decimal? totalDeductions = EmployeeSalaryVoucher.EmployeePayrollLists.Where(x => x.HeadTypeId == (int)SalaryHeadType.DEDUCTION).Sum(x => x.MonthlyAmount);
+
+                //total salary payable to employee in a month
+                decimal? totalSalaryOfEmployee = (grossSalary + totalAllowance) - totalDeductions;
+
+                string officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == EmployeeSalaryVoucher.OfficeId).Result.OfficeCode; //use OfficeCode
+                FinancialYearDetail financialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
+                EmployeeDetail EmployeeDetails = _uow.GetDbContext().EmployeeDetail.FirstOrDefault(x => x.EmployeeID == EmployeeSalaryVoucher.EmployeeId && x.IsDeleted == false);
+
+                if (totalSalaryOfEmployee != null && totalSalaryOfEmployee > 0)
+                {
+                    #region "Generate Voucher"
+                    VoucherDetailModel voucherModel = new VoucherDetailModel
+                    {
+                        CreatedById = EmployeeSalaryVoucher.CreatedById,
+                        CreatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                        VoucherNo = 0,
+                        CurrencyId = EmployeeSalaryVoucher.CurrencyId,
+                        Description = StaticResource.SalaryPaymentDone + EmployeeDetails.EmployeeCode + "-" + EmployeeDetails.EmployeeName + "-" + DateTime.Now.Month + "-" + totalSalaryOfEmployee, //EmpCode-EmpName-Month-<salary payment>,
+                        JournalCode = EmployeeSalaryVoucher.JournalCode,//null for now as per client,
+                        VoucherTypeId = (int)VoucherTypes.Journal,
+                        OfficeId = EmployeeSalaryVoucher.OfficeId,
+                        FinancialYearId = financialYear.FinancialYearId,
+                        VoucherDate = DateTime.Now,
+                        IsExchangeGainLossVoucher = false
+                    };
+
+                    var responseVoucher = await AddVoucherNewDetail(voucherModel);
+                    #endregion
+
+                    if (responseVoucher.StatusCode == 200)
+                    {
+                        foreach (SalaryHeadModel salaryhead in EmployeeSalaryVoucher.EmployeePayrollLists)
+                        {
+                            VoucherTransactionsModel transactionModel = new VoucherTransactionsModel();
+                            //Creating Voucher Transaction for Credit
+                            transactionModel.IsDeleted = false;
+                            transactionModel.VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo;
+
+                            try
+                            {
+                                //Include only salary heads in voucher that contain transaction type ""
+                                if (salaryhead.TransactionTypeId != null && salaryhead.TransactionTypeId != 0)
+                                {
+                                    //Include only salary heads in voucher that has transaction type as credit and salary head type is not general
+                                    if (salaryhead.TransactionTypeId == (int)TransactionType.Debit && (salaryhead.MonthlyAmount != null && salaryhead.MonthlyAmount > 0) && salaryhead.HeadTypeId != (int)SalaryHeadType.GENERAL)
+                                    {
+                                        transactionModel.AccountNo = salaryhead.AccountNo;
+                                        transactionModel.Description = string.Format(StaticResource.SalaryHeadAllowances, salaryhead.HeadName);
+                                        transactionModel.Debit = Convert.ToDouble(salaryhead.MonthlyAmount);
+                                        transactionModel.Credit = 0;
+
+                                        transactions.Add(transactionModel);
+
+                                    }//Include only salary heads in voucher that has transaction type as debit and salary head type is not general
+                                    else if (salaryhead.TransactionTypeId == (int)TransactionType.Credit && (salaryhead.MonthlyAmount != null && salaryhead.MonthlyAmount > 0) && salaryhead.HeadTypeId != (int)SalaryHeadType.GENERAL)
+                                    {
+                                        transactionModel.AccountNo = salaryhead.AccountNo;
+                                        transactionModel.Description = string.Format(StaticResource.SalaryHeadDeductions, salaryhead.HeadName);
+                                        transactionModel.Credit = Convert.ToDouble(salaryhead.MonthlyAmount);
+                                        transactionModel.Debit = 0;
+
+                                        transactions.Add(transactionModel);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(ex.Message);
+                            }
+                        }
+
+                        foreach (PayrollHeadModel payrollHead in EmployeeSalaryVoucher.EmployeePayrollListPrimary)
+                        {
+                            VoucherTransactionsModel transactionModel = new VoucherTransactionsModel();
+                            //Creating Voucher Transaction for Credit
+                            transactionModel.IsDeleted = false;
+                            transactionModel.VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo;
+
+                            try
+                            {
+                                //Include only salary heads in voucher that contain transaction type ""
+                                if (payrollHead.TransactionTypeId != null && payrollHead.TransactionTypeId != 0)
+                                {
+                                    //Include only salary heads in voucher that has transaction type as credit
+                                    if (payrollHead.TransactionTypeId == (int)TransactionType.Debit && (payrollHead.Amount != null && payrollHead.Amount != 0))
+                                    {
+                                        transactionModel.AccountNo = payrollHead.AccountNo;
+
+                                        if (payrollHead.PayrollHeadTypeId != (int)SalaryHeadType.GENERAL)
+                                        {
+                                            transactionModel.Description = string.Format(StaticResource.SalaryHeadAllowances, payrollHead.PayrollHeadName);
+                                        }
+                                        else
+                                        {
+                                            transactionModel.Description = payrollHead.PayrollHeadName + "Debited";
+                                        }
+
+                                        transactionModel.Debit = Convert.ToDouble(payrollHead.Amount);
+                                        transactionModel.Credit = 0;
+
+                                        transactions.Add(transactionModel);
+
+                                    }//Include only salary heads in voucher that has transaction type as debit
+                                    else if (payrollHead.TransactionTypeId == (int)TransactionType.Credit && (payrollHead.Amount != null && payrollHead.Amount != 0))
+                                    {
+                                        transactionModel.AccountNo = payrollHead.AccountNo;
+
+                                        if (payrollHead.PayrollHeadTypeId != (int)SalaryHeadType.GENERAL)
+                                        {
+                                            transactionModel.Description = string.Format(StaticResource.SalaryHeadDeductions, payrollHead.PayrollHeadName);
+                                        }
+                                        else
+                                        {
+                                            transactionModel.Description = payrollHead.PayrollHeadName + "Credited";
+                                        }
+
+                                        transactionModel.Credit = Convert.ToDouble(payrollHead.Amount);
+                                        transactionModel.Debit = 0;
+
+                                        transactions.Add(transactionModel);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(ex.Message);
+                            }
+                        }
+
+                        //Creating Voucher transactions for Gross Salary it is being calculated in this method so we need to insert record for it separately
+                        if (grossSalary != null && grossSalary != 0)
+                        {
+                            VoucherTransactionsModel transactionModel = new VoucherTransactionsModel();
+
+                            //Creating Voucher Transaction for Credit
+                            transactionModel.IsDeleted = false;
+                            transactionModel.VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo;
+                            transactionModel.AccountNo = EmployeeSalaryVoucher.EmployeePayrollLists.FirstOrDefault(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).AccountNo;
+                            transactionModel.Description = "Basic Pay Debited";
+                            transactionModel.Debit = Convert.ToDouble(grossSalary);
+                            transactionModel.Credit = 0;
+
+                            transactions.Add(transactionModel);
+                        }
+                        else
+                        {
+                            throw new Exception("Gross Salary should be greater than 0");
+                        }
+
+                        AddEditTransactionModel transactionVoucherDetail = new AddEditTransactionModel
+                        {
+                            VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                            VoucherTransactions = transactions
+                        };
+
+                        //Saving Transactions
+                        var responseTransaction = AddEditTransactionList(transactionVoucherDetail, EmployeeSalaryVoucher.CreatedById);
+
+                        if (responseTransaction.StatusCode == 200)
+                        {
+                            //Creating an entry in EmployeeSalaryPaymentHistory Table
+                            EmployeeSalaryPaymentHistory employeeSalaryPaymentHistory = new EmployeeSalaryPaymentHistory();
+                            employeeSalaryPaymentHistory.CreatedById = EmployeeSalaryVoucher.CreatedById;
+                            employeeSalaryPaymentHistory.CreatedDate = DateTime.Now;
+                            employeeSalaryPaymentHistory.IsDeleted = false;
+                            employeeSalaryPaymentHistory.EmployeeId = EmployeeSalaryVoucher.EmployeeId;
+                            employeeSalaryPaymentHistory.VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo;
+                            employeeSalaryPaymentHistory.IsSalaryReverse = false;
+                            employeeSalaryPaymentHistory.Year = DateTime.Now.Year;
+                            employeeSalaryPaymentHistory.Month = DateTime.Now.Month;
+
+                            await _uow.EmployeeSalaryPaymentHistoryRepository.AddAsyn(employeeSalaryPaymentHistory);
+
+                            response.data.VoucherReferenceNo = responseVoucher.data.VoucherDetailEntity.ReferenceNo;
+                            response.data.VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo;
+
+                            var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == EmployeeSalaryVoucher.CreatedById);
+
+                            LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                            loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
+                            loggerObj.IsRead = false;
+                            loggerObj.UserName = user.FirstName + " " + user.LastName;
+                            loggerObj.UserId = EmployeeSalaryVoucher.CreatedById;
+                            loggerObj.LoggedDetail = "Voucher " + responseVoucher.data.VoucherDetailEntity.VoucherNo + " Created";
+                            loggerObj.CreatedDate = DateTime.Now;
+
+                            response.LoggerDetailsModel = loggerObj;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Success";
+                        }
+                        else
+                        {
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = StaticResource.SomethingWrong + responseTransaction.Message;
+                        }
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.SomethingWrong;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Employee salary cannot be less than 0");
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
     }
 }
