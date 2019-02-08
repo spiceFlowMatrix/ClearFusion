@@ -1135,25 +1135,6 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<object> AddExchangeGainLossVoucher([FromBody] ExchangeGainLossVoucherDetails model)
-    {
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-      if (user != null)
-      {
-        var id = user.Id;
-        model.CreatedById = id;
-        model.IsDeleted = false;
-        model.CreatedDate = DateTime.UtcNow;
-      }
-      //APIResponse response = await _ivoucherDetail.AddExchangeGainLossVoucher(model);
-      APIResponse response = await _iVoucherNewService.CreateGainLossTransaction(model, user.Id);
-
-      return response;
-    }
-
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetExchangeGainLossVoucherList(int OfficeId)
