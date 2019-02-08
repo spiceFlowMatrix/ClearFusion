@@ -89,8 +89,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddProjectChat(ProjectCommunicationModel model, string UserId);
 
         #endregion
-
-
         #region GetAllProvinceDetails
         APIResponse GetAllProvinceDetails();
         APIResponse GetAllStrengthConsiderationDetails();
@@ -175,9 +173,11 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetProvinceMultiSelectByProjectId(long ProjectId);
         APIResponse GetDistrictMultiSelectByProjectId(long ProjectId);
         APIResponse AddEditDistrictMultiSelectDetail(DistrictMultiSelectModel model, string UserId);
-       // APIResponse SaveErrorlog(Errorlog obj, string UserId);
+        // APIResponse SaveErrorlog(Errorlog obj, string UserId);
 
 
         #endregion
+
+        Task<APIResponse> GetAllProjectDetails();
     }
 }

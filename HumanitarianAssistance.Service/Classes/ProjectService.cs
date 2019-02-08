@@ -4298,5 +4298,27 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
         #endregion
+
+        #region Get Project Details
+
+        public async Task<APIResponse> GetAllProjectDetails()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().ProjectDetail.Where(x=> x.IsDeleted == false).ToListAsync();
+                response.data.ProjectDetailList = list;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
     }
 }

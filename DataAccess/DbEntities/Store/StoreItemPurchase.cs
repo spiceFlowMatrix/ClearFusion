@@ -72,7 +72,7 @@ namespace DataAccess.DbEntities.Store
         public ReceiptType ReceiptType { get; set; }
 
         [ForeignKey("ProjectId")]
-        public ProjectDetails ProjectDetails { get; set; }
+        public ProjectDetail ProjectDetails { get; set; }
 
 
         public List<StorePurchaseOrder> PurchaseOrders { get; set; }

@@ -1201,7 +1201,8 @@ namespace HumanitarianAssistance.Controllers
       if (user != null)
       {
         model.CreatedById = user.Id;
-        response = await _ivoucherDetail.GenerateSalaryVoucher(model);
+        //response = await _ivoucherDetail.GenerateSalaryVoucher(model);
+        response = await _iVoucherNewService.GenerateSalaryVoucher(model);
       }
       return response;
     }
