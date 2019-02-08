@@ -665,93 +665,115 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        /// <summary>
+        /// Gain Loss Voucher and Transaction generation
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<APIResponse> CreateGainLossTransaction(ExchangeGainLossVoucherDetails model, string userId)
         {
             APIResponse response = new APIResponse();
-
-            #region "Generate Voucher"
-            VoucherDetailModel voucherModel = new VoucherDetailModel
+            try
             {
-                VoucherNo = model.VoucherNo,
-                CurrencyId = model.CurrencyId,
-                Description = model.Description,
-                JournalCode = model.JournalId,
-                VoucherTypeId = model.VoucherType,
-                OfficeId = model.OfficeId,
-                ProjectId = model.ProjectId,
-                BudgetLineId = model.BudgetLineId,
-                IsExchangeGainLossVoucher = true
-            };
-
-            var responseVoucher = await AddVoucherNewDetail(voucherModel);
-
-            #endregion
-
-            #region "Generate Transaction"
-
-            if (responseVoucher.StatusCode == 200)
-            {
-                List<VoucherTransactionsModel> transactions = new List<VoucherTransactionsModel>();
-
-                // Credit
-                transactions.Add(new VoucherTransactionsModel
+                #region "Generate Voucher"
+                VoucherDetailModel voucherModel = new VoucherDetailModel
                 {
-                    TransactionId = 0,
-                    VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
-                    AccountNo = model.CreditAccount,
-                    Debit = 0,
-                    Credit = Math.Abs(model.Amount),
-                    Description = "Gain-Loss-Voucher-Credit",
-                    IsDeleted = false
-                });
-
-                // Debit
-                transactions.Add(new VoucherTransactionsModel
-                {
-                    TransactionId = 0,
-                    VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
-                    AccountNo = model.DebitAccount,
-                    Debit = Math.Abs(model.Amount),
-                    Credit = 0,
-                    Description = "Gain-Loss-Voucher-Debit",
-                    IsDeleted = false
-                });
-
-                AddEditTransactionModel transactionVoucherDetail = new AddEditTransactionModel
-                {
-                    VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
-                    VoucherTransactions = transactions
+                    VoucherNo = model.VoucherNo,
+                    CurrencyId = model.CurrencyId,
+                    Description = model.Description,
+                    JournalCode = model.JournalId,
+                    VoucherTypeId = model.VoucherType,
+                    OfficeId = model.OfficeId,
+                    ProjectId = model.ProjectId,
+                    BudgetLineId = model.BudgetLineId,
+                    IsExchangeGainLossVoucher = true
                 };
 
-                var responseTransaction = AddEditTransactionList(transactionVoucherDetail, userId);
+                var responseVoucher = await AddVoucherNewDetail(voucherModel);
 
-                if (responseTransaction.StatusCode == 200)
+                #endregion
+
+                #region "Generate Transaction"
+
+                if (responseVoucher.StatusCode == 200)
                 {
-                    response.data.GainLossVoucherDetail = new GainLossVoucherList
+                    List<VoucherTransactionsModel> transactions = new List<VoucherTransactionsModel>();
+
+                    // Credit
+                    transactions.Add(new VoucherTransactionsModel
                     {
-                        VoucherId = responseVoucher.data.VoucherDetailEntity.VoucherNo,
-                        JournalName = responseVoucher.data.VoucherDetailEntity.JournalDetails != null ? responseVoucher.data.VoucherDetailEntity.JournalDetails.JournalName : "",
-                        VoucherName = responseVoucher.data.VoucherDetailEntity.ReferenceNo,
-                        VoucherDate = responseVoucher.data.VoucherDetailEntity.VoucherDate
+                        TransactionId = 0,
+                        VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                        AccountNo = model.CreditAccount,
+                        Debit = 0,
+                        Credit = Math.Abs(model.Amount),
+                        Description = "Gain-Loss-Voucher-Credit",
+                        IsDeleted = false
+                    });
+
+                    // Debit
+                    transactions.Add(new VoucherTransactionsModel
+                    {
+                        TransactionId = 0,
+                        VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                        AccountNo = model.DebitAccount,
+                        Debit = Math.Abs(model.Amount),
+                        Credit = 0,
+                        Description = "Gain-Loss-Voucher-Debit",
+                        IsDeleted = false
+                    });
+
+                    AddEditTransactionModel transactionVoucherDetail = new AddEditTransactionModel
+                    {
+                        VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                        VoucherTransactions = transactions
                     };
+
+                    var responseTransaction = AddEditTransactionList(transactionVoucherDetail, userId);
+
+                    if (responseTransaction.StatusCode == 200)
+                    {
+                        response.data.GainLossVoucherDetail = new GainLossVoucherList
+                        {
+                            VoucherId = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                            JournalName = responseVoucher.data.VoucherDetailEntity.JournalDetails != null ? responseVoucher.data.VoucherDetailEntity.JournalDetails.JournalName : "",
+                            VoucherName = responseVoucher.data.VoucherDetailEntity.ReferenceNo,
+                            VoucherDate = responseVoucher.data.VoucherDetailEntity.VoucherDate
+                        };
+                    }
+                    else
+                    {
+                        throw new Exception(responseTransaction.Message);
+                    }
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
                 }
                 else
                 {
-                    throw new Exception(responseTransaction.Message);
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = responseVoucher.Message;
                 }
 
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = StaticResource.SuccessText;
+                #endregion
             }
-            else
+            catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = responseVoucher.Message;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
-
-            #endregion
-
             return response;
         }
+
+        //public async Task<APIResponse> DeleteGainLossVoucherTransaction(ExchangeGainLossVoucherDetails model, string userId)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+
+        //    }
+        //    catch (Exception ex) { }
+        //}
     }
 }
