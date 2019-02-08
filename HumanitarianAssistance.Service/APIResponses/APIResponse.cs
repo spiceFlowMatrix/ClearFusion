@@ -404,6 +404,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
         public GainLossVoucherList GainLossVoucherDetail { get; set; }
+        public List<GainLossVoucherList> GainLossVoucherList { get; set; }
 
         #endregion
 
