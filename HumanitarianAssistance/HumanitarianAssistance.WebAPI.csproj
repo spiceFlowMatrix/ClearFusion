@@ -24,6 +24,8 @@
 
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.36.1.1407" />
 
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="2.2.1" />
+
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" PrivateAssets="All" />
 
@@ -79,8 +81,6 @@
     <PackageReference Update="Microsoft.NETCore.App" Version="2.1.0" />
   </ItemGroup>
   <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties appsettings_1json__JSONSchema="" />
-    </VisualStudio>
+    <VisualStudio><UserProperties appsettings_1json__JSONSchema="http://json.schemastore.org/appveyor" /></VisualStudio>
   </ProjectExtensions>
 </Project>

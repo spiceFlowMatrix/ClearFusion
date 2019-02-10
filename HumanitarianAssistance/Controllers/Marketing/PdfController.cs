@@ -152,11 +152,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
                                          <table width='100%' cellpadding='0' cellspacing='0'>
                                             <tbody>
                                                <tr>
-                                                  <td width = '80%' style='font-size:16px; font-weight:700; vertical-align:top; text-align: center;'>NAWA RADIO<br>
+                                                  <td width = '85%' style='font-size:16px; font-weight:700; vertical-align:top; text-align: center;'>NAWA RADIO<br>
                                                       <p style = 'margin:5px 0;'> Marketing Department</p>
                                                       Broadcasting Agreement Paper
                                                   </td>
-                                                  <td width = '20%' style= 'text-align:right;'>  
+                                                  <td width = '15%' style= 'text-align:right;'>  
                                                       <img width= '100' height= '100' src=" + imagepath + @">
                                                   </td>
                                               </tr>

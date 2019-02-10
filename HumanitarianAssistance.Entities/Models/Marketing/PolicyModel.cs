@@ -6,11 +6,13 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
 {
     public class PolicyModel
     {
-        public long? PolicyId { get; set; }
+        public long PolicyId { get; set; }
         public string PolicyName { get; set; }
         public string PolicyCode { get; set; }
         public long? LanguageId { get; set; }
         public string LanguageName { get; set; }
+        public long? ProducerId { get; set; }
+        public string ProducerName { get; set; }
         public long? MediumId { get; set; }
         public string MediumName { get; set; }
         public long? MediaCategoryId { get; set; }
@@ -23,5 +25,19 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public string ModifiedById { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string Description { get; set; }
+    }
+
+    public class PolicyFilterModel
+    {
+        public bool Medium { get; set; }
+        public string Value { get; set; }
+        public bool PolicyId { get; set; }
+        public bool PolicyName { get; set; }
+    }
+
+    public class PolicyPaginationModel
+    {
+        public int pageIndex { get; set; }
+        public int pageSize { get; set; }
     }
 }

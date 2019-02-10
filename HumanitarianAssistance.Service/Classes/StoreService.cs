@@ -2231,6 +2231,7 @@ namespace HumanitarianAssistance.Service.Classes
                             var financialYearDetails = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDeleted == false && x.StartDate.Date.Year == DateTime.Now.Year);
                             var inventory = _uow.GetDbContext().InventoryItems.Include(x => x.Inventory).FirstOrDefault(x => x.ItemId == model.InventoryItem);
                             var paymentTypes = _uow.GetDbContext().PaymentTypes.FirstOrDefault(x => x.PaymentId == model.PaymentTypeId);
+                            string currencyCode = _uow.GetDbContext().CurrencyDetails.FirstOrDefault(x => x.IsDeleted == false && x.CurrencyId == model.Currency).CurrencyCode;
                             //exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false).OrderByDescending(x => x.Date).ToListAsync();
 
                             VoucherDetail obj = new VoucherDetail();
@@ -2251,7 +2252,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                             await _uow.VoucherDetailRepository.AddAsyn(obj);
 
-                            obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
+                            obj.ReferenceNo = obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year; ;
                             await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
                             purchaseRecord.VerifiedPurchaseVoucher = obj.VoucherNo;

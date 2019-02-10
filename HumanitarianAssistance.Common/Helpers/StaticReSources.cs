@@ -26,6 +26,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string InvalidCompanyTypeId = "Invalid Company type id";
         public const string InvalidRole = "Invalid Role";
         public const string SomethingWrong = "Something went wrong: ";
+        public const string ErrorText = "Error: ";
         public const string RoleCreated = "Role Created";
         public const string RoleAlreadyExist = "Role already exists";
         public const string InvalidUser = "Invalid User";
@@ -331,7 +332,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
 
         //Salary Payment
-        public const string SalaryPaymentDone = "Salary Payment:"; //EmpCode-EmpName-Month-<salary payment>
+        public const string SalaryPaymentDone = "Salary Payment: "; //EmpCode-EmpName-Month-<salary payment>
         public const string SalaryHeadAllowances = "{0} has been debited towards Gross Salary";
         public const string SalaryHeadDeductions = "{0} has been credited towards Net Salary";
         public const string JobCodeExist = "Job Code Already Exist";
@@ -355,8 +356,14 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string defaultFinancialYearIsNotSet = "Default Financial year is not set";
         public const string officeCodeNotFound = "Office Code Not Found";
 
+        public const string TransactionNotFound = "Transaction Not Found";
+
 
         #endregion
 
+        #region "Exception Throw Error Text"
+        public const string UnableToUploadFile = "Unable To Upload File";
+
+        #endregion
     }
 }

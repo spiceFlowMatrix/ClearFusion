@@ -88,6 +88,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
         public string InventoryCode { get; set; }
+        public string JobCode { get; set; }
         public string InventoryItemCode { get; set; }
         public string StoreSourceCode { get; set; }
         public bool isSalaryHeadSaved { get; set; }
@@ -184,7 +185,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleForProspectiveEmployeeModel> ISFPEmployeeList { get; set; }
         public IList<ScheduleCandidateModel> ScheduleCandidateList { get; set; }
 
-        public IList<ProjectDetails> ProjectDetailList { get; set; }
+        public IList<ProjectDetail> ProjectDetailList { get; set; }
 
         public IList<InterviewFeedbackDetailsModel> InterviewFeedbackDetailsList { get; set; }
         public IList<EmployeeSalaryDetailsModel> EmployeeSalaryDetailsList { get; set; }
@@ -325,6 +326,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
+        public VoucherDetail VoucherDetailEntity { get; set; }
 
 
         #region Marketing       
@@ -361,6 +363,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public JobDetailsModel JobDetail { get; set; }
         public JobPriceModel JobPriceDetail { get; set; }
         public List<JobDetailsModel> JobPriceDetailList { get; set; }
+        public List<PolicyModel> PolicyFilteredList { get; set; }
         public MediaCategory mediaCategoryById { get; set; }
         public Medium mediumById { get; set; }
         public Nature natureById { get; set; }
@@ -369,6 +372,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public Producer producerById { get; set; }
         public ActivityType activityById { get; set; }
         public PolicyDetail policyDetails { get; set; }
+        public List<PolicyModel> policyFilterList { get; set; }
+        public PolicyModel policyDetailsById { get; set; }
         public TimeCategory timeCatergoryById { get; set; }
         #endregion
 
@@ -399,9 +404,26 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
+        public GainLossVoucherList GainLossVoucherDetail { get; set; }
+        public List<GainLossVoucherList> GainLossVoucherList { get; set; }
 
         #endregion
 
+
+        #region "Web link URl"
+        public string ProposalWebLink { get; set; }
+        public string EDIWebLink { get; set; }
+        public string BudgetWebLink { get; set; }
+        public string ConceptWebLink { get; set; }
+        public string PresentationWebLink { get; set; }
+
+        public string ProposalWebLinkExtType { get; set; }
+        public string EDIWebLinkExtType { get; set; }
+        public string BudgetWebLinkExtType { get; set; }
+        public string ConceptWebLinkExtType { get; set; }
+        public string PresentationWebLinkExtType { get; set; }
+
+        #endregion
 
 
     }

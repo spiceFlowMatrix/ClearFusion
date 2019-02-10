@@ -27,7 +27,7 @@ namespace HumanitarianAssistance.Service
         static string ApplicationName = string.Empty;
         public static DriveService userGoogleCredential(string ProjectCode, string pathFile, ViewModels.Models.Project.GoogleCredential Credential)
         {
-            
+
             UserCredential credential;
             using (var stream =
                 new FileStream(pathFile, FileMode.Open, FileAccess.Read))
@@ -37,7 +37,9 @@ namespace HumanitarianAssistance.Service
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
                     Scopes,
-                   "sdd.shared@gmail.com",
+                   //"sdd.shared@gmail.com",
+                   // "hamza@edgsolutions.net",
+                   Credential.EmailId,
                     CancellationToken.None,
                     new FileDataStore("Drive.Api.Auth.Store", true)).Result;
 
@@ -69,7 +71,7 @@ namespace HumanitarianAssistance.Service
             if (EmailId == null)
             {
                 mailid = Credential + "," + logginUserEmailId;
-            } 
+            }
             else
             {
                 mailid = EmailId + "," + Credential + "," + logginUserEmailId;
@@ -180,7 +182,7 @@ namespace HumanitarianAssistance.Service
                 result = result.Where(p => p.MimeType == "application/vnd.google-apps.folder" && p.Trashed == false).ToList();
                 folderName = result.Select(p => p.Name).Distinct().ToList();
                 GetAllFileListRequest.PageToken = files.NextPageToken;
-            } while (!String.IsNullOrEmpty(GetAllFileListRequest.PageToken));          
+            } while (!String.IsNullOrEmpty(GetAllFileListRequest.PageToken));
             string folder = ProjectCode;
             if (folderName.Contains(folder))
             {
@@ -226,7 +228,7 @@ namespace HumanitarianAssistance.Service
                         Type = "user",
                         Role = "writer",
                         EmailAddress = item
-                    };                  
+                    };
                     var Permissionrequest = driveService.Permissions.Create(userPermission, file.Id);
                     Permissionrequest.Fields = "*";
                     batch.Queue(Permissionrequest, callback);
