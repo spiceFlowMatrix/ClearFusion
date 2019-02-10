@@ -215,6 +215,13 @@ workflows:
       - deploy-staging:
           requires:
           - build-staging
+      - build-staging-edg:
+          filters:
+            branches:
+              only: master
+      - deploy-staging-edg:
+          requires:
+          - build-staging-edg
       - build-cha:
           filters:
             tags:
