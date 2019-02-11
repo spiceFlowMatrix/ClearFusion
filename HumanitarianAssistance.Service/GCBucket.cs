@@ -88,12 +88,12 @@ namespace HumanitarianAssistance.Service
 
                 APIResponse response = new APIResponse();
                 //var dir = AppDomain.CurrentDomain.BaseDirectory;
-                var path = Directory.GetCurrentDirectory()+"\\Documents\\Proposal\\Proposal.docx";
+                var path = Directory.GetCurrentDirectory() + "\\Documents\\Proposal\\Proposal.docx";
                 //var obj = path.Substring(path.LastIndexOf('\\') - 6, 6);
                 var newObject = new Google.Apis.Storage.v1.Data.Object()
                 {
                     Bucket = googleCredential.BucketName,
-                    Name = folderName + "/" + projectProposalfilename + ".docx",
+                    Name = googleCredential.Projects + "/" + folderName + "/" + projectProposalfilename + ".docx",
 
                 };
 
@@ -174,32 +174,13 @@ namespace HumanitarianAssistance.Service
             {
 
                 APIResponse response = new APIResponse();
-                //var dir = AppDomain.CurrentDomain.BaseDirectory;
-                //var path = pathFile;
-
-                //var obj = path.Substring(path.LastIndexOf('\\') - 6, 6);
-
                 var newObject = new Google.Apis.Storage.v1.Data.Object()
                 {
                     Bucket = googleCredential.BucketName,
-                    Name = folderName + "/" + fileName
+                    Name = googleCredential.Projects + "/" + folderName + "/" + fileName
 
                 };
                 var mimetype = GetMimeType(ext);
-                // var dir = Directory.GetCurrentDirectory();
-
-                //using (var stream = filedata.OpenReadStream())
-                //{
-                //    using (var reader = new StreamReader(stream))
-                //    {
-                //        var csvReader = new CsvReader(reader);
-                //        csvReader.Configuration.WillThrowOnMissingField = false;
-                //        csvReader.Configuration.RegisterClassMap<RedCrossRequestMap>();
-                //        var requests = csvReader.GetRecords<Request>().ToList();
-
-                //        var errors = _mediator.Send(new ImportRequestsCommand { Requests = requests });
-                //    }
-                //}
 
 
 
@@ -207,7 +188,6 @@ namespace HumanitarianAssistance.Service
                 var uploadRequest = new Google.Apis.Storage.v1.ObjectsResource.InsertMediaUpload(service, newObject, googleCredential.BucketName, filedata.OpenReadStream(), mimetype);
                 uploadRequest.OauthToken = credential.Token.AccessToken;
                 var fileResponse = uploadRequest.Upload();
-
                 var bucketFolderWithFilePath = newObject.Bucket + "/" + newObject.Name;
                 if (fileResponse.Status.ToString() == "Completed" && fileResponse.Exception == null)
                 {
@@ -347,7 +327,7 @@ namespace HumanitarianAssistance.Service
             {
                 mimeType = "application/vnd.google-apps.photo";
             }
-            else if(ext== ".pptx")
+            else if (ext == ".pptx")
             {
                 mimeType = "application/vnd.google-apps.presentation";
             }

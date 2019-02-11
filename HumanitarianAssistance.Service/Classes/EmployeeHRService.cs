@@ -976,32 +976,6 @@ namespace HumanitarianAssistance.Service.Classes
                     PensionPaymentList.Add(PensionPayment);
                 }
 
-                var employeesWithNoPension = (from ed in _uow.GetDbContext().EmployeeDetail
-                                              join epd in _uow.GetDbContext().EmployeeProfessionalDetail on ed.EmployeeID equals epd.EmployeeId
-                                              join sd in _uow.GetDbContext().EmployeePayroll on  ed.EmployeeID equals sd.EmployeeID
-                                              where ed.IsDeleted == false && epd.OfficeId == OfficeId
-                                              && epd.EmployeeTypeId != (int)EmployeeTypeStatus.Prospective
-                                              && !PensionPaymentList.Select(x => x.EmployeeId).Contains(ed.EmployeeID)
-                                              select new
-                                              {
-                                                  EmployeeId= ed.EmployeeID,
-                                                  EmployeeName= ed.EmployeeName,
-                                                  EmployeeCode= ed.EmployeeCode,
-                                                  CurrencyId= sd.CurrencyId
-                                              });
-
-                foreach (var item in employeesWithNoPension)
-                {
-                    PensionPaymentModel PensionPayment = new PensionPaymentModel();
-                    PensionPayment.EmployeeId = item.EmployeeId;
-                    PensionPayment.EmployeeName = item.EmployeeName;
-                    PensionPayment.EmployeeCode = item.EmployeeCode;
-                    PensionPayment.TotalPensionAmount = 0;
-                    PensionPayment.PensionAmountPaid = 0;
-                    PensionPayment.CurrencyId = item.CurrencyId;
-                    PensionPaymentList.Add(PensionPayment);
-                }
-
                 response.data.PensionPayment = PensionPaymentList;
 
                 response.StatusCode = StaticResource.successStatusCode;
