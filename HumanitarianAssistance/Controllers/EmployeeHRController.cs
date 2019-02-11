@@ -230,14 +230,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpGet]
-    public async Task<object> GetJobCode(int officeId)
-    {
-      APIResponse response = null;
-      response = await _iEmployeeHR.GetJobCode(officeId);
-      return response;
-    }
-
     //[HttpPost]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     //public async Task<object> DisapproveEmployeeApprovedSalary([FromBody]DisapprovePayrollModel model)

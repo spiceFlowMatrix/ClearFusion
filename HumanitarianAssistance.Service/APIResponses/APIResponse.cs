@@ -88,7 +88,6 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
         public string InventoryCode { get; set; }
-        public string JobCode { get; set; }
         public string InventoryItemCode { get; set; }
         public string StoreSourceCode { get; set; }
         public bool isSalaryHeadSaved { get; set; }
@@ -185,7 +184,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleForProspectiveEmployeeModel> ISFPEmployeeList { get; set; }
         public IList<ScheduleCandidateModel> ScheduleCandidateList { get; set; }
 
-        public IList<ProjectDetail> ProjectDetailList { get; set; }
+        public IList<ProjectDetails> ProjectDetailList { get; set; }
 
         public IList<InterviewFeedbackDetailsModel> InterviewFeedbackDetailsList { get; set; }
         public IList<EmployeeSalaryDetailsModel> EmployeeSalaryDetailsList { get; set; }

@@ -981,7 +981,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var emp = await _uow.EmployeeAppraisalDetailsRepository.FindAsync(x => x.EmployeeAppraisalDetailsId== model.EmployeeAppraisalDetailsId);
+                var emp = await _uow.EmployeeAppraisalDetailsRepository.FindAsync(x => x.EmployeeId == model.EmployeeId && x.OfficeId == model.OfficeId && x.CurrentAppraisalDate.Date == model.CurrentAppraisalDate.Date);
                 emp.Position = model.Position;
                 emp.Department = model.Department;
                 emp.DutyStation = model.DutyStation;
@@ -989,7 +989,7 @@ namespace HumanitarianAssistance.Service.Classes
                 emp.TotalScore = model.TotalScore;
                 foreach (var item in model.EmployeeAppraisalQuestionList)
                 {
-                    var question = await _uow.EmployeeAppraisalQuestionsRepository.FindAsync(x => x.EmployeeAppraisalQuestionsId== item.AppraisalGeneralQuestionsId);
+                    var question = await _uow.EmployeeAppraisalQuestionsRepository.FindAsync(x => x.EmployeeId == model.EmployeeId && x.CurrentAppraisalDate.Date == model.CurrentAppraisalDate.Date && x.AppraisalGeneralQuestionsId == item.AppraisalGeneralQuestionsId);
                     question.Score = item.Score;
                     question.Remarks = item.Remarks;
                     await _uow.EmployeeAppraisalQuestionsRepository.UpdateAsyn(question);

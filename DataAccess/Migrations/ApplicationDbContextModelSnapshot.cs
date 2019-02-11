@@ -11496,7 +11496,7 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetails")
+                    b.HasOne("DataAccess.DbEntities.ProjectDetails", "ProjectDetails")
                         .WithMany()
                         .HasForeignKey("ProjectId");
 

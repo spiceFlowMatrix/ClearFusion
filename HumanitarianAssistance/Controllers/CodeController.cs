@@ -37,7 +37,7 @@ namespace HumanitarianAssistance.Controllers
     //private IProjectBudget _iProjectBudget;
     private IProfession _iprofession;
     private ICode _icode;
-    private IProject _iProject;
+    //private IProjectDetails _iProjectDetails;
     public CodeController(
       UserManager<AppUser> userManager,
       IOfficeDetails iofficeDetail,
@@ -50,8 +50,8 @@ namespace HumanitarianAssistance.Controllers
       //IProjectBudget iProjectBudget,
       IProfession iprofession,
       ICode icode,
-      IAccountBalance accountBalance,
-      IProject iProject
+      IAccountBalance accountBalance
+      //IProjectDetails iProjectDetails
       )
     {
       _userManager = userManager;
@@ -66,7 +66,7 @@ namespace HumanitarianAssistance.Controllers
       //_iProjectBudget = iProjectBudget;
       _iprofession = iprofession;
       _icode = icode;
-      _iProject = iProject;
+      //_iProjectDetails = iProjectDetails;
       _serializerSettings = new JsonSerializerSettings
       {
         Formatting = Formatting.Indented,
@@ -571,7 +571,8 @@ namespace HumanitarianAssistance.Controllers
     [HttpGet]
     public async Task<APIResponse> GetAllProjectDetails()
     {
-      APIResponse response = await _iProject.GetAllProjectDetails();
+      //APIResponse response = await _iProjectDetails.GetAllProjectDetails();
+      APIResponse response = null;
       return response;
     }
 

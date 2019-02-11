@@ -116,7 +116,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddVoucherDetail([FromBody] VoucherDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);

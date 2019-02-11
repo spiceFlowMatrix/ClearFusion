@@ -25,6 +25,5 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
         Task<APIResponse> DeleteGainLossVoucherTransaction(long id, string userId);
         Task<APIResponse> GetExchangeGainLossVoucherList();
 
-        Task<APIResponse> GenerateSalaryVoucher(EmployeeSalaryVoucherModel EmployeeSalaryVoucher);
     }
 }

@@ -102,7 +102,6 @@ namespace HumanitarianAssistance.Service.Classes
                 if (jobhiringinfo == null)
                 {
                     JobHiringDetails obj = _mapper.Map<JobHiringDetails>(model);
-                    obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
                     await _uow.JobHiringDetailsRepository.AddAsyn(obj);
                     response.StatusCode = StaticResource.successStatusCode;
@@ -921,7 +920,7 @@ namespace HumanitarianAssistance.Service.Classes
                     isPayrollHeadSaved = existrecordPayrollHead.Count == employeeAccountHeadPayroll.Count ? true : false;
                 }
 
-                response.data.EmployeePayrollList = employeepayrolllist.OrderByDescending(x=> x.TransactionTypeId).ThenBy(x=> x.SalaryHead).ToList();
+                response.data.EmployeePayrollList = employeepayrolllist.OrderBy(x=> x.TransactionTypeId).ThenBy(x=> x.SalaryHeadType).ToList();
                 response.data.EmployeePayrollAccountHeadList = employeeAccountHeadPayroll;
                 response.data.isSalaryHeadSaved = isSalaryHeadSaved;
                 response.data.isPayrollHeadSaved = isPayrollHeadSaved;

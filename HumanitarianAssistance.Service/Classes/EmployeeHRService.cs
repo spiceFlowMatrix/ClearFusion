@@ -343,7 +343,21 @@ namespace HumanitarianAssistance.Service.Classes
                 ICollection<EmployeeMonthlyAttendance> empPayrollAttendanceList = await _uow.GetDbContext().EmployeeMonthlyAttendance.Include(x => x.EmployeeDetails).Where(x => x.OfficeId == officeid && x.Month == month && x.Year == year && x.IsDeleted == false && x.IsApproved == false).ToListAsync();
 
                 //Note: default 0.045 i.e. (4.5 %)
+                //double? pensionRate = _uow.GetDbContext().EmployeePensionRate.Include(x => x.FinancialYearDetail).FirstOrDefault(x => x.FinancialYearDetail.StartDate.Year == year && x.IsDeleted == false)?.PensionRate;
                 double? pensionRate = _uow.GetDbContext().EmployeePensionRate.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false)?.PensionRate;
+
+                //ICollection<ExchangeRate> xExchangeRate = new List<ExchangeRate>();
+
+                //xExchangeRate = await _uow.ExchangeRateRepository.FindAllAsync(x => x.IsDeleted == false && x.Date.Value.Date == DateTime.Now.Date);
+
+                //if (xExchangeRate.Count == 0)
+                //{
+                //    xExchangeRate = await _uow.ExchangeRateRepository.FindAllAsync(x => x.IsDeleted == false && x.Date.Value.Date.Year == DateTime.Now.Year);
+                //}
+                //if (xExchangeRate.Count == 0)
+                //{
+                //    throw new Exception("Exchange Rate Not Defined");
+                //}
 
                 List<EmployeeMonthlyPayrollModel> payrollFinal = new List<EmployeeMonthlyPayrollModel>();
 
@@ -361,16 +375,21 @@ namespace HumanitarianAssistance.Service.Classes
                     payrollDetail = payroll.Select(x => new EmployeePayrollModel
                     {
                         PayrollId = x.PayrollId,
+                        //CreatedById = x.CreatedById,
+                        // CreatedDate = x.CreatedDate,
                         CurrencyId = x.CurrencyId ?? 0,
                         EmployeeId = x.EmployeeID,
+                        //ModifiedById = x.ModifiedById,
                         HeadTypeId = x.SalaryHeadDetails.HeadTypeId,
                         IsDeleted = x.IsDeleted,
+                        //ModifiedDate = x.ModifiedDate,
                         MonthlyAmount = x.MonthlyAmount ?? 0,
                         PaymentType = 2, //hourly
                         PensionRate = pensionRate != null ? pensionRate : DefaultValues.DefaultPensionRate,
                         SalaryHeadId = x.SalaryHeadId ?? 0,
                         SalaryHeadType = x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
                         SalaryHead = x.SalaryHeadDetails.HeadName,
+                        //BasicPay = x.BasicPay,
                         AccountNo = x.AccountNo,
                         TransactionTypeId = x.TransactionTypeId
                     }).ToList();
@@ -408,17 +427,10 @@ namespace HumanitarianAssistance.Service.Classes
 
                             if (obj.GrossSalary > 5000)
                             {
-                                double? dExchangeRate1 = 0.0;
 
-                                try
-                                {
-                                    dExchangeRate1 = (double)_uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefault(x => x.FromCurrency == iCurrencyId && x.ToCurrency == (int)Currency.AFG).Rate;
-                                }
-                                catch (Exception ex)
-                                {
-
-                                    throw new Exception("Exchange Rate Not Defined");
-                                }
+                                double? dExchangeRate1 = (double)_uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefault(x => x.FromCurrency == iCurrencyId && x.ToCurrency== (int)Currency.AFG).Rate;
+                                //Double? dExchangeRate2 = xExchangeRate.OrderByDescending(x => x.Date).FirstOrDefault(x => x.FromCurrency == (int)Currency.AFG).Rate;
+                                //Double? dFinalExchangeRate = dExchangeRate1 / dExchangeRate2;
 
                                 obj.SalaryTax = obj.SalaryTax == null ? 0 : obj.SalaryTax;
                                 obj.SalaryTax = Math.Round(Convert.ToDouble((SalaryCalculate(obj.GrossSalary.Value, dExchangeRate1.Value))), 2);
@@ -431,6 +443,27 @@ namespace HumanitarianAssistance.Service.Classes
                             //Net Salary  = (Gross + Allowances) - Deductions
                             obj.NetSalary = obj.GrossSalary - (obj.TotalDeduction!=null? obj.TotalDeduction:0) - (obj.SalaryTax !=null? obj.SalaryTax:0) - payrollAttendance.AdvanceRecoveryAmount - (obj.PensionAmount!=null? obj.PensionAmount :0);
 
+                            //foreach (var item in payrollDetail)
+                            //{
+                            //    EmployeePayrollModel payrollObj = new EmployeePayrollModel();
+
+                            //    payrollObj.CurrencyId = item.CurrencyId;
+                            //    payrollObj.EmployeeId = item.EmployeeId;
+                            //    payrollObj.HeadTypeId = item.HeadTypeId;
+                            //    payrollObj.ModifiedById = item.ModifiedById;
+                            //    payrollObj.ModifiedDate = item.ModifiedDate;
+                            //    payrollObj.MonthlyAmount = item.MonthlyAmount;
+                            //    payrollObj.PaymentType = item.PaymentType;
+                            //    payrollObj.PayrollId = item.PayrollId;
+                            //    payrollObj.PensionRate = item.PensionRate;
+                            //    payrollObj.SalaryHead = item.SalaryHead;
+                            //    payrollObj.SalaryHeadId = item.SalaryHeadId;
+                            //    payrollObj.SalaryHeadType = item.SalaryHeadType;
+                            //    payrollObj.BasicPay = item.BasicPay;
+
+                            //    obj.employeepayrolllist.Add(payrollObj);
+                            //}
+
                             obj.employeepayrolllist.AddRange(payrollDetail);
 
                             payrollFinal.Add(obj);
@@ -441,6 +474,10 @@ namespace HumanitarianAssistance.Service.Classes
 
                             if (xAdvances != null)
                             {
+                                //if (obj.AdvanceAmount == null || obj.AdvanceAmount == 0)
+                                //{
+                                //    obj.AdvanceAmount = xAdvances.AdvanceAmount;
+                                //}
 
                                 if (xAdvances.RecoveredAmount == 0)
                                 {
@@ -1270,43 +1307,6 @@ namespace HumanitarianAssistance.Service.Classes
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = ex.Message;
             }
-            return response;
-        }
-
-        /// <summary>
-        /// Get Job Code For New Job Hiring
-        /// </summary>
-        /// <returns>Returns Job Code</returns>
-        public async Task<APIResponse> GetJobCode(int officeId)
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                JobHiringDetails jobHiringDetails = await _uow.GetDbContext().JobHiringDetails.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x=> x.OfficeId== officeId);
-
-                if (jobHiringDetails != null && jobHiringDetails.JobCode != null)
-                {
-                    //getting the latest Job Code and finding the max number from it
-                    int count = Convert.ToInt32(jobHiringDetails.JobCode.Substring(2));
-
-                    response.data.JobCode = "JC" + String.Format("{0:D4}", ++count);
-                }
-                else
-                {
-                    response.data.JobCode = "JC" + String.Format("{0:D4}", 1);
-                }
-
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-
             return response;
         }
 

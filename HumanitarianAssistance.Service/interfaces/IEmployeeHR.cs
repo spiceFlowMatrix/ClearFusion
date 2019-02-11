@@ -30,7 +30,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditEmployeeSalaryAccountDetail(List<EmployeePayrollAccountModel> model, string userid);
         Task<APIResponse> GetPrimarySalaryHeads(int EmployeeId);
         Task<APIResponse> GetAllLanguages();
-        Task<APIResponse> GetJobCode(int officeId);
         string TransformExchangeRatesToFromCurrency();
 
         string OfficeHours(int iYear);
