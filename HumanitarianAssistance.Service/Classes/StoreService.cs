@@ -2221,92 +2221,95 @@ namespace HumanitarianAssistance.Service.Classes
 
                         purchaseRecord.IsDeleted = false;
 
-                        using (var dbTransactions = _uow.GetDbContext().Database.BeginTransaction())
+
+                        //List<ExchangeRate> exchangeRate = new List<ExchangeRate>();
+
+                        if (model.IsPurchaseVerified.HasValue && model.IsPurchaseVerified.Value)
                         {
-                            if (model.IsPurchaseVerified.HasValue && model.IsPurchaseVerified.Value)
-                            {
-                                try
-                                {
-                                    var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == model.OfficeId).Result.OfficeCode; //use OfficeCode
-                                    var financialYearDetails = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDeleted == false && x.StartDate.Date.Year == DateTime.Now.Year);
-                                    var inventory = _uow.GetDbContext().InventoryItems.Include(x => x.StoreItemGroup).ThenInclude(x=> x.StoreInventory).FirstOrDefault(x => x.ItemId == model.InventoryItem);
-                                    var paymentTypes = _uow.GetDbContext().PaymentTypes.FirstOrDefault(x => x.PaymentId == model.PaymentTypeId);
-                                    string currencyCode = _uow.GetDbContext().CurrencyDetails.FirstOrDefault(x => x.IsDeleted == false && x.CurrencyId == model.Currency).CurrencyCode;
 
-                                    VoucherDetail obj = new VoucherDetail();
-                                    obj.CreatedById = model.CreatedById;
-                                    obj.CreatedDate = DateTime.UtcNow;
-                                    obj.IsDeleted = false;
-                                    obj.FinancialYearId = financialYearDetails.FinancialYearId;
-                                    obj.VoucherTypeId = (int)VoucherTypes.Journal;
-                                    obj.Description = StaticResource.PurchaseVoucherCreated;
-                                    obj.CurrencyId = model.Currency;
-                                    obj.VoucherDate = DateTime.Now;
-                                    obj.JournalCode = model.JournalCode;
-                                    obj.OfficeId = model.OfficeId;
-                                    obj.ProjectId = model.ProjectId;
-                                    obj.BudgetLineId = model.BudgetLineId;
-                                    obj.IsExchangeGainLossVoucher = false;
+                            var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == model.OfficeId).Result.OfficeCode; //use OfficeCode
+                            var financialYearDetails = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDeleted == false && x.StartDate.Date.Year == DateTime.Now.Year);
+                            var inventory = _uow.GetDbContext().InventoryItems.Include(x => x.Inventory).FirstOrDefault(x => x.ItemId == model.InventoryItem);
+                            var paymentTypes = _uow.GetDbContext().PaymentTypes.FirstOrDefault(x => x.PaymentId == model.PaymentTypeId);
+                            //exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false).OrderByDescending(x => x.Date).ToListAsync();
 
-                                    await _uow.VoucherDetailRepository.AddAsyn(obj);
+                            VoucherDetail obj = new VoucherDetail();
+                            obj.CreatedById = model.CreatedById;
+                            obj.CreatedDate = DateTime.UtcNow;
+                            obj.IsDeleted = false;
+                            obj.FinancialYearId = financialYearDetails.FinancialYearId;
+                            obj.VoucherTypeId = (int)VoucherTypes.Journal;
+                            obj.Description = StaticResource.PurchaseVoucherCreated;
+                            obj.CurrencyId = model.Currency;
+                            obj.VoucherDate = DateTime.Now;
+                            //obj.ChequeNo = model.ChequeNo;
+                            obj.JournalCode = model.JournalCode;
+                            obj.OfficeId = model.OfficeId;
+                            obj.ProjectId = model.ProjectId;
+                            obj.BudgetLineId = model.BudgetLineId;
+                            obj.IsExchangeGainLossVoucher = false;
 
-                                    obj.ReferenceNo = obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year; ;
-                                    await _uow.VoucherDetailRepository.UpdateAsyn(obj);
+                            await _uow.VoucherDetailRepository.AddAsyn(obj);
 
-                                    purchaseRecord.VerifiedPurchaseVoucher = obj.VoucherNo;
-                                    await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
+                            obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
+                            await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
-                                    List<VoucherTransactions> voucherTransactionsList = new List<VoucherTransactions>();
+                            purchaseRecord.VerifiedPurchaseVoucher = obj.VoucherNo;
+                            await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
 
-                                    //Credit
-                                    VoucherTransactions voucherTransactionCredit = new VoucherTransactions();
-                                    //Debit
-                                    VoucherTransactions voucherTransactionDebit = new VoucherTransactions();
+                            List<VoucherTransactions> voucherTransactionsList = new List<VoucherTransactions>();
 
-                                    voucherTransactionCredit.IsDeleted = false;
-                                    voucherTransactionCredit.VoucherNo = obj.VoucherNo;
-                                    voucherTransactionCredit.FinancialYearId = financialYearDetails.FinancialYearId;
-                                    voucherTransactionCredit.ChartOfAccountNewId = paymentTypes.ChartOfAccountNewId;
-                                    voucherTransactionCredit.CreditAccount = paymentTypes.ChartOfAccountNewId;
-                                    voucherTransactionCredit.DebitAccount = inventory.StoreItemGroup.StoreInventory.InventoryDebitAccount;
-                                    voucherTransactionCredit.Credit = model.UnitCost * model.Quantity;
-                                    voucherTransactionCredit.Debit = 0;
-                                    voucherTransactionCredit.CurrencyId = model.Currency;
-                                    voucherTransactionCredit.Description = StaticResource.PurchaseVoucherCreated;
-                                    voucherTransactionCredit.OfficeId = model.OfficeId;
-                                    voucherTransactionCredit.TransactionDate = obj.VoucherDate;
-                                    voucherTransactionsList.Add(voucherTransactionCredit);
+                            //Credit
+                            VoucherTransactions voucherTransactionCredit = new VoucherTransactions();
+                            //Debit
+                            VoucherTransactions voucherTransactionDebit = new VoucherTransactions();
 
-                                    //Debit
-                                    voucherTransactionDebit.IsDeleted = false;
-                                    voucherTransactionDebit.VoucherNo = obj.VoucherNo;
-                                    voucherTransactionDebit.FinancialYearId = financialYearDetails.FinancialYearId;
-                                    voucherTransactionDebit.CurrencyId = model.Currency;
-                                    voucherTransactionDebit.Description = StaticResource.PurchaseVoucherCreated;
-                                    voucherTransactionDebit.OfficeId = model.OfficeId;
-                                    voucherTransactionDebit.TransactionDate = obj.VoucherDate;
-                                    voucherTransactionDebit.CreditAccount = 0;
-                                    voucherTransactionDebit.DebitAccount = voucherTransactionCredit.DebitAccount;
-                                    voucherTransactionDebit.ChartOfAccountNewId = voucherTransactionCredit.DebitAccount;
-                                    voucherTransactionDebit.Debit = voucherTransactionCredit.Credit;
-                                    voucherTransactionDebit.Credit = 0;
+                            voucherTransactionCredit.IsDeleted = false;
+                            voucherTransactionCredit.VoucherNo = obj.VoucherNo;
+                            voucherTransactionCredit.FinancialYearId = financialYearDetails.FinancialYearId;
+                            voucherTransactionCredit.ChartOfAccountNewId = paymentTypes.ChartOfAccountNewId;
+                            voucherTransactionCredit.CreditAccount = paymentTypes.ChartOfAccountNewId;
+                            voucherTransactionCredit.DebitAccount = inventory.Inventory.InventoryDebitAccount;
+                            voucherTransactionCredit.Credit = model.UnitCost * model.Quantity;
+                            voucherTransactionCredit.Debit = 0;
+                            voucherTransactionCredit.CurrencyId = model.Currency;
+                            voucherTransactionCredit.Description = StaticResource.PurchaseVoucherCreated;
+                            voucherTransactionCredit.OfficeId = model.OfficeId;
+                            voucherTransactionCredit.TransactionDate = obj.VoucherDate;
 
-                                    voucherTransactionsList.Add(voucherTransactionDebit);
+                            voucherTransactionsList.Add(voucherTransactionCredit);
 
-                                    await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(voucherTransactionsList);
-                                    await _uow.SaveAsync();
+                            //Debit
+                            voucherTransactionDebit.IsDeleted = false;
+                            voucherTransactionDebit.VoucherNo = obj.VoucherNo;
+                            voucherTransactionDebit.FinancialYearId = financialYearDetails.FinancialYearId;
+                            //voucherTransactionCredit.ChartOfAccountNewId = paymentTypes.ChartOfAccountNewId;
+                            //voucherTransactionCredit.CreditAccount = paymentTypes.ChartOfAccountNewId;
+                            //voucherTransactionCredit.DebitAccount = inventory.Inventory.InventoryDebitAccount;
+                            //voucherTransactionCredit.Credit = model.UnitCost * model.Quantity;
+                            //voucherTransactionCredit.Debit = 0;
+                            voucherTransactionDebit.CurrencyId = model.Currency;
+                            voucherTransactionDebit.Description = StaticResource.PurchaseVoucherCreated;
+                            voucherTransactionDebit.OfficeId = model.OfficeId;
+                            voucherTransactionDebit.TransactionDate = obj.VoucherDate;
+                            voucherTransactionDebit.CreditAccount = 0;
+                            voucherTransactionDebit.DebitAccount = voucherTransactionCredit.DebitAccount;
+                            voucherTransactionDebit.ChartOfAccountNewId = voucherTransactionCredit.DebitAccount;
+                            voucherTransactionDebit.Debit = voucherTransactionCredit.Credit;
+                            voucherTransactionDebit.Credit = 0;
 
-                                    dbTransactions.Commit();
-                                    response.StatusCode = StaticResource.successStatusCode;
-                                    response.Message = "Success";
+                            voucherTransactionsList.Add(voucherTransactionDebit);
 
-                                }
-                                catch (Exception exception)
-                                {
-                                    dbTransactions.Rollback();
-                                    response.Message = exception.Message;
-                                }
-                            }
+                            await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(voucherTransactionsList);
+                            await _uow.SaveAsync();
+
+                            ////Passing Voucher Transaction model for Credit
+                            //response.data.VoucherTransactionModel = xVoucherTransactionModel;
+                            //response.data.VoucherReferenceNo = obj.ReferenceNo;
+                            ////response.data.ExchangeRates = exchangeRate;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Success";
+
                         }
                     }
                     else
