@@ -159,13 +159,13 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                       .CountAsync();
 
                 var policyList = await _uow.GetDbContext().PolicyDetails
-                                       .Where(v => v.IsDeleted == false).Select(x=>new PolicyModel
+                                       .Where(v => v.IsDeleted == false).Select(x => new PolicyModel
                                        {
-                                          PolicyId = x.PolicyId,
-                                          PolicyCode = x.PolicyCode,
-                                          PolicyName = x.PolicyName,
-                                          MediumName = x.Mediums.MediumName,
-                                          MediumId = x.MediumId
+                                           PolicyId = x.PolicyId,
+                                           PolicyCode = x.PolicyCode,
+                                           PolicyName = x.PolicyName,
+                                           MediumName = x.Mediums.MediumName,
+                                           MediumId = x.MediumId
                                        }).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).OrderByDescending(x => x.CreatedDate).AsNoTracking()
                                     .ToListAsync();
                 response.data.TotalCount = totalCount;
@@ -188,25 +188,25 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 int count = await _uow.GetDbContext().PolicyDetails.CountAsync(x => x.IsDeleted == false);
                 var policyDetail = await (from j in _uow.GetDbContext().PolicyDetails
-                                     join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
-                                     join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
-                                     join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
-                                     where !j.IsDeleted.Value && !jp.IsDeleted.Value && !me.IsDeleted.Value
-                                     && !mc.IsDeleted.Value
-                                     select (new PolicyModel
-                                     {
-                                         PolicyId = j.PolicyId,
-                                         PolicyName = j.PolicyName,
-                                         PolicyCode = j.PolicyCode,
-                                         Description = j.Description,
-                                         LanguageId = jp.LanguageId,
-                                         LanguageName = jp.LanguageName,
-                                         MediumId = me.MediumId,
-                                         MediumName = me.MediumName,
-                                         MediaCategoryId = mc.MediaCategoryId,
-                                         MediaCategoryName = mc.CategoryName
-                                     })).Take(10).Skip(0).OrderByDescending(x => x.CreatedDate).ToListAsync();
-                
+                                          join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
+                                          join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
+                                          join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
+                                          where !j.IsDeleted.Value && !jp.IsDeleted.Value && !me.IsDeleted.Value
+                                          && !mc.IsDeleted.Value
+                                          select (new PolicyModel
+                                          {
+                                              PolicyId = j.PolicyId,
+                                              PolicyName = j.PolicyName,
+                                              PolicyCode = j.PolicyCode,
+                                              Description = j.Description,
+                                              LanguageId = jp.LanguageId,
+                                              LanguageName = jp.LanguageName,
+                                              MediumId = me.MediumId,
+                                              MediumName = me.MediumName,
+                                              MediaCategoryId = mc.MediaCategoryId,
+                                              MediaCategoryName = mc.CategoryName
+                                          })).Take(10).Skip(0).OrderByDescending(x => x.CreatedDate).ToListAsync();
+
                 response.data.policyList = policyDetail;
                 response.data.TotalCount = count;
                 response.StatusCode = 200;
@@ -242,11 +242,11 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                              (
                                                v.PolicyId.ToString().Trim().ToLower().Contains(policyIdValue) ||
                                                v.PolicyName.Trim().ToLower().Contains(policyNameValue) ||
-                                               v.Mediums.MediumName.Trim().ToLower().Contains(mediumValue)                                                  
+                                               v.Mediums.MediumName.Trim().ToLower().Contains(mediumValue)
                                               ) : true
                                            )
                                      )
-                                    //.OrderByDescending(x => x.CreatedDate)
+                                    .OrderByDescending(x => x.CreatedDate)
                                     .Select(x => new PolicyModel
                                     {
                                         PolicyId = x.PolicyId,
@@ -257,7 +257,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                     })
                                     .AsNoTracking()
                                     .ToListAsync();
-               // response.data.jobListTotalCount = voucherList.Count();
+                // response.data.jobListTotalCount = voucherList.Count();
                 response.data.PolicyFilteredList = policyList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -301,6 +301,18 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
+            return response;
+        }
+
+        public async Task<APIResponse> AddEditPolicySchedules(PolicyScheduleModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            return response;
+        }
+
+        public async Task<APIResponse> GetPolicyScheduleById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
             return response;
         }
     }

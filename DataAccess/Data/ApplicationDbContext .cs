@@ -243,6 +243,7 @@ namespace HumanitarianAssistance.Entities
         #endregion
 
         #region Marketing
+        public DbSet<PolicySchedule> PolicySchedules { get; set; }
         public DbSet<UnitRate> UnitRates { get; set; }
         public DbSet<PolicyDetail> PolicyDetails { get; set; }
         public DbSet<ActivityType> ActivityTypes { get; set; }

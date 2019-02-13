@@ -197,6 +197,7 @@ namespace DataAccess
         #region Marketing
         IGenericRepository<UnitRate> UnitRateRepository { get; }
         IGenericRepository<PolicyDetail> PolicyRepository { get; }
+        IGenericRepository<PolicySchedule> PolicyScheduleRepository { get; }
         IGenericRepository<ActivityType> ActivityTypeRepository { get; }
         IGenericRepository<ContractDetails> ContractDetailsRepository { get; }
         IGenericRepository<JobDetails> JobDetailsRepository { get; }

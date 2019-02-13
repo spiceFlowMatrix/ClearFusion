@@ -108,7 +108,35 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         apiRespone = await _iPolicyService.GetPolicyById(model, id);
       }
       return apiRespone;
-    }   
+    }
+
+    [HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> PolicySchedules([FromBody]PolicyScheduleModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.AddEditPolicySchedules(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetPolicyScheduleById([FromBody]int model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.GetPolicyScheduleById(model, id);
+      }
+      return apiRespone;
+    }
 
   }
 }
