@@ -18,6 +18,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? DurationOfContract { get; set; }
         public double? Salary { get; set; }
         public int? Grade { get; set; }
+        public string GradeName { get; set; }
         public string ProjectName { get; set; }
         public long ProjectCode { get; set; }
         public int? DutyStationId { get; set; }

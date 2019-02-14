@@ -5222,7 +5222,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == EmployeeSalaryVoucher.OfficeId).Result.OfficeCode; //use OfficeCode
                 var financialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
                 var EmployeeDetails = _uow.GetDbContext().EmployeeDetail.FirstOrDefault(x => x.EmployeeID == EmployeeSalaryVoucher.EmployeeId && x.IsDeleted == false);
-
+                string currencyCode = _uow.CurrencyDetailsRepository.Find(x => x.IsDeleted == false && x.CurrencyId == EmployeeSalaryVoucher.CurrencyId).CurrencyCode;
                 //Creating Voucher for Voucher transaction
                 VoucherDetail obj = new VoucherDetail();
                 obj.CreatedById = EmployeeSalaryVoucher.CreatedById;
@@ -5238,7 +5238,8 @@ namespace HumanitarianAssistance.Service.Classes
 
                 await _uow.VoucherDetailRepository.AddAsyn(obj);
 
-                obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
+                obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year;
+
                 await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
                 foreach (SalaryHeadModel salaryhead in EmployeeSalaryVoucher.EmployeePayrollLists)

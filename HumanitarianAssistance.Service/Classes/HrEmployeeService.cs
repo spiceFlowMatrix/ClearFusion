@@ -5031,12 +5031,11 @@ namespace HumanitarianAssistance.Service.Classes
                     List<EmployeeContractModel> dataModel = await _uow.GetDbContext().EmployeeContract
                                  .Include(x => x.Employee)
                                  .Include(x => x.Employee.ProvinceDetails)
-                                 //.Include(x => x.ProjectBudgetLine)
-                                 //.Include(x => x.ProjectBudgetLine.ProjectDetails)
                                  .Include(x => x.Employee.EmployeeProfessionalDetail)
                                  .Include(x => x.Employee.EmployeeProfessionalDetail.DesignationDetails)
                                  .Include(x => x.Employee.EmployeeProfessionalDetail.OfficeDetail)
                                  .Include(x => x.Employee.EmployeeProfessionalDetail.EmployeeContractType)
+                                 .Include(x=> x.JobGrade)
                                  .Where(x => x.EmployeeId == EmployeeId && x.IsDeleted == false)
                                  .OrderByDescending(x => x.CreatedDate)
                                  .Select(x => new EmployeeContractModel
@@ -5074,6 +5073,7 @@ namespace HumanitarianAssistance.Service.Classes
                                      JobDari= x.JobDari,
                                      ProvinceDari= x.ProvinceDari,
                                      EmployeeNameDari= x.EmployeeNameDari,
+                                     GradeName= x.JobGrade.GradeName
                                  }).ToListAsync();
 
                     response.data.EmployeeContractDetails = dataModel;
