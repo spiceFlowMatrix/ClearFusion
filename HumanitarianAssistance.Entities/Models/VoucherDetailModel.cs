@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public long VoucherNo { get; set; }
         public int CurrencyId { get; set; }
         public string CurrencyCode { get; set; }
-        public DateTime? VoucherDate { get; set; }
+        public DateTime VoucherDate { get; set; }
         public string ChequeNo { get; set; }
         public string ReferenceNo { get; set; }
         public string Description { get; set; }
