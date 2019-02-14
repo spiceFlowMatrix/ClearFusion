@@ -325,7 +325,6 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
-        public VoucherDetail VoucherDetailEntity { get; set; }
 
 
         #region Marketing       
@@ -403,8 +402,6 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
-        public GainLossVoucherList GainLossVoucherDetail { get; set; }
-        public List<GainLossVoucherList> GainLossVoucherList { get; set; }
 
         #endregion
 

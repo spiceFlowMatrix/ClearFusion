@@ -823,7 +823,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
           if (fileNames.Contains('_'))
           {
-            fileName = fileNames.Split('_')[1];
+            fileName = fileNames.Split('_')[2];
           }
           else
           {
