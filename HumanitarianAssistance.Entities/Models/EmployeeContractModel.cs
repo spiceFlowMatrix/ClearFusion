@@ -29,12 +29,19 @@ namespace HumanitarianAssistance.ViewModels.Models
         public long? BudgetLineId { get; set; }
         public string BudgetLine { get; set; }
         public int? JobId { get; set; }
-        public string JobName { get; set; }
+        public string Job { get; set; }
         public int? WorkTime { get; set; }
         public int? WorkDayHours { get; set; }
         public string ContentEnglish { get; set; }
         public string ContentDari { get; set; }
         public string EmployeeImage { get; set; }
-
+        public string CountryDari { get; set; }
+        public string DesignationDari { get; set; }
+        public string DutyStationDari { get; set; }
+        public string FatherNameDari { get; set; }
+        public string GradeDari { get; set; }
+        public string JobDari { get; set; }
+        public string ProvinceDari { get; set; }
+        public string EmployeeNameDari { get; set; }
     }
 }

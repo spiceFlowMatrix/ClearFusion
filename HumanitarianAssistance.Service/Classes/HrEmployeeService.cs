@@ -5053,27 +5053,27 @@ namespace HumanitarianAssistance.Service.Classes
                                      DurationOfContract = x.DurationOfContract,
                                      Salary = x.Salary,
                                      Grade = x.Grade,
-                                     //EmployeeContractModel.ProjectName = dataModel.ProjectBudgetLine.ProjectDetails.ProjectName;
-                                     //EmployeeContractModel.ProjectCode = dataModel.ProjectBudgetLine.ProjectDetails.ProjectId;
                                      DutyStationId = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeId,
                                      DutyStation = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
                                      ProvinceId = x.Employee.ProvinceDetails.ProvinceId,
                                      Province = x.Employee.ProvinceDetails.ProvinceName,
                                      CountryId = x.Country,
                                      Country = _uow.GetDbContext().CountryDetails.FirstOrDefault(c => c.CountryId == x.Country).CountryName,
-                                     //EmployeeContractModel.BudgetLine = dataModel.ProjectBudgetLine.Description;
                                      JobId = null,
-                                     JobName = null,
-                                     //ProjectCode = null,
-                                     //ProjectName = "",
-                                     //BudgetLineId = null,
-                                     //BudgetLine = null,
+                                     Job = x.Job,
                                      WorkTime = x.WorkTime,
                                      WorkDayHours = x.WorkDayHours,
                                      ContentEnglish = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == x.Employee.EmployeeProfessionalDetail.EmployeeContractTypeId).ContentEnglish,
                                      ContentDari = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == x.Employee.EmployeeProfessionalDetail.EmployeeContractTypeId).ContentDari,
-                                     //EmployeeContractModel.EmployeeImage = dataModel.EmployeeDetail.EmployeePhoto;
-                                     EmployeeImage = x.Employee.DocumentGUID + x.Employee.Extension
+                                     EmployeeImage = x.Employee.DocumentGUID + x.Employee.Extension,
+                                     CountryDari= x.CountryDari,
+                                     DesignationDari= x.DesignationDari,
+                                     DutyStationDari= x.DutyStationDari,
+                                     GradeDari= x.GradeDari,
+                                     FatherNameDari= x.FatherNameDari,
+                                     JobDari= x.JobDari,
+                                     ProvinceDari= x.ProvinceDari,
+                                     EmployeeNameDari= x.EmployeeNameDari,
                                  }).ToListAsync();
 
                     response.data.EmployeeContractDetails = dataModel;

@@ -37,7 +37,14 @@ namespace DataAccess.DbEntities
         public float? ContractPeriod { get; set; }
         [ForeignKey("EmployeeId")]
         public EmployeeDetail Employee { get; set; }
-
+        public string CountryDari { get; set; }
+        public string DesignationDari { get; set; }
+        public string DutyStationDari { get; set; }
+        public string FatherNameDari { get; set; }
+        public string GradeDari { get; set; }
+        public string JobDari { get; set; }
+        public string ProvinceDari { get; set; }
+        public string EmployeeNameDari { get; set; }
 
         //[ForeignKey("Country")]
         //public CountryDetails CountryDetails { get; set; }
@@ -63,7 +70,7 @@ namespace DataAccess.DbEntities
         //[ForeignKey("BudgetLine")]
         //public ProjectBudgetLine ProjectBudgetLine { get; set; }
 
-        
+
 
     }
 }
