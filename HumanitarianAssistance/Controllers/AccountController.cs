@@ -980,13 +980,13 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<APIResponse> GetProjectAndBudgetLine()
-    {
-      APIResponse repsonse = await _ivoucherDetail.GetProjectAndBudgetLine();
-      return repsonse;
-    }
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<APIResponse> GetProjectAndBudgetLine()
+    //{
+    //  APIResponse repsonse = await _ivoucherDetail.GetProjectAndBudgetLine();
+    //  return repsonse;
+    //}
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

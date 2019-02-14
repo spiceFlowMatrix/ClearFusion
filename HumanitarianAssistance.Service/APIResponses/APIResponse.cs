@@ -326,6 +326,11 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
 
+        public ICollection<ProjectJobDetail> ProjectJobDetail { get; set; }
+        public List<ProjectJobDetailModel> ProjectJobDetailModel { get; set; }
+        public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
+
+
 
         #region Marketing       
         public ICollection<JobDetails> JobDetails { get; set; }

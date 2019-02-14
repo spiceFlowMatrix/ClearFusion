@@ -175,8 +175,17 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetProvinceMultiSelectByProjectId(long ProjectId);
         APIResponse GetDistrictMultiSelectByProjectId(long ProjectId);
         APIResponse AddEditDistrictMultiSelectDetail(DistrictMultiSelectModel model, string UserId);
-       // APIResponse SaveErrorlog(Errorlog obj, string UserId);
+        // APIResponse SaveErrorlog(Errorlog obj, string UserId);
 
+
+        Task<APIResponse>AddEditProjectJobDetail(ProjectJobDetailModel model, string UserId);
+
+        Task<APIResponse> GetAllProjectJobDetail();
+        Task<APIResponse> GetAllProjectJobByProjectId(long ProjectId);
+
+        Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId);
+        Task<APIResponse> GetallBudgetLineDetail();
+        Task<APIResponse> GetallBudgetLineDetail(long projectId);
 
         #endregion
     }

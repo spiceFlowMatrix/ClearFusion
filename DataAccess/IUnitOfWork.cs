@@ -191,6 +191,10 @@ namespace DataAccess
         IGenericRepository<DistrictMultiSelect> DistrictMultiSelectRepository { get; }
         IGenericRepository<SecurityConsiderationMultiSelect> SecurityConsiderationMultiSelectRepository { get; }
         IGenericRepository<Errorlog> ErrorlogRepository { get; }
+        IGenericRepository<ProjectBudgetLineDetail> ProjectBudgetLineDetailRepository { get; }
+        IGenericRepository<ProjectJobDetail> ProjectJobDetailRepository { get; }
+
+
 
         #endregion
 

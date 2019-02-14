@@ -40,7 +40,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetJouranlVoucherDetailsByCondition(JournalViewModel model);
 
         Task<APIResponse> GetAllVoucherTransactionDetailByBudgetLine(long projectId, long budgetLineId);
-        Task<APIResponse> GetProjectAndBudgetLine();
+       // Task<APIResponse> GetProjectAndBudgetLine();
         Task<APIResponse> AddNotesDetails(NotesMasterModel model);
         Task<APIResponse> EditNotesDetails(NotesMasterModel model);
         Task<APIResponse> GetAllNotesDetails();
