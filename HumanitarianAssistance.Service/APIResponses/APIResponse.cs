@@ -93,6 +93,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public bool isSalaryHeadSaved { get; set; }
         public bool isPayrollHeadSaved { get; set; }
         public string ItemGroupCode { get; set; }
+        public string JobCode { get; set; }
         public VoucherTransactionModel VoucherTransactionModel { get; set; }
         public List<VoucherTransactionModel> VoucherTransactionModelList { get; set; }
         public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }

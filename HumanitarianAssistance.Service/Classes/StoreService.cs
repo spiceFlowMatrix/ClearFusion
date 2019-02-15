@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.Common.Enums;
 
+
 namespace HumanitarianAssistance.Service.Classes
 {
     public class StoreService : IStore

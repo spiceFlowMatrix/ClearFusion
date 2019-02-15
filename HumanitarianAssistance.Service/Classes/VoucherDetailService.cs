@@ -2736,41 +2736,41 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        //public async Task<APIResponse> GetProjectAndBudgetLine()
-        //{
-        //    APIResponse response = new APIResponse();
-        //    try
-        //    {
-        //        var list = await _uow.GetDbContext().ProjectBudgetLine.Select(x => new BudgetLineModel
-        //        {
-        //            BudgetLineId = x.BudgetLineId,
-        //            ProjectId = x.ProjectId,
-        //            Description = x.Description
-        //        }).ToListAsync();
+        public async Task<APIResponse> GetProjectAndBudgetLine()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().ProjectBudgetLine.Select(x => new BudgetLineModel
+                {
+                    BudgetLineId = x.BudgetLineId,
+                    ProjectId = x.ProjectId,
+                    Description = x.Description
+                }).ToListAsync();
 
-        //        var list1 = await _uow.GetDbContext().ProjectDetails.
-        //            Select(x => new ProjectBudgetModelNew
-        //            {
-        //                ProjectId = x.ProjectId,
-        //                ProjectName = x.ProjectName
-        //            }).ToListAsync();
+                var list1 = await _uow.GetDbContext().ProjectDetails.
+                    Select(x => new ProjectBudgetModelNew
+                    {
+                        ProjectId = x.ProjectId,
+                        ProjectName = x.ProjectName
+                    }).ToListAsync();
 
-        //        ProjectBudgetLinesModel model = new ProjectBudgetLinesModel();
-        //        model.BudgetLines = list;
-        //        model.ProjectList = list1;
+                ProjectBudgetLinesModel model = new ProjectBudgetLinesModel();
+                model.BudgetLines = list;
+                model.ProjectList = list1;
 
-        //        response.data.ProjectBudgetLinesModel = model;
-        //        response.StatusCode = StaticResource.successStatusCode;
-        //        response.Message = "Project BudgetLine List ";
-        //        return response;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.StatusCode = StaticResource.failStatusCode;
-        //        response.Message = ex.Message;
-        //    }
-        //    return response;
-        //}
+                response.data.ProjectBudgetLinesModel = model;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Project BudgetLine List ";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
         public async Task<APIResponse> AddNotesDetails(NotesMasterModel model)
         {
@@ -5221,7 +5221,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == EmployeeSalaryVoucher.OfficeId).Result.OfficeCode; //use OfficeCode
                 var financialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
                 var EmployeeDetails = _uow.GetDbContext().EmployeeDetail.FirstOrDefault(x => x.EmployeeID == EmployeeSalaryVoucher.EmployeeId && x.IsDeleted == false);
-
+                string currencyCode = _uow.CurrencyDetailsRepository.Find(x => x.IsDeleted == false && x.CurrencyId == EmployeeSalaryVoucher.CurrencyId).CurrencyCode;
                 //Creating Voucher for Voucher transaction
                 VoucherDetail obj = new VoucherDetail();
                 obj.CreatedById = EmployeeSalaryVoucher.CreatedById;
@@ -5237,7 +5237,8 @@ namespace HumanitarianAssistance.Service.Classes
 
                 await _uow.VoucherDetailRepository.AddAsyn(obj);
 
-                obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
+                obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year;
+
                 await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
                 foreach (SalaryHeadModel salaryhead in EmployeeSalaryVoucher.EmployeePayrollLists)

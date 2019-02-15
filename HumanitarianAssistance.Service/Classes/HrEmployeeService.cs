@@ -828,9 +828,16 @@ namespace HumanitarianAssistance.Service.Classes
                 await _uow.SaveAsync();
 
                 List<EmployeePayroll> employeepayrolllist = new List<EmployeePayroll>();
+
                 foreach (var list in model)
                 {
                     EmployeePayroll obj = new EmployeePayroll();
+
+                    if (list.HeadTypeId == (int)SalaryHeadType.GENERAL && list.MonthlyAmount == 0)
+                    {
+                        throw new Exception("Basic Pay cannot be Zero");
+                    }
+
                     obj.EmployeeID = list.EmployeeId;
                     obj.CurrencyId = list.CurrencyId;
                     obj.HeadTypeId = list.HeadTypeId;
@@ -5031,12 +5038,11 @@ namespace HumanitarianAssistance.Service.Classes
                     List<EmployeeContractModel> dataModel = await _uow.GetDbContext().EmployeeContract
                                  .Include(x => x.Employee)
                                  .Include(x => x.Employee.ProvinceDetails)
-                                 //.Include(x => x.ProjectBudgetLine)
-                                 //.Include(x => x.ProjectBudgetLine.ProjectDetails)
                                  .Include(x => x.Employee.EmployeeProfessionalDetail)
                                  .Include(x => x.Employee.EmployeeProfessionalDetail.DesignationDetails)
                                  .Include(x => x.Employee.EmployeeProfessionalDetail.OfficeDetail)
                                  .Include(x => x.Employee.EmployeeProfessionalDetail.EmployeeContractType)
+                                 .Include(x=> x.JobGrade)
                                  .Where(x => x.EmployeeId == EmployeeId && x.IsDeleted == false)
                                  .OrderByDescending(x => x.CreatedDate)
                                  .Select(x => new EmployeeContractModel
@@ -5053,27 +5059,28 @@ namespace HumanitarianAssistance.Service.Classes
                                      DurationOfContract = x.DurationOfContract,
                                      Salary = x.Salary,
                                      Grade = x.Grade,
-                                     //EmployeeContractModel.ProjectName = dataModel.ProjectBudgetLine.ProjectDetails.ProjectName;
-                                     //EmployeeContractModel.ProjectCode = dataModel.ProjectBudgetLine.ProjectDetails.ProjectId;
                                      DutyStationId = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeId,
                                      DutyStation = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
                                      ProvinceId = x.Employee.ProvinceDetails.ProvinceId,
                                      Province = x.Employee.ProvinceDetails.ProvinceName,
                                      CountryId = x.Country,
                                      Country = _uow.GetDbContext().CountryDetails.FirstOrDefault(c => c.CountryId == x.Country).CountryName,
-                                     //EmployeeContractModel.BudgetLine = dataModel.ProjectBudgetLine.Description;
                                      JobId = null,
-                                     JobName = null,
-                                     //ProjectCode = null,
-                                     //ProjectName = "",
-                                     //BudgetLineId = null,
-                                     //BudgetLine = null,
+                                     Job = x.Job,
                                      WorkTime = x.WorkTime,
                                      WorkDayHours = x.WorkDayHours,
                                      ContentEnglish = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == x.Employee.EmployeeProfessionalDetail.EmployeeContractTypeId).ContentEnglish,
                                      ContentDari = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == x.Employee.EmployeeProfessionalDetail.EmployeeContractTypeId).ContentDari,
-                                     //EmployeeContractModel.EmployeeImage = dataModel.EmployeeDetail.EmployeePhoto;
-                                     EmployeeImage = x.Employee.DocumentGUID + x.Employee.Extension
+                                     EmployeeImage = x.Employee.DocumentGUID + x.Employee.Extension,
+                                     CountryDari= x.CountryDari,
+                                     DesignationDari= x.DesignationDari,
+                                     DutyStationDari= x.DutyStationDari,
+                                     GradeDari= x.GradeDari,
+                                     FatherNameDari= x.FatherNameDari,
+                                     JobDari= x.JobDari,
+                                     ProvinceDari= x.ProvinceDari,
+                                     EmployeeNameDari= x.EmployeeNameDari,
+                                     GradeName= x.JobGrade.GradeName
                                  }).ToListAsync();
 
                     response.data.EmployeeContractDetails = dataModel;

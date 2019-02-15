@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace HumanitarianAssistance.Service.Classes
 {
     public class ProfessionService : IProfession
