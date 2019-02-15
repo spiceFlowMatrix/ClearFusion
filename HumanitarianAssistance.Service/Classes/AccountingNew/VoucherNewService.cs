@@ -126,7 +126,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
                 var voucherDetail = await _uow.GetDbContext().VoucherDetail
-                                              .Include(o => o.OfficeDetails).Include(j => j.JournalDetails)
+                                              .Include(o => o.OfficeDetails)
+                                              .Include(j => j.JournalDetails)
                                               .Include(c => c.CurrencyDetail)
                                               .Include(f => f.FinancialYearDetails)
                                               .FirstOrDefaultAsync(v => v.IsDeleted == false && v.VoucherNo == id);
@@ -152,6 +153,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     obj.FinancialYearId = voucherDetail.FinancialYearId;
                     obj.FinancialYearName = voucherDetail.FinancialYearDetails?.FinancialYearName ?? null;
                     obj.IsVoucherVerified = voucherDetail.IsVoucherVerified;
+                    obj.IsExchangeGainLossVoucher = voucherDetail.IsExchangeGainLossVoucher;
 
                     response.data.VoucherDetail = obj;
                     response.StatusCode = StaticResource.successStatusCode;
@@ -173,6 +175,23 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        /// <summary>
+        /// check if Exchange Rate is present or not
+        /// </summary>
+        /// <param name="currencyList"></param>
+        /// <param name="exchangeRatePresedsnt"></param>
+        /// <returns>false</returns>
+        /// <returns>true</returns>
+        public bool CheckExchangeRateIsPresent(List<int> currencyList, List<ExchangeRateDetail> exchangeRates)
+        {
+            var groupedDataCount = exchangeRates.GroupBy(x => new { x.FromCurrency, x.ToCurrency }).ToList().Count;
+            if (groupedDataCount >= (int)Math.Pow(currencyList.Count(), 2))
+            {
+                return true;
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// Add Voucher
@@ -185,60 +204,83 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
 
-                var officeCode = _uow.GetDbContext().OfficeDetail.FirstOrDefault(o => o.OfficeId == model.OfficeId)?.OfficeCode; //use OfficeCode
+                // set current date
+                //model.VoucherDate = ;
 
-                if (officeCode != null)
+                var currencyList = await _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false)
+                                                                            .Select(x => x.CurrencyId).ToListAsync();
+                var exchangeRatePresent = await _uow.GetDbContext().ExchangeRateDetail
+                                                                   .Where(x => x.Date.ToShortDateString() == DateTime.UtcNow.ToShortDateString())
+                                                                   .ToListAsync();
+
+                if (CheckExchangeRateIsPresent(currencyList, exchangeRatePresent))
                 {
-                    var fincancialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(o => o.IsDefault)?.FinancialYearId; //use OfficeCode
-                    var currencyCode = _uow.GetDbContext().CurrencyDetails.FirstOrDefault(o => o.CurrencyId == model.CurrencyId)?.CurrencyCode; //use OfficeCode
+                    var officeCode = _uow.GetDbContext().OfficeDetail.FirstOrDefault(o => o.OfficeId == model.OfficeId)?.OfficeCode; //use OfficeCode
 
-                    if (fincancialYear != null)
+                    if (officeCode != null)
                     {
-                        if (currencyCode != null)
+                        var fincancialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(o => o.IsDefault)?.FinancialYearId; //use OfficeCode
+                        var currencyCode = _uow.GetDbContext().CurrencyDetails.FirstOrDefault(o => o.CurrencyId == model.CurrencyId)?.CurrencyCode;
+
+                        // NOTE: Dont remove this as we will need journal details in response
+                        var journaldetail = _uow.GetDbContext().JournalDetail.FirstOrDefault(o => o.JournalCode == model.JournalCode);
+
+                        if (fincancialYear != null)
                         {
-                            VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
-                            obj.FinancialYearId = fincancialYear;
-                            obj.CreatedById = model.CreatedById;
-                            obj.VoucherDate = DateTime.UtcNow;
-                            obj.CreatedDate = DateTime.UtcNow;
-                            obj.IsDeleted = false;
-                            await _uow.VoucherDetailRepository.AddAsyn(obj);
+                            if (currencyCode != null)
+                            {
+                                VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
+                                obj.JournalCode = journaldetail != null ? journaldetail.JournalCode : model.JournalCode;
+                                obj.FinancialYearId = fincancialYear;
+                                obj.CreatedById = model.CreatedById;
+                                obj.VoucherDate = DateTime.UtcNow;
+                                obj.CreatedDate = DateTime.UtcNow;
+                                obj.IsDeleted = false;
+                                await _uow.VoucherDetailRepository.AddAsyn(obj);
 
-                            // Pattern: Office Code - Currency Code - Month Number - Voucher Primary Key (sequential) - Year
-                            obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year;
+                                // Pattern: Office Code - Currency Code - Month Number - Voucher Primary Key (sequential) - Year
+                                obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year;
 
-                            await _uow.VoucherDetailRepository.UpdateAsyn(obj);
+                                await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
-                            var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
+                                //var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
 
-                            LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                            loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
-                            loggerObj.IsRead = false;
-                            loggerObj.UserName = user.FirstName + " " + user.LastName;
-                            loggerObj.UserId = model.CreatedById;
-                            loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
-                            loggerObj.CreatedDate = model.CreatedDate;
+                                //LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                                //loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
+                                //loggerObj.IsRead = false;
+                                //loggerObj.UserName = user.FirstName + " " + user.LastName;
+                                //loggerObj.UserId = model.CreatedById;
+                                //loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
+                                //loggerObj.CreatedDate = model.CreatedDate;
 
-                            response.LoggerDetailsModel = loggerObj;
-                            response.StatusCode = StaticResource.successStatusCode;
-                            response.Message = "Success";
+                                //response.LoggerDetailsModel = loggerObj;
+
+                                response.data.VoucherDetailEntity = obj;
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Success";
+                            }
+                            else
+                            {
+                                response.StatusCode = StaticResource.failStatusCode;
+                                response.Message = StaticResource.CurrencyNotFound;
+                            }
                         }
                         else
                         {
                             response.StatusCode = StaticResource.failStatusCode;
-                            response.Message = StaticResource.CurrencyNotFound;
+                            response.Message = StaticResource.defaultFinancialYearIsNotSet;
                         }
                     }
                     else
                     {
                         response.StatusCode = StaticResource.failStatusCode;
-                        response.Message = StaticResource.defaultFinancialYearIsNotSet;
+                        response.Message = StaticResource.officeCodeNotFound;
                     }
                 }
                 else
                 {
                     response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.officeCodeNotFound;
+                    response.Message = StaticResource.ExchagneRateNotDefined;
                 }
 
             }
@@ -297,7 +339,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 else
                 {
                     response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.SomethingWrong;
+                    response.Message = StaticResource.VoucherNotPresent;
                 }
             }
             catch (Exception ex)
@@ -309,6 +351,46 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         }
 
         /// <summary>
+        /// <summary>
+        /// Delete Voucher
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> DeleteVoucher(long voucherId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var voucherdetail = await _uow.VoucherDetailRepository.FindAsync(c => c.VoucherNo == voucherId);
+
+                if (voucherdetail != null)
+                {
+                    voucherdetail.IsDeleted = true;
+                    voucherdetail.ModifiedById = userId;
+                    voucherdetail.ModifiedDate = DateTime.UtcNow;
+
+                    await _uow.VoucherDetailRepository.UpdateAsyn(voucherdetail);
+
+                    await DeleteTransaction(voucherId, userId);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.VoucherNotPresent;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         /// Get All Voucher Transaction List 
         /// </summary>
         /// <param name="VoucherNo"></param>
@@ -425,6 +507,49 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Delete Transaction
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <returns>Success/failure</returns>
+        public async Task<APIResponse> DeleteTransaction(long voucherId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            using (var _dbTransaction = _uow.GetDbContext().Database.BeginTransaction())
+            {
+                try
+                {
+                    var transactions = await _uow.GetDbContext().VoucherTransactions.Where(x => x.VoucherNo == voucherId).ToListAsync();
+                    if (transactions.Any())
+                    {
+                        transactions.ForEach(x =>
+                        {
+                            x.IsDeleted = true;
+                            x.ModifiedDate = DateTime.UtcNow;
+                            x.ModifiedById = userId;
+                        });
+
+                        _uow.GetDbContext().VoucherTransactions.UpdateRange(transactions);
+                        _uow.GetDbContext().SaveChanges();
+                        _dbTransaction.Commit();
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
+                    }
+                    else
+                    {
+                        throw new Exception(StaticResource.TransactionNotFound);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _dbTransaction.Rollback();
+                    throw new Exception(ex.Message);
+                }
             }
             return response;
         }
@@ -659,7 +784,172 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        /// <summary>
+        /// Gain Loss Voucher and Transaction generation
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> CreateGainLossTransaction(ExchangeGainLossVoucherDetails model, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                #region "Generate Voucher"
+                VoucherDetailModel voucherModel = new VoucherDetailModel
+                {
+                    VoucherNo = model.VoucherNo,
+                    CurrencyId = model.CurrencyId,
+                    Description = model.Description,
+                    JournalCode = model.JournalId,
+                    VoucherTypeId = model.VoucherType,
+                    OfficeId = model.OfficeId,
+                    ProjectId = model.ProjectId,
+                    BudgetLineId = model.BudgetLineId,
+                    IsExchangeGainLossVoucher = true
+                };
 
+                var responseVoucher = await AddVoucherNewDetail(voucherModel);
+
+                #endregion
+
+                #region "Generate Transaction"
+
+                if (responseVoucher.StatusCode == 200)
+                {
+                    List<VoucherTransactionsModel> transactions = new List<VoucherTransactionsModel>();
+
+                    // Credit
+                    transactions.Add(new VoucherTransactionsModel
+                    {
+                        TransactionId = 0,
+                        VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                        AccountNo = model.CreditAccount,
+                        Debit = 0,
+                        Credit = Math.Abs(model.Amount),
+                        Description = "Gain-Loss-Voucher-Credit",
+                        IsDeleted = false
+                    });
+
+                    // Debit
+                    transactions.Add(new VoucherTransactionsModel
+                    {
+                        TransactionId = 0,
+                        VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                        AccountNo = model.DebitAccount,
+                        Debit = Math.Abs(model.Amount),
+                        Credit = 0,
+                        Description = "Gain-Loss-Voucher-Debit",
+                        IsDeleted = false
+                    });
+
+                    AddEditTransactionModel transactionVoucherDetail = new AddEditTransactionModel
+                    {
+                        VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                        VoucherTransactions = transactions
+                    };
+
+                    var responseTransaction = AddEditTransactionList(transactionVoucherDetail, userId);
+
+                    if (responseTransaction.StatusCode == 200)
+                    {
+                        response.data.GainLossVoucherDetail = new GainLossVoucherList
+                        {
+                            VoucherId = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                            JournalName = responseVoucher.data.VoucherDetailEntity.JournalDetails != null ? responseVoucher.data.VoucherDetailEntity.JournalDetails.JournalName : "",
+                            VoucherName = responseVoucher.data.VoucherDetailEntity.ReferenceNo,
+                            VoucherDate = responseVoucher.data.VoucherDetailEntity.VoucherDate
+                        };
+                    }
+                    else
+                    {
+                        throw new Exception(responseTransaction.Message);
+                    }
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = responseVoucher.Message;
+                }
+
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        ///  Delete Gain Loss Voucher-Transaction
+        /// </summary>
+        /// <param name="voucherId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> DeleteGainLossVoucherTransaction(long voucherId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (voucherId != 0)
+                {
+                    var voucherResponse = await DeleteVoucher(voucherId, userId);
+
+                    response.StatusCode = voucherResponse.StatusCode;
+                    response.Message = voucherResponse.Message;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.VoucherNotPresent;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Get all Vouchers let generated from gain loss report
+        /// </summary>
+        /// <returns></returns>
+        public async Task<APIResponse> GetExchangeGainLossVoucherList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var gainLossVouchers = await _uow.GetDbContext().VoucherDetail
+                                                                        .Where(x => x.IsDeleted == false &&
+                                                                                    x.IsExchangeGainLossVoucher == true)
+                                                                        .Select(x => new GainLossVoucherList
+                                                                        {
+                                                                            VoucherId = x.VoucherNo,
+                                                                            VoucherName = x.ReferenceNo,
+                                                                            JournalName = x.JournalDetails.JournalName,
+                                                                            VoucherDate = x.VoucherDate,
+                                                                        })
+                                                                        .ToListAsync();
+
+                response.data.GainLossVoucherList = gainLossVouchers;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
     }
 }

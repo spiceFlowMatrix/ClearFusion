@@ -116,7 +116,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddVoucherDetail([FromBody] VoucherDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -138,7 +137,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> EditVoucherNewDetail([FromBody] VoucherDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -233,5 +231,41 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       APIResponse response = await _iVoucherNewService.VerifyVoucher(id, user.Id);
       return response;
     }
+
+    [HttpGet]
+    public async Task<APIResponse> GetExchangeGainLossVoucherList()
+    {
+      APIResponse response = await _iVoucherNewService.GetExchangeGainLossVoucherList();
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<object> AddExchangeGainLossVoucher([FromBody] ExchangeGainLossVoucherDetails model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.IsDeleted = false;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+
+      APIResponse response = await _iVoucherNewService.CreateGainLossTransaction(model, user.Id);
+
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteGainLossVoucherTransaction([FromBody]long id)
+    {
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      APIResponse response = await _iVoucherNewService.DeleteGainLossVoucherTransaction(id, user.Id);
+      return response;
+    }
+
   }
 }
