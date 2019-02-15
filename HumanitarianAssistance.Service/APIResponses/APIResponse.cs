@@ -185,7 +185,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleForProspectiveEmployeeModel> ISFPEmployeeList { get; set; }
         public IList<ScheduleCandidateModel> ScheduleCandidateList { get; set; }
 
-        public IList<ProjectDetails> ProjectDetailList { get; set; }
+        public IList<ProjectDetail> ProjectDetailList { get; set; }
 
         public IList<InterviewFeedbackDetailsModel> InterviewFeedbackDetailsList { get; set; }
         public IList<EmployeeSalaryDetailsModel> EmployeeSalaryDetailsList { get; set; }

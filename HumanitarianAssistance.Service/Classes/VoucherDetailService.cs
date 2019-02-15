@@ -5229,7 +5229,7 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.IsDeleted = false;
                 obj.FinancialYearId = financialYear.FinancialYearId;
                 obj.VoucherTypeId = (int)VoucherTypes.Journal;
-                obj.Description = string.Format(StaticResource.SalaryPaymentDone, DateTime.Now.Date, EmployeeDetails.EmployeeName);
+                obj.Description = StaticResource.SalaryPaymentDone + EmployeeDetails.EmployeeCode+ "-"+ EmployeeDetails.EmployeeName+"-"+DateTime.Now.Month+"-"+ totalSalaryOfEmployee;
                 obj.CurrencyId = EmployeeSalaryVoucher.CurrencyId;
                 obj.VoucherDate = DateTime.Now;
                 obj.JournalCode = EmployeeSalaryVoucher.JournalCode;//null for now as per client
