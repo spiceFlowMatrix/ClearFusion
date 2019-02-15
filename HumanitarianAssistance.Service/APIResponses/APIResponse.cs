@@ -406,7 +406,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
 
-        public VoucherDetail VoucherDetailEntity { get; set; }
+        public VoucherDetailEntityModel VoucherDetailEntity { get; set; }
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }
         public GainLossVoucherList GainLossVoucherDetail { get; set; }
 

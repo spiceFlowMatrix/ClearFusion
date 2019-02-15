@@ -255,7 +255,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                                 //response.LoggerDetailsModel = loggerObj;
 
-                                response.data.VoucherDetailEntity = obj;
+                                VoucherDetailEntityModel voucherModel = _mapper.Map<VoucherDetail, VoucherDetailEntityModel>(obj);
+
+                                response.data.VoucherDetailEntity = voucherModel;
                                 response.StatusCode = StaticResource.successStatusCode;
                                 response.Message = "Success";
                             }
@@ -853,10 +855,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                     if (responseTransaction.StatusCode == 200)
                     {
+                        string voucherName = _uow.GetDbContext().VoucherDetail.FirstOrDefault(x => x.JournalCode == responseVoucher.data.VoucherDetailEntity.JournalCode)?.JournalDetails.JournalName;
+
                         response.data.GainLossVoucherDetail = new GainLossVoucherList
                         {
                             VoucherId = responseVoucher.data.VoucherDetailEntity.VoucherNo,
-                            JournalName = responseVoucher.data.VoucherDetailEntity.JournalDetails != null ? responseVoucher.data.VoucherDetailEntity.JournalDetails.JournalName : "",
+                            JournalName = voucherName != null ? voucherName : "",
                             VoucherName = responseVoucher.data.VoucherDetailEntity.ReferenceNo,
                             VoucherDate = responseVoucher.data.VoucherDetailEntity.VoucherDate
                         };
