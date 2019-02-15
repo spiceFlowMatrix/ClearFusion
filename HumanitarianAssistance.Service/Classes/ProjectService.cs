@@ -4269,42 +4269,38 @@ namespace HumanitarianAssistance.Service.Classes
         {
             APIResponse response = new APIResponse();
             long LatestprojectId = 0;
-            var ProjectBudgetLineCode = string.Empty;
+
             try
             {
-                ProjectBudgetLineDetail budgetLineDetail = _uow.GetDbContext().ProjectBudgetLineDetail
-                                                          .OrderByDescending(x => x.ProjectId == model.ProjectId)
-                                                          .FirstOrDefault(x => x.IsDeleted == false);
-                if (budgetLineDetail == null)
-                {
-                    LatestprojectId = 1;
-                    ProjectBudgetLineCode = genrateCode(LatestprojectId.ToString());
-                }
-                else
-                {
-                    LatestprojectId = budgetLineDetail.BudgetLineId + 1;
-                    ProjectBudgetLineCode = genrateCode(LatestprojectId.ToString());
-                }
+
                 ProjectBudgetLineDetail obj = _mapper.Map<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>(model);
-                obj.BudgetCode = ProjectBudgetLineCode;
-                obj.IsDeleted = false;
 
                 if (model.BudgetLineId == 0)
                 {
+                    LatestprojectId = _uow.GetDbContext().ProjectBudgetLineDetail
+                        .OrderByDescending(x => x.BudgetLineId)
+                                                          .FirstOrDefault().BudgetLineId;
+
+                    obj.BudgetCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D4}", 1);
                     obj.CreatedDate = DateTime.UtcNow;
+                    obj.IsDeleted = false;
                     obj.CreatedById = UserId;
                     await _uow.ProjectBudgetLineDetailRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
                 }
                 else
                 {
+                    ProjectBudgetLineDetail projectBudgetLineDetail = _uow.GetDbContext().ProjectBudgetLineDetail.FirstOrDefault(x => x.IsDeleted == false && x.BudgetLineId == model.BudgetLineId);
+                    projectBudgetLineDetail.BudgetCode = obj.BudgetCode;
+                    projectBudgetLineDetail.BudgetName = obj.BudgetName;
+                    projectBudgetLineDetail.CurrencyId = obj.CurrencyId;
+                    projectBudgetLineDetail.InitialBudget = obj.InitialBudget;
+                    projectBudgetLineDetail.ProjectJobId = obj.ProjectJobId;
+
                     obj.ModifiedById = UserId;
                     obj.ModifiedDate = DateTime.UtcNow;
-                    await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(obj);
-                    await _uow.SaveAsync();
-
+                    obj.IsDeleted = false;
+                    await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(projectBudgetLineDetail);
                 }
-
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -4424,7 +4420,7 @@ namespace HumanitarianAssistance.Service.Classes
                     ProjectJobId = b.ProjectJobDetail?.ProjectJobId ?? null,
 
                 }).ToList();
-                response.data.ProjectBudgetLineDetailList = budgetDetaillist.OrderByDescending(x => x.BudgetLineId).ToList();
+                response.data.ProjectBudgetLineDetailByBudgetId = budgetDetaillist.OrderByDescending(x => x.BudgetLineId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -4433,7 +4429,7 @@ namespace HumanitarianAssistance.Service.Classes
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
-            return response; 
+            return response;
 
         }
 

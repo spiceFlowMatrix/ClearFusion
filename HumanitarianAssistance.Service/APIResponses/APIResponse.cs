@@ -329,6 +329,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<ProjectJobDetail> ProjectJobDetail { get; set; }
         public List<ProjectJobDetailModel> ProjectJobDetailModel { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
+        public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
 
 
 
