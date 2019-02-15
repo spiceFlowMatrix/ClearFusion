@@ -238,6 +238,8 @@ namespace HumanitarianAssistance.Entities
 
         public DbSet<ProvinceMultiSelect> ProvinceMultiSelect { get; set; }
 
+        public DbSet<ProjectBudgetLineDetail> ProjectBudgetLineDetail { get; set; }
+        public DbSet<ProjectJobDetail> ProjectJobDetail { get; set; }
 
 
         #endregion

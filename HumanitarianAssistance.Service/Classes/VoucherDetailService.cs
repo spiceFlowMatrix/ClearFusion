@@ -47,7 +47,6 @@ namespace HumanitarianAssistance.Service.Classes
                     _uow.GetDbContext().VoucherDetail
                                       .Include(o => o.OfficeDetails).Include(j => j.JournalDetails)
                                       .Include(c => c.CurrencyDetail)
-                                      .Include(f => f.FinancialYearDetails)
                                       .Where(v => v.IsDeleted == false).OrderBy(x => x.VoucherDate).ToList()
                                       );
                 var voucherdetaillist = voucherList.Select(v => new VoucherDetailModel
@@ -144,7 +143,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                       .Include(o => o.OfficeDetails).Include(j => j.JournalDetails)
                                                       .Include(c => c.CurrencyDetail)
                                                       .Include(f => f.FinancialYearDetails)
-                                                      .Where(v => v.IsDeleted == false && filterModel.OfficesList.Contains(v.OfficeId) && v.VoucherDate.Value.Date == filterModel.Date.Value.Date)
+                                                      .Where(v => v.IsDeleted == false && filterModel.OfficesList.Contains(v.OfficeId) && v.VoucherDate.Date == filterModel.Date.Value.Date)
                                                       .OrderByDescending(x => x.VoucherDate)
                                                       .Skip(filterModel.Skip)
                                                       .Take(10)
@@ -1313,8 +1312,8 @@ namespace HumanitarianAssistance.Service.Classes
                     Boolean isRecordPresenntForOffice = await _uow.GetDbContext().VoucherDetail
                                                                 .AnyAsync(x => x.IsDeleted == false &&
                                                                           model.OfficeIdList.Contains(x.OfficeId.Value) &&
-                                                                          x.VoucherDate.Value.Date >= model.fromdate.Date &&
-                                                                          x.VoucherDate.Value.Date <= model.todate.Date);
+                                                                          x.VoucherDate.Date >= model.fromdate.Date &&
+                                                                          x.VoucherDate.Date <= model.todate.Date);
 
                     if (isRecordPresenntForOffice)
                     {
@@ -2737,41 +2736,41 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetProjectAndBudgetLine()
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var list = await _uow.GetDbContext().ProjectBudgetLine.Select(x => new BudgetLineModel
-                {
-                    BudgetLineId = x.BudgetLineId,
-                    ProjectId = x.ProjectId,
-                    Description = x.Description
-                }).ToListAsync();
+        //public async Task<APIResponse> GetProjectAndBudgetLine()
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        var list = await _uow.GetDbContext().ProjectBudgetLine.Select(x => new BudgetLineModel
+        //        {
+        //            BudgetLineId = x.BudgetLineId,
+        //            ProjectId = x.ProjectId,
+        //            Description = x.Description
+        //        }).ToListAsync();
 
-                var list1 = await _uow.GetDbContext().ProjectDetails.
-                    Select(x => new ProjectBudgetModelNew
-                    {
-                        ProjectId = x.ProjectId,
-                        ProjectName = x.ProjectName
-                    }).ToListAsync();
+        //        var list1 = await _uow.GetDbContext().ProjectDetails.
+        //            Select(x => new ProjectBudgetModelNew
+        //            {
+        //                ProjectId = x.ProjectId,
+        //                ProjectName = x.ProjectName
+        //            }).ToListAsync();
 
-                ProjectBudgetLinesModel model = new ProjectBudgetLinesModel();
-                model.BudgetLines = list;
-                model.ProjectList = list1;
+        //        ProjectBudgetLinesModel model = new ProjectBudgetLinesModel();
+        //        model.BudgetLines = list;
+        //        model.ProjectList = list1;
 
-                response.data.ProjectBudgetLinesModel = model;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Project BudgetLine List ";
-                return response;
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
+        //        response.data.ProjectBudgetLinesModel = model;
+        //        response.StatusCode = StaticResource.successStatusCode;
+        //        response.Message = "Project BudgetLine List ";
+        //        return response;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = ex.Message;
+        //    }
+        //    return response;
+        //}
 
         public async Task<APIResponse> AddNotesDetails(NotesMasterModel model)
         {
@@ -4840,8 +4839,8 @@ namespace HumanitarianAssistance.Service.Classes
                                                         .FindAllAsync(x =>
                                                                         x.JournalCode == JournalVoucherFilter.JournalNo &&
                                                                         JournalVoucherFilter.OfficeIdList.Contains(x.OfficeId) &&
-                                                                        x.VoucherDate.Value.Date >= JournalVoucherFilter.FromDate.Value.Date &&
-                                                                        x.VoucherDate.Value.Date <= JournalVoucherFilter.ToDate.Value.Date &&
+                                                                        x.VoucherDate.Date >= JournalVoucherFilter.FromDate.Value.Date &&
+                                                                        x.VoucherDate.Date <= JournalVoucherFilter.ToDate.Value.Date &&
                                                                         x.IsDeleted == false);
 
                 response.data.VouchersList = vouchers;

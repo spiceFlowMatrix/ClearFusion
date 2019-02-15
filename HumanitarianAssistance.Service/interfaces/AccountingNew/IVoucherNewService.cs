@@ -20,5 +20,8 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
         Task<APIResponse> AddTransactionDetail(List<VoucherTransactionsModel> voucherTransactionsList, string userId);
         APIResponse AddEditTransactionList(AddEditTransactionModel voucherTransactions, string userId);
         Task<APIResponse> VerifyVoucher(long voucherId, string userId);
+        Task<APIResponse> CreateGainLossTransaction(ExchangeGainLossVoucherDetails model, string userId);
+        Task<APIResponse> DeleteGainLossVoucherTransaction(long voucherId, string userId);
+        Task<APIResponse> GetExchangeGainLossVoucherList();
     }
 }

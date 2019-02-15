@@ -217,6 +217,8 @@ namespace DataAccess
         private IGenericRepository<PaymentTypes> _paymentTypesRepository;
         private IGenericRepository<PolicyDetail> _policyRepository;
         private IGenericRepository<PolicySchedule> _policyScheduleRepository;
+        private IGenericRepository<ProjectBudgetLineDetail> _budgetLineDetailRepository;
+        private IGenericRepository<ProjectJobDetail> _projectJobDetailRepository;
 
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
@@ -1771,6 +1773,23 @@ namespace DataAccess
                     _errorlogRepository ?? new GenericRepository<Errorlog>(_mschaContext);
             }
         }
+
+        public IGenericRepository<ProjectBudgetLineDetail> ProjectBudgetLineDetailRepository
+        {
+            get
+            {
+                return _budgetLineDetailRepository = _budgetLineDetailRepository ?? new GenericRepository<ProjectBudgetLineDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectJobDetail> ProjectJobDetailRepository
+        {
+            get
+            {
+                return _projectJobDetailRepository = _projectJobDetailRepository ?? new GenericRepository<ProjectJobDetail>(_mschaContext);
+            }
+        }
+
 
         public void Save()
         {

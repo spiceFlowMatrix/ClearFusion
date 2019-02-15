@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190212124934_projectBudgetLineAndProjectJobDetail120218")]
+    partial class projectBudgetLineAndProjectJobDetail120218
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4717,62 +4719,6 @@ namespace DataAccess.Migrations
                     b.ToTable("PolicyDetails");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicySchedule", b =>
-                {
-                    b.Property<long>("PolicyScheduleId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("ByDay");
-
-                    b.Property<int?>("ByMonth");
-
-                    b.Property<int?>("ByWeek");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("Description");
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<TimeSpan>("EndTime");
-
-                    b.Property<int?>("Frequency");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long?>("PolicyId");
-
-                    b.Property<string>("RepeatDays");
-
-                    b.Property<string>("ScheduleCode");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.Property<TimeSpan>("StartTime");
-
-                    b.Property<string>("Title");
-
-                    b.Property<bool>("isActive");
-
-                    b.Property<bool>("isDeleted");
-
-                    b.HasKey("PolicyScheduleId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("PolicyId");
-
-                    b.ToTable("PolicySchedules");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.Producer", b =>
                 {
                     b.Property<long>("ProducerId")
@@ -8571,7 +8517,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("ReferenceNo")
                         .HasMaxLength(20);
 
-                    b.Property<DateTime>("VoucherDate");
+                    b.Property<DateTime?>("VoucherDate");
 
                     b.Property<string>("VoucherMode");
 
@@ -10488,21 +10434,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.Marketing.Producer", "Producers")
                         .WithMany()
                         .HasForeignKey("ProducerId");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicySchedule", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.PolicyDetail", "PolicyDetails")
-                        .WithMany()
-                        .HasForeignKey("PolicyId");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.Producer", b =>

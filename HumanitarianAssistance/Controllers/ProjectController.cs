@@ -46,7 +46,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #region Donor information
     [HttpPost]
-    
+
     public async Task<APIResponse> GetAllDonorFilterList([FromBody] DonorFilterModel donorFilterModel)
     {
       APIResponse apiresponse = await _iProject.GetAllDonorFilterList(donorFilterModel);
@@ -106,7 +106,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
     #endregion
-    
+
     #region Sector Information
 
     [HttpGet]
@@ -320,7 +320,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       if (user != null)
       {
         var id = user.Id;
-        apiRespone =  _iProject.AddEditProjectDetail(model, id);
+        apiRespone = _iProject.AddEditProjectDetail(model, id);
       }
 
       return apiRespone;
@@ -369,14 +369,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     [HttpPost]
     public APIResponse GetProjectOtherDetailById([FromBody]long Id)
     {
-      APIResponse apiresponse =  _iProject.GetOtherProjectListById(Id);
+      APIResponse apiresponse = _iProject.GetOtherProjectListById(Id);
 
       return apiresponse;
     }
 
 
-   
-    
+
+
 
 
 
@@ -561,11 +561,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
     #region Other Details dropdown
-  
+
     [HttpGet]
-    public  APIResponse GetAllStrengthConsiderationDetails()
+    public APIResponse GetAllStrengthConsiderationDetails()
     {
-      APIResponse response =  _iProject.GetAllStrengthConsiderationDetails();
+      APIResponse response = _iProject.GetAllStrengthConsiderationDetails();
       return response;
     }
     [HttpGet]
@@ -577,7 +577,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     [HttpGet]
     public APIResponse GetAllSecurityDetails()
     {
-      APIResponse response =  _iProject.GetAllSecurityDetails();
+      APIResponse response = _iProject.GetAllSecurityDetails();
       return response;
     }
 
@@ -634,9 +634,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    public  APIResponse GetAllDistrictvalueByProvinceId([FromBody]int[] ProvinceId)
+    public APIResponse GetAllDistrictvalueByProvinceId([FromBody]int[] ProvinceId)
     {
-      APIResponse response =  _iProject.GetAllDistrictvalueByProvinceId(ProvinceId);
+      APIResponse response = _iProject.GetAllDistrictvalueByProvinceId(ProvinceId);
       return response;
     }
 
@@ -649,9 +649,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         var id = user.Id;
 
-        apiRespone =  _iProject.AddEditProjectotherDetail(OtherDetail, id);
+        apiRespone = _iProject.AddEditProjectotherDetail(OtherDetail, id);
       }
-      return apiRespone;      
+      return apiRespone;
     }
 
     [HttpGet]
@@ -703,7 +703,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         model.UploadedFile = model.UploadedFile.Substring(model.UploadedFile.IndexOf(',') + 1);
       }
-      
+
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
@@ -746,16 +746,16 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         string logginUserEmailId = user.Email;
         var id = user.Id;
-        apiRespone =  _iProject.AddEditProjectproposals(ProjectId, id, logginUserEmailId);
+        apiRespone = _iProject.AddEditProjectproposals(ProjectId, id, logginUserEmailId);
       }
       return apiRespone;
     }
 
     [HttpPost]
-    public  APIResponse GetProjectproposalsById([FromBody]long ProjectId)
+    public APIResponse GetProjectproposalsById([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
-        apiRespone = _iProject.GetProjectproposalsById(ProjectId);
+      apiRespone = _iProject.GetProjectproposalsById(ProjectId);
       return apiRespone;
     }
     //[HttpPost]
@@ -798,7 +798,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     //  return apiRespone;
     //}
 
-      //upload files bucket
+    //upload files bucket
     [HttpPost]
     public async Task<APIResponse> UploadEDIProposalFile()
     {
@@ -811,44 +811,44 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         //{
 
 
-          var file =  Request.Form.Files[0] ;
-          
-          //string localfolderName = Path.Combine(Directory.GetCurrentDirectory(), "UploadotherDoc/");
-          long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
-          string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
-          string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
-          string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
+        var file = Request.Form.Files[0];
 
-          string fileName = "";
+        //string localfolderName = Path.Combine(Directory.GetCurrentDirectory(), "UploadotherDoc/");
+        long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
+        string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
+        string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
+        string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
 
-          if (fileNames.Contains('_'))
-          {
-            fileName = fileNames.Split('_')[2];
-          }
-          else
-          {
-            fileName = fileNames;
-          }
-        
-          string ext = System.IO.Path.GetExtension(fileName).ToLower();
-          if (ext != ".jpeg" && ext != ".png")
-          {
+        string fileName = "";
 
-           
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-              string logginUserEmailId = user.Email;
-              var id = user.Id;
-              apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, localFolderfullPath, fileName, logginUserEmailId, ProposalType, ext);
-             
-            }
-          }
-          else
+        if (fileNames.Contains('_'))
+        {
+          fileName = fileNames.Split('_')[2];
+        }
+        else
+        {
+          fileName = fileNames;
+        }
+
+        string ext = System.IO.Path.GetExtension(fileName).ToLower();
+        if (ext != ".jpeg" && ext != ".png")
+        {
+
+
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+          if (user != null)
           {
-            apiRespone.StatusCode = StaticResource.FileNotSupported;
-            apiRespone.Message = StaticResource.FileText;
+            string logginUserEmailId = user.Email;
+            var id = user.Id;
+            apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, localFolderfullPath, fileName, logginUserEmailId, ProposalType, ext);
+
           }
+        }
+        else
+        {
+          apiRespone.StatusCode = StaticResource.FileNotSupported;
+          apiRespone.Message = StaticResource.FileText;
+        }
 
         //}
       }
@@ -930,9 +930,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     public APIResponse GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
-     
-        apiRespone = _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
-      
+
+      apiRespone = _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
+
       return apiRespone;
     }
     [HttpPost]
@@ -1038,16 +1038,16 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
-   
+
     [HttpPost]
     public async Task<APIResponse> DeletePriorityDetails([FromBody]long PriorityOtherDetailId)
-     {
+    {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-       
+
         apiRespone = await _iProject.DeletePriorityOtherDetails(PriorityOtherDetailId, id);
       }
       return apiRespone;
@@ -1083,7 +1083,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     [HttpPost]
     public async Task<APIResponse> EditFeasibleExpertOtherDetail([FromBody]CEFeasibilityExpertOtherModel Model)
-     {
+    {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
@@ -1167,7 +1167,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
 
-   
+
 
     #endregion
 
@@ -1339,7 +1339,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
-    
+
 
 
     [HttpPost]
@@ -1373,5 +1373,54 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     //  }
     //}
     #endregion
+
+    #region BudgetLine
+
+    //project job
+
+    [HttpGet]
+    public async Task<APIResponse> GetProjectJobDetail()
+    {
+      APIResponse response = await _iProject.GetAllProjectJobDetail();
+      return response;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> AddBudgetLineDetail([FromBody]ProjectBudgetLineDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddEditProjectBudgetLineDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpGet]
+    public async Task<APIResponse> GetProjectBudgetLineDetail()
+    {
+      APIResponse response = await _iProject.GetallBudgetLineDetail();
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectBudgetLineDetail([FromBody] long projectId)
+    {
+      APIResponse response = await _iProject.GetallBudgetLineDetail(projectId);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetBudgetLineDetailByBudgetId([FromBody] int budgetId)
+    {
+      APIResponse response = await _iProject.GetBudgetLineDetailByBudgetId(budgetId);
+      return response;
+    }
+
+    #endregion
+
   }
 }
