@@ -1413,7 +1413,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-
+    [HttpPost]
+    public async Task<APIResponse> GetBudgetLineDetailByBudgetId([FromBody] int budgetId)
+    {
+      APIResponse response = await _iProject.GetBudgetLineDetailByBudgetId(budgetId);
+      return response;
+    }
 
     #endregion
 

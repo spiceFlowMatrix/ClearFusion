@@ -187,6 +187,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetallBudgetLineDetail();
         Task<APIResponse> GetallBudgetLineDetail(long projectId);
 
+        Task<APIResponse> GetBudgetLineDetailByBudgetId(int budgetId);
+
         #endregion
     }
 }
