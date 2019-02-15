@@ -15,6 +15,7 @@ namespace DataAccess.DbEntities.Marketing
         [ForeignKey("PolicyId")]
         public long? PolicyId { get; set; }
         public PolicyDetail PolicyDetails { get; set; }
+        public string ScheduleCode { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public int? Frequency { get; set; }      
@@ -27,5 +28,6 @@ namespace DataAccess.DbEntities.Marketing
         public DateTime EndDate { get; set; }
         public bool isActive { get; set; }
         public bool isDeleted { get; set; }
+        public string RepeatDays { get; set; }
     }
 }

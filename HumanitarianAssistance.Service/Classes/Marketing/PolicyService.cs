@@ -304,9 +304,74 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
 
-        public async Task<APIResponse> AddEditPolicySchedules(PolicyScheduleModel model, string UserId)
+        public async Task<APIResponse> AddEditPolicySchedules(ScheduleDetailsModel model, string UserId)
         {
+            PolicyScheduleModel mdl = new PolicyScheduleModel();
+            mdl.ByDay = model.ByDay;
+            mdl.ByMonth = model.ByMonth;
+            mdl.ByWeek = model.ByWeek;
+            mdl.Description = model.Description;
+            mdl.EndTime = TimeSpan.Parse(model.EndTime);
+            mdl.StartTime = TimeSpan.Parse(model.StartTime);
+            mdl.Title = model.Title;
+            mdl.RepeatDays = string.Join(",", model.RepeatDays);
+            mdl.Frequency = model.Frequency;
+            mdl.PolicyId = model.PolicyId;
+            mdl.PolicyScheduleId = mdl.PolicyScheduleId;
+            mdl.StartDate = DateTime.Parse(model.StartDate);
+            mdl.EndDate = DateTime.Parse(model.EndDate);
+            long LatestScheduleId = 0;
+            var scheduleCode = string.Empty;
             APIResponse response = new APIResponse();
+            try
+            {
+                if (model.PolicyScheduleId == 0)
+                {
+                    //var policy = _uow.GetDbContext().PolicyDetails.Where(x => x.PolicyName == model.PolicyName && x.IsDeleted == false).FirstOrDefault();
+                    //if (policy == null)
+                    {
+                        var policyDetail = _uow.GetDbContext().PolicySchedules.OrderByDescending(x => x.PolicyScheduleId)
+                                                                                       .FirstOrDefault();
+                        if (policyDetail == null)
+                        {
+                            LatestScheduleId = 1;
+                            scheduleCode = getPolicyCode(LatestScheduleId.ToString());
+                        }
+                        else
+                        {
+                            LatestScheduleId = Convert.ToInt32(policyDetail.PolicyId) + 1;
+                            scheduleCode = getPolicyCode(LatestScheduleId.ToString());
+                        }
+
+
+                        PolicySchedule obj = _mapper.Map<PolicyScheduleModel, PolicySchedule>(mdl);
+                        obj.CreatedById = UserId;
+                        obj.ScheduleCode = scheduleCode;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.IsDeleted = false;
+                        obj.isActive = true;
+                        obj.Description = mdl.Description;
+                        obj.ByDay = mdl.ByDay;
+                        obj.ByMonth = mdl.ByMonth;
+                        obj.ByWeek = mdl.ByWeek;
+                        obj.EndDate = mdl.EndDate;
+                        obj.EndTime = mdl.EndTime;
+                        obj.Frequency = mdl.Frequency;
+                        obj.PolicyId = mdl.PolicyId;
+                        //obj.RepeatDays = mdl.RepeatDays;
+                        obj.StartDate = mdl.StartDate;
+                        obj.StartTime = mdl.StartTime;
+                        obj.Title = mdl.Title;
+                        await _uow.PolicyScheduleRepository.AddAsyn(obj);
+                        await _uow.SaveAsync();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
             return response;
         }
 
