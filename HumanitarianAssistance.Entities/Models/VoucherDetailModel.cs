@@ -212,6 +212,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 
     public class ExchangeGainLossVoucherDetails : BaseModel
     {
+
         public long VoucherNo { get; set; }
         public int CurrencyId { get; set; }
         public string Description { get; set; }

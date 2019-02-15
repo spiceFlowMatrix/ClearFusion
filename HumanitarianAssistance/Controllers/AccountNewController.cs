@@ -253,6 +253,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         model.IsDeleted = false;
         model.CreatedDate = DateTime.UtcNow;
       }
+
       APIResponse response = await _iVoucherNewService.CreateGainLossTransaction(model, user.Id);
 
       return response;

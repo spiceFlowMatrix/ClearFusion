@@ -203,6 +203,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             APIResponse response = new APIResponse();
             try
             {
+
                 // set current date
                 model.VoucherDate = DateTime.UtcNow;
 
