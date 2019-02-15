@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public long VoucherNo { get; set; }
         public int CurrencyId { get; set; }
         public string CurrencyCode { get; set; }
-        public DateTime? VoucherDate { get; set; }
+        public DateTime VoucherDate { get; set; }
         public string ChequeNo { get; set; }
         public string ReferenceNo { get; set; }
         public string Description { get; set; }
@@ -23,6 +23,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? FinancialYearId { get; set; }
         public string FinancialYearName { get; set; }
         public bool? IsVoucherVerified { get; set; }
+        public bool IsExchangeGainLossVoucher { get; set; } = false;
 
     }
 
@@ -82,7 +83,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? BudgetLineId { get; set; }
 
     }
-    
+
 
     public class LedgerModel
     {
@@ -206,6 +207,30 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int AccountCodeCredit { get; set; }
         public long ChartOfAccountNewIdDebit { get; set; }
         public string OfficeCode { get; set; }
+    }
+
+    public class ExchangeGainLossVoucherDetails : BaseModel
+    {
+
+        public long VoucherNo { get; set; }
+        public int CurrencyId { get; set; }
+        public string Description { get; set; }
+        public int? JournalId { get; set; }
+        public int? VoucherType { get; set; }
+        public int? OfficeId { get; set; }
+        public long? ProjectId { get; set; }
+        public long? BudgetLineId { get; set; }
+        public long CreditAccount { get; set; }
+        public long DebitAccount { get; set; }
+        public double Amount { get; set; }
+    }
+
+    public class GainLossVoucherList
+    {
+        public long VoucherId { get; set; }
+        public string VoucherName { get; set; }
+        public string JournalName { get; set; }
+        public DateTime? VoucherDate { get; set; }
     }
 
 }

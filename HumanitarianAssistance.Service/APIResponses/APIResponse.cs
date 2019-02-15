@@ -226,7 +226,6 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
         public List<DetailsOfNotesFinalModel> DetailsOfNotesFinalList { get; set; }
 
-        //Alpit
         public IList<ScheduleCandidateModel> ScheduledProspectiveEmployee { get; set; }
         public IList<JobGradeModel> JobGradeList { get; set; }
 
@@ -384,8 +383,6 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<CodeType> SourceCodeTypelist { get; set; }
         public List<StoreSourceCodeDetailModel> SourceCodeDatalist { get; set; }
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
-
-
         public Dictionary<string,List<string>> Permissions { get; set; }
 
 
