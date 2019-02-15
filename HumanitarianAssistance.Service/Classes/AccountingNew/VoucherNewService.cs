@@ -205,12 +205,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
 
                 // set current date
-                model.VoucherDate = DateTime.UtcNow;
+                //model.VoucherDate = ;
 
                 var currencyList = await _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false)
                                                                             .Select(x => x.CurrencyId).ToListAsync();
                 var exchangeRatePresent = await _uow.GetDbContext().ExchangeRateDetail
-                                                                   .Where(x => x.Date.ToShortDateString() == model.VoucherDate.ToShortDateString())
+                                                                   .Where(x => x.Date.ToShortDateString() == DateTime.UtcNow.ToShortDateString())
                                                                    .ToListAsync();
 
                 if (CheckExchangeRateIsPresent(currencyList, exchangeRatePresent))
