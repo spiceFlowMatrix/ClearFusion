@@ -59,6 +59,8 @@ namespace DataAccess.Data
             await AddDefaultRoleToDefaultUser(um, email, administratorRole, user, logger);
             await AddDefaultRoles(context, rm);
             await AddDefaultPermission(context);
+            await AddJobGrades(context);
+            await AddContractClauses(context);
         }
 
         private static async Task CreateDefaultAdministratorRole(RoleManager<IdentityRole> rm, string administratorRole, ILogger<DbInitializer> logger)
@@ -283,6 +285,6 @@ namespace DataAccess.Data
                 var errormessage = ex.Message;
             }
         }
+
     }
-    
 }

@@ -26,7 +26,6 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string InvalidCompanyTypeId = "Invalid Company type id";
         public const string InvalidRole = "Invalid Role";
         public const string SomethingWrong = "Something went wrong: ";
-        public const string ErrorText = "Error: ";
         public const string RoleCreated = "Role Created";
         public const string RoleAlreadyExist = "Role already exists";
         public const string InvalidUser = "Invalid User";
@@ -355,7 +354,6 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string CurrencyNotFound = "Currency not found";
         public const string defaultFinancialYearIsNotSet = "Default Financial year is not set";
         public const string officeCodeNotFound = "Office Code Not Found";
-
         public const string TransactionNotFound = "Transaction Not Found";
 
 

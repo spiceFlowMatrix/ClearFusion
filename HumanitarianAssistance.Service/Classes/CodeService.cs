@@ -981,7 +981,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var emp = await _uow.EmployeeAppraisalDetailsRepository.FindAsync(x => x.EmployeeAppraisalDetailsId== model.EmployeeAppraisalDetailsId);
+                var emp = await _uow.EmployeeAppraisalDetailsRepository.FindAsync(x => x.EmployeeId == model.EmployeeId && x.OfficeId == model.OfficeId && x.CurrentAppraisalDate.Date == model.CurrentAppraisalDate.Date);
                 emp.Position = model.Position;
                 emp.Department = model.Department;
                 emp.DutyStation = model.DutyStation;
@@ -989,7 +989,7 @@ namespace HumanitarianAssistance.Service.Classes
                 emp.TotalScore = model.TotalScore;
                 foreach (var item in model.EmployeeAppraisalQuestionList)
                 {
-                    var question = await _uow.EmployeeAppraisalQuestionsRepository.FindAsync(x => x.EmployeeAppraisalQuestionsId== item.AppraisalGeneralQuestionsId);
+                    var question = await _uow.EmployeeAppraisalQuestionsRepository.FindAsync(x => x.EmployeeId == model.EmployeeId && x.CurrentAppraisalDate.Date == model.CurrentAppraisalDate.Date && x.AppraisalGeneralQuestionsId == item.AppraisalGeneralQuestionsId);
                     question.Score = item.Score;
                     question.Remarks = item.Remarks;
                     await _uow.EmployeeAppraisalQuestionsRepository.UpdateAsyn(question);
@@ -2043,6 +2043,7 @@ namespace HumanitarianAssistance.Service.Classes
         /// <returns></returns>
         public async Task<APIResponse> UpdatePayrollAccountHeadAllEmployees(List<PayrollHeadModel> model, string UserId)
         {
+
             APIResponse response = new APIResponse();
 
             try
@@ -2050,6 +2051,20 @@ namespace HumanitarianAssistance.Service.Classes
                 //NOTE: Do not remove code for saving payroll heads for employees that do not exist in EmployeePayrollAccountHead table
                 //List<EmployeeProfessionalDetail> employeesNotInPayrollAccountHeadTable = new List<EmployeeProfessionalDetail>();
                 //List<EmployeeProfessionalDetail> employeeList = await _uow.GetDbContext().EmployeeProfessionalDetail.Where(x => x.IsDeleted == false).ToListAsync();
+
+                IEnumerable<int> employeeIds =  _uow.GetDbContext().EmployeeDetail
+                                                  .Include(x => x.EmployeeProfessionalDetail)
+                                              .Where(x => x.IsDeleted == false && x.EmployeeProfessionalDetail.OfficeId ==
+                                              model.FirstOrDefault().OfficeId).Select(x => x.EmployeeID).ToList();
+
+                IEnumerable<int> employeeWithNoPayrollHead;
+                IEnumerable<int> employeeWithPayrollHead;
+
+                List<EmployeePayrollAccountHead> xEmployeePayrollAccountHead = await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
+
+                employeeWithPayrollHead = xEmployeePayrollAccountHead.Select(x=> x.EmployeeId).Distinct().ToList();
+
+                employeeWithNoPayrollHead = employeeIds.Except(employeeWithPayrollHead);
 
                 foreach (PayrollHeadModel payrollHead in model)
                 {
@@ -2065,8 +2080,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     await _uow.PayrollAccountHeadRepository.UpdateAsyn(xPayrollAccountHead);
 
-
-                    List <EmployeePayrollAccountHead> xEmployeePayrollAccountHead =await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x=> x.IsDeleted== false && x.PayrollHeadId== payrollHead.PayrollHeadId).ToListAsync();
+                    List <EmployeePayrollAccountHead> xEmployeePayrollAccount = xEmployeePayrollAccountHead.Where(x=> x.IsDeleted== false && x.PayrollHeadId== payrollHead.PayrollHeadId).ToList();
 
                     if (xEmployeePayrollAccountHead.Any())
                     {
@@ -2080,35 +2094,26 @@ namespace HumanitarianAssistance.Service.Classes
                         _uow.Save();
                     }
 
-                    //NOTE: Do not remove code for saving payroll heads for employees that do not exist in EmployeePayrollAccountHead table
+                    List<EmployeePayrollAccountHead> employeePayrollHeads = new List<EmployeePayrollAccountHead>();
 
-                    //if (employeesNotInPayrollAccountHeadTable.Count == 0)
-                    //{
+                    //Adding New Payroll Heads for Employees not having Payroll Head already saved
+                    foreach (int employeeId in employeeWithNoPayrollHead)
+                    {
+                        EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
+                        employeePayrollAccountHead.AccountNo = payrollHead.AccountNo;
+                        employeePayrollAccountHead.CreatedById = UserId;
+                        employeePayrollAccountHead.Description = payrollHead.Description;
+                        employeePayrollAccountHead.EmployeeId = employeeId;
+                        employeePayrollAccountHead.IsDeleted = false;
+                        employeePayrollAccountHead.PayrollHeadId = payrollHead.PayrollHeadId;
+                        employeePayrollAccountHead.PayrollHeadName = payrollHead.PayrollHeadName;
+                        employeePayrollAccountHead.PayrollHeadTypeId = payrollHead.PayrollHeadTypeId;
+                        employeePayrollAccountHead.TransactionTypeId = payrollHead.TransactionTypeId;
+                        employeePayrollHeads.Add(employeePayrollAccountHead);
+                    }
 
-                    //    employeesNotInPayrollAccountHeadTable = employeeList.Where(e => !xEmployeePayrollAccountHead.Any(p => p.EmployeeId == e.EmployeeId)).ToList();
-                    //}
-
-                    //List<EmployeePayrollAccountHead> newEmployeePayrollAccountHeadList = new List<EmployeePayrollAccountHead>();
-
-                    //foreach (var employee in employeesNotInPayrollAccountHeadTable)
-                    //{
-                    //    foreach (var obj in model)
-                    //    {
-                    //        EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
-                    //        employeePayrollAccountHead.AccountNo = obj.AccountNo;
-                    //        employeePayrollAccountHead.Description = obj.Description;
-                    //        employeePayrollAccountHead.IsDeleted = false;
-                    //        employeePayrollAccountHead.EmployeeId = employee.EmployeeId.Value;
-                    //        employeePayrollAccountHead.PayrollHeadId = obj.PayrollHeadId;
-                    //        employeePayrollAccountHead.PayrollHeadTypeId = obj.PayrollHeadTypeId;
-                    //        employeePayrollAccountHead.PayrollHeadName = obj.PayrollHeadName;
-                    //        employeePayrollAccountHead.TransactionTypeId = obj.TransactionTypeId;
-                    //        newEmployeePayrollAccountHeadList.Add(employeePayrollAccountHead);
-                    //    }
-                    //}
-
-                    //_uow.GetDbContext().EmployeePayrollAccountHead.AddRange(newEmployeePayrollAccountHeadList);
-                    //_uow.GetDbContext().SaveChanges();
+                    _uow.GetDbContext().EmployeePayrollAccountHead.AddRange(employeePayrollHeads);
+                    _uow.Save();
 
                 }
 

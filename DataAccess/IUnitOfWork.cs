@@ -191,12 +191,17 @@ namespace DataAccess
         IGenericRepository<DistrictMultiSelect> DistrictMultiSelectRepository { get; }
         IGenericRepository<SecurityConsiderationMultiSelect> SecurityConsiderationMultiSelectRepository { get; }
         IGenericRepository<Errorlog> ErrorlogRepository { get; }
+        IGenericRepository<ProjectBudgetLineDetail> ProjectBudgetLineDetailRepository { get; }
+        IGenericRepository<ProjectJobDetail> ProjectJobDetailRepository { get; }
+
+
 
         #endregion
 
         #region Marketing
         IGenericRepository<UnitRate> UnitRateRepository { get; }
         IGenericRepository<PolicyDetail> PolicyRepository { get; }
+        IGenericRepository<PolicySchedule> PolicyScheduleRepository { get; }
         IGenericRepository<ActivityType> ActivityTypeRepository { get; }
         IGenericRepository<ContractDetails> ContractDetailsRepository { get; }
         IGenericRepository<JobDetails> JobDetailsRepository { get; }

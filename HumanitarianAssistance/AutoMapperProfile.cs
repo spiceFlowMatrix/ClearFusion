@@ -6,6 +6,7 @@ using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models.Marketing;
 using HumanitarianAssistance.ViewModels.Models.Project;
 using HumanitarianAssistance.ViewModels.Models.Store;
@@ -131,6 +132,12 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<PolicyModel, PolicyDetail>().ReverseMap();
       CreateMap<ApproveProjectDetailModel, ApproveProjectDetails>().ReverseMap();
       CreateMap<WinApprovalProjectModel, WinProjectDetails>().ReverseMap();
+      CreateMap<ProjectJobDetailModel, ProjectJobDetail>().ReverseMap();
+      CreateMap<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>().ReverseMap();
+      CreateMap<VoucherDetail, VoucherDetailEntityModel>().ReverseMap();
+
+
+      CreateMap<PolicyScheduleModel, PolicySchedule>().ReverseMap();
     }
   }
 }

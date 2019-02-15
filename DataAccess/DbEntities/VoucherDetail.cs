@@ -16,7 +16,7 @@ namespace DataAccess.DbEntities
         [StringLength(5)]
         public CurrencyDetails CurrencyDetail { get; set; }		
 		public int? CurrencyId { get; set; }
-        public DateTime? VoucherDate { get; set; }
+        public DateTime VoucherDate { get; set; }
         [StringLength(10)]
         public string ChequeNo { get; set; }
         [StringLength(20)]

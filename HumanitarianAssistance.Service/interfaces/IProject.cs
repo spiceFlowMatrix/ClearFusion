@@ -89,6 +89,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddProjectChat(ProjectCommunicationModel model, string UserId);
 
         #endregion
+
+        Task<APIResponse> GetAllProjectDetails();
         #region GetAllProvinceDetails
         APIResponse GetAllProvinceDetails();
         APIResponse GetAllStrengthConsiderationDetails();
@@ -176,8 +178,17 @@ namespace HumanitarianAssistance.Service.interfaces
         // APIResponse SaveErrorlog(Errorlog obj, string UserId);
 
 
-        #endregion
+        Task<APIResponse>AddEditProjectJobDetail(ProjectJobDetailModel model, string UserId);
 
-        Task<APIResponse> GetAllProjectDetails();
+        Task<APIResponse> GetAllProjectJobDetail();
+        Task<APIResponse> GetAllProjectJobByProjectId(long ProjectId);
+
+        Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId);
+        Task<APIResponse> GetallBudgetLineDetail();
+        Task<APIResponse> GetallBudgetLineDetail(long projectId);
+
+        Task<APIResponse> GetBudgetLineDetailByBudgetId(int budgetId);
+
+        #endregion
     }
 }

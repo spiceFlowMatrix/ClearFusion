@@ -159,13 +159,13 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                       .CountAsync();
 
                 var policyList = await _uow.GetDbContext().PolicyDetails
-                                       .Where(v => v.IsDeleted == false).Select(x=>new PolicyModel
+                                       .Where(v => v.IsDeleted == false).Select(x => new PolicyModel
                                        {
-                                          PolicyId = x.PolicyId,
-                                          PolicyCode = x.PolicyCode,
-                                          PolicyName = x.PolicyName,
-                                          MediumName = x.Mediums.MediumName,
-                                          MediumId = x.MediumId
+                                           PolicyId = x.PolicyId,
+                                           PolicyCode = x.PolicyCode,
+                                           PolicyName = x.PolicyName,
+                                           MediumName = x.Mediums.MediumName,
+                                           MediumId = x.MediumId
                                        }).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).OrderByDescending(x => x.CreatedDate).AsNoTracking()
                                     .ToListAsync();
                 response.data.TotalCount = totalCount;
@@ -188,25 +188,25 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 int count = await _uow.GetDbContext().PolicyDetails.CountAsync(x => x.IsDeleted == false);
                 var policyDetail = await (from j in _uow.GetDbContext().PolicyDetails
-                                     join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
-                                     join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
-                                     join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
-                                     where !j.IsDeleted.Value && !jp.IsDeleted.Value && !me.IsDeleted.Value
-                                     && !mc.IsDeleted.Value
-                                     select (new PolicyModel
-                                     {
-                                         PolicyId = j.PolicyId,
-                                         PolicyName = j.PolicyName,
-                                         PolicyCode = j.PolicyCode,
-                                         Description = j.Description,
-                                         LanguageId = jp.LanguageId,
-                                         LanguageName = jp.LanguageName,
-                                         MediumId = me.MediumId,
-                                         MediumName = me.MediumName,
-                                         MediaCategoryId = mc.MediaCategoryId,
-                                         MediaCategoryName = mc.CategoryName
-                                     })).Take(10).Skip(0).OrderByDescending(x => x.CreatedDate).ToListAsync();
-                
+                                          join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
+                                          join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
+                                          join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
+                                          where !j.IsDeleted.Value && !jp.IsDeleted.Value && !me.IsDeleted.Value
+                                          && !mc.IsDeleted.Value
+                                          select (new PolicyModel
+                                          {
+                                              PolicyId = j.PolicyId,
+                                              PolicyName = j.PolicyName,
+                                              PolicyCode = j.PolicyCode,
+                                              Description = j.Description,
+                                              LanguageId = jp.LanguageId,
+                                              LanguageName = jp.LanguageName,
+                                              MediumId = me.MediumId,
+                                              MediumName = me.MediumName,
+                                              MediaCategoryId = mc.MediaCategoryId,
+                                              MediaCategoryName = mc.CategoryName
+                                          })).Take(10).Skip(0).OrderByDescending(x => x.CreatedDate).ToListAsync();
+
                 response.data.policyList = policyDetail;
                 response.data.TotalCount = count;
                 response.StatusCode = 200;
@@ -242,11 +242,11 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                              (
                                                v.PolicyId.ToString().Trim().ToLower().Contains(policyIdValue) ||
                                                v.PolicyName.Trim().ToLower().Contains(policyNameValue) ||
-                                               v.Mediums.MediumName.Trim().ToLower().Contains(mediumValue)                                                  
+                                               v.Mediums.MediumName.Trim().ToLower().Contains(mediumValue)
                                               ) : true
                                            )
                                      )
-                                    //.OrderByDescending(x => x.CreatedDate)
+                                    .OrderByDescending(x => x.CreatedDate)
                                     .Select(x => new PolicyModel
                                     {
                                         PolicyId = x.PolicyId,
@@ -257,7 +257,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                     })
                                     .AsNoTracking()
                                     .ToListAsync();
-               // response.data.jobListTotalCount = voucherList.Count();
+                // response.data.jobListTotalCount = voucherList.Count();
                 response.data.PolicyFilteredList = policyList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -293,6 +293,141 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                        }).AsNoTracking().FirstOrDefaultAsync();
                 //response.data.TotalCount = totalCount;
                 response.data.policyDetailsById = policyList;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddEditPolicySchedules(ScheduleDetailsModel model, string UserId)
+        {
+            PolicyScheduleModel mdl = new PolicyScheduleModel();
+            mdl.ByDay = model.ByDay;
+            mdl.ByMonth = model.ByMonth;
+            mdl.ByWeek = model.ByWeek;
+            mdl.Description = model.Description;
+            mdl.EndTime = TimeSpan.Parse(model.EndTime);
+            mdl.StartTime = TimeSpan.Parse(model.StartTime);
+            mdl.Title = model.Title;
+            mdl.RepeatDays = string.Join(",", model.RepeatDays);
+            mdl.Frequency = model.Frequency;
+            mdl.PolicyId = model.PolicyId;
+            mdl.PolicyScheduleId = mdl.PolicyScheduleId;
+            mdl.StartDate = DateTime.Parse(model.StartDate);
+            mdl.EndDate = DateTime.Parse(model.EndDate);
+            long LatestScheduleId = 0;
+            var scheduleCode = string.Empty;
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model.PolicyScheduleId == 0)
+                {
+                    var schedule = _uow.GetDbContext().PolicySchedules.Where(x => x.Title == model.Title && x.IsDeleted == false).FirstOrDefault();
+                    if (schedule == null)
+                    {
+                        var policyDetail = _uow.GetDbContext().PolicySchedules.OrderByDescending(x => x.PolicyScheduleId)
+                                                                                       .FirstOrDefault();
+                        if (policyDetail == null)
+                        {
+                            LatestScheduleId = 1;
+                            scheduleCode = getPolicyCode(LatestScheduleId.ToString());
+                        }
+                        else
+                        {
+                            LatestScheduleId = Convert.ToInt32(policyDetail.PolicyId) + 1;
+                            scheduleCode = getPolicyCode(LatestScheduleId.ToString());
+                        }
+                        PolicySchedule obj = _mapper.Map<PolicyScheduleModel, PolicySchedule>(mdl);
+                        obj.CreatedById = UserId;
+                        obj.ScheduleCode = scheduleCode;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.IsDeleted = false;
+                        obj.isActive = true;
+                        obj.Description = mdl.Description;
+                        obj.ByDay = mdl.ByDay;
+                        obj.ByMonth = mdl.ByMonth;
+                        obj.ByWeek = mdl.ByWeek;
+                        obj.EndDate = mdl.EndDate;
+                        obj.EndTime = mdl.EndTime;
+                        obj.Frequency = mdl.Frequency;
+                        obj.PolicyId = mdl.PolicyId;
+                        //obj.RepeatDays = mdl.RepeatDays;
+                        obj.StartDate = mdl.StartDate;
+                        obj.StartTime = mdl.StartTime;
+                        obj.Title = mdl.Title;
+                        await _uow.PolicyScheduleRepository.AddAsyn(obj);
+                        await _uow.SaveAsync();
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Schedule created successfully.";
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Schedule already exists. Please try again with other Title.";
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetPolicyScheduleById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            return response;
+        }
+
+        public async Task<APIResponse> GetAllSchedule(string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                int count = await _uow.GetDbContext().PolicyDetails.CountAsync(x => x.IsDeleted == false);
+                var policyScheduleList = await (from j in _uow.GetDbContext().PolicySchedules
+                                          //join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
+                                          //join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
+                                          //join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
+                                          where !j.IsDeleted.Value 
+                                          //&& !jp.IsDeleted.Value && !me.IsDeleted.Value
+                                          //&& !mc.IsDeleted.Value
+                                          select (new PolicyScheduleModel
+                                          {
+                                              PolicyId = j.PolicyId,
+                                              Title = j.Title,
+                                              ScheduleCode = j.ScheduleCode,
+                                              Description = j.Description,
+                                              ByDay = j.ByDay,
+                                              ByMonth = j.ByMonth,
+                                              ByWeek = j.ByWeek,
+                                              EndDate = j.EndDate,
+                                              EndTime = j.EndTime,
+                                              Frequency = j.Frequency,
+                                              isActive = j.isActive,
+                                              PolicyScheduleId = j.PolicyScheduleId,
+                                              RepeatDays = j.RepeatDays,
+                                              StartDate = j.StartDate,
+                                              StartTime = j.StartTime
+                                              //LanguageId = jp.LanguageId,
+                                              //LanguageName = jp.LanguageName,
+                                              //MediumId = me.MediumId,
+                                              //MediumName = me.MediumName,
+                                              //MediaCategoryId = mc.MediaCategoryId,
+                                              //MediaCategoryName = mc.CategoryName
+                                          }))
+                                          //.Take(10).Skip(0).OrderByDescending(x => x.)
+                                          .ToListAsync();
+
+                //response.data.policyList = policyDetail;
+                response.data.TotalCount = count;
                 response.StatusCode = 200;
                 response.Message = "Success";
             }

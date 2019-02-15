@@ -1,5 +1,4 @@
-﻿using DataAccess.DbEntities;
-using HumanitarianAssistance.Service.APIResponses;
+﻿using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using System;
@@ -21,10 +20,8 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
         Task<APIResponse> AddTransactionDetail(List<VoucherTransactionsModel> voucherTransactionsList, string userId);
         APIResponse AddEditTransactionList(AddEditTransactionModel voucherTransactions, string userId);
         Task<APIResponse> VerifyVoucher(long voucherId, string userId);
-        Task<APIResponse> CreateGainLossTransaction(ExchangeGainLossVoucherDetails transactionDetail, string userId);
-        Task<APIResponse> DeleteGainLossVoucherTransaction(long id, string userId);
+        Task<APIResponse> CreateGainLossTransaction(ExchangeGainLossVoucherDetails model, string userId);
+        Task<APIResponse> DeleteGainLossVoucherTransaction(long voucherId, string userId);
         Task<APIResponse> GetExchangeGainLossVoucherList();
-
-        Task<APIResponse> GenerateSalaryVoucher(EmployeeSalaryVoucherModel EmployeeSalaryVoucher);
     }
 }

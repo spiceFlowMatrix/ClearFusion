@@ -47,7 +47,6 @@ namespace HumanitarianAssistance.Controllers
     private IExchangeRate _iExchangeRate;
     private IChartOfAccountNewService _iChartOfAccountNewService;
     private IPermissionsInRoles _iPermissionsInRolesService;
-    private IVoucherNewService _iVoucherNewService;
     IUnitOfWork _uow;
 
 
@@ -63,8 +62,7 @@ namespace HumanitarianAssistance.Controllers
             IVoucherDetail ivoucherDetail,
             IExchangeRate iExchangeRate,
             IChartOfAccountNewService iChartOfAccountNew,
-            IUnitOfWork uow,
-            IVoucherNewService iVoucherNewService
+            IUnitOfWork uow
             )
     {
       _userManager = userManager;
@@ -77,7 +75,6 @@ namespace HumanitarianAssistance.Controllers
       _ivoucherDetail = ivoucherDetail;
       _iExchangeRate = iExchangeRate;
       _iChartOfAccountNewService = iChartOfAccountNew;
-      _iVoucherNewService = iVoucherNewService;
       _uow = uow;
       _serializerSettings = new JsonSerializerSettings
       {
@@ -983,13 +980,13 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<APIResponse> GetProjectAndBudgetLine()
-    {
-      APIResponse repsonse = await _ivoucherDetail.GetProjectAndBudgetLine();
-      return repsonse;
-    }
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<APIResponse> GetProjectAndBudgetLine()
+    //{
+    //  APIResponse repsonse = await _ivoucherDetail.GetProjectAndBudgetLine();
+    //  return repsonse;
+    //}
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -1135,6 +1132,23 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<object> AddExchangeGainLossVoucher([FromBody] ExchangeGainLossVoucher model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.IsDeleted = false;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+      APIResponse response = await _ivoucherDetail.AddExchangeGainLossVoucher(model);
+      return response;
+    }
+
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetExchangeGainLossVoucherList(int OfficeId)
@@ -1182,8 +1196,7 @@ namespace HumanitarianAssistance.Controllers
       if (user != null)
       {
         model.CreatedById = user.Id;
-        //response = await _ivoucherDetail.GenerateSalaryVoucher(model);
-        response = await _iVoucherNewService.GenerateSalaryVoucher(model);
+        response = await _ivoucherDetail.GenerateSalaryVoucher(model);
       }
       return response;
     }

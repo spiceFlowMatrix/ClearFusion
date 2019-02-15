@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public long VoucherNo { get; set; }
         public int CurrencyId { get; set; }
         public string CurrencyCode { get; set; }
-        public DateTime? VoucherDate { get; set; }
+        public DateTime VoucherDate { get; set; }
         public string ChequeNo { get; set; }
         public string ReferenceNo { get; set; }
         public string Description { get; set; }
@@ -38,21 +38,21 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int DocumentID { get; set; }
         public string DocumentName { get; set; }
         public string FilePath { get; set; }
-        public DateTime? DocumentDate { get; set; }
+		public DateTime? DocumentDate { get; set; }
         public long VoucherNo { get; set; }
-        public string DocumentGUID { get; set; }
+		public string DocumentGUID { get; set; }
     }
 
     public class AccountDetailModel
     {
         public long AccountCode { get; set; }
         public string AccountName { get; set; }
-        public string ChartOfAccountNewCode { get; set; }
+		public string ChartOfAccountNewCode { get; set; }
         public int AccountLevelId { get; set; }
     }
 
     public class VoucherTransactionModel : BaseModel
-    {
+    {        
         public long TransactionId { get; set; }
         public long? DebitAccount { get; set; }
         public long? CreditAccount { get; set; }
@@ -75,10 +75,10 @@ namespace HumanitarianAssistance.ViewModels.Models
         public double? Debit { get; set; }
         public double? Credit { get; set; }
 
-        public double? AFGAmount { get; set; }
-        public double? EURAmount { get; set; }
-        public double? USDAmount { get; set; }
-        public double? PKRAmount { get; set; }
+		public double? AFGAmount { get; set; }
+		public double? EURAmount { get; set; }
+		public double? USDAmount { get; set; }
+		public double? PKRAmount { get; set; }
         public int? ProjectId { get; set; }
         public int? BudgetLineId { get; set; }
 
@@ -105,23 +105,22 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string VoucherNo { get; set; }
         public string Description { get; set; }
         public List<Transaction> Transactionlist { get; set; }
-        public double TotalCredit { get; set; }
-        public double TotalDebit { get; set; }
+		public double TotalCredit { get; set; }
+		public double TotalDebit { get; set; }
         public string ChartOfAccountNewCode { get; set; }
 
     }
 
-    public class AccountTransactionLogger
-    {
-        public long AccountCode { get; set; }
-        public long ChartAccountCode { get; set; }
-        public int? CurrencyId { get; set; }
-        public double? TotalCredits { get; set; }
-        public double? TotalDebits { get; set; }
-        public double? ClosingBalance { get; set; }
-    }
+	public class AccountTransactionLogger {
+		public long AccountCode { get; set; }
+		public long ChartAccountCode { get; set; }
+		public int? CurrencyId { get; set; }
+		public double? TotalCredits { get; set; }
+		public double? TotalDebits { get; set; }
+		public double? ClosingBalance { get; set; }
+	}
 
-    public class Transaction
+	public class Transaction
     {
         public int TransactionNo { get; set; }
         public string AccountName { get; set; }
@@ -151,9 +150,9 @@ namespace HumanitarianAssistance.ViewModels.Models
 
     public class LedgerValueModel
     {
-        int? _currencyId = null;
-        int? _recordType = null;
-
+        int? _currencyId=null;
+        int? _recordType=null;
+        
         public int? CurrencyId
         {
             get { return this._currencyId ?? 1; }
@@ -162,7 +161,7 @@ namespace HumanitarianAssistance.ViewModels.Models
                 this._currencyId = value;
             }
         }
-        public int? RecordType
+        public int ? RecordType
         {
             get { return this._recordType ?? 1; }
             set
@@ -170,18 +169,18 @@ namespace HumanitarianAssistance.ViewModels.Models
                 this._recordType = value;
             }
         }
-
-
-
+       
+          
+        
 
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
         //public int? OfficeCode { get; set; }
         //public int? AccountId { get; set; }
-        public List<int> accountLists { get; set; }
+		public List<int> accountLists { get; set; }
 
-
-    }
+       
+	}
     public class ExchangeGainLossVoucher : BaseModel
     {
         public long? BudgetLineId { get; set; }
@@ -212,6 +211,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 
     public class ExchangeGainLossVoucherDetails : BaseModel
     {
+
         public long VoucherNo { get; set; }
         public int CurrencyId { get; set; }
         public string Description { get; set; }

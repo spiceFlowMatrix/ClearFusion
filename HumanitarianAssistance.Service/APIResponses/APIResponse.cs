@@ -88,12 +88,12 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
         public string InventoryCode { get; set; }
-        public string JobCode { get; set; }
         public string InventoryItemCode { get; set; }
         public string StoreSourceCode { get; set; }
         public bool isSalaryHeadSaved { get; set; }
         public bool isPayrollHeadSaved { get; set; }
         public string ItemGroupCode { get; set; }
+        public string JobCode { get; set; }
         public VoucherTransactionModel VoucherTransactionModel { get; set; }
         public List<VoucherTransactionModel> VoucherTransactionModelList { get; set; }
         public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
@@ -227,7 +227,6 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
         public List<DetailsOfNotesFinalModel> DetailsOfNotesFinalList { get; set; }
 
-        //Alpit
         public IList<ScheduleCandidateModel> ScheduledProspectiveEmployee { get; set; }
         public IList<JobGradeModel> JobGradeList { get; set; }
 
@@ -326,7 +325,12 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
-        public VoucherDetail VoucherDetailEntity { get; set; }
+
+        public ICollection<ProjectJobDetail> ProjectJobDetail { get; set; }
+        public List<ProjectJobDetailModel> ProjectJobDetailModel { get; set; }
+        public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
+        public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
+
 
 
         #region Marketing       
@@ -381,8 +385,6 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<CodeType> SourceCodeTypelist { get; set; }
         public List<StoreSourceCodeDetailModel> SourceCodeDatalist { get; set; }
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
-
-
         public Dictionary<string,List<string>> Permissions { get; set; }
 
 
@@ -404,8 +406,11 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
-        public GainLossVoucherList GainLossVoucherDetail { get; set; }
+
+        public VoucherDetailEntityModel VoucherDetailEntity { get; set; }
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }
+        public GainLossVoucherList GainLossVoucherDetail { get; set; }
+
 
         #endregion
 
