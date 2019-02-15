@@ -918,6 +918,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        /// <summary>
+        /// Get all Vouchers let generated from gain loss report
+        /// </summary>
+        /// <returns></returns>
         public async Task<APIResponse> GetExchangeGainLossVoucherList()
         {
             APIResponse response = new APIResponse();
