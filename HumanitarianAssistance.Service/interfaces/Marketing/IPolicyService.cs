@@ -17,5 +17,6 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> GetPolicyById(int model, string UserId);
         Task<APIResponse> AddEditPolicySchedules(ScheduleDetailsModel model, string UserId);
         Task<APIResponse> GetPolicyScheduleById(int model, string UserId);
+        Task<APIResponse> GetAllSchedule(string UserId);
     }
 }

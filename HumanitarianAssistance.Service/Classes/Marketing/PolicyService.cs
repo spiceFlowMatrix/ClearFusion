@@ -327,8 +327,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 if (model.PolicyScheduleId == 0)
                 {
-                    //var policy = _uow.GetDbContext().PolicyDetails.Where(x => x.PolicyName == model.PolicyName && x.IsDeleted == false).FirstOrDefault();
-                    //if (policy == null)
+                    var schedule = _uow.GetDbContext().PolicySchedules.Where(x => x.Title == model.Title && x.IsDeleted == false).FirstOrDefault();
+                    if (schedule == null)
                     {
                         var policyDetail = _uow.GetDbContext().PolicySchedules.OrderByDescending(x => x.PolicyScheduleId)
                                                                                        .FirstOrDefault();
@@ -342,8 +342,6 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                             LatestScheduleId = Convert.ToInt32(policyDetail.PolicyId) + 1;
                             scheduleCode = getPolicyCode(LatestScheduleId.ToString());
                         }
-
-
                         PolicySchedule obj = _mapper.Map<PolicyScheduleModel, PolicySchedule>(mdl);
                         obj.CreatedById = UserId;
                         obj.ScheduleCode = scheduleCode;
@@ -364,6 +362,13 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj.Title = mdl.Title;
                         await _uow.PolicyScheduleRepository.AddAsyn(obj);
                         await _uow.SaveAsync();
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Schedule created successfully.";
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Schedule already exists. Please try again with other Title.";
                     }
                 }
             }
@@ -376,6 +381,12 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         }
 
         public async Task<APIResponse> GetPolicyScheduleById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            return response;
+        }
+
+        public async Task<APIResponse> GetAllSchedule(string UserId)
         {
             APIResponse response = new APIResponse();
             return response;

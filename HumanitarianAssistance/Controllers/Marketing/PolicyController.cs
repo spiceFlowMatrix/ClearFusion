@@ -151,5 +151,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       return apiRespone;
     }
 
+
+    [HttpGet]
+    public async Task<APIResponse> GetAllSchedule()
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.GetAllSchedule(id);
+      }
+      return apiRespone;
+    }
+
   }
 }
