@@ -93,6 +93,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public bool isSalaryHeadSaved { get; set; }
         public bool isPayrollHeadSaved { get; set; }
         public string ItemGroupCode { get; set; }
+        public string JobCode { get; set; }
         public VoucherTransactionModel VoucherTransactionModel { get; set; }
         public List<VoucherTransactionModel> VoucherTransactionModelList { get; set; }
         public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
@@ -184,7 +185,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleForProspectiveEmployeeModel> ISFPEmployeeList { get; set; }
         public IList<ScheduleCandidateModel> ScheduleCandidateList { get; set; }
 
-        public IList<ProjectDetails> ProjectDetailList { get; set; }
+        public IList<ProjectDetail> ProjectDetailList { get; set; }
 
         public IList<InterviewFeedbackDetailsModel> InterviewFeedbackDetailsList { get; set; }
         public IList<EmployeeSalaryDetailsModel> EmployeeSalaryDetailsList { get; set; }
@@ -406,7 +407,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
 
-        public VoucherDetail VoucherDetailEntity { get; set; }
+        public VoucherDetailEntityModel VoucherDetailEntity { get; set; }
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }
         public GainLossVoucherList GainLossVoucherDetail { get; set; }
 

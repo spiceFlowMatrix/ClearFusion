@@ -90,7 +90,7 @@ namespace HumanitarianAssistance.Service.interfaces
 
         #endregion
 
-
+        Task<APIResponse> GetAllProjectDetails();
         #region GetAllProvinceDetails
         APIResponse GetAllProvinceDetails();
         APIResponse GetAllStrengthConsiderationDetails();
