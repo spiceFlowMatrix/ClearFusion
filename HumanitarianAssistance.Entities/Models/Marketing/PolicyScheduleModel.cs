@@ -21,6 +21,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public DateTime EndDate { get; set; }
         public bool isActive { get; set; }
         public bool isDeleted { get; set; }
+        public string ScheduleCode { get; set; }
     }
 
     public class ScheduleDetailsModel
