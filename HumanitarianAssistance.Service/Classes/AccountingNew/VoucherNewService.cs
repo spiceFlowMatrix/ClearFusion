@@ -100,7 +100,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                       })
                                       .Skip(voucherNewFilterModel.pageSize.Value * voucherNewFilterModel.pageIndex.Value)
                                       .Take(voucherNewFilterModel.pageSize.Value)
-                                      .AsNoTracking()
                                       .ToListAsync();
                 response.data.VoucherDetailList = voucherList;
                 response.data.TotalCount = totalCount;
@@ -210,7 +209,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 var currencyList = await _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false)
                                                                             .Select(x => x.CurrencyId).ToListAsync();
                 var exchangeRatePresent = await _uow.GetDbContext().ExchangeRateDetail
-                                                                   .Where(x => x.Date.ToShortDateString() == DateTime.UtcNow.ToShortDateString())
+                                                                   .Where(x => x.Date.ToShortDateString() == DateTime.UtcNow.ToShortDateString() &&
+                                                                                x.IsDeleted == false)
                                                                    .ToListAsync();
 
                 if (CheckExchangeRateIsPresent(currencyList, exchangeRatePresent))
