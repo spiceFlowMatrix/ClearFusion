@@ -896,6 +896,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
+
                 var financialYear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDeleted == false && x.FinancialYearId == model.FinancialYearId);
                 if (financialYear != null)
                 {
@@ -977,17 +978,17 @@ namespace HumanitarianAssistance.Service.Classes
                 }
 
                 var employeesWithNoPension = (from ed in _uow.GetDbContext().EmployeeDetail
-                                              join epd in _uow.GetDbContext().EmployeeProfessionalDetail on ed.EmployeeID equals epd.EmployeeId
-                                              join sd in _uow.GetDbContext().EmployeePayroll on ed.EmployeeID equals sd.EmployeeID
-                                              where ed.IsDeleted == false && epd.OfficeId == OfficeId
-                                              && epd.EmployeeTypeId != (int)EmployeeTypeStatus.Prospective
+                                              
+                                              join epd in _uow.GetDbContext().EmployeeProfessionalDetail on ed.EmployeeID equals epd.EmployeeId into edr
+                                              from edresult in edr.DefaultIfEmpty()
+                                              where ed.IsDeleted == false && edresult.OfficeId == OfficeId
+                                              && edresult.EmployeeTypeId != (int)EmployeeTypeStatus.Prospective
                                               && !PensionPaymentList.Select(x => x.EmployeeId).Contains(ed.EmployeeID)
                                               select new
                                               {
                                                   EmployeeId = ed.EmployeeID,
                                                   EmployeeName = ed.EmployeeName,
                                                   EmployeeCode = ed.EmployeeCode,
-                                                  CurrencyId = sd.CurrencyId
                                               });
 
                 foreach (var item in employeesWithNoPension)
@@ -998,7 +999,7 @@ namespace HumanitarianAssistance.Service.Classes
                     PensionPayment.EmployeeCode = item.EmployeeCode;
                     PensionPayment.TotalPensionAmount = 0;
                     PensionPayment.PensionAmountPaid = 0;
-                    PensionPayment.CurrencyId = item.CurrencyId;
+                    PensionPayment.CurrencyId = _uow.GetDbContext().EmployeePayroll.FirstOrDefault(x=> x.IsDeleted== false && x.EmployeeID== item.EmployeeId).CurrencyId;
                     PensionPaymentList.Add(PensionPayment);
                 }
 
@@ -1333,6 +1334,43 @@ namespace HumanitarianAssistance.Service.Classes
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = ex.Message;
             }
+            return response;
+        }
+
+        /// <summary>
+        /// Get Job Code For New Job Hiring
+        /// </summary>
+        /// <returns>Returns Job Code</returns>
+        public async Task<APIResponse> GetJobCode(int officeId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                JobHiringDetails jobHiringDetails = await _uow.GetDbContext().JobHiringDetails.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.OfficeId == officeId);
+
+                if (jobHiringDetails != null && jobHiringDetails.JobCode != null)
+                {
+                    //getting the latest Job Code and finding the max number from it
+                    int count = Convert.ToInt32(jobHiringDetails.JobCode.Substring(2));
+
+                    response.data.JobCode = "JC" + String.Format("{0:D4}", ++count);
+                }
+                else
+                {
+                    response.data.JobCode = "JC" + String.Format("{0:D4}", 1);
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
             return response;
         }
 

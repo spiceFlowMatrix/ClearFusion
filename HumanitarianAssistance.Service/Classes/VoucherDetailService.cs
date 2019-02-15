@@ -2736,41 +2736,41 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        //public async Task<APIResponse> GetProjectAndBudgetLine()
-        //{
-        //    APIResponse response = new APIResponse();
-        //    try
-        //    {
-        //        var list = await _uow.GetDbContext().ProjectBudgetLine.Select(x => new BudgetLineModel
-        //        {
-        //            BudgetLineId = x.BudgetLineId,
-        //            ProjectId = x.ProjectId,
-        //            Description = x.Description
-        //        }).ToListAsync();
+        public async Task<APIResponse> GetProjectAndBudgetLine()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().ProjectBudgetLine.Select(x => new BudgetLineModel
+                {
+                    BudgetLineId = x.BudgetLineId,
+                    ProjectId = x.ProjectId,
+                    Description = x.Description
+                }).ToListAsync();
 
-        //        var list1 = await _uow.GetDbContext().ProjectDetails.
-        //            Select(x => new ProjectBudgetModelNew
-        //            {
-        //                ProjectId = x.ProjectId,
-        //                ProjectName = x.ProjectName
-        //            }).ToListAsync();
+                var list1 = await _uow.GetDbContext().ProjectDetails.
+                    Select(x => new ProjectBudgetModelNew
+                    {
+                        ProjectId = x.ProjectId,
+                        ProjectName = x.ProjectName
+                    }).ToListAsync();
 
-        //        ProjectBudgetLinesModel model = new ProjectBudgetLinesModel();
-        //        model.BudgetLines = list;
-        //        model.ProjectList = list1;
+                ProjectBudgetLinesModel model = new ProjectBudgetLinesModel();
+                model.BudgetLines = list;
+                model.ProjectList = list1;
 
-        //        response.data.ProjectBudgetLinesModel = model;
-        //        response.StatusCode = StaticResource.successStatusCode;
-        //        response.Message = "Project BudgetLine List ";
-        //        return response;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.StatusCode = StaticResource.failStatusCode;
-        //        response.Message = ex.Message;
-        //    }
-        //    return response;
-        //}
+                response.data.ProjectBudgetLinesModel = model;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Project BudgetLine List ";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
         public async Task<APIResponse> AddNotesDetails(NotesMasterModel model)
         {

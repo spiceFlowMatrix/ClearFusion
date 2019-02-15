@@ -828,9 +828,16 @@ namespace HumanitarianAssistance.Service.Classes
                 await _uow.SaveAsync();
 
                 List<EmployeePayroll> employeepayrolllist = new List<EmployeePayroll>();
+
                 foreach (var list in model)
                 {
                     EmployeePayroll obj = new EmployeePayroll();
+
+                    if (list.HeadTypeId == (int)SalaryHeadType.GENERAL && list.MonthlyAmount == 0)
+                    {
+                        throw new Exception("Basic Pay cannot be Zero");
+                    }
+
                     obj.EmployeeID = list.EmployeeId;
                     obj.CurrencyId = list.CurrencyId;
                     obj.HeadTypeId = list.HeadTypeId;
