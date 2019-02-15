@@ -116,7 +116,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddVoucherDetail([FromBody] VoucherDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -138,7 +137,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> EditVoucherNewDetail([FromBody] VoucherDetailModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -235,7 +233,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetExchangeGainLossVoucherList()
     {
       APIResponse response = await _iVoucherNewService.GetExchangeGainLossVoucherList();
@@ -243,7 +240,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> AddExchangeGainLossVoucher([FromBody] ExchangeGainLossVoucherDetails model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
