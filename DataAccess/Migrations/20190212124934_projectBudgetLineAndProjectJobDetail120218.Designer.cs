@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190212124934_projectBudgetLineAndProjectJobDetail120218")]
+    partial class projectBudgetLineAndProjectJobDetail120218
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1689,41 +1691,27 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("Country");
 
-                    b.Property<string>("CountryDari");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int?>("Designation");
 
-                    b.Property<string>("DesignationDari");
-
                     b.Property<int?>("DurationOfContract");
 
                     b.Property<int?>("DutyStation");
-
-                    b.Property<string>("DutyStationDari");
 
                     b.Property<string>("EmployeeCode");
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<string>("EmployeeNameDari");
-
                     b.Property<string>("FatherName");
 
-                    b.Property<string>("FatherNameDari");
-
                     b.Property<int?>("Grade");
-
-                    b.Property<string>("GradeDari");
 
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("Job");
-
-                    b.Property<string>("JobDari");
 
                     b.Property<string>("ModifiedById");
 
@@ -1734,8 +1722,6 @@ namespace DataAccess.Migrations
                     b.Property<int?>("Project");
 
                     b.Property<int?>("Province");
-
-                    b.Property<string>("ProvinceDari");
 
                     b.Property<double?>("Salary");
 
@@ -1748,8 +1734,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("EmployeeId");
-
-                    b.HasIndex("Grade");
 
                     b.HasIndex("ModifiedById");
 
@@ -9384,10 +9368,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.JobGrade", "JobGrade")
-                        .WithMany()
-                        .HasForeignKey("Grade");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
