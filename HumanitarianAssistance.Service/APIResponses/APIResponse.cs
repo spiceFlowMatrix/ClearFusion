@@ -331,7 +331,8 @@ namespace HumanitarianAssistance.Service.APIResponses
 
 
 
-        #region Marketing       
+        #region Marketing    
+        public List<PolicyScheduleModel> policySchedulesByDateList { get; set; }
         public ICollection<JobDetails> JobDetails { get; set; }
         public JobDetails JobDetailModel { get; set; }
         public ICollection<Quality> Qualities { get; set; }
