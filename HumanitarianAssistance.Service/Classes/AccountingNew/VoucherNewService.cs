@@ -100,7 +100,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                       })
                                       .Skip(voucherNewFilterModel.pageSize.Value * voucherNewFilterModel.pageIndex.Value)
                                       .Take(voucherNewFilterModel.pageSize.Value)
-                                      .AsNoTracking()
                                       .ToListAsync();
                 response.data.VoucherDetailList = voucherList;
                 response.data.TotalCount = totalCount;
@@ -205,12 +204,13 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
 
                 // set current date
-                model.VoucherDate = DateTime.UtcNow;
+                //model.VoucherDate = ;
 
                 var currencyList = await _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false)
                                                                             .Select(x => x.CurrencyId).ToListAsync();
                 var exchangeRatePresent = await _uow.GetDbContext().ExchangeRateDetail
-                                                                   .Where(x => x.Date.ToShortDateString() == model.VoucherDate.ToShortDateString())
+                                                                   .Where(x => x.Date.ToShortDateString() == DateTime.UtcNow.ToShortDateString() &&
+                                                                                x.IsDeleted == false)
                                                                    .ToListAsync();
 
                 if (CheckExchangeRateIsPresent(currencyList, exchangeRatePresent))
@@ -255,7 +255,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                                 //response.LoggerDetailsModel = loggerObj;
 
-                                response.data.VoucherDetailEntity = obj;
+                                VoucherDetailEntityModel voucherModel = _mapper.Map<VoucherDetail, VoucherDetailEntityModel>(obj);
+
+                                response.data.VoucherDetailEntity = voucherModel;
                                 response.StatusCode = StaticResource.successStatusCode;
                                 response.Message = "Success";
                             }
@@ -853,10 +855,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                     if (responseTransaction.StatusCode == 200)
                     {
+                        string voucherName = _uow.GetDbContext().VoucherDetail.FirstOrDefault(x => x.JournalCode == responseVoucher.data.VoucherDetailEntity.JournalCode)?.JournalDetails.JournalName;
+
                         response.data.GainLossVoucherDetail = new GainLossVoucherList
                         {
                             VoucherId = responseVoucher.data.VoucherDetailEntity.VoucherNo,
-                            JournalName = responseVoucher.data.VoucherDetailEntity.JournalDetails != null ? responseVoucher.data.VoucherDetailEntity.JournalDetails.JournalName : "",
+                            JournalName = voucherName != null ? voucherName : "",
                             VoucherName = responseVoucher.data.VoucherDetailEntity.ReferenceNo,
                             VoucherDate = responseVoucher.data.VoucherDetailEntity.VoucherDate
                         };
@@ -918,6 +922,10 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        /// <summary>
+        /// Get all Vouchers let generated from gain loss report
+        /// </summary>
+        /// <returns></returns>
         public async Task<APIResponse> GetExchangeGainLossVoucherList()
         {
             APIResponse response = new APIResponse();

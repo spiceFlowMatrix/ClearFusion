@@ -12,6 +12,7 @@ using HumanitarianAssistance.Common.Helpers;
 using System.Security.Claims;
 using AutoMapper;
 using System.Linq;
+
 namespace HumanitarianAssistance.Service.Classes
 {
     public class RoleService : IRole
