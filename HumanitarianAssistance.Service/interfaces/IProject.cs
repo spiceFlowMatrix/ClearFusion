@@ -192,6 +192,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllBudgetFilterList(BudgetLineFilterModel voucherNewFilterModel, long projectId);
 
         Task<APIResponse> GetTransactionListByProjectId(long projectId,string userName);
+        Task<APIResponse> GetTransactionList(string username, int currencyId, long budgetLineId);
         #endregion
     }
 }
