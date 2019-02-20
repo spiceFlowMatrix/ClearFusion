@@ -6,6 +6,11 @@ namespace HumanitarianAssistance.Common.Helpers
 {
     public static class StaticResource
     {
+
+        //appsetting joson file 
+        public const string appsettingJsonFile = "appsettings.json";
+
+
         public const int notFoundCode = 120;
         public const int successStatusCode = 200;
         public const int otherManagerAlreadyParticipatedStatusCode = 800;

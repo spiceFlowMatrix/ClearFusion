@@ -329,10 +329,13 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<ProjectJobDetail> ProjectJobDetail { get; set; }
         public List<ProjectJobDetailModel> ProjectJobDetailModel { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
+        public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
+        public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
 
 
 
-        #region Marketing       
+        #region Marketing    
+        public List<PolicyScheduleModel> policySchedulesByDateList { get; set; }
         public ICollection<JobDetails> JobDetails { get; set; }
         public JobDetails JobDetailModel { get; set; }
         public ICollection<Quality> Qualities { get; set; }
@@ -406,7 +409,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
 
-        public VoucherDetail VoucherDetailEntity { get; set; }
+        public VoucherDetailEntityModel VoucherDetailEntity { get; set; }
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }
         public GainLossVoucherList GainLossVoucherDetail { get; set; }
 
