@@ -43,6 +43,7 @@ namespace DataAccess.DbEntities
         public string JobDari { get; set; }
         public string ProvinceDari { get; set; }
         public string EmployeeNameDari { get; set; }
+        public string ProjectNameDari { get; set; }
         [ForeignKey("Grade")]
         public JobGrade JobGrade { get; set; }
 

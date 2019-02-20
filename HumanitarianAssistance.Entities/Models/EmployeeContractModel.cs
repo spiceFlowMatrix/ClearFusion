@@ -44,5 +44,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string JobDari { get; set; }
         public string ProvinceDari { get; set; }
         public string EmployeeNameDari { get; set; }
+        public string ProjectNameDari { get; set; }
     }
 }
