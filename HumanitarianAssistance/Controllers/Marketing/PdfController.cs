@@ -37,6 +37,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [BindProperty]
     public string DdlPageSize { get; set; }
+    
     [BindProperty]
     public string DdlPageOrientation { get; set; }
     public List<SelectListItem> PageSizes { get; } = new List<SelectListItem>

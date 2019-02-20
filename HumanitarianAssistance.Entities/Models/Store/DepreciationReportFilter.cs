@@ -12,7 +12,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public string InventoryId { get; set; }
         public string ItemId { get; set; }
         public string PurchaseId { get; set; }
-
+        public long ItemGroupId { get; set; }
         public DateTime CurrentDate { get; set; }
     }
 }
