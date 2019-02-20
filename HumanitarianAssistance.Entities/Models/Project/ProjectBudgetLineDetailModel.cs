@@ -18,5 +18,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string  CurrencyName { get; set; }
        
 
+
+
     }
 }

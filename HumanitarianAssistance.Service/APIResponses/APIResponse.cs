@@ -330,6 +330,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ProjectJobDetailModel> ProjectJobDetailModel { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
+        public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
 
 
 
