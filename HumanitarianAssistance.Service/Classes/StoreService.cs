@@ -1,21 +1,20 @@
 ﻿using AutoMapper;
 using DataAccess;
 using DataAccess.DbEntities;
+using DataAccess.DbEntities.Store;
+using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Service.APIResponses;
+using HumanitarianAssistance.Service.interfaces;
+using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Store;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using DataAccess.DbEntities.Store;
-using HumanitarianAssistance.Common.Helpers;
-using HumanitarianAssistance.Service.APIResponses;
-using HumanitarianAssistance.Service.interfaces;
-using HumanitarianAssistance.ViewModels.Models.Store;
-using Microsoft.EntityFrameworkCore;
-using HumanitarianAssistance.ViewModels.Models;
-using HumanitarianAssistance.Common.Enums;
 
 
 namespace HumanitarianAssistance.Service.Classes
@@ -1573,63 +1572,59 @@ namespace HumanitarianAssistance.Service.Classes
         #region Depreciation
         public async Task<APIResponse> GetAllDepreciationByFilter(DepreciationReportFilter depretiationFilter)
         {
-            var response = new APIResponse();
+            APIResponse response = new APIResponse();
+
             try
             {
-
-
                 if (depretiationFilter.CurrentDate != null)
                 {
                     List<DepreciationReportModel> depreciationList = new List<DepreciationReportModel>();
 
                     List<StoreItemPurchase> storeItemPurchased = new List<StoreItemPurchase>();
 
-
-                    //storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false).ToListAsync();
-
-
-
-
                     if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId != null)
                     {
-                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId && x.StoreInventoryItem.ItemId == depretiationFilter.ItemId).ToListAsync();
-
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x=> x.StoreItemGroup).ThenInclude(x=> x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true  && x.InventoryItem== depretiationFilter.ItemId && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId).ToListAsync();
                     }
-                    if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId == null)
+                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId == null)
                     {
-                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId).ToListAsync();
-
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.StoreItemGroup).ThenInclude(x => x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.Inventory.InventoryId == depretiationFilter.InventoryId && x.StoreInventoryItem.ItemGroupId== depretiationFilter.ItemGroupId).ToListAsync();
                     }
-                    if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
+                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
                     {
-                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.Inventory.AssetType == depretiationFilter.StoreId).ToListAsync();
-
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemGroupId== depretiationFilter.ItemGroupId).ToListAsync();
                     }
-                    if (depretiationFilter.StoreId == null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
+                    else if (depretiationFilter.StoreId == null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
                     {
-                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true).ToListAsync();
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.ItemGroupId== depretiationFilter.ItemGroupId).ToListAsync();
                     }
+
                     foreach (var item in storeItemPurchased)
                     {
-                        DepreciationReportModel obj = new DepreciationReportModel();
+                        ExchangeRateDetail dollarExchangeRate = _uow.GetDbContext().ExchangeRateDetail
+                                                        .FirstOrDefault(x => x.IsDeleted == false && x.FromCurrency == item.Currency
+                                                        && x.ToCurrency == (int)Currency.USD && x.Date.ToShortDateString() == depretiationFilter.CurrentDate.ToShortDateString());
 
-                        //double hoursSincePurchase;
-                        //double depreciationAmount;
-                        //double currentValue;
+                        if (dollarExchangeRate == null)
+                        {
+                            dollarExchangeRate = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x=> x.CreatedDate)
+                                                        .FirstOrDefault(x => x.IsDeleted == false && x.FromCurrency == item.Currency
+                                                        && x.ToCurrency == (int)Currency.USD);
+                        }
+
+                        DepreciationReportModel obj = new DepreciationReportModel();
 
                         obj.ItemName = item.StoreInventoryItem.ItemName;
                         obj.PurchaseId = item.PurchaseId;
                         obj.PurchaseDate = item.PurchaseDate;
-
-                        obj.HoursSincePurchase = depretiationFilter.CurrentDate.Date.Subtract(item.PurchaseDate.Date).TotalHours;
+                        obj.HoursSincePurchase = Math.Round(Math.Abs(depretiationFilter.CurrentDate.Date.Subtract(item.PurchaseDate).TotalHours), 4);
                         obj.DepreciationRate = item.DepreciationRate;
-                        obj.DepreciationAmount = (obj.HoursSincePurchase * item.DepreciationRate * item.UnitCost) / 100;
-                        obj.CurrentValue = item.UnitCost - obj.DepreciationAmount;
-
-                        obj.PurchasedCost = item.UnitCost;
-
+                        obj.DepreciationAmount = Math.Round(((obj.HoursSincePurchase * item.DepreciationRate * item.UnitCost) / 100) * (double)dollarExchangeRate.Rate, 4);
+                        obj.CurrentValue = Math.Round((item.UnitCost - obj.DepreciationAmount) * (double)dollarExchangeRate.Rate, 4);
+                        obj.PurchasedCost = Math.Round(item.UnitCost * (double)dollarExchangeRate.Rate, 4);
                         depreciationList.Add(obj);
                     }
+
                     response.data.DepreciationReportList = depreciationList.ToList();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

@@ -873,12 +873,28 @@ namespace HumanitarianAssistance.Entities
 
              new DistrictDetail { IsDeleted = false, DistrictID = 123, District = "Wyoming", ProvinceID = 82 }
          );
+            modelBuilder.Entity<Category>().HasData(
+            new Category { IsDeleted = false, CategoryId = 1, CategoryName="Bank" },
+            new Category { IsDeleted = false, CategoryId = 2, CategoryName = "NGO" },
+            new Category { IsDeleted = false, CategoryId = 3, CategoryName = "Telecommunicaton" },
+            new Category { IsDeleted = false, CategoryId = 4, CategoryName = "Government" },
+            new Category { IsDeleted = false, CategoryId = 5, CategoryName = "Hospital" },
+            new Category { IsDeleted = false, CategoryId = 6, CategoryName = "Travel Agency" },
+            new Category { IsDeleted = false, CategoryId = 7, CategoryName = "University" },
+            new Category { IsDeleted = false, CategoryId = 8, CategoryName = "Media Groups" },
+            new Category { IsDeleted = false, CategoryId = 9, CategoryName = "Shops" },
+            new Category { IsDeleted = false, CategoryId = 10, CategoryName = "Energy" },
+            new Category { IsDeleted = false, CategoryId = 11, CategoryName = "School" },
+            new Category { IsDeleted = false, CategoryId = 12, CategoryName = "Construction" }
+
+            );
+
             #endregion
 
 
 
 
-            base.OnModelCreating(modelBuilder);
+           base.OnModelCreating(modelBuilder);
         }
 
 

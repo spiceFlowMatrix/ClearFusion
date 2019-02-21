@@ -36,6 +36,7 @@ using HumanitarianAssistance.Service.Classes.AccountingNew;
 using Microsoft.Extensions.Logging;
 using HumanitarianAssistance.WebAPI.Filter;
 using Newtonsoft.Json;
+using HumanitarianAssistance.Common.Helpers;
 
 namespace HumanitarianAssistance
 {
@@ -51,9 +52,9 @@ namespace HumanitarianAssistance
       Configuration = configuration;
       var builder = new ConfigurationBuilder()
       .SetBasePath(env.ContentRootPath)
-      .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+      .AddJsonFile(StaticResource.appsettingJsonFile, optional: true, reloadOnChange: true)
       .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-      .AddEnvironmentVariables();
+      .AddEnvironmentVariables() ;
       string sAppPath = env.ContentRootPath; //Application Base Path
       string swwwRootPath = env.WebRootPath;  //wwwroot folder path
       Configuration = builder.Build();

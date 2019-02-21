@@ -37,17 +37,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [BindProperty]
     public string DdlPageSize { get; set; }
-    public void OnGet()
-    {
-      DdlPageSize = "A4";
-      DdlPageOrientation = "Portrait";
-      TxtHtmlCode = @"<html>
-          <body>
-              Hello World from selectpdf.com.
-          </body>
-      </html>
-      ";
-    }
+    
     [BindProperty]
     public string DdlPageOrientation { get; set; }
     public List<SelectListItem> PageSizes { get; } = new List<SelectListItem>
