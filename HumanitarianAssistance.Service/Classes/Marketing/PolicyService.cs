@@ -391,7 +391,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                int count = await _uow.GetDbContext().PolicyDetails.CountAsync(x => x.IsDeleted == false);
+                int count = await _uow.GetDbContext().PolicySchedules.CountAsync(x => x.IsDeleted == false);
                 var policyScheduleList = await (from j in _uow.GetDbContext().PolicySchedules
                                           //join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
                                           //join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
@@ -426,7 +426,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                           //.Take(10).Skip(0).OrderByDescending(x => x.)
                                           .ToListAsync();
 
-                //response.data.policyList = policyDetail;
+                response.data.policySchedulesByDateList = policyScheduleList;
                 response.data.TotalCount = count;
                 response.StatusCode = 200;
                 response.Message = "Success";
@@ -438,5 +438,48 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
+        public async Task<APIResponse> GetScheduleByDate(string model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                int count = await _uow.GetDbContext().PolicySchedules.Where(x=>x.StartDate==DateTime.Parse(model)).CountAsync(x => x.IsDeleted == false);
+                var policyScheduleList = await (from j in _uow.GetDbContext().PolicySchedules
+                                                    //join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
+                                                    //join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
+                                                    //join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
+                                                where !j.IsDeleted.Value && j.StartDate == DateTime.Parse(model)
+                                                //&& !jp.IsDeleted.Value && !me.IsDeleted.Value
+                                                //&& !mc.IsDeleted.Value
+                                                select (new PolicyScheduleModel
+                                                {
+                                                    PolicyId = j.PolicyId,
+                                                    Title = j.Title,
+                                                    ScheduleCode = j.ScheduleCode,
+                                                    Description = j.Description,
+                                                    ByDay = j.ByDay,
+                                                    ByMonth = j.ByMonth,
+                                                    ByWeek = j.ByWeek,
+                                                    EndDate = j.EndDate,
+                                                    EndTime = j.EndTime,
+                                                    Frequency = j.Frequency,
+                                                    isActive = j.isActive,
+                                                    PolicyScheduleId = j.PolicyScheduleId,
+                                                    RepeatDays = j.RepeatDays,
+                                                    StartDate = j.StartDate,
+                                                    StartTime = j.StartTime
+                                                })).ToListAsync();
+                response.data.TotalCount = count;
+                response.StatusCode = 200;
+                response.Message = "Success";
+                response.data.policySchedulesByDateList = policyScheduleList;
+            }
+            catch(Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }        
     }
 }
