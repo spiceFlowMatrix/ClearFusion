@@ -480,6 +480,78 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
-        }        
+        }
+
+        public async Task<APIResponse> AddEditPolicyTimeSchedule(PolicyTimeScheduleModel model, string UserId)
+        {
+            long LatestId = 0;
+            var Code = string.Empty;
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model.Id == 0)
+                {
+                        var detail = _uow.GetDbContext().PolicyTimeSchedules.OrderByDescending(x => x.Id)
+                                                                                       .FirstOrDefault();
+                        if (detail == null)
+                        {
+                            LatestId = 1;
+                            Code = getPolicyCode(LatestId.ToString());
+                        }
+                        else
+                        {
+                            LatestId = Convert.ToInt32(detail.Id) + 1;
+                            Code = getPolicyCode(LatestId.ToString());
+                        }
+                        PolicyTimeSchedule obj = _mapper.Map<PolicyTimeScheduleModel, PolicyTimeSchedule>(model);
+                        foreach (var items in model.RepeatDays)
+                        {
+                            if (items == "MON")
+                            {
+                                obj.Monday = true;
+                            }
+                            if (items == "TUE")
+                            {
+                                obj.Tuesday = true;
+                            }
+                            if (items == "WED")
+                            {
+                                obj.Wednesday = true;
+                            }
+                            if (items == "THU")
+                            {
+                                obj.Thursday = true;
+                            }
+                            if (items == "FRI")
+                            {
+                                obj.Friday = true;
+                            }
+                            if (items == "SAT")
+                            {
+                                obj.Saturday = true;
+                            }
+                            if (items == "SUN")
+                            {
+                                obj.Sunday = true;
+                            }
+                        }
+                        obj.StartTime = model.StartTime;
+                        obj.EndTime = model.EndTime;
+                        obj.TimeScheduleCode = Code;
+                        obj.PolicyId = model.PolicyId;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.IsDeleted = false;
+                        await _uow.PolicyTimeScheduleRepository.AddAsyn(obj);
+                        await _uow.SaveAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
     }
 }

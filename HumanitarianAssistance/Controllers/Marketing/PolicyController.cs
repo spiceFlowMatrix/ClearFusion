@@ -176,7 +176,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         apiRespone = await _iPolicyService.GetScheduleByDate(model, id);
       }
       return apiRespone;
-    }   
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddEditPolicyTimeSchedule([FromBody] PolicyTimeScheduleModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.AddEditPolicyTimeSchedule(model, id);
+      }
+      return apiRespone;
+    }
 
   }
 }
