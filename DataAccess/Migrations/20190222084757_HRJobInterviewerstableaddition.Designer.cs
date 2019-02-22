@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190222084757_HRJobInterviewerstableaddition")]
+    partial class HRJobInterviewerstableaddition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4839,56 +4841,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("PolicyId");
 
                     b.ToTable("PolicySchedules");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyTimeSchedule", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<TimeSpan>("EndTime");
-
-                    b.Property<bool>("Friday");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<bool>("Monday");
-
-                    b.Property<long?>("PolicyId");
-
-                    b.Property<bool>("Saturday");
-
-                    b.Property<TimeSpan>("StartTime");
-
-                    b.Property<bool>("Sunday");
-
-                    b.Property<bool>("Thursday");
-
-                    b.Property<string>("TimeScheduleCode");
-
-                    b.Property<bool>("Tuesday");
-
-                    b.Property<bool>("Wednesday");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("PolicyId");
-
-                    b.ToTable("PolicyTimeSchedules");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.Producer", b =>
@@ -10634,21 +10586,6 @@ namespace DataAccess.Migrations
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicySchedule", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.PolicyDetail", "PolicyDetails")
-                        .WithMany()
-                        .HasForeignKey("PolicyId");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyTimeSchedule", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()

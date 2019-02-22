@@ -192,6 +192,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public DbSet<ApproveRejectPermission> ApproveRejectPermission { get; set; }
         public DbSet<AgreeDisagreePermission> AgreeDisagreePermission { get; set; }
+        public DbSet<HRJobInterviewers> HRJobInterviewers { get; set; }
 
         public DbSet<Errorlog> errorlog { get; set; }
 
@@ -245,6 +246,7 @@ namespace HumanitarianAssistance.Entities
         #endregion
 
         #region Marketing
+        public DbSet<PolicyTimeSchedule> PolicyTimeSchedules { get; set; }
         public DbSet<PolicySchedule> PolicySchedules { get; set; }
         public DbSet<UnitRate> UnitRates { get; set; }
         public DbSet<PolicyDetail> PolicyDetails { get; set; }
