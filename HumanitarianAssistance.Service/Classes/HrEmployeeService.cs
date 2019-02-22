@@ -4686,42 +4686,43 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> EmployeePensionReport(PensionReportModel model)
+        public async Task<APIResponse> EmployeePensionReport(PensionModel model)
         {
             APIResponse response = new APIResponse();
-
             double? pensionRate = _uow.GetDbContext().EmployeePensionRate.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false)?.PensionRate;
-
 
             try
             {
                 EmployeePensionModel epm = new EmployeePensionModel();
                 List<EmployeePensionReportModel> lst = new List<EmployeePensionReportModel>();
-                var financialYearList = _uow.FinancialYearDetailRepository.FindAllAsync(x => x.FinancialYearId == model.FinancialYearId).Result.FirstOrDefault();
-                var empList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.FinancialYearDate >= financialYearList.StartDate && x.FinancialYearDate <= financialYearList.EndDate && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId);
-                //var empList = await _uow.GetDbContext().EmployeePaymentTypes.Include(x=>x.EmployeeDetail).Where(x => x.FinancialYearDate >= financialYearList.StartDate && x.FinancialYearDate <= financialYearList.EndDate && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId).ToListAsync();
+                var financialYearList = _uow.FinancialYearDetailRepository.FindAllAsync(x =>model.FinancialYearId.Contains(x.FinancialYearId)).Result;
 
-                var previousPensionList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.PayrollYear < financialYearList.StartDate.Year);
-                epm.PreviousPensionRate = previousPensionList.Average(x => x.PensionRate == null ? 0 : x.PensionRate);
-                foreach (var item in previousPensionList)
+                foreach (FinancialYearDetail financialYearDetail in financialYearList)
                 {
-                    epm.PreviousPensionDeduction += Math.Round(Convert.ToDouble(item.GrossSalary * item.PensionRate), 2);
-                    epm.PreviousProfit += Math.Round(Convert.ToDouble(item.GrossSalary * item.PensionRate * item.PensionRate), 2);
-                    epm.PreviousTotal += Math.Round(Convert.ToDouble((item.GrossSalary * item.PensionRate * item.PensionRate) + (item.GrossSalary * item.PensionRate)), 2);
-                }
-                foreach (var item in empList)
-                {
-                    EmployeePensionReportModel obj = new EmployeePensionReportModel();
-                    obj.CurrencyId = item.CurrencyId.Value;
-                    obj.Date = item.FinancialYearDate.Value;
-                    obj.GrossSalary = Math.Round(Convert.ToDouble(item.GrossSalary), 2);
-                    obj.PensionRate = item.PensionRate;
-                    obj.PensionDeduction = Math.Round(Convert.ToDouble(item.GrossSalary * item.PensionRate), 2);
-                    obj.Profit = Math.Round(Convert.ToDouble(item.GrossSalary * item.PensionRate * item.PensionRate), 2);
-                    obj.Total = Math.Round(Convert.ToDouble((item.GrossSalary * item.PensionRate * item.PensionRate) + (item.GrossSalary * item.PensionRate)), 2);
-                    lst.Add(obj);
+                    var empList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.FinancialYearDate >= financialYearDetail.StartDate && x.FinancialYearDate <= financialYearDetail.EndDate && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId);
+                    var previousPensionList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.PayrollYear < financialYearDetail.StartDate.Year);
+                    epm.PreviousPensionRate = previousPensionList.Average(x => x.PensionRate == null ? 0 : x.PensionRate);
 
+                    foreach (var item in previousPensionList)
+                    {
+                        epm.PreviousPensionDeduction += Math.Round(Convert.ToDouble(item.GrossSalary * item.PensionRate), 2);
+                        epm.PreviousProfit += Math.Round(Convert.ToDouble(item.GrossSalary * item.PensionRate * item.PensionRate), 2);
+                        epm.PreviousTotal += Math.Round(Convert.ToDouble((item.GrossSalary * item.PensionRate * item.PensionRate) + (item.GrossSalary * item.PensionRate)), 2);
+                    }
+                    foreach (var item in empList)
+                    {
+                        EmployeePensionReportModel obj = new EmployeePensionReportModel();
+                        obj.CurrencyId = item.CurrencyId.Value;
+                        obj.Date = item.FinancialYearDate.Value;
+                        obj.GrossSalary = Math.Round(Convert.ToDouble(item.GrossSalary), 2);
+                        obj.PensionRate = item.PensionRate;
+                        obj.PensionDeduction = Math.Round(Convert.ToDouble(item.GrossSalary * item.PensionRate), 2);
+                        obj.Profit = Math.Round(Convert.ToDouble(item.GrossSalary * item.PensionRate * item.PensionRate), 2);
+                        obj.Total = Math.Round(Convert.ToDouble((item.GrossSalary * item.PensionRate * item.PensionRate) + (item.GrossSalary * item.PensionRate)), 2);
+                        lst.Add(obj);
+                    }
                 }
+
                 epm.EmployeePensionReportList = lst.OrderBy(x => x.Date.Date).ToList();
                 epm.PensionTotal = lst.Sum(x => x.Total);
                 epm.PensionProfitTotal = lst.Sum(x => x.Profit);
@@ -5234,7 +5235,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> EmployeeTaxCalculation(int OfficeId, int EmployeeId, int FinancialYearId)
+        public async Task<APIResponse> EmployeeTaxCalculation(SalaryTaxViewModel model)
         {
             APIResponse response = new APIResponse();
             try
@@ -5246,7 +5247,7 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.TelephoneNumber = "+93(0)700291722, +93(0)729128401";
                 obj.EmailAddressEmployer = "info@cha-net.org";
 
-                var financialYear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.FinancialYearId == FinancialYearId);
+                var financialYear = await _uow.FinancialYearDetailRepository.FindAllAsync(x => x.IsDeleted== false && model.FinancialYearId.Contains(x.FinancialYearId));
 
                 //var record = await _uow.GetDbContext().EmployeePaymentTypes.Include(x => x.EmployeeDetail).Where(x => x.EmployeeID == EmployeeId && x.OfficeId == OfficeId && x.PayrollYear.Value == financialYear.StartDate.Date.Year && x.IsApproved == true).ToListAsync();
 
@@ -5255,7 +5256,7 @@ namespace HumanitarianAssistance.Service.Classes
                               on ept.EmployeeID equals ed.EmployeeID
                               join epd in _uow.GetDbContext().EmployeeProfessionalDetail
                               on ed.EmployeeID equals epd.EmployeeId
-                              where ept.EmployeeID == EmployeeId && ept.IsDeleted == false && ept.PayrollYear == financialYear.StartDate.Year && ept.OfficeId == OfficeId && ept.IsApproved == true
+                              where ept.EmployeeID == model.EmployeeId && ept.IsDeleted == false && financialYear.Select(x=> x.StartDate.Year).Contains(ept.PayrollYear.Value)  && ept.OfficeId == model.OfficeId && ept.IsApproved == true
                               select new
                               {
                                   EmployeeName = ed.EmployeeName,

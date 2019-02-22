@@ -2539,6 +2539,13 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
+                StoreSourceCodeDetail storeSourceCodeDetail = _uow.GetDbContext().StoreSourceCodeDetail.FirstOrDefault(x => x.IsDeleted == false && x.Code == storeSourceCodeDetailModel.Code);
+
+                if (storeSourceCodeDetail != null)
+                {
+                    throw new Exception("Code already present. Please try again!!");
+                }
+
                 StoreSourceCodeDetail obj = _mapper.Map<StoreSourceCodeDetail>(storeSourceCodeDetailModel);
 
                 obj.IsDeleted = false;
@@ -2554,7 +2561,7 @@ namespace HumanitarianAssistance.Service.Classes
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message =  ex.Message;
             }
 
             return response;
