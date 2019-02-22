@@ -5625,6 +5625,19 @@ namespace HumanitarianAssistance.Service.Classes
                         it.IsDeleted = false;
                         await _uow.InterviewTrainingsRepository.AddAsyn(it);
                     }
+
+                    foreach (int employeeId in model.Interviewers)
+                    {
+                        HRJobInterviewers hRJobInterviewers = new HRJobInterviewers();
+
+                        hRJobInterviewers.CreatedDate = DateTime.Now;
+                        hRJobInterviewers.CreatedById = UserId;
+                        hRJobInterviewers.EmployeeId = employeeId;
+                        hRJobInterviewers.InterviewDetailsId = obj.InterviewDetailsId;
+                        hRJobInterviewers.IsDeleted = false;
+                        await _uow.HRJobInterviewersRepository.AddAsyn(hRJobInterviewers);
+                    }
+
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -5648,18 +5661,9 @@ namespace HumanitarianAssistance.Service.Classes
                     var record = await _uow.InterviewDetailsRepository.FindAsync(x => x.InterviewDetailsId == model.InterviewDetailsId);
                     if (record != null)
                     {
-
-                        //record.CandidateName = model.CandidateName;
-                        //record.CandidatePosition = model.CandidatePosition;
-                        //record.ResidingProvince = model.ResidingProvince;
-                        //record.DutyStation = model.DutyStation;
-                        //record.Gender = model.Gender;
-
                         record.JobId = model.JobId;
                         record.PassportNo = model.PassportNo;
-                        //record.Qualification = model.Qualification;
                         record.University = model.University;
-                        //record.DateOfBirth = model.DateOfBirth;
                         record.PlaceOfBirth = model.PlaceOfBirth;
                         record.TazkiraIssuePlace = model.TazkiraIssuePlace;
                         record.MaritalStatus = model.MaritalStatus;
@@ -5687,13 +5691,6 @@ namespace HumanitarianAssistance.Service.Classes
                         record.TotalMarksObtained = model.TotalMarksObtained;
 
                         record.Status = model.Status;
-                        //record.InterviewStatus = model.InterviewStatus; //Non-Editable
-
-                        record.Interviewer1 = model.Interviewer1;
-                        record.Interviewer2 = model.Interviewer2;
-                        record.Interviewer3 = model.Interviewer3;
-                        record.Interviewer4 = model.Interviewer4;
-
                         record.ModifiedDate = DateTime.Now;
                         record.ModifiedById = UserId;
                         await _uow.InterviewDetailsRepository.UpdateAsyn(record);
@@ -5768,6 +5765,23 @@ namespace HumanitarianAssistance.Service.Classes
                         await _uow.InterviewTrainingsRepository.AddAsyn(it);
                     }
 
+                    if (model.Interviewers.Any())
+                    {
+                        ICollection<HRJobInterviewers> hRJobInterviewersList = await _uow.HRJobInterviewersRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
+                        _uow.GetDbContext().HRJobInterviewers.RemoveRange(hRJobInterviewersList);
+
+                        foreach (int id in model.Interviewers)
+                        {
+                            HRJobInterviewers hRJobInterviewers = new HRJobInterviewers();
+                            hRJobInterviewers.CreatedDate = DateTime.Now;
+                            hRJobInterviewers.CreatedById = UserId;
+                            hRJobInterviewers.EmployeeId = id;
+                            hRJobInterviewers.InterviewDetailsId = model.InterviewDetailsId;
+                            hRJobInterviewers.IsDeleted = false;
+                            await _uow.HRJobInterviewersRepository.AddAsyn(hRJobInterviewers);
+                        }
+                    }
+
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
@@ -5793,8 +5807,10 @@ namespace HumanitarianAssistance.Service.Classes
                     var languageRecords = await _uow.InterviewLanguagesRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
                     var trainingRecords = await _uow.InterviewTrainingsRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
                     var technicalRecords = await _uow.GetDbContext().InterviewTechnicalQuestion.Where(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId).ToListAsync();
+                    var interviewers = await _uow.GetDbContext().HRJobInterviewers.Where(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId).ToListAsync();
 
                     InterviewDetailModel obj = new InterviewDetailModel();
+                    obj.Interviewers = new List<int>();
                     List<RatingBasedCriteriaModel> ratingCriteriaRecordList = new List<RatingBasedCriteriaModel>();
                     List<InterviewLanguageModel> languageList = new List<InterviewLanguageModel>();
                     List<InterviewTechQuesModel> technicalList = new List<InterviewTechQuesModel>();
@@ -5844,6 +5860,11 @@ namespace HumanitarianAssistance.Service.Classes
                         trainingList.Add(trainingModel);
                     }
 
+                    foreach (var item in interviewers)
+                    {
+                        obj.Interviewers.Add(item.EmployeeId);
+                    }
+
                     var empDetail = await _uow.EmployeeDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeID == model.EmployeeID);
                     var jobDetail = await _uow.GetDbContext().JobHiringDetails.Include(x => x.OfficeDetails).FirstOrDefaultAsync(x => x.IsDeleted == false && x.JobId == model.JobId);
                     //var jobDetail = await _uow.JobHiringDetailsRepository.FindAsync(x => x.IsDeleted == false && x.JobId == model.JobId);
@@ -5890,10 +5911,10 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.TotalMarksObtained = model.TotalMarksObtained;
                     obj.Status = model.Status;
                     obj.InterviewStatus = model.InterviewStatus;
-                    obj.Interviewer1 = model.Interviewer1;
-                    obj.Interviewer2 = model.Interviewer2;
-                    obj.Interviewer3 = model.Interviewer3;
-                    obj.Interviewer4 = model.Interviewer4;
+                    //obj.Interviewer1 = model.Interviewer1;
+                    //obj.Interviewer2 = model.Interviewer2;
+                    //obj.Interviewer3 = model.Interviewer3;
+                    //obj.Interviewer4 = model.Interviewer4;
 
                     obj.RatingBasedCriteriaList = ratingCriteriaRecordList;
 

@@ -54,16 +54,10 @@ namespace HumanitarianAssistance.ViewModels.Models
         public bool ExpectationTransportation { get; set; }
         public bool ExpectationMeal { get; set; }
         public long ExpectationOther { get; set; }
-
         public string TotalMarksObtained { get; set; }
-
         public string Status { get; set; }
         public string InterviewStatus { get; set; }
-
-        public string Interviewer1 { get; set; }
-        public string Interviewer2 { get; set; }
-        public string Interviewer3 { get; set; }
-        public string Interviewer4 { get; set; }
+        public List<int> Interviewers { get; set; }
 
     }
 }
