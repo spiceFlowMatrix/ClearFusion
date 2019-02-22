@@ -491,19 +491,21 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 if (model.Id == 0)
                 {
-                        var detail = _uow.GetDbContext().PolicyTimeSchedules.OrderByDescending(x => x.Id)
-                                                                                       .FirstOrDefault();
-                        if (detail == null)
-                        {
-                            LatestId = 1;
-                            Code = getPolicyCode(LatestId.ToString());
-                        }
-                        else
-                        {
-                            LatestId = Convert.ToInt32(detail.Id) + 1;
-                            Code = getPolicyCode(LatestId.ToString());
-                        }
-                        PolicyTimeSchedule obj = _mapper.Map<PolicyTimeScheduleModel, PolicyTimeSchedule>(model);
+                    var detail = _uow.GetDbContext().PolicyTimeSchedules.OrderByDescending(x => x.Id)
+                                                                                   .FirstOrDefault();
+                    if (detail == null)
+                    {
+                        LatestId = 1;
+                        Code = getPolicyCode(LatestId.ToString());
+                    }
+                    else
+                    {
+                        LatestId = Convert.ToInt32(detail.Id) + 1;
+                        Code = getPolicyCode(LatestId.ToString());
+                    }
+                    PolicyTimeSchedule obj = _mapper.Map<PolicyTimeScheduleModel, PolicyTimeSchedule>(model);
+                    if (model.RepeatDays != null)
+                    {
                         foreach (var items in model.RepeatDays)
                         {
                             if (items == "MON")
@@ -535,14 +537,68 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                 obj.Sunday = true;
                             }
                         }
-                        obj.StartTime = model.StartTime;
-                        obj.EndTime = model.EndTime;
-                        obj.TimeScheduleCode = Code;
-                        obj.PolicyId = model.PolicyId;
-                        obj.CreatedDate = DateTime.Now;
-                        obj.IsDeleted = false;
-                        await _uow.PolicyTimeScheduleRepository.AddAsyn(obj);
-                        await _uow.SaveAsync();
+                    }
+                    obj.StartTime = model.StartTime;
+                    obj.EndTime = model.EndTime;
+                    obj.TimeScheduleCode = Code;
+                    obj.PolicyId = model.PolicyId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    await _uow.PolicyTimeScheduleRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.StatusCode = 200;
+                    response.Message = "Schedule created successfully";
+                }
+                else
+                {
+                    var existRecord = await _uow.PolicyTimeScheduleRepository.FindAsync(x => x.IsDeleted == false && x.Id == model.Id);
+                    if (existRecord != null)
+                    {
+                        _mapper.Map(model, existRecord);
+                        existRecord.IsDeleted = false;
+                        existRecord.StartTime = model.StartTime;
+                        existRecord.ModifiedById = UserId;
+                        existRecord.ModifiedDate = DateTime.Now;
+                        existRecord.EndTime = model.EndTime;
+                        if (model.RepeatDays != null)
+                        {
+                            foreach (var items in model.RepeatDays)
+                            {
+                                if (items == "MON")
+                                {
+                                    existRecord.Monday = true;
+                                }
+                                if (items == "TUE")
+                                {
+                                    existRecord.Tuesday = true;
+                                }
+                                if (items == "WED")
+                                {
+                                    existRecord.Wednesday = true;
+                                }
+                                if (items == "THU")
+                                {
+                                    existRecord.Thursday = true;
+                                }
+                                if (items == "FRI")
+                                {
+                                    existRecord.Friday = true;
+                                }
+                                if (items == "SAT")
+                                {
+                                    existRecord.Saturday = true;
+                                }
+                                if (items == "SUN")
+                                {
+                                    existRecord.Sunday = true;
+                                }
+                            }
+                        }
+                        await _uow.PolicyTimeScheduleRepository.UpdateAsyn(existRecord);
+                        // response.data.policyDetails = existRecord;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Policy updated successfully";
+                    }
                 }
             }
             catch (Exception ex)
@@ -551,6 +607,90 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
 
+            return response;
+        }
+
+        public async Task<APIResponse> GetPolicyTimeScheduleList(string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                int count = await _uow.GetDbContext().PolicyTimeSchedules.CountAsync(x => x.IsDeleted == false);
+                var policyScheduleList = await (from j in _uow.GetDbContext().PolicyTimeSchedules
+                                                  where !j.IsDeleted.Value
+                                                  select (new PolicyTimeScheduleModel
+                                                {
+                                                    PolicyId = j.PolicyId,
+                                                    StartTime = j.StartTime,
+                                                    EndTime = j.EndTime,
+                                                    Id = j.Id,
+                                                    Monday = j.Monday,
+                                                    Tuesday = j.Tuesday,
+                                                    Wednesday = j.Wednesday,
+                                                    Thursday = j.Thursday,
+                                                    Friday = j.Friday,
+                                                    Saturday = j.Saturday,
+                                                    Sunday = j.Sunday
+                                                }))
+                                          .ToListAsync();
+
+                response.data.policySchedulesByTimeList = policyScheduleList;
+                response.data.TotalCount = count;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> DeletePolicyTimeSchedule(int id, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var policyInfo = await _uow.PolicyTimeScheduleRepository.FindAsync(c => c.Id == id);
+                policyInfo.IsDeleted = true;
+                policyInfo.ModifiedById = UserId;
+                policyInfo.ModifiedDate = DateTime.UtcNow;
+                await _uow.PolicyTimeScheduleRepository.UpdateAsyn(policyInfo, policyInfo.Id);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Policy Schedule Deleted Successfully";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetPolicyTimeScheduleById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var policyList = await _uow.GetDbContext().PolicyTimeSchedules
+                                       .Where(v => v.IsDeleted == false && v.Id == model).Select(x => new PolicyTimeScheduleModel
+                                       {
+                                           Id = x.Id,
+                                           PolicyId = x.PolicyId,
+                                           StartTime = x.StartTime,
+                                           EndTime = x.EndTime
+                                       }).AsNoTracking().FirstOrDefaultAsync();
+                //response.data.TotalCount = totalCount;
+                response.data.policyTimeDetailsById = policyList;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
             return response;
         }
     }

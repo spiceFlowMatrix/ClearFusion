@@ -22,35 +22,23 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
   public class PdfController : Controller
   {
     IUnitOfWork _uow;
-    private readonly UserManager<AppUser> _userManager;
-    private IJobDetailsService _iJobDetailsService;
     private IHostingEnvironment _hostingEnvironment;
     // private HttpContext currentContext;
-
+    public PdfController(IUnitOfWork uow, UserManager<AppUser> userManager, IJobDetailsService iJobDetailsService, IHostingEnvironment environment)
+    {
+      this._uow = uow;
+      _hostingEnvironment = environment;
+      //this.currentContext = currentContext;
+    }
 
 
     [BindProperty]
     public string TxtHtmlCode { get; set; }
 
     [BindProperty]
-    public string TxtBaseUrl { get; set; }
-
-    [BindProperty]
     public string DdlPageSize { get; set; }
     [BindProperty]
     public string DdlPageOrientation { get; set; }
-    public List<SelectListItem> PageSizes { get; } = new List<SelectListItem>
-        {
-            new SelectListItem { Value = "A1", Text = "A1" },
-            new SelectListItem { Value = "A2", Text = "A2" },
-            new SelectListItem { Value = "A3", Text = "A3" },
-            new SelectListItem { Value = "A4", Text = "A4" },
-            new SelectListItem { Value = "A5", Text = "A5" },
-            new SelectListItem { Value = "Letter", Text = "Letter" },
-            new SelectListItem { Value = "HalfLetter", Text = "HalfLetter" },
-            new SelectListItem { Value = "Ledger", Text = "Ledger" },
-            new SelectListItem { Value = "Legal", Text = "Legal" },
-        };
     public List<SelectListItem> PageOrientations { get; } = new List<SelectListItem>
         {
             new SelectListItem { Value = "Portrait", Text = "Portrait" },
@@ -62,12 +50,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [BindProperty]
     public string TxtHeight { get; set; }
-    public PdfController(IUnitOfWork uow, UserManager<AppUser> userManager, IJobDetailsService iJobDetailsService, IHostingEnvironment environment)
-    {
-      this._uow = uow;
-      _hostingEnvironment = environment;
-      //this.currentContext = currentContext;
-    }
+   
     // GET: api/<controller>
     [HttpGet]
     public IEnumerable<string> Get(string html)
@@ -269,55 +252,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       {
         return pdf; //return ex;
       }
-    }
-
-    private string GetContentType(string path)
-    {
-      var types = GetMimeTypes();
-      var ext = Path.GetExtension(path).ToLowerInvariant();
-      return types[ext];
-    }
-    private Dictionary<string, string> GetMimeTypes()
-    {
-      return new Dictionary<string, string>
-            {
-                {".txt", "text/plain"},
-                {".pdf", "application/pdf"},
-                {".doc", "application/vnd.ms-word"},
-                {".docx", "application/vnd.ms-word"},
-                {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
-                {".png", "image/png"},
-                {".jpg", "image/jpeg"},
-                {".jpeg", "image/jpeg"},
-                {".gif", "image/gif"},
-                {".csv", "text/csv"}
-            };
-    }
-
-    // GET api/<controller>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
-    {
-      return "value";
-    }
-
-    // POST api/<controller>
-    [HttpPost]
-    public void Post([FromBody]string html)
-    {
-    }
-
-    // PUT api/<controller>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody]string value)
-    {
-    }
-
-    // DELETE api/<controller>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
-    }
+    }  
   }
 }
