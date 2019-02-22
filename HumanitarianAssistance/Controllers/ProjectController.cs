@@ -1420,6 +1420,42 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+
+    [HttpPost]
+    public async Task<APIResponse> GetAllBudgetLineList([FromBody]BudgetLineFilterModel budgetNewFilterModel, long projectId)
+    {
+      APIResponse response = await _iProject.GetAllBudgetFilterList(budgetNewFilterModel, projectId);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetTransactionListByProjectId([FromBody] long projectId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        apiRespone = await _iProject.GetTransactionListByProjectId(projectId, userName);
+      }
+
+      return apiRespone;
+    }
+    [HttpPost]
+    public async Task<APIResponse> GetTransactionList([FromBody] TransactionDetailModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        apiRespone = await _iProject.GetTransactionList(userName, model.CurrencyId, model.BudgetLineId);
+      }
+
+      return apiRespone;
+    }
     #endregion
 
   }

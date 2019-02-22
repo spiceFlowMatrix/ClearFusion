@@ -2111,9 +2111,6 @@ namespace HumanitarianAssistance.Service.Classes
             ProjectProposalDetail model = new ProjectProposalDetail();
             ProjectProposalDetail obj = new ProjectProposalDetail();
             APIResponse response = new APIResponse();
-            //try
-            //{
-
             string EmailID = string.Empty;
             ProjectDetail projectDetail = _uow.GetDbContext().ProjectDetail.FirstOrDefault(x => x.ProjectId == Projectid && !x.IsDeleted.Value);
             if (projectDetail == null)
@@ -2125,7 +2122,6 @@ namespace HumanitarianAssistance.Service.Classes
             //string subPath = System.IO.Path.Combine(@"Proposal/", FolderName);
             //if (!Directory.Exists(subPath))
             //    Directory.CreateDirectory(subPath);
-
             //string ProjectProposalfilename = _uow.GetDbContext().ProjectDetail.Where(x => x.ProjectId == Projectid && !x.IsDeleted.Value).Select(x => x.ProjectName + "-" + x.ProjectCode + "-" + "Proposal").FirstOrDefault();
             string ProjectProposalfilename = projectDetail.ProjectName + "-" + projectDetail.ProjectCode + "-Proposal";
             string filename = ProjectProposalfilename + ".docx";
@@ -2134,10 +2130,10 @@ namespace HumanitarianAssistance.Service.Classes
             // stream.Flush();
             //stream.Close();
             string GoogleCredentialpathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-            string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+            //string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.appsettingJsonFile);
             GoogleCredential result = new GoogleCredential();
 
-            using (StreamReader file = File.OpenText(GoogleCredentialsFile))
+            using (StreamReader file = File.OpenText(GoogleCredentialpathFile))
             using (JsonTextReader reader = new JsonTextReader(file))
             {
                 JObject o2 = (JObject)JToken.ReadFrom(reader);
@@ -2145,23 +2141,7 @@ namespace HumanitarianAssistance.Service.Classes
                 result = o2["GoogleCredential"].ToObject<GoogleCredential>();
             }
             ProjectProposalDetail proposaldata = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == Projectid && x.IsDeleted == false);
-            //if (proposaldata != null)
-            //{
-            //    if (proposaldata.UserId != null)
-            //    {
-            //        EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == proposaldata.UserId).Select(p => p.Username).FirstOrDefault();
-            //        if (proposaldata != null && EmailID != null)
-            //        {
-            //            obj = GCBucket.AuthExplicit("", ProjectProposalfilename, GoogleCredentialpathFile, FolderName, result, Projectid, userid).Result;
-
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    obj = GCBucket.AuthExplicit("", ProjectProposalfilename, GoogleCredentialpathFile, FolderName, result, Projectid, userid).Result;
-
-            // }
+           
 
             obj = GCBucket.AuthExplicit("", ProjectProposalfilename, GoogleCredentialpathFile, FolderName, result, Projectid, userid).Result;
 
@@ -2189,15 +2169,6 @@ namespace HumanitarianAssistance.Service.Classes
                 proposaldata.ProposalFileId = obj.ProposalFileId;
                 proposaldata.ModifiedDate = DateTime.Now;
                 proposaldata.ModifiedById = userid;
-
-                //model.ProposalStartDate = proposaldata.ProposalStartDate;
-                //model.ProposalBudget = proposaldata.ProposalBudget;
-                //model.ProposalDueDate = proposaldata.ProposalDueDate;
-                //model.ProjectAssignTo = proposaldata.UserId;
-                //model.IsProposalAccept = proposaldata.IsProposalAccept;
-
-                //model.CurrencyId = proposaldata.CurrencyId;
-
 
 
                 _uow.ProjectProposalDetailRepository.Update(proposaldata, proposaldata.ProjectProposaldetailId);
@@ -2297,9 +2268,9 @@ namespace HumanitarianAssistance.Service.Classes
 
                 // read credientials
                 string googleCredentialPathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+               // string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.appsettingJsonFile);
                 GoogleCredential result = new GoogleCredential();
-                using (StreamReader files = File.OpenText(GoogleCredentialsFile))
+                using (StreamReader files = File.OpenText(googleCredentialPathFile))
                 using (JsonTextReader reader = new JsonTextReader(files))
                 {
                     JObject o2 = (JObject)JToken.ReadFrom(reader);
@@ -4450,6 +4421,241 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+
+        public async Task<APIResponse> GetAllBudgetFilterList(BudgetLineFilterModel budgeLineFilterModel, long projectId)
+        {
+            APIResponse response = new APIResponse();
+
+            string budgetLineIdNoValue = null;
+            string budgetCodeNoValue = null;
+            string budgetNameNoValue = null;
+            string projectJobIdValue = null;
+            string initialbudgetNovalue = null;
+            string projectJobName = null;
+
+            string dateValue = null;
+
+            if (!string.IsNullOrEmpty(budgeLineFilterModel.FilterValue))
+            {
+                budgetLineIdNoValue = budgeLineFilterModel.BudgetLineIdFlag ? budgeLineFilterModel.FilterValue.ToLower().Trim() : null;
+                budgetCodeNoValue = budgeLineFilterModel.BudgetCodeFlag ? budgeLineFilterModel.FilterValue.ToLower().Trim() : null;
+                budgetNameNoValue = budgeLineFilterModel.BudgetNameFlag ? budgeLineFilterModel.FilterValue.ToLower().Trim() : null;
+                projectJobIdValue = budgeLineFilterModel.ProjectJobIdFlag ? budgeLineFilterModel.FilterValue.ToLower().Trim() : null;
+                initialbudgetNovalue = budgeLineFilterModel.InitialBudgetFlag ? budgeLineFilterModel.FilterValue.ToLower().Trim() : null;
+                dateValue = budgeLineFilterModel.DateFlag ? budgeLineFilterModel.FilterValue.ToLower().Trim() : null;
+                projectJobName = budgeLineFilterModel.ProjectJobNameFlag ? budgeLineFilterModel.FilterValue.ToLower().Trim() : null;
+            }
+
+            try
+            {
+
+                int totalCount = await _uow.GetDbContext().ProjectBudgetLineDetail
+                                       .Where(v => v.IsDeleted == false && v.ProjectId == projectId &&
+                                               !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
+                                               v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
+                                               v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
+                                               v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
+                                               v.ProjectJobId.ToString().Contains(projectJobIdValue) ||
+                                               v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
+                                               v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
+                                               v.CreatedDate.ToString().Trim().Contains(dateValue)
+                                               ) : true
+                                       )
+                                      .AsNoTracking()
+                                      .CountAsync();
+
+                var budgetLineList = await _uow.GetDbContext().ProjectBudgetLineDetail
+                                      .Where(v => v.IsDeleted == false &&
+                                                 !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
+                                                   v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
+                                                   v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
+                                                   v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
+                                                   v.ProjectJobId.ToString().Contains(projectJobIdValue) ||
+                                                   v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
+                                                   v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
+                                                   v.CreatedDate.ToString().Trim().ToLower().Contains(dateValue)
+                                                   ) : true
+                                       )
+                                      .OrderByDescending(x => x.CreatedDate)
+                                      .Select(x => new ProjectBudgetLineModel
+                                      {
+                                          //VoucherNo = x.VoucherNo,
+                                          //CurrencyCode = x.CurrencyDetail.CurrencyCode,
+                                          //CurrencyId = x.CurrencyDetail.CurrencyId,
+                                          //VoucherDate = x.VoucherDate,
+                                          //ChequeNo = x.ChequeNo,
+                                          //ReferenceNo = x.ReferenceNo,
+                                          //Description = x.Description,
+                                          //JournalName = x.JournalDetails.JournalName,
+                                          //JournalCode = x.JournalDetails.JournalCode,
+                                          //VoucherTypeId = x.VoucherTypeId,
+                                          //OfficeId = x.OfficeId,
+                                          //ProjectId = x.ProjectId,
+                                          //BudgetLineId = x.BudgetLineId,
+                                          //OfficeName = x.OfficeDetails.OfficeName,
+
+                                      })
+                                      .Skip(budgeLineFilterModel.pageSize.Value * budgeLineFilterModel.pageIndex.Value)
+                                      .Take(budgeLineFilterModel.pageSize.Value)
+                                      .ToListAsync();
+                response.data.ProjectBudgetLineList = budgetLineList;
+                response.data.TotalCount = totalCount;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> GetTransactionListByProjectId(long projectId,string userName)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var TransList = await _uow.GetDbContext().VoucherTransactions
+                                          .Include(c => c.CurrencyDetails)
+                                          .Where(x => x.IsDeleted == false && x.ProjectId == projectId && x.ProjectId != null)
+                                          .OrderBy(x => x.CreatedDate)
+                                          .ToListAsync();
+
+                var budgetDetaillist = TransList.Select(b => new TransactionBudgetModel
+                {
+
+                    CurrencyId = b.CurrencyDetails?.CurrencyId ?? null,
+                    CurrencyName = b.CurrencyDetails?.CurrencyName ?? null,
+                    Credit = b.Credit,
+                    Debit = b.Debit,
+                    TransactionDate = b.TransactionDate,
+                    UserName=userName
+
+
+                }).ToList();
+                response.data.TransactionBudgetModelList = budgetDetaillist;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> GetTransactionList(string userName, int currencyId, long budgetLineId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var TransList = await _uow.GetDbContext().VoucherTransactions
+                                          .Include(c => c.CurrencyDetails)
+                                          .Where(x => x.IsDeleted == false && x.CurrencyId == currencyId && x.BudgetLineId == budgetLineId)
+                                          .OrderBy(x => x.CreatedDate)
+                                          .ToListAsync();
+
+                var budgetDetaillist = TransList.Select(b => new TransactionBudgetModel
+                {
+
+                    CurrencyId = b.CurrencyDetails?.CurrencyId ?? null,
+                    CurrencyName = b.CurrencyDetails?.CurrencyName ?? null,
+                    Credit = b.Credit,
+                    Debit = b.Debit,
+                    TransactionDate = b.TransactionDate,
+                    UserName = userName
+                }).ToList();
+                response.data.TransactionBudgetModelList = budgetDetaillist;
+                if (response.data.TransactionBudgetModelList.Count == 0)
+                {
+                    //response.Message = StaticResource.NoDataFound;
+                    response.StatusCode = StaticResource.notFoundCode;
+
+                    throw new Exception(StaticResource.NoDataFound);
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = response.StatusCode== StaticResource.notFoundCode ? response.StatusCode : StaticResource.failStatusCode;
+                response.Message = response.StatusCode == StaticResource.notFoundCode ? StaticResource.NoDataFound:  StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+
+
+        }
+
+
+        public APIResponse AddEditProjectList(VoucherDetailModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                if (model.ProjectId != null)
+                {
+
+                    //bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                    var projectExist = _uow.GetDbContext().VoucherDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).ToList();
+
+                   // var noExistProvinceId = projectExist.Where(x => !model.ProjectId.Contains(x.ProjectId)).Select(x => x.ProjectId).ToList();
+
+                    //if (projectExist.Any())
+                    //{
+                    //    var budgetLineExist = _uow.GetDbContext().ProjectBudgetLineDetail.Where(x => noExistProvinceId.Contains(x.ProvinceId) && x.IsDeleted == false).ToList();
+                    //    if (districtExist.Any())
+                    //    {
+                    //        _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
+                    //        _uow.GetDbContext().SaveChanges();
+                    //    }
+                    //}
+
+                    //_uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
+                    //_uow.GetDbContext().SaveChanges();
+
+
+                    //List<ProvinceMultiSelect> provinceList = new List<ProvinceMultiSelect>();
+
+                    //foreach (var item in model.ProvinceId)
+                    //{
+                    //    ProvinceMultiSelect _data = new ProvinceMultiSelect();
+
+                    //    _data.ProvinceId = item;
+                    //    _data.ProjectId = model.ProjectId;
+                    //    _data.IsDeleted = false;
+                    //    _data.CreatedById = UserId;
+                    //    _data.CreatedDate = DateTime.Now;
+
+                    //    provinceList.Add(_data);
+                    //}
+
+                    //Add
+                    //_uow.GetDbContext().ProvinceMultiSelect.AddRange(provinceList);
+                    _uow.GetDbContext().SaveChanges();
+                }
+
+
+
+                //response.CommonId.Id = Convert.ToInt32(_detail.SecurityConsiderationId);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+
         #endregion
 
 

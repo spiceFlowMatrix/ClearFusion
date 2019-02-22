@@ -5080,7 +5080,8 @@ namespace HumanitarianAssistance.Service.Classes
                                      JobDari= x.JobDari,
                                      ProvinceDari= x.ProvinceDari,
                                      EmployeeNameDari= x.EmployeeNameDari,
-                                     GradeName= x.JobGrade.GradeName
+                                     GradeName= x.JobGrade.GradeName,
+                                     ProjectNameDari= x.ProvinceDari
                                  }).ToListAsync();
 
                     response.data.EmployeeContractDetails = dataModel;

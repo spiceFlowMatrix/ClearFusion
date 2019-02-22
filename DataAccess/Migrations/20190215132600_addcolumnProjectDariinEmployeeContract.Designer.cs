@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190215132600_addcolumnProjectDariinEmployeeContract")]
+    partial class addcolumnProjectDariinEmployeeContract
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4400,21 +4402,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new { CategoryId = 1L, CategoryName = "Bank", IsDeleted = false },
-                        new { CategoryId = 2L, CategoryName = "NGO", IsDeleted = false },
-                        new { CategoryId = 3L, CategoryName = "Telecommunicaton", IsDeleted = false },
-                        new { CategoryId = 4L, CategoryName = "Government", IsDeleted = false },
-                        new { CategoryId = 5L, CategoryName = "Hospital", IsDeleted = false },
-                        new { CategoryId = 6L, CategoryName = "Travel Agency", IsDeleted = false },
-                        new { CategoryId = 7L, CategoryName = "University", IsDeleted = false },
-                        new { CategoryId = 8L, CategoryName = "Media Groups", IsDeleted = false },
-                        new { CategoryId = 9L, CategoryName = "Shops", IsDeleted = false },
-                        new { CategoryId = 10L, CategoryName = "Energy", IsDeleted = false },
-                        new { CategoryId = 11L, CategoryName = "School", IsDeleted = false },
-                        new { CategoryId = 12L, CategoryName = "Construction", IsDeleted = false }
-                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.ClientDetails", b =>
@@ -4806,56 +4793,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("PolicyId");
 
                     b.ToTable("PolicySchedules");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyTimeSchedule", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<TimeSpan>("EndTime");
-
-                    b.Property<bool>("Friday");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<bool>("Monday");
-
-                    b.Property<long?>("PolicyId");
-
-                    b.Property<bool>("Saturday");
-
-                    b.Property<TimeSpan>("StartTime");
-
-                    b.Property<bool>("Sunday");
-
-                    b.Property<bool>("Thursday");
-
-                    b.Property<string>("TimeScheduleCode");
-
-                    b.Property<bool>("Tuesday");
-
-                    b.Property<bool>("Wednesday");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("PolicyId");
-
-                    b.ToTable("PolicyTimeSchedules");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.Producer", b =>
@@ -10580,21 +10517,6 @@ namespace DataAccess.Migrations
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicySchedule", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.PolicyDetail", "PolicyDetails")
-                        .WithMany()
-                        .HasForeignKey("PolicyId");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyTimeSchedule", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
