@@ -191,7 +191,7 @@ namespace DataAccess
         private IGenericRepository<ProvinceMultiSelect> _provinceMultiSelectRepository;
         private IGenericRepository<DistrictMultiSelect> _districtMultiSelectRepository;
         private IGenericRepository<SecurityConsiderationMultiSelect> _securityConsiderationMultiSelectRepository;
-
+        private IGenericRepository<HRJobInterviewers> _hRJobInterviewers;
 
 
 
@@ -213,6 +213,7 @@ namespace DataAccess
         private IGenericRepository<TimeCategory> _timeCategoryRepository;
         private IGenericRepository<ClientDetails> _ClientDetailsRepository;
         private IGenericRepository<UnitRate> _unitRateRepository;
+        private IGenericRepository<PolicyTimeSchedule> _policyTimeScheduleRepository;
         private IGenericRepository<Category> _categoryRepository;
         private IGenericRepository<PaymentTypes> _paymentTypesRepository;
         private IGenericRepository<PolicyDetail> _policyRepository;
@@ -1515,6 +1516,14 @@ namespace DataAccess
             }
         }
 
+        public IGenericRepository<PolicyTimeSchedule> PolicyTimeScheduleRepository
+        {
+            get
+            {
+                return _policyTimeScheduleRepository = _policyTimeScheduleRepository ?? new GenericRepository<PolicyTimeSchedule>(_mschaContext);
+            }
+        }
+
         public IGenericRepository<Nature> NatureRepository
         {
             get
@@ -1787,6 +1796,14 @@ namespace DataAccess
             get
             {
                 return _projectJobDetailRepository = _projectJobDetailRepository ?? new GenericRepository<ProjectJobDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<HRJobInterviewers> HRJobInterviewersRepository
+        {
+            get
+            {
+                return _hRJobInterviewers = _hRJobInterviewers ?? new GenericRepository<HRJobInterviewers>(_mschaContext);
             }
         }
 

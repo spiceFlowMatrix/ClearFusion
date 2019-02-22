@@ -61,7 +61,7 @@ namespace DataAccess.DbEntities
         public string Interviewer2 { get; set; }
         public string Interviewer3 { get; set; }
         public string Interviewer4 { get; set; }
-
+        List<HRJobInterviewers> HRJobInterviewers { get; set; }
         public string InterviewStatus { get; set; }
     }
 }

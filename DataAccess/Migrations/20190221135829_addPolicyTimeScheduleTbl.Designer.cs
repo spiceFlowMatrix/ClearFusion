@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190221135829_addPolicyTimeScheduleTbl")]
+    partial class addPolicyTimeScheduleTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1732,8 +1734,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("PeriodType");
 
                     b.Property<int?>("Project");
-
-                    b.Property<string>("ProjectNameDari");
 
                     b.Property<int?>("Province");
 
@@ -3712,39 +3712,6 @@ namespace DataAccess.Migrations
                     b.ToTable("HolidayWeeklyDetails");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.HRJobInterviewers", b =>
-                {
-                    b.Property<long>("HRJobInterviewerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int>("EmployeeId");
-
-                    b.Property<int>("InterviewDetailsId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("HRJobInterviewerId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("InterviewDetailsId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("HRJobInterviewers");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.InterviewDetails", b =>
                 {
                     b.Property<int>("InterviewDetailsId")
@@ -4873,8 +4840,6 @@ namespace DataAccess.Migrations
                     b.Property<bool>("Sunday");
 
                     b.Property<bool>("Thursday");
-
-                    b.Property<string>("TimeScheduleCode");
 
                     b.Property<bool>("Tuesday");
 
@@ -10198,27 +10163,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("OfficeId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.HRJobInterviewers", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.InterviewDetails", "InterviewDetails")
-                        .WithMany()
-                        .HasForeignKey("InterviewDetailsId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.InterviewDetails", b =>
