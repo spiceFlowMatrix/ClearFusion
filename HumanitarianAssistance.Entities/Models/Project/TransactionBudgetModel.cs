@@ -12,5 +12,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string CurrencyName { get; set; }
         public int? CurrencyId { get; set; }
         public DateTime? TransactionDate { get; set; }
+       
     }
 }
