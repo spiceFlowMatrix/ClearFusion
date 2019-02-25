@@ -191,15 +191,15 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       return apiRespone;
     }
 
-    [HttpGet]
-    public async Task<APIResponse> GetPolicyTimeScheduleList()
+    [HttpPost]
+    public async Task<APIResponse> GetPolicyTimeScheduleList([FromBody] int Id)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = await _iPolicyService.GetPolicyTimeScheduleList(id);
+        apiRespone = await _iPolicyService.GetPolicyTimeScheduleList(Id, id);
       }
       return apiRespone;
     }
@@ -228,6 +228,32 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         apiRespone = await _iPolicyService.GetPolicyTimeScheduleById(Id, id);
       }
       return apiRespone;
-    }    
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddPolicyRepeatDays([FromBody] PolicyTimeModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.AddPolicyRepeatDays(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetDayScheduleByPolicyId([FromBody] int Id)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.GetDayScheduleByPolicyId(Id, id);
+      }
+      return apiRespone;
+    }
   }
 }
