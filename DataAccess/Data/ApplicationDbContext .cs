@@ -247,6 +247,7 @@ namespace HumanitarianAssistance.Entities
 
         #region Marketing
         public DbSet<PolicyTimeSchedule> PolicyTimeSchedules { get; set; }
+        public DbSet<PolicyDaySchedule> PolicyDaySchedules { get; set; }
         public DbSet<PolicySchedule> PolicySchedules { get; set; }
         public DbSet<UnitRate> UnitRates { get; set; }
         public DbSet<PolicyDetail> PolicyDetails { get; set; }

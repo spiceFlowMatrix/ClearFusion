@@ -136,7 +136,7 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>().ReverseMap();
       CreateMap<VoucherDetail, VoucherDetailEntityModel>().ReverseMap();
       CreateMap<PolicyTimeSchedule, PolicyTimeScheduleModel>().ReverseMap();
-
+      CreateMap<PolicyDaySchedule, PolicyTimeModel>().ReverseMap();
       CreateMap<PolicyScheduleModel, PolicySchedule>().ReverseMap();
     }
   }
