@@ -62,4 +62,20 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         //public string StartTime { get; set; }
         //public string EndTime { get; set; }
     }
+
+     public class PolicyTimeModel
+     {
+        public long? PolicyId { get; set; }
+        public string[] RepeatDays { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public long Id { get; set; }
+     }
+
+    public class PolicyDayScheduleModel
+    {
+        public long? PolicyId { get; set; }
+        public long Id { get; set; }
+        public bool Monday { get; set; }
+    }
 }

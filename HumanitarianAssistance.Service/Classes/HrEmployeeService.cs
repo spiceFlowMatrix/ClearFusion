@@ -5626,13 +5626,13 @@ namespace HumanitarianAssistance.Service.Classes
                         await _uow.InterviewTrainingsRepository.AddAsyn(it);
                     }
 
-                    foreach (int employeeId in model.Interviewers)
+                    foreach (var employeeId in model.Interviewers)
                     {
                         HRJobInterviewers hRJobInterviewers = new HRJobInterviewers();
 
                         hRJobInterviewers.CreatedDate = DateTime.Now;
                         hRJobInterviewers.CreatedById = UserId;
-                        hRJobInterviewers.EmployeeId = employeeId;
+                        hRJobInterviewers.EmployeeId = employeeId.Interviewer;
                         hRJobInterviewers.InterviewDetailsId = obj.InterviewDetailsId;
                         hRJobInterviewers.IsDeleted = false;
                         await _uow.HRJobInterviewersRepository.AddAsyn(hRJobInterviewers);
@@ -5770,12 +5770,12 @@ namespace HumanitarianAssistance.Service.Classes
                         ICollection<HRJobInterviewers> hRJobInterviewersList = await _uow.HRJobInterviewersRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
                         _uow.GetDbContext().HRJobInterviewers.RemoveRange(hRJobInterviewersList);
 
-                        foreach (int id in model.Interviewers)
+                        foreach (var item in model.Interviewers)
                         {
                             HRJobInterviewers hRJobInterviewers = new HRJobInterviewers();
                             hRJobInterviewers.CreatedDate = DateTime.Now;
                             hRJobInterviewers.CreatedById = UserId;
-                            hRJobInterviewers.EmployeeId = id;
+                            hRJobInterviewers.EmployeeId = item.Interviewer;
                             hRJobInterviewers.InterviewDetailsId = model.InterviewDetailsId;
                             hRJobInterviewers.IsDeleted = false;
                             await _uow.HRJobInterviewersRepository.AddAsyn(hRJobInterviewers);
@@ -5810,7 +5810,7 @@ namespace HumanitarianAssistance.Service.Classes
                     var interviewers = await _uow.GetDbContext().HRJobInterviewers.Where(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId).ToListAsync();
 
                     InterviewDetailModel obj = new InterviewDetailModel();
-                    obj.Interviewers = new List<int>();
+                    obj.Interviewers = new List<Interviewers>();
                     List<RatingBasedCriteriaModel> ratingCriteriaRecordList = new List<RatingBasedCriteriaModel>();
                     List<InterviewLanguageModel> languageList = new List<InterviewLanguageModel>();
                     List<InterviewTechQuesModel> technicalList = new List<InterviewTechQuesModel>();
@@ -5862,7 +5862,10 @@ namespace HumanitarianAssistance.Service.Classes
 
                     foreach (var item in interviewers)
                     {
-                        obj.Interviewers.Add(item.EmployeeId);
+                        Interviewers xInterviewer = new Interviewers();
+                        xInterviewer.Interviewer = item.EmployeeId;
+
+                        obj.Interviewers.Add(xInterviewer);
                     }
 
                     var empDetail = await _uow.EmployeeDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeID == model.EmployeeID);
