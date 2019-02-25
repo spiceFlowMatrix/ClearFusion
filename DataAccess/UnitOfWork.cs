@@ -191,7 +191,7 @@ namespace DataAccess
         private IGenericRepository<ProvinceMultiSelect> _provinceMultiSelectRepository;
         private IGenericRepository<DistrictMultiSelect> _districtMultiSelectRepository;
         private IGenericRepository<SecurityConsiderationMultiSelect> _securityConsiderationMultiSelectRepository;
-
+        private IGenericRepository<HRJobInterviewers> _hRJobInterviewers;
 
 
 
@@ -1796,6 +1796,14 @@ namespace DataAccess
             get
             {
                 return _projectJobDetailRepository = _projectJobDetailRepository ?? new GenericRepository<ProjectJobDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<HRJobInterviewers> HRJobInterviewersRepository
+        {
+            get
+            {
+                return _hRJobInterviewers = _hRJobInterviewers ?? new GenericRepository<HRJobInterviewers>(_mschaContext);
             }
         }
 

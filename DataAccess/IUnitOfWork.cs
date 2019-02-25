@@ -145,6 +145,7 @@ namespace DataAccess
         IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository { get; }
         IGenericRepository<ExchangeRateDetail> ExchangeRateDetailRepository { get; }
         IGenericRepository<PaymentTypes> PaymentTypesRepository { get; }
+        IGenericRepository<HRJobInterviewers> HRJobInterviewersRepository { get; }
 
         #region Project
         IGenericRepository<DonorDetail> DonorDetailRepository { get; }

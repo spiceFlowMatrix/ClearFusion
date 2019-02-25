@@ -11,4 +11,12 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public int FinancialYearId { get; set; }
 		public int CurrencyId { get; set; }
 	}
+
+    public class PensionModel
+    {
+        public int OfficeId { get; set; }
+        public int EmployeeId { get; set; }
+        public List<int> FinancialYearId { get; set; }
+        public int CurrencyId { get; set; }
+    }
 }

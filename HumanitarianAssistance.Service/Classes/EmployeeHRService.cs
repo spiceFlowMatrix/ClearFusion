@@ -392,7 +392,7 @@ namespace HumanitarianAssistance.Service.Classes
                         //BasicPay = x.BasicPay,
                         AccountNo = x.AccountNo,
                         TransactionTypeId = x.TransactionTypeId
-                    }).ToList();
+                    }).OrderBy(x => x.TransactionTypeId).ThenBy(x => x.SalaryHeadType).ToList();
 
                     if (payrollDetail.Count > 0)
                     {
@@ -427,10 +427,19 @@ namespace HumanitarianAssistance.Service.Classes
 
                             if (obj.GrossSalary > 5000)
                             {
+                                double? dExchangeRate1 = 0.0;
+                                ExchangeRateDetail exchangeRateDetail = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefault(x => x.FromCurrency == iCurrencyId && x.ToCurrency == (int)Currency.AFG);
 
-                                double? dExchangeRate1 = (double)_uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefault(x => x.FromCurrency == iCurrencyId && x.ToCurrency== (int)Currency.AFG).Rate;
-                                //Double? dExchangeRate2 = xExchangeRate.OrderByDescending(x => x.Date).FirstOrDefault(x => x.FromCurrency == (int)Currency.AFG).Rate;
-                                //Double? dFinalExchangeRate = dExchangeRate1 / dExchangeRate2;
+                                if (exchangeRateDetail == null)
+                                {
+                                    string currencyCode = _uow.CurrencyDetailsRepository.Find(x => x.IsDeleted == false && x.CurrencyId == iCurrencyId).CurrencyCode;
+
+                                    throw new Exception($"Exchange Rate Not Defined from {currencyCode} to AFG");
+                                }
+                                else
+                                {
+                                    dExchangeRate1 = (double)exchangeRateDetail.Rate;
+                                }
 
                                 obj.SalaryTax = obj.SalaryTax == null ? 0 : obj.SalaryTax;
                                 obj.SalaryTax = Math.Round(Convert.ToDouble((SalaryCalculate(obj.GrossSalary.Value, dExchangeRate1.Value))), 2);
@@ -441,28 +450,7 @@ namespace HumanitarianAssistance.Service.Classes
                             }
 
                             //Net Salary  = (Gross + Allowances) - Deductions
-                            obj.NetSalary = obj.GrossSalary - (obj.TotalDeduction!=null? obj.TotalDeduction:0) - (obj.SalaryTax !=null? obj.SalaryTax:0) - payrollAttendance.AdvanceRecoveryAmount - (obj.PensionAmount!=null? obj.PensionAmount :0);
-
-                            //foreach (var item in payrollDetail)
-                            //{
-                            //    EmployeePayrollModel payrollObj = new EmployeePayrollModel();
-
-                            //    payrollObj.CurrencyId = item.CurrencyId;
-                            //    payrollObj.EmployeeId = item.EmployeeId;
-                            //    payrollObj.HeadTypeId = item.HeadTypeId;
-                            //    payrollObj.ModifiedById = item.ModifiedById;
-                            //    payrollObj.ModifiedDate = item.ModifiedDate;
-                            //    payrollObj.MonthlyAmount = item.MonthlyAmount;
-                            //    payrollObj.PaymentType = item.PaymentType;
-                            //    payrollObj.PayrollId = item.PayrollId;
-                            //    payrollObj.PensionRate = item.PensionRate;
-                            //    payrollObj.SalaryHead = item.SalaryHead;
-                            //    payrollObj.SalaryHeadId = item.SalaryHeadId;
-                            //    payrollObj.SalaryHeadType = item.SalaryHeadType;
-                            //    payrollObj.BasicPay = item.BasicPay;
-
-                            //    obj.employeepayrolllist.Add(payrollObj);
-                            //}
+                            obj.NetSalary = obj.GrossSalary - (obj.TotalDeduction != null ? obj.TotalDeduction : 0) - (obj.SalaryTax != null ? obj.SalaryTax : 0) - payrollAttendance.AdvanceRecoveryAmount - (obj.PensionAmount != null ? obj.PensionAmount : 0);
 
                             obj.employeepayrolllist.AddRange(payrollDetail);
 
@@ -474,11 +462,6 @@ namespace HumanitarianAssistance.Service.Classes
 
                             if (xAdvances != null)
                             {
-                                //if (obj.AdvanceAmount == null || obj.AdvanceAmount == 0)
-                                //{
-                                //    obj.AdvanceAmount = xAdvances.AdvanceAmount;
-                                //}
-
                                 if (xAdvances.RecoveredAmount == 0)
                                 {
 
@@ -596,7 +579,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                 .Include(x => x.SalaryHeadDetails)
                                                                                 .Where(x => x.EmployeeID == item.EmployeeID &&
                                                                                             x.Date.Year == item.PayrollYear &&
-                                                                                            x.Date.Month == item.PayrollMonth && x.IsDeleted== false)
+                                                                                            x.Date.Month == item.PayrollMonth && x.IsDeleted == false)
                                                                                 .Select(x => new EmployeePayrollModel
                                                                                 {
                                                                                     CurrencyId = x.CurrencyId,
@@ -608,9 +591,9 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                     HeadTypeId = x.HeadTypeId == null ? 0 : x.HeadTypeId.Value,
                                                                                     SalaryHeadType = x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
                                                                                     SalaryHead = x.SalaryHeadDetails.HeadName,
-                                                                                    AccountNo= x.AccountNo,
-                                                                                    TransactionTypeId= x.TransactionTypeId
-                                                                                }).ToListAsync();
+                                                                                    AccountNo = x.AccountNo,
+                                                                                    TransactionTypeId = x.TransactionTypeId
+                                                                                }).OrderBy(x => x.TransactionTypeId).ThenBy(x => x.SalaryHeadType).ToListAsync();
                     obj.EmployeePayrollList.AddRange(EmployeePayrollMonthList);
 
                     userList.Add(obj);
@@ -805,36 +788,30 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> EmployeePensionReport(PensionReportModel model)
+        public async Task<APIResponse> EmployeePensionReport(PensionModel model)
         {
             APIResponse response = new APIResponse();
 
             EmployeePensionRate pensionRateDetail = _uow.GetDbContext().EmployeePensionRate.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
+            double pensionRate = pensionRateDetail != null ? (double)pensionRateDetail.PensionRate : 4.5;
 
             try
             {
                 EmployeePensionModel epm = new EmployeePensionModel();
                 List<EmployeePensionReportModel> lst = new List<EmployeePensionReportModel>();
-                var financialYearList = _uow.FinancialYearDetailRepository.FindAllAsync(x => x.FinancialYearId == model.FinancialYearId).Result.FirstOrDefault();
-                var empList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.PayrollYear == financialYearList.StartDate.Year && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId && x.IsDeleted == false);
-                //var empList = await _uow.GetDbContext().EmployeePaymentTypes.Include(x=>x.EmployeeDetail).Where(x => x.FinancialYearDate >= financialYearList.StartDate && x.FinancialYearDate <= financialYearList.EndDate && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId).ToListAsync();
+                var financialYearList = await _uow.FinancialYearDetailRepository.FindAllAsync(x => model.FinancialYearId.Contains(x.FinancialYearId));
+                var empList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => financialYearList.Select(y=> y.StartDate.Year).Contains(x.PayrollYear.Value) && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId && x.IsDeleted == false);
 
                 EmployeeDetail xEmployeeDetail = await _uow.EmployeeDetailRepository.FindAsync(x => x.EmployeeID == model.EmployeeId);
 
-                var previousPensionList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.FinancialYearDate.Value.Date.Year < financialYearList.StartDate.Year && x.IsDeleted == false);
+                var previousPensionList = await _uow.EmployeePaymentTypeRepository.FindAllAsync(x => x.PayrollYear < financialYearList.OrderByDescending(y=> y.StartDate).FirstOrDefault().StartDate.Year && x.IsDeleted == false);
 
-                if (previousPensionList.Any())
-                {
-
+                //if (previousPensionList.Any())
+                //{
                     epm.PreviousPensionRate = previousPensionList.Average(x => x.PensionRate);
-                    //List<ExchangeRate> exchangeRateList = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.Date.Value.Year == financialYearList.StartDate.Year && (x.Date.Value.Month == DateTime.Now.Month - 6)).OrderByDescending(x => x.Date).ToListAsync();
-
 
                     foreach (var item in previousPensionList)
                     {
-
-                        
-
                         if (item.CurrencyId == model.CurrencyId)
                         {
                             epm.PreviousPensionDeduction += item.PensionAmount;
@@ -843,10 +820,10 @@ namespace HumanitarianAssistance.Service.Classes
                         }
                         else
                         {
-                            ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == item.CurrencyId && x.ToCurrency==model.CurrencyId);
-                            epm.PreviousPensionDeduction += item.PensionAmount * (double)exchangeRate.Rate / (double)exchangeRate.Rate;
-                            epm.PreviousProfit += Math.Round(Convert.ToDouble(item.PensionAmount * item.PensionRate), 2) * (double)exchangeRate.Rate / (double)exchangeRate.Rate;
-                            epm.PreviousTotal += Math.Round(Convert.ToDouble((item.PensionAmount * item.PensionRate) + item.PensionAmount), 2) * (double)exchangeRate.Rate / (double)exchangeRate.Rate;
+                            ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == item.CurrencyId && x.ToCurrency == model.CurrencyId);
+                            epm.PreviousPensionDeduction += item.PensionAmount * (double)exchangeRate.Rate;
+                            epm.PreviousProfit += Math.Round(Convert.ToDouble(item.PensionAmount * pensionRate), 2) * (double)exchangeRate.Rate;
+                            epm.PreviousTotal += Math.Round(Convert.ToDouble((item.PensionAmount * pensionRate) + item.PensionAmount), 2) * (double)exchangeRate.Rate;
 
                         }
 
@@ -858,10 +835,10 @@ namespace HumanitarianAssistance.Service.Classes
                         EmployeePensionReportModel obj = new EmployeePensionReportModel();
                         obj.CurrencyId = item.CurrencyId.Value;
                         obj.Date = new DateTime(item.PayrollYear.Value, item.PayrollMonth.Value, 1);
-                        obj.GrossSalary = Math.Round(Convert.ToDouble(item.GrossSalary), 2) * (double)exchangeRate.Rate / (double)exchangeRate.Rate;
-                        obj.PensionRate = pensionRateDetail.PensionRate;
-                        obj.PensionDeduction = Math.Round(Convert.ToDouble((item.GrossSalary * pensionRateDetail.PensionRate) / 100), 2) * (double)exchangeRate.Rate / (double)exchangeRate.Rate;
-                        obj.Profit = Math.Round(Convert.ToDouble((obj.PensionDeduction * pensionRateDetail.PensionRate)) / 100, 2);
+                        obj.GrossSalary = Math.Round(Convert.ToDouble(item.GrossSalary), 2) * (double)exchangeRate.Rate;
+                        obj.PensionRate = pensionRate;
+                        obj.PensionDeduction = Math.Round(Convert.ToDouble((item.GrossSalary * pensionRate) / 100), 2) * (double)exchangeRate.Rate;
+                        obj.Profit = Math.Round(Convert.ToDouble((obj.PensionDeduction * pensionRate)) / 100, 2);
                         obj.Total = obj.Profit + obj.PensionDeduction;
                         lst.Add(obj);
 
@@ -869,18 +846,18 @@ namespace HumanitarianAssistance.Service.Classes
                     epm.EmployeePensionReportList = lst.OrderBy(x => x.Date.Date).ToList();
                     epm.PensionTotal = lst.Sum(x => x.Total);
                     epm.PensionProfitTotal = lst.Sum(x => x.Profit);
-                    epm.PensionDeductionTotal = Math.Round(Convert.ToDouble(lst.Sum(x => x.GrossSalary * pensionRateDetail.PensionRate / 100)), 2);
+                    epm.PensionDeductionTotal = Math.Round(Convert.ToDouble(lst.Sum(x => x.GrossSalary * pensionRate / 100)), 2);
                     epm.EmployeeCode = xEmployeeDetail.EmployeeCode;
                     response.data.EmployeePensionModel = epm;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = StaticResource.NoPension;
+                //}
+                //else
+                //{
+                //    response.StatusCode = StaticResource.successStatusCode;
+                //    response.Message = StaticResource.NoPension;
 
-                }
+                //}
             }
             catch (Exception ex)
             {
@@ -890,37 +867,48 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> EmployeeSalaryTaxDetails(SalaryTaxModel model)
+        public async Task<APIResponse> EmployeeSalaryTaxDetails(SalaryTaxViewModel model)
         {
             APIResponse response = new APIResponse();
 
             try
             {
 
-                var financialYear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDeleted == false && x.FinancialYearId == model.FinancialYearId);
-                if (financialYear != null)
+                var financialYear =  _uow.FinancialYearDetailRepository.FindAll(x => x.IsDeleted == false && model.FinancialYearId.Contains(x.FinancialYearId));
+
+                if (financialYear.Any())
                 {
-                    List<SalaryTaxReportModel> salaryTaxReportList = _uow.EmployeePaymentTypeRepository.FindAll(x => x.IsDeleted == false && x.IsApproved == true && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId && x.PayrollYear == financialYear.StartDate.Date.Year)
-                    .Select(x => new SalaryTaxReportModel
-                    {
-                        Currency = _uow.GetDbContext().CurrencyDetails.Where(o => o.CurrencyId == x.CurrencyId).FirstOrDefault().CurrencyName,
-                        CurrencyId = x.CurrencyId,
-                        Office = _uow.GetDbContext().OfficeDetail.Where(o => o.OfficeId == x.OfficeId).FirstOrDefault().OfficeName,
-                        Date = new DateTime(x.PayrollYear.Value, x.PayrollMonth.Value, 1),
-                        TotalTax = x.SalaryTax
-                    }).OrderBy(x => x.Date).ToList();
+                    List<SalaryTaxReportModel> salaryTaxReportListFinal = new List<SalaryTaxReportModel>();
 
-                    foreach (SalaryTaxReportModel item in salaryTaxReportList)
+                    foreach (FinancialYearDetail financialYearDetail in financialYear)
                     {
-                        ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == item.CurrencyId && x.ToCurrency==model.CurrencyId );
-
-                        if (item.CurrencyId != model.CurrencyId)
+                        List<SalaryTaxReportModel> salaryTaxReportList = _uow.EmployeePaymentTypeRepository.FindAll(x => x.IsDeleted == false && x.IsApproved == true && x.OfficeId == model.OfficeId && x.EmployeeID == model.EmployeeId && x.PayrollYear == financialYearDetail.StartDate.Date.Year)
+                        .Select(x => new SalaryTaxReportModel
                         {
-                            item.TotalTax = item.TotalTax * (double)exchangeRate.Rate;
+                            Currency = _uow.GetDbContext().CurrencyDetails.Where(o => o.CurrencyId == x.CurrencyId).FirstOrDefault().CurrencyName,
+                            CurrencyId = x.CurrencyId,
+                            Office = _uow.GetDbContext().OfficeDetail.Where(o => o.OfficeId == x.OfficeId).FirstOrDefault().OfficeName,
+                            Date = new DateTime(x.PayrollYear.Value, x.PayrollMonth.Value, 1),
+                            TotalTax = x.SalaryTax
+                        }).OrderBy(x => x.Date).ToList();
+
+                        foreach (SalaryTaxReportModel item in salaryTaxReportList)
+                        {
+                            ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == item.CurrencyId && x.ToCurrency == model.CurrencyId);
+
+                            if (item.CurrencyId != model.CurrencyId)
+                            {
+                                item.TotalTax = item.TotalTax * (double)exchangeRate.Rate;
+                            }
+                        }
+
+                        if (salaryTaxReportList.Any())
+                        {
+                            salaryTaxReportListFinal.AddRange(salaryTaxReportList);
                         }
                     }
 
-                    response.data.SalaryTaxReportModelList = salaryTaxReportList;
+                    response.data.SalaryTaxReportModelList = salaryTaxReportListFinal;
                 }
                 else
                     response.data.SalaryTaxReportModelList = null;
@@ -978,7 +966,7 @@ namespace HumanitarianAssistance.Service.Classes
                 }
 
                 var employeesWithNoPension = (from ed in _uow.GetDbContext().EmployeeDetail
-                                              
+
                                               join epd in _uow.GetDbContext().EmployeeProfessionalDetail on ed.EmployeeID equals epd.EmployeeId into edr
                                               from edresult in edr.DefaultIfEmpty()
                                               where ed.IsDeleted == false && edresult.OfficeId == OfficeId
@@ -999,7 +987,7 @@ namespace HumanitarianAssistance.Service.Classes
                     PensionPayment.EmployeeCode = item.EmployeeCode;
                     PensionPayment.TotalPensionAmount = 0;
                     PensionPayment.PensionAmountPaid = 0;
-                    PensionPayment.CurrencyId = _uow.GetDbContext().EmployeePayroll.FirstOrDefault(x=> x.IsDeleted== false && x.EmployeeID== item.EmployeeId).CurrencyId;
+                    PensionPayment.CurrencyId = _uow.GetDbContext().EmployeePayroll.FirstOrDefault(x => x.IsDeleted == false && x.EmployeeID == item.EmployeeId).CurrencyId;
                     PensionPaymentList.Add(PensionPayment);
                 }
 
@@ -1101,45 +1089,84 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var payrollinfo = await _uow.PayrollMonthlyHourDetailRepository
-                                        .FindAsync(x => x.IsDeleted == false &&
-                                                        x.OfficeId == model.OfficeId &&
-                                                        x.PayrollMonth == model.PayrollMonth &&
-                                                        x.PayrollYear == model.PayrollYear
-                                                   );
-                if (payrollinfo == null)
+
+
+                TimeSpan hours;
+                hours = Convert.ToDateTime(model.OutTime) - Convert.ToDateTime(model.InTime);
+                model.Hours = Convert.ToInt32(hours.ToString().Substring(0, 2));
+
+                
+
+                if (model.SaveForAllOffice)
                 {
-                    TimeSpan hours;
-                    hours = Convert.ToDateTime(model.OutTime) - Convert.ToDateTime(model.InTime);
-                    model.Hours = Convert.ToInt32(hours.ToString().Substring(0, 2));
+                    List<PayrollMonthlyHourDetail> payrollMonthlyHourDetails = new List<PayrollMonthlyHourDetail>();
 
-                    PayrollMonthlyHourDetail obj = new PayrollMonthlyHourDetail();
+                    List<int> officeIds = _uow.GetDbContext().OfficeDetail.Where(x => x.IsDeleted == false).Select(x => x.OfficeId).ToList();
 
-                    obj.CreatedById = model.CreatedById;
-                    obj.CreatedDate = model.CreatedDate;
+                    foreach (int officeId in officeIds)
+                    {
+                        var payrollinfo = await _uow.PayrollMonthlyHourDetailRepository
+                                    .FindAsync(x => x.IsDeleted == false &&
+                                                    x.OfficeId == officeId &&
+                                                    x.PayrollMonth == model.PayrollMonth &&
+                                                    x.PayrollYear == model.PayrollYear
+                                               );
 
-                    obj.OfficeId = model.OfficeId;
-                    obj.Hours = model.Hours;
-                    obj.WorkingTime = model.WorkingTime; //total working hours
-                    obj.InTime = model.InTime;
-                    obj.OutTime = model.OutTime;
-                    obj.PayrollMonth = model.PayrollMonth;
-                    obj.PayrollYear = model.PayrollYear;
-                    obj.IsDeleted = false;
+                        if (payrollinfo == null)
+                        {
+                            PayrollMonthlyHourDetail obj = new PayrollMonthlyHourDetail();
+                            obj.CreatedById = model.CreatedById;
+                            obj.CreatedDate = model.CreatedDate;
+                            obj.Hours = model.Hours;
+                            obj.WorkingTime = model.WorkingTime; //total working hours
+                            obj.InTime = model.InTime;
+                            obj.OutTime = model.OutTime;
+                            obj.PayrollMonth = model.PayrollMonth;
+                            obj.PayrollYear = model.PayrollYear;
+                            obj.IsDeleted = false;
+                            obj.OfficeId = officeId;
+                            payrollMonthlyHourDetails.Add(obj);
+                        }
+                    }
 
-                    //PayrollMonthlyHourDetail obj = _mapper.Map<PayrollMonthlyHourDetail>(model);
-
-                    await _uow.PayrollMonthlyHourDetailRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
-
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                    await _uow.GetDbContext().AddRangeAsync(payrollMonthlyHourDetails);
+                    await _uow.GetDbContext().SaveChangesAsync();
                 }
                 else
                 {
-                    response.StatusCode = StaticResource.MandateNameAlreadyExistCode;
-                    response.Message = StaticResource.HoursAlreadySet;
+                    var payrollinfo = await _uow.PayrollMonthlyHourDetailRepository
+                                    .FindAsync(x => x.IsDeleted == false &&
+                                                    x.OfficeId == model.OfficeId &&
+                                                    x.PayrollMonth == model.PayrollMonth &&
+                                                    x.PayrollYear == model.PayrollYear
+                                               );
+
+                    if (payrollinfo == null)
+                    {
+                        PayrollMonthlyHourDetail obj = new PayrollMonthlyHourDetail();
+                        obj.CreatedById = model.CreatedById;
+                        obj.CreatedDate = model.CreatedDate;
+                        obj.Hours = model.Hours;
+                        obj.WorkingTime = model.WorkingTime; //total working hours
+                        obj.InTime = model.InTime;
+                        obj.OutTime = model.OutTime;
+                        obj.PayrollMonth = model.PayrollMonth;
+                        obj.PayrollYear = model.PayrollYear;
+                        obj.IsDeleted = false;
+                        obj.OfficeId = model.OfficeId;
+                        await _uow.PayrollMonthlyHourDetailRepository.AddAsyn(obj);
+                        await _uow.SaveAsync();
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.MandateNameAlreadyExistCode;
+                        response.Message = StaticResource.HoursAlreadySet;
+                    }
                 }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+
             }
             catch (Exception ex)
             {
@@ -1148,6 +1175,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
         public async Task<APIResponse> EditPayrollMonthlyHourDetail(PayrollMonthlyHourDetailModel model)
         {
             APIResponse response = new APIResponse();
@@ -1292,13 +1320,14 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 List<PayrollHeadModel> PayrollHeadModelList = await _uow.GetDbContext().EmployeePayrollAccountHead
                                                                                        .Where(x => x.IsDeleted == false && x.EmployeeId == EmployeeId)
-                                                                                       .Select(x=> new PayrollHeadModel {
-                                                                                        AccountNo= x.AccountNo,
-                                                                                        PayrollHeadId= x.PayrollHeadId,
-                                                                                        PayrollHeadName= x.PayrollHeadName,
-                                                                                        PayrollHeadTypeId= x.PayrollHeadTypeId,
-                                                                                        TransactionTypeId= x.TransactionTypeId
-                                                                                    }).ToListAsync();
+                                                                                       .Select(x => new PayrollHeadModel
+                                                                                       {
+                                                                                           AccountNo = x.AccountNo,
+                                                                                           PayrollHeadId = x.PayrollHeadId,
+                                                                                           PayrollHeadName = x.PayrollHeadName,
+                                                                                           PayrollHeadTypeId = x.PayrollHeadTypeId,
+                                                                                           TransactionTypeId = x.TransactionTypeId
+                                                                                       }).ToListAsync();
 
                 response.data.PayrollHeadModelList = PayrollHeadModelList;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -1323,7 +1352,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 List<LanguageDetail> LanguageDetailList = await _uow.GetDbContext().LanguageDetail.Where(x => x.IsDeleted == false).ToListAsync();
-                                                                                       
+
 
                 response.data.LanguageDetail = LanguageDetailList;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -2131,15 +2160,15 @@ namespace HumanitarianAssistance.Service.Classes
                         exchangeRateDetail.Date = rate.Date.Value;
                         exchangeRateDetail.OfficeId = rate.OfficeId.Value;
                         exchangeRateDetail.IsDeleted = false;
-                        
+
                         exchangeRateDetail.FromCurrency = rate.FromCurrency.Value;
                         exchangeRateDetail.ToCurrency = i;
-                        exchangeRateDetail.Rate = Convert.ToDecimal(ExchangeRatesonDate.FirstOrDefault(x => x.FromCurrency == rate.FromCurrency.Value).Rate/ ExchangeRatesonDate.FirstOrDefault(x => x.FromCurrency == i).Rate);
+                        exchangeRateDetail.Rate = Convert.ToDecimal(ExchangeRatesonDate.FirstOrDefault(x => x.FromCurrency == rate.FromCurrency.Value).Rate / ExchangeRatesonDate.FirstOrDefault(x => x.FromCurrency == i).Rate);
                         ExchangeRateDetailList.Add(exchangeRateDetail);
                     }
 
                     _uow.GetDbContext().ExchangeRateDetail.AddRange(ExchangeRateDetailList);
-                   _uow.GetDbContext().SaveChanges();
+                    _uow.GetDbContext().SaveChanges();
                 }
             }
             catch (Exception ex)

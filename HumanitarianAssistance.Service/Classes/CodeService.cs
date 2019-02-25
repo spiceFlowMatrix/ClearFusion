@@ -746,7 +746,7 @@ namespace HumanitarianAssistance.Service.Classes
                     TransactionTypeId = x?.TransactionTypeId ?? 0
                 }).OrderBy(x => x.HeadName).ToList();
 
-                response.data.SalaryHeadList = salaryheadlist;
+                response.data.SalaryHeadList = salaryheadlist.OrderBy(x => x.TransactionTypeId).ThenBy(x => x.HeadTypeId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
