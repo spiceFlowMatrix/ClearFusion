@@ -247,6 +247,7 @@ namespace HumanitarianAssistance.Entities
 
         #region Marketing
         public DbSet<PolicyTimeSchedule> PolicyTimeSchedules { get; set; }
+        public DbSet<PolicyDaySchedule> PolicyDaySchedules { get; set; }
         public DbSet<PolicySchedule> PolicySchedules { get; set; }
         public DbSet<UnitRate> UnitRates { get; set; }
         public DbSet<PolicyDetail> PolicyDetails { get; set; }
@@ -263,6 +264,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<Nature> Natures { get; set; }
         public DbSet<TimeCategory> TimeCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<PolicyOrderSchedule> PolicyOrderSchedules { get; set; }
         #endregion
 
 
@@ -270,7 +272,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<AccountFilterType> AccountFilterType { get; set; }
         public DbSet<ChartOfAccountNew> ChartOfAccountNew { get; set; }
         public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
-        
+
         #endregion
 
 
@@ -577,7 +579,7 @@ namespace HumanitarianAssistance.Entities
           );
 
             modelBuilder.Entity<LeaveReasonDetail>().HasData(
-              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId=1, ReasonName="Casual Leave", Unit= 12 },
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 1, ReasonName = "Casual Leave", Unit = 12 },
               new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 2, ReasonName = "Emergency Leave", Unit = 6 },
               new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 3, ReasonName = "Maternity Leave", Unit = 90 }
           );
@@ -667,7 +669,7 @@ namespace HumanitarianAssistance.Entities
             );
 
             modelBuilder.Entity<FinancialYearDetail>().HasData(
-                new FinancialYearDetail { IsDeleted = false, FinancialYearId = 1, StartDate = new DateTime(DateTime.Now.Year, 1, 1), EndDate = new DateTime(DateTime.Now.Year, 12, 31), FinancialYearName= DateTime.Now.Year+" Financial Year", IsDefault = true }
+                new FinancialYearDetail { IsDeleted = false, FinancialYearId = 1, StartDate = new DateTime(DateTime.Now.Year, 1, 1), EndDate = new DateTime(DateTime.Now.Year, 12, 31), FinancialYearName = DateTime.Now.Year + " Financial Year", IsDefault = true }
             );
 
             modelBuilder.Entity<DistrictDetail>().HasData(
@@ -875,28 +877,13 @@ namespace HumanitarianAssistance.Entities
 
              new DistrictDetail { IsDeleted = false, DistrictID = 123, District = "Wyoming", ProvinceID = 82 }
          );
-            modelBuilder.Entity<Category>().HasData(
-            new Category { IsDeleted = false, CategoryId = 1, CategoryName="Bank" },
-            new Category { IsDeleted = false, CategoryId = 2, CategoryName = "NGO" },
-            new Category { IsDeleted = false, CategoryId = 3, CategoryName = "Telecommunicaton" },
-            new Category { IsDeleted = false, CategoryId = 4, CategoryName = "Government" },
-            new Category { IsDeleted = false, CategoryId = 5, CategoryName = "Hospital" },
-            new Category { IsDeleted = false, CategoryId = 6, CategoryName = "Travel Agency" },
-            new Category { IsDeleted = false, CategoryId = 7, CategoryName = "University" },
-            new Category { IsDeleted = false, CategoryId = 8, CategoryName = "Media Groups" },
-            new Category { IsDeleted = false, CategoryId = 9, CategoryName = "Shops" },
-            new Category { IsDeleted = false, CategoryId = 10, CategoryName = "Energy" },
-            new Category { IsDeleted = false, CategoryId = 11, CategoryName = "School" },
-            new Category { IsDeleted = false, CategoryId = 12, CategoryName = "Construction" }
-
-            );
 
             #endregion
 
 
 
 
-           base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
 
 

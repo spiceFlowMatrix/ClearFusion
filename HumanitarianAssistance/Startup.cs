@@ -348,6 +348,24 @@ namespace HumanitarianAssistance
           {
             await DbInitializer.CreateDefaultUserAndRoleForApplication(um, rm, context, logger);
           }
+
+          // check if Contract Content present or not
+          if (!context.ContractTypeContent.Any())
+          {
+            await DbInitializer.AddContractClauses(context);
+          }
+
+          // check if JobGrade present or not
+          if (!context.JobGrade.Any())
+          {
+            await DbInitializer.AddJobGrades(context);
+          }
+
+          // check if Categories present or not
+          if (!context.Categories.Any())
+          {
+            await DbInitializer.AddMarketingCategory(context);
+          }
         }
       }
     }

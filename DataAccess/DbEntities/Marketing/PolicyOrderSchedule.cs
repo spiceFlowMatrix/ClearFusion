@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DataAccess.DbEntities.Marketing
 {
-    public class PolicyTimeSchedule: BaseEntityWithoutId
+    public class PolicyOrderSchedule: BaseEntityWithoutId
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -15,9 +15,8 @@ namespace DataAccess.DbEntities.Marketing
         [ForeignKey("PolicyId")]
         public long? PolicyId { get; set; }
         public virtual PolicyDetail PolicyDetails { get; set; }
-        public string TimeScheduleCode { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }        
-        public bool IsActive { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public bool RequestSchedule { get; set; }
     }
 }

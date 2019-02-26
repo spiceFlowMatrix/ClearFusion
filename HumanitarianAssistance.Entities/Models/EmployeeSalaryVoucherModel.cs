@@ -16,5 +16,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int CurrencyId { get; set; }
         public int JournalCode { get; set; }
         public int PresentHours { get; set; }
+        public DateTime PayrollMonth { get; set; }
     }
 }
