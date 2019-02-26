@@ -272,7 +272,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         private async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime endDate)
         {
             return await _uow.GetDbContext().VoucherTransactions
-                .Where(x => x.TransactionDate <= endDate
+                .Where(x => x.TransactionDate != null ? x.TransactionDate.Value.Date <= endDate.Date : x.TransactionDate <= endDate
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
                             && x.IsDeleted == false
                             && x.ChartOfAccountNewId != null)
@@ -284,8 +284,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             DateTime endDate)
         {
             return await _uow.GetDbContext().VoucherTransactions
-                .Where(x => x.TransactionDate <= endDate
-                            && x.TransactionDate >= startDate
+                .Where(x => x.TransactionDate != null ? x.TransactionDate.Value.Date <= endDate.Date : x.TransactionDate <= endDate
+                            && x.TransactionDate != null ? x.TransactionDate.Value.Date >= startDate.Date : x.TransactionDate >= startDate
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
                             && x.IsDeleted == false
                             && x.ChartOfAccountNewId != null)
@@ -460,7 +460,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         private async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime startDate,
             DateTime endDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
         {
-            var data =  await _uow.GetDbContext().VoucherTransactions
+            var data = await _uow.GetDbContext().VoucherTransactions
                 .Where(x => x.TransactionDate <= endDate
                             && x.TransactionDate >= startDate
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
@@ -637,7 +637,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 if (accountIds.Any())
                 {
                     //Get all Accounts that are already saved
-                    List<GainLossSelectedAccounts> gainLossSelectedAccountsList =  _uow.GetDbContext().GainLossSelectedAccounts.Where(x => x.IsDeleted == false).ToList();
+                    List<GainLossSelectedAccounts> gainLossSelectedAccountsList = _uow.GetDbContext().GainLossSelectedAccounts.Where(x => x.IsDeleted == false).ToList();
 
                     if (gainLossSelectedAccountsList.Any())
                     {

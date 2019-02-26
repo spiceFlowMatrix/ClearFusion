@@ -57,7 +57,12 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string TotalMarksObtained { get; set; }
         public string Status { get; set; }
         public string InterviewStatus { get; set; }
-        public List<int> Interviewers { get; set; }
+        public List<Interviewers> Interviewers { get; set; }
 
+    }
+
+    public class Interviewers
+    {
+        public int Interviewer { get; set; }
     }
 }
