@@ -203,6 +203,7 @@ namespace DataAccess
         IGenericRepository<UnitRate> UnitRateRepository { get; }
         IGenericRepository<PolicyDetail> PolicyRepository { get; }
         IGenericRepository<PolicyTimeSchedule> PolicyTimeScheduleRepository { get; }
+        IGenericRepository<PolicyOrderSchedule> PolicyOrderScheduleRepository { get; }
         IGenericRepository<PolicyDaySchedule> PolicyDayScheduleRepository { get; }
         IGenericRepository<PolicySchedule> PolicyScheduleRepository { get; }
         IGenericRepository<ActivityType> ActivityTypeRepository { get; }

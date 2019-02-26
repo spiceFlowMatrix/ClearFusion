@@ -4556,7 +4556,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var TransList = await _uow.GetDbContext().VoucherTransactions
                                           .Include(c => c.CurrencyDetails)
-                                          .Where(x => x.IsDeleted == false && x.CurrencyId == currencyId && x.BudgetLineId == budgetLineId)
+                                          .Where(x => x.IsDeleted == false && x.VoucherDetails.CurrencyId == currencyId && x.BudgetLineId == budgetLineId)
                                           .OrderBy(x => x.CreatedDate)
                                           .ToListAsync();
 
