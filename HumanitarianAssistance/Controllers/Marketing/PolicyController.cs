@@ -255,5 +255,18 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       }
       return apiRespone;
     }
+
+    [HttpPost]
+    public async Task<APIResponse> AddEditPolicyOrderSchedule([FromBody] PolicyOrderScheduleModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.AddEditPolicyOrderSchedule(model, id);
+      }
+      return apiRespone;
+    }
   }
 }

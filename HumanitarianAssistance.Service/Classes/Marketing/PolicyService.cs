@@ -829,6 +829,49 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
-        }       
+        }
+        public async Task<APIResponse> AddEditPolicyOrderSchedule(PolicyOrderScheduleModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model.Id == 0)
+                {
+                    PolicyOrderSchedule obj = _mapper.Map<PolicyOrderScheduleModel, PolicyOrderSchedule>(model);
+                    obj.PolicyId = model.PolicyId;
+                    obj.CreatedDate = DateTime.UtcNow;
+                    obj.StartDate = model.StartDate;
+                    obj.EndDate = model.EndDate;
+                    obj.IsDeleted = false;
+                    await _uow.PolicyOrderScheduleRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.StatusCode = 200;
+                    //response.data.policyTimeScheduleDetails = obj;
+                    response.Message = "Schedule order requested successfully";
+                }
+                //else
+                //{
+                //    var existRecord = await _uow.PolicyOrderScheduleRepository.FindAsync(x => x.IsDeleted == false && x.Id == model.Id);
+                //    if (existRecord != null)
+                //    {
+                //        _mapper.Map(model, existRecord);
+                //        existRecord.IsDeleted = false;
+                //        existRecord.ModifiedById = UserId;
+                //        existRecord.ModifiedDate = DateTime.Now;
+                //        await _uow.PolicyOrderScheduleRepository.UpdateAsyn(existRecord);
+                //        response.data.policyTimeScheduleDetails = existRecord;
+                //        response.StatusCode = StaticResource.successStatusCode;
+                //        response.Message = "Policy updated successfully";
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
     }
 }
