@@ -19,10 +19,10 @@ namespace DataAccess.DbEntities.Project
         public long? BudgetLineId { get; set; }
         [ForeignKey("BudgetLineId")]
         public ProjectBudgetLineDetail ProjectBudgetLineDetail { get; set; }
-        public int? AssigneeId { get; set; }
+        public int? EmployeeID { get; set; }
         [ForeignKey("EmployeeID")]
         public EmployeeDetail EmployeeDetail { get; set; }
-        public int? LocationId { get; set; }
+        public int? OfficeId { get; set; }
         [ForeignKey("OfficeId")]
 
         public OfficeDetail OfficeDetail { get; set; }

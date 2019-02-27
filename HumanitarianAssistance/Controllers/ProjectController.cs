@@ -1498,5 +1498,16 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #endregion
 
+    #region ProjectActivity
+    [HttpGet]
+    public async Task<APIResponse> GetProjectActivityDetail()
+    {
+      APIResponse response = await _iProject.GetallProjectActivityDetail();
+      return response;
+    }
+
+
+    #endregion
+
   }
 }

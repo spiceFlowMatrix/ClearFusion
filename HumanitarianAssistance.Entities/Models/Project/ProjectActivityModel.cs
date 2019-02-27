@@ -14,8 +14,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public long? BudgetLineId { get; set; }
-        public int? AssigneeId { get; set; }
-        public int? LocationId { get; set; }
+        public int? EmployeeID { get; set; }
+        public int? OfficeId { get; set; }
         public int? StatusId { get; set; }
         //REcurring
         public bool? Recurring { get; set; }
@@ -47,6 +47,12 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string Weeknesses { get; set; }
         public string MonitoringChallenges { get; set; }
         public string Recommendation { get; set; }
+        public string BudgetName { get; set; }
+        public string OfficeName { get; set; }
+        public string StatusName { get; set; }
+        public string EmployeeName { get; set; }
+
+
 
 
     }

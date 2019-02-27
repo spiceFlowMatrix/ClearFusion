@@ -4148,7 +4148,7 @@ namespace HumanitarianAssistance.Service.Classes
                         .OrderByDescending(x => x.ProjectJobId)
                                                           .FirstOrDefault().ProjectJobId;
 
-                    obj.ProjectJobCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D4}", 1);
+                    obj.ProjectJobCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D5}", 1);
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
@@ -4267,7 +4267,7 @@ namespace HumanitarianAssistance.Service.Classes
                         .OrderByDescending(x => x.BudgetLineId)
                                                           .FirstOrDefault().BudgetLineId;
 
-                    obj.BudgetCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D4}", 1);
+                    obj.BudgetCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D5}", 1);
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
@@ -4672,6 +4672,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
+       
 
 
     }

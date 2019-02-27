@@ -194,6 +194,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetTransactionList(string username, int currencyId, long budgetLineId);
 
         Task<APIResponse> DeleteProjectJob(int model, string UserId);
+
         #endregion
     }
 }
