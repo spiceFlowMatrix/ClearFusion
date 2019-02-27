@@ -59,6 +59,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public bool IsActive { get; set; }
         //public long? PolicyId { get; set; }
         public string[] RepeatDays { get; set; }
+        public List<string> repeatDays { get; set; }
         //public string StartTime { get; set; }
         //public string EndTime { get; set; }
     }

@@ -548,7 +548,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     await _uow.SaveAsync();
                     response.StatusCode = 200;
                     response.data.policyTimeScheduleDetails = obj;
-                    response.Message = "Schedule created successfully";
+                    response.Message = "Time slot created successfully";
                 }
                 else
                 {
@@ -598,7 +598,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         await _uow.PolicyTimeScheduleRepository.UpdateAsyn(existRecord);
                         response.data.policyTimeScheduleDetails = existRecord;
                         response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Policy updated successfully";
+                        response.Message = "Time slot updated successfully";
                     }
                 }
             }
@@ -819,6 +819,39 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                            Sunday = x.Sunday
                                        }).AsNoTracking().FirstOrDefaultAsync();
                 //response.data.TotalCount = totalCount;
+                List<string> repeatDays = new List<string>();
+               if(policyList != null)
+                {
+                    if (policyList.Monday == true)
+                    {
+                        repeatDays.Add("MON");
+                    }
+                    if (policyList.Tuesday == true)
+                    {
+                        repeatDays.Add("TUE");
+                    }
+                    if (policyList.Wednesday == true)
+                    {
+                        repeatDays.Add("WED");
+                    }
+                    if (policyList.Thursday == true)
+                    {
+                        repeatDays.Add("THU");
+                    }
+                    if (policyList.Friday == true)
+                    {
+                        repeatDays.Add("FRI");
+                    }
+                    if (policyList.Saturday == true)
+                    {
+                        repeatDays.Add("SAT");
+                    }
+                    if (policyList.Sunday == true)
+                    {
+                        repeatDays.Add("SUN");
+                    }
+                    policyList.repeatDays = repeatDays;
+                }                
                 response.data.policyTimeDetailsById = policyList;
                 response.StatusCode = 200;
                 response.Message = "Success";
