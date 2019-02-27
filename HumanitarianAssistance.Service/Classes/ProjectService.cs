@@ -43,6 +43,8 @@ namespace HumanitarianAssistance.Service.Classes
             _hostingEnvironment = hostingEnvironment;
         }
 
+        
+
         #region Donor Details
         public async Task<APIResponse> GetAllDonorFilterList(DonorFilterModel donorFilterModel)
         {
@@ -4242,6 +4244,35 @@ namespace HumanitarianAssistance.Service.Classes
                 response.data.ProjectJobDetailModel = JobDertailList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                int totalCount = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+
+                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => !x.IsDeleted.Value)
+                    .OrderByDescending(x => x.ProjectJobId)
+                    .Skip(projectJobFilterModel.pageSize.Value * projectJobFilterModel.pageIndex.Value)
+                    .Take(projectJobFilterModel.pageSize.Value)
+                    .ToListAsync();
+
+                response.data.ProjectJobDetail = list;
+                response.data.TotalCount = totalCount;
+
+                response.StatusCode = 200;
+                response.Message = "Success";
+
             }
             catch (Exception ex)
             {

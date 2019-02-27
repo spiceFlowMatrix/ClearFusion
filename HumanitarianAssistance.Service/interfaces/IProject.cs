@@ -82,6 +82,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddApprovalDetail(ApproveProjectDetailModel model, string UserId);
         Task<APIResponse> WinApprovalDetail(WinApprovalProjectModel model, string UserId);
 
+        Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
+
         #endregion
 
         #region Project Communication

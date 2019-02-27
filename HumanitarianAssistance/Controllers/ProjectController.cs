@@ -1386,6 +1386,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
+    public async Task<APIResponse> GetAllProjectJobFilterList([FromBody]ProjectJobFilterModel projectJobFilterModel)
+    {
+      APIResponse apiresponse = await _iProject.GetAllProjectJobsFilterList(projectJobFilterModel);
+      return apiresponse;
+
+
+    }
+    [HttpPost]
     public async Task<APIResponse> AddProjectJobDetail([FromBody]ProjectJobDetailModel Model)
 
     {
