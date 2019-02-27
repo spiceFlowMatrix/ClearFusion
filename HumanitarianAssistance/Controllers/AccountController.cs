@@ -249,7 +249,8 @@ namespace HumanitarianAssistance.Controllers
 
             var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
             List<RolePermissions> rolePermissionsList = _uow.GetDbContext().RolePermissions.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
-
+            List<ApproveRejectPermission> approveRejectRolePermissionsList = _uow.GetDbContext().ApproveRejectPermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
+            List<AgreeDisagreePermission> agreeDisagreeRolePermissionsList = _uow.GetDbContext().AgreeDisagreePermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
             if (rolePermissionsList.Any())
             {
               foreach (RolePermissions rolePermissions in rolePermissionsList)
@@ -294,21 +295,6 @@ namespace HumanitarianAssistance.Controllers
                 }
               }
             }
-
-            userRolePermissionsList.Add(userRolePermissions);
-
-          }
-          foreach (var role in roles)
-          {
-            UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
-
-            //userClaims.Add(new Claim("Roles", role)); //imp
-
-            var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
-
-            List<ApproveRejectPermission> approveRejectRolePermissionsList = _uow.GetDbContext().ApproveRejectPermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
-
-
             if (approveRejectRolePermissionsList.Any())
             {
               foreach (ApproveRejectPermission rolePermissions in approveRejectRolePermissionsList)
@@ -354,21 +340,6 @@ namespace HumanitarianAssistance.Controllers
                 }
               }
             }
-
-
-            userRolePermissionsList.Add(userRolePermissions);
-
-          }
-          foreach (var role in roles)
-          {
-            UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
-
-            //userClaims.Add(new Claim("Roles", role)); //imp
-
-            var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
-
-            List<AgreeDisagreePermission> agreeDisagreeRolePermissionsList = _uow.GetDbContext().AgreeDisagreePermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
-
             if (agreeDisagreeRolePermissionsList.Any())
             {
               foreach (AgreeDisagreePermission rolePermissions in agreeDisagreeRolePermissionsList)
@@ -414,7 +385,6 @@ namespace HumanitarianAssistance.Controllers
                 }
               }
             }
-
             userRolePermissionsList.Add(userRolePermissions);
 
           }
