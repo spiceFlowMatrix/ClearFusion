@@ -182,7 +182,6 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> GetAllProjectJobDetail();
         Task<APIResponse> GetAllProjectJobByProjectId(long ProjectId);
-
         Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId);
         Task<APIResponse> GetallBudgetLineDetail();
         Task<APIResponse> GetallBudgetLineDetail(long projectId);
@@ -192,6 +191,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllBudgetFilterList(BudgetLineFilterModel voucherNewFilterModel, long projectId);
 
         Task<APIResponse> GetTransactionListByProjectId(long projectId,string userName);
+
+        Task<APIResponse> DeleteProjectJob(int model, string UserId);
         #endregion
     }
 }
