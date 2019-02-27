@@ -102,7 +102,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EmployeePaymentTypeReportForSaveOnly(List<EmployeePaymentTypeModel> model, string userid);
         //Task<APIResponse> RemoveApprovedList(RemoveApprovedEmployee model, string userid);
         Task<APIResponse> RemoveApprovedList(List<EmployeePaymentTypeModel> model, string userid);
-        Task<APIResponse> EmployeePensionReport(PensionReportModel model);
+        Task<APIResponse> EmployeePensionReport(PensionModel model);
         Task<APIResponse> GetAllEmployeeProjects(int EmployeeId);
         Task<APIResponse> AssignEmployeeProjectPercentage(List<EmployeeProjectModel> model, string userid);
         Task<APIResponse> GetExchangeRate(ExchangeRateModel model);
@@ -113,7 +113,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetSelectedEmployeeContractByEmployeeId(int EmployeeId);
 
         Task<APIResponse> GetEmployeeSalaryDetails(int OfficeId, int year, int month, int EmployeeId);
-        Task<APIResponse> EmployeeTaxCalculation(int OfficeId, int EmployeeId, int FinancialYearId);
+        Task<APIResponse> EmployeeTaxCalculation(SalaryTaxViewModel model);
         Task<APIResponse> EmployeeSalaryTaxDetails(SalaryTaxModel model);
         Task<APIResponse> GetAllAdvancesByOfficeId(int OfficeId, int month, int year);
         Task<APIResponse> EditAdvances(AdvancesModel model, string UserId);

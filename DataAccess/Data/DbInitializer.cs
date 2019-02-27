@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using DataAccess.DbEntities.Marketing;
 
 namespace DataAccess.Data
 {
@@ -59,8 +60,6 @@ namespace DataAccess.Data
             await AddDefaultRoleToDefaultUser(um, email, administratorRole, user, logger);
             await AddDefaultRoles(context, rm);
             await AddDefaultPermission(context);
-            await AddJobGrades(context);
-            await AddContractClauses(context);
         }
 
         private static async Task CreateDefaultAdministratorRole(RoleManager<IdentityRole> rm, string administratorRole, ILogger<DbInitializer> logger)
@@ -217,7 +216,6 @@ namespace DataAccess.Data
             return errors;
         }
 
-
         public static async Task AddDefaultPermission(ApplicationDbContext context)
         {
             try
@@ -285,6 +283,35 @@ namespace DataAccess.Data
                 var errormessage = ex.Message;
             }
         }
+
+        public static async Task AddMarketingCategory(ApplicationDbContext context)
+        {
+            try
+            {
+                List<Category> list = new List<Category>
+                {
+                    new Category { IsDeleted = false, CategoryId = 1, CategoryName="Bank" },
+                    new Category { IsDeleted = false, CategoryId = 2, CategoryName = "NGO" },
+                    new Category { IsDeleted = false, CategoryId = 3, CategoryName = "Telecommunicaton" },
+                    new Category { IsDeleted = false, CategoryId = 4, CategoryName = "Government" },
+                    new Category { IsDeleted = false, CategoryId = 5, CategoryName = "Hospital" },
+                    new Category { IsDeleted = false, CategoryId = 6, CategoryName = "Travel Agency" },
+                    new Category { IsDeleted = false, CategoryId = 7, CategoryName = "University" },
+                    new Category { IsDeleted = false, CategoryId = 8, CategoryName = "Media Groups" },
+                    new Category { IsDeleted = false, CategoryId = 9, CategoryName = "Shops" },
+                    new Category { IsDeleted = false, CategoryId = 10, CategoryName = "Energy" },
+                    new Category { IsDeleted = false, CategoryId = 11, CategoryName = "School" },
+                    new Category { IsDeleted = false, CategoryId = 12, CategoryName = "Construction" }
+                };
+                await context.Categories.AddRangeAsync(list);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                var errormessage = ex.Message;
+            }
+        }
+
 
     }
 }

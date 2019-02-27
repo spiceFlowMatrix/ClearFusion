@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190226085532_CategorySeedDataCorrections")]
+    partial class CategorySeedDataCorrections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4812,40 +4814,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ProducerId");
 
                     b.ToTable("PolicyDetails");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyOrderSchedule", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long?>("PolicyId");
-
-                    b.Property<bool>("RequestSchedule");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("PolicyId");
-
-                    b.ToTable("PolicyOrderSchedules");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicySchedule", b =>
@@ -10695,21 +10663,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.Marketing.Producer", "Producers")
                         .WithMany()
                         .HasForeignKey("ProducerId");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyOrderSchedule", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.PolicyDetail", "PolicyDetails")
-                        .WithMany()
-                        .HasForeignKey("PolicyId");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicySchedule", b =>

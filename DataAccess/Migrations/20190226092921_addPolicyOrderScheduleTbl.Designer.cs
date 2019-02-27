@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190226092921_addPolicyOrderScheduleTbl")]
+    partial class addPolicyOrderScheduleTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4433,6 +4435,21 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new { CategoryId = 1L, CategoryName = "Bank", IsDeleted = false },
+                        new { CategoryId = 2L, CategoryName = "NGO", IsDeleted = false },
+                        new { CategoryId = 3L, CategoryName = "Telecommunicaton", IsDeleted = false },
+                        new { CategoryId = 4L, CategoryName = "Government", IsDeleted = false },
+                        new { CategoryId = 5L, CategoryName = "Hospital", IsDeleted = false },
+                        new { CategoryId = 6L, CategoryName = "Travel Agency", IsDeleted = false },
+                        new { CategoryId = 7L, CategoryName = "University", IsDeleted = false },
+                        new { CategoryId = 8L, CategoryName = "Media Groups", IsDeleted = false },
+                        new { CategoryId = 9L, CategoryName = "Shops", IsDeleted = false },
+                        new { CategoryId = 10L, CategoryName = "Energy", IsDeleted = false },
+                        new { CategoryId = 11L, CategoryName = "School", IsDeleted = false },
+                        new { CategoryId = 12L, CategoryName = "Construction", IsDeleted = false }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.ClientDetails", b =>

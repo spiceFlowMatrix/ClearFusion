@@ -335,6 +335,9 @@ namespace HumanitarianAssistance.Service.APIResponses
 
 
         #region Marketing    
+        public PolicyTimeSchedule policyTimeScheduleDetails { get; set; }
+        public PolicyDaySchedule policyDayScheduleDetails { get; set; }
+        public List<PolicyTimeScheduleModel> policySchedulesByTimeList { get; set; }
         public List<PolicyScheduleModel> policySchedulesByDateList { get; set; }
         public ICollection<JobDetails> JobDetails { get; set; }
         public JobDetails JobDetailModel { get; set; }
@@ -380,6 +383,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public PolicyDetail policyDetails { get; set; }
         public List<PolicyModel> policyFilterList { get; set; }
         public PolicyModel policyDetailsById { get; set; }
+        public PolicyTimeScheduleModel policyTimeDetailsById { get; set; }
         public TimeCategory timeCatergoryById { get; set; }
         #endregion
 

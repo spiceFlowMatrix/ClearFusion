@@ -18,14 +18,14 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllEmployeeMonthlyPayrollList(int officeid,int currencyid, int month, int year, int paymentType);
         Task<APIResponse> EmployeePaymentTypeReportForSaveOnly(List<EmployeePaymentTypeModel> model, string userid);
         Task<APIResponse> EmployeePaymentTypeReport(List<EmployeePaymentTypeModel> model, string userid);
-        Task<APIResponse> EmployeePensionReport(PensionReportModel model);
+        Task<APIResponse> EmployeePensionReport(PensionModel model);
         Task<APIResponse> GetAllEmployeePension(int OfficeId);
         Task<APIResponse> AddEmployeeLeaveDetails(List<AssignLeaveToEmployeeModel> model);
 
         string TransferDataForAttendance();
 		Task<string> TransferDataForVoucherTransaction2008();
 
-		Task<APIResponse> EmployeeSalaryTaxDetails(SalaryTaxModel model);
+		Task<APIResponse> EmployeeSalaryTaxDetails(SalaryTaxViewModel model);
         Task<APIResponse> GetEmployeePensionHistoryDetail(int EmployeeId, int OfficeId);
         Task<APIResponse> EditEmployeeSalaryAccountDetail(List<EmployeePayrollAccountModel> model, string userid);
         Task<APIResponse> GetPrimarySalaryHeads(int EmployeeId);
