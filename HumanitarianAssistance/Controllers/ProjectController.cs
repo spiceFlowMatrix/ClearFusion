@@ -41,7 +41,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       _iProject = iProject;
       _iActivity = iActivity;
       _hostingEnvironment = hostingEnvironment;
-      _serializerSettings = new JsonSerializerSettings   
+      _serializerSettings = new JsonSerializerSettings
       {
         Formatting = Formatting.Indented,
         NullValueHandling = NullValueHandling.Ignore
@@ -1520,7 +1520,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> AddProjectActivityDetail(ProjectActivityModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        apiRespone = await _iActivity.AddProjectActivityDetail(model, id);
+      }
 
+      return apiRespone;
+    }
     #endregion
 
   }
