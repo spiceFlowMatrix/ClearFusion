@@ -120,6 +120,63 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> EditProjectActivityDetail(ProjectActivityModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var ProjectactivityDetail = _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == model.ActivityId);
+                if (ProjectactivityDetail != null)
+                {
+                    ProjectActivityDetail obj = _mapper.Map<ProjectActivityModel, ProjectActivityDetail>(model);
+                    obj.ModifiedDate = DateTime.UtcNow;
+                    obj.ModifiedById = UserId;
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> DeleteProjectActivity(long activityId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var activityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(c => c.ActivityId == activityId);
+
+                if (activityDetail != null)
+                {
+                    activityDetail.IsDeleted = true;
+                    activityDetail.ModifiedById = userId;
+                    activityDetail.ModifiedDate = DateTime.UtcNow;
+
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(activityDetail);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.VoucherNotPresent;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
 
         #endregion
     }

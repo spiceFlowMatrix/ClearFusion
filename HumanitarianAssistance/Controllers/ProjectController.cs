@@ -1534,6 +1534,37 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiRespone;
     }
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectActivityDetail(ProjectActivityModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        apiRespone = await _iActivity.EditProjectActivityDetail(model, id);
+      }
+
+      return apiRespone;
+    }
+
+
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteActivityDetail(long activityId,string userId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        response = await _iActivity.DeleteProjectActivity(activityId, userId);
+      }
+      return response;
+    }
     #endregion
 
   }
