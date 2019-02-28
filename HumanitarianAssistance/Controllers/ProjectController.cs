@@ -1374,7 +1374,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     //}
     #endregion
 
-    #region BudgetLine
+    #region ProjectJob
 
     //project job
 
@@ -1424,6 +1424,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetAllProjectJobFilterList([FromBody]ProjectJobFilterModel projectJobFilterModel)
+    {
+      APIResponse apiresponse = await _iProject.GetAllProjectJobsFilterList(projectJobFilterModel);
+      return apiresponse;
+    }
+
+
+    #endregion
+
+    #region BudgetLine Detail
 
     [HttpPost]
     public async Task<APIResponse> AddBudgetLineDetail([FromBody]ProjectBudgetLineDetailModel Model)
