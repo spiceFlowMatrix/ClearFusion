@@ -132,7 +132,7 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    
+
     public async Task<object> GetAllOfficeDetails()
     {
       APIResponse apiRespone = null;
@@ -1202,6 +1202,14 @@ namespace HumanitarianAssistance.Controllers
         var id = user.Id;
         response = await _icode.GetAllEmployeeAppraisalMoreDetails(OfficeId);
       }
+      return response;
+    }
+
+    [HttpGet]
+    public async Task<APIResponse> GetAllEmployeeList()
+    {
+      APIResponse response = new APIResponse();
+      response = await _icode.GetAllEmployeeList();
       return response;
     }
 
