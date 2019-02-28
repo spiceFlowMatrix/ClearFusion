@@ -29,16 +29,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     private readonly UserManager<AppUser> _userManager;
     private IHostingEnvironment _hostingEnvironment;
     private IProject _iProject;
+    private IProjectActivityService _iActivity;
     public ProjectController(
        UserManager<AppUser> userManager,
       IProject iProject,
-      IHostingEnvironment hostingEnvironment
+      IHostingEnvironment hostingEnvironment,
+      IProjectActivityService iActivity
       )
     {
       _userManager = userManager;
       _iProject = iProject;
+      _iActivity = iActivity;
       _hostingEnvironment = hostingEnvironment;
-      _serializerSettings = new JsonSerializerSettings
+      _serializerSettings = new JsonSerializerSettings   
       {
         Formatting = Formatting.Indented,
         NullValueHandling = NullValueHandling.Ignore
@@ -1374,7 +1377,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     //}
     #endregion
 
-    #region BudgetLine
+    #region ProjectJob
 
     //project job
 
@@ -1424,6 +1427,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetAllProjectJobFilterList([FromBody]ProjectJobFilterModel projectJobFilterModel)
+    {
+      APIResponse apiresponse = await _iProject.GetAllProjectJobsFilterList(projectJobFilterModel);
+      return apiresponse;
+    }
+
+
+    #endregion
+
+    #region BudgetLine Detail
 
     [HttpPost]
     public async Task<APIResponse> AddBudgetLineDetail([FromBody]ProjectBudgetLineDetailModel Model)
@@ -1502,7 +1516,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     [HttpGet]
     public async Task<APIResponse> GetProjectActivityDetail()
     {
-      APIResponse response = await _iProject.GetallProjectActivityDetail();
+      APIResponse response = await _iActivity.GetallProjectActivityDetail();
       return response;
     }
 
