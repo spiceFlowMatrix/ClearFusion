@@ -51,6 +51,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddEmployeeAppraisalMoreDetails(EmployeeAppraisalDetailsModel model, string UserId);
         Task<APIResponse> EditEmployeeAppraisalMoreDetails(EmployeeAppraisalDetailsModel model, string UserId);
         Task<APIResponse> GetEmployeeDetailByOfficeId(int OfficeId);
+        Task<APIResponse> GetAllEmployeeList();
         Task<APIResponse> GetEmployeeDetailByEmployeeId(int EmployeeId);
         Task<APIResponse> GetAllEmployeeAppraisalMoreDetails(int OfficeId);
         Task<APIResponse> AddInterviewTechnicalQuestions(InterviewTechnicalQuestions model, string UserId);

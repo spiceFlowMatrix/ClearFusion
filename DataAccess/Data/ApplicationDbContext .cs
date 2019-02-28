@@ -241,6 +241,11 @@ namespace HumanitarianAssistance.Entities
 
         public DbSet<ProjectBudgetLineDetail> ProjectBudgetLineDetail { get; set; }
         public DbSet<ProjectJobDetail> ProjectJobDetail { get; set; }
+        public DbSet<ActivityStatusDetail> ActivityStatusDetail { get; set; }
+        public DbSet<ProjectActivityDetail> ProjectActivityDetail { get; set; }
+
+
+        
 
 
         #endregion

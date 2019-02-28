@@ -4135,54 +4135,69 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #region ProjectJobDetail
-
         public async Task<APIResponse> AddEditProjectJobDetail(ProjectJobDetailModel model, string UserId)
         {
             APIResponse response = new APIResponse();
+            long LatestprojectId = 0;
             try
             {
-                long LatestprojectId = 0;
-                var ProjectJobCode = string.Empty;
-                ProjectJobDetail projectJobDetail = _uow.GetDbContext().ProjectJobDetail
-                                                          .OrderByDescending(x => x.ProjectJobId == model.ProjectJobId)
-                                                          .FirstOrDefault(x => x.IsDeleted == false);
-                if (projectJobDetail == null)
-                {
-                    LatestprojectId = 1;
-                    ProjectJobCode = genrateCode(LatestprojectId.ToString());
-                }
-                else
-                {
-                    LatestprojectId = projectJobDetail.ProjectJobId + 1;
-                    ProjectJobCode = genrateCode(LatestprojectId.ToString());
-                }
-
                 ProjectJobDetail obj = _mapper.Map<ProjectJobDetailModel, ProjectJobDetail>(model);
-                obj.ProjectJobCode = ProjectJobCode; // ProjectDetail != null ? getProjectCode(ProjectDetail.ProjectId.ToString()) : getProjectCode("1");
-                obj.IsDeleted = false;
-
                 if (model.ProjectJobId == 0)
                 {
+                    LatestprojectId = _uow.GetDbContext().ProjectJobDetail
+                        .OrderByDescending(x => x.ProjectJobId)
+                                                          .FirstOrDefault().ProjectJobId;
+
+                    obj.ProjectJobCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D5}", 1);
                     obj.CreatedDate = DateTime.UtcNow;
+                    obj.IsDeleted = false;
                     obj.CreatedById = UserId;
                     await _uow.ProjectJobDetailRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
                 }
                 else
                 {
+                    ProjectJobDetail projectJobDetail = _uow.GetDbContext().ProjectJobDetail.FirstOrDefault(x => x.IsDeleted == false && x.ProjectJobId == model.ProjectJobId);
+                    projectJobDetail.ProjectJobCode = obj.ProjectJobCode;
+                    projectJobDetail.ProjectJobName = obj.ProjectJobName;
+                    projectJobDetail.ProjectJobId = obj.ProjectJobId;
+
                     obj.ModifiedById = UserId;
                     obj.ModifiedDate = DateTime.UtcNow;
-                    await _uow.ProjectJobDetailRepository.UpdateAsyn(obj);
+                    obj.IsDeleted = false;
+                    await _uow.ProjectJobDetailRepository.UpdateAsyn(projectJobDetail);
                 }
-
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
-
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteProjectJob(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var projectJobDetails = await _uow.ProjectJobDetailRepository.FindAsync(x => x.IsDeleted == false && x.ProjectJobId == model);
+                if (projectJobDetails != null)
+                {
+                    projectJobDetails.ModifiedById = UserId;
+                    projectJobDetails.ModifiedDate = DateTime.UtcNow;
+                    projectJobDetails.IsDeleted = true;
+                    await _uow.ProjectJobDetailRepository.UpdateAsyn(projectJobDetails);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Poject Job deleted successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
             }
             return response;
         }
@@ -4236,6 +4251,35 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                int totalCount = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+
+                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => !x.IsDeleted.Value)
+                    .OrderByDescending(x => x.ProjectJobId)
+                    .Skip(projectJobFilterModel.pageSize.Value * projectJobFilterModel.pageIndex.Value)
+                    .Take(projectJobFilterModel.pageSize.Value)
+                    .ToListAsync();
+
+                response.data.ProjectJobDetail = list;
+                response.data.TotalCount = totalCount;
+
+                response.StatusCode = 200;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -4252,7 +4296,7 @@ namespace HumanitarianAssistance.Service.Classes
                         .OrderByDescending(x => x.BudgetLineId)
                                                           .FirstOrDefault().BudgetLineId;
 
-                    obj.BudgetCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D4}", 1);
+                    obj.BudgetCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D5}", 1);
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
@@ -4657,6 +4701,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
+       
 
 
     }

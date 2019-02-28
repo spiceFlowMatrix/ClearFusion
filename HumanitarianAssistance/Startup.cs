@@ -149,6 +149,7 @@ namespace HumanitarianAssistance
       services.AddTransient<IVoucherNewService, VoucherNewService>();
 
       services.AddTransient<IAccountBalance, AccountBalanceService>();
+      services.AddTransient<IProjectActivityService, ProjectActivityService>();
 
       //services.AddTransient<UserManager<AppUser>>();
 
@@ -365,6 +366,10 @@ namespace HumanitarianAssistance
           if (!context.Categories.Any())
           {
             await DbInitializer.AddMarketingCategory(context);
+          }
+          if (!context.ActivityStatusDetail.Any())
+          {
+            await DbInitializer.AddActivityStatus(context);
           }
         }
       }

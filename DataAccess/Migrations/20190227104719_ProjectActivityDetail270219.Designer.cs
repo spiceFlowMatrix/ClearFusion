@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190227104719_ProjectActivityDetail270219")]
+    partial class ProjectActivityDetail270219
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6390,6 +6392,8 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("ActualStartDate");
 
+                    b.Property<int?>("AssigneeId");
+
                     b.Property<long?>("BudgetLineId");
 
                     b.Property<string>("CreatedById");
@@ -6413,6 +6417,8 @@ namespace DataAccess.Migrations
                     b.Property<bool?>("ImplementationStatus");
 
                     b.Property<bool?>("IsDeleted");
+
+                    b.Property<int?>("LocationId");
 
                     b.Property<string>("ModifiedById");
 

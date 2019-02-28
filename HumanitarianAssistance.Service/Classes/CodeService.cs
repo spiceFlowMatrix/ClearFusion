@@ -2,6 +2,7 @@
 using DataAccess;
 using DataAccess.DbEntities;
 using DataAccess.DbEntities.Marketing;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Entities;
 using HumanitarianAssistance.Service.APIResponses;
@@ -1517,6 +1518,32 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetAllEmployeeList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail
+                                                            .Where(x => x.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
+                                                            .Select(x => new EmployeeDetailList
+                                                            {
+                                                                EmployeeId = x.EmployeeID,
+                                                                EmployeeName = x.EmployeeName,
+                                                                EmployeeCode = x.EmployeeCode ?? x.EmployeeProfessionalDetail.OfficeDetail.OfficeCode + x.EmployeeID,
+                                                                CodeEmployeeName = x.EmployeeCode != null ? x.EmployeeCode + " - " + x.EmployeeName : x.EmployeeProfessionalDetail.OfficeDetail.OfficeCode + x.EmployeeID + " - " + x.EmployeeName
+                                                            }).ToListAsync();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> GetEmployeeDetailByOfficeId(int OfficeId)
         {
             APIResponse response = new APIResponse();
@@ -2052,7 +2079,7 @@ namespace HumanitarianAssistance.Service.Classes
                 //List<EmployeeProfessionalDetail> employeesNotInPayrollAccountHeadTable = new List<EmployeeProfessionalDetail>();
                 //List<EmployeeProfessionalDetail> employeeList = await _uow.GetDbContext().EmployeeProfessionalDetail.Where(x => x.IsDeleted == false).ToListAsync();
 
-                IEnumerable<int> employeeIds =  _uow.GetDbContext().EmployeeDetail
+                IEnumerable<int> employeeIds = _uow.GetDbContext().EmployeeDetail
                                                   .Include(x => x.EmployeeProfessionalDetail)
                                               .Where(x => x.IsDeleted == false && x.EmployeeProfessionalDetail.OfficeId ==
                                               model.FirstOrDefault().OfficeId).Select(x => x.EmployeeID).ToList();
@@ -2062,7 +2089,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 List<EmployeePayrollAccountHead> xEmployeePayrollAccountHead = await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
 
-                employeeWithPayrollHead = xEmployeePayrollAccountHead.Select(x=> x.EmployeeId).Distinct().ToList();
+                employeeWithPayrollHead = xEmployeePayrollAccountHead.Select(x => x.EmployeeId).Distinct().ToList();
 
                 employeeWithNoPayrollHead = employeeIds.Except(employeeWithPayrollHead);
 
@@ -2080,7 +2107,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     await _uow.PayrollAccountHeadRepository.UpdateAsyn(xPayrollAccountHead);
 
-                    List <EmployeePayrollAccountHead> xEmployeePayrollAccount = xEmployeePayrollAccountHead.Where(x=> x.IsDeleted== false && x.PayrollHeadId== payrollHead.PayrollHeadId).ToList();
+                    List<EmployeePayrollAccountHead> xEmployeePayrollAccount = xEmployeePayrollAccountHead.Where(x => x.IsDeleted == false && x.PayrollHeadId == payrollHead.PayrollHeadId).ToList();
 
                     if (xEmployeePayrollAccountHead.Any())
                     {
@@ -2090,7 +2117,7 @@ namespace HumanitarianAssistance.Service.Classes
                             x.PayrollHeadTypeId = payrollHead.PayrollHeadTypeId; x.TransactionTypeId = payrollHead.TransactionTypeId;
                         });
 
-                         _uow.GetDbContext().EmployeePayrollAccountHead.UpdateRange(xEmployeePayrollAccountHead);
+                        _uow.GetDbContext().EmployeePayrollAccountHead.UpdateRange(xEmployeePayrollAccountHead);
                         _uow.Save();
                     }
 
@@ -2135,7 +2162,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                List<DistrictDetail> districtlist = _uow.GetDbContext().DistrictDetail.Where(x =>x.IsDeleted==false && ProvinceId.Contains(x.ProvinceID)).ToList();                
+                List<DistrictDetail> districtlist = _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted == false && ProvinceId.Contains(x.ProvinceID)).ToList();
                 response.data.Districtlist = districtlist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -2199,7 +2226,7 @@ namespace HumanitarianAssistance.Service.Classes
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = ex.Message;
             }
-            return response;            
+            return response;
         }
 
         /// <summary>
@@ -2241,7 +2268,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                LanguageDetail obj = _mapper.Map<LanguageModel,LanguageDetail>(model);
+                LanguageDetail obj = _mapper.Map<LanguageModel, LanguageDetail>(model);
                 obj.CreatedById = UserId;
                 obj.CreatedDate = DateTime.Now;
                 obj.IsDeleted = false;
@@ -2270,7 +2297,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                List<ApplicationPages> xApplicationPages = await _uow.GetDbContext().ApplicationPages.Where(x => x.IsDeleted== false).ToListAsync();
+                List<ApplicationPages> xApplicationPages = await _uow.GetDbContext().ApplicationPages.Where(x => x.IsDeleted == false).ToListAsync();
 
                 response.data.ApplicationPagesList = xApplicationPages;
                 response.StatusCode = StaticResource.successStatusCode;
