@@ -1385,6 +1385,45 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> AddProjectJobDetail([FromBody]ProjectJobDetailModel Model)
+
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddEditProjectJobDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    /// <summary>
+    /// delete selected projectJob
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<APIResponse> DeleteProjectJob([FromBody]int model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.DeleteProjectJob(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectJobDetailByProjectJobId([FromBody] int projectJobId)
+    {
+      APIResponse response = await _iProject.GetAllProjectJobByProjectId(projectJobId);
+      return response;
+    }
+
 
     [HttpPost]
     public async Task<APIResponse> AddBudgetLineDetail([FromBody]ProjectBudgetLineDetailModel Model)
@@ -1405,6 +1444,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       APIResponse response = await _iProject.GetallBudgetLineDetail();
       return response;
     }
+
 
     [HttpPost]
     public async Task<APIResponse> GetProjectBudgetLineDetail([FromBody] long projectId)
@@ -1456,6 +1496,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiRespone;
     }
+    #endregion
+
+    #region ProjectActivity
+    [HttpGet]
+    public async Task<APIResponse> GetProjectActivityDetail()
+    {
+      APIResponse response = await _iProject.GetallProjectActivityDetail();
+      return response;
+    }
+
+
     #endregion
 
   }
