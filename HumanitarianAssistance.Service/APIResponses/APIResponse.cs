@@ -335,6 +335,8 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public IList<ProjectActivityModel> ProjectActivityModel { get; set; }
 
+        public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
+
 
         #region Marketing    
         public PolicyTimeSchedule policyTimeScheduleDetails { get; set; }
