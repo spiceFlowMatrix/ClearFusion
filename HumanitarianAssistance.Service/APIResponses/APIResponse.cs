@@ -331,7 +331,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
         public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
-
+        public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
+        public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
 
 
         #region Marketing    
