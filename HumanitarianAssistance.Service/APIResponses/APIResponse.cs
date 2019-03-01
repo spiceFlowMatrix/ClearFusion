@@ -333,7 +333,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
         public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
 
-        public IList<ProjectActivityModel> ProjectActivityModel { get; set; }
+        public IList<ProjectActivityModel> ProjectActivityList { get; set; }
 
         public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
         public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
@@ -442,6 +442,9 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         #endregion
 
+        public DateTime DateTime { get; set; }
+        public bool ImplementationStatus { get; set; }
+        public bool MonitoringStatus { get; set; }
 
     }
 
