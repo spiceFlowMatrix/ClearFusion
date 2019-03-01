@@ -138,6 +138,9 @@ namespace HumanitarianAssistance.WebAPI
       CreateMap<PolicyTimeSchedule, PolicyTimeScheduleModel>().ReverseMap();
       CreateMap<PolicyDaySchedule, PolicyTimeModel>().ReverseMap();
       CreateMap<PolicyScheduleModel, PolicySchedule>().ReverseMap();
+      CreateMap<PolicyOrderScheduleModel, PolicyOrderSchedule>().ReverseMap();
+      CreateMap<ProjectActivityModel, ProjectActivityDetail>().ReverseMap();
+
     }
   }
 }

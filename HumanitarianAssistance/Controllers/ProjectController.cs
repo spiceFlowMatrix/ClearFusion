@@ -29,14 +29,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     private readonly UserManager<AppUser> _userManager;
     private IHostingEnvironment _hostingEnvironment;
     private IProject _iProject;
+    private IProjectActivityService _iActivity;
     public ProjectController(
        UserManager<AppUser> userManager,
       IProject iProject,
-      IHostingEnvironment hostingEnvironment
+      IHostingEnvironment hostingEnvironment,
+      IProjectActivityService iActivity
       )
     {
       _userManager = userManager;
       _iProject = iProject;
+      _iActivity = iActivity;
       _hostingEnvironment = hostingEnvironment;
       _serializerSettings = new JsonSerializerSettings
       {
@@ -1374,7 +1377,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     //}
     #endregion
 
-    #region BudgetLine
+    #region ProjectJob
 
     //project job
 
@@ -1385,6 +1388,56 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> AddProjectJobDetail([FromBody]ProjectJobDetailModel Model)
+
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.AddEditProjectJobDetail(Model, id);
+      }
+      return apiRespone;
+    }
+
+    /// <summary>
+    /// delete selected projectJob
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<APIResponse> DeleteProjectJob([FromBody]int model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iProject.DeleteProjectJob(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectJobDetailByProjectJobId([FromBody] int projectJobId)
+    {
+      APIResponse response = await _iProject.GetAllProjectJobByProjectId(projectJobId);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetAllProjectJobFilterList([FromBody]ProjectJobFilterModel projectJobFilterModel)
+    {
+      APIResponse apiresponse = await _iProject.GetAllProjectJobsFilterList(projectJobFilterModel);
+      return apiresponse;
+    }
+
+
+    #endregion
+
+    #region BudgetLine Detail
 
     [HttpPost]
     public async Task<APIResponse> AddBudgetLineDetail([FromBody]ProjectBudgetLineDetailModel Model)
@@ -1405,6 +1458,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       APIResponse response = await _iProject.GetallBudgetLineDetail();
       return response;
     }
+
 
     [HttpPost]
     public async Task<APIResponse> GetProjectBudgetLineDetail([FromBody] long projectId)
@@ -1455,6 +1509,76 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
 
       return apiRespone;
+    }
+    #endregion
+
+    #region ProjectActivity
+    [HttpGet]
+    public async Task<APIResponse> GetProjectActivityDetail()
+    {
+      APIResponse response = await _iActivity.GetallProjectActivityDetail();
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddProjectActivityDetail(ProjectActivityModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        apiRespone = await _iActivity.AddProjectActivityDetail(model, id);
+      }
+
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectActivityDetail(ProjectActivityModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        apiRespone = await _iActivity.EditProjectActivityDetail(model, id);
+      }
+
+      return apiRespone;
+    }
+
+
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteActivityDetail(long activityId,string userId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        response = await _iActivity.DeleteProjectActivity(activityId, userId);
+      }
+      return response;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> AllActivityStatus(long activityId, string userId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        response = await _iActivity.AllProjectActivityStatus();
+      }
+      return response;
     }
     #endregion
 

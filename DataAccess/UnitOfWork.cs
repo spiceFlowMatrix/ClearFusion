@@ -213,6 +213,7 @@ namespace DataAccess
         private IGenericRepository<TimeCategory> _timeCategoryRepository;
         private IGenericRepository<ClientDetails> _ClientDetailsRepository;
         private IGenericRepository<UnitRate> _unitRateRepository;
+        private IGenericRepository<PolicyOrderSchedule> _policyOrderScheduleRepository;
         private IGenericRepository<PolicyTimeSchedule> _policyTimeScheduleRepository;
         private IGenericRepository<PolicyDaySchedule> _policyDayScheduleRepository;
         private IGenericRepository<Category> _categoryRepository;
@@ -221,6 +222,7 @@ namespace DataAccess
         private IGenericRepository<PolicySchedule> _policyScheduleRepository;
         private IGenericRepository<ProjectBudgetLineDetail> _budgetLineDetailRepository;
         private IGenericRepository<ProjectJobDetail> _projectJobDetailRepository;
+        private IGenericRepository<ProjectActivityDetail> _projectActivityDetailRepository;
 
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
@@ -1517,6 +1519,14 @@ namespace DataAccess
             }
         }
 
+        public IGenericRepository<PolicyOrderSchedule> PolicyOrderScheduleRepository
+        {
+            get
+            {
+                return _policyOrderScheduleRepository = _policyOrderScheduleRepository ?? new GenericRepository<PolicyOrderSchedule>(_mschaContext);
+            }
+        }
+
         public IGenericRepository<PolicyTimeSchedule> PolicyTimeScheduleRepository
         {
             get
@@ -1805,6 +1815,14 @@ namespace DataAccess
             get
             {
                 return _projectJobDetailRepository = _projectJobDetailRepository ?? new GenericRepository<ProjectJobDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectActivityDetail> ProjectActivityDetailRepository
+        {
+            get
+            {
+                return _projectActivityDetailRepository = _projectActivityDetailRepository ?? new GenericRepository<ProjectActivityDetail>(_mschaContext);
             }
         }
 

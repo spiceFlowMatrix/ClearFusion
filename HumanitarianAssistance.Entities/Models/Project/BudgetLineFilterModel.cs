@@ -19,8 +19,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public int? pageIndex { get; set; }
         public int? pageSize { get; set; }
         public int? totalCount { get; set; }
+        public long? ProjectId { get; set; }
 
 
-     
     }
 }

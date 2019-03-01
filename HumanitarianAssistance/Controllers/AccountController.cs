@@ -220,7 +220,7 @@ namespace HumanitarianAssistance.Controllers
           List<RolePermissionModel> RolePermissionModelList = new List<RolePermissionModel>();
           List<ApproveRejectPermissionModel> ApproveRejectRolePermissionModelList = new List<ApproveRejectPermissionModel>();
           List<AgreeDisagreePermissionModel> AgreeDisagreeRolePermissionModelList = new List<AgreeDisagreePermissionModel>();
-
+          List<OrderSchedulePermissionModel> OrderSchedulePermissionModelList = new List<OrderSchedulePermissionModel>();
           var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
 
           #region "Check wrong credientials"
@@ -249,7 +249,9 @@ namespace HumanitarianAssistance.Controllers
 
             var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
             List<RolePermissions> rolePermissionsList = _uow.GetDbContext().RolePermissions.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
-
+            List<ApproveRejectPermission> approveRejectRolePermissionsList = _uow.GetDbContext().ApproveRejectPermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
+            List<AgreeDisagreePermission> agreeDisagreeRolePermissionsList = _uow.GetDbContext().AgreeDisagreePermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
+            List<OrderSchedulePermission> orderScheduleRolePermissionsList = _uow.GetDbContext().OrderSchedulePermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
             if (rolePermissionsList.Any())
             {
               foreach (RolePermissions rolePermissions in rolePermissionsList)
@@ -294,21 +296,6 @@ namespace HumanitarianAssistance.Controllers
                 }
               }
             }
-
-            userRolePermissionsList.Add(userRolePermissions);
-
-          }
-          foreach (var role in roles)
-          {
-            UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
-
-            //userClaims.Add(new Claim("Roles", role)); //imp
-
-            var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
-
-            List<ApproveRejectPermission> approveRejectRolePermissionsList = _uow.GetDbContext().ApproveRejectPermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
-
-
             if (approveRejectRolePermissionsList.Any())
             {
               foreach (ApproveRejectPermission rolePermissions in approveRejectRolePermissionsList)
@@ -354,21 +341,6 @@ namespace HumanitarianAssistance.Controllers
                 }
               }
             }
-
-
-            userRolePermissionsList.Add(userRolePermissions);
-
-          }
-          foreach (var role in roles)
-          {
-            UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
-
-            //userClaims.Add(new Claim("Roles", role)); //imp
-
-            var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
-
-            List<AgreeDisagreePermission> agreeDisagreeRolePermissionsList = _uow.GetDbContext().AgreeDisagreePermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
-
             if (agreeDisagreeRolePermissionsList.Any())
             {
               foreach (AgreeDisagreePermission rolePermissions in agreeDisagreeRolePermissionsList)
@@ -414,7 +386,48 @@ namespace HumanitarianAssistance.Controllers
                 }
               }
             }
+            if (orderScheduleRolePermissionsList.Any())
+            {
+              foreach (OrderSchedulePermission rolePermissions in orderScheduleRolePermissionsList)
+              {
+                if (OrderSchedulePermissionModelList.Any())
+                {
+                  OrderSchedulePermissionModel rolePermissionModel = OrderSchedulePermissionModelList.FirstOrDefault(x => x.PageId == rolePermissions.PageId);
 
+                  if (rolePermissionModel == null)
+                  {
+                    OrderSchedulePermissionModel rolePermission = new OrderSchedulePermissionModel();
+                    rolePermission.OrderSchedule = rolePermissions.OrderSchedule;
+                    rolePermission.Id = rolePermissions.Id;
+                    rolePermission.PageId = rolePermissions.PageId;
+                    rolePermission.PageId = rolePermissions.PageId;
+                    rolePermission.RoleId = rolePermissions.RoleId;
+                    OrderSchedulePermissionModelList.Add(rolePermission);
+                  }
+                  else
+                  {
+                    if (rolePermissionModel.OrderSchedule)
+                    {
+                      rolePermissionModel.OrderSchedule = rolePermissions.OrderSchedule;
+                    }
+                    else if (!rolePermissionModel.OrderSchedule)
+                    {
+                      rolePermissionModel.OrderSchedule = true;
+                    }
+
+                  }
+                }
+                else
+                {
+                  OrderSchedulePermissionModel rolePermissionModel = new OrderSchedulePermissionModel();
+                  rolePermissionModel.OrderSchedule = rolePermissions.OrderSchedule;
+                  rolePermissionModel.PageId = rolePermissions.PageId;
+                  rolePermissionModel.Id = rolePermissions.Id;
+                  rolePermissionModel.RoleId = rolePermissions.RoleId;
+                  OrderSchedulePermissionModelList.Add(rolePermissionModel);
+                }
+              }
+            }
             userRolePermissionsList.Add(userRolePermissions);
 
           }
@@ -446,7 +459,7 @@ namespace HumanitarianAssistance.Controllers
           response.data.RolePermissionModelList = RolePermissionModelList;
           response.data.ApproveRejectPermissionsInRole = ApproveRejectRolePermissionModelList;
           response.data.AgreeDisagreePermissionsInRole = AgreeDisagreeRolePermissionModelList;
-
+          response.data.OrderSchedulePermissionsInRole = OrderSchedulePermissionModelList;
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
           #endregion
         }

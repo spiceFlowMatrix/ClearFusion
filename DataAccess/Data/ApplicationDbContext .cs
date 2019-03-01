@@ -192,6 +192,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public DbSet<ApproveRejectPermission> ApproveRejectPermission { get; set; }
         public DbSet<AgreeDisagreePermission> AgreeDisagreePermission { get; set; }
+        public DbSet<OrderSchedulePermission> OrderSchedulePermission { get; set; }
         public DbSet<HRJobInterviewers> HRJobInterviewers { get; set; }
         public DbSet<ExchangeRateVerification> ExchangeRateVerifications { get; set; }
         public DbSet<Errorlog> errorlog { get; set; }
@@ -241,6 +242,11 @@ namespace HumanitarianAssistance.Entities
 
         public DbSet<ProjectBudgetLineDetail> ProjectBudgetLineDetail { get; set; }
         public DbSet<ProjectJobDetail> ProjectJobDetail { get; set; }
+        public DbSet<ActivityStatusDetail> ActivityStatusDetail { get; set; }
+        public DbSet<ProjectActivityDetail> ProjectActivityDetail { get; set; }
+
+
+        
 
 
         #endregion
@@ -264,6 +270,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<Nature> Natures { get; set; }
         public DbSet<TimeCategory> TimeCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<PolicyOrderSchedule> PolicyOrderSchedules { get; set; }
         #endregion
 
 
@@ -271,7 +278,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<AccountFilterType> AccountFilterType { get; set; }
         public DbSet<ChartOfAccountNew> ChartOfAccountNew { get; set; }
         public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
-        
+
         #endregion
 
 
@@ -578,7 +585,7 @@ namespace HumanitarianAssistance.Entities
           );
 
             modelBuilder.Entity<LeaveReasonDetail>().HasData(
-              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId=1, ReasonName="Casual Leave", Unit= 12 },
+              new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 1, ReasonName = "Casual Leave", Unit = 12 },
               new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 2, ReasonName = "Emergency Leave", Unit = 6 },
               new LeaveReasonDetail { IsDeleted = false, LeaveReasonId = 3, ReasonName = "Maternity Leave", Unit = 90 }
           );
@@ -664,11 +671,12 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 69, PageName = "ProjectDetails", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 70, PageName = "Proposal", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 71, PageName = "CriteriaEvaluation", ModuleId = 8, ModuleName = "Projects" },
-                new ApplicationPages { IsDeleted = false, PageId = 72, PageName = "Producer", ModuleId = 6, ModuleName = "Marketing" }
+                new ApplicationPages { IsDeleted = false, PageId = 72, PageName = "Producer", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 73, PageName = "Policy", ModuleId = 6, ModuleName = "Marketing" }
             );
 
             modelBuilder.Entity<FinancialYearDetail>().HasData(
-                new FinancialYearDetail { IsDeleted = false, FinancialYearId = 1, StartDate = new DateTime(DateTime.Now.Year, 1, 1), EndDate = new DateTime(DateTime.Now.Year, 12, 31), FinancialYearName= DateTime.Now.Year+" Financial Year", IsDefault = true }
+                new FinancialYearDetail { IsDeleted = false, FinancialYearId = 1, StartDate = new DateTime(DateTime.Now.Year, 1, 1), EndDate = new DateTime(DateTime.Now.Year, 12, 31), FinancialYearName = DateTime.Now.Year + " Financial Year", IsDefault = true }
             );
 
             modelBuilder.Entity<DistrictDetail>().HasData(
@@ -876,28 +884,13 @@ namespace HumanitarianAssistance.Entities
 
              new DistrictDetail { IsDeleted = false, DistrictID = 123, District = "Wyoming", ProvinceID = 82 }
          );
-            modelBuilder.Entity<Category>().HasData(
-            new Category { IsDeleted = false, CategoryId = 1, CategoryName="Bank" },
-            new Category { IsDeleted = false, CategoryId = 2, CategoryName = "NGO" },
-            new Category { IsDeleted = false, CategoryId = 3, CategoryName = "Telecommunicaton" },
-            new Category { IsDeleted = false, CategoryId = 4, CategoryName = "Government" },
-            new Category { IsDeleted = false, CategoryId = 5, CategoryName = "Hospital" },
-            new Category { IsDeleted = false, CategoryId = 6, CategoryName = "Travel Agency" },
-            new Category { IsDeleted = false, CategoryId = 7, CategoryName = "University" },
-            new Category { IsDeleted = false, CategoryId = 8, CategoryName = "Media Groups" },
-            new Category { IsDeleted = false, CategoryId = 9, CategoryName = "Shops" },
-            new Category { IsDeleted = false, CategoryId = 10, CategoryName = "Energy" },
-            new Category { IsDeleted = false, CategoryId = 11, CategoryName = "School" },
-            new Category { IsDeleted = false, CategoryId = 12, CategoryName = "Construction" }
-
-            );
 
             #endregion
 
 
 
 
-           base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
 
 
