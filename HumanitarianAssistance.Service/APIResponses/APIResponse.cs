@@ -239,6 +239,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleModel> InterviewScheduleFieldOfficelist { get; set; }
         public IList<RolePermissionViewModel> PermissionsInRole { get; set; }
         public IList<AgreeDisagreePermissionModel> AgreeDisagreePermissionsInRole { get; set; }
+        public IList<OrderSchedulePermissionModel> OrderSchedulePermissionsInRole { get; set; }
         public IList<ApproveRejectPermissionModel> ApproveRejectPermissionsInRole { get; set; }
         public IList<EmployeeMonthlyPayrollModel> EmployeeMonthlyPayrolllist { get; set; }
 
@@ -333,6 +334,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
 
         public IList<ProjectActivityModel> ProjectActivityList { get; set; }
+
+        public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
 
 
         #region Marketing    

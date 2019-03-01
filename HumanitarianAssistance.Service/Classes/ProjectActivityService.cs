@@ -330,6 +330,99 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        #endregion
+        public int GetActivityOnSchedule()
+        {
+
+            int totalCount = _uow.GetDbContext().ProjectActivityDetail.Where(a => a.IsDeleted == false && a.StartDate == (a.ActualStartDate.Value.Date != null ?
+                                                                                  a.ActualStartDate.Value.Date :
+                                                                                  DateTime.UtcNow.Date))
+                                                                            .Count();
+            return totalCount;
+        }
+
+        public int GetLateStart()
+        {
+
+            int totalCount = _uow.GetDbContext().ProjectActivityDetail.Count(a => a.IsDeleted == false &&
+                                                                                  a.StartDate.Value.Date < (a.ActualStartDate != null ?
+                                                                                                           a.ActualStartDate.Value.Date :
+                                                                                                           DateTime.UtcNow.Date)
+                                                                              );
+            return totalCount;
+
+        }
+
+        public int GetLateEnd()
+        {
+
+            int totalCount = _uow.GetDbContext().ProjectActivityDetail.Where(a => a.IsDeleted == false &&
+                                                                                   (a.EndDate.Value.Date != null ? a.EndDate.Value.Date : DateTime.UtcNow.Date) < (
+                                                                                   a.ActualEndDate.Value.Date != null ?
+                                                                                   a.ActualEndDate.Value.Date : DateTime.UtcNow.Date))
+                                                                            .Count();
+            return totalCount;
+        }
+
+        public int  GetSlippage()
+        {
+
+            int slippage =  _uow.GetDbContext().ProjectActivityDetail.Where(a => a.IsDeleted == false &&
+                                                                                      (a.ActualEndDate.Value.Date !=null 
+                                                                                      ? a.ActualEndDate.Value.Date
+                                                                                      :DateTime.UtcNow.Date)
+                                                                                    > (a.EndDate.Value.Date != null 
+                                                                                      ? a.EndDate.Value.Date
+                                                                                      : DateTime.UtcNow.Date))
+                                                                                 .Count();
+            return slippage;
+        }
+
+        public int GetProgress()
+        {
+          
+            int avg = 0;
+                int totalImplementationProgress = 0;
+                int totalMonitoringProgrss = 0;
+                var slippage = _uow.GetDbContext().ProjectActivityDetail.Where(a => a.IsDeleted == false).ToList();
+                if (slippage != null)
+                {
+                    totalImplementationProgress = slippage.Sum(x => x.ImplementationProgress).Value;
+                    totalMonitoringProgrss = slippage.Sum(x => x.MonitoringProgress).Value;
+                    avg = (totalImplementationProgress + totalMonitoringProgrss) / 2;
+                }
+
+            return avg;
+        }
+
+        public async Task<APIResponse> AllProjectActivityStatus()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityStatusModel obj = new ProjectActivityStatusModel
+                {
+                    ActivityOnSchedule = GetActivityOnSchedule(),
+                    LateStart = GetLateStart(),
+                    LateEnd = GetLateEnd(),
+                    Progress = GetProgress(),
+                    Slippage = GetSlippage(),
+                };
+
+                response.data.ProjectActivityStatusModel = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+
+
+        }
     }
+
+    #endregion
+
 }
