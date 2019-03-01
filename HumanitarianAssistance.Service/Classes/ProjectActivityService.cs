@@ -84,7 +84,8 @@ namespace HumanitarianAssistance.Service.Classes
                     StartDate = b.StartDate,
                     Strengths = b.Strengths,
                     VerificationSource = b.VerificationSource,
-                    Weeknesses = b.Weeknesses
+                    Weeknesses = b.Weeknesses,
+                    Comments = b.Comments
 
                 }).ToList();
                 response.data.ProjectActivityList = activityDetaillist.OrderByDescending(x => x.ActivityId).ToList();
@@ -128,15 +129,24 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var ProjectactivityDetail = _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == model.ActivityId);
-                if (ProjectactivityDetail != null)
+                var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == model.ActivityId && x.IsDeleted == false);
+                if (projectactivityDetail != null)
                 {
-                    ProjectActivityDetail obj = _mapper.Map<ProjectActivityModel, ProjectActivityDetail>(model);
-                    obj.ModifiedDate = DateTime.UtcNow;
-                    obj.ModifiedById = UserId;
-                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
+                    _mapper.Map(model, projectactivityDetail);
+
+                    projectactivityDetail.ModifiedDate = DateTime.UtcNow;
+                    projectactivityDetail.ModifiedById = UserId;
+                    projectactivityDetail.IsDeleted = false;
+
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
+                } 
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.ActivityNotFound;
                 }
             }
             catch (Exception ex)
@@ -162,14 +172,14 @@ namespace HumanitarianAssistance.Service.Classes
                     activityDetail.ModifiedDate = DateTime.UtcNow;
 
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(activityDetail);
+
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;
                 }
-
                 else
                 {
                     response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.VoucherNotPresent;
+                    response.Message = StaticResource.ActivityNotFound;
                 }
             }
             catch (Exception ex)
@@ -180,6 +190,145 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> StartProjectActivity(long activityId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+                if (projectactivityDetail != null)
+                {
+                    // Actual start date
+                    projectactivityDetail.ActualStartDate = DateTime.UtcNow;
+
+                    projectactivityDetail.ModifiedDate = DateTime.UtcNow;
+                    projectactivityDetail.ModifiedById = UserId;
+                    projectactivityDetail.IsDeleted = false;
+
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+
+                    response.data.DateTime = projectactivityDetail.ActualStartDate.Value;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.ActivityNotFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> EndProjectActivity(long activityId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+                if (projectactivityDetail != null)
+                {
+                    // Actual end date
+                    projectactivityDetail.ActualEndDate = DateTime.UtcNow;
+
+                    projectactivityDetail.ModifiedDate = DateTime.UtcNow;
+                    projectactivityDetail.ModifiedById = UserId;
+                    projectactivityDetail.IsDeleted = false;
+
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+
+                    response.data.DateTime = projectactivityDetail.ActualStartDate.Value;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.ActivityNotFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> MarkImplementationAsCompleted(long activityId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+                if (projectactivityDetail != null)
+                {
+                    // Actual end date
+                    projectactivityDetail.ImplementationStatus = !projectactivityDetail.ImplementationStatus;
+
+                    projectactivityDetail.ModifiedDate = DateTime.UtcNow;
+                    projectactivityDetail.ModifiedById = UserId;
+                    projectactivityDetail.IsDeleted = false;
+
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+
+                    response.data.ImplementationStatus = projectactivityDetail.ImplementationStatus.Value;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.ActivityNotFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> MarkMonitoringAsCompleted(long activityId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+                if (projectactivityDetail != null)
+                {
+                    // Actual end date
+                    projectactivityDetail.MonitoringStatus = !projectactivityDetail.MonitoringStatus;
+
+                    projectactivityDetail.ModifiedDate = DateTime.UtcNow;
+                    projectactivityDetail.ModifiedById = UserId;
+                    projectactivityDetail.IsDeleted = false;
+
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+
+                    response.data.MonitoringStatus = projectactivityDetail.MonitoringStatus.Value;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.ActivityNotFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
         #endregion
     }

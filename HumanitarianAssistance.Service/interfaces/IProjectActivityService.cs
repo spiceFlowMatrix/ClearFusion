@@ -13,5 +13,9 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddProjectActivityDetail(ProjectActivityModel model, string UserId);
         Task<APIResponse> EditProjectActivityDetail(ProjectActivityModel model, string UserId);
         Task<APIResponse> DeleteProjectActivity(long activityId, string userId);
+        Task<APIResponse> StartProjectActivity(long activityId, string UserId);
+        Task<APIResponse> EndProjectActivity(long activityId, string UserId);
+        Task<APIResponse> MarkImplementationAsCompleted(long activityId, string UserId);
+        Task<APIResponse> MarkMonitoringAsCompleted(long activityId, string UserId);
     }
 }
