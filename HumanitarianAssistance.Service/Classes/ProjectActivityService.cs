@@ -32,34 +32,37 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
         #region "projectActivity"
-        public async Task<APIResponse> GetallProjectActivityDetail()
+        public async Task<APIResponse> GetallProjectActivityDetail(long projectId)
+
         {
 
             APIResponse response = new APIResponse();
             try
             {
-                var activityList = await Task.Run(() =>
-                        _uow.GetDbContext().ProjectActivityDetail
+                var activityList = await _uow.GetDbContext().ProjectActivityDetail
                                           .Include(p => p.ProjectBudgetLineDetail)
                                           .Include(e => e.EmployeeDetail)
                                           .Include(o => o.OfficeDetail)
                                           .Include(s => s.ActivityStatusDetail)
-                                          .Where(v => v.IsDeleted == false).OrderBy(x => x.ActivityId).ToList()
-                                         );
+                                          .Where(v => v.IsDeleted == false &&
+                                                      v.ProjectBudgetLineDetail.ProjectId == projectId
+                                          )
+                                          .OrderBy(x => x.ActivityId)
+                                          .ToListAsync();
                 var activityDetaillist = activityList.Select(b => new ProjectActivityModel
                 {
                     ActivityId = b.ActivityId,
                     ActivityName = b.ActivityName,
                     ActivityDescription = b.ActivityDescription,
-                    BudgetLineId = b.ProjectBudgetLineDetail?.BudgetLineId ?? null,
-                    BudgetName = b.ProjectBudgetLineDetail?.BudgetName ?? null,
+                    BudgetLineId = b.ProjectBudgetLineDetail?.BudgetLineId,
+                    BudgetName = b.ProjectBudgetLineDetail?.BudgetName,
                     ActualStartDate = b.ActualStartDate,
-                    OfficeId = b.OfficeDetail?.OfficeId ?? null,
-                    OfficeName = b.OfficeDetail?.OfficeName ?? null,
-                    EmployeeID = b.EmployeeDetail?.EmployeeID ?? null,
-                    EmployeeName = b.EmployeeDetail?.EmployeeName ?? null,
-                    StatusId = b.ActivityStatusDetail?.StatusId ?? null,
-                    StatusName = b.ActivityStatusDetail?.StatusName ?? null,
+                    OfficeId = b.OfficeDetail?.OfficeId,
+                    OfficeName = b.OfficeDetail?.OfficeName,
+                    EmployeeID = b.EmployeeDetail?.EmployeeID,
+                    EmployeeName = b.EmployeeDetail?.EmployeeName,
+                    StatusId = b.ActivityStatusDetail?.StatusId,
+                    StatusName = b.ActivityStatusDetail?.StatusName,
                     ActualEndDate = b.ActualEndDate,
                     EndDate = b.EndDate,
                     ExtensionEndDate = b.ExtensionEndDate,
@@ -84,7 +87,7 @@ namespace HumanitarianAssistance.Service.Classes
                     Weeknesses = b.Weeknesses
 
                 }).ToList();
-                response.data.ProjectActivityModel = activityDetaillist.OrderByDescending(x => x.ActivityId).ToList();
+                response.data.ProjectActivityList = activityDetaillist.OrderByDescending(x => x.ActivityId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

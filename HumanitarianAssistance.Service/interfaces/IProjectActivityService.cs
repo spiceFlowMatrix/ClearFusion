@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.Service.interfaces
 {
    public interface IProjectActivityService
     {
-        Task<APIResponse> GetallProjectActivityDetail();
+        Task<APIResponse> GetallProjectActivityDetail(long projectId);
         Task<APIResponse> AddProjectActivityDetail(ProjectActivityModel model, string UserId);
     }
 }

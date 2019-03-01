@@ -1513,15 +1513,15 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
     #region ProjectActivity
-    [HttpGet]
-    public async Task<APIResponse> GetProjectActivityDetail()
+    [HttpPost]
+    public async Task<APIResponse> GetProjectActivityDetail([FromBody]long id)
     {
-      APIResponse response = await _iActivity.GetallProjectActivityDetail();
+      APIResponse response = await _iActivity.GetallProjectActivityDetail(id);
       return response;
     }
 
     [HttpPost]
-    public async Task<APIResponse> AddProjectActivityDetail(ProjectActivityModel model)
+    public async Task<APIResponse> AddProjectActivityDetail([FromBody]ProjectActivityModel model)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);

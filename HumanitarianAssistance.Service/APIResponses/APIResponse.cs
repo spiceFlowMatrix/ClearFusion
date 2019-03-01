@@ -332,7 +332,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
         public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
 
-        public IList<ProjectActivityModel> ProjectActivityModel { get; set; }
+        public IList<ProjectActivityModel> ProjectActivityList { get; set; }
 
 
         #region Marketing    
