@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190227123707_updateColoumOfficeIdAndEmployeeId270219")]
+    partial class updateColoumOfficeIdAndEmployeeId270219
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,34 +135,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("ChartOfAccountNew");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.AccountingNew.ExchangeRateVerification", b =>
-                {
-                    b.Property<long>("ExRateVerificationId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<bool>("IsVerified");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("ExRateVerificationId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("ExchangeRateVerifications");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AccountLevel", b =>
@@ -5481,39 +5455,6 @@ namespace DataAccess.Migrations
                     b.ToTable("EmployeeDetailDT");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.OrderSchedulePermission", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<bool>("OrderSchedule");
-
-                    b.Property<int>("PageId");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("PageId");
-
-                    b.ToTable("OrderSchedulePermission");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.PayrollAccountHead", b =>
                 {
                     b.Property<int>("PayrollHeadId")
@@ -6452,8 +6393,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("ActualStartDate");
 
                     b.Property<long?>("BudgetLineId");
-
-                    b.Property<string>("Comments");
 
                     b.Property<string>("CreatedById");
 
@@ -9274,17 +9213,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.AccountingNew.ExchangeRateVerification", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.AccountType", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AccountHeadType", "AccountHeadType")
@@ -11058,22 +10986,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.OrderSchedulePermission", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.ApplicationPages", "ApplicationPages")
-                        .WithMany()
-                        .HasForeignKey("PageId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.PayrollAccountHead", b =>

@@ -1,5 +1,6 @@
 ﻿using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,8 @@ namespace HumanitarianAssistance.Service.interfaces
         //Task<APIResponse> GetExchangeRateByDate(int currencyFromCode, int currenctToCode, DateTime? date);
         Task<APIResponse> GetExchangeGainOrLossAmount(ExchangeGainOrLossFilterModel model);
         Task<APIResponse> GetExchangeGainOrLossTransactionAmount(ExchangeGainOrLossTransactionFilterModel model);
-
+        Task<APIResponse> GenerateExchangeRates(List<GenerateExchangeRateViewModel> GenerateExchangeRateModel, string userId);
+        Task<APIResponse> GetSavedExchangeRates(ExchangeRateVerificationFilter filter);
+        Task<APIResponse> GetExchangeRatesDetail(ExchangeRateDetailModel exchangeRateDetailModel);
     }
 }

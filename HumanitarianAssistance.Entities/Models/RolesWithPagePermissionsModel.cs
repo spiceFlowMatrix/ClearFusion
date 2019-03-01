@@ -23,6 +23,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public bool Reject { get; set; }
         public bool Agree { get; set; }
         public bool Disagree { get; set; }
+        public bool OrderSchedule { get; set; }
     }
 
     public class RolePermissionViewModel {
@@ -53,6 +54,15 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string PageName { get; set; }
         public bool Agree { get; set; }
         public bool Disagree { get; set; }
+        public string RoleId { get; set; }
+    }
+
+    public class OrderSchedulePermissionModel
+    {
+        public long Id { get; set; }
+        public int PageId { get; set; }
+        public string PageName { get; set; }
+        public bool OrderSchedule { get; set; }
         public string RoleId { get; set; }
     }
 
