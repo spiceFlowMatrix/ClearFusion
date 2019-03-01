@@ -193,7 +193,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<FinancialYearDetailModel> FinancialYearDetailList { get; set; }
         public IList<TaskMasterModel> TaskMasterList { get; set; }
         public IList<ActivityMasterModel> ActivityMasterList { get; set; }
-        public IList<ProjectBudgetLineModel> ProjectBudgetLineList { get; set; }
+        public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineList { get; set; }
         public IList<BudgetLineTypeModel> BudgetLineTypeList { get; set; }
         public IList<EmployeeTypeModel> EmployeeTypeList { get; set; }
         public IList<AssignActivityModel> AssignActivityList { get; set; }
