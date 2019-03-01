@@ -349,6 +349,10 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string FileText = "File Not Supported";
         public const int FileNotSupported = 4440;
 
+        #region "Project Activity"
+        public const string ActivityNotFound = "Activity Not Found";
+        #endregion
+
         #region "Accounting New"
         public const string ExceedLevelCount = "You have reached Maximum Limit";
         public const string ParentIdNotPresent = "Account does not exist";

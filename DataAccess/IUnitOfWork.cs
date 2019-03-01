@@ -194,6 +194,7 @@ namespace DataAccess
         IGenericRepository<Errorlog> ErrorlogRepository { get; }
         IGenericRepository<ProjectBudgetLineDetail> ProjectBudgetLineDetailRepository { get; }
         IGenericRepository<ProjectJobDetail> ProjectJobDetailRepository { get; }
+        IGenericRepository<ProjectActivityDetail> ProjectActivityDetailRepository { get; }
 
 
 

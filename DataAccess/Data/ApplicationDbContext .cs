@@ -192,8 +192,9 @@ namespace HumanitarianAssistance.Entities
         public DbSet<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public DbSet<ApproveRejectPermission> ApproveRejectPermission { get; set; }
         public DbSet<AgreeDisagreePermission> AgreeDisagreePermission { get; set; }
+        public DbSet<OrderSchedulePermission> OrderSchedulePermission { get; set; }
         public DbSet<HRJobInterviewers> HRJobInterviewers { get; set; }
-
+        public DbSet<ExchangeRateVerification> ExchangeRateVerifications { get; set; }
         public DbSet<Errorlog> errorlog { get; set; }
 
 
@@ -241,6 +242,11 @@ namespace HumanitarianAssistance.Entities
 
         public DbSet<ProjectBudgetLineDetail> ProjectBudgetLineDetail { get; set; }
         public DbSet<ProjectJobDetail> ProjectJobDetail { get; set; }
+        public DbSet<ActivityStatusDetail> ActivityStatusDetail { get; set; }
+        public DbSet<ProjectActivityDetail> ProjectActivityDetail { get; set; }
+
+
+        
 
 
         #endregion
@@ -665,7 +671,8 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 69, PageName = "ProjectDetails", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 70, PageName = "Proposal", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 71, PageName = "CriteriaEvaluation", ModuleId = 8, ModuleName = "Projects" },
-                new ApplicationPages { IsDeleted = false, PageId = 72, PageName = "Producer", ModuleId = 6, ModuleName = "Marketing" }
+                new ApplicationPages { IsDeleted = false, PageId = 72, PageName = "Producer", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 73, PageName = "Policy", ModuleId = 6, ModuleName = "Marketing" }
             );
 
             modelBuilder.Entity<FinancialYearDetail>().HasData(

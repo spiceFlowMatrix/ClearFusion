@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.DbEntities.Marketing;
+using DataAccess.DbEntities.Project;
 
 namespace DataAccess.Data
 {
@@ -312,6 +313,25 @@ namespace DataAccess.Data
             }
         }
 
-
+        public static async Task AddActivityStatus(ApplicationDbContext context)
+        {
+            try
+            {
+                List<ActivityStatusDetail> list = new List<ActivityStatusDetail>
+                {
+                    new ActivityStatusDetail { IsDeleted = false, StatusId = 1, StatusName="Planning" },
+                    new ActivityStatusDetail { IsDeleted = false, StatusId = 2, StatusName = "Implementation" },
+                    new ActivityStatusDetail { IsDeleted = false, StatusId = 3, StatusName = "Monitoring" },
+                    new ActivityStatusDetail { IsDeleted = false, StatusId = 4, StatusName = "Completed" }
+                  
+                };
+                await context.ActivityStatusDetail.AddRangeAsync(list);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                var errormessage = ex.Message;
+            }
+        }
     }
 }
