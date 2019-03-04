@@ -37,7 +37,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [BindProperty]
     public string DdlPageSize { get; set; }
-    
+
     [BindProperty]
     public string DdlPageOrientation { get; set; }
     public List<SelectListItem> PageOrientations { get; } = new List<SelectListItem>
@@ -51,7 +51,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [BindProperty]
     public string TxtHeight { get; set; }
-   
+
     // GET: api/<controller>
     [HttpGet]
     public IEnumerable<string> Get(string html)
@@ -84,7 +84,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
                       })).FirstOrDefault();
       }
       catch (Exception ex) { }
-      var imagepath = Path.Combine(_hostingEnvironment.WebRootPath, "agreement-logo.png");
+      //var imagepath = Path.Combine(_hostingEnvironment.WebRootPath, "agreement-logo.png");
+      //< img width = '100' height = '100' src = " + imagepath + @" >
       DdlPageSize = "A4";
       PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
           DdlPageSize, true);
@@ -130,7 +131,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
                                                       Broadcasting Agreement Paper
                                                   </td>
                                                   <td width = '15%' style= 'text-align:right;'>  
-                                                      <img width= '100' height= '100' src=" + imagepath + @">
+                                                    
                                                   </td>
                                               </tr>
                                           </tbody>
@@ -253,6 +254,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       {
         return pdf; //return ex;
       }
-    }  
+    }
   }
 }
