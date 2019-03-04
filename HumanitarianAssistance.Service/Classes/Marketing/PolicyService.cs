@@ -868,6 +868,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
+                //var list = await _uow.GetDbContext().PolicyOrderSchedules.ToListAsync();
                 if (model.Id == 0)
                 {
                     PolicyOrderSchedule obj = _mapper.Map<PolicyOrderScheduleModel, PolicyOrderSchedule>(model);
