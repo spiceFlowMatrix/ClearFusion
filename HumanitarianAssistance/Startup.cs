@@ -46,6 +46,7 @@ namespace HumanitarianAssistance
     private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
     private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
     public static IHostingEnvironment _Env;
+    string value;
 
     public Startup(IConfiguration configuration, IHostingEnvironment env)
     {
@@ -58,6 +59,16 @@ namespace HumanitarianAssistance
       string sAppPath = env.ContentRootPath; //Application Base Path
       string swwwRootPath = env.WebRootPath;  //wwwroot folder path
       Configuration = builder.Build();
+      //get and set environment variable at run time
+      value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+
+      if (value == null)
+      {
+        Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json", EnvironmentVariableTarget.Machine);
+        var  vdsfdsfalue = Environment.GetEnvironmentVariable("PATH");
+        value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+      }
+      Console.WriteLine("GOOGLE_APPLICATION_CREDENTIALS: {0}\n", value);
     }
 
     public IConfiguration Configuration { get; }

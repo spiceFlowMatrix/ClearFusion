@@ -17,4 +17,11 @@ namespace HumanitarianAssistance.ViewModels.Models.AccountingNew
         public  DateTime ExchangeRateDate { get; set; }
         public int OfficeId { get; set; }
     }
+
+    public class OfficeExchangeRateViewModel
+    {
+        public List<GenerateExchangeRateViewModel> ExchangeRatesViewModel { get; set; }
+        public bool SaveForAllOffices { get; set; }
+        public int? OfficeId { get; set; }
+    }
 }
