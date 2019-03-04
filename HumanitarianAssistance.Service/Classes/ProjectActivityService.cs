@@ -2,6 +2,7 @@
 using DataAccess;
 using DataAccess.DbEntities;
 using DataAccess.DbEntities.Project;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
@@ -142,7 +143,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
-                } 
+                }
                 else
                 {
                     response.StatusCode = StaticResource.failStatusCode;
@@ -196,10 +197,12 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+
                 if (projectactivityDetail != null)
                 {
                     // Actual start date
                     projectactivityDetail.ActualStartDate = DateTime.UtcNow;
+                    projectactivityDetail.StatusId = (int)ProjectPhaseType.Implementation;
 
                     projectactivityDetail.ModifiedDate = DateTime.UtcNow;
                     projectactivityDetail.ModifiedById = UserId;
@@ -270,6 +273,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     // Actual end date
                     projectactivityDetail.ImplementationStatus = !projectactivityDetail.ImplementationStatus;
+                    projectactivityDetail.StatusId = (int)ProjectPhaseType.Monitoring;
 
                     projectactivityDetail.ModifiedDate = DateTime.UtcNow;
                     projectactivityDetail.ModifiedById = UserId;
@@ -305,6 +309,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     // Actual end date
                     projectactivityDetail.MonitoringStatus = !projectactivityDetail.MonitoringStatus;
+                    projectactivityDetail.StatusId = (int)ProjectPhaseType.Completed;
 
                     projectactivityDetail.ModifiedDate = DateTime.UtcNow;
                     projectactivityDetail.ModifiedById = UserId;
@@ -330,20 +335,19 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public int GetActivityOnSchedule()
+        public async Task<int> GetActivityOnSchedule()
         {
 
-            int totalCount = _uow.GetDbContext().ProjectActivityDetail.Where(a => a.IsDeleted == false && a.StartDate == (a.ActualStartDate.Value.Date != null ?
-                                                                                  a.ActualStartDate.Value.Date :
-                                                                                  DateTime.UtcNow.Date))
-                                                                            .Count();
+            int totalCount = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
+                                                                                   a.StartDate == (a.ActualStartDate.Value.Date != null ?
+                                                                                   a.ActualStartDate.Value.Date : DateTime.UtcNow.Date));
             return totalCount;
         }
 
-        public int GetLateStart()
+        public async Task<int> GetLateStart()
         {
 
-            int totalCount = _uow.GetDbContext().ProjectActivityDetail.Count(a => a.IsDeleted == false &&
+            int totalCount = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
                                                                                   a.StartDate.Value.Date < (a.ActualStartDate != null ?
                                                                                                            a.ActualStartDate.Value.Date :
                                                                                                            DateTime.UtcNow.Date)
@@ -352,44 +356,47 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
 
-        public int GetLateEnd()
+        public async Task<int> GetLateEnd()
         {
 
-            int totalCount = _uow.GetDbContext().ProjectActivityDetail.Where(a => a.IsDeleted == false &&
+            int totalCount = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
                                                                                    (a.EndDate.Value.Date != null ? a.EndDate.Value.Date : DateTime.UtcNow.Date) < (
                                                                                    a.ActualEndDate.Value.Date != null ?
-                                                                                   a.ActualEndDate.Value.Date : DateTime.UtcNow.Date))
-                                                                            .Count();
+                                                                                   a.ActualEndDate.Value.Date : DateTime.UtcNow.Date));
             return totalCount;
         }
 
-        public int  GetSlippage()
+        public async Task<int> GetSlippage()
         {
 
-            int slippage =  _uow.GetDbContext().ProjectActivityDetail.Where(a => a.IsDeleted == false &&
-                                                                                      (a.ActualEndDate.Value.Date !=null 
-                                                                                      ? a.ActualEndDate.Value.Date
-                                                                                      :DateTime.UtcNow.Date)
-                                                                                    > (a.EndDate.Value.Date != null 
-                                                                                      ? a.EndDate.Value.Date
-                                                                                      : DateTime.UtcNow.Date))
-                                                                                 .Count();
+            int slippage = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
+                                                                                      (a.ActualEndDate.Value.Date != null ?
+                                                                                      a.ActualEndDate.Value.Date : DateTime.UtcNow.Date) >
+                                                                                      (a.EndDate.Value.Date != null ? a.EndDate.Value.Date : DateTime.UtcNow.Date));
             return slippage;
         }
 
-        public int GetProgress()
+        public async Task<float> GetProgress()
         {
-          
-            int avg = 0;
-                int totalImplementationProgress = 0;
-                int totalMonitoringProgrss = 0;
-                var slippage = _uow.GetDbContext().ProjectActivityDetail.Where(a => a.IsDeleted == false).ToList();
-                if (slippage != null)
-                {
-                    totalImplementationProgress = slippage.Sum(x => x.ImplementationProgress).Value;
-                    totalMonitoringProgrss = slippage.Sum(x => x.MonitoringProgress).Value;
-                    avg = (totalImplementationProgress + totalMonitoringProgrss) / 2;
-                }
+
+            float avg = 0;
+            float totalImplementationProgress = 0;
+            float totalMonitoringProgrss = 0;
+            var slippage = await _uow.GetDbContext().ProjectActivityDetail
+                                                    .Where(a => a.IsDeleted == false)
+                                                    .Select(x => new
+                                                    {
+                                                        x.ImplementationProgress,
+                                                        x.MonitoringProgress
+                                                    })
+                                                    .ToListAsync();
+
+            if (slippage != null)
+            {
+                totalImplementationProgress = slippage.Sum(x => x.ImplementationProgress ?? 0);
+                totalMonitoringProgrss = slippage.Sum(x => x.MonitoringProgress ?? 0);
+                avg = (totalImplementationProgress + totalMonitoringProgrss) / 2;
+            }
 
             return avg;
         }
@@ -399,13 +406,19 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
+                Task<int> ActivityOnSchedule = GetActivityOnSchedule();
+                Task<int> LateStart = GetLateStart();
+                Task<int> LateEnd = GetLateEnd();
+                Task<float> Progress = GetProgress();
+                Task<int> Slippage = GetSlippage();
+
                 ProjectActivityStatusModel obj = new ProjectActivityStatusModel
                 {
-                    ActivityOnSchedule = GetActivityOnSchedule(),
-                    LateStart = GetLateStart(),
-                    LateEnd = GetLateEnd(),
-                    Progress = GetProgress(),
-                    Slippage = GetSlippage(),
+                    ActivityOnSchedule = await ActivityOnSchedule,
+                    LateStart = await LateStart,
+                    LateEnd = await LateEnd,
+                    Progress = await Progress,
+                    Slippage = await Slippage,
                 };
 
                 response.data.ProjectActivityStatusModel = obj;

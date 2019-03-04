@@ -150,9 +150,12 @@ namespace HumanitarianAssistance.Common.Enums
 
   public enum ProjectPhaseType
   {
-    DataEntryPhase = 1,
+        Planning = 1,
+        Implementation = 2,
+        Monitoring = 3,
+        Completed = 4
 
-  }
+    }
   public enum RoleName
   {
     HR = 1,
@@ -190,4 +193,5 @@ namespace HumanitarianAssistance.Common.Enums
     //conceptfile = 'CONCEPT',
     //presentationfile = 'PRESENTATION'
   }
+
 }
