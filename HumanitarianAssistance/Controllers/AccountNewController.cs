@@ -267,5 +267,27 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetSavedExchangeRates([FromBody] ExchangeRateVerificationFilter filter)
+    {
+      APIResponse response = await _iExchangeRate.GetSavedExchangeRates(filter);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> SaveSystemGeneratedExchangeRates([FromBody] List<GenerateExchangeRateViewModel> generateExchangeRateList)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      APIResponse response = await _iExchangeRate.GenerateExchangeRates(generateExchangeRateList, user.Id);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetExchangeRatesDetail([FromBody] ExchangeRateDetailModel exchangeRateDetailModel)
+    {
+      APIResponse response = await _iExchangeRate.GetExchangeRatesDetail(exchangeRateDetailModel);
+      return response;
+    }
+
   }
 }

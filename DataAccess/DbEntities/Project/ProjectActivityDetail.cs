@@ -8,6 +8,19 @@ namespace DataAccess.DbEntities.Project
 {
     public class ProjectActivityDetail : BaseEntityWithoutId
     {
+        public ProjectActivityDetail()
+        {
+            Recurring = false;
+            RecurringCount = 0;
+            ImplementationProgress = 0;
+            ImplementationStatus = false;
+
+            MonitoringProgress = 0;
+            MonitoringStatus = false;
+            MonitoringScore = 0;
+            MonitoringFrequency = 0;
+        }
+        //Planning
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
@@ -29,7 +42,6 @@ namespace DataAccess.DbEntities.Project
         public int? StatusId { get; set; }
         [ForeignKey("StatusId")]
         public ActivityStatusDetail ActivityStatusDetail { get; set; }
-        //REcurring
         public bool? Recurring { get; set; }
         public int? RecurringCount { get; set; }
         public int RecurrinTypeId { get; set; }
@@ -44,7 +56,8 @@ namespace DataAccess.DbEntities.Project
         public string OvercomingChallanges { get; set; }
         public DateTime? ExtensionStartDate { get; set; }
         public DateTime? ExtensionEndDate { get; set; }
-        //monitoring
+
+        //Monitoring
         [Range(0, 100)]
         public int? MonitoringProgress { get; set; }
         public bool? MonitoringStatus { get; set; }
@@ -59,5 +72,6 @@ namespace DataAccess.DbEntities.Project
         public string Weeknesses { get; set; }
         public string MonitoringChallenges { get; set; }
         public string Recommendation { get; set; }
+        public string Comments { get; set; }
     }
 }

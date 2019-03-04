@@ -1513,15 +1513,15 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
     #region ProjectActivity
-    [HttpGet]
-    public async Task<APIResponse> GetProjectActivityDetail()
+    [HttpPost]
+    public async Task<APIResponse> GetProjectActivityDetail([FromBody]long id)
     {
-      APIResponse response = await _iActivity.GetallProjectActivityDetail();
+      APIResponse response = await _iActivity.GetallProjectActivityDetail(id);
       return response;
     }
 
     [HttpPost]
-    public async Task<APIResponse> AddProjectActivityDetail(ProjectActivityModel model)
+    public async Task<APIResponse> AddProjectActivityDetail([FromBody]ProjectActivityModel model)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -1536,7 +1536,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<APIResponse> EditProjectActivityDetail(ProjectActivityModel model)
+    public async Task<APIResponse> EditProjectActivityDetail([FromBody]ProjectActivityModel model)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -1553,7 +1553,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    public async Task<APIResponse> DeleteActivityDetail(long activityId,string userId)
+    public async Task<APIResponse> DeleteActivityDetail([FromBody]long activityId)
     {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -1561,11 +1561,83 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         var id = user.Id;
         var userName = user.UserName;
-        response = await _iActivity.DeleteProjectActivity(activityId, userId);
+        response = await _iActivity.DeleteProjectActivity(activityId, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> StartProjectActivity([FromBody]long activityId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        response = await _iActivity.StartProjectActivity(activityId, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EndProjectActivity([FromBody]long activityId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        response = await _iActivity.EndProjectActivity(activityId, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> MarkImplementationAsCompleted([FromBody]long activityId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        response = await _iActivity.MarkImplementationAsCompleted(activityId, id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> MarkMonitoringAsCompleted([FromBody]long activityId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        response = await _iActivity.MarkMonitoringAsCompleted(activityId, id);
+      }
+      return response;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> AllActivityStatus(long activityId, string userId)
+    {
+      APIResponse response = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        response = await _iActivity.AllProjectActivityStatus();
       }
       return response;
     }
     #endregion
+
 
   }
 }

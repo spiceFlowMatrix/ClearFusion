@@ -5553,7 +5553,6 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-
                 foreach (Employees Employee in model.EmployeeList)
                 {
                     //Check if salary paymet is done for an approved payroll

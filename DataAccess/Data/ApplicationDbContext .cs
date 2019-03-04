@@ -194,7 +194,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<AgreeDisagreePermission> AgreeDisagreePermission { get; set; }
         public DbSet<OrderSchedulePermission> OrderSchedulePermission { get; set; }
         public DbSet<HRJobInterviewers> HRJobInterviewers { get; set; }
-
+        public DbSet<ExchangeRateVerification> ExchangeRateVerifications { get; set; }
         public DbSet<Errorlog> errorlog { get; set; }
 
 
