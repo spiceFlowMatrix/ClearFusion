@@ -1623,17 +1623,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
 
-    [HttpPost]
-    public async Task<APIResponse> AllActivityStatus(long activityId, string userId)
+    [HttpGet]
+    public async Task<APIResponse> AllActivityStatus()
     {
       APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.AllProjectActivityStatus();
-      }
+      response = await _iActivity.AllProjectActivityStatus();
       return response;
     }
     #endregion

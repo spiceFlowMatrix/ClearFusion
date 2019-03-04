@@ -788,14 +788,14 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.IsProposalComplate = model.IsProposalComplate;
                         obj.ReviewerId = model.ReviewerId;
                         obj.DirectorId = model.DirectorId;
-                        obj.ProjectPhaseDetailsId = Convert.ToInt64(ProjectPhaseType.DataEntryPhase);
+                        obj.ProjectPhaseDetailsId = (int)ProjectPhaseType.Planning;
                         obj.IsDeleted = false;
                         obj.IsActive = true;
                         obj.CreatedById = UserId;
                         obj.CreatedDate = DateTime.Now;
                         _uow.ProjectDetailNewRepository.Add(obj);
                         _ProjectPhase.ProjectId = LatestprojectId = obj.ProjectId;
-                        _ProjectPhase.ProjectPhaseDetailsId = Convert.ToInt64(ProjectPhaseType.DataEntryPhase);
+                        _ProjectPhase.ProjectPhaseDetailsId = (int)ProjectPhaseType.Planning;
                         _ProjectPhase.PhaseStartData = DateTime.Now;
                         _ProjectPhase.IsDeleted = false;
                         _ProjectPhase.CreatedById = UserId;
@@ -823,7 +823,7 @@ namespace HumanitarianAssistance.Service.Classes
                             //    _uow.ProjectDetailNewRepository.UpdateAsyn(existProjectRecord);
                             if (exstingProjectTimePhase != null)
                             {
-                                _ProjectPhase.ProjectPhaseDetailsId = Convert.ToInt64(ProjectPhaseType.DataEntryPhase);
+                                _ProjectPhase.ProjectPhaseDetailsId = (int)ProjectPhaseType.Planning;
                                 _ProjectPhase.PhaseStartData = DateTime.Now;
                                 _ProjectPhase.IsDeleted = false;
                                 _ProjectPhase.ModifiedById = UserId;
