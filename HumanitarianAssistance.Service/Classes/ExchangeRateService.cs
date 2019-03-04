@@ -65,8 +65,8 @@ namespace HumanitarianAssistance.Service.Classes
                 exchangerateinfo.ModifiedById = model.ModifiedById;
                 exchangerateinfo.ModifiedDate = DateTime.UtcNow;
                 exchangerateinfo.Date = model.Date.Value;
-                exchangerateinfo.FromCurrency = model?.FromCurrency??0;
-                exchangerateinfo.ToCurrency = model?.ToCurrency??0;
+                exchangerateinfo.FromCurrency = model?.FromCurrency ?? 0;
+                exchangerateinfo.ToCurrency = model?.ToCurrency ?? 0;
                 exchangerateinfo.OfficeId = model.OfficeId;
                 exchangerateinfo.Rate = Convert.ToDecimal(model.Rate);
                 _uow.GetDbContext().ExchangeRateDetail.Update(exchangerateinfo);
@@ -130,7 +130,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                         Rate = Convert.ToDouble(x.Rate),
                                                                                         FromCurrency = x.FromCurrency,
                                                                                         ToCurrency = x.ToCurrency,
-                                                                                        OfficeId= x.OfficeId
+                                                                                        OfficeId = x.OfficeId
                                                                                     }).ToListAsync();
 
                 response.data.ExchangeRateList = exchangeratelist;
@@ -641,7 +641,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 //if (filter == null)
                 //{
-                    ExchangeRateVerificationList = await _uow.GetDbContext().ExchangeRateVerifications.Where(x => x.IsDeleted == false).ToListAsync();
+                ExchangeRateVerificationList = await _uow.GetDbContext().ExchangeRateVerifications.Where(x => x.IsDeleted == false).OrderByDescending(x=> x.Date).ToListAsync();
                 // }
                 //else
                 //{
@@ -689,7 +689,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                              FromCurrency = x.FromCurrency,
                                                                              Rate = (double)x.Rate,
                                                                              ToCurrency = x.ToCurrency
-                                                                         }).ToListAsync();
+                                                                         }).OrderBy(x => x.FromCurrency).ThenBy(x=> x.ToCurrency).ToListAsync();
 
                 response.StatusCode = StaticResource.successStatusCode;
             }
@@ -703,17 +703,17 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
 
-        public async Task<APIResponse> GenerateExchangeRates(List<GenerateExchangeRateViewModel> GenerateExchangeRateModel, string userId)
+        public async Task<APIResponse> GenerateExchangeRates(List<GenerateExchangeRateViewModel> exchangeRateModel, string userId)
         {
             APIResponse response = new APIResponse();
 
             try
             {
-                if (GenerateExchangeRateModel.Any())
+                if (exchangeRateModel.Any())
                 {
                     List<ExchangeRateDetail> exchangeRateDetails = new List<ExchangeRateDetail>();
 
-                    exchangeRateDetails = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.IsDeleted == false && x.Date.Date == GenerateExchangeRateModel.FirstOrDefault().Date.Date).ToList();
+                    exchangeRateDetails = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.IsDeleted == false && x.Date.Date == exchangeRateModel.FirstOrDefault().Date.Date).ToList();
                     List<CurrencyDetails> currencyDetails = _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false).ToList();
 
                     if (exchangeRateDetails.Any())
@@ -722,23 +722,40 @@ namespace HumanitarianAssistance.Service.Classes
 
                     }
 
-                      GetSystemGeneratedExchangeRates(GenerateExchangeRateModel, ref exchangeRateDetails, currencyDetails, userId);
+                    GetSystemGeneratedExchangeRates(exchangeRateModel, ref exchangeRateDetails, currencyDetails, userId);
 
                     List<int> OfficeIds = await _uow.GetDbContext().OfficeDetail.Where(x => x.IsDeleted == false).Select(x => x.OfficeId).ToListAsync();
 
+                    List<ExchangeRateDetail> exchangeRatesForAllOffices = new List<ExchangeRateDetail>();
+
                     foreach (int officeId in OfficeIds)
                     {
-                        exchangeRateDetails.ForEach(x => x.OfficeId = officeId);
+                        foreach (ExchangeRateDetail item in exchangeRateDetails)
+                        {
+                            ExchangeRateDetail exchangeRateDetail = new ExchangeRateDetail();
+                            exchangeRateDetail.CreatedById = item.CreatedById;
+                            exchangeRateDetail.CreatedDate = item.CreatedDate;
+                            exchangeRateDetail.Date = item.Date;
+                            exchangeRateDetail.FromCurrency = item.FromCurrency;
+                            exchangeRateDetail.ToCurrency = item.ToCurrency;
+                            exchangeRateDetail.IsDeleted = item.IsDeleted;
+                            exchangeRateDetail.OfficeId = officeId;
+                            exchangeRateDetail.Rate = item.Rate;
 
-                        await _uow.GetDbContext().ExchangeRateDetail.AddRangeAsync(exchangeRateDetails);
-                        await _uow.SaveAsync();
+                            exchangeRatesForAllOffices.Add(exchangeRateDetail);
+
+                        }
+                        exchangeRatesForAllOffices.AddRange(exchangeRateDetails);
                     }
+
+                    _uow.GetDbContext().ExchangeRateDetail.AddRange(exchangeRatesForAllOffices);
+                    _uow.Save();
 
                     ExchangeRateVerification exchangeRateVerification = new ExchangeRateVerification();
                     exchangeRateVerification.IsDeleted = false;
                     exchangeRateVerification.CreatedById = userId;
                     exchangeRateVerification.CreatedDate = DateTime.UtcNow;
-                    exchangeRateVerification.Date = GenerateExchangeRateModel.FirstOrDefault().Date;
+                    exchangeRateVerification.Date = exchangeRateModel.FirstOrDefault().Date;
                     exchangeRateVerification.IsVerified = false;
 
                     _uow.GetDbContext().ExchangeRateVerifications.Add(exchangeRateVerification);
@@ -763,13 +780,13 @@ namespace HumanitarianAssistance.Service.Classes
         /// <param name="exchangeRateDetails"></param>
         /// <param name="currencyDetails"></param>
         /// <param name="userId"></param>
-        public void GetSystemGeneratedExchangeRates(List<GenerateExchangeRateViewModel> GenerateExchangeRateList, ref List<ExchangeRateDetail> exchangeRateDetails, List<CurrencyDetails> currencyDetails, string userId)
+        public void GetSystemGeneratedExchangeRates(List<GenerateExchangeRateViewModel> exchangeRateList, ref List<ExchangeRateDetail> exchangeRateDetails, List<CurrencyDetails> currencyDetails, string userId)
         {
             try
             {
-                int baseCurrenyId = GenerateExchangeRateList.FirstOrDefault().FromCurrencyId;
+                int baseCurrenyId = exchangeRateList.FirstOrDefault().FromCurrencyId;
 
-                foreach (GenerateExchangeRateViewModel item in GenerateExchangeRateList)
+                foreach (GenerateExchangeRateViewModel item in exchangeRateList)
                 {
                     exchangeRateDetails.Add(AddExchangeRateAfterManipulation(item, userId));
 
@@ -793,7 +810,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 GenerateExchangeRateViewModel generateExchangeRate = new GenerateExchangeRateViewModel();
                                 generateExchangeRate.ToCurrencyId = currencyDetails[i].CurrencyId;
                                 generateExchangeRate.FromCurrencyId = currencyDetails[j].CurrencyId;
-                                generateExchangeRate.Date = GenerateExchangeRateList.FirstOrDefault().Date;
+                                generateExchangeRate.Date = exchangeRateList.FirstOrDefault().Date;
                                 generateExchangeRate.Rate = (double)(exchangeRateDetails.FirstOrDefault(x => x.ToCurrency == generateExchangeRate.ToCurrencyId && x.FromCurrency == baseCurrenyId).Rate /
                                                             exchangeRateDetails.FirstOrDefault(y => y.FromCurrency == baseCurrenyId && y.ToCurrency == generateExchangeRate.FromCurrencyId).Rate);
 
@@ -817,15 +834,15 @@ namespace HumanitarianAssistance.Service.Classes
         /// <param name="GenerateExchangeRate"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public ExchangeRateDetail AddExchangeRateAfterManipulation(GenerateExchangeRateViewModel GenerateExchangeRate, string userId)
+        public ExchangeRateDetail AddExchangeRateAfterManipulation(GenerateExchangeRateViewModel exchangeRateViewModel, string userId)
         {
             ExchangeRateDetail exchangeRate = new ExchangeRateDetail();
             exchangeRate.CreatedById = userId;
             exchangeRate.CreatedDate = DateTime.UtcNow;
-            exchangeRate.Date = GenerateExchangeRate.Date;
-            exchangeRate.FromCurrency = GenerateExchangeRate.FromCurrencyId;
-            exchangeRate.ToCurrency = GenerateExchangeRate.ToCurrencyId;
-            exchangeRate.Rate = (decimal)GenerateExchangeRate.Rate;
+            exchangeRate.Date = exchangeRateViewModel.Date;
+            exchangeRate.FromCurrency = exchangeRateViewModel.FromCurrencyId;
+            exchangeRate.ToCurrency = exchangeRateViewModel.ToCurrencyId;
+            exchangeRate.Rate = (decimal)exchangeRateViewModel.Rate;
             exchangeRate.IsDeleted = false;
 
             return exchangeRate;
@@ -845,11 +862,132 @@ namespace HumanitarianAssistance.Service.Classes
             exchangeRate.Date = GenerateExchangeRate.Date;
             exchangeRate.ToCurrency = GenerateExchangeRate.FromCurrencyId;
             exchangeRate.FromCurrency = GenerateExchangeRate.ToCurrencyId;
-            exchangeRate.Rate = 1/(decimal)GenerateExchangeRate.Rate;
+            exchangeRate.Rate = 1 / (decimal)GenerateExchangeRate.Rate;
             exchangeRate.IsDeleted = false;
 
             return exchangeRate;
         }
 
+        public async Task<APIResponse> SaveExchangeRatesForOffice(OfficeExchangeRateViewModel officeExchangeRateViewModel, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            List<ExchangeRateDetail> exchangeRateList = new List<ExchangeRateDetail>();
+
+            try
+            {
+                if (officeExchangeRateViewModel.SaveForAllOffices)
+                {
+
+                    exchangeRateList = await _uow.GetDbContext().ExchangeRateDetail.Where(x => x.IsDeleted == false && x.Date.Date == officeExchangeRateViewModel.ExchangeRatesViewModel.FirstOrDefault().Date.Date).ToListAsync();
+
+                    if (exchangeRateList.Any())
+                    {
+                        foreach (ExchangeRateDetail item in exchangeRateList)
+                        {
+                            item.Rate = (decimal)officeExchangeRateViewModel.ExchangeRatesViewModel.FirstOrDefault(x => x.ToCurrencyId == item.ToCurrency && x.FromCurrencyId == item.FromCurrency).Rate;
+                        }
+
+                        _uow.GetDbContext().ExchangeRateDetail.UpdateRange(exchangeRateList);
+                        _uow.GetDbContext().SaveChanges();
+                    }
+                }
+                else
+                {
+                  exchangeRateList = await _uow.GetDbContext().ExchangeRateDetail.Where(x => x.IsDeleted == false && x.Date.Date == officeExchangeRateViewModel.ExchangeRatesViewModel.FirstOrDefault().Date.Date && x.OfficeId== officeExchangeRateViewModel.OfficeId).ToListAsync();
+
+                    if (exchangeRateList.Any())
+                    {
+                        foreach (ExchangeRateDetail item in exchangeRateList)
+                        {
+                            item.Rate = (decimal)officeExchangeRateViewModel.ExchangeRatesViewModel.FirstOrDefault(x => x.ToCurrencyId == item.ToCurrency && x.FromCurrencyId == item.FromCurrency).Rate;
+                        }
+
+                        _uow.GetDbContext().ExchangeRateDetail.UpdateRange(exchangeRateList);
+                        _uow.GetDbContext().SaveChanges();
+                    }
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Exchange rates updated successfully!!!";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> VerifyExchangeRates(DateTime ExchangeRateDate, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            List<ExchangeRateDetail> exchangeRateList = new List<ExchangeRateDetail>();
+
+            try
+            {
+                ExchangeRateVerification exchangeRateVerification = await _uow.GetDbContext().ExchangeRateVerifications.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Date.Date == ExchangeRateDate.Date);
+                exchangeRateVerification.IsVerified = true;
+                exchangeRateVerification.ModifiedDate = DateTime.UtcNow;
+                exchangeRateVerification.ModifiedById = userId;
+                _uow.GetDbContext().Update(exchangeRateVerification);
+                _uow.GetDbContext().SaveChanges();
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Exchange rates verified successfully!!!";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteExchangeRates(DateTime ExchangeRateDate, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                ExchangeRateVerification exchangeRateVerification = await _uow.GetDbContext().ExchangeRateVerifications.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Date.Date == ExchangeRateDate.Date);
+
+                if (exchangeRateVerification != null)
+                {
+                    exchangeRateVerification.IsDeleted = true;
+                    exchangeRateVerification.ModifiedDate = DateTime.UtcNow;
+                    exchangeRateVerification.ModifiedById = userId;
+                    _uow.GetDbContext().Update(exchangeRateVerification);
+                    _uow.GetDbContext().SaveChanges();
+                }
+                
+                List<ExchangeRateDetail> exchangeRateList = await _uow.GetDbContext().ExchangeRateDetail.Where(x => x.IsDeleted == false && x.Date.Date == ExchangeRateDate.Date).ToListAsync();
+
+                if (exchangeRateList.Any())
+                {
+                    foreach (ExchangeRateDetail exchangeRate in exchangeRateList)
+                    {
+                        exchangeRate.IsDeleted = true;
+                        exchangeRate.ModifiedById = userId;
+                        exchangeRate.ModifiedDate = DateTime.UtcNow;
+                    }
+                    _uow.GetDbContext().UpdateRange(exchangeRateList);
+                    _uow.GetDbContext().SaveChanges();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Exchange rates deleted successfully!!!";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
     }
 }

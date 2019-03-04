@@ -13,11 +13,13 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddExchangeRate(ExchangeRateModel model);
         Task<APIResponse> EditExchangeRate(ExchangeRateModel model);
         Task<APIResponse> GetAllExchangeRate();
-        //Task<APIResponse> GetExchangeRateByDate(int currencyFromCode, int currenctToCode, DateTime? date);
         Task<APIResponse> GetExchangeGainOrLossAmount(ExchangeGainOrLossFilterModel model);
         Task<APIResponse> GetExchangeGainOrLossTransactionAmount(ExchangeGainOrLossTransactionFilterModel model);
         Task<APIResponse> GenerateExchangeRates(List<GenerateExchangeRateViewModel> GenerateExchangeRateModel, string userId);
         Task<APIResponse> GetSavedExchangeRates(ExchangeRateVerificationFilter filter);
         Task<APIResponse> GetExchangeRatesDetail(ExchangeRateDetailModel exchangeRateDetailModel);
+        Task<APIResponse> SaveExchangeRatesForOffice(OfficeExchangeRateViewModel officeExchangeRateViewModel, string userId);
+        Task<APIResponse> VerifyExchangeRates(DateTime ExchangeRateDate, string userId);
+        Task<APIResponse> DeleteExchangeRates(DateTime ExchangeRateDate, string userId);
     }
 }
