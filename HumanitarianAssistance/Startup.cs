@@ -59,7 +59,9 @@ namespace HumanitarianAssistance
       string sAppPath = env.ContentRootPath; //Application Base Path
       string swwwRootPath = env.WebRootPath;  //wwwroot folder path
       Configuration = builder.Build();
+      //get and set environment variable at run time
       value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+
       if (value == null)
       {
         Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json");

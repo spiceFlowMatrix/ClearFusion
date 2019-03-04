@@ -2281,7 +2281,7 @@ namespace HumanitarianAssistance.Service.Classes
                 string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
                 Console.WriteLine(googleCredentialPathFile1);
 
-                Console.WriteLine("-------After Credential path Upload-------------");
+                Console.WriteLine("------------After Credential path Upload-------------");
 
                 GoogleCredential result = new GoogleCredential();
                 using (StreamReader files = File.OpenText(googleCredentialPathFile1))
