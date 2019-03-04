@@ -64,7 +64,8 @@ namespace HumanitarianAssistance
 
       if (value == null)
       {
-        Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json");
+        Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json", EnvironmentVariableTarget.Machine);
+        var  vdsfdsfalue = Environment.GetEnvironmentVariable("PATH");
         value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
       }
       Console.WriteLine("GOOGLE_APPLICATION_CREDENTIALS: {0}\n", value);
