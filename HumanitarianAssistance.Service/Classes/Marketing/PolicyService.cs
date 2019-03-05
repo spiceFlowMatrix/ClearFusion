@@ -690,8 +690,6 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
         public async Task<APIResponse> AddPolicyRepeatDays(PolicyTimeModel model, string UserId)
         {
-            long LatestId = 0;
-            var Code = string.Empty;
             APIResponse response = new APIResponse();
             try
             {
@@ -699,37 +697,37 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 {
                     var detail = _uow.GetDbContext().PolicyDaySchedules.OrderByDescending(x => x.Id).FirstOrDefault();
                     PolicyDaySchedule obj = _mapper.Map<PolicyTimeModel, PolicyDaySchedule>(model);
-                    if (model.RepeatDays != null)
+                    if (model.RepeatDays != null && model.RepeatDays.Count>0)
                     {
                         foreach (var items in model.RepeatDays)
                         {
-                            if (items == "MON")
+                            if (items.Value == "MON")
                             {
-                                obj.Monday = true;
+                                obj.Monday = items.status;
                             }
-                            if (items == "TUE")
+                            if (items.Value == "TUE")
                             {
-                                obj.Tuesday = true;
+                                obj.Tuesday = items.status; 
                             }
-                            if (items == "WED")
+                            if (items.Value == "WED")
                             {
-                                obj.Wednesday = true;
+                                obj.Wednesday = items.status;
                             }
-                            if (items == "THU")
+                            if (items.Value == "THU")
                             {
-                                obj.Thursday = true;
+                                obj.Thursday = items.status;
                             }
-                            if (items == "FRI")
+                            if (items.Value == "FRI")
                             {
-                                obj.Friday = true;
+                                obj.Friday = items.status;
                             }
-                            if (items == "SAT")
+                            if (items.Value == "SAT")
                             {
-                                obj.Saturday = true;
+                                obj.Saturday = items.status;
                             }
-                            if (items == "SUN")
+                            if (items.Value == "SUN")
                             {
-                                obj.Sunday = true;
+                                obj.Sunday = items.status;
                             }
                         }
                     }
@@ -751,44 +749,44 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         existRecord.IsDeleted = false;
                         existRecord.ModifiedById = UserId;
                         existRecord.ModifiedDate = DateTime.Now;
-                        if (model.RepeatDays != null)
+                        if (model.RepeatDays != null && model.RepeatDays.Count>0)
                         {
                             foreach (var items in model.RepeatDays)
                             {
-                                if (items == "MON")
+                                if (items.Value == "MON")
                                 {
-                                    existRecord.Monday = true;
+                                    existRecord.Monday = items.status;
                                 }
-                                if (items == "TUE")
+                                if (items.Value == "TUE")
                                 {
-                                    existRecord.Tuesday = true;
+                                    existRecord.Tuesday = items.status;
                                 }
-                                if (items == "WED")
+                                if (items.Value == "WED")
                                 {
-                                    existRecord.Wednesday = true;
+                                    existRecord.Wednesday = items.status;
                                 }
-                                if (items == "THU")
+                                if (items.Value == "THU")
                                 {
-                                    existRecord.Thursday = true;
+                                    existRecord.Thursday = items.status;
                                 }
-                                if (items == "FRI")
+                                if (items.Value == "FRI")
                                 {
-                                    existRecord.Friday = true;
+                                    existRecord.Friday = items.status;
                                 }
-                                if (items == "SAT")
+                                if (items.Value == "SAT")
                                 {
-                                    existRecord.Saturday = true;
+                                    existRecord.Saturday = items.status;
                                 }
-                                if (items == "SUN")
+                                if (items.Value == "SUN")
                                 {
-                                    existRecord.Sunday = true;
+                                    existRecord.Sunday = items.status;
                                 }
                             }
                         }
                         await _uow.PolicyDayScheduleRepository.UpdateAsyn(existRecord);
                         response.data.policyDayScheduleDetails = existRecord;
                         response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Policy updated successfully";
+                        response.Message = "Repeat Days updated successfully";
                     }
                 }
             }
