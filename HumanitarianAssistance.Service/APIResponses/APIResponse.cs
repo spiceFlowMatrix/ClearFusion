@@ -71,7 +71,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double TotalRecivable { get; set; }
         public double TotalPayable { get; set; }
         public double Balance { get; set; }
-
+        public long TotalExchangeRateCount { get; set; }
 
         public double TotalIncome { get; set; }
         public int TotalPresentDays { get; set; }

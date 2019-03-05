@@ -635,35 +635,50 @@ namespace HumanitarianAssistance.Service.Classes
         {
             APIResponse response = new APIResponse();
 
+            int skipPages = filter.PageSize * filter.PageIndex;
+
             try
             {
-                List<ExchangeRateVerification> ExchangeRateVerificationList = new List<ExchangeRateVerification>();
-
-                //if (filter == null)
-                //{
-                ExchangeRateVerificationList = await _uow.GetDbContext().ExchangeRateVerifications.Where(x => x.IsDeleted == false).OrderByDescending(x=> x.Date).ToListAsync();
-                // }
-                //else
-                //{
-                //    ExchangeRateVerificationList = await _uow.GetDbContext().ExchangeRateVerifications
-                //                                                            .Where(x => x.IsDeleted == false && x.IsVerified== filter.IsVerified 
-                //                                                            && x.Date.Date>= filter.FromDate.Date
-                //                                                            && x.Date.Date<= filter.ToDate.Date)
-                //                                                            .ToListAsync();
-                //}
-
                 response.data.ExchangeRateVerificationList = new List<ExchangeRateVerificationViewModel>();
 
-                foreach (ExchangeRateVerification item in ExchangeRateVerificationList)
-                {
-                    ExchangeRateVerificationViewModel exchangeRateVerificationViewModel = new ExchangeRateVerificationViewModel();
-                    exchangeRateVerificationViewModel.ExRateVerificationId = item.ExRateVerificationId;
-                    exchangeRateVerificationViewModel.Date = item.Date;
-                    exchangeRateVerificationViewModel.IsVerified = item.IsVerified;
+                var recordList = _uow.GetDbContext().ExchangeRateVerifications.Where(x => x.IsDeleted == false);
 
-                    response.data.ExchangeRateVerificationList.Add(exchangeRateVerificationViewModel);
+                var ExchangeRateVerificationList = _uow.GetDbContext().ExchangeRateVerifications.Where(x => x.IsDeleted == false).OrderByDescending(x=> x.Date).Skip(skipPages).Take(filter.PageSize);
+
+                if (filter.FromDate != null)
+                {
+                    recordList = recordList.Where(x => x.Date.Date >= filter.FromDate.Value.Date);
+                    ExchangeRateVerificationList = ExchangeRateVerificationList.Where(x => x.Date.Date >= filter.FromDate.Value.Date);
+                }
+                if (filter.ToDate != null)
+                {
+                    recordList = recordList.Where(x => x.Date.Date <= filter.ToDate.Value.Date);
+                    ExchangeRateVerificationList = ExchangeRateVerificationList.Where(x => x.Date.Date <= filter.ToDate.Value.Date);
+                }
+                if (filter.IsVerified != null)
+                {
+                    recordList = recordList.Where(x => x.IsVerified == filter.IsVerified.Value);
+                    ExchangeRateVerificationList = ExchangeRateVerificationList.Where(x => x.IsVerified== filter.IsVerified.Value);
                 }
 
+                if (ExchangeRateVerificationList.Any())
+                    {
+
+                      ExchangeRateVerificationList = ExchangeRateVerificationList.OrderByDescending(x => x.Date);
+
+                        foreach (ExchangeRateVerification item in ExchangeRateVerificationList)
+                        {
+                            ExchangeRateVerificationViewModel exchangeRateVerificationViewModel = new ExchangeRateVerificationViewModel();
+                            exchangeRateVerificationViewModel.ExRateVerificationId = item.ExRateVerificationId;
+                            exchangeRateVerificationViewModel.Date = item.Date;
+                            exchangeRateVerificationViewModel.IsVerified = item.IsVerified;
+
+                            response.data.ExchangeRateVerificationList.Add(exchangeRateVerificationViewModel);
+                        }
+
+                    response.data.TotalExchangeRateCount = recordList.Count();
+                }
+                
                 response.StatusCode = StaticResource.successStatusCode;
             }
             catch (Exception ex)
