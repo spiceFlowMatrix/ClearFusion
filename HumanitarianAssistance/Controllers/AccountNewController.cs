@@ -267,5 +267,51 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetSavedExchangeRates([FromBody] ExchangeRateVerificationFilter filter)
+    {
+      APIResponse response = await _iExchangeRate.GetSavedExchangeRates(filter);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> SaveSystemGeneratedExchangeRates([FromBody] List<GenerateExchangeRateViewModel> exchangeRateList)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      APIResponse response = await _iExchangeRate.GenerateExchangeRates(exchangeRateList, user.Id);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetExchangeRatesDetail([FromBody] ExchangeRateDetailModel exchangeRateDetailModel)
+    {
+      APIResponse response = await _iExchangeRate.GetExchangeRatesDetail(exchangeRateDetailModel);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> SaveExchangeRatesForAllOffices([FromBody] OfficeExchangeRateViewModel officeExchangeRateViewModel)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      APIResponse response = await _iExchangeRate.SaveExchangeRatesForOffice(officeExchangeRateViewModel, user.Id);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> VerifyExchangeRates([FromBody] DateTime ExchangeRateDate)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      APIResponse response = await _iExchangeRate.VerifyExchangeRates(ExchangeRateDate, user.Id);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteExchangeRates([FromBody] DateTime ExchangeRateDate)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      APIResponse response = await _iExchangeRate.DeleteExchangeRates(ExchangeRateDate, user.Id);
+      return response;
+    }
+
   }
 }

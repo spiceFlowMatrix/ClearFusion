@@ -193,7 +193,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<FinancialYearDetailModel> FinancialYearDetailList { get; set; }
         public IList<TaskMasterModel> TaskMasterList { get; set; }
         public IList<ActivityMasterModel> ActivityMasterList { get; set; }
-        public IList<ProjectBudgetLineModel> ProjectBudgetLineList { get; set; }
+        public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineList { get; set; }
         public IList<BudgetLineTypeModel> BudgetLineTypeList { get; set; }
         public IList<EmployeeTypeModel> EmployeeTypeList { get; set; }
         public IList<AssignActivityModel> AssignActivityList { get; set; }
@@ -239,6 +239,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleModel> InterviewScheduleFieldOfficelist { get; set; }
         public IList<RolePermissionViewModel> PermissionsInRole { get; set; }
         public IList<AgreeDisagreePermissionModel> AgreeDisagreePermissionsInRole { get; set; }
+        public IList<OrderSchedulePermissionModel> OrderSchedulePermissionsInRole { get; set; }
         public IList<ApproveRejectPermissionModel> ApproveRejectPermissionsInRole { get; set; }
         public IList<EmployeeMonthlyPayrollModel> EmployeeMonthlyPayrolllist { get; set; }
 
@@ -332,6 +333,11 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
         public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
 
+        public IList<ProjectActivityModel> ProjectActivityList { get; set; }
+
+        public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
+        public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
+        public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
 
 
         #region Marketing    
@@ -436,6 +442,9 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         #endregion
 
+        public DateTime DateTime { get; set; }
+        public bool ImplementationStatus { get; set; }
+        public bool MonitoringStatus { get; set; }
 
     }
 

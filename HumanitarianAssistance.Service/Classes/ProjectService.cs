@@ -790,14 +790,14 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.IsProposalComplate = model.IsProposalComplate;
                         obj.ReviewerId = model.ReviewerId;
                         obj.DirectorId = model.DirectorId;
-                        obj.ProjectPhaseDetailsId = Convert.ToInt64(ProjectPhaseType.DataEntryPhase);
+                        obj.ProjectPhaseDetailsId = (int)ProjectPhaseType.Planning;
                         obj.IsDeleted = false;
                         obj.IsActive = true;
                         obj.CreatedById = UserId;
                         obj.CreatedDate = DateTime.Now;
                         _uow.ProjectDetailNewRepository.Add(obj);
                         _ProjectPhase.ProjectId = LatestprojectId = obj.ProjectId;
-                        _ProjectPhase.ProjectPhaseDetailsId = Convert.ToInt64(ProjectPhaseType.DataEntryPhase);
+                        _ProjectPhase.ProjectPhaseDetailsId = (int)ProjectPhaseType.Planning;
                         _ProjectPhase.PhaseStartData = DateTime.Now;
                         _ProjectPhase.IsDeleted = false;
                         _ProjectPhase.CreatedById = UserId;
@@ -825,7 +825,7 @@ namespace HumanitarianAssistance.Service.Classes
                             //    _uow.ProjectDetailNewRepository.UpdateAsyn(existProjectRecord);
                             if (exstingProjectTimePhase != null)
                             {
-                                _ProjectPhase.ProjectPhaseDetailsId = Convert.ToInt64(ProjectPhaseType.DataEntryPhase);
+                                _ProjectPhase.ProjectPhaseDetailsId = (int)ProjectPhaseType.Planning;
                                 _ProjectPhase.PhaseStartData = DateTime.Now;
                                 _ProjectPhase.IsDeleted = false;
                                 _ProjectPhase.ModifiedById = UserId;
@@ -2131,21 +2131,28 @@ namespace HumanitarianAssistance.Service.Classes
             //var stream = new FileStream(FilefullPath, FileMode.Create);
             // stream.Flush();
             //stream.Close();
-            string GoogleCredentialpathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-            //string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.appsettingJsonFile);
+
+            // string GoogleCredentialpathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+
+            Console.WriteLine("---------- Before Credential create path----------");
+
+            string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
             GoogleCredential result = new GoogleCredential();
 
-            using (StreamReader file = File.OpenText(GoogleCredentialpathFile))
+            using (StreamReader file = File.OpenText(GoogleCredentialsFile))
             using (JsonTextReader reader = new JsonTextReader(file))
             {
                 JObject o2 = (JObject)JToken.ReadFrom(reader);
 
                 result = o2["GoogleCredential"].ToObject<GoogleCredential>();
             }
-            ProjectProposalDetail proposaldata = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == Projectid && x.IsDeleted == false);
-           
 
-            obj = GCBucket.AuthExplicit("", ProjectProposalfilename, GoogleCredentialpathFile, FolderName, result, Projectid, userid).Result;
+            Console.WriteLine("--------- After Credential create path----------");
+
+            ProjectProposalDetail proposaldata = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == Projectid && x.IsDeleted == false);
+
+
+            obj = GCBucket.AuthExplicit("", ProjectProposalfilename, GoogleCredentialsFile, FolderName, result, Projectid, userid).Result;
 
             if (proposaldata == null)
             {
@@ -2268,11 +2275,18 @@ namespace HumanitarianAssistance.Service.Classes
                 ProjectProposalDetail model = new ProjectProposalDetail();
                 string folderName = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && !x.IsDeleted.Value)?.FolderName;
 
+                Console.WriteLine("------Before Credential path Upload----------");
+                
+
                 // read credientials
-                string googleCredentialPathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-               // string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.appsettingJsonFile);
+               // string googleCredentialPathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+                Console.WriteLine(googleCredentialPathFile1);
+
+                Console.WriteLine("------------After Credential path Upload-------------");
+
                 GoogleCredential result = new GoogleCredential();
-                using (StreamReader files = File.OpenText(googleCredentialPathFile))
+                using (StreamReader files = File.OpenText(googleCredentialPathFile1))
                 using (JsonTextReader reader = new JsonTextReader(files))
                 {
                     JObject o2 = (JObject)JToken.ReadFrom(reader);
@@ -2289,12 +2303,12 @@ namespace HumanitarianAssistance.Service.Classes
                         EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == proposaldata.UserId).Select(p => p.Username).FirstOrDefault();
                         if (proposaldata != null && EmailID != null)
                         {
-                            model = GCBucket.uploadOtherProposaldoc(folderName, file, fileName, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile, ProposalType).Result;
+                            model = GCBucket.uploadOtherProposaldoc(folderName, file, fileName, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile1, ProposalType).Result;
                         }
                     }
                     else
                     {
-                        model = GCBucket.uploadOtherProposaldoc(folderName, file, fileName, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile, ProposalType).Result;
+                        model = GCBucket.uploadOtherProposaldoc(folderName, file, fileName, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile1, ProposalType).Result;
                     }
                 }
 
@@ -2386,8 +2400,8 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 else
                 {
-                    _uow.ProjectProposalDetailRepository.Update(proposaldetails, proposaldetails.ProjectProposaldetailId);
-                    //_uow.GetDbContext().ProjectProposalDetail.Update(proposaldetails);
+                   // _uow.ProjectProposalDetailRepository.Update(proposaldetails, proposaldetails.ProjectProposaldetailId);
+                    _uow.GetDbContext().ProjectProposalDetail.Update(proposaldetails);
                     _uow.GetDbContext().SaveChanges();
                 }
 
@@ -4150,7 +4164,7 @@ namespace HumanitarianAssistance.Service.Classes
                         .OrderByDescending(x => x.ProjectJobId)
                                                           .FirstOrDefault().ProjectJobId;
 
-                    obj.ProjectJobCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D4}", 1);
+                    obj.ProjectJobCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D5}", 1);
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
@@ -4298,7 +4312,7 @@ namespace HumanitarianAssistance.Service.Classes
                         .OrderByDescending(x => x.BudgetLineId)
                                                           .FirstOrDefault().BudgetLineId;
 
-                    obj.BudgetCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D4}", 1);
+                    obj.BudgetCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D5}", 1);
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
@@ -4497,8 +4511,9 @@ namespace HumanitarianAssistance.Service.Classes
             {
 
                 int totalCount = await _uow.GetDbContext().ProjectBudgetLineDetail
-                                       .Where(v => v.IsDeleted == false && v.ProjectId == projectId &&
-                                               !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
+                                       .Where(v => v.IsDeleted == false && v.ProjectId == budgeLineFilterModel.ProjectId
+                                               && !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue)
+                                               ? (
                                                v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
                                                v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
                                                v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
@@ -4506,41 +4521,36 @@ namespace HumanitarianAssistance.Service.Classes
                                                v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
                                                v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
                                                v.CreatedDate.ToString().Trim().Contains(dateValue)
-                                               ) : true
+                                               ) : v.ProjectId == budgeLineFilterModel.ProjectId
                                        )
-                                      .AsNoTracking()
                                       .CountAsync();
 
                 var budgetLineList = await _uow.GetDbContext().ProjectBudgetLineDetail
-                                      .Where(v => v.IsDeleted == false &&
-                                                 !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
-                                                   v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
-                                                   v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
-                                                   v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
-                                                   v.ProjectJobId.ToString().Contains(projectJobIdValue) ||
-                                                   v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
-                                                   v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
-                                                   v.CreatedDate.ToString().Trim().ToLower().Contains(dateValue)
-                                                   ) : true
+                                      .Where(v => v.ProjectId == budgeLineFilterModel.ProjectId && v.IsDeleted == false &&
+                                                !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
+                                                  v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
+                                                  v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
+                                                  v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
+                                                  v.ProjectJobId.ToString().Contains(projectJobIdValue) ||
+                                                  v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
+                                                  v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
+                                                  v.CreatedDate.ToString().Trim().ToLower().Contains(dateValue)
+                                                  ) : v.ProjectId == budgeLineFilterModel.ProjectId
                                        )
                                       .OrderByDescending(x => x.CreatedDate)
-                                      .Select(x => new ProjectBudgetLineModel
+                                      .Select(x => new ProjectBudgetLineDetailModel
                                       {
-                                          //VoucherNo = x.VoucherNo,
-                                          //CurrencyCode = x.CurrencyDetail.CurrencyCode,
-                                          //CurrencyId = x.CurrencyDetail.CurrencyId,
-                                          //VoucherDate = x.VoucherDate,
-                                          //ChequeNo = x.ChequeNo,
-                                          //ReferenceNo = x.ReferenceNo,
-                                          //Description = x.Description,
-                                          //JournalName = x.JournalDetails.JournalName,
-                                          //JournalCode = x.JournalDetails.JournalCode,
-                                          //VoucherTypeId = x.VoucherTypeId,
-                                          //OfficeId = x.OfficeId,
-                                          //ProjectId = x.ProjectId,
-                                          //BudgetLineId = x.BudgetLineId,
-                                          //OfficeName = x.OfficeDetails.OfficeName,
-
+                                          BudgetLineId = x.BudgetLineId,
+                                          BudgetCode = x.BudgetCode,
+                                          BudgetName = x.BudgetName,
+                                          ProjectId = x.ProjectId,
+                                          CurrencyId = x.CurrencyId,
+                                          CurrencyName = x.CurrencyDetails.CurrencyName,
+                                          InitialBudget = x.InitialBudget,
+                                          ProjectJobCode = x.ProjectJobDetail.ProjectJobCode,
+                                          ProjectJobId = x.ProjectJobId,
+                                          ProjectJobName = x.ProjectJobDetail.ProjectJobName,
+                                          CreatedDate = x.CreatedDate,
                                       })
                                       .Skip(budgeLineFilterModel.pageSize.Value * budgeLineFilterModel.pageIndex.Value)
                                       .Take(budgeLineFilterModel.pageSize.Value)
@@ -4559,7 +4569,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
 
-        public async Task<APIResponse> GetTransactionListByProjectId(long projectId,string userName)
+        public async Task<APIResponse> GetTransactionListByProjectId(long projectId, string userName)
         {
             APIResponse response = new APIResponse();
             try
@@ -4578,7 +4588,7 @@ namespace HumanitarianAssistance.Service.Classes
                     Credit = b.Credit,
                     Debit = b.Debit,
                     TransactionDate = b.TransactionDate,
-                    UserName=userName
+                    UserName = userName
 
 
                 }).ToList();
@@ -4629,8 +4639,8 @@ namespace HumanitarianAssistance.Service.Classes
             }
             catch (Exception ex)
             {
-                response.StatusCode = response.StatusCode== StaticResource.notFoundCode ? response.StatusCode : StaticResource.failStatusCode;
-                response.Message = response.StatusCode == StaticResource.notFoundCode ? StaticResource.NoDataFound:  StaticResource.SomethingWrong + ex.Message;
+                response.StatusCode = response.StatusCode == StaticResource.notFoundCode ? response.StatusCode : StaticResource.failStatusCode;
+                response.Message = response.StatusCode == StaticResource.notFoundCode ? StaticResource.NoDataFound : StaticResource.SomethingWrong + ex.Message;
             }
             return response;
 
@@ -4650,7 +4660,7 @@ namespace HumanitarianAssistance.Service.Classes
                     //bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
                     var projectExist = _uow.GetDbContext().VoucherDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).ToList();
 
-                   // var noExistProvinceId = projectExist.Where(x => !model.ProjectId.Contains(x.ProjectId)).Select(x => x.ProjectId).ToList();
+                    // var noExistProvinceId = projectExist.Where(x => !model.ProjectId.Contains(x.ProjectId)).Select(x => x.ProjectId).ToList();
 
                     //if (projectExist.Any())
                     //{
@@ -4703,6 +4713,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
+
 
 
     }

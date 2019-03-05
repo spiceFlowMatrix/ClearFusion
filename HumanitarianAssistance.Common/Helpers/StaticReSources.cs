@@ -9,6 +9,10 @@ namespace HumanitarianAssistance.Common.Helpers
 
         //appsetting joson file 
         public const string appsettingJsonFile = "appsettings.json";
+        public const string googleCredential = "GoogleCredentials\\";
+        //public const string googleCredential = "GoogleCredentials/";
+
+        public const string credentialsJsonFile = "credentials.json";
 
 
         public const int notFoundCode = 120;
@@ -348,6 +352,10 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string SuccessText = "Success";
         public const string FileText = "File Not Supported";
         public const int FileNotSupported = 4440;
+
+        #region "Project Activity"
+        public const string ActivityNotFound = "Activity Not Found";
+        #endregion
 
         #region "Accounting New"
         public const string ExceedLevelCount = "You have reached Maximum Limit";
