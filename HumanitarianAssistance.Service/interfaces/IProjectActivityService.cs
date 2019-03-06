@@ -17,6 +17,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EndProjectActivity(long activityId, string UserId);
         Task<APIResponse> MarkImplementationAsCompleted(long activityId, string UserId);
         Task<APIResponse> MarkMonitoringAsCompleted(long activityId, string UserId);
-        Task<APIResponse> AllProjectActivityStatus();
+        Task<APIResponse> AllProjectActivityStatus(long projectId);
     }
 }
