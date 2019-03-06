@@ -335,4 +335,173 @@ namespace HumanitarianAssistance.Service
         }
     }
 
+
+    #region Upload files
+
+    //public static async Task<ProjectProposalDetail> UploadDocument(string folderName, IFormFile filedata, string fileName, ViewModels.Models.Project.GoogleCredential googleCredential, string EmailId, string logginUserEmailId, string ext, string googleCredentialPathFile, string ProposalType)
+    //{
+    //    ProjectProposalModel res = new ProjectProposalModel();
+    //    string exten = System.IO.Path.GetExtension(fileName).ToLower();
+
+    //    ProjectProposalDetail model = new ProjectProposalDetail();
+    //    //there are different scopes, which you can find here https://cloud.google.com/storage/docs/authentication
+    //    var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
+    //    var cts = new CancellationTokenSource();
+    //    var service = new Google.Apis.Storage.v1.StorageService();
+    //    UserCredential credential;
+    //    using (var stream = new FileStream(googleCredentialPathFile, FileMode.Open, FileAccess.Read))
+    //    {
+    //        credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+    //              GoogleClientSecrets.Load(stream).Secrets,
+    //              scopes,
+    //             googleCredential.EmailId, CancellationToken.None);
+    //    }
+    //    // Create the service.
+    //    service = new StorageService(new BaseClientService.Initializer()
+    //    {
+    //        HttpClientInitializer = credential,
+    //        ApplicationName = googleCredential.ApplicationName,
+    //    });
+
+    //    var bucketsQuery = service.Buckets.List(googleCredential.ProjectId);
+    //    bucketsQuery.OauthToken = credential.Token.AccessToken;
+    //    var buckets = bucketsQuery.Execute();
+
+    //    FileStream fileStream = null;
+    //    try
+    //    {
+
+    //        APIResponse response = new APIResponse();
+    //        var newObject = new Google.Apis.Storage.v1.Data.Object()
+    //        {
+    //            Bucket = googleCredential.BucketName,
+    //            Name = googleCredential.Projects + "/" + folderName + "/" + fileName
+
+    //        };
+    //        var mimetype = GetMimeType(ext);
+
+
+
+    //        //fileStream = new FileStream();
+    //        var uploadRequest = new Google.Apis.Storage.v1.ObjectsResource.InsertMediaUpload(service, newObject, googleCredential.BucketName, filedata.OpenReadStream(), mimetype);
+    //        uploadRequest.OauthToken = credential.Token.AccessToken;
+    //        var fileResponse = uploadRequest.Upload();
+    //        var bucketFolderWithFilePath = newObject.Bucket + "/" + newObject.Name;
+    //        if (fileResponse.Status.ToString() == "Completed" && fileResponse.Exception == null)
+    //        {
+    //            if (ProposalType == "Proposal")
+    //            {
+    //                model.FolderName = folderName;
+    //                model.ProposalFileName = fileName;
+    //                model.ProposalWebLink = bucketFolderWithFilePath;
+    //                //model.ProjectId = ;
+    //                model.IsDeleted = false;
+    //                //model.CreatedById = logginUserEmailId;
+    //                model.CreatedDate = DateTime.Now;
+
+    //            }
+
+    //            if (ProposalType == "EOI")
+    //            {
+    //                model.FolderName = folderName;
+    //                model.EDIFileName = fileName;
+    //                model.EDIFileWebLink = bucketFolderWithFilePath;
+    //                model.EDIFileExtType = ext;
+    //                model.IsDeleted = false;
+    //                model.ModifiedDate = DateTime.Now;
+
+
+    //            }
+    //            else if (ProposalType == "BUDGET")
+    //            {
+    //                model.FolderName = folderName;
+    //                model.IsDeleted = false;
+    //                model.BudgetFileName = fileName;
+    //                // res.BudgetFileId = file.Id;
+    //                model.BudgetFileWebLink = bucketFolderWithFilePath;
+    //                model.BudgetFileExtType = ext;
+    //                model.ModifiedDate = DateTime.Now;
+
+    //            }
+    //            else if (ProposalType == "CONCEPT")
+    //            {
+    //                model.FolderName = folderName;
+    //                model.IsDeleted = false;
+    //                model.ConceptFileName = fileName;
+    //                // res.ConceptFileId = file.Id;
+    //                model.ConceptFileWebLink = bucketFolderWithFilePath;
+    //                model.ConceptFileExtType = ext;
+    //                model.ModifiedDate = DateTime.Now;
+    //            }
+    //            else if (ProposalType == "PRESENTATION")
+    //            {
+    //                model.FolderName = folderName;
+    //                model.IsDeleted = false;
+    //                model.PresentationFileName = fileName;
+    //                //res.PresentationFileId = file.Id;
+    //                model.PresentationFileWebLink = bucketFolderWithFilePath;
+    //                model.PresentationExtType = ext;
+    //                model.ModifiedDate = DateTime.Now;
+    //            }
+
+
+    //        }
+    //        else
+    //        {
+    //            throw new Exception(StaticResource.UnableToUploadFile);
+    //        }
+
+
+    //        ////code to delete the file
+    //        //ObjectsResource.ListRequest request = service.Objects.List(googleCredential.BucketName);
+    //        //request.Delimiter = folderName + "/";
+
+    //        ////request.Prefix = Delimiter;
+    //        //var filePath = folderName + "/" + projectProposalfilename;
+    //        //Google.Apis.Storage.v1.Data.Objects response1 = request.Execute();
+
+    //        //foreach (var data in response1.Items)
+    //        //{
+
+    //        //    if (data != null && data.Name == filePath)
+    //        //    {
+    //        //        //delete the file in containing folder******
+
+    //        //        ObjectsResource.DeleteRequest deleteRequest = null;
+
+    //        //        deleteRequest = new ObjectsResource.DeleteRequest(service, googleCredential.BucketName, data.Name);
+    //        //        deleteRequest.OauthToken = credential.Token.AccessToken;
+    //        //        deleteRequest.Execute();
+    //        //    }
+    //        //    else
+    //        //    {
+
+    //        //    }
+    //        //}
+    //        //if (response1.Prefixes != null)
+    //        //{
+    //        //    // return
+    //        //    var data = response;
+    //        //}
+
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine(ex.Message);
+    //    }
+    //    finally
+    //    {
+    //        if (fileStream != null)
+    //        {
+    //            fileStream.Dispose();
+    //        }
+    //    }
+
+
+    //    return model;
+
+    //}
+
+    #endregion
 }
