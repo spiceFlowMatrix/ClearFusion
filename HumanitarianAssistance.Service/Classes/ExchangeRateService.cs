@@ -696,6 +696,9 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
+
+                response.data.IsExchangeRateVerified = _uow.GetDbContext().ExchangeRateVerifications.FirstOrDefault(x => x.IsDeleted == false && x.Date.Date == exchangeRateDetailModel.ExchangeRateDate.Date).IsVerified;
+
                 response.data.ExchangeRateDetailViewModelList = await _uow.GetDbContext().ExchangeRateDetail
                                                                          .Where(x => x.IsDeleted == false && x.Date.Date == exchangeRateDetailModel.ExchangeRateDate.Date && x.OfficeId == exchangeRateDetailModel.OfficeId)
                                                                          .Select(x => new ExchangeRateDetailViewModel
@@ -728,10 +731,10 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     List<ExchangeRateDetail> exchangeRateDetails = new List<ExchangeRateDetail>();
 
-                    exchangeRateDetails = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.IsDeleted == false && x.Date.Date == exchangeRateModel.FirstOrDefault().Date.Date).ToList();
+                    var exchangeRateDates = _uow.GetDbContext().ExchangeRateVerifications.Where(x => x.IsDeleted == false && x.Date.Date == exchangeRateModel.FirstOrDefault().Date.Date).ToList();
                     List<CurrencyDetails> currencyDetails = _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false).ToList();
 
-                    if (exchangeRateDetails.Any())
+                    if (exchangeRateDates.Any())
                     {
                         throw new Exception("Exchange rate already exists for the selected date");
 
