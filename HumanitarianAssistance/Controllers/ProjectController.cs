@@ -1365,6 +1365,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     #endregion
+
     #region Error Log
     //public async void SaveErrorlog(int status, string message)
     //{
@@ -1630,6 +1631,69 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       response = await _iActivity.AllProjectActivityStatus();
       return response;
     }
+    #endregion
+
+    #region upload files
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> UploadProjectDocumnentFile()
+    {
+      APIResponse apiRespone = new APIResponse();
+      string localFolderfullPath1 = string.Empty;
+      try
+      {
+        //var filrec = Request.Form.Files;
+
+        var file = Request.Form.Files[0];
+        long activityId = Convert.ToInt64(Request.Form.Files[0].Name);
+        //string localfolderName = Path.Combine(Directory.GetCurrentDirectory(), "UploadotherDoc/");
+        //long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
+        //string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
+        //string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
+        //string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
+
+        //string fileName = "";
+
+        //if (fileNames.Contains('_'))
+        //{
+        //  fileName = fileNames.Split('_')[2];
+        //}
+        //else
+        //{
+        //  fileName = fileNames;
+        //}
+
+        string fileName = Request.Form.Files[0].FileName;
+        string ext = System.IO.Path.GetExtension(fileName).ToLower();
+        if (ext != ".jpeg" && ext != ".png")
+        {
+
+
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+          if (user != null)
+          {
+            string logginUserEmailId = user.Email;
+            var id = user.Id;
+            apiRespone = _iActivity.UploadDocumentFile(file, id, activityId, fileName, logginUserEmailId, ext);
+
+          }
+        }
+        else
+        {
+          apiRespone.StatusCode = StaticResource.FileNotSupported;
+          apiRespone.Message = StaticResource.FileText;
+        }
+
+        //}
+      }
+      catch (System.Exception ex)
+      {
+        throw ex;
+        //return Json("Upload Failed: " + ex.Message);
+      }
+      return apiRespone;
+    }
+
+
     #endregion
 
 

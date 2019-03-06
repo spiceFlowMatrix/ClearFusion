@@ -1,5 +1,6 @@
 ﻿using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models.Project;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,5 +19,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> MarkImplementationAsCompleted(long activityId, string UserId);
         Task<APIResponse> MarkMonitoringAsCompleted(long activityId, string UserId);
         Task<APIResponse> AllProjectActivityStatus();
+
+        APIResponse UploadDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext);
+
     }
 }

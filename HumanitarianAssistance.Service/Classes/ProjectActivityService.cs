@@ -8,6 +8,7 @@ using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models.Project;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -434,7 +435,156 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         }
+
+        public APIResponse UploadDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                ProjectActivityModel model = new ProjectActivityModel();
+                // ProjectActivityDetail list = _uow.GetDbContext().ProjectActivityDetail.FirstOrDefault(x => x.ActivityId == activityId && x.IsDeleted == false);
+                var folderName = _uow.GetDbContext().ProjectActivityDetail.Include(x => x.ProjectBudgetLineDetail)
+                                                                      .FirstOrDefault(x => x.ActivityId == activityId && x.IsDeleted == false)
+                                                                      .ProjectBudgetLineDetail.ProjectId
+                                                                     ;
+
+                Console.WriteLine("------Before Credential path Upload----------");
+
+
+                //read credientials
+                // string googleCredentialPathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                //string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+                //Console.WriteLine(googleCredentialPathFile1);
+
+                Console.WriteLine("------------After Credential path Upload-------------");
+
+                //GoogleCredential result = new GoogleCredential();
+                //using (StreamReader files = File.OpenText(googleCredentialPathFile1))
+                //using (JsonTextReader reader = new JsonTextReader(files))
+                //{
+                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
+
+                //    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
+                //}
+
+                var ifExistdata = _uow.GetDbContext().ProjectActivityDetail.FirstOrDefault(x => x.ActivityId == activityId && x.IsDeleted == false);
+                if (ifExistdata != null)
+                {
+                    //model = GCBucket.UploadDocument(folderName, file, fileName, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile1, ProposalType).Result;
+                   
+                }
+                else
+                {
+                    //model = GCBucket.UploadDocument(folderName, file, fileName, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile1, ProposalType).Result;
+                }
+                //ProjectProposalDetail proposaldetails = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && x.IsDeleted == false);
+
+                //if (proposaldetails == null)
+                //{
+                //    proposaldetails = new ProjectProposalDetail();
+
+                //}
+
+                //if (ProposalType == "Proposal")
+                //{
+                //    proposaldetails.FolderName = model.FolderName;
+                //    proposaldetails.ProposalFileName = model.ProposalFileName;
+                //    proposaldetails.ProposalWebLink = model.ProposalWebLink;
+                //    proposaldetails.ProjectId = Convert.ToInt64(Projectid);
+                //    proposaldetails.CreatedDate = DateTime.UtcNow;
+                //    proposaldetails.IsDeleted = false;
+                //    proposaldetails.CreatedById = UserId;
+
+                //    // response folder path
+                //    response.data.ProposalWebLink = model.ProposalWebLink;
+                //    response.data.ProposalWebLinkExtType = model.ProposalExtType;
+                //}
+                //else
+                //{
+                //    if (ProposalType == "EOI")
+                //    {
+                //        proposaldetails.FolderName = model.FolderName;
+
+                //        proposaldetails.EdiFileId = model.EdiFileId;
+                //        proposaldetails.EDIFileName = model.EDIFileName;
+                //        proposaldetails.EDIFileWebLink = model.EDIFileWebLink;
+                //        proposaldetails.EDIFileExtType = model.EDIFileExtType;
+
+                //        // response folder path
+                //        response.data.EDIWebLink = model.EDIFileWebLink;
+                //        response.data.EDIWebLinkExtType = model.EDIFileExtType;
+                //    }
+                //    else if (ProposalType == "BUDGET")
+                //    {
+                //        proposaldetails.FolderName = model.FolderName;
+
+                //        proposaldetails.BudgetFileId = model.BudgetFileId;
+                //        proposaldetails.BudgetFileName = model.BudgetFileName;
+                //        proposaldetails.BudgetFileWebLink = model.BudgetFileWebLink;
+                //        proposaldetails.BudgetFileExtType = model.BudgetFileExtType;
+
+                //        // response folder path
+                //        response.data.BudgetWebLink = model.BudgetFileWebLink;
+                //        response.data.BudgetWebLinkExtType = model.BudgetFileExtType;
+                //    }
+                //    else if (ProposalType == "CONCEPT")
+                //    {
+                //        proposaldetails.FolderName = model.FolderName;
+
+                //        proposaldetails.ConceptFileId = model.ConceptFileId;
+                //        proposaldetails.ConceptFileName = model.ConceptFileName;
+                //        proposaldetails.ConceptFileWebLink = model.ConceptFileWebLink;
+                //        proposaldetails.ConceptFileExtType = model.ConceptFileExtType;
+
+                //        // response folder path
+                //        response.data.ConceptWebLink = model.ConceptFileWebLink;
+                //        response.data.ConceptWebLinkExtType = model.ConceptFileExtType;
+                //    }
+                //    else if (ProposalType == "PRESENTATION")
+                //    {
+                //        proposaldetails.FolderName = model.FolderName;
+
+                //        proposaldetails.PresentationFileId = model.PresentationFileId;
+                //        proposaldetails.PresentationFileName = model.PresentationFileName;
+                //        proposaldetails.PresentationFileWebLink = model.PresentationFileWebLink;
+                //        proposaldetails.PresentationExtType = model.PresentationExtType;
+
+                //        // response folder path
+                //        response.data.PresentationWebLink = model.PresentationFileWebLink;
+                //        response.data.PresentationWebLinkExtType = model.PresentationExtType;
+                //    }
+                //    proposaldata.ProjectId = Convert.ToInt64(Projectid);
+                //    proposaldata.ModifiedDate = DateTime.Now;
+
+                //}
+
+                //if (proposaldetails.ProjectProposaldetailId == 0)
+                //{
+                //    _uow.ProjectProposalDetailRepository.Add(proposaldetails);
+                //    _uow.GetDbContext().SaveChanges();
+                //}
+                //else
+                //{
+                //    // _uow.ProjectProposalDetailRepository.Update(proposaldetails, proposaldetails.ProjectProposaldetailId);
+                //    _uow.GetDbContext().ProjectProposalDetail.Update(proposaldetails);
+                //    _uow.GetDbContext().SaveChanges();
+                //}
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
     }
+
+
+
 
     #endregion
 
