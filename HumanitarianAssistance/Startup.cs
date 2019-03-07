@@ -163,7 +163,7 @@ namespace HumanitarianAssistance
       services.AddTransient<IPolicyService, PolicyService>();
       services.AddTransient<IClientDetails, ClientDetailsService>();
       services.AddTransient<IVoucherNewService, VoucherNewService>();
-
+      services.AddTransient<ISchedulerService, SchedulerService>();
       services.AddTransient<IAccountBalance, AccountBalanceService>();
       services.AddTransient<IProjectActivityService, ProjectActivityService>();
 

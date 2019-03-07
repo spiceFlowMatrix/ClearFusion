@@ -98,6 +98,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long Id { get; set; }
         public long? PolicyId { get; set; }
         public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }        
+        public DateTime EndDate { get; set; }
     }
 }
