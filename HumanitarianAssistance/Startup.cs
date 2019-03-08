@@ -80,6 +80,11 @@ namespace HumanitarianAssistance
       string DefaultCorsPolicyUrl = Configuration["DefaultCorsPolicyName:PolicyUrl"];
       string connectionString = Configuration.GetConnectionString("linuxdb");
 
+      //get and set environment variable at run time
+      //string connectionString = Environment.GetEnvironmentVariable("linuxdb");
+
+      Console.WriteLine("Connection string: {0}\n", connectionString);
+
 
       services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
