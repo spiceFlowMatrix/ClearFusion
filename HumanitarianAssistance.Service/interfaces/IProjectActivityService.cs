@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HumanitarianAssistance.Service.interfaces
 {
-   public interface IProjectActivityService
+    public interface IProjectActivityService
     {
         Task<APIResponse> GetallProjectActivityDetail(long projectId);
         Task<APIResponse> AddProjectActivityDetail(ProjectActivityModel model, string UserId);
@@ -18,9 +18,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EndProjectActivity(long activityId, string UserId);
         Task<APIResponse> MarkImplementationAsCompleted(long activityId, string UserId);
         Task<APIResponse> MarkMonitoringAsCompleted(long activityId, string UserId);
-        Task<APIResponse> AllProjectActivityStatus();
-
-        APIResponse UploadDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext);
-
+        Task<APIResponse> AllProjectActivityStatus(long projectId);
+        Task<APIResponse> UploadDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID);
+        Task<APIResponse> GetUploadedDocument(long activityId);
     }
 }
