@@ -810,13 +810,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       try
       {
 
-        //if (Request.Form.Files.Count > 0)
-        //{
-
-
         var file = Request.Form.Files[0];
-
-        //string localfolderName = Path.Combine(Directory.GetCurrentDirectory(), "UploadotherDoc/");
         long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
         string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
         string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
@@ -1637,7 +1631,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region upload files
     [HttpPost, DisableRequestSizeLimit]
-    public async Task<APIResponse> UploadProjectDocumnentFile()
+    public async Task<APIResponse> UploadProjectDocumnentFile([FromForm] IFormFile filesData, string activityId, string statusId)
     {
       APIResponse apiRespone = new APIResponse();
       string localFolderfullPath1 = string.Empty;
@@ -1646,24 +1640,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         //var filrec = Request.Form.Files;
 
         var file = Request.Form.Files[0];
-        long activityId = Convert.ToInt64(Request.Form.Files[0].Name);
-        //string localfolderName = Path.Combine(Directory.GetCurrentDirectory(), "UploadotherDoc/");
-        //long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
-        //string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
-        //string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
-        //string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
-
-        //string fileName = "";
-
-        //if (fileNames.Contains('_'))
-        //{
-        //  fileName = fileNames.Split('_')[2];
-        //}
-        //else
-        //{
-        //  fileName = fileNames;
-        //}
-
+        long activityID = Convert.ToInt64(activityId);
+        int statusID = Convert.ToInt32(statusId);
         string fileName = Request.Form.Files[0].FileName;
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
         if (ext != ".jpeg" && ext != ".png")
@@ -1675,7 +1653,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = _iActivity.UploadDocumentFile(file, id, activityId, fileName, logginUserEmailId, ext);
+            apiRespone = await _iActivity.UploadDocumentFile(file, id, activityID, fileName, logginUserEmailId, ext, statusID);
 
           }
         }
@@ -1695,6 +1673,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
+
+    [HttpPost]
+    public async Task<APIResponse> GetActivityDocumentDetail([FromBody]long activityId)
+    {
+      APIResponse response = new APIResponse();
+      response = await _iActivity.GetUploadedDocument(activityId);
+      return response;
+    }
 
     #endregion
 
