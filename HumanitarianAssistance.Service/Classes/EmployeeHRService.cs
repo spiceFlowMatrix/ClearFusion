@@ -1099,7 +1099,8 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (model.SaveForAllOffice)
                 {
-                    List<PayrollMonthlyHourDetail> payrollMonthlyHourDetails = new List<PayrollMonthlyHourDetail>();
+                    List<PayrollMonthlyHourDetail> payrollMonthlyHourDetailsAdd = new List<PayrollMonthlyHourDetail>();
+                    List<PayrollMonthlyHourDetail> payrollMonthlyHourDetailsUpdate = new List<PayrollMonthlyHourDetail>();
 
                     List<int> officeIds = _uow.GetDbContext().OfficeDetail.Where(x => x.IsDeleted == false).Select(x => x.OfficeId).ToList();
 
@@ -1125,12 +1126,34 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.PayrollYear = model.PayrollYear;
                             obj.IsDeleted = false;
                             obj.OfficeId = officeId;
-                            payrollMonthlyHourDetails.Add(obj);
+                            payrollMonthlyHourDetailsAdd.Add(obj);
+                        }
+                        else
+                        {
+                            payrollinfo.ModifiedDate = DateTime.UtcNow;
+                            payrollinfo.Hours = model.Hours;
+                            payrollinfo.WorkingTime= model.WorkingTime;
+                            payrollinfo.InTime = model.InTime;
+                            payrollinfo.OutTime = model.OutTime;
+                            payrollinfo.PayrollMonth = model.PayrollMonth;
+                            payrollinfo.PayrollYear = model.PayrollYear;
+                            payrollinfo.OfficeId = officeId;
+
+                            payrollMonthlyHourDetailsUpdate.Add(payrollinfo);
                         }
                     }
 
-                    await _uow.GetDbContext().AddRangeAsync(payrollMonthlyHourDetails);
-                    await _uow.GetDbContext().SaveChangesAsync();
+                    if (payrollMonthlyHourDetailsAdd.Any())
+                    {
+                        await _uow.GetDbContext().AddRangeAsync(payrollMonthlyHourDetailsAdd);
+                        await _uow.GetDbContext().SaveChangesAsync();
+                    }
+
+                    if (payrollMonthlyHourDetailsUpdate.Any())
+                    {
+                        _uow.GetDbContext().UpdateRange(payrollMonthlyHourDetailsUpdate);
+                        await _uow.GetDbContext().SaveChangesAsync();
+                    }
                 }
                 else
                 {
