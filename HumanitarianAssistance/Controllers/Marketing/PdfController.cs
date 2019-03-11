@@ -244,10 +244,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       // create a new pdf document converting an url
       try
       {
-
         doc.Close();
-        FileResult fileResult = new FileContentResult(pdf, "application/pdf");
-        fileResult.FileDownloadName = "Document.pdf";
         return pdf;
       }
       catch (Exception ex)

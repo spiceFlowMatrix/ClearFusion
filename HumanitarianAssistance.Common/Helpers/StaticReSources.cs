@@ -12,6 +12,19 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string googleCredential = "GoogleCredentials\\";
         //public const string googleCredential = "GoogleCredentials/";
 
+
+        public const string EmailId = "hamza@edgsolutions.net";
+        public const string ApplicationName = "OAuth client";
+        public const string ProjectId = "clear-fusion-193608";
+        public const string BucketName = "cf-staging-storage";
+        public const string ProjectsFolderName = "Project-Management";
+        public const string HRFolderName = "HR";
+        public const string AccountingFolderName = "Accounting";
+        public const string StoreFolderName = "Store";
+        public const string ProjectActivityFolderName = "Activity";
+        public const string uploadUrl = "https://storage.cloud.google.com/";
+
+
         public const string credentialsJsonFile = "credentials.json";
 
 

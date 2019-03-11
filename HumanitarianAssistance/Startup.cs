@@ -64,7 +64,8 @@ namespace HumanitarianAssistance
 
       if (value == null)
       {
-        Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json");
+        Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json", EnvironmentVariableTarget.Machine);
+        var  vdsfdsfalue = Environment.GetEnvironmentVariable("PATH");
         value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
       }
       Console.WriteLine("GOOGLE_APPLICATION_CREDENTIALS: {0}\n", value);
@@ -78,6 +79,11 @@ namespace HumanitarianAssistance
       DefaultCorsPolicyName = Configuration["DefaultCorsPolicyName:PolicyName"];
       string DefaultCorsPolicyUrl = Configuration["DefaultCorsPolicyName:PolicyUrl"];
       string connectionString = Configuration.GetConnectionString("linuxdb");
+
+      //get and set environment variable at run time
+      //string connectionString = Environment.GetEnvironmentVariable("linuxdb");
+
+      Console.WriteLine("Connection string: {0}\n", connectionString);
 
 
       services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));

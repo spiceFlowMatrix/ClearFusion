@@ -338,6 +338,12 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
         public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
         public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
+        public ActivityDocumentsDetail activityDocumnentDetail { get; set; }
+        public List<ActivityDocumentDetailModel> ActivityDocumentDetailModel { get; set; }
+
+
+
+
 
 
         #region Marketing    
