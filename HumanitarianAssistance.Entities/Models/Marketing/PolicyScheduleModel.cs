@@ -64,10 +64,17 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         //public string EndTime { get; set; }
     }
 
+    public class RepeatDaysModel
+    {
+        public string id { get; set; }
+        public string Value { get; set; }
+        public bool status { get; set; }
+    }
+
      public class PolicyTimeModel
      {
         public long? PolicyId { get; set; }
-        public string[] RepeatDays { get; set; }
+        public List<RepeatDaysModel> RepeatDays { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public long Id { get; set; }

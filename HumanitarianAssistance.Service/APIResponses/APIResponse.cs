@@ -71,7 +71,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double TotalRecivable { get; set; }
         public double TotalPayable { get; set; }
         public double Balance { get; set; }
-
+        public long TotalExchangeRateCount { get; set; }
 
         public double TotalIncome { get; set; }
         public int TotalPresentDays { get; set; }
@@ -338,6 +338,12 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
         public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
         public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
+        public ActivityDocumentsDetail activityDocumnentDetail { get; set; }
+        public List<ActivityDocumentDetailModel> ActivityDocumentDetailModel { get; set; }
+
+
+
+
 
 
         #region Marketing    
@@ -418,6 +424,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
+        public bool IsExchangeRateVerified { get; set; }
 
         public VoucherDetailEntityModel VoucherDetailEntity { get; set; }
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }
