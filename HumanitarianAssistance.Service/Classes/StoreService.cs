@@ -488,6 +488,7 @@ namespace HumanitarianAssistance.Service.Classes
                     editItem.ItemName = model.ItemName;
                     editItem.ItemType = model.ItemType;
                     editItem.IsDeleted = false;
+                    editItem.ItemInventory = model.ItemInventory;
 
                     await _uow.StoreInventoryItemRepository.UpdateAsyn(editItem);
 
@@ -1062,6 +1063,18 @@ namespace HumanitarianAssistance.Service.Classes
                     VerifiedPurchaseVoucherReferenceNo = v.VerifiedPurchaseVoucher != null ? officeDetails.FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == v.OfficeId).OfficeCode + "-" + v.VerifiedPurchaseVoucher : null
                 }).ToList();
 
+                foreach (var item in purchasesModel)
+                {
+                    var exchangeRate = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date <= item.PurchaseDate && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
+
+                    if (exchangeRate == null)
+                    {
+                        throw new Exception($"Exchange Rates not defined for Date {item.PurchaseDate.Date}");
+                    }
+
+                    item.TotalCostUSD = item.TotalCost * (double)exchangeRate.Rate;
+                }
+
                 response.data.StoreItemsPurchaseViewList = purchasesModel;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1586,30 +1599,36 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x=> x.StoreItemGroup).ThenInclude(x=> x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true  && x.InventoryItem== depretiationFilter.ItemId && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId).ToListAsync();
                     }
-                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId == null)
+                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId == null && depretiationFilter.ItemGroupId !=0)
                     {
                         storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.StoreItemGroup).ThenInclude(x => x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.Inventory.InventoryId == depretiationFilter.InventoryId && x.StoreInventoryItem.ItemGroupId== depretiationFilter.ItemGroupId).ToListAsync();
                     }
-                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
+                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId == null && depretiationFilter.ItemGroupId == 0)
+                    {
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.StoreItemGroup).ThenInclude(x => x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId).ToListAsync();
+                    }
+                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null && depretiationFilter.ItemGroupId !=0)
                     {
                         storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemGroupId== depretiationFilter.ItemGroupId).ToListAsync();
                     }
+                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null && depretiationFilter.ItemGroupId == 0)
+                    {
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId).ToListAsync();
+                    }
                     else if (depretiationFilter.StoreId == null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
                     {
-                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.ItemGroupId== depretiationFilter.ItemGroupId).ToListAsync();
+                        storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true).ToListAsync();
                     }
 
                     foreach (var item in storeItemPurchased)
                     {
-                        ExchangeRateDetail dollarExchangeRate = _uow.GetDbContext().ExchangeRateDetail
+                        ExchangeRateDetail dollarExchangeRate = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date)
                                                         .FirstOrDefault(x => x.IsDeleted == false && x.FromCurrency == item.Currency
-                                                        && x.ToCurrency == (int)Currency.USD && x.Date.ToShortDateString() == depretiationFilter.CurrentDate.ToShortDateString());
+                                                        && x.ToCurrency == (int)Currency.USD && x.Date.Date<= depretiationFilter.CurrentDate.Date);
 
                         if (dollarExchangeRate == null)
                         {
-                            dollarExchangeRate = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x=> x.CreatedDate)
-                                                        .FirstOrDefault(x => x.IsDeleted == false && x.FromCurrency == item.Currency
-                                                        && x.ToCurrency == (int)Currency.USD);
+                           throw new Exception("Exchange Rate not defined!!");
                         }
 
                         DepreciationReportModel obj = new DepreciationReportModel();
