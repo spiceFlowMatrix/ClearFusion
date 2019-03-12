@@ -27,6 +27,7 @@ namespace HumanitarianAssistance.Common.Helpers
 
         public const string credentialsJsonFile = "credentials.json";
 
+        public const int projectNotFound = 404;
 
         public const int notFoundCode = 120;
         public const int successStatusCode = 200;

@@ -10,8 +10,9 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? ProjectJobNameFlag { get; set; }
         public bool? DateFlag { get; set; }
 
-        public int? pageIndex { get; set; }
-        public int? pageSize { get; set; }
-        public int? totalCount { get; set; }
+        public int? PageIndex { get; set; }
+        public int? PageSize { get; set; }
+        public int? TotalCount { get; set; }
+        public long? ProjectId { get; set; }
     }
 }
