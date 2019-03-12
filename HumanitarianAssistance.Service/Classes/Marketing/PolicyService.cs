@@ -489,118 +489,61 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                if (model.Id == 0)
+                var ifExists = await _uow.GetDbContext().PolicyTimeSchedules.Where(x => x.PolicyId == model.PolicyId && x.StartTime == model.StartTime && x.EndTime == model.EndTime && x.IsDeleted == false).FirstOrDefaultAsync();
+                if (ifExists != null)
                 {
-                    var detail = _uow.GetDbContext().PolicyTimeSchedules.OrderByDescending(x => x.Id)
-                                                                                   .FirstOrDefault();
-                    if (detail == null)
-                    {
-                        LatestId = 1;
-                        Code = getPolicyCode(LatestId.ToString());
-                    }
-                    else
-                    {
-                        LatestId = Convert.ToInt32(detail.Id) + 1;
-                        Code = getPolicyCode(LatestId.ToString());
-                    }
-                    PolicyTimeSchedule obj = _mapper.Map<PolicyTimeScheduleModel, PolicyTimeSchedule>(model);
-                    if (model.RepeatDays != null)
-                    {
-                        foreach (var items in model.RepeatDays)
-                        {
-                            //if (items == "MON")
-                            //{
-                            //    obj.Monday = true;
-                            //}
-                            //if (items == "TUE")
-                            //{
-                            //    obj.Tuesday = true;
-                            //}
-                            //if (items == "WED")
-                            //{
-                            //    obj.Wednesday = true;
-                            //}
-                            //if (items == "THU")
-                            //{
-                            //    obj.Thursday = true;
-                            //}
-                            //if (items == "FRI")
-                            //{
-                            //    obj.Friday = true;
-                            //}
-                            //if (items == "SAT")
-                            //{
-                            //    obj.Saturday = true;
-                            //}
-                            //if (items == "SUN")
-                            //{
-                            //    obj.Sunday = true;
-                            //}
-                        }
-                    }
-                    obj.StartTime = model.StartTime;
-                    obj.EndTime = model.EndTime;
-                    obj.TimeScheduleCode = Code;
-                    obj.PolicyId = model.PolicyId;
-                    obj.CreatedDate = DateTime.Now;
-                    obj.IsDeleted = false;
-                    await _uow.PolicyTimeScheduleRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
-                    response.StatusCode = 200;
-                    response.data.policyTimeScheduleDetails = obj;
-                    response.Message = "Time slot created successfully";
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Time slot for the policy already exists";
                 }
                 else
                 {
-                    var existRecord = await _uow.PolicyTimeScheduleRepository.FindAsync(x => x.IsDeleted == false && x.Id == model.Id);
-                    if (existRecord != null)
+                    if (model.Id == 0)
                     {
-                        _mapper.Map(model, existRecord);
-                        existRecord.IsDeleted = false;
-                        existRecord.StartTime = model.StartTime;
-                        existRecord.ModifiedById = UserId;
-                        existRecord.ModifiedDate = DateTime.Now;
-                        existRecord.EndTime = model.EndTime;
-                        if (model.RepeatDays != null)
+                        var detail = _uow.GetDbContext().PolicyTimeSchedules.OrderByDescending(x => x.Id)
+                                                                                       .FirstOrDefault();
+                        if (detail == null)
                         {
-                            foreach (var items in model.RepeatDays)
-                            {
-                                //if (items == "MON")
-                                //{
-                                //    existRecord.Monday = true;
-                                //}
-                                //if (items == "TUE")
-                                //{
-                                //    existRecord.Tuesday = true;
-                                //}
-                                //if (items == "WED")
-                                //{
-                                //    existRecord.Wednesday = true;
-                                //}
-                                //if (items == "THU")
-                                //{
-                                //    existRecord.Thursday = true;
-                                //}
-                                //if (items == "FRI")
-                                //{
-                                //    existRecord.Friday = true;
-                                //}
-                                //if (items == "SAT")
-                                //{
-                                //    existRecord.Saturday = true;
-                                //}
-                                //if (items == "SUN")
-                                //{
-                                //    existRecord.Sunday = true;
-                                //}
-                            }
+                            LatestId = 1;
+                            Code = getPolicyCode(LatestId.ToString());
                         }
-                        await _uow.PolicyTimeScheduleRepository.UpdateAsyn(existRecord);
-                        response.data.policyTimeScheduleDetails = existRecord;
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Time slot updated successfully";
+                        else
+                        {
+                            LatestId = Convert.ToInt32(detail.Id) + 1;
+                            Code = getPolicyCode(LatestId.ToString());
+                        }
+
+                        PolicyTimeSchedule obj = _mapper.Map<PolicyTimeScheduleModel, PolicyTimeSchedule>(model);
+                        obj.StartTime = model.StartTime;
+                        obj.EndTime = model.EndTime;
+                        obj.TimeScheduleCode = Code;
+                        obj.PolicyId = model.PolicyId;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.IsDeleted = false;
+                        await _uow.PolicyTimeScheduleRepository.AddAsyn(obj);
+                        await _uow.SaveAsync();
+                        response.StatusCode = 200;
+                        response.data.policyTimeScheduleDetails = obj;
+                        response.Message = "Time slot created successfully";
+
                     }
-                }
+                    else
+                    {
+                        var existRecord = await _uow.PolicyTimeScheduleRepository.FindAsync(x => x.IsDeleted == false && x.Id == model.Id);
+                        if (existRecord != null)
+                        {
+                            _mapper.Map(model, existRecord);
+                            existRecord.IsDeleted = false;
+                            existRecord.StartTime = model.StartTime;
+                            existRecord.ModifiedById = UserId;
+                            existRecord.ModifiedDate = DateTime.Now;
+                            existRecord.EndTime = model.EndTime;
+                            await _uow.PolicyTimeScheduleRepository.UpdateAsyn(existRecord);
+                            response.data.policyTimeScheduleDetails = existRecord;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Time slot updated successfully";
+                        }
+                    }
+                }               
             }
             catch (Exception ex)
             {
