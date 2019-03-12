@@ -489,7 +489,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var ifExists = await _uow.GetDbContext().PolicyTimeSchedules.Where(x => x.PolicyId == model.PolicyId && x.StartTime.ToString() == model.StartTime && x.EndTime.ToString() == model.EndTime && x.IsDeleted == false).FirstOrDefaultAsync();
+                var ifExists = await _uow.GetDbContext().PolicyTimeSchedules.Where(x => x.PolicyId == model.PolicyId && x.StartTime == TimeSpan.Parse(model.StartTime) && x.EndTime == TimeSpan.Parse(model.EndTime) && x.IsDeleted == false).FirstOrDefaultAsync();
                 if (ifExists != null)
                 {
                     response.StatusCode = StaticResource.failStatusCode;
