@@ -76,14 +76,27 @@ namespace HumanitarianAssistance
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      DefaultCorsPolicyName = Configuration["DefaultCorsPolicyName:PolicyName"];
-      string DefaultCorsPolicyUrl = Configuration["DefaultCorsPolicyName:PolicyUrl"];
-      string connectionString = Configuration.GetConnectionString("linuxdb");
+      //DefaultCorsPolicyName = Configuration["DefaultCorsPolicyName:PolicyName"];
+     // string DefaultCorsPolicyUrl = Configuration["DefaultCorsPolicyName:PolicyUrl"];
+     // string connectionString = Configuration.GetConnectionString("linuxdb");
 
       //get and set environment variable at run time
-      //string connectionString = Environment.GetEnvironmentVariable("linuxdb");
+      string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
+
+      string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
+      DefaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
+
+      string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
+      string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
+      string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
+    // string GoogleCredentialsFile = Environment.GetEnvironmentVariable("GOOGLE");
+
+
 
       Console.WriteLine("Connection string: {0}\n", connectionString);
+      Console.WriteLine("DefaultCorsPolicyName string: {0}\n", DefaultCorsPolicyName);
+      Console.WriteLine("DefaultCorsPolicyUrl string: {0}\n", DefaultCorsPolicyUrl);
+      Console.WriteLine("WebSiteUrl string: {0}\n", WebSiteUrl);
 
 
       services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
@@ -128,7 +141,7 @@ namespace HumanitarianAssistance
                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
       services.AddSingleton<IRole, RoleService>();
       services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
-      services.Configure<WebSiteUrl>(Configuration.GetSection("WebSiteUrl"));
+      services.Configure<WebSiteUrl>(Configuration.GetSection("WEB_SITE_URL"));
       services.Configure<SwaggerEndPoint>(Configuration.GetSection("SwaggerEndPoint"));
       services.AddSingleton<IJwtFactory, JwtFactory>();
       services.AddTransient<IPermissions, PermissionService>();

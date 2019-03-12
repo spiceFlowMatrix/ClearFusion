@@ -2133,17 +2133,35 @@ namespace HumanitarianAssistance.Service.Classes
             // string GoogleCredentialpathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
 
             Console.WriteLine("---------- Before Credential create path----------");
+            JObject GoogleCredentialsFile = JObject.Parse(Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL"));
+            Console.WriteLine("GoogleCredentialsFilepath  string: {0}\n", GoogleCredentialsFile);
 
-            string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+            // string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+
+            // string GoogleCredentialsFile1 = Path.GetFullPath(GoogleCredentialsFile);
+
             GoogleCredential result = new GoogleCredential();
 
-            using (StreamReader file = File.OpenText(GoogleCredentialsFile))
-            using (JsonTextReader reader = new JsonTextReader(file))
-            {
-                JObject o2 = (JObject)JToken.ReadFrom(reader);
+            //using (StreamReader file = File.OpenText(GoogleCredentialsFile))
+            //using (JsonTextReader reader = new JsonTextReader(file))
+            //{
+            //    JObject o2 = (JObject)JToken.ReadFrom(reader);
 
-                result = o2["GoogleCredential"].ToObject<GoogleCredential>();
-            }
+            //    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
+            //}
+
+            var abc = GoogleCredentialsFile["GoogleCredential"];
+
+            result.ApplicationName = GoogleCredentialsFile["GoogleCredential"]["ApplicationName"].ToString();
+            result.BucketName= GoogleCredentialsFile["GoogleCredential"]["BucketName"].ToString();
+            result.EmailId= GoogleCredentialsFile["GoogleCredential"]["EmailId"].ToString();
+            result.ProjectId= GoogleCredentialsFile["GoogleCredential"]["ProjectId"].ToString();
+            result.Projects = GoogleCredentialsFile["GoogleCredential"]["Projects"].ToString();
+            result.HR= GoogleCredentialsFile["GoogleCredential"]["HR"].ToString();
+            result.Accounting = GoogleCredentialsFile["GoogleCredential"]["Accounting"].ToString();
+            result.Store = GoogleCredentialsFile["GoogleCredential"]["Store"].ToString();
+
+            //result = GoogleCredentialsFile["GoogleCredential"].ToObject<GoogleCredential>();
 
             Console.WriteLine("--------- After Credential create path----------");
 
@@ -2278,19 +2296,33 @@ namespace HumanitarianAssistance.Service.Classes
 
                 // read credientials
                 // string googleCredentialPathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+                // string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+                JObject googleCredentialPathFile1 = JObject.Parse(Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL"));
+
                 Console.WriteLine(googleCredentialPathFile1);
 
                 Console.WriteLine("------------After Credential path Upload-------------");
 
                 GoogleCredential result = new GoogleCredential();
-                using (StreamReader files = File.OpenText(googleCredentialPathFile1))
-                using (JsonTextReader reader = new JsonTextReader(files))
-                {
-                    JObject o2 = (JObject)JToken.ReadFrom(reader);
 
-                    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
-                }
+                //using (StreamReader files = File.OpenText(googleCredentialPathFile1))
+                //using (JsonTextReader reader = new JsonTextReader(files))
+                //{
+                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
+
+                //    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
+                //}
+
+                var completePath = googleCredentialPathFile1["GoogleCredential"];
+
+                result.ApplicationName = googleCredentialPathFile1["GoogleCredential"]["ApplicationName"].ToString();
+                result.BucketName = googleCredentialPathFile1["GoogleCredential"]["BucketName"].ToString();
+                result.EmailId = googleCredentialPathFile1["GoogleCredential"]["EmailId"].ToString();
+                result.ProjectId = googleCredentialPathFile1["GoogleCredential"]["ProjectId"].ToString();
+                result.Projects = googleCredentialPathFile1["GoogleCredential"]["Projects"].ToString();
+                result.HR = googleCredentialPathFile1["GoogleCredential"]["HR"].ToString();
+                result.Accounting = googleCredentialPathFile1["GoogleCredential"]["Accounting"].ToString();
+                result.Store = googleCredentialPathFile1["GoogleCredential"]["Store"].ToString();
 
                 string EmailID = string.Empty;
                 var proposaldata = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && x.IsDeleted == false);
