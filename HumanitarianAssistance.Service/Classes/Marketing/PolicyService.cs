@@ -489,7 +489,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var ifExists = await _uow.GetDbContext().PolicyTimeSchedules.Where(x => x.PolicyId == model.PolicyId && x.StartTime == model.StartTime && x.EndTime == model.EndTime && x.IsDeleted == false).FirstOrDefaultAsync();
+                var ifExists = await _uow.GetDbContext().PolicyTimeSchedules.Where(x => x.PolicyId == model.PolicyId && x.StartTime.ToString() == model.StartTime && x.EndTime.ToString() == model.EndTime && x.IsDeleted == false).FirstOrDefaultAsync();
                 if (ifExists != null)
                 {
                     response.StatusCode = StaticResource.failStatusCode;
@@ -511,10 +511,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                             LatestId = Convert.ToInt32(detail.Id) + 1;
                             Code = getPolicyCode(LatestId.ToString());
                         }
-
                         PolicyTimeSchedule obj = _mapper.Map<PolicyTimeScheduleModel, PolicyTimeSchedule>(model);
-                        obj.StartTime = model.StartTime;
-                        obj.EndTime = model.EndTime;
+                        obj.StartTime = TimeSpan.Parse(model.StartTime);
+                        obj.EndTime = TimeSpan.Parse(model.EndTime);
                         obj.TimeScheduleCode = Code;
                         obj.PolicyId = model.PolicyId;
                         obj.CreatedDate = DateTime.Now;
@@ -533,10 +532,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         {
                             _mapper.Map(model, existRecord);
                             existRecord.IsDeleted = false;
-                            existRecord.StartTime = model.StartTime;
+                            existRecord.StartTime = TimeSpan.Parse(model.StartTime);
                             existRecord.ModifiedById = UserId;
                             existRecord.ModifiedDate = DateTime.Now;
-                            existRecord.EndTime = model.EndTime;
+                            existRecord.EndTime = TimeSpan.Parse(model.EndTime);
                             await _uow.PolicyTimeScheduleRepository.UpdateAsyn(existRecord);
                             response.data.policyTimeScheduleDetails = existRecord;
                             response.StatusCode = StaticResource.successStatusCode;
@@ -565,8 +564,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                                 select (new PolicyTimeScheduleModel
                                                 {
                                                     PolicyId = j.PolicyId,
-                                                    StartTime = j.StartTime,
-                                                    EndTime = j.EndTime,
+                                                    StartTime = j.StartTime.ToString(@"hh\:mm"),
+                                                    EndTime = j.EndTime.ToString(@"hh\:mm"),
                                                     Id = j.Id
                                                 }))
                                           .ToListAsync();
@@ -615,8 +614,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                        {
                                            Id = x.Id,
                                            PolicyId = x.PolicyId,
-                                           StartTime = x.StartTime,
-                                           EndTime = x.EndTime
+                                           StartTime = x.StartTime.ToString(@"hh\:mm"),
+                                           EndTime = x.EndTime.ToString(@"hh\:mm")
                                        }).AsNoTracking().FirstOrDefaultAsync();
                 //response.data.TotalCount = totalCount;
                 response.data.policyTimeDetailsById = policyList;
