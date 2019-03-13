@@ -381,6 +381,9 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string defaultFinancialYearIsNotSet = "Default Financial year is not set";
         public const string officeCodeNotFound = "Office Code Not Found";
         public const string TransactionNotFound = "Transaction Not Found";
+        public const string AccountNotFound = "Account Not Found";
+        public const string DeleteAllTransactions = "Transactions Exist";
+        public const string DeleteAllChildAccount = "Child Account Exist";
 
 
         #endregion

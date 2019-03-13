@@ -61,6 +61,17 @@ namespace DataAccess
             return _context.Set<T>().SingleOrDefault(match);
         }
 
+        public virtual bool Any(Expression<Func<T, bool>> match)
+        {
+            return _context.Set<T>().Any(match);
+        }
+
+        public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> match)
+        {
+            return await _context.Set<T>().AnyAsync(match);
+        }
+
+
         public virtual async Task<T> FindAsync(Expression<Func<T, bool>> match)
         {
             return await _context.Set<T>().SingleOrDefaultAsync(match);
