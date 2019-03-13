@@ -2106,13 +2106,13 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public APIResponse AddEditProjectproposals(long Projectid, string userid, string logginUserEmailId)
+        public async Task<APIResponse> AddEditProjectproposals(long Projectid, string userid, string logginUserEmailId)
         {
             ProjectProposalDetail model = new ProjectProposalDetail();
             ProjectProposalDetail obj = new ProjectProposalDetail();
             APIResponse response = new APIResponse();
             string EmailID = string.Empty;
-            ProjectDetail projectDetail = _uow.GetDbContext().ProjectDetail.FirstOrDefault(x => x.ProjectId == Projectid && !x.IsDeleted.Value);
+            ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == Projectid && !x.IsDeleted.Value);
             if (projectDetail == null)
             {
                 throw new Exception("Project Id not found");
@@ -2152,20 +2152,20 @@ namespace HumanitarianAssistance.Service.Classes
 
             var abc = GoogleCredentialsFile["GoogleCredential"];
 
-            result.ApplicationName = GoogleCredentialsFile["GoogleCredential"]["ApplicationName"].ToString();
-            result.BucketName= GoogleCredentialsFile["GoogleCredential"]["BucketName"].ToString();
-            result.EmailId= GoogleCredentialsFile["GoogleCredential"]["EmailId"].ToString();
-            result.ProjectId= GoogleCredentialsFile["GoogleCredential"]["ProjectId"].ToString();
-            result.Projects = GoogleCredentialsFile["GoogleCredential"]["Projects"].ToString();
-            result.HR= GoogleCredentialsFile["GoogleCredential"]["HR"].ToString();
-            result.Accounting = GoogleCredentialsFile["GoogleCredential"]["Accounting"].ToString();
-            result.Store = GoogleCredentialsFile["GoogleCredential"]["Store"].ToString();
+            result.ApplicationName = StaticResource.ApplicationName;
+            result.BucketName = StaticResource.BucketName;
+            result.EmailId = StaticResource.EmailId;
+            result.ProjectId = StaticResource.ProjectId;
+            result.Projects = StaticResource.ProjectsFolderName;
+            result.HR = StaticResource.HRFolderName;
+            result.Accounting = StaticResource.AccountingFolderName;
+            result.Store = StaticResource.StoreFolderName;
 
             //result = GoogleCredentialsFile["GoogleCredential"].ToObject<GoogleCredential>();
 
             Console.WriteLine("--------- After Credential create path----------");
 
-            ProjectProposalDetail proposaldata = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == Projectid && x.IsDeleted == false);
+            ProjectProposalDetail proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == Projectid && x.IsDeleted == false);
 
 
             obj = GCBucket.AuthExplicit("", ProjectProposalfilename, GoogleCredentialsFile, FolderName, result, Projectid, userid).Result;
@@ -2196,7 +2196,7 @@ namespace HumanitarianAssistance.Service.Classes
                 proposaldata.ModifiedById = userid;
 
 
-                _uow.ProjectProposalDetailRepository.Update(proposaldata, proposaldata.ProjectProposaldetailId);
+                await _uow.ProjectProposalDetailRepository.UpdateAsyn(proposaldata);
             }
 
 
@@ -2282,14 +2282,14 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileName, string logginUserEmailId, string ProposalType, string ext)
+        public async Task<APIResponse> UploadOtherProposalFile(IFormFile file, string UserId, long projectid, string fullPath, string fileName, string logginUserEmailId, string ProposalType, string ext)
         {
             APIResponse response = new APIResponse();
             try
             {
-                long ProjectId = long.Parse(Projectid);
+                long ProjectId = projectid;
                 ProjectProposalDetail model = new ProjectProposalDetail();
-                string folderName = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && !x.IsDeleted.Value)?.FolderName;
+                var folderDetail = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == ProjectId && x.IsDeleted == false);
 
                 Console.WriteLine("------Before Credential path Upload----------");
 
@@ -2315,32 +2315,41 @@ namespace HumanitarianAssistance.Service.Classes
 
                 var completePath = googleCredentialPathFile1["GoogleCredential"];
 
-                result.ApplicationName = googleCredentialPathFile1["GoogleCredential"]["ApplicationName"].ToString();
-                result.BucketName = googleCredentialPathFile1["GoogleCredential"]["BucketName"].ToString();
-                result.EmailId = googleCredentialPathFile1["GoogleCredential"]["EmailId"].ToString();
-                result.ProjectId = googleCredentialPathFile1["GoogleCredential"]["ProjectId"].ToString();
-                result.Projects = googleCredentialPathFile1["GoogleCredential"]["Projects"].ToString();
-                result.HR = googleCredentialPathFile1["GoogleCredential"]["HR"].ToString();
-                result.Accounting = googleCredentialPathFile1["GoogleCredential"]["Accounting"].ToString();
-                result.Store = googleCredentialPathFile1["GoogleCredential"]["Store"].ToString();
+                //result.ApplicationName = googleCredentialPathFile1["GoogleCredential"]["ApplicationName"].ToString();
+                //result.BucketName = googleCredentialPathFile1["GoogleCredential"]["BucketName"].ToString();
+                //result.EmailId = googleCredentialPathFile1["GoogleCredential"]["EmailId"].ToString();
+                //result.ProjectId = googleCredentialPathFile1["GoogleCredential"]["ProjectId"].ToString();
+                //result.Projects = googleCredentialPathFile1["GoogleCredential"]["Projects"].ToString();
+                //result.HR = googleCredentialPathFile1["GoogleCredential"]["HR"].ToString();
+                //result.Accounting = googleCredentialPathFile1["GoogleCredential"]["Accounting"].ToString();
+                //result.Store = googleCredentialPathFile1["GoogleCredential"]["Store"].ToString();
+                result.ApplicationName = StaticResource.ApplicationName;
+                result.BucketName = StaticResource.BucketName;
+                result.EmailId = StaticResource.EmailId;
+                result.ProjectId = StaticResource.ProjectId;
+                result.Projects = StaticResource.ProjectsFolderName;
+                result.HR = StaticResource.HRFolderName;
+                result.Accounting = StaticResource.AccountingFolderName;
+                result.Store = StaticResource.StoreFolderName;
 
-                string EmailID = string.Empty;
-                var proposaldata = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && x.IsDeleted == false);
-                if (proposaldata != null)
-                {
-                    if (proposaldata.UserId != null)
-                    {
-                        EmailID = _uow.GetDbContext().UserDetails.Where(z => z.UserID == proposaldata.UserId).Select(p => p.Username).FirstOrDefault();
-                        if (proposaldata != null && EmailID != null)
-                        {
-                            model = GCBucket.uploadOtherProposaldoc(folderName, file, fileName, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile1, ProposalType).Result;
-                        }
-                    }
-                    else
-                    {
-                        model = GCBucket.uploadOtherProposaldoc(folderName, file, fileName, result, EmailID, logginUserEmailId, ext, googleCredentialPathFile1, ProposalType).Result;
-                    }
-                }
+                
+                var proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == ProjectId && x.IsDeleted == false);
+                //UserDetails userDetail = new UserDetails();
+                //if (proposaldata != null)
+                //{
+                //    if (proposaldata.UserId != null)
+                //    {
+                //        userDetail = await  _uow.GetDbContext().UserDetails.FirstOrDefaultAsync(z => z.UserID == proposaldata.UserId);
+                //        if (proposaldata != null && userDetail.Username != null)
+                //        {
+                //            model = GCBucket.uploadOtherProposaldoc(folderDetail.FolderName, file, fileName, result, userDetail.Username, logginUserEmailId, ext, googleCredentialPathFile1, ProposalType).Result;
+                //        }
+                //    }
+                //    else
+                //    {
+                        model = GCBucket.uploadOtherProposaldoc(folderDetail.FolderName, file, fileName, result, UserId, logginUserEmailId, ext, googleCredentialPathFile1, ProposalType).Result;
+                    //}
+                //}
 
                 ProjectProposalDetail proposaldetails = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && x.IsDeleted == false);
 
@@ -2355,7 +2364,7 @@ namespace HumanitarianAssistance.Service.Classes
                     proposaldetails.FolderName = model.FolderName;
                     proposaldetails.ProposalFileName = model.ProposalFileName;
                     proposaldetails.ProposalWebLink = model.ProposalWebLink;
-                    proposaldetails.ProjectId = Convert.ToInt64(Projectid);
+                    proposaldetails.ProjectId = projectid;
                     proposaldetails.CreatedDate = DateTime.UtcNow;
                     proposaldetails.IsDeleted = false;
                     proposaldetails.CreatedById = UserId;
@@ -2418,7 +2427,7 @@ namespace HumanitarianAssistance.Service.Classes
                         response.data.PresentationWebLink = model.PresentationFileWebLink;
                         response.data.PresentationWebLinkExtType = model.PresentationExtType;
                     }
-                    proposaldata.ProjectId = Convert.ToInt64(Projectid);
+                    proposaldata.ProjectId = projectid;
                     proposaldata.ModifiedDate = DateTime.Now;
 
                 }

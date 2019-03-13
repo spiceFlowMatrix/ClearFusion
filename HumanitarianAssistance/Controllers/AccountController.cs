@@ -1322,7 +1322,21 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<APIResponse> DeleteChartOfAccount([FromBody]long accountId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iChartOfAccountNewService.DeleteChartOfAccount(accountId, user.Id);
+      }
+      return response;
+    }
+    
+
+   [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllApplicationPages()
     {

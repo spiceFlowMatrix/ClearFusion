@@ -203,58 +203,50 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
 
-                // set current date
-                //model.VoucherDate = ;
+                Task<List<int>> currencyListTask = _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false).Select(x => x.CurrencyId).ToListAsync();
 
-                var currencyList = await _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false)
-                                                                            .Select(x => x.CurrencyId).ToListAsync();
-                var exchangeRatePresent = await _uow.GetDbContext().ExchangeRateDetail
-                                                                   .Where(x => x.Date.ToShortDateString() == DateTime.UtcNow.ToShortDateString() &&
-                                                                                x.IsDeleted == false)
-                                                                   .ToListAsync();
+                Task<List<ExchangeRateDetail>> exchangeRatePresentTask = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.Date.Date == model.VoucherDate.Date && x.IsDeleted == false).ToListAsync();
+
+                List<int> currencyList = await currencyListTask;
+                List<ExchangeRateDetail> exchangeRatePresent = await exchangeRatePresentTask;
 
                 if (CheckExchangeRateIsPresent(currencyList, exchangeRatePresent))
                 {
-                    var officeCode = _uow.GetDbContext().OfficeDetail.FirstOrDefault(o => o.OfficeId == model.OfficeId)?.OfficeCode; //use OfficeCode
+                    var officeDetail = await _uow.GetDbContext().OfficeDetail.FirstOrDefaultAsync(o => o.OfficeId == model.OfficeId); //use OfficeCode
 
-                    if (officeCode != null)
+                    if (officeDetail != null)
                     {
-                        var fincancialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(o => o.IsDefault)?.FinancialYearId; //use OfficeCode
-                        var currencyCode = _uow.GetDbContext().CurrencyDetails.FirstOrDefault(o => o.CurrencyId == model.CurrencyId)?.CurrencyCode;
-
+                        Task<FinancialYearDetail> fincancialYearTask = _uow.GetDbContext().FinancialYearDetail.FirstOrDefaultAsync(o => o.IsDefault); //use OfficeCode
+                        Task<CurrencyDetails> currencyDetailTask = _uow.GetDbContext().CurrencyDetails.FirstOrDefaultAsync(o => o.CurrencyId == model.CurrencyId);
                         // NOTE: Dont remove this as we will need journal details in response
-                        var journaldetail = _uow.GetDbContext().JournalDetail.FirstOrDefault(o => o.JournalCode == model.JournalCode);
+                        Task<JournalDetail> journaldetailTask = _uow.GetDbContext().JournalDetail.FirstOrDefaultAsync(o => o.JournalCode == model.JournalCode);
+
+                        FinancialYearDetail fincancialYear = await fincancialYearTask;
 
                         if (fincancialYear != null)
                         {
-                            if (currencyCode != null)
+                            CurrencyDetails currencyDetail = await currencyDetailTask;
+                            if (currencyDetail != null)
                             {
+                                JournalDetail journaldetail = await journaldetailTask;
+
                                 VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
                                 obj.JournalCode = journaldetail != null ? journaldetail.JournalCode : model.JournalCode;
-                                obj.FinancialYearId = fincancialYear;
+                                obj.FinancialYearId = fincancialYear.FinancialYearId;
                                 obj.CreatedById = model.CreatedById;
-                                obj.VoucherDate = DateTime.UtcNow;
+                                obj.VoucherDate = model.VoucherDate;
                                 obj.CreatedDate = DateTime.UtcNow;
                                 obj.IsDeleted = false;
+
                                 await _uow.VoucherDetailRepository.AddAsyn(obj);
 
-                                // Pattern: Office Code - Currency Code - Month Number - Voucher Primary Key (sequential) - Year
-                                obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year;
+                                if (obj.VoucherNo != 0)
+                                {
+                                    // Pattern: Office Code - Currency Code - Month Number - Voucher Primary Key (sequential) - Year
+                                    obj.ReferenceNo = officeDetail.OfficeCode + "-" + currencyDetail.CurrencyCode + "-" + model.VoucherDate.Month + "-" + obj.VoucherNo + "-" + model.VoucherDate.Year;
 
-                                await _uow.VoucherDetailRepository.UpdateAsyn(obj);
-
-                                //var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
-
-                                //LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                                //loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
-                                //loggerObj.IsRead = false;
-                                //loggerObj.UserName = user.FirstName + " " + user.LastName;
-                                //loggerObj.UserId = model.CreatedById;
-                                //loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
-                                //loggerObj.CreatedDate = model.CreatedDate;
-
-                                //response.LoggerDetailsModel = loggerObj;
-
+                                    await _uow.VoucherDetailRepository.UpdateAsyn(obj);
+                                }
                                 VoucherDetailEntityModel voucherModel = _mapper.Map<VoucherDetail, VoucherDetailEntityModel>(obj);
 
                                 response.data.VoucherDetailEntity = voucherModel;
