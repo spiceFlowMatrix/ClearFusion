@@ -192,7 +192,9 @@ namespace DataAccess
         private IGenericRepository<DistrictMultiSelect> _districtMultiSelectRepository;
         private IGenericRepository<SecurityConsiderationMultiSelect> _securityConsiderationMultiSelectRepository;
         private IGenericRepository<HRJobInterviewers> _hRJobInterviewers;
+        private IGenericRepository<ActivityDocumentsDetail> _activityDocumentsDetailRepository;
 
+        
 
 
 
@@ -1834,7 +1836,13 @@ namespace DataAccess
             }
         }
 
-
+        public IGenericRepository<ActivityDocumentsDetail> ActivityDocumentsDetailRepository
+        {
+            get
+            {
+                return _activityDocumentsDetailRepository = _activityDocumentsDetailRepository ?? new GenericRepository<ActivityDocumentsDetail>(_mschaContext);
+            }
+        }
         public void Save()
         {
             _mschaContext.SaveChanges();

@@ -99,12 +99,12 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetAllSecurityConsiderationDetails();
         APIResponse GetAllDistrictvalueByProvinceId(int[] provinceId);
 
-        APIResponse AddEditProjectproposals(long projectId, string UserId,string logginUserEmailId);
+        Task<APIResponse> AddEditProjectproposals(long projectId, string UserId,string logginUserEmailId);
         APIResponse GetProjectproposalsById(long projectId);
 
         APIResponse AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
         //APIResponse UploadOtherProposalFile(IFormFile file, string UserId);
-        APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileName, string logginUserEmailId,string ProposalType,string ext);
+        Task<APIResponse> UploadOtherProposalFile(IFormFile file, string UserId, long projectid, string fullPath, string fileName, string logginUserEmailId,string ProposalType,string ext);
 
         APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId);
         APIResponse GetOtherProjectListById(long ProjectId);
@@ -181,6 +181,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse>AddEditProjectJobDetail(ProjectJobDetailModel model, string UserId);
 
         Task<APIResponse> GetAllProjectJobDetail();
+        Task<APIResponse> GetAllProjectJobDetail(long prejectId);
+
         Task<APIResponse> GetAllProjectJobByProjectId(long ProjectId);
         Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
         Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId);
@@ -194,7 +196,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetTransactionListByProjectId(long projectId,string userName);
         Task<APIResponse> GetTransactionList(string username, int currencyId, long budgetLineId);
 
-        Task<APIResponse> DeleteProjectJob(int model, string UserId);
+        Task<APIResponse> DeleteProjectJob(long jobId, string UserId);
 
         #endregion
     }
