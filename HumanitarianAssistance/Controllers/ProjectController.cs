@@ -749,7 +749,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         string logginUserEmailId = user.Email;
         var id = user.Id;
-        apiRespone = _iProject.AddEditProjectproposals(ProjectId, id, logginUserEmailId);
+        apiRespone = await _iProject.AddEditProjectproposals(ProjectId, id, logginUserEmailId);
       }
       return apiRespone;
     }
@@ -761,49 +761,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       apiRespone = _iProject.GetProjectproposalsById(ProjectId);
       return apiRespone;
     }
-    //[HttpPost]
-    //public async Task<APIResponse> UploadEDIProposalFile()
-    //{
-    //  APIResponse apiRespone = new APIResponse();
+   
 
-    //  try
-    //  {
-    //    var file = Request.Form.Files[0];
+    //upload other documents files bucket
+    [HttpPost, DisableRequestSizeLimit]
 
-    //      //}
-    //      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-    //      if (user != null)
-    //      {
-    //        string logginUserEmailId = user.Email;
-    //        var id = user.Id;
-    //        apiRespone = _iProject.UploadOtherProposalFile(file, id);
-    //        //if (apiRespone.StatusCode == StaticResource.successStatusCode)
-    //        //{
-    //        //  DirectoryInfo di = new DirectoryInfo(folderName);
-    //        //  FileInfo[] fi = di.GetFiles();
-    //        //  FileInfo f = fi.Where(p => p.Name == fileName).FirstOrDefault();
-    //        //  f.Delete();
-    //        //}
-
-    //    }
-    //    else
-    //    {
-    //      apiRespone.StatusCode = StaticResource.FileNotSupported;
-    //      apiRespone.Message = StaticResource.FileText;
-    //    }
-
-    //  }
-    //  catch (System.Exception ex)
-    //  {
-    //    throw ex;
-    //    //return Json("Upload Failed: " + ex.Message);
-    //  }
-    //  return apiRespone;
-    //}
-
-    //upload files bucket
-    [HttpPost]
-    public async Task<APIResponse> UploadEDIProposalFile()
+    public async Task<APIResponse> UploadEDIProposalFile([FromForm] IFormFile filesData, string projectId, string data)
     {
       APIResponse apiRespone = new APIResponse();
       string localFolderfullPath = string.Empty;
@@ -811,33 +774,39 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
 
         var file = Request.Form.Files[0];
-        long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
-        string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
-        string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
-        string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
+        long ProjectId = Convert.ToInt64(projectId);
+        string ProposalType = data;
+        string fileName = Request.Form.Files[0].FileName;
 
-        string fileName = "";
 
-        if (fileNames.Contains('_'))
-        {
-          fileName = fileNames.Split('_')[2];
-        }
-        else
-        {
-          fileName = fileNames;
-        }
+        //var file = Request.Form.Files[0];
+        //long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
+        //string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
+        //string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
+        //string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
+
+        //string fileName = "";
+
+        //if (fileNames.Contains('_'))
+        //{
+        //  fileName = fileNames.Split('_')[2];
+        //}
+        //else
+        //{
+        //  fileName = fileNames;
+        //}
 
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
         if (ext != ".jpeg" && ext != ".png")
         {
 
 
-          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, localFolderfullPath, fileName, logginUserEmailId, ProposalType, ext);
+            apiRespone = await _iProject.UploadOtherProposalFile(file, id, ProjectId, localFolderfullPath, fileName, logginUserEmailId, ProposalType, ext);
 
           }
         }
