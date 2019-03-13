@@ -32,12 +32,22 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         NullValueHandling = NullValueHandling.Ignore
       };
     }
+
     [HttpPost]
-    public async Task<APIResponse> GetAllPolicyScheduleList(string abc)
+    public async Task<APIResponse> GetAllPolicyScheduleList(string text)
     {
       APIResponse apiRespone = null;
       apiRespone = await _iScheduleService.GetAllPolicyScheduleList();
       return apiRespone;
     }
+
+    [HttpPost]
+    public async Task<APIResponse> GetScheduleDetailsById([FromBody] int id)
+    {
+      APIResponse apiRespone = null;
+      apiRespone = await _iScheduleService.GetScheduleDetailsById(id);
+      return apiRespone;
+    }
+
   }
 }
