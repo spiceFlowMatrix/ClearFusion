@@ -1384,6 +1384,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
+    public async Task<APIResponse> GetProjectJobDetailByProjectId([FromBody]long projectId)
+    {
+      APIResponse response = await _iProject.GetAllProjectJobDetail(projectId);
+      return response;
+    }
+
+    [HttpPost]
     public async Task<APIResponse> AddProjectJobDetail([FromBody]ProjectJobDetailModel Model)
 
     {
@@ -1403,20 +1410,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<APIResponse> DeleteProjectJob([FromBody]int model)
+    public async Task<APIResponse> DeleteProjectJob([FromBody]long jobId)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = await _iProject.DeleteProjectJob(model, id);
+        apiRespone = await _iProject.DeleteProjectJob(jobId, id);
       }
       return apiRespone;
     }
 
     [HttpPost]
-    public async Task<APIResponse> GetProjectJobDetailByProjectJobId([FromBody] int projectJobId)
+    public async Task<APIResponse> GetProjectJobDetailByProjectJobId([FromBody]long projectJobId)
     {
       APIResponse response = await _iProject.GetAllProjectJobByProjectId(projectJobId);
       return response;

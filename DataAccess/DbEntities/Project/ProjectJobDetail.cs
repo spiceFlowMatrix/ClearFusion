@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DataAccess.DbEntities.Project
 {
-    public class ProjectJobDetail: BaseEntityWithoutId
+    public class ProjectJobDetail : BaseEntityWithoutId
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -14,7 +14,10 @@ namespace DataAccess.DbEntities.Project
         public long ProjectJobId { get; set; }
         public string ProjectJobCode { get; set; }
         public string ProjectJobName { get; set; }
-      
+
+        public long ProjectId { get; set; }
+        [ForeignKey("ProjectId")]
+        public virtual ProjectDetail ProjectDetail { get; set; }
 
     }
 }

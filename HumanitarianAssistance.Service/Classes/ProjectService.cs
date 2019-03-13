@@ -2133,17 +2133,35 @@ namespace HumanitarianAssistance.Service.Classes
             // string GoogleCredentialpathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
 
             Console.WriteLine("---------- Before Credential create path----------");
+            JObject GoogleCredentialsFile = JObject.Parse(Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL"));
+            Console.WriteLine("GoogleCredentialsFilepath  string: {0}\n", GoogleCredentialsFile);
 
-            string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+            // string GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+
+            // string GoogleCredentialsFile1 = Path.GetFullPath(GoogleCredentialsFile);
+
             GoogleCredential result = new GoogleCredential();
 
-            using (StreamReader file = File.OpenText(GoogleCredentialsFile))
-            using (JsonTextReader reader = new JsonTextReader(file))
-            {
-                JObject o2 = (JObject)JToken.ReadFrom(reader);
+            //using (StreamReader file = File.OpenText(GoogleCredentialsFile))
+            //using (JsonTextReader reader = new JsonTextReader(file))
+            //{
+            //    JObject o2 = (JObject)JToken.ReadFrom(reader);
 
-                result = o2["GoogleCredential"].ToObject<GoogleCredential>();
-            }
+            //    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
+            //}
+
+            var abc = GoogleCredentialsFile["GoogleCredential"];
+
+            result.ApplicationName = GoogleCredentialsFile["GoogleCredential"]["ApplicationName"].ToString();
+            result.BucketName= GoogleCredentialsFile["GoogleCredential"]["BucketName"].ToString();
+            result.EmailId= GoogleCredentialsFile["GoogleCredential"]["EmailId"].ToString();
+            result.ProjectId= GoogleCredentialsFile["GoogleCredential"]["ProjectId"].ToString();
+            result.Projects = GoogleCredentialsFile["GoogleCredential"]["Projects"].ToString();
+            result.HR= GoogleCredentialsFile["GoogleCredential"]["HR"].ToString();
+            result.Accounting = GoogleCredentialsFile["GoogleCredential"]["Accounting"].ToString();
+            result.Store = GoogleCredentialsFile["GoogleCredential"]["Store"].ToString();
+
+            //result = GoogleCredentialsFile["GoogleCredential"].ToObject<GoogleCredential>();
 
             Console.WriteLine("--------- After Credential create path----------");
 
@@ -2274,23 +2292,37 @@ namespace HumanitarianAssistance.Service.Classes
                 string folderName = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && !x.IsDeleted.Value)?.FolderName;
 
                 Console.WriteLine("------Before Credential path Upload----------");
-                
+
 
                 // read credientials
-               // string googleCredentialPathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+                // string googleCredentialPathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                // string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+                JObject googleCredentialPathFile1 = JObject.Parse(Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL"));
+
                 Console.WriteLine(googleCredentialPathFile1);
 
                 Console.WriteLine("------------After Credential path Upload-------------");
 
                 GoogleCredential result = new GoogleCredential();
-                using (StreamReader files = File.OpenText(googleCredentialPathFile1))
-                using (JsonTextReader reader = new JsonTextReader(files))
-                {
-                    JObject o2 = (JObject)JToken.ReadFrom(reader);
 
-                    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
-                }
+                //using (StreamReader files = File.OpenText(googleCredentialPathFile1))
+                //using (JsonTextReader reader = new JsonTextReader(files))
+                //{
+                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
+
+                //    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
+                //}
+
+                var completePath = googleCredentialPathFile1["GoogleCredential"];
+
+                result.ApplicationName = googleCredentialPathFile1["GoogleCredential"]["ApplicationName"].ToString();
+                result.BucketName = googleCredentialPathFile1["GoogleCredential"]["BucketName"].ToString();
+                result.EmailId = googleCredentialPathFile1["GoogleCredential"]["EmailId"].ToString();
+                result.ProjectId = googleCredentialPathFile1["GoogleCredential"]["ProjectId"].ToString();
+                result.Projects = googleCredentialPathFile1["GoogleCredential"]["Projects"].ToString();
+                result.HR = googleCredentialPathFile1["GoogleCredential"]["HR"].ToString();
+                result.Accounting = googleCredentialPathFile1["GoogleCredential"]["Accounting"].ToString();
+                result.Store = googleCredentialPathFile1["GoogleCredential"]["Store"].ToString();
 
                 string EmailID = string.Empty;
                 var proposaldata = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == ProjectId && x.IsDeleted == false);
@@ -2398,7 +2430,7 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 else
                 {
-                   // _uow.ProjectProposalDetailRepository.Update(proposaldetails, proposaldetails.ProjectProposaldetailId);
+                    // _uow.ProjectProposalDetailRepository.Update(proposaldetails, proposaldetails.ProjectProposaldetailId);
                     _uow.GetDbContext().ProjectProposalDetail.Update(proposaldetails);
                     _uow.GetDbContext().SaveChanges();
                 }
@@ -4152,36 +4184,53 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> AddEditProjectJobDetail(ProjectJobDetailModel model, string UserId)
         {
             APIResponse response = new APIResponse();
-            long LatestprojectId = 0;
+            //  long LatestProjectJobId = 0;
             try
             {
-                ProjectJobDetail obj = _mapper.Map<ProjectJobDetailModel, ProjectJobDetail>(model);
-                if (model.ProjectJobId == 0)
+                if (model.ProjectId != 0)
                 {
-                    LatestprojectId = _uow.GetDbContext().ProjectJobDetail
-                        .OrderByDescending(x => x.ProjectJobId)
-                                                          .FirstOrDefault().ProjectJobId;
+                    ProjectJobDetail obj = _mapper.Map<ProjectJobDetailModel, ProjectJobDetail>(model);
+                    if (model.ProjectJobId == 0)
+                    {
 
-                    obj.ProjectJobCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D5}", 1);
-                    obj.CreatedDate = DateTime.UtcNow;
-                    obj.IsDeleted = false;
-                    obj.CreatedById = UserId;
-                    await _uow.ProjectJobDetailRepository.AddAsyn(obj);
+                        //var  latestProjectJobId = await _uow.GetDbContext().ProjectJobDetail
+                        //                                         .OrderByDescending(x => x.ProjectJobId)
+                        //                                        .FirstOrDefaultAsync();
+
+                        obj.CreatedDate = DateTime.UtcNow;
+                        obj.IsDeleted = false;
+                        obj.CreatedById = UserId;
+                        var listobj = await _uow.ProjectJobDetailRepository.AddAsyn(obj);
+
+                        if (obj.ProjectJobId != 0)
+                        {
+                            obj.ProjectJobCode = string.Format("{0:D5}", obj.ProjectJobId);
+                            await _uow.ProjectJobDetailRepository.UpdateAsyn(obj);
+                        }
+
+
+                    }
+                    else
+                    {
+                        ProjectJobDetail projectJobDetail = _uow.GetDbContext().ProjectJobDetail.FirstOrDefault(x => x.IsDeleted == false && x.ProjectJobId == model.ProjectJobId);
+
+                        projectJobDetail.ProjectJobCode = obj.ProjectJobCode;
+                        projectJobDetail.ProjectJobName = obj.ProjectJobName;
+                        projectJobDetail.ProjectJobId = obj.ProjectJobId;
+                        projectJobDetail.ProjectId = obj.ProjectId;
+                        obj.ModifiedById = UserId;
+                        obj.ModifiedDate = DateTime.UtcNow;
+                        obj.IsDeleted = false;
+
+                        await _uow.ProjectJobDetailRepository.UpdateAsyn(projectJobDetail);
+                    }
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
                 }
                 else
                 {
-                    ProjectJobDetail projectJobDetail = _uow.GetDbContext().ProjectJobDetail.FirstOrDefault(x => x.IsDeleted == false && x.ProjectJobId == model.ProjectJobId);
-                    projectJobDetail.ProjectJobCode = obj.ProjectJobCode;
-                    projectJobDetail.ProjectJobName = obj.ProjectJobName;
-                    projectJobDetail.ProjectJobId = obj.ProjectJobId;
-
-                    obj.ModifiedById = UserId;
-                    obj.ModifiedDate = DateTime.UtcNow;
-                    obj.IsDeleted = false;
-                    await _uow.ProjectJobDetailRepository.UpdateAsyn(projectJobDetail);
+                    response.StatusCode = StaticResource.projectNotFound;
                 }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
             }
             catch (Exception ex)
             {
@@ -4191,12 +4240,12 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> DeleteProjectJob(int model, string UserId)
+        public async Task<APIResponse> DeleteProjectJob(long jobId, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var projectJobDetails = await _uow.ProjectJobDetailRepository.FindAsync(x => x.IsDeleted == false && x.ProjectJobId == model);
+                var projectJobDetails = await _uow.ProjectJobDetailRepository.FindAsync(x => x.IsDeleted == false && x.ProjectJobId == jobId);
                 if (projectJobDetails != null)
                 {
                     projectJobDetails.ModifiedById = UserId;
@@ -4237,25 +4286,59 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
 
-        public async Task<APIResponse> GetAllProjectJobByProjectId(long ProjectJobId)
+
+        public async Task<APIResponse> GetAllProjectJobDetail(long projectId)
         {
             APIResponse response = new APIResponse();
             try
             {
 
-                var JobDertailList = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false && x.ProjectJobId == ProjectJobId)
-                                                            .OrderBy(x => x.ProjectJobId)
-                                                            .Select(x => new ProjectJobDetailModel
-                                                            {
-                                                                ProjectJobName = x.ProjectJobName,
-                                                                ProjectJobCode = x.ProjectJobCode,
-                                                                ProjectJobId = x.ProjectJobId,
-                                                            }).ToListAsync();
-
-
-                response.data.ProjectJobDetailModel = JobDertailList;
+                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => !x.IsDeleted.Value && x.ProjectId == projectId)
+                                                                     .OrderByDescending(x => x.ProjectJobName)
+                                                                     .ToListAsync();
+                response.data.ProjectJobDetail = list;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+
+        }
+
+
+
+
+
+        public async Task<APIResponse> GetAllProjectJobByProjectId(long projectJobId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (projectJobId != 0)
+                {
+                    var JobDertailList = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false && x.ProjectJobId == projectJobId)
+                                                                .OrderBy(x => x.ProjectJobId)
+                                                                .Select(x => new ProjectJobDetailModel
+                                                                {
+                                                                    ProjectId = x.ProjectId,
+                                                                    ProjectJobName = x.ProjectJobName,
+                                                                    ProjectJobCode = x.ProjectJobCode,
+                                                                    ProjectJobId = x.ProjectJobId,
+                                                                }).ToListAsync();
+
+
+                    response.data.ProjectJobDetailModel = JobDertailList;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.notFoundCode;
+                }
             }
             catch (Exception ex)
             {
@@ -4271,12 +4354,12 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
 
-                int totalCount = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false).AsNoTracking().CountAsync();
+                int totalCount = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false && x.ProjectId == projectJobFilterModel.ProjectId).AsNoTracking().CountAsync();
 
-                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => !x.IsDeleted.Value)
+                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => !x.IsDeleted.Value && x.ProjectId == projectJobFilterModel.ProjectId)
                     .OrderByDescending(x => x.ProjectJobId)
-                    .Skip(projectJobFilterModel.pageSize.Value * projectJobFilterModel.pageIndex.Value)
-                    .Take(projectJobFilterModel.pageSize.Value)
+                    .Skip(projectJobFilterModel.PageSize.Value * projectJobFilterModel.PageIndex.Value)
+                    .Take(projectJobFilterModel.PageSize.Value)
                     .ToListAsync();
 
                 response.data.ProjectJobDetail = list;
@@ -4306,15 +4389,18 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (model.BudgetLineId == 0)
                 {
-                    LatestprojectId = _uow.GetDbContext().ProjectBudgetLineDetail
-                        .OrderByDescending(x => x.BudgetLineId)
-                                                          .FirstOrDefault().BudgetLineId;
-
-                    obj.BudgetCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D5}", 1);
+                    //obj.BudgetCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D5}", 1);
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
-                    await _uow.ProjectBudgetLineDetailRepository.AddAsyn(obj);
+                    var objeList = await _uow.ProjectBudgetLineDetailRepository.AddAsyn(obj);
+                    if (obj.BudgetLineId != 0)
+                    {
+                        obj.BudgetCode = string.Format("{0:D5}", obj.BudgetLineId);
+                        await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(obj);
+
+                    }
+
                 }
                 else
                 {
