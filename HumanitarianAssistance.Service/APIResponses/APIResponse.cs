@@ -371,6 +371,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<TimeCategory> TimeCategories { get; set; }
         public List<JobDetailsModel> JobDetailsModel { get; set; }
         public List<PolicyModel> policyList { get; set; }
+        public List<ScheduleTimeModel> scheduleTimeList { get; set; }
         public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
         public List<ContractByClient> ContractByClientList { get; set; }
