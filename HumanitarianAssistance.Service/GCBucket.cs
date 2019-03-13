@@ -10,6 +10,7 @@ using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models.Project;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Threading;
@@ -32,10 +33,9 @@ namespace HumanitarianAssistance.Service
         }
 
 
-        public static async Task<ProjectProposalDetail> AuthExplicit(string filefullPath, string projectProposalfilename, string googleCredentialpathFile, string folderName, ViewModels.Models.Project.GoogleCredential googleCredential, long Projectid, string userid)
+        public static async Task<ProjectProposalDetail> AuthExplicit(string filefullPath, string projectProposalfilename, JObject googleCredentialpathFile, string folderName, ViewModels.Models.Project.GoogleCredential googleCredential, long Projectid, string userid)
         {
-
-            ProjectProposalModel res = new ProjectProposalModel();
+           ProjectProposalModel res = new ProjectProposalModel();
             ProjectProposalDetail model = new ProjectProposalDetail();
             //there are different scopes, which you can find here https://cloud.google.com/storage/docs/authentication
             var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
@@ -43,13 +43,16 @@ namespace HumanitarianAssistance.Service
             StorageService service = new StorageService();
 
             UserCredential credential;
-            using (var stream = new FileStream(googleCredentialpathFile, FileMode.Open, FileAccess.Read))
-            {
-                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                      GoogleClientSecrets.Load(stream).Secrets,
+            ClientSecrets secrets = new ClientSecrets();
+            secrets.ClientId = googleCredentialpathFile["installed"]["client_id"].ToString();
+            secrets.ClientSecret= googleCredentialpathFile["installed"]["client_secret"].ToString();
+            //using (var stream = new FileStream(googleCredentialpathFile, FileMode.Open, FileAccess.Read))
+            //{
+            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                     secrets,
                       scopes,
                      StaticResource.EmailId, CancellationToken.None);
-            }
+            //}
             // Create the service.
             service = new StorageService(new BaseClientService.Initializer()
             {
@@ -80,7 +83,9 @@ namespace HumanitarianAssistance.Service
             {
 
                 APIResponse response = new APIResponse();
-                var path = Directory.GetCurrentDirectory() + "\\Documents\\Proposal\\Proposal.docx";
+                var path = Directory.GetCurrentDirectory() + "/Documents/Proposal/Proposal.docx";
+
+                path = path.Replace('\\', '/');
                 var newObject = new Google.Apis.Storage.v1.Data.Object()
                 {
                     Bucket = googleCredential.BucketName,
@@ -129,7 +134,7 @@ namespace HumanitarianAssistance.Service
 
 
         //upload files 
-        public static async Task<ProjectProposalDetail> uploadOtherProposaldoc(string folderName, IFormFile filedata, string fileName, ViewModels.Models.Project.GoogleCredential googleCredential, string EmailId, string logginUserEmailId, string ext, string googleCredentialPathFile, string ProposalType)
+        public static async Task<ProjectProposalDetail> uploadOtherProposaldoc(string folderName, IFormFile filedata, string fileName, ViewModels.Models.Project.GoogleCredential googleCredential, string EmailId, string logginUserEmailId, string ext, JObject googleCredentialPathFile, string ProposalType)
         {
             ProjectProposalModel res = new ProjectProposalModel();
             string exten = Path.GetExtension(fileName).ToLower();
@@ -140,13 +145,17 @@ namespace HumanitarianAssistance.Service
             var cts = new CancellationTokenSource();
             StorageService service = new StorageService();
             UserCredential credential;
-            using (var stream = new FileStream(googleCredentialPathFile, FileMode.Open, FileAccess.Read))
-            {
+            ClientSecrets secrets = new ClientSecrets();
+            secrets.ClientId = googleCredentialPathFile["installed"]["client_id"].ToString();
+            secrets.ClientSecret = googleCredentialPathFile["installed"]["client_secret"].ToString();
+
+            //using (var stream = new FileStream(googleCredentialPathFile, FileMode.Open, FileAccess.Read))
+            //{
                 credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                      GoogleClientSecrets.Load(stream).Secrets,
+                      secrets,
                       scopes,
                      StaticResource.EmailId, CancellationToken.None);
-            }
+            //}
             // Create the service.
             service = new StorageService(new BaseClientService.Initializer()
             {

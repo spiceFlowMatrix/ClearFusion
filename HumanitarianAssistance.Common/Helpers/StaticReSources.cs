@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.Common.Helpers
 
         //appsetting joson file 
         public const string appsettingJsonFile = "appsettings.json";
-        public const string googleCredential = "GoogleCredentials\\";
+        public const string googleCredential = "GoogleCredentials/";
         //public const string googleCredential = "GoogleCredentials/";
 
 
