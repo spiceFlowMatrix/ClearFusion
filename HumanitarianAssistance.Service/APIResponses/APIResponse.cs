@@ -71,7 +71,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double TotalRecivable { get; set; }
         public double TotalPayable { get; set; }
         public double Balance { get; set; }
-
+        public long TotalExchangeRateCount { get; set; }
 
         public double TotalIncome { get; set; }
         public int TotalPresentDays { get; set; }
@@ -371,6 +371,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<TimeCategory> TimeCategories { get; set; }
         public List<JobDetailsModel> JobDetailsModel { get; set; }
         public List<PolicyModel> policyList { get; set; }
+        public List<ScheduleTimeModel> scheduleTimeList { get; set; }
         public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
         public List<ContractByClient> ContractByClientList { get; set; }
@@ -424,6 +425,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
+        public bool IsExchangeRateVerified { get; set; }
 
         public VoucherDetailEntityModel VoucherDetailEntity { get; set; }
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }

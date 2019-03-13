@@ -399,7 +399,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                     })
                                                     .ToListAsync();
 
-            if (slippage != null)
+            if (slippage.Count() > 0)
             {
                 totalImplementationProgress = slippage.Sum(x => x.ImplementationProgress ?? 0);
                 totalMonitoringProgrss = slippage.Sum(x => x.MonitoringProgress ?? 0);

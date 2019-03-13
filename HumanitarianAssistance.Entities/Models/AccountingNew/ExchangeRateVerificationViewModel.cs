@@ -15,7 +15,10 @@ namespace HumanitarianAssistance.ViewModels.Models.AccountingNew
     {
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
-        public bool? IsVerified { get; set; } = false;
+        public bool? IsVerified { get; set; }
+        public int TotalCount { get; set; }
+        public int PageSize { get; set; }
+        public int PageIndex { get; set; }
     }
 
     public class ExchangeRateDetailViewModel
