@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Service
 
         public static async Task<ProjectProposalDetail> AuthExplicit(string filefullPath, string projectProposalfilename, JObject googleCredentialpathFile, string folderName, ViewModels.Models.Project.GoogleCredential googleCredential, long Projectid, string userid)
         {
-           ProjectProposalModel res = new ProjectProposalModel();
+            ProjectProposalModel res = new ProjectProposalModel();
             ProjectProposalDetail model = new ProjectProposalDetail();
             //there are different scopes, which you can find here https://cloud.google.com/storage/docs/authentication
             var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
@@ -45,7 +45,7 @@ namespace HumanitarianAssistance.Service
             UserCredential credential;
             ClientSecrets secrets = new ClientSecrets();
             secrets.ClientId = googleCredentialpathFile["installed"]["client_id"].ToString();
-            secrets.ClientSecret= googleCredentialpathFile["installed"]["client_secret"].ToString();
+            secrets.ClientSecret = googleCredentialpathFile["installed"]["client_secret"].ToString();
             //using (var stream = new FileStream(googleCredentialpathFile, FileMode.Open, FileAccess.Read))
             //{
             credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
@@ -151,10 +151,10 @@ namespace HumanitarianAssistance.Service
 
             //using (var stream = new FileStream(googleCredentialPathFile, FileMode.Open, FileAccess.Read))
             //{
-                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                      secrets,
-                      scopes,
-                     StaticResource.EmailId, CancellationToken.None);
+            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                  secrets,
+                  scopes,
+                 StaticResource.EmailId, CancellationToken.None);
             //}
             // Create the service.
             service = new StorageService(new BaseClientService.Initializer()
@@ -327,7 +327,7 @@ namespace HumanitarianAssistance.Service
 
         #region Upload files
 
-        public static async Task<string> UploadDocument(string folderName, IFormFile filedata, string fileName, string ext, string googleCredentialPathFile1, ViewModels.Models.Project.GoogleCredential googleCredential)
+        public static async Task<string> UploadDocument(string folderName, IFormFile filedata, string fileName, string ext, JObject googleCredentialPathFile1, ViewModels.Models.Project.GoogleCredential googleCredential)
         {
             string exten = Path.GetExtension(fileName).ToLower();
             string bucketFolderWithFilePath = string.Empty;
@@ -335,15 +335,21 @@ namespace HumanitarianAssistance.Service
             ProjectProposalDetail model = new ProjectProposalDetail();
             var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
             var cts = new CancellationTokenSource();
-            var service = new StorageService();
+            StorageService service = new StorageService();
             UserCredential credential;
-            using (var stream = new FileStream(googleCredentialPathFile1, FileMode.Open, FileAccess.Read))
-            {
-                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                      GoogleClientSecrets.Load(stream).Secrets,
-                      scopes,
-                     StaticResource.EmailId, CancellationToken.None);
-            }
+            ClientSecrets secrets = new ClientSecrets();
+            secrets.ClientId = googleCredentialPathFile1["installed"]["client_id"].ToString();
+            secrets.ClientSecret = googleCredentialPathFile1["installed"]["client_secret"].ToString();
+
+            //var service = new StorageService();
+            //UserCredential credential;
+            //using (var stream = new FileStream(googleCredentialPathFile1, FileMode.Open, FileAccess.Read))
+            //{
+            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                secrets,
+                  scopes,
+                 StaticResource.EmailId, CancellationToken.None);
+            //}
             // Create the service.
             service = new StorageService(new BaseClientService.Initializer()
             {
@@ -376,7 +382,7 @@ namespace HumanitarianAssistance.Service
 
                 }
 
-                
+
 
             }
 
@@ -392,7 +398,7 @@ namespace HumanitarianAssistance.Service
                 }
             }
 
-            if(!string.IsNullOrEmpty(bucketFolderWithFilePath))
+            if (!string.IsNullOrEmpty(bucketFolderWithFilePath))
             {
                 return bucketFolderWithFilePath;
             }

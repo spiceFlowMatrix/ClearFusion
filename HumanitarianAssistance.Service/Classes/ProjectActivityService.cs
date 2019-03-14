@@ -484,20 +484,32 @@ namespace HumanitarianAssistance.Service.Classes
                 Console.WriteLine("------Before Credential path Upload----------");
 
                 //read credientials
-                string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+                // string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+                // Console.WriteLine(googleCredentialPathFile1);
+                JObject googleCredentialPathFile1 = JObject.Parse(Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL"));
+
                 Console.WriteLine(googleCredentialPathFile1);
 
                 Console.WriteLine("------------After Credential path Upload-------------");
 
                 GoogleCredential result = new GoogleCredential();
-                using (StreamReader files = File.OpenText(googleCredentialPathFile1))
-                using (JsonTextReader reader = new JsonTextReader(files))
-                {
-                    JObject o2 = (JObject)JToken.ReadFrom(reader);
+                //using (StreamReader files = File.OpenText(googleCredentialPathFile1))
+                //using (JsonTextReader reader = new JsonTextReader(files))
+                //{
+                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
 
-                    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
-                }
+                //    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
+                //}
 
+                var completePath = googleCredentialPathFile1["GoogleCredential"];
+                result.ApplicationName = StaticResource.ApplicationName;
+                result.BucketName = StaticResource.BucketName;
+                result.EmailId = StaticResource.EmailId;
+                result.ProjectId = StaticResource.ProjectId;
+                result.Projects = StaticResource.ProjectsFolderName;
+                result.HR = StaticResource.HRFolderName;
+                result.Accounting = StaticResource.AccountingFolderName;
+                result.Store = StaticResource.StoreFolderName;
 
                 string bucketResponse = GCBucket.UploadDocument(folderName, file, fileName, ext, googleCredentialPathFile1, result).Result;
                 //ActivityDocumentsDetail activityExixt = _uow.GetDbContext().ActivityDocumentsDetail.FirstOrDefault(x => x.ActivityId == activityId && x.IsDeleted == false);
