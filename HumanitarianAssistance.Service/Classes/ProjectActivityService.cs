@@ -201,7 +201,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
-
+              
                 if (projectactivityDetail != null)
                 {
                     // Actual start date
@@ -212,11 +212,19 @@ namespace HumanitarianAssistance.Service.Classes
                     projectactivityDetail.ModifiedById = UserId;
                     projectactivityDetail.IsDeleted = false;
 
-                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
-
-                    response.data.DateTime = projectactivityDetail.ActualStartDate.Value;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = StaticResource.SuccessText;
+                    if (projectactivityDetail.StartDate <= projectactivityDetail.ActualStartDate)
+                    {
+                        await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+                        response.data.DateTime = projectactivityDetail.ActualStartDate.Value.Date;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = StaticResource.SuccessText;
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.invalidDate;
+                    }
+                  
                 }
                 else
                 {
@@ -249,7 +257,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
 
-                    response.data.DateTime = projectactivityDetail.ActualStartDate.Value;
+                    response.data.DateTime = projectactivityDetail.ActualEndDate.Value.Date;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;
                 }
