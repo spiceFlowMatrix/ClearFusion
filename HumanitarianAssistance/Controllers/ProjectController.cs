@@ -761,7 +761,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       apiRespone = _iProject.GetProjectproposalsById(ProjectId);
       return apiRespone;
     }
-   
+
 
     //upload other documents files bucket
     [HttpPost, DisableRequestSizeLimit]
@@ -1660,6 +1660,22 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #endregion
 
+    #region
+    [HttpPost]
+    public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowModel Model)
+    {
+      APIResponse apiresponse = await _iProject.FilterProjectCashFlow(Model);
+      return apiresponse;
+    }
 
+
+    [HttpPost]
+    public async Task<APIResponse> GetAllExpenditureByProjectId([FromBody]int projectId)
+    {
+      APIResponse apriresponse = new APIResponse();
+      apriresponse = await _iProject.GetAllExpenditureByProjectId(projectId);
+      return apriresponse;
+    }
+    #endregion
   }
 }

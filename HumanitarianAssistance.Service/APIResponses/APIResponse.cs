@@ -342,8 +342,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ActivityDocumentDetailModel> ActivityDocumentDetailModel { get; set; }
 
 
-
-
+        public ProjectCashFlowModel ProjectCashFlowList { get; set; }
+        public List<BLTransactionCashFlowModel> BudgetLineCashFlowModelList { get; set; }
 
 
         #region Marketing    

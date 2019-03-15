@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using DataAccess.DbEntities.ErrorLog;
+using System.Globalization;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -4805,8 +4806,52 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
 
+
         #endregion
 
+        #region "Project Cash Flow"
+        public async Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowModel model)
+        {
+            APIResponse response = new APIResponse();
+            response.data.ProjectCashFlowList = model;
+            response.StatusCode = StaticResource.successStatusCode;
+            response.Message = "Success";
+            return response;
+
+        }
+
+        public async Task<APIResponse> GetAllExpenditureByProjectId(int projectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var TransList = await _uow.GetDbContext().VoucherTransactions
+                                          .Where(x => x.IsDeleted == false && x.ProjectId == projectId && x.ProjectId != null)
+                                          .OrderBy(x => x.CreatedDate)
+                                          .ToListAsync();
+
+                List<BLTransactionCashFlowModel> budgetDetaillist = TransList.Select(b => new BudgetLineCashFlowModel
+                {
+                    ProjectId = b.ProjectId,
+                    Debit = b.Debit,
+                    TransactionDate = b.TransactionDate,
+                    Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(b.TransactionDate.Value.Month)
+
+                }).GroupBy(x => x.Month, x => x, (key, g) => new BLTransactionCashFlowModel { Month = key, DebitList = g.ToList() }).ToList();
+
+
+                response.data.BudgetLineCashFlowModelList = budgetDetaillist;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        #endregion
 
 
     }
