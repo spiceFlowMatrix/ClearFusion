@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces.Marketing;
+using HumanitarianAssistance.ViewModels.Models.Marketing;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -42,10 +43,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
-    public async Task<APIResponse> GetScheduleDetailsById([FromBody] int id)
+    public async Task<APIResponse> GetScheduleDetailsById([FromBody] ScheduleDetailModel model)
     {
       APIResponse apiRespone = null;
-      apiRespone = await _iScheduleService.GetScheduleDetailsById(id);
+      apiRespone = await _iScheduleService.GetScheduleDetailsById(model);
       return apiRespone;
     }
 
