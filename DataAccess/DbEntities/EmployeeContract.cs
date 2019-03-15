@@ -12,7 +12,6 @@ namespace DataAccess.DbEntities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
         public int EmployeeContractId { get; set; }
-
         public int EmployeeId { get; set; }
         public string FatherName { get; set; }
         public string EmployeeCode { get; set; }
@@ -20,7 +19,6 @@ namespace DataAccess.DbEntities
         public DateTime? ContractStartDate { get; set; }
         public DateTime? ContractEndDate { get; set; }
         public int? DurationOfContract { get; set; }
-
         public double? Salary { get; set; }
         public int? Grade { get; set; }
         public int? DutyStation { get; set; } //if
@@ -37,33 +35,17 @@ namespace DataAccess.DbEntities
         public float? ContractPeriod { get; set; }
         [ForeignKey("EmployeeId")]
         public EmployeeDetail Employee { get; set; }
-
-
-        //[ForeignKey("Country")]
-        //public CountryDetails CountryDetails { get; set; }
-
-        //[ForeignKey("Province")]
-        //public ProvinceDetails ProvinceDetails { get; set; }
-
-
-
-
-
-        //NOTE: Add relation later
-
-        //[ForeignKey("EmployeeId")]
-        //public EmployeeDetail EmployeeDetail { get; set; }
-
-        //[ForeignKey("DutyStation")]
-        //public OfficeDetail OfficeDetail { get; set; }
-
-        //[ForeignKey("Designation")]
-        //public DesignationDetail DesignationDetail { get; set; }
-
-        //[ForeignKey("BudgetLine")]
-        //public ProjectBudgetLine ProjectBudgetLine { get; set; }
-
-        
+        public string CountryDari { get; set; }
+        public string DesignationDari { get; set; }
+        public string DutyStationDari { get; set; }
+        public string FatherNameDari { get; set; }
+        public string GradeDari { get; set; }
+        public string JobDari { get; set; }
+        public string ProvinceDari { get; set; }
+        public string EmployeeNameDari { get; set; }
+        public string ProjectNameDari { get; set; }
+        [ForeignKey("Grade")]
+        public JobGrade JobGrade { get; set; }
 
     }
 }

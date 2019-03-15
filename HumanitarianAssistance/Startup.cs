@@ -36,6 +36,7 @@ using HumanitarianAssistance.Service.Classes.AccountingNew;
 using Microsoft.Extensions.Logging;
 using HumanitarianAssistance.WebAPI.Filter;
 using Newtonsoft.Json;
+using HumanitarianAssistance.Common.Helpers;
 
 namespace HumanitarianAssistance
 {
@@ -45,18 +46,29 @@ namespace HumanitarianAssistance
     private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
     private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
     public static IHostingEnvironment _Env;
+    string value;
 
     public Startup(IConfiguration configuration, IHostingEnvironment env)
     {
       Configuration = configuration;
       var builder = new ConfigurationBuilder()
       .SetBasePath(env.ContentRootPath)
-      .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+      .AddJsonFile(StaticResource.appsettingJsonFile, optional: true, reloadOnChange: true)
       .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-      .AddEnvironmentVariables();
+      .AddEnvironmentVariables() ;
       string sAppPath = env.ContentRootPath; //Application Base Path
       string swwwRootPath = env.WebRootPath;  //wwwroot folder path
       Configuration = builder.Build();
+      //get and set environment variable at run time
+      //value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+
+      //if (value == null)
+      //{
+      //  Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json", EnvironmentVariableTarget.Machine);
+      //  var  vdsfdsfalue = Environment.GetEnvironmentVariable("PATH");
+      //  value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+      //}
+      //Console.WriteLine("GOOGLE_APPLICATION_CREDENTIALS: {0}\n", value);
     }
 
     public IConfiguration Configuration { get; }
@@ -64,9 +76,27 @@ namespace HumanitarianAssistance
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      DefaultCorsPolicyName = Configuration["DefaultCorsPolicyName:PolicyName"];
-      string DefaultCorsPolicyUrl = Configuration["DefaultCorsPolicyName:PolicyUrl"];
-      string connectionString = Configuration.GetConnectionString("linuxdb");
+      //DefaultCorsPolicyName = Configuration["DefaultCorsPolicyName:PolicyName"];
+     // string DefaultCorsPolicyUrl = Configuration["DefaultCorsPolicyName:PolicyUrl"];
+     // string connectionString = Configuration.GetConnectionString("linuxdb");
+
+      //get and set environment variable at run time
+      string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
+
+      string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
+      DefaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
+
+      string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
+      string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
+      string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
+    // string GoogleCredentialsFile = Environment.GetEnvironmentVariable("GOOGLE");
+
+
+
+      Console.WriteLine("Connection string: {0}\n", connectionString);
+      Console.WriteLine("DefaultCorsPolicyName string: {0}\n", DefaultCorsPolicyName);
+      Console.WriteLine("DefaultCorsPolicyUrl string: {0}\n", DefaultCorsPolicyUrl);
+      Console.WriteLine("WebSiteUrl string: {0}\n", WebSiteUrl);
 
 
       services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
@@ -111,7 +141,7 @@ namespace HumanitarianAssistance
                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
       services.AddSingleton<IRole, RoleService>();
       services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
-      services.Configure<WebSiteUrl>(Configuration.GetSection("WebSiteUrl"));
+      services.Configure<WebSiteUrl>(Configuration.GetSection("WEB_SITE_URL"));
       services.Configure<SwaggerEndPoint>(Configuration.GetSection("SwaggerEndPoint"));
       services.AddSingleton<IJwtFactory, JwtFactory>();
       services.AddTransient<IPermissions, PermissionService>();
@@ -146,8 +176,9 @@ namespace HumanitarianAssistance
       services.AddTransient<IPolicyService, PolicyService>();
       services.AddTransient<IClientDetails, ClientDetailsService>();
       services.AddTransient<IVoucherNewService, VoucherNewService>();
-
+      services.AddTransient<ISchedulerService, SchedulerService>();
       services.AddTransient<IAccountBalance, AccountBalanceService>();
+      services.AddTransient<IProjectActivityService, ProjectActivityService>();
 
       //services.AddTransient<UserManager<AppUser>>();
 
@@ -265,7 +296,7 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
 
-      //UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
       if (env.IsDevelopment())
       {
@@ -332,7 +363,7 @@ namespace HumanitarianAssistance
       });
     }
 
-    // 2011
+    //2011
     private static async Task UpdateDatabase(IApplicationBuilder app, UserManager<AppUser> um, RoleManager<IdentityRole> rm, ILogger<DbInitializer> logger)
     {
       using (var serviceScope = app.ApplicationServices
@@ -346,6 +377,28 @@ namespace HumanitarianAssistance
           if (!context.Users.Any())
           {
             await DbInitializer.CreateDefaultUserAndRoleForApplication(um, rm, context, logger);
+          }
+
+          // check if Contract Content present or not
+          if (!context.ContractTypeContent.Any())
+          {
+            await DbInitializer.AddContractClauses(context);
+          }
+
+          // check if JobGrade present or not
+          if (!context.JobGrade.Any())
+          {
+            await DbInitializer.AddJobGrades(context);
+          }
+
+          // check if Categories present or not
+          if (!context.Categories.Any())
+          {
+            await DbInitializer.AddMarketingCategory(context);
+          }
+          if (!context.ActivityStatusDetail.Any())
+          {
+            await DbInitializer.AddActivityStatus(context);
           }
         }
       }

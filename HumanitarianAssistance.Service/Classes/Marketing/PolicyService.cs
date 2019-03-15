@@ -159,13 +159,13 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                       .CountAsync();
 
                 var policyList = await _uow.GetDbContext().PolicyDetails
-                                       .Where(v => v.IsDeleted == false).Select(x=>new PolicyModel
+                                       .Where(v => v.IsDeleted == false).Select(x => new PolicyModel
                                        {
-                                          PolicyId = x.PolicyId,
-                                          PolicyCode = x.PolicyCode,
-                                          PolicyName = x.PolicyName,
-                                          MediumName = x.Mediums.MediumName,
-                                          MediumId = x.MediumId
+                                           PolicyId = x.PolicyId,
+                                           PolicyCode = x.PolicyCode,
+                                           PolicyName = x.PolicyName,
+                                           MediumName = x.Mediums.MediumName,
+                                           MediumId = x.MediumId
                                        }).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).OrderByDescending(x => x.CreatedDate).AsNoTracking()
                                     .ToListAsync();
                 response.data.TotalCount = totalCount;
@@ -188,25 +188,25 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 int count = await _uow.GetDbContext().PolicyDetails.CountAsync(x => x.IsDeleted == false);
                 var policyDetail = await (from j in _uow.GetDbContext().PolicyDetails
-                                     join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
-                                     join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
-                                     join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
-                                     where !j.IsDeleted.Value && !jp.IsDeleted.Value && !me.IsDeleted.Value
-                                     && !mc.IsDeleted.Value
-                                     select (new PolicyModel
-                                     {
-                                         PolicyId = j.PolicyId,
-                                         PolicyName = j.PolicyName,
-                                         PolicyCode = j.PolicyCode,
-                                         Description = j.Description,
-                                         LanguageId = jp.LanguageId,
-                                         LanguageName = jp.LanguageName,
-                                         MediumId = me.MediumId,
-                                         MediumName = me.MediumName,
-                                         MediaCategoryId = mc.MediaCategoryId,
-                                         MediaCategoryName = mc.CategoryName
-                                     })).Take(10).Skip(0).OrderByDescending(x => x.CreatedDate).ToListAsync();
-                
+                                          join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
+                                          join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
+                                          join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
+                                          where !j.IsDeleted.Value && !jp.IsDeleted.Value && !me.IsDeleted.Value
+                                          && !mc.IsDeleted.Value
+                                          select (new PolicyModel
+                                          {
+                                              PolicyId = j.PolicyId,
+                                              PolicyName = j.PolicyName,
+                                              PolicyCode = j.PolicyCode,
+                                              Description = j.Description,
+                                              LanguageId = jp.LanguageId,
+                                              LanguageName = jp.LanguageName,
+                                              MediumId = me.MediumId,
+                                              MediumName = me.MediumName,
+                                              MediaCategoryId = mc.MediaCategoryId,
+                                              MediaCategoryName = mc.CategoryName
+                                          })).Take(10).Skip(0).OrderByDescending(x => x.CreatedDate).ToListAsync();
+
                 response.data.policyList = policyDetail;
                 response.data.TotalCount = count;
                 response.StatusCode = 200;
@@ -242,11 +242,11 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                              (
                                                v.PolicyId.ToString().Trim().ToLower().Contains(policyIdValue) ||
                                                v.PolicyName.Trim().ToLower().Contains(policyNameValue) ||
-                                               v.Mediums.MediumName.Trim().ToLower().Contains(mediumValue)                                                  
+                                               v.Mediums.MediumName.Trim().ToLower().Contains(mediumValue)
                                               ) : true
                                            )
                                      )
-                                    //.OrderByDescending(x => x.CreatedDate)
+                                    .OrderByDescending(x => x.CreatedDate)
                                     .Select(x => new PolicyModel
                                     {
                                         PolicyId = x.PolicyId,
@@ -257,7 +257,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                     })
                                     .AsNoTracking()
                                     .ToListAsync();
-               // response.data.jobListTotalCount = voucherList.Count();
+                // response.data.jobListTotalCount = voucherList.Count();
                 response.data.PolicyFilteredList = policyList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -301,6 +301,564 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
+            return response;
+        }
+
+        public async Task<APIResponse> AddEditPolicySchedules(ScheduleDetailsModel model, string UserId)
+        {
+            PolicyScheduleModel mdl = new PolicyScheduleModel();
+            mdl.ByDay = model.ByDay;
+            mdl.ByMonth = model.ByMonth;
+            mdl.ByWeek = model.ByWeek;
+            mdl.Description = model.Description;
+            mdl.EndTime = TimeSpan.Parse(model.EndTime);
+            mdl.StartTime = TimeSpan.Parse(model.StartTime);
+            mdl.Title = model.Title;
+            mdl.RepeatDays = string.Join(",", model.RepeatDays);
+            mdl.Frequency = model.Frequency;
+            mdl.PolicyId = model.PolicyId;
+            mdl.PolicyScheduleId = mdl.PolicyScheduleId;
+            mdl.StartDate = DateTime.Parse(model.StartDate);
+            mdl.EndDate = DateTime.Parse(model.EndDate);
+            long LatestScheduleId = 0;
+            var scheduleCode = string.Empty;
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model.PolicyScheduleId == 0)
+                {
+                    var schedule = _uow.GetDbContext().PolicySchedules.Where(x => x.Title == model.Title && x.IsDeleted == false).FirstOrDefault();
+                    if (schedule == null)
+                    {
+                        var policyDetail = _uow.GetDbContext().PolicySchedules.OrderByDescending(x => x.PolicyScheduleId)
+                                                                                       .FirstOrDefault();
+                        if (policyDetail == null)
+                        {
+                            LatestScheduleId = 1;
+                            scheduleCode = getPolicyCode(LatestScheduleId.ToString());
+                        }
+                        else
+                        {
+                            LatestScheduleId = Convert.ToInt32(policyDetail.PolicyId) + 1;
+                            scheduleCode = getPolicyCode(LatestScheduleId.ToString());
+                        }
+                        PolicySchedule obj = _mapper.Map<PolicyScheduleModel, PolicySchedule>(mdl);
+                        obj.CreatedById = UserId;
+                        obj.ScheduleCode = scheduleCode;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.IsDeleted = false;
+                        obj.isActive = true;
+                        obj.Description = mdl.Description;
+                        obj.ByDay = mdl.ByDay;
+                        obj.ByMonth = mdl.ByMonth;
+                        obj.ByWeek = mdl.ByWeek;
+                        obj.EndDate = mdl.EndDate;
+                        obj.EndTime = mdl.EndTime;
+                        obj.Frequency = mdl.Frequency;
+                        obj.PolicyId = mdl.PolicyId;
+                        //obj.RepeatDays = mdl.RepeatDays;
+                        obj.StartDate = mdl.StartDate;
+                        obj.StartTime = mdl.StartTime;
+                        obj.Title = mdl.Title;
+                        await _uow.PolicyScheduleRepository.AddAsyn(obj);
+                        await _uow.SaveAsync();
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Schedule created successfully.";
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Schedule already exists. Please try again with other Title.";
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetPolicyScheduleById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            return response;
+        }
+
+        public async Task<APIResponse> GetAllSchedule(string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                int count = await _uow.GetDbContext().PolicySchedules.CountAsync(x => x.IsDeleted == false);
+                var policyScheduleList = await (from j in _uow.GetDbContext().PolicySchedules
+                                                    //join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
+                                                    //join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
+                                                    //join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
+                                                where !j.IsDeleted.Value
+                                                //&& !jp.IsDeleted.Value && !me.IsDeleted.Value
+                                                //&& !mc.IsDeleted.Value
+                                                select (new PolicyScheduleModel
+                                                {
+                                                    PolicyId = j.PolicyId,
+                                                    Title = j.Title,
+                                                    ScheduleCode = j.ScheduleCode,
+                                                    Description = j.Description,
+                                                    ByDay = j.ByDay,
+                                                    ByMonth = j.ByMonth,
+                                                    ByWeek = j.ByWeek,
+                                                    EndDate = j.EndDate,
+                                                    EndTime = j.EndTime,
+                                                    Frequency = j.Frequency,
+                                                    isActive = j.isActive,
+                                                    PolicyScheduleId = j.PolicyScheduleId,
+                                                    RepeatDays = j.RepeatDays,
+                                                    StartDate = j.StartDate,
+                                                    StartTime = j.StartTime
+                                                    //LanguageId = jp.LanguageId,
+                                                    //LanguageName = jp.LanguageName,
+                                                    //MediumId = me.MediumId,
+                                                    //MediumName = me.MediumName,
+                                                    //MediaCategoryId = mc.MediaCategoryId,
+                                                    //MediaCategoryName = mc.CategoryName
+                                                }))
+                                          //.Take(10).Skip(0).OrderByDescending(x => x.)
+                                          .ToListAsync();
+
+                response.data.policySchedulesByDateList = policyScheduleList;
+                response.data.TotalCount = count;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        public async Task<APIResponse> GetScheduleByDate(string model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                int count = await _uow.GetDbContext().PolicySchedules.Where(x=>x.StartDate==DateTime.Parse(model)).CountAsync(x => x.IsDeleted == false);
+                var policyScheduleList = await (from j in _uow.GetDbContext().PolicySchedules
+                                                    //join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
+                                                    //join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
+                                                    //join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
+                                                where !j.IsDeleted.Value && j.StartDate == DateTime.Parse(model)
+                                                //&& !jp.IsDeleted.Value && !me.IsDeleted.Value
+                                                //&& !mc.IsDeleted.Value
+                                                select (new PolicyScheduleModel
+                                                {
+                                                    PolicyId = j.PolicyId,
+                                                    Title = j.Title,
+                                                    ScheduleCode = j.ScheduleCode,
+                                                    Description = j.Description,
+                                                    ByDay = j.ByDay,
+                                                    ByMonth = j.ByMonth,
+                                                    ByWeek = j.ByWeek,
+                                                    EndDate = j.EndDate,
+                                                    EndTime = j.EndTime,
+                                                    Frequency = j.Frequency,
+                                                    isActive = j.isActive,
+                                                    PolicyScheduleId = j.PolicyScheduleId,
+                                                    RepeatDays = j.RepeatDays,
+                                                    StartDate = j.StartDate,
+                                                    StartTime = j.StartTime
+                                                })).ToListAsync();
+                response.data.TotalCount = count;
+                response.StatusCode = 200;
+                response.Message = "Success";
+                response.data.policySchedulesByDateList = policyScheduleList;
+            }
+            catch(Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddEditPolicyTimeSchedule(PolicyTimeScheduleModel model, string UserId)
+        {
+            long LatestId = 0;
+            var Code = string.Empty;
+            APIResponse response = new APIResponse();
+            try
+            {
+                var ifExists = await _uow.GetDbContext().PolicyTimeSchedules.Where(x => x.PolicyId == model.PolicyId && x.StartTime == TimeSpan.Parse(model.StartTime) && x.EndTime == TimeSpan.Parse(model.EndTime) && x.IsDeleted == false).FirstOrDefaultAsync();
+                if (ifExists != null)
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Time slot for the policy already exists";
+                }
+                else
+                {
+                    if (model.Id == 0)
+                    {
+                        var detail = _uow.GetDbContext().PolicyTimeSchedules.OrderByDescending(x => x.Id)
+                                                                                       .FirstOrDefault();
+                        if (detail == null)
+                        {
+                            LatestId = 1;
+                            Code = getPolicyCode(LatestId.ToString());
+                        }
+                        else
+                        {
+                            LatestId = Convert.ToInt32(detail.Id) + 1;
+                            Code = getPolicyCode(LatestId.ToString());
+                        }
+                        PolicyTimeSchedule obj = _mapper.Map<PolicyTimeScheduleModel, PolicyTimeSchedule>(model);
+                        obj.StartTime = TimeSpan.Parse(model.StartTime);
+                        obj.EndTime = TimeSpan.Parse(model.EndTime);
+                        obj.TimeScheduleCode = Code;
+                        obj.PolicyId = model.PolicyId;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.IsDeleted = false;
+                        await _uow.PolicyTimeScheduleRepository.AddAsyn(obj);
+                        await _uow.SaveAsync();
+                        response.StatusCode = 200;
+                        response.data.policyTimeScheduleDetails = obj;
+                        response.Message = "Time slot created successfully";
+
+                    }
+                    else
+                    {
+                        var existRecord = await _uow.PolicyTimeScheduleRepository.FindAsync(x => x.IsDeleted == false && x.Id == model.Id);
+                        if (existRecord != null)
+                        {
+                            _mapper.Map(model, existRecord);
+                            existRecord.IsDeleted = false;
+                            existRecord.StartTime = TimeSpan.Parse(model.StartTime);
+                            existRecord.ModifiedById = UserId;
+                            existRecord.ModifiedDate = DateTime.Now;
+                            existRecord.EndTime = TimeSpan.Parse(model.EndTime);
+                            await _uow.PolicyTimeScheduleRepository.UpdateAsyn(existRecord);
+                            response.data.policyTimeScheduleDetails = existRecord;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Time slot updated successfully";
+                        }
+                    }
+                }               
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> GetPolicyTimeScheduleList(int id, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                int count = await _uow.GetDbContext().PolicyTimeSchedules.CountAsync(x => x.IsDeleted == false);
+                var policyScheduleList = await (from j in _uow.GetDbContext().PolicyTimeSchedules
+                                                where !j.IsDeleted.Value && j.PolicyId == id
+                                                select (new PolicyTimeScheduleModel
+                                                {
+                                                    PolicyId = j.PolicyId,
+                                                    StartTime = j.StartTime.ToString(@"hh\:mm"),
+                                                    EndTime = j.EndTime.ToString(@"hh\:mm"),
+                                                    Id = j.Id
+                                                }))
+                                          .ToListAsync();
+
+                response.data.policySchedulesByTimeList = policyScheduleList;
+                response.data.TotalCount = count;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> DeletePolicyTimeSchedule(int id, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var policyInfo = await _uow.PolicyTimeScheduleRepository.FindAsync(c => c.Id == id);
+                policyInfo.IsDeleted = true;
+                policyInfo.ModifiedById = UserId;
+                policyInfo.ModifiedDate = DateTime.UtcNow;
+                await _uow.PolicyTimeScheduleRepository.UpdateAsyn(policyInfo, policyInfo.Id);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Policy Schedule Deleted Successfully";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetPolicyTimeScheduleById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var policyList = await _uow.GetDbContext().PolicyTimeSchedules
+                                       .Where(v => v.IsDeleted == false && v.Id == model).Select(x => new PolicyTimeScheduleModel
+                                       {
+                                           Id = x.Id,
+                                           PolicyId = x.PolicyId,
+                                           StartTime = x.StartTime.ToString(@"hh\:mm"),
+                                           EndTime = x.EndTime.ToString(@"hh\:mm")
+                                       }).AsNoTracking().FirstOrDefaultAsync();
+                //response.data.TotalCount = totalCount;
+                response.data.policyTimeDetailsById = policyList;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddPolicyRepeatDays(PolicyTimeModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model.Id == 0)
+                {
+                    var detail = _uow.GetDbContext().PolicyDaySchedules.OrderByDescending(x => x.Id).FirstOrDefault();
+                    PolicyDaySchedule obj = _mapper.Map<PolicyTimeModel, PolicyDaySchedule>(model);
+                    if (model.RepeatDays != null && model.RepeatDays.Count>0)
+                    {
+                        foreach (var items in model.RepeatDays)
+                        {
+                            if (items.Value == "MON")
+                            {
+                                obj.Monday = items.status;
+                            }
+                            if (items.Value == "TUE")
+                            {
+                                obj.Tuesday = items.status; 
+                            }
+                            if (items.Value == "WED")
+                            {
+                                obj.Wednesday = items.status;
+                            }
+                            if (items.Value == "THU")
+                            {
+                                obj.Thursday = items.status;
+                            }
+                            if (items.Value == "FRI")
+                            {
+                                obj.Friday = items.status;
+                            }
+                            if (items.Value == "SAT")
+                            {
+                                obj.Saturday = items.status;
+                            }
+                            if (items.Value == "SUN")
+                            {
+                                obj.Sunday = items.status;
+                            }
+                        }
+                    }
+                    obj.PolicyId = model.PolicyId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    await _uow.PolicyDayScheduleRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.StatusCode = 200;
+                    response.data.policyDayScheduleDetails = obj;
+                    response.Message = "Repeat Days updated successfully";
+                }
+                else
+                {
+                    var existRecord = await _uow.PolicyDayScheduleRepository.FindAsync(x => x.IsDeleted == false && x.Id == model.Id);
+                    if (existRecord != null)
+                    {
+                        _mapper.Map(model, existRecord);
+                        existRecord.IsDeleted = false;
+                        existRecord.ModifiedById = UserId;
+                        existRecord.ModifiedDate = DateTime.Now;
+                        if (model.RepeatDays != null && model.RepeatDays.Count>0)
+                        {
+                            foreach (var items in model.RepeatDays)
+                            {
+                                if (items.Value == "MON")
+                                {
+                                    existRecord.Monday = items.status;
+                                }
+                                if (items.Value == "TUE")
+                                {
+                                    existRecord.Tuesday = items.status;
+                                }
+                                if (items.Value == "WED")
+                                {
+                                    existRecord.Wednesday = items.status;
+                                }
+                                if (items.Value == "THU")
+                                {
+                                    existRecord.Thursday = items.status;
+                                }
+                                if (items.Value == "FRI")
+                                {
+                                    existRecord.Friday = items.status;
+                                }
+                                if (items.Value == "SAT")
+                                {
+                                    existRecord.Saturday = items.status;
+                                }
+                                if (items.Value == "SUN")
+                                {
+                                    existRecord.Sunday = items.status;
+                                }
+                            }
+                        }
+                        await _uow.PolicyDayScheduleRepository.UpdateAsyn(existRecord);
+                        response.data.policyDayScheduleDetails = existRecord;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Repeat Days updated successfully";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+        public async Task<APIResponse> GetDayScheduleByPolicyId(int id, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var policyList = await _uow.GetDbContext().PolicyDaySchedules
+                                       .Where(v => v.IsDeleted == false && v.PolicyId == id).Select(x => new PolicyTimeScheduleModel
+                                       {
+                                           Id = x.Id,
+                                           PolicyId = x.PolicyId,
+                                           Monday = x.Monday,
+                                           Tuesday = x.Tuesday,
+                                           Wednesday = x.Wednesday,
+                                           Thursday = x.Thursday,
+                                           Friday = x.Friday,
+                                           Saturday = x.Saturday,
+                                           Sunday = x.Sunday
+                                       }).AsNoTracking().FirstOrDefaultAsync();
+                //response.data.TotalCount = totalCount;
+                List<string> repeatDays = new List<string>();
+                if(policyList != null)
+                {
+                    if (policyList.Monday == true)
+                    {
+                        repeatDays.Add("MON");
+                    }
+                    if (policyList.Tuesday == true)
+                    {
+                        repeatDays.Add("TUE");
+                    }
+                    if (policyList.Wednesday == true)
+                    {
+                        repeatDays.Add("WED");
+                    }
+                    if (policyList.Thursday == true)
+                    {
+                        repeatDays.Add("THU");
+                    }
+                    if (policyList.Friday == true)
+                    {
+                        repeatDays.Add("FRI");
+                    }
+                    if (policyList.Saturday == true)
+                    {
+                        repeatDays.Add("SAT");
+                    }
+                    if (policyList.Sunday == true)
+                    {
+                        repeatDays.Add("SUN");
+                    }
+                    policyList.repeatDays = repeatDays;
+                }
+                response.data.policyTimeDetailsById = policyList;
+                response.StatusCode = 200;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        public async Task<APIResponse> AddEditPolicyOrderSchedule(PolicyOrderScheduleModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var list = await _uow.GetDbContext().PolicyOrderSchedules.Where(x => x.IsDeleted == false && x.PolicyId == model.PolicyId && ((x.StartDate <= model.StartDate && x.EndDate >= model.EndDate) || (x.StartDate <= model.StartDate && x.EndDate >= model.StartDate) || (x.StartDate <= model.EndDate && x.EndDate >= model.EndDate))).ToListAsync();
+                try
+                {
+                    if (list.Count != 0)
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Order schedule could not be requested as the dates are already taken.";
+                        //foreach (var items in list)
+                        //{
+                        //    if (model.StartDate >= items.StartDate && model.StartDate <= items.EndDate && model.EndDate >= items.StartDate && model.EndDate <= items.EndDate)
+                        //    {
+                        //      flag=true;
+
+                        //    }
+
+                        //}
+
+                    }
+
+                    else
+                    {
+                        if (model.Id == 0)
+                        {
+                            PolicyOrderSchedule obj = _mapper.Map<PolicyOrderScheduleModel, PolicyOrderSchedule>(model);
+                            obj.PolicyId = model.PolicyId;
+                            obj.CreatedDate = DateTime.UtcNow;
+                            obj.StartDate = model.StartDate;
+                            obj.EndDate = model.EndDate;
+                            obj.IsDeleted = false;
+                            obj.RequestSchedule = true;
+                            await _uow.PolicyOrderScheduleRepository.AddAsyn(obj);
+                            await _uow.SaveAsync();
+                            response.StatusCode = 200;
+                            //response.data.policyTimeScheduleDetails = obj;
+                            response.Message = "Schedule order requested successfully";
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.SomethingWrong + ex.Message;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
             return response;
         }
     }

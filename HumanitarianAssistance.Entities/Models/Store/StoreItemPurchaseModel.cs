@@ -64,6 +64,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public long? VerifiedPurchaseVoucher { get; set; }
         public int? JournalCode { get; set; }
         public string VerifiedPurchaseVoucherReferenceNo { get; set; }
+        public double TotalCostUSD { get; set; }
     }
 
     public class ItemPurchaseWithDataModel

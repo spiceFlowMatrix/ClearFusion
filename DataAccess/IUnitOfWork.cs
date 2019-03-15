@@ -145,6 +145,7 @@ namespace DataAccess
         IGenericRepository<EmployeePayrollAccountHead> EmployeePayrollAccountHeadRepository { get; }
         IGenericRepository<ExchangeRateDetail> ExchangeRateDetailRepository { get; }
         IGenericRepository<PaymentTypes> PaymentTypesRepository { get; }
+        IGenericRepository<HRJobInterviewers> HRJobInterviewersRepository { get; }
 
         #region Project
         IGenericRepository<DonorDetail> DonorDetailRepository { get; }
@@ -191,12 +192,22 @@ namespace DataAccess
         IGenericRepository<DistrictMultiSelect> DistrictMultiSelectRepository { get; }
         IGenericRepository<SecurityConsiderationMultiSelect> SecurityConsiderationMultiSelectRepository { get; }
         IGenericRepository<Errorlog> ErrorlogRepository { get; }
+        IGenericRepository<ProjectBudgetLineDetail> ProjectBudgetLineDetailRepository { get; }
+        IGenericRepository<ProjectJobDetail> ProjectJobDetailRepository { get; }
+        IGenericRepository<ProjectActivityDetail> ProjectActivityDetailRepository { get; }
+
+        IGenericRepository<ActivityDocumentsDetail> ActivityDocumentsDetailRepository { get; }
+
 
         #endregion
 
         #region Marketing
         IGenericRepository<UnitRate> UnitRateRepository { get; }
         IGenericRepository<PolicyDetail> PolicyRepository { get; }
+        IGenericRepository<PolicyTimeSchedule> PolicyTimeScheduleRepository { get; }
+        IGenericRepository<PolicyOrderSchedule> PolicyOrderScheduleRepository { get; }
+        IGenericRepository<PolicyDaySchedule> PolicyDayScheduleRepository { get; }
+        IGenericRepository<PolicySchedule> PolicyScheduleRepository { get; }
         IGenericRepository<ActivityType> ActivityTypeRepository { get; }
         IGenericRepository<ContractDetails> ContractDetailsRepository { get; }
         IGenericRepository<JobDetails> JobDetailsRepository { get; }

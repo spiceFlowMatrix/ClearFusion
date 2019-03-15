@@ -2,6 +2,7 @@
 using DataAccess;
 using DataAccess.DbEntities;
 using DataAccess.DbEntities.Marketing;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Entities;
 using HumanitarianAssistance.Service.APIResponses;
@@ -746,7 +747,7 @@ namespace HumanitarianAssistance.Service.Classes
                     TransactionTypeId = x?.TransactionTypeId ?? 0
                 }).OrderBy(x => x.HeadName).ToList();
 
-                response.data.SalaryHeadList = salaryheadlist;
+                response.data.SalaryHeadList = salaryheadlist.OrderBy(x => x.TransactionTypeId).ThenBy(x => x.HeadTypeId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1517,6 +1518,32 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetAllEmployeeList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail
+                                                            .Where(x => x.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
+                                                            .Select(x => new EmployeeDetailList
+                                                            {
+                                                                EmployeeId = x.EmployeeID,
+                                                                EmployeeName = x.EmployeeName,
+                                                                EmployeeCode = x.EmployeeCode ?? x.EmployeeProfessionalDetail.OfficeDetail.OfficeCode + x.EmployeeID,
+                                                                CodeEmployeeName = x.EmployeeCode != null ? x.EmployeeCode + " - " + x.EmployeeName : x.EmployeeProfessionalDetail.OfficeDetail.OfficeCode + x.EmployeeID + " - " + x.EmployeeName
+                                                            }).ToListAsync();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> GetEmployeeDetailByOfficeId(int OfficeId)
         {
             APIResponse response = new APIResponse();
@@ -2043,6 +2070,7 @@ namespace HumanitarianAssistance.Service.Classes
         /// <returns></returns>
         public async Task<APIResponse> UpdatePayrollAccountHeadAllEmployees(List<PayrollHeadModel> model, string UserId)
         {
+
             APIResponse response = new APIResponse();
 
             try
@@ -2050,6 +2078,20 @@ namespace HumanitarianAssistance.Service.Classes
                 //NOTE: Do not remove code for saving payroll heads for employees that do not exist in EmployeePayrollAccountHead table
                 //List<EmployeeProfessionalDetail> employeesNotInPayrollAccountHeadTable = new List<EmployeeProfessionalDetail>();
                 //List<EmployeeProfessionalDetail> employeeList = await _uow.GetDbContext().EmployeeProfessionalDetail.Where(x => x.IsDeleted == false).ToListAsync();
+
+                IEnumerable<int> employeeIds = _uow.GetDbContext().EmployeeDetail
+                                                  .Include(x => x.EmployeeProfessionalDetail)
+                                              .Where(x => x.IsDeleted == false && x.EmployeeProfessionalDetail.OfficeId ==
+                                              model.FirstOrDefault().OfficeId).Select(x => x.EmployeeID).ToList();
+
+                IEnumerable<int> employeeWithNoPayrollHead;
+                IEnumerable<int> employeeWithPayrollHead;
+
+                List<EmployeePayrollAccountHead> xEmployeePayrollAccountHead = await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
+
+                employeeWithPayrollHead = xEmployeePayrollAccountHead.Select(x => x.EmployeeId).Distinct().ToList();
+
+                employeeWithNoPayrollHead = employeeIds.Except(employeeWithPayrollHead);
 
                 foreach (PayrollHeadModel payrollHead in model)
                 {
@@ -2065,8 +2107,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     await _uow.PayrollAccountHeadRepository.UpdateAsyn(xPayrollAccountHead);
 
-
-                    List <EmployeePayrollAccountHead> xEmployeePayrollAccountHead =await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x=> x.IsDeleted== false && x.PayrollHeadId== payrollHead.PayrollHeadId).ToListAsync();
+                    List<EmployeePayrollAccountHead> xEmployeePayrollAccount = xEmployeePayrollAccountHead.Where(x => x.IsDeleted == false && x.PayrollHeadId == payrollHead.PayrollHeadId).ToList();
 
                     if (xEmployeePayrollAccountHead.Any())
                     {
@@ -2076,39 +2117,30 @@ namespace HumanitarianAssistance.Service.Classes
                             x.PayrollHeadTypeId = payrollHead.PayrollHeadTypeId; x.TransactionTypeId = payrollHead.TransactionTypeId;
                         });
 
-                         _uow.GetDbContext().EmployeePayrollAccountHead.UpdateRange(xEmployeePayrollAccountHead);
+                        _uow.GetDbContext().EmployeePayrollAccountHead.UpdateRange(xEmployeePayrollAccountHead);
                         _uow.Save();
                     }
 
-                    //NOTE: Do not remove code for saving payroll heads for employees that do not exist in EmployeePayrollAccountHead table
+                    List<EmployeePayrollAccountHead> employeePayrollHeads = new List<EmployeePayrollAccountHead>();
 
-                    //if (employeesNotInPayrollAccountHeadTable.Count == 0)
-                    //{
+                    //Adding New Payroll Heads for Employees not having Payroll Head already saved
+                    foreach (int employeeId in employeeWithNoPayrollHead)
+                    {
+                        EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
+                        employeePayrollAccountHead.AccountNo = payrollHead.AccountNo;
+                        employeePayrollAccountHead.CreatedById = UserId;
+                        employeePayrollAccountHead.Description = payrollHead.Description;
+                        employeePayrollAccountHead.EmployeeId = employeeId;
+                        employeePayrollAccountHead.IsDeleted = false;
+                        employeePayrollAccountHead.PayrollHeadId = payrollHead.PayrollHeadId;
+                        employeePayrollAccountHead.PayrollHeadName = payrollHead.PayrollHeadName;
+                        employeePayrollAccountHead.PayrollHeadTypeId = payrollHead.PayrollHeadTypeId;
+                        employeePayrollAccountHead.TransactionTypeId = payrollHead.TransactionTypeId;
+                        employeePayrollHeads.Add(employeePayrollAccountHead);
+                    }
 
-                    //    employeesNotInPayrollAccountHeadTable = employeeList.Where(e => !xEmployeePayrollAccountHead.Any(p => p.EmployeeId == e.EmployeeId)).ToList();
-                    //}
-
-                    //List<EmployeePayrollAccountHead> newEmployeePayrollAccountHeadList = new List<EmployeePayrollAccountHead>();
-
-                    //foreach (var employee in employeesNotInPayrollAccountHeadTable)
-                    //{
-                    //    foreach (var obj in model)
-                    //    {
-                    //        EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
-                    //        employeePayrollAccountHead.AccountNo = obj.AccountNo;
-                    //        employeePayrollAccountHead.Description = obj.Description;
-                    //        employeePayrollAccountHead.IsDeleted = false;
-                    //        employeePayrollAccountHead.EmployeeId = employee.EmployeeId.Value;
-                    //        employeePayrollAccountHead.PayrollHeadId = obj.PayrollHeadId;
-                    //        employeePayrollAccountHead.PayrollHeadTypeId = obj.PayrollHeadTypeId;
-                    //        employeePayrollAccountHead.PayrollHeadName = obj.PayrollHeadName;
-                    //        employeePayrollAccountHead.TransactionTypeId = obj.TransactionTypeId;
-                    //        newEmployeePayrollAccountHeadList.Add(employeePayrollAccountHead);
-                    //    }
-                    //}
-
-                    //_uow.GetDbContext().EmployeePayrollAccountHead.AddRange(newEmployeePayrollAccountHeadList);
-                    //_uow.GetDbContext().SaveChanges();
+                    _uow.GetDbContext().EmployeePayrollAccountHead.AddRange(employeePayrollHeads);
+                    _uow.Save();
 
                 }
 
@@ -2130,7 +2162,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                List<DistrictDetail> districtlist = _uow.GetDbContext().DistrictDetail.Where(x =>x.IsDeleted==false && ProvinceId.Contains(x.ProvinceID)).ToList();                
+                List<DistrictDetail> districtlist = _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted == false && ProvinceId.Contains(x.ProvinceID)).ToList();
                 response.data.Districtlist = districtlist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -2194,7 +2226,7 @@ namespace HumanitarianAssistance.Service.Classes
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = ex.Message;
             }
-            return response;            
+            return response;
         }
 
         /// <summary>
@@ -2236,7 +2268,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                LanguageDetail obj = _mapper.Map<LanguageModel,LanguageDetail>(model);
+                LanguageDetail obj = _mapper.Map<LanguageModel, LanguageDetail>(model);
                 obj.CreatedById = UserId;
                 obj.CreatedDate = DateTime.Now;
                 obj.IsDeleted = false;
@@ -2265,7 +2297,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                List<ApplicationPages> xApplicationPages = await _uow.GetDbContext().ApplicationPages.Where(x => x.IsDeleted== false).ToListAsync();
+                List<ApplicationPages> xApplicationPages = await _uow.GetDbContext().ApplicationPages.Where(x => x.IsDeleted == false).ToListAsync();
 
                 response.data.ApplicationPagesList = xApplicationPages;
                 response.StatusCode = StaticResource.successStatusCode;

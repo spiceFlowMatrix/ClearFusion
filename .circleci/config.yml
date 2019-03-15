@@ -27,8 +27,8 @@ jobs:
       - run: dotnet publish HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj -c Release -o release
       - run: echo $STAGINGEDG_APPSETTINGS_JSON
       - run: echo $STAGINGEDG_APPSETTINGS_JSON > HumanitarianAssistance/release/appsettings.json
-      - run: echo $GOOGLE_DRIVE_API_CREDENTIALS
-      - run: echo $GOOGLE_DRIVE_API_CREDENTIALS > HumanitarianAssistance/release/GoogleCredentials/credentials.json
+      - run: echo $GOOGLE_DRIVE_APIEDG_CREDENTIALS
+      - run: echo $GOOGLE_DRIVE_APIEDG_CREDENTIALS > HumanitarianAssistance/release/GoogleCredentials/credentials.json
       - run: mkdir HumanitarianAssistance/release/Documents
       - persist_to_workspace:
           root: .

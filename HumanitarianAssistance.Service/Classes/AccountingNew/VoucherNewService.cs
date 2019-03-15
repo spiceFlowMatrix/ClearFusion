@@ -100,7 +100,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                       })
                                       .Skip(voucherNewFilterModel.pageSize.Value * voucherNewFilterModel.pageIndex.Value)
                                       .Take(voucherNewFilterModel.pageSize.Value)
-                                      .AsNoTracking()
                                       .ToListAsync();
                 response.data.VoucherDetailList = voucherList;
                 response.data.TotalCount = totalCount;
@@ -176,6 +175,24 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         }
 
         /// <summary>
+        /// check if Exchange Rate is present or not
+        /// </summary>
+        /// <param name="currencyList"></param>
+        /// <param name="exchangeRatePresedsnt"></param>
+        /// <returns>false</returns>
+        /// <returns>true</returns>
+        public bool CheckExchangeRateIsPresent(List<int> currencyList, List<ExchangeRateDetail> exchangeRates)
+        {
+            var groupedDataCount = exchangeRates.GroupBy(x => new { x.FromCurrency, x.ToCurrency }).ToList().Count;
+            if (groupedDataCount >= (int)Math.Pow(currencyList.Count(), 2))
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        /// <summary>
         /// Add Voucher
         /// </summary>
         /// <param name="model"></param>
@@ -185,80 +202,79 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             APIResponse response = new APIResponse();
             try
             {
-                // check if Exchange Rate is present on Voucher Date
-                //var dateNow = DateTime.UtcNow.ToShortDateString();
-                //var currencyList = await _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false).Select(x => x.CurrencyId).ToListAsync();
-                //bool exchangeRatePresent = await _uow.GetDbContext().ExchangeRateDetail
-                //                                                    .AnyAsync(x => x.Date.ToShortDateString() == dateNow &&
-                //                                                                   currencyList.Contains(x.FromCurrency) &&
-                //                                                                   currencyList.Contains(x.ToCurrency)
-                //                                                    );
 
+                Task<List<int>> currencyListTask = _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false).Select(x => x.CurrencyId).ToListAsync();
 
-                //if (exchangeRatePresent) {
+                Task<List<ExchangeRateDetail>> exchangeRatePresentTask = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.Date.Date == model.VoucherDate.Date && x.IsDeleted == false).ToListAsync();
 
-                //}
+                List<int> currencyList = await currencyListTask;
+                List<ExchangeRateDetail> exchangeRatePresent = await exchangeRatePresentTask;
 
-                var officeCode = _uow.GetDbContext().OfficeDetail.FirstOrDefault(o => o.OfficeId == model.OfficeId)?.OfficeCode; //use OfficeCode
-
-                if (officeCode != null)
+                if (CheckExchangeRateIsPresent(currencyList, exchangeRatePresent))
                 {
-                    var fincancialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(o => o.IsDefault)?.FinancialYearId; //use OfficeCode
-                    var currencyCode = _uow.GetDbContext().CurrencyDetails.FirstOrDefault(o => o.CurrencyId == model.CurrencyId)?.CurrencyCode;
+                    var officeDetail = await _uow.GetDbContext().OfficeDetail.FirstOrDefaultAsync(o => o.OfficeId == model.OfficeId); //use OfficeCode
 
-                    // NOTE: Dont remove this as we will need journal details in response
-                    var journaldetail = _uow.GetDbContext().JournalDetail.FirstOrDefault(o => o.JournalCode == model.JournalCode);
-
-                    if (fincancialYear != null)
+                    if (officeDetail != null)
                     {
-                        if (currencyCode != null)
+                        Task<FinancialYearDetail> fincancialYearTask = _uow.GetDbContext().FinancialYearDetail.FirstOrDefaultAsync(o => o.IsDefault); //use OfficeCode
+                        Task<CurrencyDetails> currencyDetailTask = _uow.GetDbContext().CurrencyDetails.FirstOrDefaultAsync(o => o.CurrencyId == model.CurrencyId);
+                        // NOTE: Dont remove this as we will need journal details in response
+                        Task<JournalDetail> journaldetailTask = _uow.GetDbContext().JournalDetail.FirstOrDefaultAsync(o => o.JournalCode == model.JournalCode);
+
+                        FinancialYearDetail fincancialYear = await fincancialYearTask;
+
+                        if (fincancialYear != null)
                         {
-                            VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
-                            obj.JournalCode = journaldetail != null ? journaldetail.JournalCode : model.JournalCode;
-                            obj.FinancialYearId = fincancialYear;
-                            obj.CreatedById = model.CreatedById;
-                            obj.VoucherDate = DateTime.UtcNow;
-                            obj.CreatedDate = DateTime.UtcNow;
-                            obj.IsDeleted = false;
-                            await _uow.VoucherDetailRepository.AddAsyn(obj);
+                            CurrencyDetails currencyDetail = await currencyDetailTask;
+                            if (currencyDetail != null)
+                            {
+                                JournalDetail journaldetail = await journaldetailTask;
 
-                            // Pattern: Office Code - Currency Code - Month Number - Voucher Primary Key (sequential) - Year
-                            obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year;
+                                VoucherDetail obj = _mapper.Map<VoucherDetail>(model);
+                                obj.JournalCode = journaldetail != null ? journaldetail.JournalCode : model.JournalCode;
+                                obj.FinancialYearId = fincancialYear.FinancialYearId;
+                                obj.CreatedById = model.CreatedById;
+                                obj.VoucherDate = model.VoucherDate;
+                                obj.CreatedDate = DateTime.UtcNow;
+                                obj.IsDeleted = false;
 
-                            await _uow.VoucherDetailRepository.UpdateAsyn(obj);
+                                await _uow.VoucherDetailRepository.AddAsyn(obj);
 
-                            //var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == model.CreatedById);
+                                if (obj.VoucherNo != 0)
+                                {
+                                    // Pattern: Office Code - Currency Code - Month Number - Voucher Primary Key (sequential) - Year
+                                    obj.ReferenceNo = officeDetail.OfficeCode + "-" + currencyDetail.CurrencyCode + "-" + model.VoucherDate.Month + "-" + obj.VoucherNo + "-" + model.VoucherDate.Year;
 
-                            //LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                            //loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
-                            //loggerObj.IsRead = false;
-                            //loggerObj.UserName = user.FirstName + " " + user.LastName;
-                            //loggerObj.UserId = model.CreatedById;
-                            //loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
-                            //loggerObj.CreatedDate = model.CreatedDate;
+                                    await _uow.VoucherDetailRepository.UpdateAsyn(obj);
+                                }
+                                VoucherDetailEntityModel voucherModel = _mapper.Map<VoucherDetail, VoucherDetailEntityModel>(obj);
 
-                            //response.LoggerDetailsModel = loggerObj;
-
-                            response.data.VoucherDetailEntity = obj;
-                            response.StatusCode = StaticResource.successStatusCode;
-                            response.Message = "Success";
+                                response.data.VoucherDetailEntity = voucherModel;
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Success";
+                            }
+                            else
+                            {
+                                response.StatusCode = StaticResource.failStatusCode;
+                                response.Message = StaticResource.CurrencyNotFound;
+                            }
                         }
                         else
                         {
                             response.StatusCode = StaticResource.failStatusCode;
-                            response.Message = StaticResource.CurrencyNotFound;
+                            response.Message = StaticResource.defaultFinancialYearIsNotSet;
                         }
                     }
                     else
                     {
                         response.StatusCode = StaticResource.failStatusCode;
-                        response.Message = StaticResource.defaultFinancialYearIsNotSet;
+                        response.Message = StaticResource.officeCodeNotFound;
                     }
                 }
                 else
                 {
                     response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.officeCodeNotFound;
+                    response.Message = StaticResource.ExchagneRateNotDefined;
                 }
 
             }
@@ -329,6 +345,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         }
 
         /// <summary>
+        /// <summary>
         /// Delete Voucher
         /// </summary>
         /// <param name="model"></param>
@@ -368,7 +385,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
-        /// <summary>
         /// Get All Voucher Transaction List 
         /// </summary>
         /// <param name="VoucherNo"></param>
@@ -831,10 +847,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                     if (responseTransaction.StatusCode == 200)
                     {
+                        string voucherName = _uow.GetDbContext().VoucherDetail.FirstOrDefault(x => x.JournalCode == responseVoucher.data.VoucherDetailEntity.JournalCode)?.JournalDetails.JournalName;
+
                         response.data.GainLossVoucherDetail = new GainLossVoucherList
                         {
                             VoucherId = responseVoucher.data.VoucherDetailEntity.VoucherNo,
-                            JournalName = responseVoucher.data.VoucherDetailEntity.JournalDetails != null ? responseVoucher.data.VoucherDetailEntity.JournalDetails.JournalName : "",
+                            JournalName = voucherName != null ? voucherName : "",
                             VoucherName = responseVoucher.data.VoucherDetailEntity.ReferenceNo,
                             VoucherDate = responseVoucher.data.VoucherDetailEntity.VoucherDate
                         };
@@ -876,7 +894,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 if (voucherId != 0)
                 {
-                   var voucherResponse =  await DeleteVoucher(voucherId, userId);
+                    var voucherResponse = await DeleteVoucher(voucherId, userId);
 
                     response.StatusCode = voucherResponse.StatusCode;
                     response.Message = voucherResponse.Message;
@@ -896,13 +914,17 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return response;
         }
 
+        /// <summary>
+        /// Get all Vouchers let generated from gain loss report
+        /// </summary>
+        /// <returns></returns>
         public async Task<APIResponse> GetExchangeGainLossVoucherList()
         {
             APIResponse response = new APIResponse();
             try
             {
                 var gainLossVouchers = await _uow.GetDbContext().VoucherDetail
-                                                                        .Where(x => x.IsDeleted == false && 
+                                                                        .Where(x => x.IsDeleted == false &&
                                                                                     x.IsExchangeGainLossVoucher == true)
                                                                         .Select(x => new GainLossVoucherList
                                                                         {

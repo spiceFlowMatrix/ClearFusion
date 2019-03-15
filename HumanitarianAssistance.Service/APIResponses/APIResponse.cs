@@ -71,8 +71,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double TotalRecivable { get; set; }
         public double TotalPayable { get; set; }
         public double Balance { get; set; }
-
-
+        public long TotalExchangeRateCount { get; set; }
+        
         public double TotalIncome { get; set; }
         public int TotalPresentDays { get; set; }
         public int TotalAbsentDays { get; set; }
@@ -93,6 +93,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public bool isSalaryHeadSaved { get; set; }
         public bool isPayrollHeadSaved { get; set; }
         public string ItemGroupCode { get; set; }
+        public string JobCode { get; set; }
         public VoucherTransactionModel VoucherTransactionModel { get; set; }
         public List<VoucherTransactionModel> VoucherTransactionModelList { get; set; }
         public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
@@ -184,7 +185,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleForProspectiveEmployeeModel> ISFPEmployeeList { get; set; }
         public IList<ScheduleCandidateModel> ScheduleCandidateList { get; set; }
 
-        public IList<ProjectDetails> ProjectDetailList { get; set; }
+        public IList<ProjectDetail> ProjectDetailList { get; set; }
 
         public IList<InterviewFeedbackDetailsModel> InterviewFeedbackDetailsList { get; set; }
         public IList<EmployeeSalaryDetailsModel> EmployeeSalaryDetailsList { get; set; }
@@ -192,7 +193,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<FinancialYearDetailModel> FinancialYearDetailList { get; set; }
         public IList<TaskMasterModel> TaskMasterList { get; set; }
         public IList<ActivityMasterModel> ActivityMasterList { get; set; }
-        public IList<ProjectBudgetLineModel> ProjectBudgetLineList { get; set; }
+        public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineList { get; set; }
         public IList<BudgetLineTypeModel> BudgetLineTypeList { get; set; }
         public IList<EmployeeTypeModel> EmployeeTypeList { get; set; }
         public IList<AssignActivityModel> AssignActivityList { get; set; }
@@ -226,7 +227,6 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
         public List<DetailsOfNotesFinalModel> DetailsOfNotesFinalList { get; set; }
 
-        //Alpit
         public IList<ScheduleCandidateModel> ScheduledProspectiveEmployee { get; set; }
         public IList<JobGradeModel> JobGradeList { get; set; }
 
@@ -239,6 +239,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<InterviewScheduleModel> InterviewScheduleFieldOfficelist { get; set; }
         public IList<RolePermissionViewModel> PermissionsInRole { get; set; }
         public IList<AgreeDisagreePermissionModel> AgreeDisagreePermissionsInRole { get; set; }
+        public IList<OrderSchedulePermissionModel> OrderSchedulePermissionsInRole { get; set; }
         public IList<ApproveRejectPermissionModel> ApproveRejectPermissionsInRole { get; set; }
         public IList<EmployeeMonthlyPayrollModel> EmployeeMonthlyPayrolllist { get; set; }
 
@@ -302,7 +303,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<int> ProvinceMultiSelectById { get; set; }
         public List<long> DistrictMultiSelectById { get; set; }
 
-        
+
         public List<ProjectCommunicationModel> ProjectCommunicationModel { get; set; }
         public ProjectProgram projectProgram { get; set; }
         public ProjectArea projectArea { get; set; }
@@ -316,7 +317,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<UserRolePermissionsModel> UserRolePermissions { get; set; }
         public List<RolePermissionModel> RolePermissionModelList { get; set; }
 
-       
+
         public ICollection<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public ICollection<CEFeasibilityExpertOtherDetail> FeasibilityExpertOtherDetail { get; set; }
         public ICollection<CEAgeGroupDetail> CEAgeGroupDetail { get; set; }
@@ -325,10 +326,31 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ICollection<DonorEligibilityCriteria> DonorEligibilityCriteria { get; set; }
         public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
-        public VoucherDetail VoucherDetailEntity { get; set; }
+
+        public ICollection<ProjectJobDetail> ProjectJobDetail { get; set; }
+        public List<ProjectJobDetailModel> ProjectJobDetailModel { get; set; }
+        public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
+        public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
+        public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
+
+        public IList<ProjectActivityModel> ProjectActivityList { get; set; }
+
+        public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
+        public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
+        public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
+        public ActivityDocumentsDetail activityDocumnentDetail { get; set; }
+        public List<ActivityDocumentDetailModel> ActivityDocumentDetailModel { get; set; }
 
 
-        #region Marketing       
+
+
+
+
+        #region Marketing    
+        public PolicyTimeSchedule policyTimeScheduleDetails { get; set; }
+        public PolicyDaySchedule policyDayScheduleDetails { get; set; }
+        public List<PolicyTimeScheduleModel> policySchedulesByTimeList { get; set; }
+        public List<PolicyScheduleModel> policySchedulesByDateList { get; set; }
         public ICollection<JobDetails> JobDetails { get; set; }
         public JobDetails JobDetailModel { get; set; }
         public ICollection<Quality> Qualities { get; set; }
@@ -349,6 +371,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<TimeCategory> TimeCategories { get; set; }
         public List<JobDetailsModel> JobDetailsModel { get; set; }
         public List<PolicyModel> policyList { get; set; }
+        public List<ScheduleTimeModel> scheduleTimeList { get; set; }
+        public ScheduleDetailModel scheduleDetails { get; set; }
+        public List<ScheduleDetailModel> scheduleDetailsList { get; set; }
         public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
         public List<ContractByClient> ContractByClientList { get; set; }
@@ -373,6 +398,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public PolicyDetail policyDetails { get; set; }
         public List<PolicyModel> policyFilterList { get; set; }
         public PolicyModel policyDetailsById { get; set; }
+        public PolicyTimeScheduleModel policyTimeDetailsById { get; set; }
         public TimeCategory timeCatergoryById { get; set; }
         #endregion
 
@@ -380,8 +406,6 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<CodeType> SourceCodeTypelist { get; set; }
         public List<StoreSourceCodeDetailModel> SourceCodeDatalist { get; set; }
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
-
-
         public Dictionary<string,List<string>> Permissions { get; set; }
 
 
@@ -403,8 +427,12 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
-        public GainLossVoucherList GainLossVoucherDetail { get; set; }
+        public bool IsExchangeRateVerified { get; set; }
+
+        public VoucherDetailEntityModel VoucherDetailEntity { get; set; }
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }
+        public GainLossVoucherList GainLossVoucherDetail { get; set; }
+
 
         #endregion
 
@@ -424,6 +452,9 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         #endregion
 
+        public DateTime DateTime { get; set; }
+        public bool ImplementationStatus { get; set; }
+        public bool MonitoringStatus { get; set; }
 
     }
 

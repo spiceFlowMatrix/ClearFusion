@@ -47,7 +47,6 @@ namespace HumanitarianAssistance.Service.Classes
                     _uow.GetDbContext().VoucherDetail
                                       .Include(o => o.OfficeDetails).Include(j => j.JournalDetails)
                                       .Include(c => c.CurrencyDetail)
-                                      .Include(f => f.FinancialYearDetails)
                                       .Where(v => v.IsDeleted == false).OrderBy(x => x.VoucherDate).ToList()
                                       );
                 var voucherdetaillist = voucherList.Select(v => new VoucherDetailModel
@@ -144,7 +143,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                       .Include(o => o.OfficeDetails).Include(j => j.JournalDetails)
                                                       .Include(c => c.CurrencyDetail)
                                                       .Include(f => f.FinancialYearDetails)
-                                                      .Where(v => v.IsDeleted == false && filterModel.OfficesList.Contains(v.OfficeId) && v.VoucherDate.Value.Date == filterModel.Date.Value.Date)
+                                                      .Where(v => v.IsDeleted == false && filterModel.OfficesList.Contains(v.OfficeId) && v.VoucherDate.Date == filterModel.Date.Value.Date)
                                                       .OrderByDescending(x => x.VoucherDate)
                                                       .Skip(filterModel.Skip)
                                                       .Take(10)
@@ -1313,8 +1312,8 @@ namespace HumanitarianAssistance.Service.Classes
                     Boolean isRecordPresenntForOffice = await _uow.GetDbContext().VoucherDetail
                                                                 .AnyAsync(x => x.IsDeleted == false &&
                                                                           model.OfficeIdList.Contains(x.OfficeId.Value) &&
-                                                                          x.VoucherDate.Value.Date >= model.fromdate.Date &&
-                                                                          x.VoucherDate.Value.Date <= model.todate.Date);
+                                                                          x.VoucherDate.Date >= model.fromdate.Date &&
+                                                                          x.VoucherDate.Date <= model.todate.Date);
 
                     if (isRecordPresenntForOffice)
                     {
@@ -4840,8 +4839,8 @@ namespace HumanitarianAssistance.Service.Classes
                                                         .FindAllAsync(x =>
                                                                         x.JournalCode == JournalVoucherFilter.JournalNo &&
                                                                         JournalVoucherFilter.OfficeIdList.Contains(x.OfficeId) &&
-                                                                        x.VoucherDate.Value.Date >= JournalVoucherFilter.FromDate.Value.Date &&
-                                                                        x.VoucherDate.Value.Date <= JournalVoucherFilter.ToDate.Value.Date &&
+                                                                        x.VoucherDate.Date >= JournalVoucherFilter.FromDate.Value.Date &&
+                                                                        x.VoucherDate.Date <= JournalVoucherFilter.ToDate.Value.Date &&
                                                                         x.IsDeleted == false);
 
                 response.data.VouchersList = vouchers;
@@ -5222,7 +5221,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == EmployeeSalaryVoucher.OfficeId).Result.OfficeCode; //use OfficeCode
                 var financialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
                 var EmployeeDetails = _uow.GetDbContext().EmployeeDetail.FirstOrDefault(x => x.EmployeeID == EmployeeSalaryVoucher.EmployeeId && x.IsDeleted == false);
-
+                string currencyCode = _uow.CurrencyDetailsRepository.Find(x => x.IsDeleted == false && x.CurrencyId == EmployeeSalaryVoucher.CurrencyId).CurrencyCode;
                 //Creating Voucher for Voucher transaction
                 VoucherDetail obj = new VoucherDetail();
                 obj.CreatedById = EmployeeSalaryVoucher.CreatedById;
@@ -5230,7 +5229,7 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.IsDeleted = false;
                 obj.FinancialYearId = financialYear.FinancialYearId;
                 obj.VoucherTypeId = (int)VoucherTypes.Journal;
-                obj.Description = string.Format(StaticResource.SalaryPaymentDone, DateTime.Now.Date, EmployeeDetails.EmployeeName);
+                obj.Description = StaticResource.SalaryPaymentDone + EmployeeDetails.EmployeeCode+ "-"+ EmployeeDetails.EmployeeName+"-"+ EmployeeSalaryVoucher.PayrollMonth.Month + "-"+ totalSalaryOfEmployee;
                 obj.CurrencyId = EmployeeSalaryVoucher.CurrencyId;
                 obj.VoucherDate = DateTime.Now;
                 obj.JournalCode = EmployeeSalaryVoucher.JournalCode;//null for now as per client
@@ -5238,7 +5237,8 @@ namespace HumanitarianAssistance.Service.Classes
 
                 await _uow.VoucherDetailRepository.AddAsyn(obj);
 
-                obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
+                obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year;
+
                 await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
                 foreach (SalaryHeadModel salaryhead in EmployeeSalaryVoucher.EmployeePayrollLists)
@@ -5553,7 +5553,6 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-
                 foreach (Employees Employee in model.EmployeeList)
                 {
                     //Check if salary paymet is done for an approved payroll

@@ -16,6 +16,7 @@ using HumanitarianAssistance.ViewModels.Models;
 using System.Security.Claims;
 using HumanitarianAssistance.ViewModels;
 
+
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
   [Produces("application/json")]
@@ -780,7 +781,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpGet]
-    public async Task<object> EmployeePensionReport([FromQuery]PensionReportModel model)
+    public async Task<object> EmployeePensionReport([FromBody]PensionModel model)
     {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -901,14 +902,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpGet]
-    public async Task<object> EmployeeTaxCalculation([FromQuery]int OfficeId, int EmployeeId, int FinancialYearId)
+    [HttpPost]
+    public async Task<object> EmployeeTaxCalculation([FromBody]SalaryTaxViewModel model)
     {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
-        response = await _iHREmployee.EmployeeTaxCalculation(OfficeId, EmployeeId, FinancialYearId);
+        response = await _iHREmployee.EmployeeTaxCalculation(model);
       }
       return response;
     }

@@ -108,7 +108,165 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         apiRespone = await _iPolicyService.GetPolicyById(model, id);
       }
       return apiRespone;
-    }   
+    }
 
+    [HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> PolicySchedules([FromBody]ScheduleDetailsModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.AddEditPolicySchedules(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> GetPolicyScheduleById([FromBody]int model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.GetPolicyScheduleById(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddSchedule([FromBody]ScheduleDetailsModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.AddEditPolicySchedules(model, id);
+      }
+      return apiRespone;
+    }
+
+
+    [HttpGet]
+    public async Task<APIResponse> GetAllSchedule()
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.GetAllSchedule(id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetScheduleByDate([FromBody]string model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.GetScheduleByDate(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddEditPolicyTimeSchedule([FromBody] PolicyTimeScheduleModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.AddEditPolicyTimeSchedule(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetPolicyTimeScheduleList([FromBody] int Id)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.GetPolicyTimeScheduleList(Id, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeletePolicyTimeSchedule([FromBody] int Id)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.DeletePolicyTimeSchedule(Id, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetPolicyTimeScheduleById([FromBody] int Id)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.GetPolicyTimeScheduleById(Id, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddPolicyRepeatDays([FromBody] PolicyTimeModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.AddPolicyRepeatDays(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetDayScheduleByPolicyId([FromBody] int Id)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.GetDayScheduleByPolicyId(Id, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddEditPolicyOrderSchedule([FromBody] PolicyOrderScheduleModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iPolicyService.AddEditPolicyOrderSchedule(model, id);
+      }
+      return apiRespone;
+    }
   }
 }

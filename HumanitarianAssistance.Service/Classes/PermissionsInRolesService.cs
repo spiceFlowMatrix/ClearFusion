@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace HumanitarianAssistance.Service.Classes
 {
     public class PermissionsInRolesService : IPermissionsInRoles
@@ -243,6 +244,18 @@ namespace HumanitarianAssistance.Service.Classes
                             _uow.GetDbContext().SaveChanges();
                             _uow.GetDbContext().Entry<AgreeDisagreePermission>(rolePermission).State = EntityState.Detached;
                         }
+                        if (item.OrderSchedule == true)
+                        {
+                            OrderSchedulePermission rolePermission = new OrderSchedulePermission();
+                            rolePermission.OrderSchedule = item.OrderSchedule;
+                            rolePermission.CreatedDate = DateTime.UtcNow;
+                            rolePermission.IsDeleted = false;
+                            rolePermission.PageId = item.PageId;
+                            rolePermission.RoleId = RoleId;
+                            _uow.GetDbContext().OrderSchedulePermission.Add(rolePermission);
+                            _uow.GetDbContext().SaveChanges();
+                            _uow.GetDbContext().Entry<OrderSchedulePermission>(rolePermission).State = EntityState.Detached;
+                        }
                     }
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;
@@ -314,6 +327,17 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                           RoleId = RoleId,
                                                                                           PageName = at.PageName
                                                                                       })).ToList();
+                    List<OrderSchedulePermissionModel> orderSchedulePermissionList = (from ur in _uow.GetDbContext().OrderSchedulePermission
+                                                                                      join at in _uow.GetDbContext().ApplicationPages on ur.PageId equals at.PageId
+                                                                                      where !ur.IsDeleted.Value && !at.IsDeleted.Value && ur.RoleId == RoleId
+                                                                                      select (new OrderSchedulePermissionModel
+                                                                                      {
+                                                                                          OrderSchedule = ur.OrderSchedule,
+                                                                                          Id = ur.Id,
+                                                                                          PageId = ur.PageId,
+                                                                                          RoleId = RoleId,
+                                                                                          PageName = at.PageName
+                                                                                      })).ToList();
                     // await _uow.GetDbContext().ApproveRejectPermission
                     //.Where(x => x.IsDeleted == false && x.RoleId == RoleId)
                     // .Select(x => new ApproveRejectPermissionModel {
@@ -323,6 +347,7 @@ namespace HumanitarianAssistance.Service.Classes
                     // PageId = x.PageId,
                     // RoleId = x.RoleId
                     // }).ToListAsync();
+                    response.data.OrderSchedulePermissionsInRole = orderSchedulePermissionList;
                     response.data.AgreeDisagreePermissionsInRole = agreeDisagreePermissionList;
                     response.data.PermissionsInRole = rolePermissionsList;
                     response.data.ApproveRejectPermissionsInRole = approveRejectPermissionList;
@@ -361,13 +386,18 @@ namespace HumanitarianAssistance.Service.Classes
                     List<RolePermissions> removedPermissions = rolePermissionsList.Where(x => !rolesWithPagePermissionsModel.Permissions.Select(y => y.PageId).Contains(x.PageId.Value)).ToList();
                     List<ApproveRejectPermission> approveRejectRolePermissionsList = await _uow.GetDbContext().ApproveRejectPermission.Where(x => x.IsDeleted == false && x.RoleId == rolesWithPagePermissionsModel.RoleId).ToListAsync();
                     List<AgreeDisagreePermission> agreeDisagreeRolePermissionsList = await _uow.GetDbContext().AgreeDisagreePermission.Where(x => x.IsDeleted == false && x.RoleId == rolesWithPagePermissionsModel.RoleId).ToListAsync();
+                    List<OrderSchedulePermission> orderScheduleRolePermissionsList = await _uow.GetDbContext().OrderSchedulePermission.Where(x => x.IsDeleted == false && x.RoleId == rolesWithPagePermissionsModel.RoleId).ToListAsync();
                     List<ApproveRejectPermission> approveRejectRemovePermissions = approveRejectRolePermissionsList.Where(x => !rolesWithPagePermissionsModel.Permissions.Select(y => y.PageId).Contains(x.PageId)).ToList();
                     List<AgreeDisagreePermission> agreeDisagreeRemovePermissions = agreeDisagreeRolePermissionsList.Where(x => !rolesWithPagePermissionsModel.Permissions.Select(y => y.PageId).Contains(x.PageId)).ToList();
+                    List<OrderSchedulePermission> orderScheduleRemovePermissions = orderScheduleRolePermissionsList.Where(x => !rolesWithPagePermissionsModel.Permissions.Select(y => y.PageId).Contains(x.PageId)).ToList();
                     removedPermissions.ForEach(x => x.IsDeleted = true);
                     approveRejectRemovePermissions.ForEach(x => x.IsDeleted = true);
+                    agreeDisagreeRemovePermissions.ForEach(x => x.IsDeleted = true);
+                    orderScheduleRemovePermissions.ForEach(x => x.IsDeleted = true);
                     _uow.GetDbContext().RolePermissions.UpdateRange(removedPermissions);
                     _uow.GetDbContext().ApproveRejectPermission.UpdateRange(approveRejectRemovePermissions);
                     _uow.GetDbContext().AgreeDisagreePermission.UpdateRange(agreeDisagreeRemovePermissions);
+                    _uow.GetDbContext().OrderSchedulePermission.UpdateRange(orderScheduleRemovePermissions);
                     _uow.GetDbContext().SaveChanges();
 
                     foreach (ApplicationPagesModel item in rolesWithPagePermissionsModel.Permissions)
@@ -457,6 +487,33 @@ namespace HumanitarianAssistance.Service.Classes
                                 _uow.GetDbContext().AgreeDisagreePermission.Update(agreeDisagreeRolePermissions);
                                 _uow.GetDbContext().SaveChanges();
                                 _uow.GetDbContext().Entry<AgreeDisagreePermission>(agreeDisagreeRolePermissions).State = EntityState.Detached;
+                            }
+                        }
+                        if (item.OrderSchedule == true)
+                        {
+                            OrderSchedulePermission orderScheduleRolePermissions = orderScheduleRolePermissionsList.FirstOrDefault(x => x.PageId == item.PageId);
+
+                            //If permission for the page does not exist then initialize object
+                            orderScheduleRolePermissions = orderScheduleRolePermissions ?? new OrderSchedulePermission();
+                            orderScheduleRolePermissions.OrderSchedule = item.OrderSchedule;
+                            orderScheduleRolePermissions.CreatedDate = orderScheduleRolePermissions.CreatedDate ?? DateTime.UtcNow;
+                            orderScheduleRolePermissions.IsDeleted = false;
+                            orderScheduleRolePermissions.PageId = item.PageId;
+                            orderScheduleRolePermissions.RoleId = rolesWithPagePermissionsModel.RoleId;
+
+                            //save a new entry in the rolepermissions table
+                            if (orderScheduleRolePermissions.Id == 0)
+                            {
+                                _uow.GetDbContext().OrderSchedulePermission.Add(orderScheduleRolePermissions);
+                                _uow.GetDbContext().SaveChanges();
+                                _uow.GetDbContext().Entry<OrderSchedulePermission>(orderScheduleRolePermissions).State = EntityState.Detached;
+                            }
+                            else//update existing permissions record for the page
+                            {
+                                orderScheduleRolePermissions.ModifiedDate = DateTime.Now;
+                                _uow.GetDbContext().OrderSchedulePermission.Update(orderScheduleRolePermissions);
+                                _uow.GetDbContext().SaveChanges();
+                                _uow.GetDbContext().Entry<OrderSchedulePermission>(orderScheduleRolePermissions).State = EntityState.Detached;
                             }
                         }
 

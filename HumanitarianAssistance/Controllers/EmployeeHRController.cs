@@ -125,8 +125,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpGet]
-    public async Task<object> EmployeePensionReport([FromQuery]PensionReportModel model)
+    [HttpPost]
+    public async Task<object> EmployeePensionReport([FromBody]PensionModel model)
     {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -138,7 +138,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<object> EmployeeSalaryTaxDetails([FromBody]SalaryTaxModel model)
+    public async Task<object> EmployeeSalaryTaxDetails([FromBody]SalaryTaxViewModel model)
     {
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -227,6 +227,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         response = await _iEmployeeHR.GetAllLanguages();
       }
+      return response;
+    }
+
+    [HttpGet]
+    public async Task<object> GetJobCode(int officeId)
+    {
+      APIResponse response = null;
+      response = await _iEmployeeHR.GetJobCode(officeId);
       return response;
     }
 

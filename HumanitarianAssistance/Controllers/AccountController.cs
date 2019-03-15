@@ -47,7 +47,6 @@ namespace HumanitarianAssistance.Controllers
     private IExchangeRate _iExchangeRate;
     private IChartOfAccountNewService _iChartOfAccountNewService;
     private IPermissionsInRoles _iPermissionsInRolesService;
-    private IVoucherNewService _iVoucherNewService;
     IUnitOfWork _uow;
 
 
@@ -63,8 +62,7 @@ namespace HumanitarianAssistance.Controllers
             IVoucherDetail ivoucherDetail,
             IExchangeRate iExchangeRate,
             IChartOfAccountNewService iChartOfAccountNew,
-            IUnitOfWork uow,
-            IVoucherNewService iVoucherNewService
+            IUnitOfWork uow
             )
     {
       _userManager = userManager;
@@ -77,7 +75,6 @@ namespace HumanitarianAssistance.Controllers
       _ivoucherDetail = ivoucherDetail;
       _iExchangeRate = iExchangeRate;
       _iChartOfAccountNewService = iChartOfAccountNew;
-      _iVoucherNewService = iVoucherNewService;
       _uow = uow;
       _serializerSettings = new JsonSerializerSettings
       {
@@ -223,7 +220,7 @@ namespace HumanitarianAssistance.Controllers
           List<RolePermissionModel> RolePermissionModelList = new List<RolePermissionModel>();
           List<ApproveRejectPermissionModel> ApproveRejectRolePermissionModelList = new List<ApproveRejectPermissionModel>();
           List<AgreeDisagreePermissionModel> AgreeDisagreeRolePermissionModelList = new List<AgreeDisagreePermissionModel>();
-
+          List<OrderSchedulePermissionModel> OrderSchedulePermissionModelList = new List<OrderSchedulePermissionModel>();
           var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
 
           #region "Check wrong credientials"
@@ -252,7 +249,9 @@ namespace HumanitarianAssistance.Controllers
 
             var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
             List<RolePermissions> rolePermissionsList = _uow.GetDbContext().RolePermissions.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
-
+            List<ApproveRejectPermission> approveRejectRolePermissionsList = _uow.GetDbContext().ApproveRejectPermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
+            List<AgreeDisagreePermission> agreeDisagreeRolePermissionsList = _uow.GetDbContext().AgreeDisagreePermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
+            List<OrderSchedulePermission> orderScheduleRolePermissionsList = _uow.GetDbContext().OrderSchedulePermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
             if (rolePermissionsList.Any())
             {
               foreach (RolePermissions rolePermissions in rolePermissionsList)
@@ -297,21 +296,6 @@ namespace HumanitarianAssistance.Controllers
                 }
               }
             }
-
-            userRolePermissionsList.Add(userRolePermissions);
-
-          }
-          foreach (var role in roles)
-          {
-            UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
-
-            //userClaims.Add(new Claim("Roles", role)); //imp
-
-            var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
-
-            List<ApproveRejectPermission> approveRejectRolePermissionsList = _uow.GetDbContext().ApproveRejectPermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
-
-
             if (approveRejectRolePermissionsList.Any())
             {
               foreach (ApproveRejectPermission rolePermissions in approveRejectRolePermissionsList)
@@ -357,21 +341,6 @@ namespace HumanitarianAssistance.Controllers
                 }
               }
             }
-
-
-            userRolePermissionsList.Add(userRolePermissions);
-
-          }
-          foreach (var role in roles)
-          {
-            UserRolePermissionsModel userRolePermissions = new UserRolePermissionsModel();
-
-            //userClaims.Add(new Claim("Roles", role)); //imp
-
-            var roleid = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == role);
-
-            List<AgreeDisagreePermission> agreeDisagreeRolePermissionsList = _uow.GetDbContext().AgreeDisagreePermission.Where(x => x.IsDeleted == false && x.RoleId == roleid.Id).ToList();
-
             if (agreeDisagreeRolePermissionsList.Any())
             {
               foreach (AgreeDisagreePermission rolePermissions in agreeDisagreeRolePermissionsList)
@@ -417,7 +386,48 @@ namespace HumanitarianAssistance.Controllers
                 }
               }
             }
+            if (orderScheduleRolePermissionsList.Any())
+            {
+              foreach (OrderSchedulePermission rolePermissions in orderScheduleRolePermissionsList)
+              {
+                if (OrderSchedulePermissionModelList.Any())
+                {
+                  OrderSchedulePermissionModel rolePermissionModel = OrderSchedulePermissionModelList.FirstOrDefault(x => x.PageId == rolePermissions.PageId);
 
+                  if (rolePermissionModel == null)
+                  {
+                    OrderSchedulePermissionModel rolePermission = new OrderSchedulePermissionModel();
+                    rolePermission.OrderSchedule = rolePermissions.OrderSchedule;
+                    rolePermission.Id = rolePermissions.Id;
+                    rolePermission.PageId = rolePermissions.PageId;
+                    rolePermission.PageId = rolePermissions.PageId;
+                    rolePermission.RoleId = rolePermissions.RoleId;
+                    OrderSchedulePermissionModelList.Add(rolePermission);
+                  }
+                  else
+                  {
+                    if (rolePermissionModel.OrderSchedule)
+                    {
+                      rolePermissionModel.OrderSchedule = rolePermissions.OrderSchedule;
+                    }
+                    else if (!rolePermissionModel.OrderSchedule)
+                    {
+                      rolePermissionModel.OrderSchedule = true;
+                    }
+
+                  }
+                }
+                else
+                {
+                  OrderSchedulePermissionModel rolePermissionModel = new OrderSchedulePermissionModel();
+                  rolePermissionModel.OrderSchedule = rolePermissions.OrderSchedule;
+                  rolePermissionModel.PageId = rolePermissions.PageId;
+                  rolePermissionModel.Id = rolePermissions.Id;
+                  rolePermissionModel.RoleId = rolePermissions.RoleId;
+                  OrderSchedulePermissionModelList.Add(rolePermissionModel);
+                }
+              }
+            }
             userRolePermissionsList.Add(userRolePermissions);
 
           }
@@ -449,7 +459,7 @@ namespace HumanitarianAssistance.Controllers
           response.data.RolePermissionModelList = RolePermissionModelList;
           response.data.ApproveRejectPermissionsInRole = ApproveRejectRolePermissionModelList;
           response.data.AgreeDisagreePermissionsInRole = AgreeDisagreeRolePermissionModelList;
-
+          response.data.OrderSchedulePermissionsInRole = OrderSchedulePermissionModelList;
           response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
           #endregion
         }
@@ -983,13 +993,13 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<APIResponse> GetProjectAndBudgetLine()
-    {
-      APIResponse repsonse = await _ivoucherDetail.GetProjectAndBudgetLine();
-      return repsonse;
-    }
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<APIResponse> GetProjectAndBudgetLine()
+    //{
+    //  APIResponse repsonse = await _ivoucherDetail.GetProjectAndBudgetLine();
+    //  return repsonse;
+    //}
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -1132,6 +1142,23 @@ namespace HumanitarianAssistance.Controllers
     public async Task<APIResponse> GetExchangeGainOrLossTransactionAmount([FromBody]ExchangeGainOrLossTransactionFilterModel model)
     {
       APIResponse response = await _iExchangeRate.GetExchangeGainOrLossTransactionAmount(model);
+      return response;
+    }
+
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<object> AddExchangeGainLossVoucher([FromBody] ExchangeGainLossVoucher model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        var id = user.Id;
+        model.CreatedById = id;
+        model.IsDeleted = false;
+        model.CreatedDate = DateTime.UtcNow;
+      }
+      APIResponse response = await _ivoucherDetail.AddExchangeGainLossVoucher(model);
       return response;
     }
 
@@ -1295,7 +1322,21 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<APIResponse> DeleteChartOfAccount([FromBody]long accountId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iChartOfAccountNewService.DeleteChartOfAccount(accountId, user.Id);
+      }
+      return response;
+    }
+    
+
+   [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllApplicationPages()
     {

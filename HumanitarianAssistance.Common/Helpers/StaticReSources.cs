@@ -6,6 +6,31 @@ namespace HumanitarianAssistance.Common.Helpers
 {
     public static class StaticResource
     {
+
+        //appsetting joson file 
+        public const string appsettingJsonFile = "appsettings.json";
+        public const string googleCredential = "GoogleCredentials/";
+        //public const string googleCredential = "GoogleCredentials/";
+
+
+        public const string EmailId = "hamza@edgsolutions.net";
+        public const string ApplicationName = "OAuth client";
+        public const string ProjectId = "clear-fusion-193608";
+        public const string BucketName = "cf-staging-storage";
+        public const string ProjectsFolderName = "Project-Management";
+        public const string HRFolderName = "HR";
+        public const string AccountingFolderName = "Accounting";
+        public const string StoreFolderName = "Store";
+        public const string ProjectActivityFolderName = "Activity";
+        public const string uploadUrl = "https://storage.cloud.google.com/";
+
+
+        public const string credentialsJsonFile = "credentials.json";
+
+        public const int projectNotFound = 404;
+
+        public const string invalidDate = "Actual date must be greater than or equal to start date";
+
         public const int notFoundCode = 120;
         public const int successStatusCode = 200;
         public const int otherManagerAlreadyParticipatedStatusCode = 800;
@@ -26,7 +51,6 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string InvalidCompanyTypeId = "Invalid Company type id";
         public const string InvalidRole = "Invalid Role";
         public const string SomethingWrong = "Something went wrong: ";
-        public const string ErrorText = "Error: ";
         public const string RoleCreated = "Role Created";
         public const string RoleAlreadyExist = "Role already exists";
         public const string InvalidUser = "Invalid User";
@@ -332,7 +356,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
 
         //Salary Payment
-        public const string SalaryPaymentDone = "Salary Payment:"; //EmpCode-EmpName-Month-<salary payment>
+        public const string SalaryPaymentDone = "Salary Payment: "; //EmpCode-EmpName-Month-<salary payment>
         public const string SalaryHeadAllowances = "{0} has been debited towards Gross Salary";
         public const string SalaryHeadDeductions = "{0} has been credited towards Net Salary";
         public const string JobCodeExist = "Job Code Already Exist";
@@ -345,6 +369,10 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string FileText = "File Not Supported";
         public const int FileNotSupported = 4440;
 
+        #region "Project Activity"
+        public const string ActivityNotFound = "Activity Not Found";
+        #endregion
+
         #region "Accounting New"
         public const string ExceedLevelCount = "You have reached Maximum Limit";
         public const string ParentIdNotPresent = "Account does not exist";
@@ -355,8 +383,10 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string CurrencyNotFound = "Currency not found";
         public const string defaultFinancialYearIsNotSet = "Default Financial year is not set";
         public const string officeCodeNotFound = "Office Code Not Found";
-
         public const string TransactionNotFound = "Transaction Not Found";
+        public const string AccountNotFound = "Account Not Found";
+        public const string DeleteAllTransactions = "Transactions Exist";
+        public const string DeleteAllChildAccount = "Child Account Exist";
 
 
         #endregion

@@ -43,7 +43,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 var mainLevelList = await _uow.GetDbContext().ChartOfAccountNew
                                                              .Where(x => x.AccountHeadTypeId == id && x.AccountLevelId == (int)AccountLevels.MainLevel && x.IsDeleted == false)
-                                                             .OrderBy(x=>x.ChartOfAccountNewId)
+                                                             .OrderBy(x => x.ChartOfAccountNewId)
                                                              .ToListAsync();
 
                 response.data.MainLevelAccountList = mainLevelList;
@@ -67,7 +67,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                                                     .Where(x => x.ChartOfAccountNewId != parentId &&
                                                                                 x.ParentID == parentId &&
                                                                                 x.IsDeleted == false)
-                                                                    .OrderBy(x=>x.ChartOfAccountNewId)
+                                                                    .OrderBy(x => x.ChartOfAccountNewId)
                                                                     .ToListAsync();
 
                 response.data.AllAccountList = mainLevelList;
@@ -237,7 +237,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                 obj.AccountTypeId = model.AccountTypeId;
                                 // Get balance type.
                                 obj.IsCreditBalancetype =
-                                    await GetAccountBalanceTypeByAccountType((int) obj.AccountTypeId);
+                                    await GetAccountBalanceTypeByAccountType((int)obj.AccountTypeId);
                             }
                             else
                             {
@@ -421,6 +421,68 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
             return response;
         }
+
+        public async Task<bool> CheckTransactionExistOrNot(long accountId)
+        {
+            bool transactionExist = await _uow.VoucherTransactionsRepository.AnyAsync(x => x.ChartOfAccountNewId == accountId && x.IsDeleted == false);
+            if (transactionExist)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> CheckChildAccountExistOrNot(long accountId)
+        {
+            bool childAccountExist = await _uow.ChartOfAccountNewRepository.AnyAsync(x => x.ChartOfAccountNewId != accountId && x.ParentID == accountId && x.IsDeleted == false);
+            if (childAccountExist)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<APIResponse> DeleteChartOfAccount(long accountId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var accountDetail = await _uow.ChartOfAccountNewRepository.FindAsync(x => x.ChartOfAccountNewId == accountId);
+                if (accountDetail != null)
+                {
+                    if (accountDetail.AccountLevelId == (int)AccountLevels.InputLevel ? !await CheckTransactionExistOrNot(accountId) : !await CheckChildAccountExistOrNot(accountId))
+                    {
+                        accountDetail.IsDeleted = true;
+                        accountDetail.ModifiedById = userId;
+                        accountDetail.ModifiedDate = DateTime.UtcNow;
+
+                        await _uow.ChartOfAccountNewRepository.UpdateAsyn(accountDetail);
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = StaticResource.SuccessText;
+                    }
+                    else
+                    {
+
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = accountDetail.AccountLevelId == (int)AccountLevels.InputLevel ? StaticResource.DeleteAllTransactions : StaticResource.DeleteAllChildAccount;
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.AccountNotFound;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
 
 
         //Create code

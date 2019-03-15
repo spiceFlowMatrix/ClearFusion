@@ -22,46 +22,24 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
   public class PdfController : Controller
   {
     IUnitOfWork _uow;
-    private readonly UserManager<AppUser> _userManager;
-    private IJobDetailsService _iJobDetailsService;
     private IHostingEnvironment _hostingEnvironment;
     // private HttpContext currentContext;
-
+    public PdfController(IUnitOfWork uow, UserManager<AppUser> userManager, IJobDetailsService iJobDetailsService, IHostingEnvironment environment)
+    {
+      this._uow = uow;
+      _hostingEnvironment = environment;
+      //this.currentContext = currentContext;
+    }
 
 
     [BindProperty]
     public string TxtHtmlCode { get; set; }
 
     [BindProperty]
-    public string TxtBaseUrl { get; set; }
+    public string DdlPageSize { get; set; }
 
     [BindProperty]
-    public string DdlPageSize { get; set; }
-    public void OnGet()
-    {
-      DdlPageSize = "A4";
-      DdlPageOrientation = "Portrait";
-      TxtHtmlCode = @"<html>
-          <body>
-              Hello World from selectpdf.com.
-          </body>
-      </html>
-      ";
-    }
-    [BindProperty]
     public string DdlPageOrientation { get; set; }
-    public List<SelectListItem> PageSizes { get; } = new List<SelectListItem>
-        {
-            new SelectListItem { Value = "A1", Text = "A1" },
-            new SelectListItem { Value = "A2", Text = "A2" },
-            new SelectListItem { Value = "A3", Text = "A3" },
-            new SelectListItem { Value = "A4", Text = "A4" },
-            new SelectListItem { Value = "A5", Text = "A5" },
-            new SelectListItem { Value = "Letter", Text = "Letter" },
-            new SelectListItem { Value = "HalfLetter", Text = "HalfLetter" },
-            new SelectListItem { Value = "Ledger", Text = "Ledger" },
-            new SelectListItem { Value = "Legal", Text = "Legal" },
-        };
     public List<SelectListItem> PageOrientations { get; } = new List<SelectListItem>
         {
             new SelectListItem { Value = "Portrait", Text = "Portrait" },
@@ -73,12 +51,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [BindProperty]
     public string TxtHeight { get; set; }
-    public PdfController(IUnitOfWork uow, UserManager<AppUser> userManager, IJobDetailsService iJobDetailsService, IHostingEnvironment environment)
-    {
-      this._uow = uow;
-      _hostingEnvironment = environment;
-      //this.currentContext = currentContext;
-    }
+
     // GET: api/<controller>
     [HttpGet]
     public IEnumerable<string> Get(string html)
@@ -111,7 +84,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
                       })).FirstOrDefault();
       }
       catch (Exception ex) { }
-      var imagepath = Path.Combine(_hostingEnvironment.WebRootPath, "agreement-logo.png");
+      //var imagepath = Path.Combine(_hostingEnvironment.WebRootPath, "agreement-logo.png");
+      //< img width = '100' height = '100' src = " + imagepath + @" >
       DdlPageSize = "A4";
       PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
           DdlPageSize, true);
@@ -157,7 +131,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
                                                       Broadcasting Agreement Paper
                                                   </td>
                                                   <td width = '15%' style= 'text-align:right;'>  
-                                                      <img width= '100' height= '100' src=" + imagepath + @">
+                                                    
                                                   </td>
                                               </tr>
                                           </tbody>
@@ -270,65 +244,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       // create a new pdf document converting an url
       try
       {
-
         doc.Close();
-        FileResult fileResult = new FileContentResult(pdf, "application/pdf");
-        fileResult.FileDownloadName = "Document.pdf";
         return pdf;
       }
       catch (Exception ex)
       {
         return pdf; //return ex;
       }
-    }
-
-    private string GetContentType(string path)
-    {
-      var types = GetMimeTypes();
-      var ext = Path.GetExtension(path).ToLowerInvariant();
-      return types[ext];
-    }
-    private Dictionary<string, string> GetMimeTypes()
-    {
-      return new Dictionary<string, string>
-            {
-                {".txt", "text/plain"},
-                {".pdf", "application/pdf"},
-                {".doc", "application/vnd.ms-word"},
-                {".docx", "application/vnd.ms-word"},
-                {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
-                {".png", "image/png"},
-                {".jpg", "image/jpeg"},
-                {".jpeg", "image/jpeg"},
-                {".gif", "image/gif"},
-                {".csv", "text/csv"}
-            };
-    }
-
-    // GET api/<controller>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
-    {
-      return "value";
-    }
-
-    // POST api/<controller>
-    [HttpPost]
-    public void Post([FromBody]string html)
-    {
-    }
-
-    // PUT api/<controller>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody]string value)
-    {
-    }
-
-    // DELETE api/<controller>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
     }
   }
 }
