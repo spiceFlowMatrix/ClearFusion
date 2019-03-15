@@ -29,6 +29,8 @@ namespace HumanitarianAssistance.Common.Helpers
 
         public const int projectNotFound = 404;
 
+        public const string invalidDate = "Actual date must be greater than or equal to start date";
+
         public const int notFoundCode = 120;
         public const int successStatusCode = 200;
         public const int otherManagerAlreadyParticipatedStatusCode = 800;

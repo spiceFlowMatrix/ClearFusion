@@ -201,7 +201,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
-
+              
                 if (projectactivityDetail != null)
                 {
                     // Actual start date
@@ -212,11 +212,19 @@ namespace HumanitarianAssistance.Service.Classes
                     projectactivityDetail.ModifiedById = UserId;
                     projectactivityDetail.IsDeleted = false;
 
-                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
-
-                    response.data.DateTime = projectactivityDetail.ActualStartDate.Value;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = StaticResource.SuccessText;
+                    if (projectactivityDetail.StartDate <= projectactivityDetail.ActualStartDate)
+                    {
+                        await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+                        response.data.DateTime = projectactivityDetail.ActualStartDate.Value.Date;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = StaticResource.SuccessText;
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.invalidDate;
+                    }
+                  
                 }
                 else
                 {
@@ -249,7 +257,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
 
-                    response.data.DateTime = projectactivityDetail.ActualStartDate.Value;
+                    response.data.DateTime = projectactivityDetail.ActualEndDate.Value.Date;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;
                 }
@@ -476,20 +484,32 @@ namespace HumanitarianAssistance.Service.Classes
                 Console.WriteLine("------Before Credential path Upload----------");
 
                 //read credientials
-                string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+                // string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
+                // Console.WriteLine(googleCredentialPathFile1);
+                JObject googleCredentialPathFile1 = JObject.Parse(Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL"));
+
                 Console.WriteLine(googleCredentialPathFile1);
 
                 Console.WriteLine("------------After Credential path Upload-------------");
 
                 GoogleCredential result = new GoogleCredential();
-                using (StreamReader files = File.OpenText(googleCredentialPathFile1))
-                using (JsonTextReader reader = new JsonTextReader(files))
-                {
-                    JObject o2 = (JObject)JToken.ReadFrom(reader);
+                //using (StreamReader files = File.OpenText(googleCredentialPathFile1))
+                //using (JsonTextReader reader = new JsonTextReader(files))
+                //{
+                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
 
-                    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
-                }
+                //    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
+                //}
 
+                var completePath = googleCredentialPathFile1["GoogleCredential"];
+                result.ApplicationName = StaticResource.ApplicationName;
+                result.BucketName = StaticResource.BucketName;
+                result.EmailId = StaticResource.EmailId;
+                result.ProjectId = StaticResource.ProjectId;
+                result.Projects = StaticResource.ProjectsFolderName;
+                result.HR = StaticResource.HRFolderName;
+                result.Accounting = StaticResource.AccountingFolderName;
+                result.Store = StaticResource.StoreFolderName;
 
                 string bucketResponse = GCBucket.UploadDocument(folderName, file, fileName, ext, googleCredentialPathFile1, result).Result;
                 //ActivityDocumentsDetail activityExixt = _uow.GetDbContext().ActivityDocumentsDetail.FirstOrDefault(x => x.ActivityId == activityId && x.IsDeleted == false);
