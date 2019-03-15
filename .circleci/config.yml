@@ -25,10 +25,6 @@ jobs:
       - checkout
       - run: dotnet restore HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj
       - run: dotnet publish HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj -c Release -o release
-      - run: echo $STAGINGEDG_APPSETTINGS_JSON
-      - run: echo $STAGINGEDG_APPSETTINGS_JSON > HumanitarianAssistance/release/appsettings.json
-      - run: echo $GOOGLE_DRIVE_APIEDG_CREDENTIALS
-      - run: echo $GOOGLE_DRIVE_APIEDG_CREDENTIALS > HumanitarianAssistance/release/GoogleCredentials/credentials.json
       - run: mkdir HumanitarianAssistance/release/Documents
       - persist_to_workspace:
           root: .
@@ -208,13 +204,6 @@ workflows:
   version: 2.1
   clearfusion-api-build-deploy:
     jobs:
-      - build-staging:
-          filters:
-            branches:
-              only: master
-      - deploy-staging:
-          requires:
-          - build-staging
       - build-staging-edg:
           filters:
             branches:
