@@ -63,6 +63,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                            join po in _uow.GetDbContext().PolicyOrderSchedules on j.PolicyId equals po.PolicyId
                                            where !j.IsDeleted.Value && !mc.IsDeleted.Value
                                             && !pd.IsDeleted.Value && !po.IsDeleted.Value
+                                            && po.StartDate<=DateTime.UtcNow.Date && DateTime.UtcNow.Date<=po.EndDate
                                            //&& !jp.IsDeleted.Value && !me.IsDeleted.Value
                                            //&& !mc.IsDeleted.Value
                                            select (new ScheduleDetailModel
@@ -152,7 +153,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
 
-        public async Task<APIResponse> GetScheduleDetailsById(int Id)
+        public async Task<APIResponse> GetScheduleDetailsById(ScheduleDetailModel model)
         {
             APIResponse response = new APIResponse();
             try
@@ -162,7 +163,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                           join pd in _uow.GetDbContext().PolicyDaySchedules on j.PolicyId equals pd.PolicyId
                                           join po in _uow.GetDbContext().PolicyOrderSchedules on j.PolicyId equals po.PolicyId
                                           where !j.IsDeleted.Value && !mc.IsDeleted.Value
-                                          && !pd.IsDeleted.Value && !po.IsDeleted.Value && j.Id == Id && mc.PolicyId == j.PolicyId
+                                          && !pd.IsDeleted.Value && !po.IsDeleted.Value && j.Id == model.PolicyTimeId && po.Id == model.PolicyOrderId && mc.PolicyId == j.PolicyId
                                           select (new ScheduleDetailModel
                                           {
                                               PolicyId = mc.PolicyId,
