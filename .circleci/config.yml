@@ -7,10 +7,6 @@ jobs:
       - checkout
       - run: dotnet restore HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj
       - run: dotnet publish HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj -c Release -o release
-      - run: echo $STAGING_APPSETTINGS_JSON
-      - run: echo $STAGING_APPSETTINGS_JSON > HumanitarianAssistance/release/appsettings.json
-      - run: echo $GOOGLE_DRIVE_API_CREDENTIALS
-      - run: echo $GOOGLE_DRIVE_API_CREDENTIALS > HumanitarianAssistance/release/GoogleCredentials/credentials.json
       - run: mkdir HumanitarianAssistance/release/Documents
       - persist_to_workspace:
           root: .
@@ -211,31 +207,15 @@ workflows:
       - deploy-staging-edg:
           requires:
           - build-staging-edg
-      - build-cha:
+      - build-staging:
           filters:
             tags:
               only: /^v.*/
             branches:
               ignore: /.*/
-      - deploy-cha:
+      - deploy-staging:
           requires:
-          - build-cha
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-      - build-smo:
-          requires:
-          - deploy-cha
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-      - deploy-smo:
-          requires:
-          - build-smo
+          - build-staging
           filters:
             tags:
               only: /^v.*/
