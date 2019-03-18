@@ -72,7 +72,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double TotalPayable { get; set; }
         public double Balance { get; set; }
         public long TotalExchangeRateCount { get; set; }
-
+        
         public double TotalIncome { get; set; }
         public int TotalPresentDays { get; set; }
         public int TotalAbsentDays { get; set; }
@@ -303,7 +303,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<int> ProvinceMultiSelectById { get; set; }
         public List<long> DistrictMultiSelectById { get; set; }
 
-        
+
         public List<ProjectCommunicationModel> ProjectCommunicationModel { get; set; }
         public ProjectProgram projectProgram { get; set; }
         public ProjectArea projectArea { get; set; }
@@ -317,7 +317,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<UserRolePermissionsModel> UserRolePermissions { get; set; }
         public List<RolePermissionModel> RolePermissionModelList { get; set; }
 
-       
+
         public ICollection<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public ICollection<CEFeasibilityExpertOtherDetail> FeasibilityExpertOtherDetail { get; set; }
         public ICollection<CEAgeGroupDetail> CEAgeGroupDetail { get; set; }
@@ -372,6 +372,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<JobDetailsModel> JobDetailsModel { get; set; }
         public List<PolicyModel> policyList { get; set; }
         public List<ScheduleTimeModel> scheduleTimeList { get; set; }
+        public ScheduleDetailModel scheduleDetails { get; set; }
+        public List<ScheduleDetailModel> scheduleDetailsList { get; set; }
         public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
         public List<ContractByClient> ContractByClientList { get; set; }

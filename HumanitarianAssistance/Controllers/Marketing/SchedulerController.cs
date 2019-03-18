@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces.Marketing;
+using HumanitarianAssistance.ViewModels.Models.Marketing;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -32,12 +33,22 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         NullValueHandling = NullValueHandling.Ignore
       };
     }
+
     [HttpPost]
-    public async Task<APIResponse> GetAllPolicyScheduleList(string abc)
+    public async Task<APIResponse> GetAllPolicyScheduleList(string text)
     {
       APIResponse apiRespone = null;
       apiRespone = await _iScheduleService.GetAllPolicyScheduleList();
       return apiRespone;
     }
+
+    [HttpPost]
+    public async Task<APIResponse> GetScheduleDetailsById([FromBody] ScheduleDetailModel model)
+    {
+      APIResponse apiRespone = null;
+      apiRespone = await _iScheduleService.GetScheduleDetailsById(model);
+      return apiRespone;
+    }
+
   }
 }

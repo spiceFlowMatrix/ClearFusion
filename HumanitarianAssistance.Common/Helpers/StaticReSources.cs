@@ -29,6 +29,8 @@ namespace HumanitarianAssistance.Common.Helpers
 
         public const int projectNotFound = 404;
 
+        public const string invalidDate = "Actual date must be greater than or equal to start date";
+
         public const int notFoundCode = 120;
         public const int successStatusCode = 200;
         public const int otherManagerAlreadyParticipatedStatusCode = 800;
@@ -382,6 +384,9 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string defaultFinancialYearIsNotSet = "Default Financial year is not set";
         public const string officeCodeNotFound = "Office Code Not Found";
         public const string TransactionNotFound = "Transaction Not Found";
+        public const string AccountNotFound = "Account Not Found";
+        public const string DeleteAllTransactions = "Transactions Exist";
+        public const string DeleteAllChildAccount = "Child Account Exist";
 
 
         #endregion

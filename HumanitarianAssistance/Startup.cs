@@ -60,15 +60,15 @@ namespace HumanitarianAssistance
       string swwwRootPath = env.WebRootPath;  //wwwroot folder path
       Configuration = builder.Build();
       //get and set environment variable at run time
-      value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+      //value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
 
-      if (value == null)
-      {
-        Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json", EnvironmentVariableTarget.Machine);
-        var  vdsfdsfalue = Environment.GetEnvironmentVariable("PATH");
-        value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-      }
-      Console.WriteLine("GOOGLE_APPLICATION_CREDENTIALS: {0}\n", value);
+      //if (value == null)
+      //{
+      //  Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json", EnvironmentVariableTarget.Machine);
+      //  var  vdsfdsfalue = Environment.GetEnvironmentVariable("PATH");
+      //  value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+      //}
+      //Console.WriteLine("GOOGLE_APPLICATION_CREDENTIALS: {0}\n", value);
     }
 
     public IConfiguration Configuration { get; }
