@@ -137,12 +137,21 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                     if (levelcount < (int)AccountLevelLimits.MainLevel)
                     {
+
+                        bool isCOACodeExists = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewCode == model.ChartOfAccountNewCode && x.IsDeleted == false);
+
+                        if (isCOACodeExists)
+                        {
+                            throw new Exception("Account Code Already Exists!!!");
+                        }
+
                         ChartOfAccountNew obj = new ChartOfAccountNew();
 
                         obj.AccountLevelId = (int)AccountLevels.MainLevel;
                         obj.AccountHeadTypeId = model.AccountHeadTypeId;
                         obj.ParentID = -1;
                         obj.AccountName = model.AccountName;
+                        obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode;
                         obj.CreatedById = model.CreatedById;
                         obj.CreatedDate = model.CreatedDate;
                         obj.IsDeleted = false;
@@ -150,7 +159,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
 
                         obj.ParentID = obj.ChartOfAccountNewId;
-                        obj.ChartOfAccountNewCode = (levelcount + 1).ToString();
 
                         await _uow.ChartOfAccountNewRepository.UpdateAsyn(obj);
 
@@ -174,7 +182,12 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     {
                         ChartOfAccountNew obj = new ChartOfAccountNew();
 
-                        //bool parentPresent = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewId == model.ParentID);
+                        bool isCOACodeExists = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewCode == model.ChartOfAccountNewCode && x.IsDeleted == false);
+
+                        if (isCOACodeExists)
+                        {
+                            throw new Exception("Account Code Already Exists!!!");
+                        }
 
                         ChartOfAccountNew parentPresent = await _uow.GetDbContext().ChartOfAccountNew.FirstOrDefaultAsync(x => x.ChartOfAccountNewId == model.ParentID);
 
@@ -183,13 +196,13 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             obj.AccountLevelId = (int)AccountLevels.ControlLevel;
                             obj.AccountHeadTypeId = model.AccountHeadTypeId;
                             obj.ParentID = model.ParentID;
-                            obj.ChartOfAccountNewCode = parentPresent.ChartOfAccountNewCode + (levelcount + 1);
+                            obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode;
                             obj.AccountName = model.AccountName;
                             obj.CreatedById = model.CreatedById;
                             obj.CreatedDate = model.CreatedDate;
                             obj.IsDeleted = false;
 
-                            await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
+                             await _uow.ChartOfAccountNewRepository.AddAsyn(obj);
 
                             response.data.ChartOfAccountNewDetail = obj;
                             response.StatusCode = StaticResource.successStatusCode;
@@ -218,6 +231,13 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     {
                         ChartOfAccountNew obj = new ChartOfAccountNew();
 
+                        bool isCOACodeExists = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewCode == model.ChartOfAccountNewCode && x.IsDeleted == false);
+
+                        if (isCOACodeExists)
+                        {
+                            throw new Exception("Account Code Already Exists!!!");
+                        }
+
                         ChartOfAccountNew parentPresent = await _uow.GetDbContext().ChartOfAccountNew.FirstOrDefaultAsync(x => x.ChartOfAccountNewId == model.ParentID);
 
                         if (parentPresent != null)
@@ -227,7 +247,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             obj.AccountHeadTypeId = model.AccountHeadTypeId;
                             obj.ParentID = model.ParentID;
                             obj.AccountName = model.AccountName;
-                            obj.ChartOfAccountNewCode = parentPresent.ChartOfAccountNewCode + genrateCode((levelcount + 1).ToString());
+                            obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode;
 
                             obj.AccountFilterTypeId = model.AccountFilterTypeId != null ? model.AccountFilterTypeId : null;  //dropdown
                             // obj.AccountTypeId = model.AccountTypeId != null ? model.AccountTypeId : null; //dropdown
@@ -276,6 +296,14 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                     if (levelcount < (int)AccountLevelLimits.InputLevel)
                     {
+
+                        bool isCOACodeExists = await _uow.GetDbContext().ChartOfAccountNew.AnyAsync(x => x.ChartOfAccountNewCode == model.ChartOfAccountNewCode && x.IsDeleted == false);
+
+                        if (isCOACodeExists)
+                        {
+                            throw new Exception("Account Code Already Exists!!!");
+                        }
+
                         ChartOfAccountNew obj = new ChartOfAccountNew();
 
                         ChartOfAccountNew parentPresent = await _uow.GetDbContext().ChartOfAccountNew.FirstOrDefaultAsync(x => x.ChartOfAccountNewId == model.ParentID);
@@ -285,7 +313,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             obj.AccountLevelId = (int)AccountLevels.InputLevel;
                             obj.AccountHeadTypeId = model.AccountHeadTypeId;
                             obj.ParentID = model.ParentID;
-                            obj.ChartOfAccountNewCode = parentPresent.ChartOfAccountNewCode + genrateCode((levelcount + 1).ToString());
+                            obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode;
                             obj.AccountName = model.AccountName;
                             obj.CreatedById = model.CreatedById;
                             obj.CreatedDate = model.CreatedDate;
