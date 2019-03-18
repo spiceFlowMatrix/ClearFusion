@@ -37,23 +37,23 @@ namespace HumanitarianAssistance.Service
         {
             ProjectProposalModel res = new ProjectProposalModel();
             ProjectProposalDetail model = new ProjectProposalDetail();
+
             //there are different scopes, which you can find here https://cloud.google.com/storage/docs/authentication
+
             var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
             var cts = new CancellationTokenSource();
-            StorageService service = new StorageService();
 
-            UserCredential credential;
+            StorageService service = new StorageService();
             ClientSecrets secrets = new ClientSecrets();
+
             secrets.ClientId = googleCredentialpathFile["installed"]["client_id"].ToString();
             secrets.ClientSecret = googleCredentialpathFile["installed"]["client_secret"].ToString();
-            //using (var stream = new FileStream(googleCredentialpathFile, FileMode.Open, FileAccess.Read))
-            //{
-            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+
+            UserCredential credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                      secrets,
                       scopes,
                      StaticResource.EmailId, CancellationToken.None);
-            //}
-            // Create the service.
+
             service = new StorageService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
@@ -85,6 +85,8 @@ namespace HumanitarianAssistance.Service
                 APIResponse response = new APIResponse();
                 var path = Directory.GetCurrentDirectory() + "/Documents/Proposal/Proposal.docx";
 
+                Console.WriteLine($"File Path : {path}");
+
                 path = path.Replace('\\', '/');
                 var newObject = new Google.Apis.Storage.v1.Data.Object()
                 {
@@ -93,9 +95,13 @@ namespace HumanitarianAssistance.Service
                 };
 
                 fileStream = new FileStream(path, FileMode.Open);
-                var uploadRequest = new Google.Apis.Storage.v1.ObjectsResource.InsertMediaUpload(service, newObject, googleCredential.BucketName, fileStream, "application/vnd.google-apps.document");
+
+                var uploadRequest = new ObjectsResource.InsertMediaUpload(service, newObject, googleCredential.BucketName, fileStream, "application/vnd.google-apps.document");
                 uploadRequest.OauthToken = credential.Token.AccessToken;
                 var fileResponse = uploadRequest.Upload();
+
+                Console.WriteLine($"File upload status: {fileResponse}");
+
 
                 var bucketFolderWithFilePath = newObject.Bucket + "/" + newObject.Name;
                 if (fileResponse.Status.ToString() == "Completed" && fileResponse.Exception == null)
@@ -113,9 +119,6 @@ namespace HumanitarianAssistance.Service
                 {
                     throw new Exception(StaticResource.UnableToUploadFile);
                 }
-
-
-
             }
             catch (Exception ex)
             {
@@ -138,26 +141,24 @@ namespace HumanitarianAssistance.Service
         {
             ProjectProposalModel res = new ProjectProposalModel();
             string exten = Path.GetExtension(fileName).ToLower();
-
             ProjectProposalDetail model = new ProjectProposalDetail();
+
             //there are different scopes, which you can find here https://cloud.google.com/storage/docs/authentication
             var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
             var cts = new CancellationTokenSource();
-            StorageService service = new StorageService();
-            UserCredential credential;
+
             ClientSecrets secrets = new ClientSecrets();
+
             secrets.ClientId = googleCredentialPathFile["installed"]["client_id"].ToString();
             secrets.ClientSecret = googleCredentialPathFile["installed"]["client_secret"].ToString();
 
-            //using (var stream = new FileStream(googleCredentialPathFile, FileMode.Open, FileAccess.Read))
-            //{
-            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+            UserCredential credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                   secrets,
                   scopes,
                  StaticResource.EmailId, CancellationToken.None);
-            //}
+
             // Create the service.
-            service = new StorageService(new BaseClientService.Initializer()
+            StorageService service = new StorageService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
                 ApplicationName = StaticResource.ApplicationName,
@@ -180,9 +181,12 @@ namespace HumanitarianAssistance.Service
                 };
                 var mimetype = GetMimeType(ext);
 
-                var uploadRequest = new Google.Apis.Storage.v1.ObjectsResource.InsertMediaUpload(service, newObject, StaticResource.BucketName, filedata.OpenReadStream(), mimetype);
+                var uploadRequest = new ObjectsResource.InsertMediaUpload(service, newObject, StaticResource.BucketName, filedata.OpenReadStream(), mimetype);
                 uploadRequest.OauthToken = credential.Token.AccessToken;
                 var fileResponse = uploadRequest.Upload();
+
+                Console.WriteLine($"Other files response from bucket: {fileResponse}");
+
                 var bucketFolderWithFilePath = newObject.Bucket + "/" + newObject.Name;
                 if (fileResponse.Status.ToString() == "Completed" && fileResponse.Exception == null)
                 {
@@ -192,8 +196,7 @@ namespace HumanitarianAssistance.Service
                         model.ProposalFileName = fileName;
                         model.ProposalWebLink = bucketFolderWithFilePath;
                         model.IsDeleted = false;
-                        model.CreatedDate = DateTime.Now;
-
+                        model.CreatedDate = DateTime.UtcNow;
                     }
 
                     if (ProposalType == "EOI")
@@ -203,9 +206,7 @@ namespace HumanitarianAssistance.Service
                         model.EDIFileWebLink = bucketFolderWithFilePath;
                         model.EDIFileExtType = ext;
                         model.IsDeleted = false;
-                        model.ModifiedDate = DateTime.Now;
-
-
+                        model.ModifiedDate = DateTime.UtcNow;
                     }
                     else if (ProposalType == "BUDGET")
                     {
@@ -214,8 +215,7 @@ namespace HumanitarianAssistance.Service
                         model.BudgetFileName = fileName;
                         model.BudgetFileWebLink = bucketFolderWithFilePath;
                         model.BudgetFileExtType = ext;
-                        model.ModifiedDate = DateTime.Now;
-
+                        model.ModifiedDate = DateTime.UtcNow;
                     }
                     else if (ProposalType == "CONCEPT")
                     {
@@ -224,7 +224,7 @@ namespace HumanitarianAssistance.Service
                         model.ConceptFileName = fileName;
                         model.ConceptFileWebLink = bucketFolderWithFilePath;
                         model.ConceptFileExtType = ext;
-                        model.ModifiedDate = DateTime.Now;
+                        model.ModifiedDate = DateTime.UtcNow;
                     }
                     else if (ProposalType == "PRESENTATION")
                     {
@@ -233,7 +233,7 @@ namespace HumanitarianAssistance.Service
                         model.PresentationFileName = fileName;
                         model.PresentationFileWebLink = bucketFolderWithFilePath;
                         model.PresentationExtType = ext;
-                        model.ModifiedDate = DateTime.Now;
+                        model.ModifiedDate = DateTime.UtcNow;
                     }
 
 
