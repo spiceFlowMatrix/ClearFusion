@@ -19,7 +19,7 @@ namespace HumanitarianAssistance
           .AddJsonFile("appsettings.json")
           .Build();
       var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-      var connectionString = configuration.GetConnectionString("linuxdb");
+      var connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
       builder.UseNpgsql(connectionString);
       return new ApplicationDbContext(builder.Options);
     }

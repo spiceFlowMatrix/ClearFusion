@@ -268,6 +268,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<Language> Languages { get; set; }
         public DbSet<MediaCategory> MediaCategories { get; set; }
         public DbSet<Medium> Mediums { get; set; }
+        public DbSet<Channel> Channel { get; set; }
         public DbSet<Nature> Natures { get; set; }
         public DbSet<TimeCategory> TimeCategories { get; set; }
         public DbSet<Category> Categories { get; set; }

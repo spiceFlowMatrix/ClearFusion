@@ -1349,5 +1349,132 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
         #endregion      
+
+        #region Channel
+        /// <summary>
+        /// get Channel By Id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> GetChannelById(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                Channel obj = await _uow.ChannelRepository.FindAsync(x => x.ChannelId == model && x.IsDeleted == false);
+                response.data.channelById = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// get Channel List
+        /// </summary>
+        /// <returns></returns>
+        public async Task<APIResponse> GetAllChannels()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ICollection<Channel> Channels = await _uow.ChannelRepository.FindAllAsync(x => x.IsDeleted == false);
+                response.data.Channels = Channels;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Delete Selected Channel
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> DeleteChannel(int model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var channelDetails = await _uow.ChannelRepository.FindAsync(x => x.IsDeleted == false && x.ChannelId == model);
+                if (channelDetails != null)
+                {
+                    channelDetails.ModifiedById = UserId;
+                    channelDetails.ModifiedDate = DateTime.UtcNow;
+                    channelDetails.IsDeleted = true;
+                    await _uow.ChannelRepository.UpdateAsyn(channelDetails);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Channel deleted successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Add New Channel
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> AddEditChannel(ChannelModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model.ChannelId == 0 || model.ChannelId == null)
+                {
+                    Channel obj = _mapper.Map<ChannelModel, Channel>(model);
+                    obj.CreatedById = UserId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.ChannelName = model.ChannelName;
+                    obj.MediumId = model.MediumId;
+                    await _uow.ChannelRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.data.channelById = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Channel added Successfully";
+                }
+                else
+                {
+                    Channel obj1 = await _uow.ChannelRepository.FindAsync(x => x.ChannelId == model.ChannelId);
+                    obj1.ModifiedById = UserId;
+                    obj1.ModifiedDate = DateTime.Now;
+                    obj1.MediumId = model.MediumId;
+                    _mapper.Map(model, obj1);
+                    await _uow.ChannelRepository.UpdateAsyn(obj1);
+                    await _uow.SaveAsync();
+                    response.data.channelById = obj1;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Channel updated successfully";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+        #endregion      
     }
 }
