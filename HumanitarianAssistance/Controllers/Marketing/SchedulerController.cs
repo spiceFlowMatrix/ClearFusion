@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Service.APIResponses;
@@ -23,10 +24,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     private readonly JsonSerializerSettings _serializerSettings;
     private readonly UserManager<AppUser> _userManager;
     private ISchedulerService _iScheduleService;
-    public SchedulerController(UserManager<AppUser> userManager, ISchedulerService iSchedulerService)
+    private IMasterPageService _iMasterPageService;
+    public SchedulerController(UserManager<AppUser> userManager, ISchedulerService iSchedulerService, IMasterPageService iMasterPageService)
     {
       _userManager = userManager;
       _iScheduleService = iSchedulerService;
+      _iMasterPageService = iMasterPageService;
       _serializerSettings = new JsonSerializerSettings
       {
         Formatting = Formatting.Indented,
@@ -47,6 +50,66 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     {
       APIResponse apiRespone = null;
       apiRespone = await _iScheduleService.GetScheduleDetailsById(model);
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetChannelById([FromBody]int model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iMasterPageService.GetChannelById(model, id);
+      }
+      return apiResponse;
+    }
+
+    /// <summary>
+    /// Get Activity Type List
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<APIResponse> GetAllChannelList()
+    {
+      APIResponse apiresponse = await _iMasterPageService.GetAllChannels();
+      return apiresponse;
+    }
+
+    /// <summary>
+    /// Add New Activity Type
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<APIResponse> AddChannel([FromBody]ChannelModel model)
+    {
+      APIResponse apiResponse = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiResponse = await _iMasterPageService.AddEditChannel(model, id);
+      }
+      return apiResponse;
+    }
+
+    /// <summary>
+    /// Delete Selected Activity Type
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<APIResponse> DeleteChannel([FromBody]int model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iMasterPageService.DeleteChannel(model, id);
+      }
       return apiRespone;
     }
 
