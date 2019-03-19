@@ -84,10 +84,10 @@ namespace HumanitarianAssistance.Service
 
                 APIResponse response = new APIResponse();
                 var path = Directory.GetCurrentDirectory() + "/Documents/Proposal/Proposal.docx";
+                Console.WriteLine($"File local  Path with environment variables : {path}");
+                path = path.Replace(@"\", "/");
+                Console.WriteLine($"convert File local Path in linux : {path}");
 
-                Console.WriteLine($"File Path : {path}");
-
-                path = path.Replace('\\', '/');
                 var newObject = new Google.Apis.Storage.v1.Data.Object()
                 {
                     Bucket = googleCredential.BucketName,
