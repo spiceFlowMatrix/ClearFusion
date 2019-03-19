@@ -1386,8 +1386,18 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                ICollection<Channel> Channels = await _uow.ChannelRepository.FindAllAsync(x => x.IsDeleted == false);
-                response.data.Channels = Channels;
+                var Channels = await (from j in _uow.GetDbContext().Channel
+                                 join jp in _uow.GetDbContext().Mediums on j.MediumId equals jp.MediumId
+                                 where !j.IsDeleted.Value && !jp.IsDeleted.Value
+                                 select (new ChannelModel
+                                 {
+                                     ChannelId = j.ChannelId,
+                                     ChannelName = j.ChannelName,
+                                     MediumId = j.MediumId,
+                                     MediumName = jp.MediumName
+                                 })).ToListAsync();
+                //ICollection<Channel> Channels = await _uow.ChannelRepository.FindAllAsync(x => x.IsDeleted == false);
+                response.data.ChannelList = Channels;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

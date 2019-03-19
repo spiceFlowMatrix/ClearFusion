@@ -364,6 +364,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<JobPhase> JobPhases { get; set; }
         public ICollection<Producer> Producers { get; set; }
         public ICollection<Channel> Channels { get; set; }
+        public ICollection<ChannelModel> ChannelList { get; set; }
         public ICollection<UnitRate> UnitRates { get; set; }
         public UnitRate UnitRateByActivityId { get; set; }
         public ICollection<JobPriceDetails> JobPriceDetails { get; set; }

@@ -9,5 +9,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public long ChannelId { get; set; }
         public string ChannelName { get; set; }
         public long? MediumId { get; set; }
+        public string MediumName { get; set; }
     }
 }
