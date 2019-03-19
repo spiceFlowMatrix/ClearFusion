@@ -100,7 +100,7 @@ namespace HumanitarianAssistance.Service
                 uploadRequest.OauthToken = credential.Token.AccessToken;
                 var fileResponse = uploadRequest.Upload();
 
-                Console.WriteLine($"File upload status: {fileResponse}");
+                Console.WriteLine($"File upload status: {fileResponse.Status}");
 
 
                 var bucketFolderWithFilePath = newObject.Bucket + "/" + newObject.Name;
@@ -134,6 +134,107 @@ namespace HumanitarianAssistance.Service
 
             return model;
         }
+
+
+        //read credential from directory
+        public static async Task<ProjectProposalDetail> StartProposalByDirectory(string projectProposalfilename, string googleCredentialpathFile, string folderName, ViewModels.Models.Project.GoogleCredential googleCredential, long Projectid, string userid)
+        {
+            FileStream fileStream = null;
+            ProjectProposalDetail model = new ProjectProposalDetail();
+
+            try
+            {
+                ProjectProposalModel res = new ProjectProposalModel();
+                var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
+                var cts = new CancellationTokenSource();
+
+                StorageService service = new StorageService();
+                UserCredential credential;
+                using (var stream = new FileStream(googleCredentialpathFile, FileMode.Open, FileAccess.Read))
+                {
+                    credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                          GoogleClientSecrets.Load(stream).Secrets,
+                          scopes,
+                         googleCredential.EmailId, CancellationToken.None);
+                }
+                Console.WriteLine("");
+                // Create the service.
+                service = new StorageService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = googleCredential.ApplicationName,
+                });
+
+                var bucketsQuery = service.Buckets.List(StaticResource.ProjectId);
+                bucketsQuery.OauthToken = credential.Token.AccessToken;
+                var buckets = bucketsQuery.Execute();
+
+
+                //enter bucket name to which you want to upload file 
+                APIResponse response = new APIResponse();
+                var path = Directory.GetCurrentDirectory() + @"/Documents/Proposal/Proposal.docx";
+
+                Console.WriteLine($"--------File local folder Path ----------: {path}");
+
+                path = path.Replace(@"\", "/");
+                Console.WriteLine($"--------convert to linux window File local folder Path ----------: {path}");
+
+                var newObject = new Google.Apis.Storage.v1.Data.Object()
+                {
+                    Bucket = googleCredential.BucketName,
+                    Name = googleCredential.Projects + "/" + folderName + "/" + projectProposalfilename + "xyz" + ".docx",
+                };
+
+                fileStream = new FileStream(path, FileMode.Open);
+                if (fileStream != null)
+                {
+                    var uploadRequest = new ObjectsResource.InsertMediaUpload(service, newObject, googleCredential.BucketName, fileStream, "application/vnd.google-apps.document");
+                    uploadRequest.OauthToken = credential.Token.AccessToken;
+                    var fileResponse = uploadRequest.Upload();
+
+                    Console.WriteLine($"File upload on bucket status: {fileResponse.Status}");
+
+
+                    var bucketFolderWithFilePath = newObject.Bucket + "/" + newObject.Name;
+                    if (fileResponse.Status.ToString() == "Completed" && fileResponse.Exception == null)
+                    {
+                        model.FolderName = folderName;
+                        model.ProposalFileName = projectProposalfilename;
+                        model.ProposalWebLink = bucketFolderWithFilePath;
+                        model.ProjectId = Projectid;
+                        model.IsDeleted = false;
+                        model.CreatedById = userid;
+                        model.CreatedDate = DateTime.Now;
+                        model.ProposalExtType = ".docx";
+                    }
+                }
+
+                else
+                {
+                    throw new Exception(StaticResource.UnableToUploadFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Dispose();
+                }
+            }
+            return model;
+
+        }
+
+
+
+
+
+
+
 
 
         //upload files 
