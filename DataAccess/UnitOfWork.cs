@@ -215,6 +215,7 @@ namespace DataAccess
         private IGenericRepository<TimeCategory> _timeCategoryRepository;
         private IGenericRepository<ClientDetails> _ClientDetailsRepository;
         private IGenericRepository<UnitRate> _unitRateRepository;
+        private IGenericRepository<Channel> _channelRepository;
         private IGenericRepository<PolicyOrderSchedule> _policyOrderScheduleRepository;
         private IGenericRepository<PolicyTimeSchedule> _policyTimeScheduleRepository;
         private IGenericRepository<PolicyDaySchedule> _policyDayScheduleRepository;
@@ -1518,6 +1519,14 @@ namespace DataAccess
             get
             {
                 return _unitRateRepository = _unitRateRepository ?? new GenericRepository<UnitRate>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<Channel> ChannelRepository
+        {
+            get
+            {
+                return _channelRepository = _channelRepository ?? new GenericRepository<Channel>(_mschaContext);
             }
         }
 
