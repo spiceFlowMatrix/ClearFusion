@@ -99,7 +99,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.Message = ex.Message;
             }
             return response;
-        }        
+        }
 
         /// <summary>
         /// Add New Quality
@@ -124,7 +124,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     response.data.qualityById = obj;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Quality added successfully";
-                }                
+                }
                 else
                 {
                     Quality obj = await _uow.QualityRepository.FindAsync(x => x.QualityId == model.QualityId);
@@ -255,7 +255,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     response.data.mediumById = obj;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Medium updated successfully";
-                }                
+                }
             }
             catch (Exception ex)
             {
@@ -362,7 +362,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     response.data.natureById = obj;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Nature added successfully";
-                }                
+                }
                 else
                 {
                     Nature obj = await _uow.NatureRepository.FindAsync(x => x.NatureId == model.NatureId);
@@ -457,7 +457,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-        
+
         /// <summary>
         /// Add New Phase
         /// </summary>
@@ -482,7 +482,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Phase added Successfully";
                 }
-                else 
+                else
                 {
                     JobPhase obj = await _uow.JobPhaseRepository.FindAsync(x => x.JobPhaseId == model.JobPhaseId);
                     obj.ModifiedById = UserId;
@@ -576,7 +576,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-        
+
         /// <summary>
         /// Add New Activity Type
         /// </summary>
@@ -612,7 +612,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     response.data.activityById = obj;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
-                }                
+                }
             }
             catch (Exception ex)
             {
@@ -694,7 +694,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-        
+
         /// <summary>
         /// Add New Media Category
         /// </summary>
@@ -706,7 +706,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-               if (model.MediaCategoryId == 0 || model.MediaCategoryId == null)
+                if (model.MediaCategoryId == 0 || model.MediaCategoryId == null)
                 {
                     MediaCategory obj = _mapper.Map<MediaCategoryModel, MediaCategory>(model);
                     obj.CreatedById = UserId;
@@ -854,7 +854,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.Message = ex.Message;
             }
             return response;
-        }       
+        }
 
         /// <summary>
         /// Add New Time Category
@@ -867,7 +867,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                if(model.TimeCategoryId == 0 || model.TimeCategoryId == null)
+                if (model.TimeCategoryId == 0 || model.TimeCategoryId == null)
                 {
                     TimeCategory obj = _mapper.Map<TimeCategoryModel, TimeCategory>(model);
                     obj.CreatedById = UserId;
@@ -891,7 +891,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     response.data.timeCatergoryById = obj;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Time category updated successfully";
-                }               
+                }
             }
             catch (Exception ex)
             {
@@ -1302,7 +1302,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-        
+
         /// <summary>
         /// Add New Producer
         /// </summary>
@@ -1314,7 +1314,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                if(model.ProducerId == 0 || model.ProducerId == null)
+                if (model.ProducerId == 0 || model.ProducerId == null)
                 {
                     Producer obj = _mapper.Map<ProducerModel, Producer>(model);
                     obj.CreatedById = UserId;
@@ -1339,7 +1339,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Producer updated successfully";
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -1363,7 +1363,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             try
             {
                 Channel obj = await _uow.ChannelRepository.FindAsync(x => x.ChannelId == model && x.IsDeleted == false);
+                ICollection<Medium> Mediums = await _uow.MediumRepository.FindAllAsync(x => x.IsDeleted == false);
                 response.data.channelById = obj;
+                response.data.Mediums = Mediums;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1439,33 +1441,50 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                if (model.ChannelId == 0 || model.ChannelId == null)
-                {
-                    Channel obj = _mapper.Map<ChannelModel, Channel>(model);
-                    obj.CreatedById = UserId;
-                    obj.CreatedDate = DateTime.Now;
-                    obj.IsDeleted = false;
-                    obj.ChannelName = model.ChannelName;
-                    obj.MediumId = model.MediumId;
-                    await _uow.ChannelRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
-                    response.data.channelById = obj;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Channel added Successfully";
-                }
-                else
-                {
-                    Channel obj1 = await _uow.ChannelRepository.FindAsync(x => x.ChannelId == model.ChannelId);
-                    obj1.ModifiedById = UserId;
-                    obj1.ModifiedDate = DateTime.Now;
-                    obj1.MediumId = model.MediumId;
-                    _mapper.Map(model, obj1);
-                    await _uow.ChannelRepository.UpdateAsyn(obj1);
-                    await _uow.SaveAsync();
-                    response.data.channelById = obj1;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Channel updated successfully";
-                }
+                    if (model.ChannelId == 0 || model.ChannelId == null)
+                    {
+                        if (model.MediumId == null || model.MediumId == 0)
+                        {
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = "Select a Medium";
+                        }
+                        else
+                        {
+                            var ob = await _uow.ChannelRepository.FindAsync(x => x.ChannelName == model.ChannelName && x.IsDeleted == false);
+                            if (ob != null)
+                            {
+                                response.StatusCode = StaticResource.failStatusCode;
+                                response.Message = "Channel already exists";
+                            }
+                            else
+                            {
+                                Channel obj = _mapper.Map<ChannelModel, Channel>(model);
+                                obj.CreatedById = UserId;
+                                obj.CreatedDate = DateTime.Now;
+                                obj.IsDeleted = false;
+                                obj.ChannelName = model.ChannelName;
+                                obj.MediumId = model.MediumId;
+                                await _uow.ChannelRepository.AddAsyn(obj);
+                                await _uow.SaveAsync();
+                                response.data.channelById = obj;
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Channel added Successfully";
+                            }                            
+                        }
+                    }
+                    else
+                    {
+                        Channel obj1 = await _uow.ChannelRepository.FindAsync(x => x.ChannelId == model.ChannelId);
+                        obj1.ModifiedById = UserId;
+                        obj1.ModifiedDate = DateTime.Now;
+                        obj1.MediumId = model.MediumId;
+                        _mapper.Map(model, obj1);
+                        await _uow.ChannelRepository.UpdateAsyn(obj1);
+                        await _uow.SaveAsync();
+                        response.data.channelById = obj1;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Channel updated successfully";
+                    }
 
             }
             catch (Exception ex)
