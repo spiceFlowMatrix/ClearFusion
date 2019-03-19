@@ -4503,7 +4503,7 @@ namespace HumanitarianAssistance.Service.Classes
                     ProjectJobCode = b.ProjectJobDetail?.ProjectJobCode ?? null,
                     CurrencyName = b.CurrencyDetails?.CurrencyName ?? null,
                     ProjectJobId = b.ProjectJobDetail?.ProjectJobId ?? null,
-
+                    BudgetCodeName= b.BudgetCode+"-"+ b.BudgetName
                 }).ToList();
                 response.data.ProjectBudgetLineDetailList = budgetDetaillist.OrderByDescending(x => x.BudgetLineId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;

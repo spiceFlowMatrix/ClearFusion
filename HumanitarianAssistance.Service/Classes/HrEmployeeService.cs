@@ -4987,103 +4987,113 @@ namespace HumanitarianAssistance.Service.Classes
 
                     ICollection<ContractTypeContent> contractTypeDariModel = await _uow.ContractTypeContentRepository.FindAllAsync(x => x.IsDeleted == false);
 
+                    //List<EmployeeContractModel> dataModel = await _uow.GetDbContext().EmployeeContract
+                    //             .Include(x => x.Employee)
+                    //             .Include(x => x.Employee.ProvinceDetails)
+                    //             .Include(x => x.Employee.EmployeeProfessionalDetail)
+                    //             .Include(x => x.Employee.EmployeeProfessionalDetail.DesignationDetails)
+                    //             .Include(x => x.Employee.EmployeeProfessionalDetail.OfficeDetail)
+                    //             .Include(x => x.Employee.EmployeeProfessionalDetail.EmployeeContractType)
+                    //             .Include(x => x.JobGrade)
+                    //             .Where(x => x.EmployeeId == EmployeeId && x.IsDeleted == false)
+                    //             .OrderByDescending(x => x.CreatedDate)
+                    //             .Select(x => new EmployeeContractModel
+                    //             {
+                    //                 EmployeeContractId = x.EmployeeContractId,
+                    //                 EmployeeId = x.EmployeeId,
+                    //                 EmployeeName = x.Employee.EmployeeName,
+                    //                 FatherName = x.Employee.FatherName,
+                    //                 EmployeeCode = x.Employee.EmployeeCode,
+                    //                 DesignationId = x.Designation,
+                    //                 Designation = _uow.GetDbContext().DesignationDetail.FirstOrDefault(c => c.DesignationId == x.Designation).Designation,
+                    //                 ContractStartDate = x.ContractStartDate,
+                    //                 ContractEndDate = x.ContractEndDate,
+                    //                 DurationOfContract = x.DurationOfContract,
+                    //                 Salary = x.Salary,
+                    //                 Grade = x.Grade,
+                    //                 DutyStationId = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeId,
+                    //                 DutyStation = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
+                    //                 ProvinceId = x.Employee.ProvinceDetails.ProvinceId,
+                    //                 Province = x.Employee.ProvinceDetails.ProvinceName,
+                    //                 CountryId = x.Country,
+                    //                 Country = _uow.GetDbContext().CountryDetails.FirstOrDefault(c => c.CountryId == x.Country).CountryName,
+                    //                 JobId = null,
+                    //                 Job = x.Job,
+                    //                 WorkTime = x.WorkTime,
+                    //                 WorkDayHours = x.WorkDayHours,
+                    //                 ContentEnglish = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == x.Employee.EmployeeProfessionalDetail.EmployeeContractTypeId).ContentEnglish,
+                    //                 ContentDari = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == x.Employee.EmployeeProfessionalDetail.EmployeeContractTypeId).ContentDari,
+                    //                 EmployeeImage = x.Employee.DocumentGUID + x.Employee.Extension,
+                    //                 CountryDari = x.CountryDari,
+                    //                 DesignationDari = x.DesignationDari,
+                    //                 DutyStationDari = x.DutyStationDari,
+                    //                 GradeDari = x.GradeDari,
+                    //                 FatherNameDari = x.FatherNameDari,
+                    //                 JobDari = x.JobDari,
+                    //                 ProvinceDari = x.ProvinceDari,
+                    //                 EmployeeNameDari = x.EmployeeNameDari,
+                    //                 GradeName = x.JobGrade.GradeName,
+                    //                 ProjectNameDari = x.ProjectNameDari,
+                    //                 ProjectName = _uow.GetDbContext().ProjectDetail.FirstOrDefault(p => p.IsDeleted == false && p.ProjectId == x.Project).ProjectName,
+                    //                 BudgetLine = _uow.GetDbContext().ProjectBudgetLineDetail.Select(z=> new { BudgetLineNameCode= z.BudgetCode+"-"+z.BudgetName, IsDeleted=z.IsDeleted, BudgetLineId= z.BudgetLineId }).FirstOrDefault(y=> y.IsDeleted== false && y.BudgetLineId== x.BudgetLine).BudgetLineNameCode,
+                    //                 BudgetLineDari= x.BudgetLineDari,
+                    //                 ProjectCode= x.pro
+                    //             }).ToListAsync();
 
-
-                    //List<EmployeeContractModel> dataModel = (from cont in _uow.GetDbContext().EmployeeContract
-                    //                                         join empd in _uow.GetDbContext().EmployeeDetail on cont.EmployeeId equals empd.EmployeeID
-                    //                                         join prof in _uow.GetDbContext().EmployeeProfessionalDetail on empd.EmployeeID equals prof.EmployeeId
-                    //                                         join offi in _uow.GetDbContext().OfficeDetail on prof.OfficeId equals offi.OfficeId
-                    //                                         join coun in _uow.GetDbContext().CountryDetails on cont.Country equals coun.CountryId
-                    //                                         join prov in _uow.GetDbContext().ProvinceDetails on cont.Province equals prov.ProvinceId
-                    //                                         join desi in _uow.GetDbContext().DesignationDetail on cont.Designation equals desi.DesignationId
-                    //                                         join cType in _uow.GetDbContext().ContractTypeContent on prof.EmployeeContractTypeId equals cType.EmployeeContractTypeId
-                    //                                         where cont.EmployeeId == EmployeeId && cont.IsDeleted == false
-                    //                                         select new EmployeeContractModel
-                    //                                         {
-
-                    //                                             EmployeeId = cont.EmployeeId,
-                    //                                             EmployeeName = empd.EmployeeName,
-                    //                                             FatherName = empd.FatherName,
-                    //                                             EmployeeCode = empd.EmployeeCode,
-                    //                                             DesignationId = cont.Designation,
-                    //                                             Designation = desi.Designation,
-                    //                                             ContractStartDate = cont.ContractStartDate,
-                    //                                             ContractEndDate = cont.ContractEndDate,
-                    //                                             DurationOfContract = cont.DurationOfContract,
-                    //                                             Salary = cont.Salary,
-                    //                                             Grade = cont.Grade,
-                    //                                             //EmployeeContractModel.ProjectName = dataModel.ProjectBudgetLine.ProjectDetails.ProjectName;
-                    //                                             //EmployeeContractModel.ProjectCode = dataModel.ProjectBudgetLine.ProjectDetails.ProjectId;
-                    //                                             DutyStationId = cont.DutyStation,
-                    //                                             DutyStation = offi.OfficeName,
-                    //                                             ProvinceId = cont.Province,
-                    //                                             Province = prov.ProvinceName,
-                    //                                             CountryId = cont.Country,
-                    //                                             Country = coun.CountryName,
-                    //                                             //EmployeeContractModel.BudgetLine = dataModel.ProjectBudgetLine.Description;
-                    //                                             //JobId = null,
-                    //                                             JobName = "nil",
-                    //                                             WorkTime = cont.WorkTime,
-                    //                                             WorkDayHours = cont.WorkDayHours,
-                    //                                             ContentEnglish = cType.ContentEnglish,
-                    //                                             ContentDari = cType.ContentDari,
-                    //                                             //EmployeeContractModel.EmployeeImage = dataModel.EmployeeDetail.EmployeePhoto;
-                    //                                             EmployeeImage = empd.DocumentGUID + empd.Extension
-                    //                                         }).ToList();
-
-
-
-
-
-
-                    List<EmployeeContractModel> dataModel = await _uow.GetDbContext().EmployeeContract
-                                 .Include(x => x.Employee)
-                                 .Include(x => x.Employee.ProvinceDetails)
-                                 .Include(x => x.Employee.EmployeeProfessionalDetail)
-                                 .Include(x => x.Employee.EmployeeProfessionalDetail.DesignationDetails)
-                                 .Include(x => x.Employee.EmployeeProfessionalDetail.OfficeDetail)
-                                 .Include(x => x.Employee.EmployeeProfessionalDetail.EmployeeContractType)
-                                 .Include(x=> x.JobGrade)
-                                 .Where(x => x.EmployeeId == EmployeeId && x.IsDeleted == false)
-                                 .OrderByDescending(x => x.CreatedDate)
-                                 .Select(x => new EmployeeContractModel
-                                 {
-                                     EmployeeContractId = x.EmployeeContractId,
-                                     EmployeeId = x.EmployeeId,
-                                     EmployeeName = x.Employee.EmployeeName,
-                                     FatherName = x.Employee.FatherName,
-                                     EmployeeCode = x.Employee.EmployeeCode,
-                                     DesignationId = x.Designation,
-                                     Designation = _uow.GetDbContext().DesignationDetail.FirstOrDefault(c => c.DesignationId == x.Designation).Designation,
-                                     ContractStartDate = x.ContractStartDate,
-                                     ContractEndDate = x.ContractEndDate,
-                                     DurationOfContract = x.DurationOfContract,
-                                     Salary = x.Salary,
-                                     Grade = x.Grade,
-                                     DutyStationId = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeId,
-                                     DutyStation = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
-                                     ProvinceId = x.Employee.ProvinceDetails.ProvinceId,
-                                     Province = x.Employee.ProvinceDetails.ProvinceName,
-                                     CountryId = x.Country,
-                                     Country = _uow.GetDbContext().CountryDetails.FirstOrDefault(c => c.CountryId == x.Country).CountryName,
-                                     JobId = null,
-                                     Job = x.Job,
-                                     WorkTime = x.WorkTime,
-                                     WorkDayHours = x.WorkDayHours,
-                                     ContentEnglish = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == x.Employee.EmployeeProfessionalDetail.EmployeeContractTypeId).ContentEnglish,
-                                     ContentDari = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == x.Employee.EmployeeProfessionalDetail.EmployeeContractTypeId).ContentDari,
-                                     EmployeeImage = x.Employee.DocumentGUID + x.Employee.Extension,
-                                     CountryDari= x.CountryDari,
-                                     DesignationDari= x.DesignationDari,
-                                     DutyStationDari= x.DutyStationDari,
-                                     GradeDari= x.GradeDari,
-                                     FatherNameDari= x.FatherNameDari,
-                                     JobDari= x.JobDari,
-                                     ProvinceDari= x.ProvinceDari,
-                                     EmployeeNameDari= x.EmployeeNameDari,
-                                     GradeName= x.JobGrade.GradeName,
-                                     ProjectNameDari= x.ProvinceDari
-                                 }).ToListAsync();
+                    List<EmployeeContractModel> dataModel = (from ec in _uow.GetDbContext().EmployeeContract
+                                join e in _uow.GetDbContext().EmployeeDetail on ec.EmployeeId equals e.EmployeeID
+                                join pd in _uow.GetDbContext().ProvinceDetails on e.ProvinceId equals pd.ProvinceId
+                                join epd in _uow.GetDbContext().EmployeeProfessionalDetail on e.EmployeeID equals epd.EmployeeId
+                                join dd in _uow.GetDbContext().DesignationDetail on epd.DesignationId equals dd.DesignationId
+                                join od in _uow.GetDbContext().OfficeDetail on epd.OfficeId equals od.OfficeId
+                                join ect in _uow.GetDbContext().EmployeeContractType on epd.EmployeeContractTypeId equals ect.EmployeeContractTypeId
+                                join jg in _uow.GetDbContext().JobGrade on ec.Grade equals jg.GradeId
+                                join cd in _uow.GetDbContext().CountryDetails on ec.Country equals cd.CountryId
+                                join bld in _uow.GetDbContext().ProjectBudgetLineDetail on ec.BudgetLine equals bld.BudgetLineId
+                                join p in _uow.GetDbContext().ProjectDetail on ec.Project equals Convert.ToInt32(p.ProjectId)
+                                where ec.IsDeleted== false && ec.EmployeeId == EmployeeId
+                                select new EmployeeContractModel
+                                {
+                                    EmployeeContractId = ec.EmployeeContractId,
+                                    EmployeeId = ec.EmployeeId,
+                                    EmployeeName = ec.Employee.EmployeeName,
+                                    FatherName = ec.Employee.FatherName,
+                                    EmployeeCode = ec.Employee.EmployeeCode,
+                                    DesignationId = ec.Designation,
+                                    Designation = dd.Designation,
+                                    ContractStartDate = ec.ContractStartDate,
+                                    ContractEndDate = ec.ContractEndDate,
+                                    DurationOfContract = ec.DurationOfContract,
+                                    Salary = ec.Salary,
+                                    Grade = ec.Grade,
+                                    DutyStationId = od.OfficeId,
+                                    DutyStation = od.OfficeName,
+                                    ProvinceId = pd.ProvinceId,
+                                    Province = pd.ProvinceName,
+                                    CountryId = ec.Country,
+                                    Country = cd.CountryName,
+                                    JobId = null,
+                                    Job = ec.Job,
+                                    WorkTime = ec.WorkTime,
+                                    WorkDayHours = ec.WorkDayHours,
+                                    ContentEnglish = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == epd.EmployeeContractTypeId).ContentEnglish,
+                                    ContentDari = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == epd.EmployeeContractTypeId).ContentDari,
+                                    EmployeeImage = e.DocumentGUID + e.Extension,
+                                    CountryDari = ec.CountryDari,
+                                    DesignationDari = ec.DesignationDari,
+                                    DutyStationDari = ec.DutyStationDari,
+                                    GradeDari = ec.GradeDari,
+                                    FatherNameDari = ec.FatherNameDari,
+                                    JobDari = ec.JobDari,
+                                    ProvinceDari = ec.ProvinceDari,
+                                    EmployeeNameDari = ec.EmployeeNameDari,
+                                    GradeName = jg.GradeName,
+                                    ProjectNameDari = ec.ProjectNameDari,
+                                    ProjectName = p.ProjectName,
+                                    BudgetLine = bld.BudgetName,
+                                    BudgetLineDari = ec.BudgetLineDari,
+                                    ProjectCode = p.ProjectCode
+                                }).ToList();
 
                     response.data.EmployeeContractDetails = dataModel;
                     response.StatusCode = StaticResource.successStatusCode;
