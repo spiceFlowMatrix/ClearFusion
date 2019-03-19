@@ -199,5 +199,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteProjectJob(long jobId, string UserId);
 
         #endregion
+        #region "cashflow"
+        Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowModel model);
+        Task<APIResponse> GetAllExpenditureByProjectId(int projectId);
+
+        #endregion
     }
 }
