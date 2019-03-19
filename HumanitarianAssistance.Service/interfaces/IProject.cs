@@ -201,7 +201,7 @@ namespace HumanitarianAssistance.Service.interfaces
         #endregion
         #region "cashflow"
         Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowModel model);
-        Task<APIResponse> GetAllExpenditureByProjectId(int projectId);
+        Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineCashFlowFilterModel model);
 
         #endregion
     }

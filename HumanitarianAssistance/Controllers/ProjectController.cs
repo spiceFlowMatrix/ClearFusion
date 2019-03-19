@@ -1662,18 +1662,18 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region
     [HttpPost]
-    public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowModel Model)
+    public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowModel model)
     {
-      APIResponse apiresponse = await _iProject.FilterProjectCashFlow(Model);
+      APIResponse apiresponse = await _iProject.FilterProjectCashFlow(model);
       return apiresponse;
     }
 
 
     [HttpPost]
-    public async Task<APIResponse> GetAllExpenditureByProjectId([FromBody]int projectId)
+    public async Task<APIResponse> FilterBudgetLineBreakdown([FromBody]BudgetLineCashFlowFilterModel model)
     {
       APIResponse apriresponse = new APIResponse();
-      apriresponse = await _iProject.GetAllExpenditureByProjectId(projectId);
+      apriresponse = await _iProject.FilterBudgetLineBreakdown(model);
       return apriresponse;
     }
     #endregion
