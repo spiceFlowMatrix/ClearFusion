@@ -157,13 +157,13 @@ namespace HumanitarianAssistance.Service
                           scopes,
                          googleCredential.EmailId, CancellationToken.None);
                 }
-                Console.WriteLine("");
                 // Create the service.
                 service = new StorageService(new BaseClientService.Initializer()
                 {
                     HttpClientInitializer = credential,
                     ApplicationName = googleCredential.ApplicationName,
                 });
+                Console.WriteLine($"---- credential service----: {service}");
 
                 var bucketsQuery = service.Buckets.List(StaticResource.ProjectId);
                 bucketsQuery.OauthToken = credential.Token.AccessToken;
