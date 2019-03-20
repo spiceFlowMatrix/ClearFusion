@@ -625,6 +625,8 @@ namespace HumanitarianAssistance.Service.Classes
                     string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
                     GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
 
+                    Console.WriteLine($"Linux GoogleServiceAccountDirectory : {GoogleServiceAccountDirectory}");
+
                     Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
                     using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
                     {
