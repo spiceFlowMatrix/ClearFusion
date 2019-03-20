@@ -268,6 +268,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<Language> Languages { get; set; }
         public DbSet<MediaCategory> MediaCategories { get; set; }
         public DbSet<Medium> Mediums { get; set; }
+        public DbSet<Channel> Channel { get; set; }
         public DbSet<Nature> Natures { get; set; }
         public DbSet<TimeCategory> TimeCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -675,7 +676,8 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 72, PageName = "Producer", ModuleId = 6, ModuleName = "Marketing" },
                 new ApplicationPages { IsDeleted = false, PageId = 73, PageName = "Policy", ModuleId = 6, ModuleName = "Marketing" },
                 new ApplicationPages { IsDeleted = false, PageId = 74, PageName = "ProjectJobs", ModuleId = 8, ModuleName = "Projects" },
-                new ApplicationPages { IsDeleted = false, PageId = 75, PageName = "ProjectActivities", ModuleId = 8, ModuleName = "Projects" }
+                new ApplicationPages { IsDeleted = false, PageId = 75, PageName = "ProjectActivities", ModuleId = 8, ModuleName = "Projects" },
+                 new ApplicationPages { IsDeleted = false, PageId = 76, PageName = "Channel", ModuleId = 6, ModuleName = "Marketing" }
             );
 
             modelBuilder.Entity<FinancialYearDetail>().HasData(
