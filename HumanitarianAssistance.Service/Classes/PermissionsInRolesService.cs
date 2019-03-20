@@ -488,9 +488,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 _uow.GetDbContext().SaveChanges();
                                 _uow.GetDbContext().Entry<AgreeDisagreePermission>(agreeDisagreeRolePermissions).State = EntityState.Detached;
                             }
-                        }
-                        if (item.OrderSchedule == true)
-                        {
+                        }                        
                             OrderSchedulePermission orderScheduleRolePermissions = orderScheduleRolePermissionsList.FirstOrDefault(x => x.PageId == item.PageId);
 
                             //If permission for the page does not exist then initialize object
@@ -515,7 +513,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 _uow.GetDbContext().SaveChanges();
                                 _uow.GetDbContext().Entry<OrderSchedulePermission>(orderScheduleRolePermissions).State = EntityState.Detached;
                             }
-                        }
+                        
 
                     }
 

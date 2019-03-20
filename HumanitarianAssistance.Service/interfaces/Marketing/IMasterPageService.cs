@@ -54,6 +54,7 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
 
         #region Channel
         Task<APIResponse> GetChannelById(int model, string UserId);
+        Task<APIResponse> GetChannelListByMediumId(int model);
         Task<APIResponse> GetAllChannels();
         Task<APIResponse> DeleteChannel(int model, string UserId);
         Task<APIResponse> AddEditChannel(ChannelModel model, string UserId);
