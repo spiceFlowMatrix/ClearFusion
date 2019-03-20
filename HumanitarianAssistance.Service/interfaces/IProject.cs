@@ -81,6 +81,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteProjectArea(ProjectArea model, string UserId);
         Task<APIResponse> AddApprovalDetail(ApproveProjectDetailModel model, string UserId);
         Task<APIResponse> WinApprovalDetail(WinApprovalProjectModel model, string UserId);
+        Task<APIResponse> GetProjectJobDetailByBudgetLineId(long budgetLineId);
 
         #endregion
 

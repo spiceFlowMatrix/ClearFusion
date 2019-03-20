@@ -4386,6 +4386,39 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetProjectJobDetailByBudgetLineId(long budgetLineId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+
+                ProjectBudgetLineDetail projectBudgetLineDetail = await _uow.GetDbContext().ProjectBudgetLineDetail.Include(x=> x.ProjectJobDetail).FirstOrDefaultAsync(x=> x.IsDeleted== false && x.BudgetLineId== budgetLineId);
+
+                ProjectJobDetailModel model = new ProjectJobDetailModel();
+
+                if (projectBudgetLineDetail.ProjectJobDetail != null)
+                {
+
+                    model.ProjectId = projectBudgetLineDetail.ProjectJobDetail.ProjectId;
+                    model.ProjectJobCode = projectBudgetLineDetail.ProjectJobDetail.ProjectJobCode;
+                    model.ProjectJobName = projectBudgetLineDetail.ProjectJobDetail.ProjectJobName;
+                    model.ProjectJobId = projectBudgetLineDetail.ProjectJobDetail.ProjectJobId;
+                }
+
+                response.data.ProjectJobModel = model;
+                response.StatusCode = 200;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId)
         {
             APIResponse response = new APIResponse();
