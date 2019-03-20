@@ -1672,10 +1672,27 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     [HttpPost]
     public async Task<APIResponse> FilterBudgetLineBreakdown([FromBody]BudgetLineCashFlowFilterModel model)
     {
-      APIResponse apriresponse = new APIResponse();
-      apriresponse = await _iProject.FilterBudgetLineBreakdown(model);
-      return apriresponse;
+      APIResponse apiResponse = new APIResponse();
+      apiResponse = await _iProject.FilterBudgetLineBreakdown(model);
+      return apiResponse;
     }
     #endregion
+
+
+
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> UploadFileDemo([FromForm] IFormFile fileData, string activityId, string statusId)
+    {
+    
+      APIResponse apiResponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        string logginUserEmailId = user.Email;
+        var userId = user.Id;
+        apiResponse = await _iActivity.UploadFileDemo(fileData, userId, logginUserEmailId);
+      }
+      return apiResponse;
+    }
   }
 }
