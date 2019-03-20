@@ -364,6 +364,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<Nature> Natures { get; set; }
         public ICollection<JobPhase> JobPhases { get; set; }
         public ICollection<Producer> Producers { get; set; }
+        public ICollection<Channel> Channels { get; set; }
+        public ICollection<ChannelModel> ChannelList { get; set; }
         public ICollection<UnitRate> UnitRates { get; set; }
         public UnitRate UnitRateByActivityId { get; set; }
         public ICollection<JobPriceDetails> JobPriceDetails { get; set; }
@@ -395,6 +397,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public Quality qualityById { get; set; }
         public JobPhase phaseById { get; set; }
         public Producer producerById { get; set; }
+        public Channel channelById { get; set; }
         public ActivityType activityById { get; set; }
         public PolicyDetail policyDetails { get; set; }
         public List<PolicyModel> policyFilterList { get; set; }

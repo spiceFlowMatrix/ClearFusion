@@ -52,6 +52,13 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> AddEditProducer(ProducerModel model, string UserId);
         #endregion
 
+        #region Channel
+        Task<APIResponse> GetChannelById(int model, string UserId);
+        Task<APIResponse> GetAllChannels();
+        Task<APIResponse> DeleteChannel(int model, string UserId);
+        Task<APIResponse> AddEditChannel(ChannelModel model, string UserId);
+        #endregion
+
         #region Media Category
         Task<APIResponse> GetAllMediaCategory();
         Task<APIResponse> DeleteMediaCategory(int model, string UserId);
