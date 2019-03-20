@@ -328,6 +328,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
 
         public ICollection<ProjectJobDetail> ProjectJobDetail { get; set; }
+        public ProjectJobDetailModel ProjectJobModel { get; set; }
         public List<ProjectJobDetailModel> ProjectJobDetailModel { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }

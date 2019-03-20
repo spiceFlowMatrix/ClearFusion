@@ -1405,6 +1405,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetProjectJobDetailByBudgetLineId([FromBody]long budgetLineId)
+    {
+      APIResponse response = await _iProject.GetProjectJobDetailByBudgetLineId(budgetLineId);
+      return response;
+    }
+
 
     #endregion
 

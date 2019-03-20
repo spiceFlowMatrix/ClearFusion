@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190320094313_addJobIdInVoucherTransactions")]
+    partial class addJobIdInVoucherTransactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -538,8 +540,7 @@ namespace DataAccess.Migrations
                         new { PageId = 72, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Producer" },
                         new { PageId = 73, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Policy" },
                         new { PageId = 74, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectJobs" },
-                        new { PageId = 75, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectActivities" },
-                        new { PageId = 76, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Channel" }
+                        new { PageId = 75, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectActivities" }
                     );
                 });
 
@@ -4467,36 +4468,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.Channel", b =>
-                {
-                    b.Property<long>("ChannelId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ChannelName");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<long?>("MediumId");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("ChannelId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("MediumId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("Channel");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.ClientDetails", b =>
@@ -10792,21 +10763,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.Channel", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.Medium", "Mediums")
-                        .WithMany()
-                        .HasForeignKey("MediumId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
