@@ -20,7 +20,8 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? Grade { get; set; }
         public string GradeName { get; set; }
         public string ProjectName { get; set; }
-        public long ProjectCode { get; set; }
+        public long Project { get; set; }
+        public string ProjectCode { get; set; }
         public int? DutyStationId { get; set; }
         public string DutyStation { get; set; }
         public int? CountryId { get; set; }
@@ -45,5 +46,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string ProvinceDari { get; set; }
         public string EmployeeNameDari { get; set; }
         public string ProjectNameDari { get; set; }
+        public string BudgetLineDari { get; set; }
     }
 }

@@ -46,6 +46,7 @@ namespace DataAccess.DbEntities
         public string ProjectNameDari { get; set; }
         [ForeignKey("Grade")]
         public JobGrade JobGrade { get; set; }
+        public string BudgetLineDari { get; set; }
 
     }
 }

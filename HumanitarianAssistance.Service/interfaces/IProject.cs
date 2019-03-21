@@ -81,6 +81,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteProjectArea(ProjectArea model, string UserId);
         Task<APIResponse> AddApprovalDetail(ApproveProjectDetailModel model, string UserId);
         Task<APIResponse> WinApprovalDetail(WinApprovalProjectModel model, string UserId);
+        Task<APIResponse> GetProjectJobDetailByBudgetLineId(long budgetLineId);
 
         #endregion
 
@@ -201,7 +202,7 @@ namespace HumanitarianAssistance.Service.interfaces
         #endregion
         #region "cashflow"
         Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowModel model);
-        Task<APIResponse> GetAllExpenditureByProjectId(int projectId);
+        Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineCashFlowFilterModel model);
 
         #endregion
     }

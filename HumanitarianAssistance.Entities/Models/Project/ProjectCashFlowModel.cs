@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HumanitarianAssistance.ViewModels.Models.Project
 {
-   public class ProjectCashFlowModel
+    public class ProjectCashFlowModel
     {
         public long ProjectId { get; set; }
 
@@ -13,14 +13,21 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
         public long DonorID { get; set; }
     }
+    public class BudgetLineCashFlowFilterModel
+    {
+        public long? ProjectId { get; set; }
+        public long? BudgetLineId { get; set; }
+        public DateTime? BudgetLineStartDate { get; set; }
+        public DateTime? BudgetLineEndDate { get; set; }
+    }
     public class BudgetLineCashFlowModel
     {
-        public int? ProjectId { get; set; }
+        public long? ProjectId { get; set; }
 
         public DateTime? BudgetLineStartDate { get; set; }
         public DateTime? BudgetLineEndDate { get; set; }
-
         public long? BudgetLieID { get; set; }
+
         public double? Debit { get; set; }
         public DateTime? TransactionDate { get; set; }
         public string Month { get; set; }
@@ -34,5 +41,15 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         }
         public string Month { get; set; }
         public List<BudgetLineCashFlowModel> DebitList { get; set; }
+    }
+
+    public class BalanceSheetBreakdownModel
+    {
+        public BalanceSheetBreakdownModel()
+        {
+            DebitTotal = 0.00;
+        }
+        public string Date { get; set; }
+        public double DebitTotal { get; set; }
     }
 }

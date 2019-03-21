@@ -328,6 +328,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
 
         public ICollection<ProjectJobDetail> ProjectJobDetail { get; set; }
+        public ProjectJobDetailModel ProjectJobModel { get; set; }
         public List<ProjectJobDetailModel> ProjectJobDetailModel { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
@@ -338,12 +339,13 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
         public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
         public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
-        public ActivityDocumentsDetail activityDocumnentDetail { get; set; }
+        public ActivityDocumentsDetailModel activityDocumnentDetail { get; set; }
         public List<ActivityDocumentDetailModel> ActivityDocumentDetailModel { get; set; }
 
 
         public ProjectCashFlowModel ProjectCashFlowList { get; set; }
         public List<BLTransactionCashFlowModel> BudgetLineCashFlowModelList { get; set; }
+        public List<BalanceSheetBreakdownModel> BudgetLineBreakdownList { get; set; }
 
 
         #region Marketing    
