@@ -1405,6 +1405,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetProjectJobDetailByBudgetLineId([FromBody]long budgetLineId)
+    {
+      APIResponse response = await _iProject.GetProjectJobDetailByBudgetLineId(budgetLineId);
+      return response;
+    }
+
 
     #endregion
 
@@ -1662,20 +1669,37 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region
     [HttpPost]
-    public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowModel Model)
+    public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowModel model)
     {
-      APIResponse apiresponse = await _iProject.FilterProjectCashFlow(Model);
+      APIResponse apiresponse = await _iProject.FilterProjectCashFlow(model);
       return apiresponse;
     }
 
 
     [HttpPost]
-    public async Task<APIResponse> GetAllExpenditureByProjectId([FromBody]int projectId)
+    public async Task<APIResponse> FilterBudgetLineBreakdown([FromBody]BudgetLineCashFlowFilterModel model)
     {
-      APIResponse apriresponse = new APIResponse();
-      apriresponse = await _iProject.GetAllExpenditureByProjectId(projectId);
-      return apriresponse;
+      APIResponse apiResponse = new APIResponse();
+      apiResponse = await _iProject.FilterBudgetLineBreakdown(model);
+      return apiResponse;
     }
     #endregion
+
+
+
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> UploadFileDemo([FromForm] IFormFile fileData, string activityId, string statusId)
+    {
+    
+      APIResponse apiResponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        string logginUserEmailId = user.Email;
+        var userId = user.Id;
+        apiResponse = await _iActivity.UploadFileDemo(fileData, userId, logginUserEmailId);
+      }
+      return apiResponse;
+    }
   }
 }

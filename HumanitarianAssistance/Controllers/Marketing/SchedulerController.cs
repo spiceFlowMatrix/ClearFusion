@@ -113,5 +113,16 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       return apiRespone;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetAllChannelListByMedium([FromBody]int model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiRespone = await _iMasterPageService.GetChannelListByMediumId(model);
+      }
+      return apiRespone;
+    } 
   }
 }

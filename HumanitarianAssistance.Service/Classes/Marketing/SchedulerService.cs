@@ -115,7 +115,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         public async Task<List<ProjectDetailNewModel>> GetProjectList()
         {
             var ProjectList = await _uow.GetDbContext().ProjectDetail
-                                         .Where(x => !x.IsDeleted.Value)
+                                         .Where(x => !x.IsDeleted.Value && x.ProjectName != "")
                                          .OrderByDescending(x => x.ProjectId).Select(x => new ProjectDetailNewModel
                                          {
                                              ProjectId = x.ProjectId,

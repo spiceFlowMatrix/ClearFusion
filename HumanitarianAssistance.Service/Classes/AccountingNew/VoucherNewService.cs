@@ -13,6 +13,7 @@ using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Storage;
+using HumanitarianAssistance.ViewModels.Models.Project;
 
 namespace HumanitarianAssistance.Service.Classes.AccountingNew
 {
@@ -407,7 +408,17 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                        ProjectId = x.ProjectId,
                                        Description = x.Description,
                                        TransactionId = x.TransactionId,
-                                       VoucherNo = x.VoucherNo
+                                       VoucherNo = x.VoucherNo,
+                                       JobId = x.JobId,
+                                       JobName = _uow.GetDbContext().ProjectJobDetail.FirstOrDefault(j => j.IsDeleted == false && j.ProjectJobId == x.JobId).ProjectJobName,
+                                       BudgetLineList = _uow.GetDbContext()
+                                                                    .ProjectBudgetLineDetail
+                                                                    .Where(p => p.IsDeleted == false && p.ProjectId == x.ProjectId)
+                                                                    .Select(s=> new ProjectBudgetLineDetailModel
+                                                                    {
+                                                                        BudgetLineId= s.BudgetLineId,
+                                                                        BudgetName= s.BudgetName
+                                                                    }).ToList()
                                    }).ToListAsync();
 
                 response.data.VoucherTransactions = voucherTransactionsList;
@@ -659,6 +670,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                 transaction.VoucherNo = item.VoucherNo;
                                 transaction.CurrencyId = voucherDetail.CurrencyId;
                                 transaction.TransactionDate = voucherDetail.VoucherDate;
+                                transaction.JobId = item.JobId;
 
                                 transactionsListAdd.Add(transaction);
                             }
@@ -684,10 +696,9 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                     transaction.Description = item.Description;
                                     transaction.BudgetLineId = item.BudgetLineId;
                                     transaction.ProjectId = item.ProjectId;
-
+                                    transaction.JobId = item.JobId;
                                     transaction.CurrencyId = voucherDetail.CurrencyId;
                                     transaction.TransactionDate = voucherDetail.VoucherDate;
-
                                     transaction.ModifiedById = userId;
                                     transaction.ModifiedDate = DateTime.Now;
                                     //transaction.VoucherNo = voucherTransactions.VoucherNo;

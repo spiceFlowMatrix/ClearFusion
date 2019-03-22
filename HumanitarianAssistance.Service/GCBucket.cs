@@ -5,6 +5,7 @@ using DataAccess.DbEntities.Project;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Storage.v1;
+using Google.Cloud.Storage.V1;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models.Project;
@@ -513,6 +514,24 @@ namespace HumanitarianAssistance.Service
 
 
         #endregion
+
+
+
+
+        //public static void UploadFile(string bucketName, string localPath, string objectName = null)
+        public static int UploadFile(string bucketName, string localPath)
+        {
+            var storage = StorageClient.Create();
+
+            using (var f = File.OpenRead(localPath))
+            {
+                //objectName = objectName ?? Path.GetFileName(localPath);
+                storage.UploadObject(StaticResource.BucketName, "TESTFILE_PLEASECHECK.docx", null, f);
+                //Console.WriteLine($"Uploaded {objectName}.");
+                Console.WriteLine($"Uploaded.");
+            }
+            return 1;
+        }
     }
 
 
