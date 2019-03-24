@@ -110,9 +110,9 @@ jobs:
       - run:
           name: Patch K8 deployment with new container
           command: |
-            kubectl patch deployment ${KUBDEPLOYMENT_CHAAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
-            kubectl rollout status deployment/${KUBDEPLOYMENT_CHAAPI_PROD}
-            kubectl get pods
+            kubectl patch deployment ${KUBDEPLOYMENT_CHAAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}' --namespace=cha-org
+            kubectl rollout status deployment/${KUBDEPLOYMENT_CHAAPI_PROD} --namespace=cha-org
+            kubectl get pods --namespace=cha-org
   deploy-smo-prod:
     docker:
       - image: google/cloud-sdk
@@ -129,9 +129,9 @@ jobs:
       - run:
           name: Patch K8 deployment with new container
           command: |
-            kubectl patch deployment ${KUBDEPLOYMENT_SMOAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
-            kubectl rollout status deployment/${KUBDEPLOYMENT_SMOAPI_PROD}
-            kubectl get pods
+            kubectl patch deployment ${KUBDEPLOYMENT_SMOAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}' --namespace=smo-org
+            kubectl rollout status deployment/${KUBDEPLOYMENT_SMOAPI_PROD} --namespace=smo-org
+            kubectl get pods --namespace=smo-org
   deploy-noon-prod:
     docker:
       - image: google/cloud-sdk
@@ -148,9 +148,9 @@ jobs:
       - run:
           name: Patch K8 deployment with new container
           command: |
-            kubectl patch deployment ${KUBDEPLOYMENT_NOONAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
-            kubectl rollout status deployment/${KUBDEPLOYMENT_NOONAPI_PROD}
-            kubectl get pods
+            kubectl patch deployment ${KUBDEPLOYMENT_NOONAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}' --namespace=noon-org
+            kubectl rollout status deployment/${KUBDEPLOYMENT_NOONAPI_PROD} --namespace=noon-org
+            kubectl get pods --namespace=noon-org
   deploy-edg-prod:
     docker:
       - image: google/cloud-sdk
@@ -167,9 +167,9 @@ jobs:
       - run:
           name: Patch K8 deployment with new container
           command: |
-            kubectl patch deployment ${KUBDEPLOYMENT_EDGEAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
-            kubectl rollout status deployment/${KUBDEPLOYMENT_EDGEAPI_PROD}
-            kubectl get pods
+            kubectl patch deployment ${KUBDEPLOYMENT_EDGEAPI_PROD} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}' --namespace=edgsolutions-org
+            kubectl rollout status deployment/${KUBDEPLOYMENT_EDGEAPI_PROD} --namespace=edgsolutions-org
+            kubectl get pods --namespace=edgsolutions-org
 workflows:
   version: 2.1
   clearfusion-api-build-deploy:
