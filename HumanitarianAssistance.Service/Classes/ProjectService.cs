@@ -5056,38 +5056,36 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                List<VoucherTransactions> TransList = new List<VoucherTransactions>();
-                if (model.BudgetLineId == 0 || model.BudgetLineId == null)
+                List<VoucherTransactions> transList = new List<VoucherTransactions>();
+                if (model.BudgetLineId.Count == 0 || model.BudgetLineId == null)
                 {
-                    TransList = await _uow.GetDbContext().VoucherTransactions
+                    transList = await _uow.GetDbContext().VoucherTransactions
                                               .Where(x => x.IsDeleted == false && x.ProjectId == model.ProjectId)
                                               .OrderBy(x => x.CreatedDate)
                                               .ToListAsync();
                 }
                 else
                 {
-                    TransList = (from vt in _uow.GetDbContext().VoucherTransactions
-                                 join bl in _uow.GetDbContext().ProjectBudgetLineDetail on vt.BudgetLineId equals Convert.ToInt32(bl.BudgetLineId)
-                                 where vt.IsDeleted == false &&
-                                             vt.ProjectId == model.ProjectId &&
-                                             vt.BudgetLineId == model.BudgetLineId &&
-                                             bl.CreatedDate.Value.Date >= model.BudgetLineStartDate.Value.Date &&
-                                             bl.CreatedDate.Value.Date <= model.BudgetLineEndDate.Value.Date
-                                 select vt
-                                  ).ToList();
+
+                    transList = await _uow.GetDbContext().VoucherTransactions.Include(x => x.ProjectBudgetLineDetail).Where(x => x.IsDeleted == false &&
+                                             x.ProjectId == model.ProjectId &&
+                                             model.BudgetLineId.Contains(x.BudgetLineId) &&
+                                             x.ProjectBudgetLineDetail.CreatedDate.Value.Date >= model.BudgetLineStartDate.Value.Date &&
+                                             x.ProjectBudgetLineDetail.CreatedDate.Value.Date <= model.BudgetLineEndDate.Value.Date)
+                                             .ToListAsync();
                 }
 
-                List<BLTransactionCashFlowModel> budgetDetaillist = TransList.Select(b => new BudgetLineCashFlowModel
+                List<BLTransactionCashFlowModel> budgetDetailList = transList.Select(b => new BudgetLineCashFlowModel
                 {
                     ProjectId = b.ProjectId,
                     Debit = b.Debit,
                     TransactionDate = b.TransactionDate,
-                    Month = b.TransactionDate?.ToShortDateString()
+                    Month = b.ProjectBudgetLineDetail?.CreatedDate?.ToShortDateString()
                     //Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(b.TransactionDate.Value.Month)
 
                 }).GroupBy(x => x.Month, x => x, (key, g) => new BLTransactionCashFlowModel { Month = key, DebitList = g.ToList() }).ToList();
 
-                List<BalanceSheetBreakdownModel> breakdownList = budgetDetaillist.Select(x => new BalanceSheetBreakdownModel
+                List<BalanceSheetBreakdownModel> breakdownList = budgetDetailList.Select(x => new BalanceSheetBreakdownModel
                 {
                     Date = x.Month,
                     DebitTotal = (double)x.DebitList.Sum(y => y.Debit)

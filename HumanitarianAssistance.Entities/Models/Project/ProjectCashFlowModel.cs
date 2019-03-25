@@ -15,8 +15,12 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     }
     public class BudgetLineCashFlowFilterModel
     {
+        BudgetLineCashFlowFilterModel() {
+            BudgetLineId = new List<long?>();
+        }
+
         public long? ProjectId { get; set; }
-        public long? BudgetLineId { get; set; }
+        public List<long?> BudgetLineId { get; set; }
         public DateTime? BudgetLineStartDate { get; set; }
         public DateTime? BudgetLineEndDate { get; set; }
     }
