@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HumanitarianAssistance.ViewModels.Models.Project
 {
-  public class GoogleCredential
+  public class GoogleCredentialModel
     {
         public string EmailId { get; set; }
         public string ApplicationName { get; set; }

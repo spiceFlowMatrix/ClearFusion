@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.Service
         }
 
 
-        public static async Task<ProjectProposalDetail> AuthExplicit(string filefullPath, string projectProposalfilename, JObject googleCredentialpathFile, string folderName, ViewModels.Models.Project.GoogleCredential googleCredential, long Projectid, string userid)
+        public static async Task<ProjectProposalDetail> AuthExplicit(string filefullPath, string projectProposalfilename, JObject googleCredentialpathFile, string folderName, ViewModels.Models.Project.GoogleCredentialModel googleCredential, long Projectid, string userid)
         {
             ProjectProposalModel res = new ProjectProposalModel();
             ProjectProposalDetail model = new ProjectProposalDetail();
@@ -83,6 +83,8 @@ namespace HumanitarianAssistance.Service
             {
 
                 APIResponse response = new APIResponse();
+                Console.WriteLine("reading file path");
+
                 var path = Directory.GetCurrentDirectory() + "/Documents/Proposal/Proposal.docx";
                 Console.WriteLine($"File local  Path with environment variables : {path}");
                 path = path.Replace(@"\", "/");
@@ -117,11 +119,15 @@ namespace HumanitarianAssistance.Service
                 }
                 else
                 {
+                    Console.WriteLine("not completed");
+
                     throw new Exception(StaticResource.UnableToUploadFile);
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Exception occured");
+
                 Console.WriteLine(ex.Message);
             }
             finally
@@ -135,9 +141,120 @@ namespace HumanitarianAssistance.Service
             return model;
         }
 
+        //****************read credential using service account from directory 21/03/19
+        //public static async Task<ProjectProposalDetail> StartProposalByDirectory(string projectProposalfilename, string googleCredentialpathFile, string folderName, ViewModels.Models.Project.GoogleCredentialModel googleCredential, long Projectid, string userid)
+        //{
+        //    FileStream fileStream = null;
+        //    ProjectProposalDetail model = new ProjectProposalDetail();
 
-        //read credential from directory
-        public static async Task<ProjectProposalDetail> StartProposalByDirectory(string projectProposalfilename, string googleCredentialpathFile, string folderName, ViewModels.Models.Project.GoogleCredential googleCredential, long Projectid, string userid)
+        //    try
+        //    {
+        //        ProjectProposalModel res = new ProjectProposalModel();
+        //        //var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
+        //        //var cts = new CancellationTokenSource();
+
+        //        //StorageService service = new StorageService();
+        //        //UserCredential credential;
+        //        //using (var stream = new FileStream(googleCredentialpathFile, FileMode.Open, FileAccess.Read))
+        //        //{
+        //        //    credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+        //        //          GoogleClientSecrets.Load(stream).Secrets,
+        //        //          scopes,
+        //        //         googleCredential.EmailId, CancellationToken.None);
+        //        //}
+        //        //// Create the service.
+        //        //service = new StorageService(new BaseClientService.Initializer()
+        //        //{
+        //        //    HttpClientInitializer = credential,
+        //        //    ApplicationName = googleCredential.ApplicationName,
+        //        //});
+
+        //        var clientSecrets = new ClientSecrets();
+        //        clientSecrets.ClientId = "160690498129-pg9hh4gr2ucta6neiik97tv1sla1qkec.apps.googleusercontent.com";
+        //        clientSecrets.ClientSecret = "W0Zn9o2KmJFRXDnCbmq9z5m6";
+        //        //there are different scopes, which you can find here https://cloud.google.com/storage/docs/authentication
+        //        var scopes = new[] { @"https://www.googleapis.com/auth/devstorage.full_control" };
+
+        //        var cts = new CancellationTokenSource();
+        //        var userCredential = await GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets, scopes, "cf-storage-serviceacc@clear-fusion-193608.iam.gserviceaccount.com", cts.Token);
+
+        //        await userCredential.RefreshTokenAsync(cts.Token);
+        //        var service = new Google.Apis.Storage.v1.StorageService();
+        //        Console.WriteLine($"---- credential service----: {service}");
+
+        //        var bucketsQuery = service.Buckets.List(StaticResource.ProjectId);
+        //        bucketsQuery.OauthToken = userCredential.Token.AccessToken;
+        //        var buckets = bucketsQuery.Execute();
+
+
+        //        var dir = Directory.GetCurrentDirectory();
+        //       // var pathCombine = Path.Combine(dir, @"/Documents/Proposal/Proposal.docx");
+        //        var pathCombine = Directory.GetCurrentDirectory() + @"/Documents/Proposal/Proposal.docx";
+
+        //        pathCombine = pathCombine.Replace(@"\", "/");
+
+        //        Console.WriteLine($"--------File local folder Path ----------: {pathCombine}");
+
+        //        fileStream = new FileStream(pathCombine, FileMode.Open);
+
+
+        //        APIResponse response = new APIResponse();
+
+
+        //        Console.WriteLine($"--------convert to linux window File local folder Path ----------: {fileStream}");
+
+        //        var newObject = new Google.Apis.Storage.v1.Data.Object()
+        //        {
+        //            Bucket = googleCredential.BucketName,
+        //            Name = googleCredential.Projects + "/" + folderName + "/" + projectProposalfilename + "xyz" + ".docx",
+        //        };
+
+        //        if (fileStream != null)
+        //        {
+        //            var uploadRequest = new ObjectsResource.InsertMediaUpload(service, newObject, googleCredential.BucketName, fileStream, "application/vnd.google-apps.document");
+        //            uploadRequest.OauthToken = userCredential.Token.AccessToken;
+        //            var fileResponse = uploadRequest.Upload();
+
+        //            Console.WriteLine($"File upload on bucket status: {fileResponse.Status}");
+
+
+        //            var bucketFolderWithFilePath = newObject.Bucket + "/" + newObject.Name;
+        //            if (fileResponse.Status.ToString() == "Completed" && fileResponse.Exception == null)
+        //            {
+        //                model.FolderName = folderName;
+        //                model.ProposalFileName = projectProposalfilename;
+        //                model.ProposalWebLink = bucketFolderWithFilePath;
+        //                model.ProjectId = Projectid;
+        //                model.IsDeleted = false;
+        //                model.CreatedById = userid;
+        //                model.CreatedDate = DateTime.Now;
+        //                model.ProposalExtType = ".docx";
+        //            }
+        //        }
+
+        //        else
+        //        {
+        //            throw new Exception(StaticResource.UnableToUploadFile);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        if (fileStream != null)
+        //        {
+        //            fileStream.Dispose();
+        //        }
+        //    }
+        //    return model;
+
+        //}
+
+
+        //************************************read credential from directory using auth credentail and using env as well as directory 20/03/2019
+        public static async Task<ProjectProposalDetail> StartProposalByDirectory(string projectProposalfilename, string googleCredentialpathFile, string folderName, ViewModels.Models.Project.GoogleCredentialModel googleCredential, long Projectid, string userid)
         {
             FileStream fileStream = null;
             ProjectProposalDetail model = new ProjectProposalDetail();
@@ -230,15 +347,8 @@ namespace HumanitarianAssistance.Service
         }
 
 
-
-
-
-
-
-
-
         //upload files 
-        public static async Task<ProjectProposalDetail> uploadOtherProposaldoc(string folderName, IFormFile filedata, string fileName, ViewModels.Models.Project.GoogleCredential googleCredential, string EmailId, string logginUserEmailId, string ext, JObject googleCredentialPathFile, string ProposalType)
+        public static async Task<ProjectProposalDetail> uploadOtherProposaldoc(string folderName, IFormFile filedata, string fileName, ViewModels.Models.Project.GoogleCredentialModel googleCredential, string EmailId, string logginUserEmailId, string ext, JObject googleCredentialPathFile, string ProposalType)
         {
             ProjectProposalModel res = new ProjectProposalModel();
             string exten = Path.GetExtension(fileName).ToLower();
@@ -426,13 +536,13 @@ namespace HumanitarianAssistance.Service
         }
 
 
-        #region Upload files
+        #region Upload files common method to all 
 
-        public static async Task<string> UploadDocument(string folderName, IFormFile filedata, string fileName, string ext, JObject googleCredentialPathFile1, ViewModels.Models.Project.GoogleCredential googleCredential)
+        public static async Task<string> UploadDocument(string folderName, IFormFile filedata, string fileName, string ext, JObject googleCredentialPathFile1, ViewModels.Models.Project.GoogleCredentialModel googleCredential)
         {
             string exten = Path.GetExtension(fileName).ToLower();
             string bucketFolderWithFilePath = string.Empty;
-
+            Console.WriteLine("---------------------GCBUCKET ----------------code");
             ProjectProposalDetail model = new ProjectProposalDetail();
             var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
             var cts = new CancellationTokenSource();
@@ -441,7 +551,7 @@ namespace HumanitarianAssistance.Service
             ClientSecrets secrets = new ClientSecrets();
             secrets.ClientId = googleCredentialPathFile1["installed"]["client_id"].ToString();
             secrets.ClientSecret = googleCredentialPathFile1["installed"]["client_secret"].ToString();
-
+            Console.WriteLine($"secrets");
             //var service = new StorageService();
             //UserCredential credential;
             //using (var stream = new FileStream(googleCredentialPathFile1, FileMode.Open, FileAccess.Read))
@@ -477,6 +587,8 @@ namespace HumanitarianAssistance.Service
 
                 var uploadRequest = new ObjectsResource.InsertMediaUpload(service, newObject, StaticResource.BucketName, filedata.OpenReadStream(), mimetype);
                 var fileResponse = uploadRequest.Upload();
+                Console.WriteLine($"File upload on bucket status: {fileResponse.Status}");
+
                 if (fileResponse.Status.ToString() == "Completed" && fileResponse.Exception == null)
                 {
                     bucketFolderWithFilePath = newObject.Bucket + "/" + newObject.Name;
