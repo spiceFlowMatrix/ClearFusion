@@ -1709,6 +1709,8 @@ namespace DataAccess.Migrations
 
                     b.Property<long?>("BudgetLine");
 
+                    b.Property<string>("BudgetLineDari");
+
                     b.Property<DateTime?>("ContractEndDate");
 
                     b.Property<float?>("ContractNumber");
@@ -9113,6 +9115,8 @@ namespace DataAccess.Migrations
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("Job");
+
+                    b.Property<long?>("JobId");
 
                     b.Property<string>("ModifiedById");
 
