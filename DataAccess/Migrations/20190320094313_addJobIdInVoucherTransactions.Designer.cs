@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190225093431_addTimePolicySchedule")]
-    partial class addTimePolicySchedule
+    [Migration("20190320094313_addJobIdInVoucherTransactions")]
+    partial class addJobIdInVoucherTransactions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -135,6 +135,34 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("ChartOfAccountNew");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.AccountingNew.ExchangeRateVerification", b =>
+                {
+                    b.Property<long>("ExRateVerificationId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<bool>("IsVerified");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.HasKey("ExRateVerificationId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("ExchangeRateVerifications");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AccountLevel", b =>
@@ -509,7 +537,10 @@ namespace DataAccess.Migrations
                         new { PageId = 69, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectDetails" },
                         new { PageId = 70, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "Proposal" },
                         new { PageId = 71, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "CriteriaEvaluation" },
-                        new { PageId = 72, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Producer" }
+                        new { PageId = 72, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Producer" },
+                        new { PageId = 73, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Policy" },
+                        new { PageId = 74, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectJobs" },
+                        new { PageId = 75, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectActivities" }
                     );
                 });
 
@@ -1678,6 +1709,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("serial");
 
                     b.Property<long?>("BudgetLine");
+
+                    b.Property<string>("BudgetLineDari");
 
                     b.Property<DateTime?>("ContractEndDate");
 
@@ -4435,21 +4468,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new { CategoryId = 1L, CategoryName = "Bank", IsDeleted = false },
-                        new { CategoryId = 2L, CategoryName = "NGO", IsDeleted = false },
-                        new { CategoryId = 3L, CategoryName = "Telecommunicaton", IsDeleted = false },
-                        new { CategoryId = 4L, CategoryName = "Government", IsDeleted = false },
-                        new { CategoryId = 5L, CategoryName = "Hospital", IsDeleted = false },
-                        new { CategoryId = 6L, CategoryName = "Travel Agency", IsDeleted = false },
-                        new { CategoryId = 7L, CategoryName = "University", IsDeleted = false },
-                        new { CategoryId = 8L, CategoryName = "Media Groups", IsDeleted = false },
-                        new { CategoryId = 9L, CategoryName = "Shops", IsDeleted = false },
-                        new { CategoryId = 10L, CategoryName = "Energy", IsDeleted = false },
-                        new { CategoryId = 11L, CategoryName = "School", IsDeleted = false },
-                        new { CategoryId = 12L, CategoryName = "Construction", IsDeleted = false }
-                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.ClientDetails", b =>
@@ -4829,6 +4847,40 @@ namespace DataAccess.Migrations
                     b.HasIndex("ProducerId");
 
                     b.ToTable("PolicyDetails");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyOrderSchedule", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<long?>("PolicyId");
+
+                    b.Property<bool>("RequestSchedule");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("PolicyId");
+
+                    b.ToTable("PolicyOrderSchedules");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicySchedule", b =>
@@ -5435,6 +5487,39 @@ namespace DataAccess.Migrations
                     b.ToTable("EmployeeDetailDT");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.OrderSchedulePermission", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<bool>("OrderSchedule");
+
+                    b.Property<int>("PageId");
+
+                    b.Property<string>("RoleId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("PageId");
+
+                    b.ToTable("OrderSchedulePermission");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.PayrollAccountHead", b =>
                 {
                     b.Property<int>("PayrollHeadId")
@@ -5659,6 +5744,68 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("ProfessionDetails");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.ActivityDocumentsDetail", b =>
+                {
+                    b.Property<long>("ActtivityDocumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<string>("ActivityDocumentsFilePath");
+
+                    b.Property<long>("ActivityId");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int?>("StatusId");
+
+                    b.HasKey("ActtivityDocumentId");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("ActivityDocumentsDetail");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.ActivityStatusDetail", b =>
+                {
+                    b.Property<int>("StatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("StatusName");
+
+                    b.HasKey("StatusId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("ActivityStatusDetail");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ApproveProjectDetails", b =>
@@ -6331,6 +6478,99 @@ namespace DataAccess.Migrations
                     b.ToTable("ProgramDetail");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectActivityDetail", b =>
+                {
+                    b.Property<long>("ActivityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<string>("ActivityDescription");
+
+                    b.Property<string>("ActivityName");
+
+                    b.Property<DateTime?>("ActualEndDate");
+
+                    b.Property<DateTime?>("ActualStartDate");
+
+                    b.Property<long?>("BudgetLineId");
+
+                    b.Property<string>("Comments");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int?>("EmployeeID");
+
+                    b.Property<DateTime?>("EndDate");
+
+                    b.Property<DateTime?>("ExtensionEndDate");
+
+                    b.Property<DateTime?>("ExtensionStartDate");
+
+                    b.Property<string>("ImplementationChalanges");
+
+                    b.Property<string>("ImplementationMethod");
+
+                    b.Property<int?>("ImplementationProgress");
+
+                    b.Property<bool?>("ImplementationStatus");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("MonitoringChallenges");
+
+                    b.Property<int?>("MonitoringFrequency");
+
+                    b.Property<int?>("MonitoringProgress");
+
+                    b.Property<int?>("MonitoringScore");
+
+                    b.Property<bool?>("MonitoringStatus");
+
+                    b.Property<int?>("OfficeId");
+
+                    b.Property<string>("OvercomingChallanges");
+
+                    b.Property<string>("Recommendation");
+
+                    b.Property<int>("RecurrinTypeId");
+
+                    b.Property<bool?>("Recurring");
+
+                    b.Property<int?>("RecurringCount");
+
+                    b.Property<DateTime?>("StartDate");
+
+                    b.Property<int?>("StatusId");
+
+                    b.Property<string>("Strengths");
+
+                    b.Property<string>("VerificationSource");
+
+                    b.Property<string>("Weeknesses");
+
+                    b.HasKey("ActivityId");
+
+                    b.HasIndex("BudgetLineId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("ProjectActivityDetail");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectArea", b =>
                 {
                     b.Property<long>("ProjectAreaId")
@@ -6573,6 +6813,8 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
+                    b.Property<long>("ProjectId");
+
                     b.Property<string>("ProjectJobCode");
 
                     b.Property<string>("ProjectJobName");
@@ -6582,6 +6824,8 @@ namespace DataAccess.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ModifiedById");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectJobDetail");
                 });
@@ -8843,6 +9087,8 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Job");
 
+                    b.Property<long?>("JobId");
+
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
@@ -9066,6 +9312,17 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("AccountTypeId");
 
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.AccountingNew.ExchangeRateVerification", b =>
+                {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -10680,6 +10937,21 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ProducerId");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyOrderSchedule", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.Marketing.PolicyDetail", "PolicyDetails")
+                        .WithMany()
+                        .HasForeignKey("PolicyId");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicySchedule", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -10835,6 +11107,22 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.OrderSchedulePermission", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.ApplicationPages", "ApplicationPages")
+                        .WithMany()
+                        .HasForeignKey("PageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.PayrollAccountHead", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -10906,6 +11194,37 @@ namespace DataAccess.Migrations
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.ProfessionDetails", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.ActivityDocumentsDetail", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.Project.ProjectActivityDetail", "ProjectActivityDetail")
+                        .WithMany()
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.Project.ActivityStatusDetail", "ActivityStatusDetail")
+                        .WithMany()
+                        .HasForeignKey("StatusId");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.Project.ActivityStatusDetail", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
@@ -11183,6 +11502,33 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectActivityDetail", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.Project.ProjectBudgetLineDetail", "ProjectBudgetLineDetail")
+                        .WithMany()
+                        .HasForeignKey("BudgetLineId");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetail")
+                        .WithMany()
+                        .HasForeignKey("OfficeId");
+
+                    b.HasOne("DataAccess.DbEntities.Project.ActivityStatusDetail", "ActivityStatusDetail")
+                        .WithMany()
+                        .HasForeignKey("StatusId");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectArea", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.Project.AreaDetail", "AreaDetail")
@@ -11309,6 +11655,11 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectOtherDetail", b =>

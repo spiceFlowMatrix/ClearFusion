@@ -20,15 +20,9 @@ namespace DataAccess.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     PolicyId = table.Column<long>(nullable: true),
+                    TimeScheduleCode = table.Column<string>(nullable: true),
                     StartTime = table.Column<TimeSpan>(nullable: false),
                     EndTime = table.Column<TimeSpan>(nullable: false),
-                    Monday = table.Column<bool>(nullable: false),
-                    Tuesday = table.Column<bool>(nullable: false),
-                    Wednesday = table.Column<bool>(nullable: false),
-                    Thursday = table.Column<bool>(nullable: false),
-                    Friday = table.Column<bool>(nullable: false),
-                    Saturday = table.Column<bool>(nullable: false),
-                    Sunday = table.Column<bool>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -75,5 +69,6 @@ namespace DataAccess.Migrations
             migrationBuilder.DropTable(
                 name: "PolicyTimeSchedules");
         }
+
     }
 }

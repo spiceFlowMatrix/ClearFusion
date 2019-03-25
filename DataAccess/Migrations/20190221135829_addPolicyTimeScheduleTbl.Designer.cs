@@ -4819,8 +4819,6 @@ namespace DataAccess.Migrations
 
                     b.Property<TimeSpan>("EndTime");
 
-                    b.Property<bool>("Friday");
-
                     b.Property<bool>("IsActive");
 
                     b.Property<bool?>("IsDeleted");
@@ -4829,21 +4827,11 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<bool>("Monday");
-
                     b.Property<long?>("PolicyId");
-
-                    b.Property<bool>("Saturday");
 
                     b.Property<TimeSpan>("StartTime");
 
-                    b.Property<bool>("Sunday");
-
-                    b.Property<bool>("Thursday");
-
-                    b.Property<bool>("Tuesday");
-
-                    b.Property<bool>("Wednesday");
+                    b.Property<string>("TimeScheduleCode");
 
                     b.HasKey("Id");
 
@@ -4855,6 +4843,7 @@ namespace DataAccess.Migrations
 
                     b.ToTable("PolicyTimeSchedules");
                 });
+
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.Producer", b =>
                 {

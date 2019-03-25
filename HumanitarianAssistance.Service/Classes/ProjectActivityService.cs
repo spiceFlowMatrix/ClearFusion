@@ -201,7 +201,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
-              
+
                 if (projectactivityDetail != null)
                 {
                     // Actual start date
@@ -224,7 +224,7 @@ namespace HumanitarianAssistance.Service.Classes
                         response.StatusCode = StaticResource.failStatusCode;
                         response.Message = StaticResource.invalidDate;
                     }
-                  
+
                 }
                 else
                 {
@@ -470,7 +470,7 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
 
-        public async Task<APIResponse> UploadDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext,int statusID)
+        public async Task<APIResponse> UploadDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID)
         {
             APIResponse response = new APIResponse();
             try
@@ -519,15 +519,14 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     //if (activityExixt == null)
                     //{
-                        docObj.ActivityId = activityId;
-                        docObj.ActivityDocumentsFilePath = bucketResponse;
-                        docObj.StatusId = statusID;
-                        docObj.CreatedById = UserId;
-                        docObj.IsDeleted = false;
-                        docObj.CreatedDate = DateTime.UtcNow;
+                    docObj.ActivityId = activityId;
+                    docObj.ActivityDocumentsFilePath = bucketResponse;
+                    docObj.StatusId = statusID;
+                    docObj.CreatedById = UserId;
+                    docObj.IsDeleted = false;
+                    docObj.CreatedDate = DateTime.UtcNow;
 
-                        await _uow.ActivityDocumentsDetailRepository.AddAsyn(docObj);
-                        _uow.GetDbContext().SaveChanges();
+                    await _uow.ActivityDocumentsDetailRepository.AddAsyn(docObj);
 
                     //}
 
@@ -545,10 +544,18 @@ namespace HumanitarianAssistance.Service.Classes
 
                 }
 
+                ActivityDocumentsDetailModel obj = new ActivityDocumentsDetailModel
+                {
+                    ActtivityDocumentId = docObj.ActtivityDocumentId,
+                    ActivityDocumentsFilePath = docObj.ActivityDocumentsFilePath,
+                    ActivityDocumentsFileName = docObj.ActivityDocumentsFilePath.Split('/').Last(),
+                    StatusId = docObj.StatusId,
+                    ActivityId = docObj.ActivityId,
+                };
 
-                _uow.GetDbContext().SaveChanges();
-                response.data.activityDocumnentDetail = docObj;
+                await _uow.GetDbContext().SaveChangesAsync();
 
+                response.data.activityDocumnentDetail = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
 
@@ -567,7 +574,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse apiResponse = new APIResponse();
             try
             {
-                var listobj = await  _uow.GetDbContext().ActivityDocumentsDetail.Where(x => x.ActivityId == activityId && x.IsDeleted == false)
+                var listobj = await _uow.GetDbContext().ActivityDocumentsDetail.Where(x => x.ActivityId == activityId && x.IsDeleted == false)
                     .Select(x => new ActivityDocumentDetailModel()
                     {
                         ActivityId = x.ActivityId,
@@ -582,8 +589,8 @@ namespace HumanitarianAssistance.Service.Classes
                     apiResponse.StatusCode = StaticResource.successStatusCode;
                     apiResponse.Message = StaticResource.SuccessText;
                 }
-                
-                
+
+
             }
             catch (Exception ex)
             {
@@ -592,9 +599,70 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return apiResponse;
         }
+
+
+
+
+
+        public async Task<APIResponse> UploadFileDemo(IFormFile filesData, string userId, string userName)
+        {
+            APIResponse apiResponse = new APIResponse();
+            try
+            {
+                var file = filesData;
+                string fileName = filesData.FileName;
+                string ext = Path.GetExtension(fileName).ToLower();
+
+                // validate file type 
+                if (ext == ".doc" || ext == ".docx" || ext == ".txt" || ext == ".xlsx" || ext == ".pdf")
+                {
+                    // Auth 
+                    var webRootfilePath = _hostingEnvironment.WebRootPath;
+
+                    var path = Path.Combine(webRootfilePath, "demo.xlsx");
+
+
+                    string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                    GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
+
+                    Console.WriteLine($"Linux GoogleServiceAccountDirectory : {GoogleServiceAccountDirectory}");
+
+                    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
+                    using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
+                    {
+                        Console.WriteLine($"obj stream:{"GOOGLE_APPLICATION_CREDENTIALS"}");
+                        //UploadFile(StaticResource.BucketName, @"D:\poonam\newdoc.docx", "abc");
+
+                        var intdata = GCBucket.UploadFile(StaticResource.BucketName, path);
+                    }
+
+                    // Upload
+
+                }
+                else
+                {
+                    apiResponse.StatusCode = StaticResource.failStatusCode;
+                    apiResponse.Message = StaticResource.FileText;
+                }
+
+
+                }
+            catch (Exception ex)
+            {
+                apiResponse.StatusCode = StaticResource.failStatusCode;
+                apiResponse.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return apiResponse;
+        }
+
+
+
+
     }
 
 
     #endregion
+
+
 
 }

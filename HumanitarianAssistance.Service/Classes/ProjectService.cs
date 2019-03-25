@@ -4430,6 +4430,39 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetProjectJobDetailByBudgetLineId(long budgetLineId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+
+                ProjectBudgetLineDetail projectBudgetLineDetail = await _uow.GetDbContext().ProjectBudgetLineDetail.Include(x=> x.ProjectJobDetail).FirstOrDefaultAsync(x=> x.IsDeleted== false && x.BudgetLineId== budgetLineId);
+
+                ProjectJobDetailModel model = new ProjectJobDetailModel();
+
+                if (projectBudgetLineDetail.ProjectJobDetail != null)
+                {
+
+                    model.ProjectId = projectBudgetLineDetail.ProjectJobDetail.ProjectId;
+                    model.ProjectJobCode = projectBudgetLineDetail.ProjectJobDetail.ProjectJobCode;
+                    model.ProjectJobName = projectBudgetLineDetail.ProjectJobDetail.ProjectJobName;
+                    model.ProjectJobId = projectBudgetLineDetail.ProjectJobDetail.ProjectJobId;
+                }
+
+                response.data.ProjectJobModel = model;
+                response.StatusCode = 200;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -4547,7 +4580,7 @@ namespace HumanitarianAssistance.Service.Classes
                     ProjectJobCode = b.ProjectJobDetail?.ProjectJobCode ?? null,
                     CurrencyName = b.CurrencyDetails?.CurrencyName ?? null,
                     ProjectJobId = b.ProjectJobDetail?.ProjectJobId ?? null,
-
+                    BudgetCodeName= b.BudgetCode+"-"+ b.BudgetName
                 }).ToList();
                 response.data.ProjectBudgetLineDetailList = budgetDetaillist.OrderByDescending(x => x.BudgetLineId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
@@ -4863,27 +4896,51 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
 
-        public async Task<APIResponse> GetAllExpenditureByProjectId(int projectId)
+        public async Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineCashFlowFilterModel model)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var TransList = await _uow.GetDbContext().VoucherTransactions
-                                          .Where(x => x.IsDeleted == false && x.ProjectId == projectId && x.ProjectId != null)
-                                          .OrderBy(x => x.CreatedDate)
-                                          .ToListAsync();
+                List<VoucherTransactions> TransList = new List<VoucherTransactions>();
+                if (model.BudgetLineId == 0 || model.BudgetLineId == null)
+                {
+                    TransList = await _uow.GetDbContext().VoucherTransactions
+                                              .Where(x => x.IsDeleted == false && x.ProjectId == model.ProjectId)
+                                              .OrderBy(x => x.CreatedDate)
+                                              .ToListAsync();
+                }
+                else
+                {
+                    TransList = (from vt in _uow.GetDbContext().VoucherTransactions
+                                 join bl in _uow.GetDbContext().ProjectBudgetLineDetail on vt.BudgetLineId equals Convert.ToInt32(bl.BudgetLineId)
+                                 where vt.IsDeleted == false &&
+                                             vt.ProjectId == model.ProjectId &&
+                                             vt.BudgetLineId == model.BudgetLineId &&
+                                             bl.CreatedDate.Value.Date >= model.BudgetLineStartDate.Value.Date &&
+                                             bl.CreatedDate.Value.Date <= model.BudgetLineEndDate.Value.Date
+                                 select vt
+                                  ).ToList();
+                }
 
                 List<BLTransactionCashFlowModel> budgetDetaillist = TransList.Select(b => new BudgetLineCashFlowModel
                 {
                     ProjectId = b.ProjectId,
                     Debit = b.Debit,
                     TransactionDate = b.TransactionDate,
-                    Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(b.TransactionDate.Value.Month)
+                    Month = b.TransactionDate?.ToShortDateString()
+                    //Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(b.TransactionDate.Value.Month)
 
                 }).GroupBy(x => x.Month, x => x, (key, g) => new BLTransactionCashFlowModel { Month = key, DebitList = g.ToList() }).ToList();
 
+                List<BalanceSheetBreakdownModel> breakdownList = budgetDetaillist.Select(x => new BalanceSheetBreakdownModel
+                {
+                    Date = x.Month,
+                    DebitTotal = (double)x.DebitList.Sum(y => y.Debit)
+                }).ToList();
 
-                response.data.BudgetLineCashFlowModelList = budgetDetaillist;
+                response.data.BudgetLineBreakdownList = breakdownList;
+
+                //response.data.BudgetLineCashFlowModelList = budgetDetaillist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
