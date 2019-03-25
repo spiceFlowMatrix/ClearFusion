@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,7 +42,9 @@ namespace HumanitarianAssistance.Service
 
             //there are different scopes, which you can find here https://cloud.google.com/storage/docs/authentication
 
-            var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
+            //var scopes = new[] { @"https://www.googleapis.com/auth/cloud-platform" };
+            var scopes = new[] { @"https://www.googleapis.com/auth/devstorage.full_control" };
+
             var cts = new CancellationTokenSource();
 
             StorageService service = new StorageService();
@@ -255,6 +258,7 @@ namespace HumanitarianAssistance.Service
 
 
         //************************************read credential from directory using auth credentail and using env as well as directory 20/03/2019
+
         public static async Task<ProjectProposalDetail> StartProposalByDirectory(string projectProposalfilename, string googleCredentialpathFile, string folderName, ViewModels.Models.Project.GoogleCredentialModel googleCredential, long Projectid, string userid)
         {
             FileStream fileStream = null;
@@ -644,6 +648,37 @@ namespace HumanitarianAssistance.Service
             }
             return 1;
         }
+
+        /// <summary>
+        /// start proposal 25/03/2019
+        /// </summary>
+
+
+        //DEMO FOR UPLOAD FILE USING SERVICE ACCOUNT CREDENTIAL. 22/03/2019
+        public static async Task<string> StartOroposalCreateFile(string bucketName, string folderName, string fileName)
+        {
+            try
+            {
+                APIResponse response = new APIResponse();
+                var storage = StorageClient.Create();
+                var content = Encoding.UTF8.GetBytes("");
+                string folderWithProposalFile = StaticResource.ProjectsFolderName +"/"+ folderName + "/" + fileName;
+                var bucketResponse = await storage.UploadObjectAsync(bucketName, folderWithProposalFile, "application/x-directory", new MemoryStream(content));
+                Console.WriteLine($"upload status:******************check bucket{bucketResponse}");
+                var uploadedFile = bucketResponse.Name;
+                Console.WriteLine($"UPLOADED FILE NAME: {uploadedFile}");
+                return uploadedFile;
+              
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("-------------Exception of proposal creation on bucket------------:");
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+        
+
     }
 
 

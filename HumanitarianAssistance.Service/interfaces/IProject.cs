@@ -100,7 +100,7 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetAllSecurityConsiderationDetails();
         APIResponse GetAllDistrictvalueByProvinceId(int[] provinceId);
 
-        Task<APIResponse> AddEditProjectproposals(long projectId, string UserId,string logginUserEmailId);
+        //Task<APIResponse> AddEditProjectproposals(long projectId, string UserId,string logginUserEmailId);
         APIResponse GetProjectproposalsById(long projectId);
 
         APIResponse AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
@@ -204,6 +204,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowModel model);
         Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineCashFlowFilterModel model);
 
+        #endregion
+
+        #region start proposal 25/03/219
+        Task<APIResponse> StartProposal(long Projectid, string userid, string logginUserEmailId);
         #endregion
     }
 }
