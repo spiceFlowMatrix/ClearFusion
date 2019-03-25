@@ -79,8 +79,8 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public double? EURAmount { get; set; }
 		public double? USDAmount { get; set; }
 		public double? PKRAmount { get; set; }
-        public int? ProjectId { get; set; }
-        public int? BudgetLineId { get; set; }
+        public long? ProjectId { get; set; }
+        public long? BudgetLineId { get; set; }
 
     }
 
