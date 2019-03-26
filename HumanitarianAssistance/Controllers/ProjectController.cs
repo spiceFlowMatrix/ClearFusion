@@ -1730,7 +1730,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region
     [HttpPost]
-    public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowModel model)
+    public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowFilterModel model)
     {
       APIResponse apiresponse = await _iProject.FilterProjectCashFlow(model);
       return apiresponse;
@@ -1738,7 +1738,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    public async Task<APIResponse> FilterBudgetLineBreakdown([FromBody]BudgetLineCashFlowFilterModel model)
+    public async Task<APIResponse> FilterBudgetLineBreakdown([FromBody]BudgetLineBreakdownFilterModel model)
     {
       APIResponse apiResponse = new APIResponse();
       apiResponse = await _iProject.FilterBudgetLineBreakdown(model);
