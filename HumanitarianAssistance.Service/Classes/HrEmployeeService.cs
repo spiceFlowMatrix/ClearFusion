@@ -1316,6 +1316,7 @@ namespace HumanitarianAssistance.Service.Classes
                             EmployeePayroll employeePayroll = new EmployeePayroll();
                             employeePayroll.AccountNo = salaryHead.AccountNo;
                             employeePayroll.HeadTypeId = salaryHead.HeadTypeId;
+                            employeePayroll.SalaryHeadId = salaryHead.SalaryHeadId;
                             employeePayroll.IsDeleted = false;
                             employeePayroll.TransactionTypeId = salaryHead.TransactionTypeId;
                             employeePayroll.EmployeeID = model.EmployeeId.Value;

@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Service
     {
         static string[] Scopes = { DriveService.Scope.Drive };
         static string ApplicationName = string.Empty;
-        public static DriveService userGoogleCredential(string ProjectCode, string pathFile, ViewModels.Models.Project.GoogleCredential Credential)
+        public static DriveService userGoogleCredential(string ProjectCode, string pathFile, ViewModels.Models.Project.GoogleCredentialModel Credential)
         {
 
             UserCredential credential;
@@ -53,7 +53,7 @@ namespace HumanitarianAssistance.Service
         }
 
 
-        public static ProjectProposalModel userCredential(string ProjectProposalfilename, string pathFile, ViewModels.Models.Project.GoogleCredential Credential, string EmailId, string FolderName, string logginUserEmailId)
+        public static ProjectProposalModel userCredential(string ProjectProposalfilename, string pathFile, ViewModels.Models.Project.GoogleCredentialModel Credential, string EmailId, string FolderName, string logginUserEmailId)
         {
             var driveService = userGoogleCredential(ProjectProposalfilename, pathFile, Credential);
             var resp = createfolder(driveService, ProjectProposalfilename, EmailId, FolderName, Credential.EmailId, logginUserEmailId);
@@ -156,7 +156,7 @@ namespace HumanitarianAssistance.Service
         }
 
 
-        public static ProjectProposalModel uploadOtherProposaldoc(string ProjectCode, IFormFile filedata, string fileName, string pathFile, string uploadfilelocalpath, ViewModels.Models.Project.GoogleCredential Credential, string EmailId, string logginUserEmailId)
+        public static ProjectProposalModel uploadOtherProposaldoc(string ProjectCode, IFormFile filedata, string fileName, string pathFile, string uploadfilelocalpath, ViewModels.Models.Project.GoogleCredentialModel Credential, string EmailId, string logginUserEmailId)
         {
             ProjectProposalModel res = new ProjectProposalModel();
             string exten = System.IO.Path.GetExtension(fileName).ToLower();
@@ -388,7 +388,7 @@ namespace HumanitarianAssistance.Service
             }
             return mimeType;
         }
-        public static string FilePermission(string ProjectCode, string Fileid, string EmailId, string pathFile, ViewModels.Models.Project.GoogleCredential Credential, string logginUserEmailId)
+        public static string FilePermission(string ProjectCode, string Fileid, string EmailId, string pathFile, ViewModels.Models.Project.GoogleCredentialModel Credential, string logginUserEmailId)
         {
             var driveService = userGoogleCredential(ProjectCode, pathFile, Credential);
             string Message = string.Empty;

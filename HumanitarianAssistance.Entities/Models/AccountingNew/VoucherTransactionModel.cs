@@ -14,8 +14,8 @@ namespace HumanitarianAssistance.ViewModels.Models.AccountingNew
         public long TransactionId { get; set; }
         public long? AccountNo { get; set; }
         public string Description { get; set; }
-        public int? ProjectId { get; set; }
-        public int? BudgetLineId { get; set; }
+        public long? ProjectId { get; set; }
+        public long? BudgetLineId { get; set; }
         public long? JobId { get; set; }
         public string JobName { get; set; }
         public double? Credit { get; set; }
