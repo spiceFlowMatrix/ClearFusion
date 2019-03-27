@@ -740,6 +740,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
     #region proposals
+    //original addedit Project Proposal with google credential using read drirectory path  and  by environment variable comment.poonam 25/03/2019.
+    //[HttpPost]
+    //public async Task<APIResponse> AddEditProjectproposals([FromBody]long ProjectId)
+    //{
+    //  APIResponse apiRespone = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    string logginUserEmailId = user.Email;
+    //    var id = user.Id;
+    //    apiRespone = await _iProject.AddEditProjectproposals(ProjectId, id, logginUserEmailId);
+    //  }
+    //  return apiRespone;
+    //}
+
     [HttpPost]
     public async Task<APIResponse> AddEditProjectproposals([FromBody]long ProjectId)
     {
@@ -749,10 +764,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         string logginUserEmailId = user.Email;
         var id = user.Id;
-        apiRespone = await _iProject.AddEditProjectproposals(ProjectId, id, logginUserEmailId);
+        apiRespone = await _iProject.StartProposal(ProjectId, id, logginUserEmailId);
       }
       return apiRespone;
     }
+
 
     [HttpPost]
     public APIResponse GetProjectproposalsById([FromBody]long ProjectId)
@@ -1669,7 +1685,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region
     [HttpPost]
-    public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowModel model)
+    public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowFilterModel model)
     {
       APIResponse apiresponse = await _iProject.FilterProjectCashFlow(model);
       return apiresponse;
@@ -1677,7 +1693,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    public async Task<APIResponse> FilterBudgetLineBreakdown([FromBody]BudgetLineCashFlowFilterModel model)
+    public async Task<APIResponse> FilterBudgetLineBreakdown([FromBody]BudgetLineBreakdownFilterModel model)
     {
       APIResponse apiResponse = new APIResponse();
       apiResponse = await _iProject.FilterBudgetLineBreakdown(model);

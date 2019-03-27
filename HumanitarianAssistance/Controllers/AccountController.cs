@@ -44,6 +44,7 @@ namespace HumanitarianAssistance.Controllers
     private IUserDetails _iuserDetails;
     private IPermissionsInRoles _ipermissionsInRoles;
     private IVoucherDetail _ivoucherDetail;
+    private IVoucherNewService _iVoucherNewService;
     private IExchangeRate _iExchangeRate;
     private IChartOfAccountNewService _iChartOfAccountNewService;
     private IPermissionsInRoles _iPermissionsInRolesService;
@@ -62,7 +63,8 @@ namespace HumanitarianAssistance.Controllers
             IVoucherDetail ivoucherDetail,
             IExchangeRate iExchangeRate,
             IChartOfAccountNewService iChartOfAccountNew,
-            IUnitOfWork uow
+            IUnitOfWork uow,
+            IVoucherNewService iVoucherNewService
             )
     {
       _userManager = userManager;
@@ -76,6 +78,7 @@ namespace HumanitarianAssistance.Controllers
       _iExchangeRate = iExchangeRate;
       _iChartOfAccountNewService = iChartOfAccountNew;
       _uow = uow;
+      _iVoucherNewService = iVoucherNewService;
       _serializerSettings = new JsonSerializerSettings
       {
         Formatting = Formatting.Indented,
@@ -1195,7 +1198,7 @@ namespace HumanitarianAssistance.Controllers
       if (user != null)
       {
         model.CreatedById = user.Id;
-        response = await _ivoucherDetail.AddEmployeePensionPayment(model);
+        response = await _iVoucherNewService.AddEmployeePensionPayment(model);
       }
       return response;
     }

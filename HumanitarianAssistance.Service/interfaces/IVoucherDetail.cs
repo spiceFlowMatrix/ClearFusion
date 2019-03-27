@@ -65,8 +65,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddExchangeGainLossVoucher(ExchangeGainLossVoucher model);
         Task<APIResponse> GetExchangeGainLossVoucherList(int OfficeId);
         Task<APIResponse> DeleteExchangeGainLossVoucher(long VoucherNo, string UserId);
-        //Task<APIResponse> GetAllAccountCodeByVoucherNo(ExchangeGainOrLossFilterModel ExchangeGainOrLossFilter);
-        Task<APIResponse> AddEmployeePensionPayment(EmployeePensionPaymentModel EmployeePensionPayment);
+        //Task<APIResponse> GetAllAccountCodeByVoucherNo(ExchangeGainOrLossFilterModel ExchangeGainOrLossFilter);    
         Task<APIResponse> GetAllInputLevelAccountCode();
         Task<APIResponse> GenerateSalaryVoucher(EmployeeSalaryVoucherModel EmployeeSalaryVoucher);
         Task<APIResponse> GetEmployeeSalaryVoucher(int EmployeeId, int Month, int Year);

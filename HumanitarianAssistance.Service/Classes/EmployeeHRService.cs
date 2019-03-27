@@ -340,24 +340,11 @@ namespace HumanitarianAssistance.Service.Classes
                 // 2. Deductions
                 // 3. General(basicPay / hours)
 
-                ICollection<EmployeeMonthlyAttendance> empPayrollAttendanceList = await _uow.GetDbContext().EmployeeMonthlyAttendance.Include(x => x.EmployeeDetails).Where(x => x.OfficeId == officeid && x.Month == month && x.Year == year && x.IsDeleted == false && x.IsApproved == false).ToListAsync();
+                ICollection<EmployeeMonthlyAttendance> empPayrollAttendanceList = await _uow.GetDbContext().EmployeeMonthlyAttendance.Include(x => x.EmployeeDetails).Where(x => x.OfficeId == officeid && x.Month == month && x.Year == year && x.IsDeleted == false && x.IsApproved == false && x.EmployeeDetails.IsDeleted== false).ToListAsync();
 
                 //Note: default 0.045 i.e. (4.5 %)
                 //double? pensionRate = _uow.GetDbContext().EmployeePensionRate.Include(x => x.FinancialYearDetail).FirstOrDefault(x => x.FinancialYearDetail.StartDate.Year == year && x.IsDeleted == false)?.PensionRate;
                 double? pensionRate = _uow.GetDbContext().EmployeePensionRate.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false)?.PensionRate;
-
-                //ICollection<ExchangeRate> xExchangeRate = new List<ExchangeRate>();
-
-                //xExchangeRate = await _uow.ExchangeRateRepository.FindAllAsync(x => x.IsDeleted == false && x.Date.Value.Date == DateTime.Now.Date);
-
-                //if (xExchangeRate.Count == 0)
-                //{
-                //    xExchangeRate = await _uow.ExchangeRateRepository.FindAllAsync(x => x.IsDeleted == false && x.Date.Value.Date.Year == DateTime.Now.Year);
-                //}
-                //if (xExchangeRate.Count == 0)
-                //{
-                //    throw new Exception("Exchange Rate Not Defined");
-                //}
 
                 List<EmployeeMonthlyPayrollModel> payrollFinal = new List<EmployeeMonthlyPayrollModel>();
 
@@ -369,27 +356,22 @@ namespace HumanitarianAssistance.Service.Classes
 
                     if (payroll.Any(x => x.AccountNo == null))
                     {
-                        throw new Exception($"Payroll details not set for Employee Id: {payrollAttendance.EmployeeId}");
+                        throw new Exception($"Payroll details not set for Employee code: {payrollAttendance.EmployeeDetails.EmployeeCode}");
                     }
 
                     payrollDetail = payroll.Select(x => new EmployeePayrollModel
                     {
                         PayrollId = x.PayrollId,
-                        //CreatedById = x.CreatedById,
-                        // CreatedDate = x.CreatedDate,
                         CurrencyId = x.CurrencyId ?? 0,
                         EmployeeId = x.EmployeeID,
-                        //ModifiedById = x.ModifiedById,
                         HeadTypeId = x.SalaryHeadDetails.HeadTypeId,
                         IsDeleted = x.IsDeleted,
-                        //ModifiedDate = x.ModifiedDate,
                         MonthlyAmount = x.MonthlyAmount ?? 0,
                         PaymentType = 2, //hourly
                         PensionRate = pensionRate != null ? pensionRate : DefaultValues.DefaultPensionRate,
                         SalaryHeadId = x.SalaryHeadId ?? 0,
                         SalaryHeadType = x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.ALLOWANCE ? "Allowance" : x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.DEDUCTION ? "Deduction" : x.SalaryHeadDetails.HeadTypeId == (int)SalaryHeadType.GENERAL ? "General" : "",
                         SalaryHead = x.SalaryHeadDetails.HeadName,
-                        //BasicPay = x.BasicPay,
                         AccountNo = x.AccountNo,
                         TransactionTypeId = x.TransactionTypeId
                     }).OrderBy(x => x.TransactionTypeId).ThenBy(x => x.SalaryHeadType).ToList();
@@ -421,6 +403,11 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.TotalAllowance = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.ALLOWANCE).Sum(s => s.MonthlyAmount);
                             obj.TotalDeduction = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.DEDUCTION).Sum(s => s.MonthlyAmount);
                             obj.TotalGeneralAmount = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).Sum(s => s.MonthlyAmount);
+
+                            if (obj.TotalGeneralAmount == 0)
+                            {
+                                throw new Exception($"Basic Pay not defined for Employee Code-{payrollAttendance.EmployeeDetails.EmployeeCode}");
+                            }
 
                             obj.GrossSalary = obj.TotalGeneralAmount * (obj.PresentDays + obj.LeaveHours + obj.OverTimeHours) + obj.TotalAllowance;
                             obj.PensionAmount = (obj.GrossSalary * payrollDetail.FirstOrDefault().PensionRate) / 100; // i.e. 4.5 % => 0.045

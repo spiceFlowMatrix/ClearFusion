@@ -477,8 +477,8 @@ namespace HumanitarianAssistance.Service.Classes
             {
 
                 ActivityDocumentDetailModel activityModel = new ActivityDocumentDetailModel();
-                var projectCode = _uow.GetDbContext().ProjectActivityDetail.Include(x => x.ProjectBudgetLineDetail.ProjectDetail)
-                                                                      .FirstOrDefault(x => x.ActivityId == activityId && x.IsDeleted == false);
+                var projectCode = await _uow.GetDbContext().ProjectActivityDetail.Include(x => x.ProjectBudgetLineDetail.ProjectDetail)
+                                                                      .FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
                 string folderName = projectCode.ProjectBudgetLineDetail.ProjectDetail.ProjectCode;
 
                 Console.WriteLine("------Before Credential path Upload----------");
@@ -492,7 +492,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 Console.WriteLine("------------After Credential path Upload-------------");
 
-                GoogleCredential result = new GoogleCredential();
+                GoogleCredentialModel result = new GoogleCredentialModel();
                 //using (StreamReader files = File.OpenText(googleCredentialPathFile1))
                 //using (JsonTextReader reader = new JsonTextReader(files))
                 //{
@@ -511,7 +511,8 @@ namespace HumanitarianAssistance.Service.Classes
                 result.Accounting = StaticResource.AccountingFolderName;
                 result.Store = StaticResource.StoreFolderName;
 
-                string bucketResponse = GCBucket.UploadDocument(folderName, file, fileName, ext, googleCredentialPathFile1, result).Result;
+                string bucketResponse = await GCBucket.UploadDocument(folderName, file, fileName, ext, googleCredentialPathFile1, result);
+                Console.WriteLine($"bucketResponse : {bucketResponse}");
                 //ActivityDocumentsDetail activityExixt = _uow.GetDbContext().ActivityDocumentsDetail.FirstOrDefault(x => x.ActivityId == activityId && x.IsDeleted == false);
                 ActivityDocumentsDetail docObj = new ActivityDocumentsDetail();
 

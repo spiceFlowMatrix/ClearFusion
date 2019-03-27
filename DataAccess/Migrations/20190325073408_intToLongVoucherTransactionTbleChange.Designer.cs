@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190325073408_intToLongVoucherTransactionTbleChange")]
+    partial class intToLongVoucherTransactionTbleChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5056,82 +5058,6 @@ namespace DataAccess.Migrations
                     b.ToTable("Qualities");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.ScheduleDetails", b =>
-                {
-                    b.Property<long>("ScheduleId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long?>("ChannelId");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("Description");
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<TimeSpan>("EndTime");
-
-                    b.Property<bool>("Friday");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<long?>("JobId");
-
-                    b.Property<long?>("MediumId");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<bool>("Monday");
-
-                    b.Property<long?>("PolicyId");
-
-                    b.Property<long?>("ProjectId");
-
-                    b.Property<bool>("Saturday");
-
-                    b.Property<string>("ScheduleCode");
-
-                    b.Property<string>("ScheduleName");
-
-                    b.Property<string>("ScheduleType");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.Property<TimeSpan>("StartTime");
-
-                    b.Property<bool>("Sunday");
-
-                    b.Property<bool>("Thursday");
-
-                    b.Property<bool>("Tuesday");
-
-                    b.Property<bool>("Wednesday");
-
-                    b.HasKey("ScheduleId");
-
-                    b.HasIndex("ChannelId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("JobId");
-
-                    b.HasIndex("MediumId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("PolicyId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ScheduleDetails");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.TimeCategory", b =>
                 {
                     b.Property<long>("TimeCategoryId")
@@ -9206,7 +9132,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Project");
 
-                    b.Property<long?>("ProjectId");
+                    b.Property<int?>("ProjectId");
 
                     b.Property<string>("Sector");
 
@@ -9218,8 +9144,6 @@ namespace DataAccess.Migrations
 
                     b.HasKey("TransactionId");
 
-                    b.HasIndex("BudgetLineId");
-
                     b.HasIndex("ChartOfAccountNewId");
 
                     b.HasIndex("CreatedById");
@@ -9229,8 +9153,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("OfficeId");
-
-                    b.HasIndex("ProjectId");
 
                     b.HasIndex("TransactionId")
                         .IsUnique();
@@ -11128,37 +11050,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.ScheduleDetails", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.Marketing.Channel", "Channel")
-                        .WithMany()
-                        .HasForeignKey("ChannelId");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.JobDetails", "JobDetails")
-                        .WithMany()
-                        .HasForeignKey("JobId");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.Medium", "Mediums")
-                        .WithMany()
-                        .HasForeignKey("MediumId");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.PolicyDetail", "PolicyDetails")
-                        .WithMany()
-                        .HasForeignKey("PolicyId");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.TimeCategory", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -12561,7 +12452,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.VoucherDetail", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectBudgetLineDetail", "ProjectBudgetLineDetail")
+                    b.HasOne("DataAccess.DbEntities.ProjectBudgetLine", "ProjectBudgetLine")
                         .WithMany()
                         .HasForeignKey("BudgetLineId");
 
@@ -12616,10 +12507,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactions", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectBudgetLineDetail", "ProjectBudgetLineDetail")
-                        .WithMany()
-                        .HasForeignKey("BudgetLineId");
-
                     b.HasOne("DataAccess.DbEntities.AccountingNew.ChartOfAccountNew", "ChartOfAccountDetail")
                         .WithMany("VoucherTransactionsList")
                         .HasForeignKey("ChartOfAccountNewId");
@@ -12639,10 +12526,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetails")
                         .WithMany()
                         .HasForeignKey("OfficeId");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
 
                     b.HasOne("DataAccess.DbEntities.VoucherDetail", "VoucherDetails")
                         .WithMany("VoucherTransactionDetails")
