@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using HumanitarianAssistance.ViewModels.Models.Marketing;
 using Microsoft.EntityFrameworkCore;
 using HumanitarianAssistance.ViewModels.Models.Project;
+using DataAccess.DbEntities.Marketing;
 
 namespace HumanitarianAssistance.Service.Classes.Marketing
 {
@@ -26,6 +27,21 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             this._uow = uow;
             this._mapper = mapper;
             this._userManager = userManager;
+        }
+
+        public string getScheduleCode(string ScheduleId)
+        {
+            string code = string.Empty;
+            if (ScheduleId.Length == 1)
+                return code = "0000" + ScheduleId;
+            else if (ScheduleId.Length == 2)
+                return code = "000" + ScheduleId;
+            else if (ScheduleId.Length == 3)
+                return code = "00" + ScheduleId;
+            else if (ScheduleId.Length == 4)
+                return code = "0" + ScheduleId;
+            else
+                return code = "" + ScheduleId;
         }
 
         public async Task<List<JobDetailsModel>> GetJobsList()
@@ -115,18 +131,14 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         public async Task<List<ProjectDetailNewModel>> GetProjectList()
         {
             var ProjectList = await _uow.GetDbContext().ProjectDetail
-                                         .Where(x => !x.IsDeleted.Value && x.ProjectName != "")
+                                         .Where(x => x.IsDeleted == false && x.ProjectName != "")
                                          .OrderByDescending(x => x.ProjectId).Select(x => new ProjectDetailNewModel
                                          {
                                              ProjectId = x.ProjectId,
                                              ProjectCode = x.ProjectCode,
                                              ProjectName = x.ProjectName,
-                                             ProjectDescription = x.ProjectDescription,
-                                             IsWin = _uow.GetDbContext().WinProjectDetails.Where(y => y.ProjectId == x.ProjectId).Select(y => y.IsWin).FirstOrDefault(),
-                                             IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
-                                             ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
-                                             TotalDaysinHours = x.EndDate == null ? (Convert.ToString(Math.Round(DateTime.Now.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + DateTime.Now.Subtract(x.StartDate.Value).Minutes)) : (Convert.ToString(Math.Round(x.EndDate.Value.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + x.EndDate.Value.Subtract(x.StartDate.Value).Minutes))
-                                         }).ToListAsync();
+                                             ProjectDescription = x.ProjectDescription
+                                            }).ToListAsync();
             return ProjectList;
         }
         public async Task<APIResponse> GetAllPolicyScheduleList()
@@ -153,90 +165,340 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             return response;
         }
 
-        public async Task<APIResponse> GetScheduleDetailsById(ScheduleDetailModel model)
+        public async Task<APIResponse> GetScheduleDetailsById(int model)
+        {           
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model != 0)
+                {
+                    var scheduleById = await _uow.GetDbContext().ScheduleDetails
+                                          .Include(p => p.ProjectDetail)
+                                          .Include(e => e.PolicyDetails)
+                                          .Include(o => o.JobDetails)
+                                          .Where(v => v.IsDeleted == false && v.JobDetails.JobId == v.JobId)
+                                          .Where(v => v.ProjectDetail.ProjectId == v.ProjectId)
+                                          .Where(v => v.PolicyDetails.PolicyId == v.PolicyId)
+                                          .Where(v => v.ScheduleId == model)
+                                          .FirstOrDefaultAsync();
+                    SchedulerModel ScheduleList = new SchedulerModel
+                    {
+                        PolicyId = scheduleById.PolicyId,
+                        ScheduleType = scheduleById.ScheduleType,
+                        MediumId = scheduleById.MediumId,
+                        ChannelId = scheduleById.ChannelId,
+                        Name = scheduleById.PolicyDetails != null ? scheduleById.PolicyDetails.PolicyName : scheduleById.ProjectDetail != null ? scheduleById.ProjectDetail.ProjectName : scheduleById.JobDetails != null ? scheduleById.JobDetails.JobName : null,
+                        StartTime = scheduleById.StartTime.ToString(@"hh\:mm"),
+                        EndTime = scheduleById.EndTime.ToString(@"hh\:mm"),
+                        StartDate = scheduleById.StartDate.ToString(),
+                        EndDate = scheduleById.EndDate.ToString(),
+                        ProjectId = scheduleById.ProjectId,
+                        JobId = scheduleById.JobId,
+                        ScheduleCode = scheduleById.ScheduleCode,
+                        ScheduleId = scheduleById.ScheduleId,
+                        ScheduleName = scheduleById.ScheduleName,
+                        Monday = scheduleById.Monday,
+                        Tuesday = scheduleById.Tuesday,
+                        Wednesday = scheduleById.Wednesday,
+                        Thursday = scheduleById.Thursday,
+                        Friday = scheduleById.Friday,
+                        Saturday = scheduleById.Saturday,
+                        Sunday = scheduleById.Sunday
+                    };
+
+                    if (scheduleById != null)
+                    {
+                        List<string> repeatDays = new List<string>();
+                        if (ScheduleList != null)
+                        {
+                            if (ScheduleList.Monday == true)
+                            {
+                                repeatDays.Add("MON");
+                            }
+                            if (ScheduleList.Tuesday == true)
+                            {
+                                repeatDays.Add("TUE");
+                            }
+                            if (ScheduleList.Wednesday == true)
+                            {
+                                repeatDays.Add("WED");
+                            }
+                            if (ScheduleList.Thursday == true)
+                            {
+                                repeatDays.Add("THU");
+                            }
+                            if (ScheduleList.Friday == true)
+                            {
+                                repeatDays.Add("FRI");
+                            }
+                            if (ScheduleList.Saturday == true)
+                            {
+                                repeatDays.Add("SAT");
+                            }
+                            if (ScheduleList.Sunday == true)
+                            {
+                                repeatDays.Add("SUN");
+                            }
+                        }
+                        response.data.RepeatDays = repeatDays;
+                        response.data.scheduleDetailsModel = ScheduleList;
+                        response.StatusCode = 200;
+                        response.Message = "Success";
+                    }
+                }
+                             
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> AddEditSchedule(SchedulerModel model, string userId)
+        {
+            long LatestScheduleId = 0;
+            var scheduleCode = string.Empty;
+            if(model.ProjectId == 0)
+            {
+                model.ProjectId = null;
+            } if (model.PolicyId == 0)
+            {
+                model.PolicyId = null;
+            } if (model.JobId == 0)
+            {
+                model.JobId = null;
+            }
+            APIResponse response = new APIResponse();
+            try
+            {
+                if (model.ScheduleId == 0 || model.ScheduleId == null)
+                {
+                    //var schedule = _uow.GetDbContext().ScheduleDetails.Where(x => x.ScheduleName == model.ScheduleName && x.IsDeleted == false).FirstOrDefault();
+                    
+                        var scheduleDetail = _uow.GetDbContext().ScheduleDetails.OrderByDescending(x => x.ScheduleId)
+                                                                                       .FirstOrDefault();
+                        if (scheduleDetail == null)
+                        {
+                            LatestScheduleId = 1;
+                            scheduleCode = getScheduleCode(LatestScheduleId.ToString());
+                        }
+                        else
+                        {
+                            LatestScheduleId = Convert.ToInt32(scheduleDetail.ScheduleId) + 1;
+                            scheduleCode = getScheduleCode(LatestScheduleId.ToString());
+                        }
+                        ScheduleDetails obj = _mapper.Map<SchedulerModel, ScheduleDetails>(model);
+                        obj.CreatedById = userId;
+                    if(model.ProjectId != null)
+                    {
+                        obj.ProjectId = model.ProjectId ?? null;
+                        obj.ScheduleType = "Project";
+                    }
+                    if (model.PolicyId != null)
+                    {
+                        obj.PolicyId = model.PolicyId ?? null;
+                        obj.ScheduleType = "Policy";
+                    }
+                    if (model.JobId != null)
+                    {
+                        obj.JobId = model.JobId ?? null;
+                        obj.ScheduleType = "Job";
+                    }                 
+                                        
+                       
+                        obj.StartTime = TimeSpan.Parse(model.StartTime);
+                        obj.EndTime = TimeSpan.Parse(model.EndTime);
+                        obj.ScheduleName = model.ScheduleName;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.IsDeleted = false;
+                        obj.ScheduleCode = scheduleCode;
+                        obj.MediumId = model.MediumId;
+                        obj.ChannelId = model.ChannelId;
+                        obj.Description = model.Description;
+                        if (model.RepeatDays != null && model.RepeatDays.Count > 0)
+                        {
+                            foreach (var items in model.RepeatDays)
+                            {
+                                if (items.Value == "MON")
+                                {
+                                    obj.Monday = items.status;
+                                }
+                                if (items.Value == "TUE")
+                                {
+                                    obj.Tuesday = items.status;
+                                }
+                                if (items.Value == "WED")
+                                {
+                                    obj.Wednesday = items.status;
+                                }
+                                if (items.Value == "THU")
+                                {
+                                    obj.Thursday = items.status;
+                                }
+                                if (items.Value == "FRI")
+                                {
+                                    obj.Friday = items.status;
+                                }
+                                if (items.Value == "SAT")
+                                {
+                                    obj.Saturday = items.status;
+                                }
+                                if (items.Value == "SUN")
+                                {
+                                    obj.Sunday = items.status;
+                                }
+                            }
+                        }
+                        await _uow.ScheduleDetailsRepository.AddAsyn(obj);
+                        APIResponse response1 = await GetScheduleDetailsById(Convert.ToInt32(obj.ScheduleId));
+                        response.data.scheduleDetailsModel = response1.data.scheduleDetailsModel;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Schedule created successfully";
+                }
+                else
+                {
+                    var existRecord = await _uow.ScheduleDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ScheduleId == model.ScheduleId);
+                    if (existRecord != null)
+                    {
+                        _mapper.Map(model, existRecord);
+                        existRecord.IsDeleted = false;
+                        existRecord.ModifiedById = userId;
+                        existRecord.ModifiedDate = DateTime.Now;
+                        //existRecord.ProjectId = model.ProjectId;
+                        if (model.ProjectId != 0)
+                        {
+                            existRecord.ProjectId = model.ProjectId;
+                        }
+                        else
+                        {
+                            existRecord.ProjectId = null;
+                        }
+                        if (model.PolicyId != 0)
+                        {
+                            existRecord.PolicyId = model.PolicyId;
+                        }
+                        else
+                        {
+                            existRecord.ProjectId = null;
+                        }
+                        if (model.JobId != 0)
+                        {
+                            existRecord.JobId = model.JobId;
+                        }
+                        else
+                        {
+                            existRecord.JobId = null;
+                        }
+                        //existRecord.JobId = model.JobId;
+                        //existRecord.PolicyId = model.PolicyId;
+                        existRecord.MediumId = model.MediumId;
+                        existRecord.ChannelId = model.ChannelId;
+                        existRecord.StartTime = TimeSpan.Parse(model.StartTime);
+                        existRecord.EndTime = TimeSpan.Parse(model.EndTime);
+                        //existRecord.ScheduleName = model.ScheduleName;
+                        existRecord.CreatedDate = DateTime.Now;
+                        //existRecord.Description = model.Description;
+                        if (model.RepeatDays != null && model.RepeatDays.Count > 0)
+                        {
+                            foreach (var items in model.RepeatDays)
+                            {
+                                if (items.Value == "MON")
+                                {
+                                    existRecord.Monday = items.status;
+                                }
+                                if (items.Value == "TUE")
+                                {
+                                    existRecord.Tuesday = items.status;
+                                }
+                                if (items.Value == "WED")
+                                {
+                                    existRecord.Wednesday = items.status;
+                                }
+                                if (items.Value == "THU")
+                                {
+                                    existRecord.Thursday = items.status;
+                                }
+                                if (items.Value == "FRI")
+                                {
+                                    existRecord.Friday = items.status;
+                                }
+                                if (items.Value == "SAT")
+                                {
+                                    existRecord.Saturday = items.status;
+                                }
+                                if (items.Value == "SUN")
+                                {
+                                    existRecord.Sunday = items.status;
+                                }
+                            }
+                        }
+                        await _uow.ScheduleDetailsRepository.UpdateAsyn(existRecord);
+                        response.data.schedulerDetails = existRecord;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetAllScheduleList()
         {
             APIResponse response = new APIResponse();
             try
             {
-                var scheduleById = await (from j in _uow.GetDbContext().PolicyTimeSchedules
-                                          join mc in _uow.GetDbContext().PolicyDetails on j.PolicyId equals mc.PolicyId
-                                          join pd in _uow.GetDbContext().PolicyDaySchedules on j.PolicyId equals pd.PolicyId
-                                          join po in _uow.GetDbContext().PolicyOrderSchedules on j.PolicyId equals po.PolicyId
-                                          where !j.IsDeleted.Value && !mc.IsDeleted.Value
-                                          && !pd.IsDeleted.Value && !po.IsDeleted.Value && j.Id == model.PolicyTimeId && po.Id == model.PolicyOrderId && mc.PolicyId == j.PolicyId
-                                          select (new ScheduleDetailModel
-                                          {
-                                              PolicyId = mc.PolicyId,
-                                              PolicyDayId = pd.Id,
-                                              PolicyOrderId = po.Id,
-                                              PolicyName = mc.PolicyName,
-                                              PolicyTimeId = j.Id,
-                                              Name = mc.PolicyName,
-                                              StartTime = j.StartTime.ToString(@"hh\:mm"),
-                                              EndTime = j.EndTime.ToString(@"hh\:mm"),
-                                              StartDate = po.StartDate,
-                                              EndDate = po.EndDate,
-                                              Sunday = pd.Sunday,
-                                              Monday = pd.Monday,
-                                              Tuesday = pd.Tuesday,
-                                              Wednesday = pd.Wednesday,
-                                              Thursday = pd.Thursday,
-                                              Friday = pd.Friday,
-                                              Saturday = pd.Saturday
-                                          })).FirstOrDefaultAsync();
-               if(scheduleById != null)
+
+                var activityList = await _uow.GetDbContext().ScheduleDetails
+                                          .Include(p => p.ProjectDetail)
+                                          .Include(e => e.PolicyDetails)
+                                          .Include(o => o.JobDetails)
+                                          .Where(v => v.IsDeleted == false && v.JobDetails.JobId == v.JobId)
+                                          .Where(v => v.ProjectDetail.ProjectId == v.ProjectId)
+                                          .Where(v => v.PolicyDetails.PolicyId == v.PolicyId)
+                                          .Where(v => v.StartDate <= DateTime.UtcNow && DateTime.UtcNow.Date <= v.EndDate)
+                                          .ToListAsync();
+                var ScheduleList = activityList.Select(b => new SchedulerModel
                 {
-                    var policyList = await _uow.GetDbContext().PolicyDaySchedules
-                                       .Where(v => v.IsDeleted == false && v.PolicyId == scheduleById.PolicyId).Select(x => new PolicyTimeScheduleModel
-                                       {
-                                           Id = x.Id,
-                                           PolicyId = x.PolicyId,
-                                           Monday = x.Monday,
-                                           Tuesday = x.Tuesday,
-                                           Wednesday = x.Wednesday,
-                                           Thursday = x.Thursday,
-                                           Friday = x.Friday,
-                                           Saturday = x.Saturday,
-                                           Sunday = x.Sunday
-                                       }).AsNoTracking().FirstOrDefaultAsync();
-                    List<string> repeatDays = new List<string>();
-                    if (policyList != null)
-                    {
-                        if (policyList.Monday == true)
-                        {
-                            repeatDays.Add("MON");
-                        }
-                        if (policyList.Tuesday == true)
-                        {
-                            repeatDays.Add("TUE");
-                        }
-                        if (policyList.Wednesday == true)
-                        {
-                            repeatDays.Add("WED");
-                        }
-                        if (policyList.Thursday == true)
-                        {
-                            repeatDays.Add("THU");
-                        }
-                        if (policyList.Friday == true)
-                        {
-                            repeatDays.Add("FRI");
-                        }
-                        if (policyList.Saturday == true)
-                        {
-                            repeatDays.Add("SAT");
-                        }
-                        if (policyList.Sunday == true)
-                        {
-                            repeatDays.Add("SUN");
-                        }
-                        policyList.repeatDays = repeatDays;
-                    }
-                    response.data.policyTimeDetailsById = policyList;
-                    response.data.scheduleDetails = scheduleById;
-                    response.StatusCode = 200;
-                    response.Message = "Success";
-                }                
+                    PolicyId = b.PolicyId,
+                    Name = b.PolicyDetails != null ? b.PolicyDetails.PolicyName : b.ProjectDetail != null ? b.ProjectDetail.ProjectName : b.JobDetails != null? b.JobDetails.JobName : null,
+                    StartTime = b.StartTime.ToString(@"hh\:mm"),
+                    EndTime = b.EndTime.ToString(@"hh\:mm"),
+                    StartDate = b.StartDate.ToShortDateString(),
+                    EndDate = b.EndDate.ToShortDateString(),
+                    ProjectId = b.ProjectId,
+                    JobId = b.JobId,
+                    ChannelId = b.ChannelId,
+                    MediumId = b.MediumId,
+                    ScheduleType = b.ScheduleType,
+                    ScheduleId = b.ScheduleId
+                }).ToList();
+                //var ScheduleList = await (from j in _uow.GetDbContext().ScheduleDetails
+                //                                join mc in _uow.GetDbContext().PolicyDetails on j.PolicyId equals mc.PolicyId
+                //                                join pd in _uow.GetDbContext().JobDetails on j.JobId equals pd.JobId
+                //                                join po in _uow.GetDbContext().ProjectDetails on j.ProjectId equals po.ProjectId
+                //                                where !j.IsDeleted.Value
+                //                               select (new SchedulerModel
+                //                                {
+                //                                    PolicyId = j.PolicyId,
+                //                                    StartTime = j.StartTime.ToString(@"hh\:mm"),
+                //                                    EndTime = j.EndTime.ToString(@"hh\:mm"),
+                //                                    StartDate = j.StartDate.ToShortDateString(),
+                //                                    EndDate = j.EndDate.ToShortDateString(),
+                //                                    ProjectId = j.ProjectId,
+                //                                    JobId = j.JobId,
+                //                                    ChannelId = j.ChannelId,
+                //                                    MediumId = j.MediumId,
+                //                                    ScheduleType = j.ScheduleType,
+                //                                    ScheduleId = j.ScheduleId
+                //                                })).ToListAsync();
+                response.data.SchedulerList = ScheduleList;
+                response.StatusCode = 200;
+                response.Message = "Success";
             }
             catch (Exception ex)
             {
