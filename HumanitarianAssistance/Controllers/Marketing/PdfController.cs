@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using DataAccess;
 using DataAccess.DbEntities;
+using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces.Marketing;
 using HumanitarianAssistance.ViewModels.Models.Marketing;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,10 +39,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     [HttpPost]
     //[Route("CreatePDF")]
-    public byte[] CreatePDF([FromBody]int JobId)
+    public async Task<APIResponse> CreatePDF([FromBody]int JobId)
     {
+      APIResponse apiRespone = null;
       byte[] pdf = null;
-      return pdf = _iJobDetailService.CreatePDF(JobId);
+      apiRespone = await _iJobDetailService.CreatePDF(JobId);
+      return apiRespone;
 
     }
   }

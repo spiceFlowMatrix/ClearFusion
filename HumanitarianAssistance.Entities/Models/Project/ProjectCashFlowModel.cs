@@ -8,9 +8,11 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     public class ProjectCashFlowFilterModel
     {
         public long ProjectId { get; set; }
+        public int CurrencyId { get; set; }
         public DateTime ProjectStartDate { get; set; }
         public DateTime ProjectEndDate { get; set; }
         public long DonorID { get; set; }
+        public int CurrencyId { get; set; }
     }
     public class ProjectCashFlowModel
     {
@@ -31,6 +33,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         }
 
         public long? ProjectId { get; set; }
+        public int CurrencyId { get; set; }
         public List<long?> BudgetLineId { get; set; }
         public DateTime? BudgetLineStartDate { get; set; }
         public DateTime? BudgetLineEndDate { get; set; }

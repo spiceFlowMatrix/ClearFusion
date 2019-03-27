@@ -12,7 +12,8 @@ namespace DataAccess.DbEntities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column(Order = 1, TypeName = "serial")]
 		public int InterviewTrainingsId { get; set; }
-		public InterviewDetails InterviewDetails { get; set; }
+        [ForeignKey("InterviewDetailsId")]
+        public InterviewDetails InterviewDetails { get; set; }
 		public int InterviewDetailsId { get; set; }
 		public int TraininigType { get; set; }
 		public string TrainingName { get; set; }

@@ -226,7 +226,7 @@ namespace DataAccess
         private IGenericRepository<ProjectBudgetLineDetail> _budgetLineDetailRepository;
         private IGenericRepository<ProjectJobDetail> _projectJobDetailRepository;
         private IGenericRepository<ProjectActivityDetail> _projectActivityDetailRepository;
-
+        private IGenericRepository<ScheduleDetails> _scheduleDetailsRepository;
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
         private IGenericRepository<ChartOfAccountNew> _chartOfAccountNewRepository;
@@ -1519,6 +1519,14 @@ namespace DataAccess
             get
             {
                 return _unitRateRepository = _unitRateRepository ?? new GenericRepository<UnitRate>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ScheduleDetails> ScheduleDetailsRepository
+        {
+            get
+            {
+                return _scheduleDetailsRepository = _scheduleDetailsRepository ?? new GenericRepository<ScheduleDetails>(_mschaContext);
             }
         }
 

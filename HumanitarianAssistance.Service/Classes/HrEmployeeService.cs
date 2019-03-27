@@ -5758,78 +5758,110 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 List<InterviewDetailModel> lst = new List<InterviewDetailModel>();
-                var recordLst = await _uow.InterviewDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
+                var recordLst = await _uow.GetDbContext().InterviewDetails
+                                                         .Include(x=> x.EmployeeDetail)
+                                                         .Include(x=> x.RatingBasedCriteriaList)
+                                                         .Include(x=> x.InterviewLanguagesList)
+                                                         .Include(x=> x.InterviewTrainingsList)
+                                                         .Include(x=> x.HRJobInterviewersList)
+                                                         .Where(x => x.IsDeleted == false)
+                                                         .ToListAsync();
                 foreach (var model in recordLst)
                 {
-                    var ratingCriteriaRecord = await _uow.RatingBasedCriteriaRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
-                    var languageRecords = await _uow.InterviewLanguagesRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
-                    var trainingRecords = await _uow.InterviewTrainingsRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
-                    var technicalRecords = await _uow.GetDbContext().InterviewTechnicalQuestion.Where(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId).ToListAsync();
-                    var interviewers = await _uow.GetDbContext().HRJobInterviewers.Where(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId).ToListAsync();
-
+                    
                     InterviewDetailModel obj = new InterviewDetailModel();
-                    obj.Interviewers = new List<Interviewers>();
-                    List<RatingBasedCriteriaModel> ratingCriteriaRecordList = new List<RatingBasedCriteriaModel>();
-                    List<InterviewLanguageModel> languageList = new List<InterviewLanguageModel>();
-                    List<InterviewTechQuesModel> technicalList = new List<InterviewTechQuesModel>();
-                    List<InterviewTrainingModel> trainingList = new List<InterviewTrainingModel>();
-
-                    //ratingCriteriaRecordList = _mapper.Map<List<RatingBasedCriteriaModel>, RatingBasedCriteria>(
 
                     //rating based criteria
-                    foreach (var item in ratingCriteriaRecord)
+
+                    if (model.RatingBasedCriteriaList !=null && model.RatingBasedCriteriaList.Any())
                     {
-                        RatingBasedCriteriaModel criteriaModel = new RatingBasedCriteriaModel();
-                        //technicalModel.TechnicalQuestionId = item.TechnicalQuestionId;
-                        criteriaModel.CriteriaQuestion = item.CriteriaQuestion;
-                        criteriaModel.Rating = item.Rating;
-                        ratingCriteriaRecordList.Add(criteriaModel);
+                        obj.RatingBasedCriteriaList = new List<RatingBasedCriteriaModel>();
+
+                        foreach (var item in model.RatingBasedCriteriaList)
+                        {
+                            RatingBasedCriteriaModel criteriaModel = new RatingBasedCriteriaModel()
+                            {
+                                CriteriaQuestion = item.CriteriaQuestion,
+                                Rating = item.Rating
+                            };
+
+                            obj.RatingBasedCriteriaList.Add(criteriaModel);
+                        }
                     }
 
-                    foreach (var item in technicalRecords)
+                    if (model.InterviewTechnicalQuestionList != null && model.InterviewTechnicalQuestionList.Any())
                     {
-                        InterviewTechQuesModel technicalModel = new InterviewTechQuesModel();
-                        //technicalModel.TechnicalQuestionId = item.TechnicalQuestionId;
-                        technicalModel.Question = item.Question;
-                        technicalModel.Answer = item.Answer;
-                        technicalList.Add(technicalModel);
+                        obj.InterviewTechQuesModelList = new List<InterviewTechQuesModel>();
+
+                        foreach (var item in model.InterviewTechnicalQuestionList)
+                        {
+                            InterviewTechQuesModel technicalModel = new InterviewTechQuesModel()
+                            {
+                               Question = item.Question,
+                               Answer = item.Answer
+                            };
+
+                            obj.InterviewTechQuesModelList.Add(technicalModel);
+                        }
                     }
 
-                    foreach (var item in languageRecords)
-                    {
-                        InterviewLanguageModel languageModel = new InterviewLanguageModel();
-                        languageModel.LanguageName = item.LanguageName;
-                        languageModel.LanguageId = item.LanguageId;
-                        languageModel.Reading = item.Reading;
-                        languageModel.Writing = item.Writing;
-                        languageModel.Listening = item.Listening;
-                        languageModel.Speaking = item.Speaking;
-                        languageList.Add(languageModel);
+                    if (model.InterviewLanguagesList != null && model.InterviewLanguagesList.Any())
+                    { 
+                        obj.InterviewLanguageModelList = new List<InterviewLanguageModel>();
+
+                        foreach (var item in model.InterviewLanguagesList)
+                        {
+                            InterviewLanguageModel languageModel = new InterviewLanguageModel()
+                            {
+                                LanguageName = item.LanguageName,
+                                LanguageId = item.LanguageId,
+                                Reading = item.Reading,
+                                Writing = item.Writing,
+                                Listening = item.Listening,
+                                Speaking = item.Speaking,
+                            };
+
+                            obj.InterviewLanguageModelList.Add(languageModel);
+                        }
                     }
 
-                    foreach (var item in trainingRecords)
+                    if (model.InterviewTrainingsList != null && model.InterviewTrainingsList.Any())
                     {
-                        InterviewTrainingModel trainingModel = new InterviewTrainingModel();
-                        trainingModel.TraininigType = item.TraininigType;
-                        trainingModel.TrainingName = item.TrainingName;
-                        trainingModel.StudyingCountry = item.StudyingCountry;
-                        trainingModel.StartDate = item.StartDate;
-                        trainingModel.EndDate = item.EndDate;
-                        trainingList.Add(trainingModel);
+
+                    obj.InterviewTrainingModelList = new List<InterviewTrainingModel>();
+
+                    foreach (var item in model.InterviewTrainingsList)
+                        {
+                            InterviewTrainingModel trainingModel = new InterviewTrainingModel()
+                            {
+                               TraininigType = item.TraininigType,
+                               TrainingName = item.TrainingName,
+                               StudyingCountry = item.StudyingCountry,
+                               StartDate = item.StartDate,
+                               EndDate = item.EndDate
+                            };
+
+                            obj.InterviewTrainingModelList.Add(trainingModel);
+                        }
                     }
 
-                    foreach (var item in interviewers)
+                    if (model.HRJobInterviewersList != null && model.HRJobInterviewersList.Any())
                     {
-                        Interviewers xInterviewer = new Interviewers();
-                        xInterviewer.Interviewer = item.EmployeeId;
+                        obj.Interviewers = new List<Interviewers>();
 
-                        obj.Interviewers.Add(xInterviewer);
+                        foreach (var item in model.HRJobInterviewersList)
+                        {
+                            Interviewers xInterviewer = new Interviewers()
+                            {
+                               Interviewer = item.EmployeeId
+                            };
+                            
+                            obj.Interviewers.Add(xInterviewer);
+                        }
                     }
 
                     var empDetail = await _uow.EmployeeDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeID == model.EmployeeID);
                     var jobDetail = await _uow.GetDbContext().JobHiringDetails.Include(x => x.OfficeDetails).FirstOrDefaultAsync(x => x.IsDeleted == false && x.JobId == model.JobId);
-                    //var jobDetail = await _uow.JobHiringDetailsRepository.FindAsync(x => x.IsDeleted == false && x.JobId == model.JobId);
-
 
                     obj.EmployeeID = model.EmployeeID;
                     obj.CandidateName = empDetail.EmployeeName;
@@ -5837,16 +5869,9 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.JobId = model.JobId;
                     obj.DutyStation = jobDetail.OfficeDetails?.OfficeName;
 
-
                     obj.InterviewDetailsId = model.InterviewDetailsId;
-                    //obj.CandidatePosition = model.CandidatePosition;
-                    //obj.ResidingProvince = model.ResidingProvince;
-                    //obj.DutyStation = model.DutyStation;
-                    //obj.Gender = model.Gender;
                     obj.PassportNo = model.PassportNo;
-                    //obj.Qualification = model.Qualification;
                     obj.University = model.University;
-                    //obj.DateOfBirth = model.DateOfBirth;
                     obj.PlaceOfBirth = model.PlaceOfBirth;
                     obj.TazkiraIssuePlace = model.TazkiraIssuePlace;
                     obj.MaritalStatus = model.MaritalStatus;
@@ -5872,16 +5897,6 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.TotalMarksObtained = model.TotalMarksObtained;
                     obj.Status = model.Status;
                     obj.InterviewStatus = model.InterviewStatus;
-                    //obj.Interviewer1 = model.Interviewer1;
-                    //obj.Interviewer2 = model.Interviewer2;
-                    //obj.Interviewer3 = model.Interviewer3;
-                    //obj.Interviewer4 = model.Interviewer4;
-
-                    obj.RatingBasedCriteriaList = ratingCriteriaRecordList;
-
-                    obj.InterviewLanguageModelList = languageList;
-                    obj.InterviewTrainingModelList = trainingList;
-                    obj.InterviewTechQuesModelList = technicalList;
 
                     lst.Add(obj);
                 }
