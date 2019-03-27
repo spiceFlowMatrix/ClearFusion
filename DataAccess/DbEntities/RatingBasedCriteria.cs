@@ -16,5 +16,7 @@ namespace DataAccess.DbEntities
         public int InterviewDetailsId { get; set; }
         public string CriteriaQuestion { get; set; }
         public int? Rating { get; set; }
+        [ForeignKey("InterviewDetailsId")]
+        public InterviewDetails InterviewDetails { get; set; }
     }
 }
