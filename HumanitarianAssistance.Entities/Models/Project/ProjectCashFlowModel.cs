@@ -12,6 +12,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public DateTime ProjectStartDate { get; set; }
         public DateTime ProjectEndDate { get; set; }
         public long DonorID { get; set; }
+        public int CurrencyId { get; set; }
     }
     public class ProjectCashFlowModel
     {
