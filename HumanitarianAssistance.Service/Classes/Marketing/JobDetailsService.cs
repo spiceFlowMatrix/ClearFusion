@@ -721,9 +721,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
             return new string[] { "value1", "value2" };
         }
-        public byte[] CreatePDF(int JobId)
+        public async Task<APIResponse> CreatePDF(int JobId)
         {
             byte[] pdf = null;
+            APIResponse response = new APIResponse();
             try
             {
                 JobPriceModel JobDetails = (from j in _uow.GetDbContext().JobDetails
@@ -894,18 +895,21 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                      </div>
                  </div>";
 
-                PdfDocument doc = converter.ConvertHtmlString(TxtHtmlCode);
+                PdfDocument doc = converter.ConvertHtmlString(TxtHtmlCode);                       
                 pdf = doc.Save();
-                // create a new pdf document converting an url
-
+                Console.WriteLine(doc);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+                response.data.pdf = pdf;
                 doc.Close();
 
             }
             catch (Exception ex)
             {
-
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
-            return pdf;
+            return response;
 
         }
     }
