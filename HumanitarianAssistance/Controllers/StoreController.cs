@@ -8,6 +8,7 @@ using DataAccess.DbEntities;
 using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
+using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.Store;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,12 +26,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
   {
     private readonly UserManager<AppUser> _userManager;
     private IStore _iStore;
+    private IVoucherNewService _voucherNewService;
     private IVoucherDetail _iVoucherDetail;
-    public StoreController(UserManager<AppUser> userManager, IStore iStore, IVoucherDetail iVoucherDetail)
+    public StoreController(UserManager<AppUser> userManager, IStore iStore, IVoucherDetail iVoucherDetail, IVoucherNewService iVoucherNewService)
     {
       _userManager = userManager;
       _iStore = iStore;
       _iVoucherDetail = iVoucherDetail;
+      _voucherNewService = iVoucherNewService;
     }
 
     #region "Store Inventories"
@@ -614,26 +617,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         model.ModifiedById = user.Id;
         model.ModifiedDate = DateTime.Now;
-        apiRespone = await _iStore.VerifyPurchase(model);
-
-        //if (apiRespone.StatusCode == 200 && apiRespone.Message.ToLower() == "success" && apiRespone.data.VoucherTransactionModel != null)
-        //{
-
-        //    long? debitAccount = apiRespone.data.VoucherTransactionModel.DebitAccount;
-        //    apiRespone.data.VoucherTransactionModel.DebitAccount = 0;
-
-        //    //Credit
-        //    xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(apiRespone.data.VoucherTransactionModel, apiRespone.data.ExchangeRates);
-
-        //    apiRespone.data.VoucherTransactionModel.CreditAccount = 0;
-        //    apiRespone.data.VoucherTransactionModel.DebitAccount = debitAccount;
-        //    apiRespone.data.VoucherTransactionModel.AccountNo = debitAccount;
-        //    apiRespone.data.VoucherTransactionModel.Debit = apiRespone.data.VoucherTransactionModel.Credit;
-        //    apiRespone.data.VoucherTransactionModel.Credit = 0;
-
-        //    //Debit
-        //    xApiRespone = await _iVoucherDetail.AddVoucherTransactionConvertedToExchangeRate(apiRespone.data.VoucherTransactionModel, apiRespone.data.ExchangeRates);
-        //}
+        apiRespone = await _voucherNewService.VerifyPurchase(model);
       }
       return apiRespone;
     }
@@ -648,7 +632,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         model.ModifiedById = user.Id;
         model.ModifiedDate = DateTime.Now;
-        apiRespone = await _iStore.UnverifyPurchase(model);
+        apiRespone = await _voucherNewService.UnverifyPurchase(model);
 
         //if (apiRespone.StatusCode == 200 && apiRespone.Message.ToLower() == "success")
         //{

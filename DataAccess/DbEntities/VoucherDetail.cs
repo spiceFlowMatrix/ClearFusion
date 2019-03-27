@@ -32,7 +32,7 @@ namespace DataAccess.DbEntities
         [ForeignKey("ProjectId")]
         public ProjectDetail ProjectDetail { get; set; }
         public long ? BudgetLineId { get; set; }
-        public ProjectBudgetLine ProjectBudgetLine { get; set; }
+        public ProjectBudgetLineDetail ProjectBudgetLineDetail { get; set; }
 
         public int? FinancialYearId { get; set; }
         public FinancialYearDetail FinancialYearDetails { get; set; }
