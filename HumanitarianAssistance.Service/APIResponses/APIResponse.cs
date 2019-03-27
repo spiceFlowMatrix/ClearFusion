@@ -60,6 +60,8 @@ namespace HumanitarianAssistance.Service.APIResponses
 
     public class data
     {
+        public List<string> RepeatDays { get; set; }
+        public byte[] pdf { get; set; }
         public string AspNetUserId { get; set; }
         public RoleViewModel RoleData { get; set; }
         public string Token { get; set; }
@@ -376,7 +378,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<JobDetailsModel> JobDetailsModel { get; set; }
         public List<PolicyModel> policyList { get; set; }
         public List<ScheduleTimeModel> scheduleTimeList { get; set; }
-        public ScheduleDetailModel scheduleDetails { get; set; }
+        public ScheduleDetails scheduleDetails { get; set; }
+        public SchedulerModel scheduleDetailsModel { get; set; }
         public List<ScheduleDetailModel> scheduleDetailsList { get; set; }
         public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
@@ -401,6 +404,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public Channel channelById { get; set; }
         public ActivityType activityById { get; set; }
         public PolicyDetail policyDetails { get; set; }
+        public ScheduleDetails schedulerDetails { get; set; }
         public List<PolicyModel> policyFilterList { get; set; }
         public PolicyModel policyDetailsById { get; set; }
         public PolicyTimeScheduleModel policyTimeDetailsById { get; set; }
@@ -426,7 +430,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ChartOfAccountNew ChartOfAccountNewDetail { get; set; }
         public List<VoucherTransactionsModel> VoucherTransactions { get; set; }
         public List<AccountBalance> AccountBalanceList { get; internal set; }
-
+        public List<SchedulerModel> SchedulerList { get; internal set; }
 
         public List<AccountBalance> AccountBalances { get; set; }
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }

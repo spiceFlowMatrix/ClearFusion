@@ -10,6 +10,8 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
     public interface ISchedulerService
     {
         Task<APIResponse> GetAllPolicyScheduleList();
-        Task<APIResponse> GetScheduleDetailsById(ScheduleDetailModel model);
+        Task<APIResponse> GetAllScheduleList();
+        Task<APIResponse> GetScheduleDetailsById(int model);
+        Task<APIResponse> AddEditSchedule(SchedulerModel model, string userId);
     }
 }

@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190325063359_updateScheduleDetailsTbl")]
+    partial class updateScheduleDetailsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5061,8 +5063,6 @@ namespace DataAccess.Migrations
                     b.Property<long>("ScheduleId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long?>("ChannelId");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -5080,8 +5080,6 @@ namespace DataAccess.Migrations
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<long?>("JobId");
-
-                    b.Property<long?>("MediumId");
 
                     b.Property<string>("ModifiedById");
 
@@ -5115,13 +5113,9 @@ namespace DataAccess.Migrations
 
                     b.HasKey("ScheduleId");
 
-                    b.HasIndex("ChannelId");
-
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("JobId");
-
-                    b.HasIndex("MediumId");
 
                     b.HasIndex("ModifiedById");
 
@@ -11126,10 +11120,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.ScheduleDetails", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.Marketing.Channel", "Channel")
-                        .WithMany()
-                        .HasForeignKey("ChannelId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -11137,10 +11127,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.JobDetails", "JobDetails")
                         .WithMany()
                         .HasForeignKey("JobId");
-
-                    b.HasOne("DataAccess.DbEntities.Marketing.Medium", "Mediums")
-                        .WithMany()
-                        .HasForeignKey("MediumId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -11150,7 +11136,7 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("PolicyId");
 
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
+                    b.HasOne("DataAccess.DbEntities.ProjectDetails", "ProjectDetails")
                         .WithMany()
                         .HasForeignKey("ProjectId");
                 });
