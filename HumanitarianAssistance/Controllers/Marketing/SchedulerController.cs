@@ -46,7 +46,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
-    public async Task<APIResponse> GetScheduleDetailsById([FromBody] ScheduleDetailModel model)
+    public async Task<APIResponse> GetScheduleDetailsById([FromBody] int model)
     {
       APIResponse apiRespone = null;
       apiRespone = await _iScheduleService.GetScheduleDetailsById(model);
@@ -123,6 +123,27 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
         apiRespone = await _iMasterPageService.GetChannelListByMediumId(model);
       }
       return apiRespone;
-    } 
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddSchedule([FromBody]SchedulerModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iScheduleService.AddEditSchedule(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetAllScheduleList(string text)
+    {
+      APIResponse apiRespone = null;
+      apiRespone = await _iScheduleService.GetAllScheduleList();
+      return apiRespone;
+    }    
   }
 }

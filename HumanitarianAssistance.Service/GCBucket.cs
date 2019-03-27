@@ -541,7 +541,7 @@ namespace HumanitarianAssistance.Service
         }
 
 
-        #region Upload files common method to all 
+        #region Upload files common method to all drag and drop pk
 
         public static async Task<string> UploadDocument(string folderName, IFormFile filedata, string fileName, string ext, JObject googleCredentialPathFile1, ViewModels.Models.Project.GoogleCredentialModel googleCredential)
         {
@@ -600,8 +600,6 @@ namespace HumanitarianAssistance.Service
 
                 }
 
-
-
             }
 
             catch (Exception ex)
@@ -634,7 +632,7 @@ namespace HumanitarianAssistance.Service
 
 
 
-        //public static void UploadFile(string bucketName, string localPath, string objectName = null)
+        //upload file for drag and drop demo
         public static int UploadFile(string bucketName, string localPath)
         {
             var storage = StorageClient.Create();
@@ -654,21 +652,21 @@ namespace HumanitarianAssistance.Service
         /// </summary>
 
 
-        //DEMO FOR UPLOAD FILE USING SERVICE ACCOUNT CREDENTIAL. 22/03/2019
-        public static async Task<string> StartOroposalCreateFile(string bucketName, string folderName, string fileName)
+        //DEMO FOR Start Propsal USING SERVICE ACCOUNT CREDENTIAL. 22/03/2019
+        public static async Task<string> StartProposalCreateFile(string bucketName, string folderName, string fileName)
         {
             try
             {
                 APIResponse response = new APIResponse();
                 var storage = StorageClient.Create();
                 var content = Encoding.UTF8.GetBytes("");
-                string folderWithProposalFile = StaticResource.ProjectsFolderName +"/"+ folderName + "/" + fileName;
+                string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
                 var bucketResponse = await storage.UploadObjectAsync(bucketName, folderWithProposalFile, "application/x-directory", new MemoryStream(content));
                 Console.WriteLine($"upload status:******************check bucket{bucketResponse}");
                 var uploadedFile = bucketResponse.Name;
                 Console.WriteLine($"UPLOADED FILE NAME: {uploadedFile}");
                 return uploadedFile;
-              
+
             }
             catch (Exception ex)
             {
@@ -677,7 +675,42 @@ namespace HumanitarianAssistance.Service
                 throw;
             }
         }
-        
+
+        ///UPLOAD OTHER DOCUMENT OF PROPOSAL USING SERVICE ACCOUNT  new CREDENTAIL PK 26/03/2019
+        ///
+        public static async Task<string> UploadOtherProposalDocuments(string bucketName, string folderName, IFormFile filedata, string fileName, string ext)
+        {
+            string exten = Path.GetExtension(fileName).ToLower();
+            var mimetype = GetMimeType(ext);
+            Stream filestream = null;
+            try
+            {
+                var storage = StorageClient.Create();
+                using (filestream = filedata.OpenReadStream())
+                {
+                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
+                    var resp = await storage.UploadObjectAsync(bucketName, folderWithProposalFile, mimetype, filestream);
+                    Console.WriteLine($"------------Uploaded file Bucket Response:{resp.Name}");
+                    var uploadedFileName = bucketName + "/" + resp.Name;
+                    return uploadedFileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("-------------Exception of upload other documents  on bucket------------:");
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (filestream != null)
+                {
+                    filestream.Dispose();
+                }
+            }
+
+        }
+
 
     }
 

@@ -14,6 +14,9 @@ using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Storage;
 using HumanitarianAssistance.ViewModels.Models.Project;
+using HumanitarianAssistance.Common.Enums;
+using System.IO;
+using HumanitarianAssistance.ViewModels.Models.Store;
 
 namespace HumanitarianAssistance.Service.Classes.AccountingNew
 {
@@ -206,6 +209,11 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                 Task<List<int>> currencyListTask = _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false).Select(x => x.CurrencyId).ToListAsync();
 
+                if (model.IsExchangeGainLossVoucher)
+                {
+                    model.VoucherDate = DateTime.UtcNow;
+                }
+
                 Task<List<ExchangeRateDetail>> exchangeRatePresentTask = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.Date.Date == model.VoucherDate.Date && x.IsDeleted == false).ToListAsync();
 
                 List<int> currencyList = await currencyListTask;
@@ -305,7 +313,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     voucherdetailInfo.OfficeId = model.OfficeId;
                     voucherdetailInfo.VoucherDate = model.VoucherDate;
                     voucherdetailInfo.ChequeNo = model.ChequeNo;
-                    voucherdetailInfo.ReferenceNo = officekey + "-" + voucherdetailInfo.VoucherNo;
+                    // voucherdetailInfo.ReferenceNo = voucherdetailInfo.ReferenceNo;
                     voucherdetailInfo.JournalCode = model.JournalCode;
                     voucherdetailInfo.FinancialYearId = model.FinancialYearId;
                     voucherdetailInfo.VoucherTypeId = model.VoucherTypeId;
@@ -949,6 +957,488 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 response.data.GainLossVoucherList = gainLossVouchers;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> VerifyPurchase(ItemPurchaseModel model)
+        {
+            var response = new APIResponse();
+            try
+            {
+                if (model != null)
+                {
+                    var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
+                    if (purchaseRecord != null)
+                    {
+                        _mapper.Map(model, purchaseRecord);
+
+                        if (!string.IsNullOrEmpty(model.ImageFileName))
+                        {
+                            if (model.ImageFileName.Contains(","))
+                            {
+                                string[] str = model.ImageFileName.Split(",");
+                                byte[] filepath = Convert.FromBase64String(str[1]);
+                                string ex = str[0].Split("/")[1].Split(";")[0];
+                                string guidname = Guid.NewGuid().ToString();
+                                string filename = guidname + "." + ex;
+                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                                File.WriteAllBytes(@"Documents/" + filename, filepath);
+
+                                purchaseRecord.ImageFileName = guidname;
+                                purchaseRecord.ImageFileType = "." + ex;
+                            }
+                        }
+
+                        if (model.InvoiceFileName != null && model.InvoiceFileName != "")
+                        {
+                            if (model.InvoiceFileName.Contains(","))
+                            {
+                                string[] str = model.InvoiceFileName.Split(",");
+                                byte[] filepath = Convert.FromBase64String(str[1]);
+                                string ex = str[0].Split("/")[1].Split(";")[0];
+                                string guidname = Guid.NewGuid().ToString();
+                                string filename = guidname + "." + ex;
+                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                                File.WriteAllBytes(@"Documents/" + filename, filepath);
+
+                                purchaseRecord.InvoiceFileName = guidname;
+                                purchaseRecord.InvoiceFileType = "." + ex;
+                            }
+                        }
+
+                        purchaseRecord.IsDeleted = false;
+
+
+                        //List<ExchangeRate> exchangeRate = new List<ExchangeRate>();
+
+                        if (model.IsPurchaseVerified.HasValue && model.IsPurchaseVerified.Value)
+                        {
+                            var financialYearDetails = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDeleted == false && x.StartDate.Date.Year == DateTime.Now.Year);
+                            var inventory = _uow.GetDbContext().InventoryItems.Include(x => x.Inventory).FirstOrDefault(x => x.ItemId == model.InventoryItem);
+                            var paymentTypes = _uow.GetDbContext().PaymentTypes.FirstOrDefault(x => x.PaymentId == model.PaymentTypeId);
+                           
+                            #region "Generate Voucher"
+                            VoucherDetailModel voucherModel = new VoucherDetailModel
+                            {
+                                CurrencyId = model.Currency,
+                                Description = StaticResource.PurchaseVoucherCreated,
+                                JournalCode = model.JournalCode,
+                                VoucherTypeId = (int)VoucherTypes.Journal,
+                                OfficeId = model.OfficeId,
+                                ProjectId = model.ProjectId,
+                                BudgetLineId = model.BudgetLineId,
+                                IsExchangeGainLossVoucher = false,
+                                CreatedById= model.CreatedById,
+                                CreatedDate = DateTime.UtcNow,
+                                IsDeleted = false,
+                                FinancialYearId = financialYearDetails.FinancialYearId,
+                                VoucherDate = DateTime.UtcNow
+                            };
+
+                            var responseVoucher = await AddVoucherNewDetail(voucherModel);
+                            #endregion
+                            
+                            if (responseVoucher.StatusCode == 200)
+                            {
+                                purchaseRecord.VerifiedPurchaseVoucher = responseVoucher.data.VoucherDetailEntity.VoucherNo;
+                                await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
+
+                                List<VoucherTransactionsModel> transactions = new List<VoucherTransactionsModel>();
+
+                                // Credit
+                                transactions.Add(new VoucherTransactionsModel
+                                {
+                                    TransactionId = 0,
+                                    VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                                    AccountNo = paymentTypes.ChartOfAccountNewId,
+                                    Debit = 0,
+                                    Credit = model.UnitCost * model.Quantity,
+                                    Description = StaticResource.PurchaseVoucherCreated,
+                                    IsDeleted = false
+                                });
+
+                                // Debit
+                                transactions.Add(new VoucherTransactionsModel
+                                {
+                                    TransactionId = 0,
+                                    VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                                    AccountNo = inventory.Inventory.InventoryDebitAccount,
+                                    Debit = model.UnitCost * model.Quantity,
+                                    Credit = 0,
+                                    Description = StaticResource.PurchaseVoucherCreated,
+                                    IsDeleted = false
+                                });
+
+                                AddEditTransactionModel transactionVoucherDetail = new AddEditTransactionModel
+                                {
+                                    VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                                    VoucherTransactions = transactions
+                                };
+
+                                var responseTransaction = AddEditTransactionList(transactionVoucherDetail, model.CreatedById);
+
+                                if (responseTransaction.StatusCode == 200)
+                                {
+                                    response.StatusCode = StaticResource.successStatusCode;
+                                    response.Message = StaticResource.SuccessText;
+                                }
+                                else
+                                {
+                                    throw new Exception(responseTransaction.Message);
+                                }
+                            }
+                            else
+                            {
+                                response.StatusCode = StaticResource.failStatusCode;
+                                response.Message = responseVoucher.Message;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Record cannot be updated";
+                        return response;
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model values are inappropriate";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> UnverifyPurchase(ItemPurchaseModel model)
+        {
+            var response = new APIResponse();
+
+            try
+            {
+                if (model != null)
+                {
+                    var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
+
+                    if (purchaseRecord != null)
+                    {
+                        _mapper.Map(model, purchaseRecord);
+
+                        if (!string.IsNullOrEmpty(model.ImageFileName))
+                        {
+                            if (model.ImageFileName.Contains(","))
+                            {
+                                string[] str = model.ImageFileName.Split(",");
+                                byte[] filepath = Convert.FromBase64String(str[1]);
+                                string ex = str[0].Split("/")[1].Split(";")[0];
+                                string guidname = Guid.NewGuid().ToString();
+                                string filename = guidname + "." + ex;
+                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                                File.WriteAllBytes(@"Documents/" + filename, filepath);
+
+                                purchaseRecord.ImageFileName = guidname;
+                                purchaseRecord.ImageFileType = "." + ex;
+                            }
+                        }
+
+                        if (model.InvoiceFileName != null && model.InvoiceFileName != "")
+                        {
+                            if (model.InvoiceFileName.Contains(","))
+                            {
+                                string[] str = model.InvoiceFileName.Split(",");
+                                byte[] filepath = Convert.FromBase64String(str[1]);
+                                string ex = str[0].Split("/")[1].Split(";")[0];
+                                string guidname = Guid.NewGuid().ToString();
+                                string filename = guidname + "." + ex;
+                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
+                                File.WriteAllBytes(@"Documents/" + filename, filepath);
+
+                                purchaseRecord.InvoiceFileName = guidname;
+                                purchaseRecord.InvoiceFileType = "." + ex;
+                            }
+                        }
+
+                        purchaseRecord.IsDeleted = false;
+
+                        if (model.IsPurchaseVerified.HasValue && !model.IsPurchaseVerified.Value)
+                        {
+
+                            VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == model.VerifiedPurchaseVoucher);
+
+                            if (voucherDetail != null)
+                            {
+                                List<VoucherTransactions> voucherTransactionsList = await _uow.GetDbContext().VoucherTransactions.Where(x => x.IsDeleted == false && x.VoucherNo == model.VerifiedPurchaseVoucher).ToListAsync();
+
+                                var creditTransaction = voucherTransactionsList.FirstOrDefault(x => x.Debit == 0);
+                                var debitTransaction = voucherTransactionsList.FirstOrDefault(x => x.Credit == 0);
+
+                                List<VoucherTransactionsModel> transactions = new List<VoucherTransactionsModel>();
+
+                                // Credit
+                                transactions.Add(new VoucherTransactionsModel
+                                {
+                                    TransactionId = 0,
+                                    VoucherNo = voucherDetail.VoucherNo,
+                                    AccountNo = debitTransaction.ChartOfAccountNewId,
+                                    Debit = 0,
+                                    Credit = debitTransaction.Debit,
+                                    Description = StaticResource.PurchaseVoucherCreated,
+                                    IsDeleted = false
+                                });
+
+                                // Debit
+                                transactions.Add(new VoucherTransactionsModel
+                                {
+                                    TransactionId = 0,
+                                    VoucherNo = voucherDetail.VoucherNo,
+                                    AccountNo = creditTransaction.ChartOfAccountNewId,
+                                    Debit = creditTransaction.Credit,
+                                    Credit = 0,
+                                    Description = StaticResource.PurchaseVoucherCreated,
+                                    IsDeleted = false
+                                });
+
+                                AddEditTransactionModel transactionVoucherDetail = new AddEditTransactionModel
+                                {
+                                    VoucherNo = voucherDetail.VoucherNo,
+                                    VoucherTransactions = transactions
+                                };
+
+                                var responseTransaction = AddEditTransactionList(transactionVoucherDetail, model.CreatedById);
+
+                                if (responseTransaction.StatusCode == 200)
+                                {
+                                    response.StatusCode = StaticResource.successStatusCode;
+                                    response.Message = StaticResource.SuccessText;
+                                }
+                                else
+                                {
+                                    throw new Exception(responseTransaction.Message);
+                                }
+
+
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Success";
+                            }
+                            else
+                            {
+                                throw new Exception(" Voucher Not Found on Verified Purchase");
+                            }
+                        }
+                        else
+                        {
+                            await _uow.StoreItemPurchaseRepository.UpdateAsyn(purchaseRecord);
+                        }
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Record cannot be updated";
+                        return response;
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "Model values are inappropriate";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+                return response;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Addition of Employee Pension Payment
+        /// </summary>
+        /// <param name="OfficeId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> AddEmployeePensionPayment(EmployeePensionPaymentModel EmployeePensionPayment)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == EmployeePensionPayment.OfficeId).Result.OfficeCode; //use OfficeCode
+                var financialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
+                var EmployeeDetails = _uow.GetDbContext().EmployeeDetail.FirstOrDefault(x => x.EmployeeID == EmployeePensionPayment.EmployeeId && x.IsDeleted == false);
+
+
+                #region "Generate Voucher"
+                VoucherDetailModel voucherModel = new VoucherDetailModel
+                {
+                    CurrencyId = EmployeePensionPayment.CurrencyId.Value,
+                    Description = string.Format(StaticResource.PensionPaymentCreated, DateTime.Now.Date, EmployeeDetails.EmployeeName),
+                    JournalCode = EmployeePensionPayment.JournalCode,
+                    VoucherTypeId = EmployeePensionPayment.VoucherTypeId,
+                    OfficeId = EmployeePensionPayment.OfficeId,
+                    IsExchangeGainLossVoucher = false,
+                    CreatedById = EmployeePensionPayment.CreatedById,
+                    CreatedDate = DateTime.UtcNow,
+                    IsDeleted = false,
+                    FinancialYearId = financialYear.FinancialYearId,
+                    VoucherDate = DateTime.UtcNow
+                };
+
+                var responseVoucher = await AddVoucherNewDetail(voucherModel);
+                #endregion
+
+                if (responseVoucher.StatusCode == 200)
+                {
+
+                    List<VoucherTransactionsModel> transactions = new List<VoucherTransactionsModel>();
+
+                    // Credit
+                    transactions.Add(new VoucherTransactionsModel
+                    {
+                        TransactionId = 0,
+                        VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                        AccountNo = EmployeePensionPayment.CreditAccount,
+                        Debit = 0,
+                        Credit = Convert.ToDouble(EmployeePensionPayment.PensionAmount),
+                        Description = StaticResource.PurchaseVoucherCreated,
+                        IsDeleted = false
+                    });
+
+                    // Debit
+                    transactions.Add(new VoucherTransactionsModel
+                    {
+                        TransactionId = 0,
+                        VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                        AccountNo = EmployeePensionPayment.DebitAccount,
+                        Debit = Convert.ToDouble(EmployeePensionPayment.PensionAmount),
+                        Credit = 0,
+                        Description = StaticResource.PurchaseVoucherCreated,
+                        IsDeleted = false
+                    });
+
+                    AddEditTransactionModel transactionVoucherDetail = new AddEditTransactionModel
+                    {
+                        VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
+                        VoucherTransactions = transactions
+                    };
+
+                    var responseTransaction = AddEditTransactionList(transactionVoucherDetail, EmployeePensionPayment.CreatedById);
+
+                    if (responseTransaction.StatusCode == 200)
+                    {
+
+                        PensionPaymentHistory pensionPayments = new PensionPaymentHistory();
+                        pensionPayments.PaymentDate = DateTime.Now;
+                        pensionPayments.PaymentAmount = EmployeePensionPayment.PensionAmount;
+                        pensionPayments.IsDeleted = false;
+                        pensionPayments.CreatedById = EmployeePensionPayment.CreatedById;
+                        pensionPayments.EmployeeId = EmployeePensionPayment.EmployeeId.Value;
+                        pensionPayments.VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo;
+                        pensionPayments.VoucherReferenceNo = responseVoucher.data.VoucherDetailEntity.ReferenceNo;
+
+                        _uow.PensionPaymentHistoryRepository.Add(pensionPayments);
+
+                        var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == EmployeePensionPayment.CreatedById);
+
+                        LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                        loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
+                        loggerObj.IsRead = false;
+                        loggerObj.UserName = user.FirstName + " " + user.LastName;
+                        loggerObj.UserId = EmployeePensionPayment.CreatedById;
+                        loggerObj.LoggedDetail = "Voucher " + responseVoucher.data.VoucherDetailEntity.ReferenceNo + " Created";
+                        loggerObj.CreatedDate = DateTime.Now;
+
+                        response.LoggerDetailsModel = loggerObj;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = StaticResource.SuccessText;
+                    }
+                    else
+                    {
+                        throw new Exception(responseTransaction.Message);
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = responseVoucher.Message;
+                }
+
+                ////Creating Voucher for Voucher transaction
+                //VoucherDetail obj = new VoucherDetail();
+                //obj.CreatedById = EmployeePensionPayment.CreatedById;
+                //obj.CreatedDate = DateTime.UtcNow;
+                //obj.IsDeleted = false;
+                //obj.FinancialYearId = financialYear.FinancialYearId;
+                //obj.VoucherTypeId = EmployeePensionPayment.VoucherTypeId;
+                //obj.Description = string.Format(StaticResource.PensionPaymentCreated, DateTime.Now.Date, EmployeeDetails.EmployeeName);
+                //obj.CurrencyId = EmployeePensionPayment.CurrencyId;
+                //obj.VoucherDate = DateTime.Now;
+                //obj.JournalCode = EmployeePensionPayment.JournalId;
+                //obj.OfficeId = EmployeePensionPayment.OfficeId;
+
+                //await _uow.VoucherDetailRepository.AddAsyn(obj);
+
+                //obj.ReferenceNo = officeCode + "-" + obj.VoucherNo;
+                //await _uow.VoucherDetailRepository.UpdateAsyn(obj);
+
+                //List<VoucherTransactions> VoucherTransactionsList = new List<VoucherTransactions>();
+
+                //VoucherTransactions xVoucherTransactionCredit = new VoucherTransactions();
+                //VoucherTransactions xVoucherTransactionDebit = new VoucherTransactions();
+
+                ////Creating Voucher Transaction for Credit
+                //xVoucherTransactionCredit.IsDeleted = false;
+                //xVoucherTransactionCredit.VoucherNo = obj.VoucherNo;
+                //xVoucherTransactionCredit.FinancialYearId = financialYear.FinancialYearId;
+                //xVoucherTransactionCredit.ChartOfAccountNewId = EmployeePensionPayment.CreditAccount;
+                //xVoucherTransactionCredit.CreditAccount = EmployeePensionPayment.CreditAccount;
+                //xVoucherTransactionCredit.Credit = Convert.ToDouble(EmployeePensionPayment.PensionAmount);
+                //xVoucherTransactionCredit.Debit = 0;
+                //xVoucherTransactionCredit.CurrencyId = EmployeePensionPayment.CurrencyId;
+                //xVoucherTransactionCredit.Description = string.Format(StaticResource.PensionPaymentCreated, DateTime.Now.Date, EmployeeDetails.EmployeeName); ;
+                //xVoucherTransactionCredit.OfficeId = EmployeePensionPayment.OfficeId;
+
+                //VoucherTransactionsList.Add(xVoucherTransactionCredit);
+
+                ////Creating Voucher Transaction for Debit
+                //xVoucherTransactionDebit.IsDeleted = false;
+                //xVoucherTransactionDebit.VoucherNo = obj.VoucherNo;
+                //xVoucherTransactionDebit.FinancialYearId = financialYear.FinancialYearId;
+                //xVoucherTransactionDebit.Debit = Convert.ToDouble(EmployeePensionPayment.PensionAmount);
+                //xVoucherTransactionDebit.Credit = 0;
+                //xVoucherTransactionDebit.ChartOfAccountNewId = EmployeePensionPayment.DebitAccount;
+                //xVoucherTransactionDebit.DebitAccount = EmployeePensionPayment.DebitAccount;
+                //xVoucherTransactionDebit.CreditAccount = 0;
+                //xVoucherTransactionDebit.CurrencyId = EmployeePensionPayment.CurrencyId;
+                //xVoucherTransactionDebit.Description = string.Format(StaticResource.PensionPaymentCreated, DateTime.Now.Date, EmployeeDetails.EmployeeName); ;
+                //xVoucherTransactionDebit.OfficeId = EmployeePensionPayment.OfficeId;
+
+                //VoucherTransactionsList.Add(xVoucherTransactionDebit);
+
+                ////save voucher transactions to db
+                //await _uow.GetDbContext().AddRangeAsync(VoucherTransactionsList);
+                //await _uow.GetDbContext().SaveChangesAsync();
+
+                //Adding details to Pension Payment History Table
+               
+
             }
             catch (Exception ex)
             {

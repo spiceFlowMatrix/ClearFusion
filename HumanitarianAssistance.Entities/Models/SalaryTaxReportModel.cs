@@ -35,6 +35,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string CreatedById { get; set; }
         public int? JournalId { get; set; }
         public int VoucherTypeId { get; set; }
+        public int? JournalCode { get; set; }
     }
 
     public class PensionPaymentHistoryModel

@@ -106,7 +106,7 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
         //APIResponse UploadOtherProposalFile(IFormFile file, string UserId);
         Task<APIResponse> UploadOtherProposalFile(IFormFile file, string UserId, long projectid, string fullPath, string fileName, string logginUserEmailId,string ProposalType,string ext);
-
+        Task<APIResponse> UploadOtherDocuments(IFormFile file, string UserId, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
         APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId);
         APIResponse GetOtherProjectListById(long ProjectId);
         APIResponse AddEditDonorCriteria(DonorCriteriaModel model, string UserId);
@@ -208,6 +208,12 @@ namespace HumanitarianAssistance.Service.interfaces
 
         #region start proposal 25/03/219
         Task<APIResponse> StartProposal(long Projectid, string userid, string logginUserEmailId);
+        Task<APIResponse> StartProposalDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
+        //Task<APIResponse> UploadOtherDocuments(IFormFile file, string UserId, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
+        Task<APIResponse> UploadReviewDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, ApproveProjectDetailModel model);
+        Task<APIResponse> UploadFinalizeDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, WinApprovalProjectModel model);
+
+
         #endregion
     }
 }
