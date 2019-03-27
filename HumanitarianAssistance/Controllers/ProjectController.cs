@@ -755,6 +755,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     //  return apiRespone;
     //}
 
+
+      /// <summary>
+      /// start proposal on click 26/03/2019 pk 
+      /// </summary>
+      /// <param name="ProjectId"></param>
+      /// <returns></returns>
     [HttpPost]
     public async Task<APIResponse> AddEditProjectproposals([FromBody]long ProjectId)
     {
@@ -779,67 +785,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
 
-    //upload other documents files bucket old
-    //[HttpPost, DisableRequestSizeLimit]
-    //public async Task<APIResponse> UploadEDIProposalFile([FromForm] IFormFile filesData, string projectId, string data)
-    //{
-    //  APIResponse apiRespone = new APIResponse();
-    //  string localFolderfullPath = string.Empty;
-    //  try
-    //  {
-
-    //    var file = Request.Form.Files[0];
-    //    long ProjectId = Convert.ToInt64(projectId);
-    //    string ProposalType = data;
-    //    string fileName = Request.Form.Files[0].FileName;
-
-
-    //    //var file = Request.Form.Files[0];
-    //    //long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
-    //    //string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
-    //    //string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
-    //    //string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
-
-    //    //string fileName = "";
-
-    //    //if (fileNames.Contains('_'))
-    //    //{
-    //    //  fileName = fileNames.Split('_')[2];
-    //    //}
-    //    //else
-    //    //{
-    //    //  fileName = fileNames;
-    //    //}
-
-    //    string ext = System.IO.Path.GetExtension(fileName).ToLower();
-    //    if (ext != ".jpeg" && ext != ".png")
-    //    {
-
-
-    //      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-    //      if (user != null)
-    //      {
-    //        string logginUserEmailId = user.Email;
-    //        var id = user.Id;
-    //        apiRespone = await _iProject.UploadOtherProposalFile(file, id, ProjectId, localFolderfullPath, fileName, logginUserEmailId, ProposalType, ext);
-
-    //      }
-    //    }
-    //    else
-    //    {
-    //      apiRespone.StatusCode = StaticResource.FileNotSupported;
-    //      apiRespone.Message = StaticResource.FileText;
-    //    }
-
-    //    //}
-    //  }
-    //  catch (System.Exception ex)
-    //  {
-    //    throw ex;
-    //    //return Json("Upload Failed: " + ex.Message);
-    //  }
-    //  return apiRespone;
-    //}
+    
 
     /// <summary>
     /// upload other proposal document using service account credentails new 26/03/2019 poonam
@@ -858,7 +804,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string fileName = Request.Form.Files[0].FileName;
 
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext == ".doc" || ext == ".docx" || ext == ".txt" || ext == ".xlsx" || ext == ".pdf")
+        if (ext == ".doc" || ext == ".docx" || ext == ".txt" || ext == ".xlsx" || ext == ".pdf" || ext== ".pptx")
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
@@ -1747,6 +1693,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
 
+    #region demo upload file 
 
     [HttpPost, DisableRequestSizeLimit]
     public async Task<APIResponse> UploadFileDemo([FromForm] IFormFile fileData, string activityId, string statusId)
@@ -1762,5 +1709,134 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiResponse;
     }
+    #endregion
+
+    #region start proposal drag and drop pk 26/03/2019 
+
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> StartProposalDragAndDropFile([FromForm] IFormFile filesData, string projectId, string data)
+    {
+      APIResponse apiRespone = new APIResponse();
+      string localFolderfullPath = string.Empty;
+      try
+      {
+
+        var file = Request.Form.Files[0];
+        long ProjectId = Convert.ToInt64(projectId);
+        string ProposalType = data;
+        string fileName = Request.Form.Files[0].FileName;
+
+        string ext = System.IO.Path.GetExtension(fileName).ToLower();
+        if (ext == ".doc" || ext == ".docx" || ext == ".txt")
+        {
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+          if (user != null)
+          {
+            string logginUserEmailId = user.Email;
+            var id = user.Id;
+            apiRespone = await _iProject.StartProposalDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ProposalType, ext);
+
+          }
+        }
+        else
+        {
+          apiRespone.StatusCode = StaticResource.FileNotSupported;
+          apiRespone.Message = StaticResource.FileText;
+        }
+
+        //}
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      return apiRespone;
+    }
+
+
+    #endregion
+
+    #region"UploadReviewFile"
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> UploadReviewFile([FromForm] IFormFile filesData,ApproveProjectDetailModel model)
+    {
+      APIResponse apiRespone = new APIResponse();
+      string localFolderfullPath = string.Empty;
+      try
+      {
+
+        var file = Request.Form.Files[0];
+        long ProjectId = Convert.ToInt64(model.ProjectId);
+        string fileName = Request.Form.Files[0].FileName;
+
+        string ext = System.IO.Path.GetExtension(fileName).ToLower();
+        if (ext == ".doc" || ext == ".docx" || ext == ".txt" || ext == ".xlsx" || ext == ".pdf" || ext == ".pptx")
+        {
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+          if (user != null)
+          {
+            string logginUserEmailId = user.Email;
+            var id = user.Id;
+            apiRespone = await _iProject.UploadReviewDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ext,model);
+
+          }
+        }
+        else
+        {
+          apiRespone.StatusCode = StaticResource.FileNotSupported;
+          apiRespone.Message = StaticResource.FileText;
+        }
+
+        //}
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      return apiRespone;
+    }
+
+    #endregion
+
+    #region"UploadFinalizeFile"
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> UploadFinalizeFile([FromForm] IFormFile filesData, WinApprovalProjectModel model)
+    {
+      APIResponse apiRespone = new APIResponse();
+      string localFolderfullPath = string.Empty;
+      try
+      {
+
+        var file = Request.Form.Files[0];
+        long ProjectId = Convert.ToInt64(model.ProjectId);
+        string fileName = Request.Form.Files[0].FileName;
+
+        string ext = System.IO.Path.GetExtension(fileName).ToLower();
+        if (ext == ".doc" || ext == ".docx" || ext == ".txt" || ext == ".xlsx" || ext == ".pdf" || ext == ".pptx")
+        {
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+          if (user != null)
+          {
+            string logginUserEmailId = user.Email;
+            var id = user.Id;
+            apiRespone = await _iProject.UploadFinalizeDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ext, model);
+
+          }
+        }
+        else
+        {
+          apiRespone.StatusCode = StaticResource.FileNotSupported;
+          apiRespone.Message = StaticResource.FileText;
+        }
+
+        //}
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      return apiRespone;
+    }
+    #endregion
   }
 }

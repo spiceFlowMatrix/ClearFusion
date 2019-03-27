@@ -311,6 +311,9 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public ProjectProposalModel ProjectProposalModel { get; set; }
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
+        public ApproveProjectDetails ApproveProjectDetails { get; set; }
+        public WinProjectDetails WinProjectDetails { get; set; }
+
         public EligibilityCriteriaDetail eligibilityCriteriaDetail { get; set; }
         public CriteriaEveluationModel CriteriaEveluationModel { get; set; }
         public List<ApplicationPages> ApplicationPagesList { get; set; }

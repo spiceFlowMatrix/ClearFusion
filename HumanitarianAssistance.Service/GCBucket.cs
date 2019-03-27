@@ -689,9 +689,9 @@ namespace HumanitarianAssistance.Service
                 using (filestream = filedata.OpenReadStream())
                 {
                     string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
-                    var resp = await storage.UploadObjectAsync(StaticResource.BucketName, folderWithProposalFile, mimetype, filestream);
+                    var resp = await storage.UploadObjectAsync(bucketName, folderWithProposalFile, mimetype, filestream);
                     Console.WriteLine($"------------Uploaded file Bucket Response:{resp.Name}");
-                    var uploadedFileName = resp.Name;
+                    var uploadedFileName = bucketName + "/" + resp.Name;
                     return uploadedFileName;
                 }
             }
