@@ -690,7 +690,7 @@ namespace HumanitarianAssistance.Service
                 {
                     var resp = await storage.UploadObjectAsync(bucketName, folderWithProposalFile, mimetype, filestream);
                     //Console.WriteLine($"------------Uploaded file Bucket Response:{resp.Name}");
-                    var uploadedFileName = bucketName + "/" + resp.Name;
+                    var uploadedFileName = resp.Name;
                     return uploadedFileName;
                 }
             }
