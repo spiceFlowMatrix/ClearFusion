@@ -5044,13 +5044,14 @@ namespace HumanitarianAssistance.Service.Classes
         #region "Project Cash Flow"
         public async Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowFilterModel model)
         {
+            
             APIResponse response = new APIResponse();
             List<VoucherTransactions> transList = new List<VoucherTransactions>();
 
             try
             {
                 //get Journal Report from sp get_journal_report by passing parameters
-                var spJournalReport = await _uow.GetDbContext().LoadStoredProc("get_projectcashflow")
+                var spProjectCashFlow = await _uow.GetDbContext().LoadStoredProc("get_projectcashflow")
                                       .WithSqlParam("currency", model.CurrencyId)
                                       .WithSqlParam("projectid", model.ProjectId)
                                       .WithSqlParam("projectstartdate", model.ProjectStartDate.ToString())
@@ -5058,15 +5059,16 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("donorid", model.DonorID)
                                       .ExecuteStoredProc<SPProjectCashFlowModel>();
 
-                if (spJournalReport.Any())
+                if (spProjectCashFlow.Any())
                 {
                     response.data.ProjectCashFlowModel = new ProjectCashFlowModel();
                     response.data.ProjectCashFlowModel.Expenditure = new List<double>();
                     response.data.ProjectCashFlowModel.Income = new List<double>();
                     response.data.ProjectCashFlowModel.Date = new List<DateTime>();
 
-                    foreach (var item in spJournalReport)
+                    foreach (var item in spProjectCashFlow)
                     {
+
                         response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
                         response.data.ProjectCashFlowModel.Income.Add(item.Income);
                         response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
@@ -5087,6 +5089,7 @@ namespace HumanitarianAssistance.Service.Classes
 
         public async Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineBreakdownFilterModel model)
         {
+            int index = 0;
             APIResponse response = new APIResponse();
 
             try
@@ -5139,10 +5142,36 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.BudgetLineBreakdownModel.Expenditure = new List<double>();
                     response.data.BudgetLineBreakdownModel.Date = new List<DateTime>();
 
+
+
+                    var asfdg = spBudgetLineBreakdown
+                  .GroupBy(x => x.VoucherDate.ToShortDateString(), x => x, (key, g) =>
+                new BudgetLineBreakdownListModel
+                {
+                    Date = key,
+                    DebitTotal = g.Sum(x => x.Expenditure)
+                })
+                        .ToList();
+
+
                     foreach (var item in spBudgetLineBreakdown)
                     {
+
+                        double previousExpenditure = 0;
+
+                        if (index == 0)
+                        {
+                            previousExpenditure = 0;
+                        }
+                        else
+                        {
+                            previousExpenditure = spBudgetLineBreakdown[index-1].Expenditure;
+                            item.Expenditure = item.Expenditure + previousExpenditure;
+                                
+                        }
                         response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
                         response.data.BudgetLineBreakdownModel.Date.Add(item.VoucherDate);
+                        index++;
                     }
                 }
 
