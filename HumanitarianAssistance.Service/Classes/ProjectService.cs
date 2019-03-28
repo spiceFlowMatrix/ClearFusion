@@ -2324,14 +2324,15 @@ namespace HumanitarianAssistance.Service.Classes
                     Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
 
                     string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
-                    Console.WriteLine($"BucketName:{BucketName}");
-                    Console.WriteLine("--------- check For upload----- ----------");
+                    //Console.WriteLine($"BucketName:{BucketName}");
+                    //Console.WriteLine("--------- check For upload----- ----------");
+                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
 
                     ProjectProposalDetail proposaldata = new ProjectProposalDetail();
                     try
                     {
                         // --------------------code to get response credential from environment variables.
-                        string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, projectDetail.ProjectCode, file, fileName, ext);
+                        string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, file, fileName, ext);
                         proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
                         Console.WriteLine($"Final bucket response : {obj}");
 
@@ -2402,34 +2403,33 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 string folderName = projectDetail.ProjectCode;
                 //code to read credential from environment variables
-                Console.WriteLine("---------- Before Credential create path----------");
+                //Console.WriteLine("---------- Before Credential create path----------");
                 string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-                Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
                 if (googleApplicationCredentail == null)
                 {
                     string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                    Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    //Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    Console.WriteLine($"------GoogleServiceAccountDirectory cred null-----");
                     GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
                     Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
                 }
 
                 using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
                 {
-                    Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
+                    //Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
 
                     string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
-                    Console.WriteLine($"BucketName:{BucketName}");
-                    Console.WriteLine("--------- check For upload----- ----------");
+                    //Console.WriteLine($"BucketName:{BucketName}");
+                    //Console.WriteLine("--------- check For upload----- ----------");
+                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
 
                     ApproveProjectDetails objRes = new ApproveProjectDetails();
 
                     try
                     {
                         // --------------------code to get response credential from environment variables.
-                        string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, projectDetail.ProjectCode, file, fileName, ext);
-                        //proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
-
-
+                        string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, file, fileName, ext);
                         objRes = await _uow.GetDbContext().ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
 
                         Console.WriteLine($"Final bucket response : {obj}");
@@ -2504,34 +2504,34 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 string folderName = projectDetail.ProjectCode;
                 //code to read credential from environment variables
-                Console.WriteLine("---------- Before Credential create path----------");
+                //Console.WriteLine("---------- Before Credential create path----------");
                 string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-                Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
                 if (googleApplicationCredentail == null)
                 {
                     string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                    Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    Console.WriteLine("-----UploadFinalizeDragAndDrop cred null-------");
                     GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
                     Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
                 }
 
                 using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
                 {
-                    Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
+                    //Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
 
                     string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
-                    Console.WriteLine($"BucketName:{BucketName}");
-                    Console.WriteLine("--------- check For upload----- ----------");
+                    //Console.WriteLine($"BucketName:{BucketName}");
+                    //Console.WriteLine("--------- check For upload----- ----------");
+                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
 
                     WinProjectDetails objRes = new WinProjectDetails();
-
                     try
                     {
                         // --------------------code to get response credential from environment variables.
-                        string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, projectDetail.ProjectCode, file, fileName, ext);
+                        string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, file, fileName, ext);
                         objRes = await _uow.GetDbContext().WinProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
 
-                        Console.WriteLine($"Final bucket response : {obj}");
+                        //Console.WriteLine($"Final bucket response : {obj}");
 
                         if (obj != null)
                         {
@@ -2605,23 +2605,24 @@ namespace HumanitarianAssistance.Service.Classes
                 string filename = projectProposalfilename + ".docx";
 
                 //code to read credential from environment variables
-                Console.WriteLine("---------- Before Credential create path----------");
+                //Console.WriteLine("---------- Before Credential create path----------");
                 string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-                Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
                 if (googleApplicationCredentail == null)
                 {
                     string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                    Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    //Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    //Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
                     GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
                     Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
                 }
 
                 using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
                 {
-                    Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
+                    //Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
 
                     string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
-                    Console.WriteLine($"BucketName:{BucketName}");
+                    //Console.WriteLine($"BucketName:{BucketName}");
                     GoogleCredentialModel result = new GoogleCredentialModel
                     {
                         ApplicationName = StaticResource.ApplicationName,
@@ -2634,7 +2635,7 @@ namespace HumanitarianAssistance.Service.Classes
                         Store = StaticResource.StoreFolderName
                     };
 
-                    Console.WriteLine("--------- check For upload----- ----------");
+                    //Console.WriteLine("--------- check For upload----- ----------");
 
                     ProjectProposalDetail proposaldata = new ProjectProposalDetail();
                     try
@@ -2715,14 +2716,14 @@ namespace HumanitarianAssistance.Service.Classes
 
                 var folderDetail = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectId && x.IsDeleted == false);
 
-                Console.WriteLine("------Before other file Credential path Upload----------");
+                //Console.WriteLine("------Before other file Credential path Upload----------");
 
                 string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-                Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
                 if (googleApplicationCredentail == null)
                 {
                     string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                    Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    //Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
                     GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
                     Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
                 }
@@ -2744,8 +2745,10 @@ namespace HumanitarianAssistance.Service.Classes
 
                     var proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectId && x.IsDeleted == false);
                     string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
-                    Console.WriteLine($"BucketName:{BucketName}");
-                    string uploadedFileResponse = await GCBucket.UploadOtherProposalDocuments(BucketName, folderDetail.FolderName, file, fileName, ext);
+                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderDetail.FolderName + "/" + fileName;
+
+                    //Console.WriteLine($"BucketName:{BucketName}");
+                    string uploadedFileResponse = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, file, fileName, ext);
                     if (uploadedFileResponse != null)
                     {
                         ProjectProposalDetail proposaldetails = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectId && x.IsDeleted == false);

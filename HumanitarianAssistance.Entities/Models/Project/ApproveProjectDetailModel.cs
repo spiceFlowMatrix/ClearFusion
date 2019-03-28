@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +13,5 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string FilePath { get; set; }
         public bool IsApproved { get; set; }
         public string UploadedFile { get; set; }
-        public IFormFile File { get; set; }
-
     }
 }
