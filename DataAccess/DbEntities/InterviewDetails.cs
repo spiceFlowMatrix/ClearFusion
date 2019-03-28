@@ -63,5 +63,12 @@ namespace DataAccess.DbEntities
         public string Interviewer4 { get; set; }
         List<HRJobInterviewers> HRJobInterviewers { get; set; }
         public string InterviewStatus { get; set; }
+        [ForeignKey("EmployeeID")]
+        public EmployeeDetail EmployeeDetail { get; set; }
+        public List<RatingBasedCriteria> RatingBasedCriteriaList { get; set; }
+        public List<InterviewLanguages> InterviewLanguagesList { get; set; }
+        public List<InterviewTrainings> InterviewTrainingsList { get; set; }
+        public List<InterviewTechnicalQuestion> InterviewTechnicalQuestionList { get; set; }
+        public List<HRJobInterviewers> HRJobInterviewersList { get; set; }
     }
 }
