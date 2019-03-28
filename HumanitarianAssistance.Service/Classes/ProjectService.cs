@@ -5088,42 +5088,67 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineBreakdownFilterModel model)
         {
             APIResponse response = new APIResponse();
+
             try
             {
-                List<VoucherTransactions> transList = new List<VoucherTransactions>();
-                if (model.BudgetLineId.Count == 0 || model.BudgetLineId == null)
+                //List<VoucherTransactions> transList = new List<VoucherTransactions>();
+                //if (model.BudgetLineId.Count == 0 || model.BudgetLineId == null)
+                //{
+                //    transList = await _uow.GetDbContext().VoucherTransactions
+                //                              .Where(x => x.IsDeleted == false && x.ProjectId == model.ProjectId)
+                //                              .ToListAsync();
+                //}
+                //else
+                //{
+                //    transList = await _uow.GetDbContext().VoucherTransactions.Include(x => x.ProjectBudgetLineDetail)
+                //                                         .Where(x => x.IsDeleted == false &&
+                //                                                     x.ProjectId == model.ProjectId &&
+                //                                                     model.BudgetLineId.Contains(x.BudgetLineId) &&
+                //                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date >= model.BudgetLineStartDate.Value.Date &&
+                //                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date <= model.BudgetLineEndDate.Value.Date)
+                //                                         .ToListAsync();
+                //}
+
+                //List<BudgetLineBreakdownListModel> budgetDetailList = transList.Select(b => new BudgetLineBreakdownModel
+                //{
+                //    ProjectId = b.ProjectId,
+                //    Debit = b.Debit,
+                //    TransactionDate = b.TransactionDate,
+                //    Date = b.ProjectBudgetLineDetail?.CreatedDate?.ToShortDateString()
+                //}).GroupBy(x => x.Date, x => x, (key, g) =>
+                //new BudgetLineBreakdownListModel
+                //{
+                //    Date = key,
+                //    DebitTotal = g.Sum(x => x.Debit)
+                //})
+                //  .OrderBy(x => x.Date)
+                //  .ToList();
+
+                //get Journal Report from sp get_journal_report by passing parameters
+                var spBudgetLineBreakdown = await _uow.GetDbContext().LoadStoredProc("get_budgetlinebreakdown")
+                                      .WithSqlParam("currency", model.CurrencyId)
+                                      .WithSqlParam("projectid", model.ProjectId)
+                                      .WithSqlParam("budgetlinestartdate", model.BudgetLineStartDate.ToString())
+                                      .WithSqlParam("budgetlineenddate", model.BudgetLineEndDate.ToString())
+                                      .WithSqlParam("budgetlineids", model.BudgetLineId)
+                                      .ExecuteStoredProc<SPBudgetLineBeakdown>();
+
+                if (spBudgetLineBreakdown.Any())
                 {
-                    transList = await _uow.GetDbContext().VoucherTransactions
-                                              .Where(x => x.IsDeleted == false && x.ProjectId == model.ProjectId)
-                                              .ToListAsync();
-                }
-                else
-                {
-                    transList = await _uow.GetDbContext().VoucherTransactions.Include(x => x.ProjectBudgetLineDetail)
-                                                         .Where(x => x.IsDeleted == false &&
-                                                                     x.ProjectId == model.ProjectId &&
-                                                                     model.BudgetLineId.Contains(x.BudgetLineId) &&
-                                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date >= model.BudgetLineStartDate.Value.Date &&
-                                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date <= model.BudgetLineEndDate.Value.Date)
-                                                         .ToListAsync();
+                    response.data.BudgetLineBreakdownModel = new BudgetLineBreakdownModel();
+                    response.data.BudgetLineBreakdownModel.Expenditure = new List<double>();
+                    response.data.BudgetLineBreakdownModel.Date = new List<DateTime>();
+
+                    foreach (var item in spBudgetLineBreakdown)
+                    {
+                        response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
+                        response.data.BudgetLineBreakdownModel.Date.Add(item.VoucherDate);
+                    }
                 }
 
-                List<BudgetLineBreakdownListModel> budgetDetailList = transList.Select(b => new BudgetLineBreakdownModel
-                {
-                    ProjectId = b.ProjectId,
-                    Debit = b.Debit,
-                    TransactionDate = b.TransactionDate,
-                    Date = b.ProjectBudgetLineDetail?.CreatedDate?.ToShortDateString()
-                }).GroupBy(x => x.Date, x => x, (key, g) =>
-                new BudgetLineBreakdownListModel
-                {
-                    Date = key,
-                    DebitTotal = g.Sum(x => x.Debit)
-                })
-                  .OrderBy(x => x.Date)
-                  .ToList();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
 
-                response.data.BudgetLineBreakdownList = budgetDetailList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
