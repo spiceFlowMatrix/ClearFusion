@@ -15,9 +15,9 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     }
     public class ProjectCashFlowModel
     {
-        public double? CreditList { get; set; }
-        public double? DebitList { get; set; }
-        public string Date { get; set; }
+        public List<DateTime> Date { get; set; }
+        public List<double> Expenditure { get; set; }
+        public List<double> Income { get; set; }
     }
 
     #endregion

@@ -31,6 +31,7 @@ using System.Security.Cryptography.X509Certificates;
 using Google.Apis.Storage.v1;
 using Google.Apis.Services;
 using Google.Apis.Auth.OAuth2;
+using HumanitarianAssistance.ViewModels.SPModels;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -5048,34 +5049,30 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                transList = await _uow.GetDbContext().VoucherTransactions
-                                  .Where(x => x.IsDeleted == false &&
-                                              x.ProjectId == model.ProjectId)
-                                  .ToListAsync();
+                //get Journal Report from sp get_journal_report by passing parameters
+                var spJournalReport = await _uow.GetDbContext().LoadStoredProc("get_projectcashflow")
+                                      .WithSqlParam("currency", model.CurrencyId)
+                                      .WithSqlParam("projectid", model.ProjectId)
+                                      .WithSqlParam("projectstartdate", model.ProjectStartDate.ToString())
+                                      .WithSqlParam("projectenddate", model.ProjectEndDate.ToString())
+                                      .WithSqlParam("donorid", model.DonorID)
+                                      .ExecuteStoredProc<SPProjectCashFlowModel>();
 
-                //transList = await _uow.GetDbContext().VoucherTransactions
-                //                          .Where(x => x.IsDeleted == false &&
-                //                                      x.ProjectId == model.ProjectId &&
-                //                                      x.ProjectDetail.CreatedDate.Value.Date >= model.ProjectStartDate.Date &&
-                //                                      x.ProjectDetail.EndDate.Value.Date <= model.ProjectEndDate.Date)
-                //                          .OrderBy(x => x.ProjectDetail.CreatedDate)
-                //                          .ToListAsync();
-
-                var budgetDetailList = transList.Select(b => new ProjectCashFlowModel
+                if (spJournalReport.Any())
                 {
-                    DebitList = b.Debit,
-                    CreditList = b.Credit,
-                    Date = b.TransactionDate?.Date.ToShortDateString()
-                }).GroupBy(x => x.Date, x => x, (key, g) => new ProjectCashFlowModel
-                {
-                    Date = key,
-                    DebitList = g.Sum(x => x.DebitList),
-                    CreditList = g.Sum(x => x.CreditList),
-                })
-               .OrderBy(x => x.Date)
-               .ToList();
+                    response.data.ProjectCashFlowModel = new ProjectCashFlowModel();
+                    response.data.ProjectCashFlowModel.Expenditure = new List<double>();
+                    response.data.ProjectCashFlowModel.Income = new List<double>();
+                    response.data.ProjectCashFlowModel.Date = new List<DateTime>();
 
-                response.data.ProjectCashFlowList = budgetDetailList;
+                    foreach (var item in spJournalReport)
+                    {
+                        response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
+                        response.data.ProjectCashFlowModel.Income.Add(item.Income);
+                        response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
+                    }
+                }
+                
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }
