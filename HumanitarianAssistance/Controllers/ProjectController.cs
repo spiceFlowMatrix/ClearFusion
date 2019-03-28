@@ -1634,7 +1634,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         int statusID = Convert.ToInt32(statusId);
         string fileName = Request.Form.Files[0].FileName;
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext != ".jpeg" && ext != ".png")
+        if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
           if (user != null)
@@ -1765,7 +1765,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string fileName = Request.Form.Files[0].FileName;
 
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext != ".jpeg" && ext != ".png")
+        if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
@@ -1807,7 +1807,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string fileName = Request.Form.Files[0].FileName;
 
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext != ".jpeg" && ext != ".png")
+        if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
