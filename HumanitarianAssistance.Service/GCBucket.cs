@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -690,9 +691,11 @@ namespace HumanitarianAssistance.Service
                 {
                     var resp = await storage.UploadObjectAsync(bucketName, folderWithProposalFile, mimetype, filestream);
                     //Console.WriteLine($"------------Uploaded file Bucket Response:{resp.Name}");
-                    var uploadedFileName = bucketName + "/" + resp.Name;
-                    return uploadedFileName;
+                    //var uploadedFileName = bucketName + "/" + resp.Name;
+
+                    return resp.Name;
                 }
+                   
             }
             catch (Exception ex)
             {
@@ -710,10 +713,31 @@ namespace HumanitarianAssistance.Service
 
         }
 
+        public async static Task<string> GetSignedURL(string bucketName, string objectName)
+        {
+            try
+            {
+                var scopes = new string[] { "https://www.googleapis.com/auth/devstorage.read_write" };
+                ServiceAccountCredential cred;
 
+                using (var stream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
+                {
+                    cred = GoogleCredential.FromStream(stream)
+                                           .CreateScoped(scopes)
+                                           .UnderlyingCredential as ServiceAccountCredential;
+                }
+
+                var urlSigner = UrlSigner.FromServiceAccountCredential(cred);
+
+                return await urlSigner.SignAsync(bucketName, objectName, TimeSpan.FromMinutes(10), HttpMethod.Get);
+            }
+            catch (Exception)
+            {
+                throw new Exception(StaticResource.UnableToGenerateSignedUrl);
+            }
+        
+        }
 
     }
-
-
 
 }

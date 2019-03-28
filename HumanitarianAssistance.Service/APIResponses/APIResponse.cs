@@ -466,6 +466,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public DateTime DateTime { get; set; }
         public bool ImplementationStatus { get; set; }
         public bool MonitoringStatus { get; set; }
+        public string SignedUrl{ get; set; }
 
     }
 

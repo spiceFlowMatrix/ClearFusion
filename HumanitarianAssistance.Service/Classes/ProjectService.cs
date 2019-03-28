@@ -2490,7 +2490,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-       
+
         public async Task<APIResponse> UploadFinalizeDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, WinApprovalProjectModel model)
         {
             APIResponse response = new APIResponse();
@@ -2652,7 +2652,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 proposaldata = new ProjectProposalDetail();
                                 proposaldata.FolderName = folderName;
                                 proposaldata.ProposalFileName = filename;
-                                proposaldata.ProposalWebLink = StaticResource.BucketName + "/" + obj;
+                                proposaldata.ProposalWebLink = obj;
                                 proposaldata.ProjectId = Projectid;
                                 proposaldata.IsDeleted = false;
                                 proposaldata.ProposalExtType = ".docx";
@@ -5565,6 +5565,25 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
+        #region "DownloadFileFromBucket"
+        public async Task<APIResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                string bucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
 
+                response.data.SignedUrl = await GCBucket.GetSignedURL(bucketName, model.ObjectName);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+            return response;
+        }
+        #endregion
     }
 }

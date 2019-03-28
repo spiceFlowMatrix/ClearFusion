@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using System.Net.Http.Headers;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.ViewModels.Models;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
@@ -1833,5 +1834,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
     #endregion
+
+
+    #region "DownloadFileFromBucket"
+    [HttpPost]
+    public async Task<APIResponse> DownloadFileFromBucket([FromBody]DownloadObjectGCBucketModel model)
+    {
+      APIResponse apiresponse = await _iProject.DownloadFileFromBucket(model);
+      return apiresponse;
+    }
+    #endregion
+
+
   }
 }
