@@ -803,8 +803,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string ProposalType = data;
         string fileName = Request.Form.Files[0].FileName;
 
-        string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext == ".doc" || ext == ".docx" || ext == ".txt" || ext == ".xlsx" || ext == ".pdf" || ext== ".pptx")
+        string ext = Path.GetExtension(fileName).ToLower();
+        if (ext != ".jpeg" && ext != ".png")
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
@@ -1619,7 +1619,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #endregion
 
-    #region upload files
+    #region upload files for activity documents 28/03/2019
     [HttpPost, DisableRequestSizeLimit]
     public async Task<APIResponse> UploadProjectDocumnentFile([FromForm] IFormFile filesData, string activityId, string statusId)
     {
@@ -1636,15 +1636,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
         if (ext != ".jpeg" && ext != ".png")
         {
-
-
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
           if (user != null)
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = await _iActivity.UploadDocumentFile(file, id, activityID, fileName, logginUserEmailId, ext, statusID);
-
+            apiRespone = await _iActivity.UploadProjectActivityDocumentFile(file, id, activityID, fileName, logginUserEmailId, ext, statusID);
           }
         }
         else
@@ -1652,10 +1649,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
           apiRespone.StatusCode = StaticResource.FileNotSupported;
           apiRespone.Message = StaticResource.FileText;
         }
-
-        //}
       }
-      catch (System.Exception ex)
+      catch (Exception ex)
       {
         throw ex;
         //return Json("Upload Failed: " + ex.Message);
@@ -1674,7 +1669,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #endregion
 
-    #region
+    #region "FilterProjectCashFlow"
     [HttpPost]
     public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowFilterModel model)
     {
@@ -1727,7 +1722,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string fileName = Request.Form.Files[0].FileName;
 
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext == ".doc" || ext == ".docx" || ext == ".txt")
+        if (ext == ".doc" || ext == ".docx")
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
@@ -1770,7 +1765,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string fileName = Request.Form.Files[0].FileName;
 
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext == ".doc" || ext == ".docx" || ext == ".txt" || ext == ".xlsx" || ext == ".pdf" || ext == ".pptx")
+        if (ext != ".jpeg" && ext != ".png")
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
@@ -1812,7 +1807,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string fileName = Request.Form.Files[0].FileName;
 
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext == ".doc" || ext == ".docx" || ext == ".txt" || ext == ".xlsx" || ext == ".pdf" || ext == ".pptx")
+        if (ext != ".jpeg" && ext != ".png")
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
