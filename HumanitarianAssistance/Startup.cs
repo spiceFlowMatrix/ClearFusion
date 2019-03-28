@@ -328,7 +328,7 @@ namespace HumanitarianAssistance
         app.UseHsts();
       }
 
-      app.UseHttpsRedirection();
+      // app.UseHttpsRedirection();
       app.UseCookiePolicy();
 
       app.UseCors(DefaultCorsPolicyName);
