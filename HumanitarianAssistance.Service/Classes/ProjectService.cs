@@ -2003,7 +2003,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 ApproveProjectDetails obj = new ApproveProjectDetails();
 
-                obj = _uow.GetDbContext().ApproveProjectDetails.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
+                obj =  await _uow.GetDbContext().ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
                 if (obj == null)
                 {
                     obj = new ApproveProjectDetails();
@@ -2012,12 +2012,11 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.FileName = model.FileName;
                     obj.FilePath = model.FilePath;
                     obj.IsApproved = model.IsApproved;
-                    obj.UploadedFile = string.IsNullOrEmpty(model.UploadedFile) ? null : Convert.FromBase64String(model.UploadedFile);
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.Now;
                     await _uow.ApproveProjectDetailsRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
+                    
                     if (model.IsApproved == false)
                     {
                         var details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
@@ -2027,7 +2026,7 @@ namespace HumanitarianAssistance.Service.Classes
                             details.ModifiedById = UserId;
                             details.IsDeleted = false;
                             details.ModifiedDate = DateTime.Now;
-                            _uow.GetDbContext().SaveChanges();
+                           await _uow.GetDbContext().SaveChangesAsync();
                         }
                     }
 
@@ -2040,36 +2039,27 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.FileName = model.FileName;
                     obj.FilePath = model.FilePath;
                     obj.IsApproved = model.IsApproved;
-                    obj.UploadedFile = string.IsNullOrEmpty(model.UploadedFile) ? null : Convert.FromBase64String(model.UploadedFile);
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.Now;
-                    await _uow.SaveAsync();
+                    await _uow.ApproveProjectDetailsRepository.UpdateAsyn(obj);
+
                     if (model.IsApproved == false)
                     {
                         var details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
-                        //var Approveprojectdetail = _uow.GetDbContext().ApproveProjectDetails.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
                         if (details != null)
                         {
                             details.IsProposalAccept = model.IsApproved;
                             details.ModifiedById = UserId;
                             details.IsDeleted = false;
                             details.ModifiedDate = DateTime.Now;
-                            _uow.GetDbContext().SaveChanges();
+                           await _uow.GetDbContext().SaveChangesAsync();
                         }
-                        //if (Approveprojectdetail != null)
-                        //{
-                        //    Approveprojectdetail.IsApproved = null;
-                        //    Approveprojectdetail.ModifiedById = UserId;
-                        //    Approveprojectdetail.IsDeleted = false;
-                        //    Approveprojectdetail.ModifiedDate = DateTime.Now;
-                        //    _uow.GetDbContext().SaveChanges();
-                        //}
                     }
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
-                response.CommonId.IsApproved = model.IsApproved;
+                response.data.ApproveProjectDetails = obj;
             }
             catch (Exception ex)
             {
@@ -2093,7 +2083,6 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.FileName = model.FileName;
                 obj.FilePath = model.FilePath;
                 obj.IsWin = model.IsWin;
-                obj.UploadedFile = string.IsNullOrEmpty(model.UploadedFile) ? null : Convert.FromBase64String(model.UploadedFile);
                 obj.IsDeleted = false;
                 obj.CreatedById = UserId;
                 obj.CreatedDate = DateTime.Now;

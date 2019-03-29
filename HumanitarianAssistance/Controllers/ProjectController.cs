@@ -757,11 +757,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     //}
 
 
-      /// <summary>
-      /// start proposal on click 26/03/2019 pk 
-      /// </summary>
-      /// <param name="ProjectId"></param>
-      /// <returns></returns>
+    /// <summary>
+    /// start proposal on click 26/03/2019 pk 
+    /// </summary>
+    /// <param name="ProjectId"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<APIResponse> AddEditProjectproposals([FromBody]long ProjectId)
     {
@@ -786,7 +786,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
 
-    
+
 
     /// <summary>
     /// upload other proposal document using service account credentails new 26/03/2019 poonam
@@ -805,7 +805,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string fileName = Request.Form.Files[0].FileName;
 
         string ext = Path.GetExtension(fileName).ToLower();
-        if (ext != ".jpeg" && ext != ".png" && ext !=".jpg" && ext!=".gif")
+        if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
@@ -1754,36 +1754,54 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region"UploadReviewFile"
     [HttpPost, DisableRequestSizeLimit]
-    public async Task<APIResponse> UploadReviewFile([FromForm] IFormFile filesData,ApproveProjectDetailModel model)
+    public async Task<APIResponse> UploadReviewFile([FromForm] IFormFile filesData, ApproveProjectDetailModel model)
     {
       APIResponse apiRespone = new APIResponse();
       string localFolderfullPath = string.Empty;
       try
       {
-
-        var file = Request.Form.Files[0];
-        long ProjectId = Convert.ToInt64(model.ProjectId);
-        string fileName = Request.Form.Files[0].FileName;
-
-        string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
+        if (filesData == null)
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = await _iProject.UploadReviewDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ext,model);
+            apiRespone = await _iProject.AddApprovalDetail( model,id);
 
+          }
+          else
+          {
+            apiRespone.StatusCode = StaticResource.FileNotSupported;
+            apiRespone.Message = StaticResource.FileText;
           }
         }
         else
         {
-          apiRespone.StatusCode = StaticResource.FileNotSupported;
-          apiRespone.Message = StaticResource.FileText;
-        }
+          var file = Request.Form.Files[0];
+          long ProjectId = Convert.ToInt64(model.ProjectId);
+          string fileName = Request.Form.Files[0].FileName;
 
-        //}
+          string ext = System.IO.Path.GetExtension(fileName).ToLower();
+          if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
+          {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (user != null)
+            {
+              string logginUserEmailId = user.Email;
+              var id = user.Id;
+              apiRespone = await _iProject.UploadReviewDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ext, model);
+
+            }
+          }
+
+          else
+          {
+            apiRespone.StatusCode = StaticResource.FileNotSupported;
+            apiRespone.Message = StaticResource.FileText;
+          }
+
+        }   //}
       }
       catch (Exception ex)
       {
