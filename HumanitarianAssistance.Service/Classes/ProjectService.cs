@@ -5470,7 +5470,7 @@ namespace HumanitarianAssistance.Service.Classes
         #region "Project Cash Flow"
         public async Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowFilterModel model)
         {
-            
+            int index = 0;
             APIResponse response = new APIResponse();
             List<VoucherTransactions> transList = new List<VoucherTransactions>();
 
@@ -5495,9 +5495,24 @@ namespace HumanitarianAssistance.Service.Classes
                     foreach (var item in spProjectCashFlow)
                     {
 
+                        // adding previous expenditure to the current expenditure
+                        double previousExpenditure = 0;
+
+                        if (index == 0)
+                        {
+                            previousExpenditure = 0;
+                        }
+                        else
+                        {
+                            previousExpenditure = spProjectCashFlow[index - 1].Expenditure;
+                            item.Expenditure = item.Expenditure + previousExpenditure;
+
+                        }
+
                         response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
                         response.data.ProjectCashFlowModel.Income.Add(item.Income);
                         response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
+                        index++;
                     }
                 }
                 
@@ -5568,21 +5583,9 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.BudgetLineBreakdownModel.Expenditure = new List<double>();
                     response.data.BudgetLineBreakdownModel.Date = new List<DateTime>();
 
-
-
-                    var asfdg = spBudgetLineBreakdown
-                  .GroupBy(x => x.VoucherDate.ToShortDateString(), x => x, (key, g) =>
-                new BudgetLineBreakdownListModel
-                {
-                    Date = key,
-                    DebitTotal = g.Sum(x => x.Expenditure)
-                })
-                        .ToList();
-
-
                     foreach (var item in spBudgetLineBreakdown)
                     {
-
+                        // adding previous expenditure to the current expenditure
                         double previousExpenditure = 0;
 
                         if (index == 0)
@@ -5595,6 +5598,7 @@ namespace HumanitarianAssistance.Service.Classes
                             item.Expenditure = item.Expenditure + previousExpenditure;
                                 
                         }
+
                         response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
                         response.data.BudgetLineBreakdownModel.Date.Add(item.VoucherDate);
                         index++;
