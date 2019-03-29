@@ -2112,141 +2112,9 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        //StartProposal without directory using service account credentail 25/03/2019.
-        public async Task<APIResponse> StartProposal(long Projectid, string userid, string logginUserEmailId)
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == Projectid && x.IsDeleted == false);
-                if (projectDetail == null)
-                {
-                    throw new Exception("Project Id not found");
-                }
-                string folderName = projectDetail.ProjectCode;
-                string projectProposalfilename = projectDetail.ProjectName + "-" + projectDetail.ProjectCode + "-Proposal";
-                string filename = projectProposalfilename + ".docx";
-
-                //code to read credential from environment variables
-                Console.WriteLine("---------- Before Credential create path----------");
-                string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-                Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
-                if (googleApplicationCredentail == null)
-                {
-                    string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                    Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
-                    GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
-                    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
-                }
-
-                using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
-                {
-                    Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
-
-                    string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
-                    Console.WriteLine($"BucketName:{BucketName}");
-                    //call method to upload black proposal on bucket
-                    //UploadFile(BucketName, folderName, filename);
-
-                    GoogleCredentialModel result = new GoogleCredentialModel
-                    {
-                        ApplicationName = StaticResource.ApplicationName,
-                        BucketName = StaticResource.BucketName,
-                        EmailId = StaticResource.EmailId,
-                        ProjectId = StaticResource.ProjectId,
-                        Projects = StaticResource.ProjectsFolderName,
-                        HR = StaticResource.HRFolderName,
-                        Accounting = StaticResource.AccountingFolderName,
-                        Store = StaticResource.StoreFolderName
-                    };
-
-                    Console.WriteLine("--------- check For upload----- ----------");
 
 
-                    //String serviceAccountEmail = "xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@developer.gserviceaccount.com";
-
-                    //var certificate = new X509Certificate2(@"D:\poonam\Raman\clearfusion-api\HumanitarianAssistance\GoogleCredentials\credentials.json", "notasecret", X509KeyStorageFlags.Exportable);
-                    //var scopes = new[] { @"https://www.googleapis.com/auth/devstorage.full_control" };
-                    //ServiceAccountCredential credential = new ServiceAccountCredential(
-                    // new ServiceAccountCredential.Initializer("cf-storage-serviceacc@clear-fusion-193608.iam.gserviceaccount.com")
-                    // {
-                    //     Scopes = scopes
-                    // }.FromCertificate(certificate));
-
-                    //StorageService service = new StorageService(new BaseClientService.Initializer()
-                    //{
-                    //    HttpClientInitializer = credential,
-                    //    ApplicationName = StaticResource.ApplicationName,
-                    //});
-
-
-
-                    ProjectProposalDetail proposaldata = new ProjectProposalDetail();
-                    try
-                    {
-                        // --------------------code to get response credential from environment variables.
-                        string obj = await GCBucket.StartOroposalCreateFile(BucketName, folderName, filename);
-                        proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == Projectid && x.IsDeleted == false);
-                        Console.WriteLine($"Final bucket response : {obj}");
-
-                        if (obj != null && obj != "undefined")
-                        {
-                            if (proposaldata == null)
-                            {
-                                proposaldata = new ProjectProposalDetail();
-                                proposaldata.FolderName = folderName;
-                                proposaldata.ProposalFileName = filename;
-                                proposaldata.ProposalWebLink = StaticResource.BucketName + "/" + obj;
-                                proposaldata.ProjectId = Projectid;
-                                proposaldata.IsDeleted = false;
-                                proposaldata.ProposalExtType = ".docx";
-                                proposaldata.CreatedById = userid;
-                                proposaldata.CreatedDate = DateTime.Now;
-                                await _uow.ProjectProposalDetailRepository.AddAsyn(proposaldata);
-                            }
-                            else
-                            {
-                                proposaldata.FolderName = folderName;
-                                proposaldata.ProposalFileName = filename;
-                                proposaldata.ProposalWebLink = obj;
-                                proposaldata.ProjectId = Projectid;
-                                proposaldata.IsDeleted = false;
-                                proposaldata.ProposalExtType = ".docx";
-                                proposaldata.ModifiedDate = DateTime.Now;
-                                proposaldata.ModifiedById = userid;
-
-
-                                await _uow.ProjectProposalDetailRepository.UpdateAsyn(proposaldata);
-                            }
-                        }
-                        else
-                        {
-                            throw new Exception("Failed to upload. Try again!");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Upload using Environment variable failed");
-                        Console.WriteLine($"--------------Using environment variable exception--: {ex}");
-
-                    }
-
-                    response.data.ProjectProposalDetail = proposaldata;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-                }
-            }
-
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
-
-        //DEMO FOR UPLOAD FILE USING SERVICE ACCOUNT CREDENTIAL. 22/03/2019
+        //DEMO FOR UPLOAD FILE USING SERVICE ACCOUNT CREDENTIAL . 22/03/2019
         //public void UploadFile(string bucketName,string folderName,string fileName)
         //{
         //    var storage = StorageClient.Create();
@@ -2259,7 +2127,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
 
-        //  ***********************addEdit start proposal using auth credential with environment variable and directory 20/03/2019
+        //  ***********************addEdit start proposal using auth credential with environment variable and directory PK 20/03/2019
         //public async Task<APIResponse> AddEditProjectproposals(long Projectid, string userid, string logginUserEmailId)
         //{
         //    APIResponse response = new APIResponse();
@@ -2420,6 +2288,564 @@ namespace HumanitarianAssistance.Service.Classes
         //}
 
 
+        /// <summary>
+        /// start proposal using drag and drop file 26/03/2019 pk 
+        /// </summary>
+        /// <param name="Projectid"></param>
+        /// <param name="userid"></param>
+        /// <param name="logginUserEmailId"></param>
+        /// <returns></returns>
+        /// 
+        public async Task<APIResponse> StartProposalDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
+                if (projectDetail == null)
+                {
+                    throw new Exception("Project Id not found");
+                }
+                string folderName = projectDetail.ProjectCode;
+                //code to read credential from environment variables
+                Console.WriteLine("---------- Before Credential create path----------");
+                string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+                Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                if (googleApplicationCredentail == null)
+                {
+                    string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                    Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
+                    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
+                }
+
+                using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
+                {
+                    Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
+
+                    string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
+                    //Console.WriteLine($"BucketName:{BucketName}");
+                    //Console.WriteLine("--------- check For upload----- ----------");
+                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
+
+                    ProjectProposalDetail proposaldata = new ProjectProposalDetail();
+                    try
+                    {
+                        // --------------------code to get response credential from environment variables.
+                        string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, file, fileName, ext);
+                        proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
+                        Console.WriteLine($"Final bucket response : {obj}");
+
+                        if (obj != null)
+                        {
+                            if (proposaldata == null)
+                            {
+                                proposaldata = new ProjectProposalDetail();
+                                proposaldata.FolderName = folderName;
+                                proposaldata.ProposalFileName = fileName;
+                                proposaldata.ProposalWebLink = obj;
+                                proposaldata.ProjectId = projectid;
+                                proposaldata.IsDeleted = false;
+                                proposaldata.ProposalExtType = ".docx";
+                                proposaldata.CreatedById = userid;
+                                proposaldata.CreatedDate = DateTime.UtcNow;
+                                await _uow.ProjectProposalDetailRepository.AddAsyn(proposaldata);
+                            }
+                            else
+                            {
+                                proposaldata.FolderName = folderName;
+                                proposaldata.ProposalFileName = fileName;
+                                proposaldata.ProposalWebLink = obj;
+                                proposaldata.ProjectId = projectid;
+                                proposaldata.IsDeleted = false;
+                                proposaldata.ProposalExtType = ".docx";
+                                proposaldata.ModifiedDate = DateTime.UtcNow;
+                                proposaldata.ModifiedById = userid;
+                                await _uow.ProjectProposalDetailRepository.UpdateAsyn(proposaldata);
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Failed to upload. Try again!");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Upload using Environment variable failed");
+                        Console.WriteLine($"--------------Using environment variable exception--: {ex}");
+
+                    }
+
+                    response.data.ProjectProposalDetail = proposaldata;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> UploadReviewDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, ApproveProjectDetailModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
+                if (projectDetail == null)
+                {
+                    throw new Exception("Project Id not found");
+                }
+                string folderName = projectDetail.ProjectCode;
+                //code to read credential from environment variables
+                //Console.WriteLine("---------- Before Credential create path----------");
+                string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                if (googleApplicationCredentail == null)
+                {
+                    string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                    //Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    Console.WriteLine($"------GoogleServiceAccountDirectory cred null-----");
+                    GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
+                    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
+                }
+
+                using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
+                {
+                    //Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
+
+                    string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
+                    //Console.WriteLine($"BucketName:{BucketName}");
+                    //Console.WriteLine("--------- check For upload----- ----------");
+                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
+
+                    ApproveProjectDetails objRes = new ApproveProjectDetails();
+
+                    try
+                    {
+                        // --------------------code to get response credential from environment variables.
+                        string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, file, fileName, ext);
+                        objRes = await _uow.GetDbContext().ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
+
+                        Console.WriteLine($"Final bucket response : {obj}");
+
+                        if (obj != null)
+                        {
+                            if (objRes == null)
+                            {
+                                objRes = new ApproveProjectDetails();
+                                objRes.ProjectId = projectid;
+                                objRes.FileName = fileName;
+                                objRes.FilePath = obj;
+                                objRes.CommentText = model.CommentText;
+                                objRes.UploadedFile = null;
+                                objRes.IsDeleted = false;
+                                objRes.CreatedById = userid;
+                                objRes.IsApproved = model.IsApproved;
+                                objRes.CreatedDate = DateTime.UtcNow;
+                                await _uow.ApproveProjectDetailsRepository.AddAsyn(objRes);
+                            }
+                            else
+                            {
+                                objRes.ProjectId = projectid;
+                                objRes.FileName = fileName;
+                                objRes.CommentText = model.CommentText;
+                                objRes.FilePath = obj;
+                                objRes.UploadedFile = null;
+                                objRes.IsDeleted = false;
+                                objRes.ModifiedDate = DateTime.UtcNow;
+                                objRes.ModifiedById = userid;
+                                objRes.IsApproved = model.IsApproved;
+                                await _uow.ApproveProjectDetailsRepository.UpdateAsyn(objRes);
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Failed to upload. Try again!");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Upload using Environment variable failed");
+                        Console.WriteLine($"--------------Using environment variable exception--: {ex}");
+
+                    }
+
+                    response.data.ApproveProjectDetails = objRes;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> UploadFinalizeDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, WinApprovalProjectModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
+                if (projectDetail == null)
+                {
+                    throw new Exception("Project Id not found");
+                }
+                string folderName = projectDetail.ProjectCode;
+                //code to read credential from environment variables
+                //Console.WriteLine("---------- Before Credential create path----------");
+                string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                if (googleApplicationCredentail == null)
+                {
+                    string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                    Console.WriteLine("-----UploadFinalizeDragAndDrop cred null-------");
+                    GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
+                    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
+                }
+
+                using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
+                {
+                    //Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
+
+                    string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
+                    //Console.WriteLine($"BucketName:{BucketName}");
+                    //Console.WriteLine("--------- check For upload----- ----------");
+                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
+
+                    WinProjectDetails objRes = new WinProjectDetails();
+                    try
+                    {
+                        // --------------------code to get response credential from environment variables.
+                        string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, file, fileName, ext);
+                        objRes = await _uow.GetDbContext().WinProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
+
+                        //Console.WriteLine($"Final bucket response : {obj}");
+
+                        if (obj != null)
+                        {
+                            if (objRes == null)
+                            {
+                                objRes = new WinProjectDetails();
+                                objRes.ProjectId = projectid;
+                                objRes.FileName = fileName;
+                                objRes.FilePath = obj;
+                                objRes.CommentText = model.CommentText;
+                                objRes.UploadedFile = null;
+                                objRes.IsDeleted = false;
+                                objRes.CreatedById = userid;
+                                objRes.IsWin = model.IsWin;
+                                objRes.CreatedDate = DateTime.UtcNow;
+                                await _uow.WinProjectDetailsRepository.AddAsyn(objRes);
+                            }
+                            else
+                            {
+                                objRes.ProjectId = projectid;
+                                objRes.FileName = fileName;
+                                objRes.CommentText = model.CommentText;
+                                objRes.FilePath = obj;
+                                objRes.UploadedFile = null;
+                                objRes.IsDeleted = false;
+                                objRes.ModifiedDate = DateTime.UtcNow;
+                                objRes.ModifiedById = userid;
+                                objRes.IsWin = model.IsWin;
+                                await _uow.WinProjectDetailsRepository.UpdateAsyn(objRes);
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Failed to upload. Try again!");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Upload using Environment variable failed");
+                        Console.WriteLine($"--------------Using environment variable exception--: {ex}");
+
+                    }
+
+                    response.data.WinProjectDetails = objRes;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        //StartProposal on click without directory using service account credentail 25/03/2019.
+        public async Task<APIResponse> StartProposal(long Projectid, string userid, string logginUserEmailId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == Projectid && x.IsDeleted == false);
+                if (projectDetail == null)
+                {
+                    throw new Exception("Project Id not found");
+                }
+                string folderName = projectDetail.ProjectCode;
+                string projectProposalfilename = projectDetail.ProjectName + "-" + projectDetail.ProjectCode + "-Proposal";
+                string filename = projectProposalfilename + ".docx";
+
+                //code to read credential from environment variables
+                //Console.WriteLine("---------- Before Credential create path----------");
+                string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                if (googleApplicationCredentail == null)
+                {
+                    string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                    //Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    //Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
+                    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
+                }
+
+                using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
+                {
+                    //Console.WriteLine("--------- Environment Credential Read successfully----- ----------");
+
+                    string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
+                    //Console.WriteLine($"BucketName:{BucketName}");
+                    GoogleCredentialModel result = new GoogleCredentialModel
+                    {
+                        ApplicationName = StaticResource.ApplicationName,
+                        BucketName = StaticResource.BucketName,
+                        EmailId = StaticResource.EmailId,
+                        ProjectId = StaticResource.ProjectId,
+                        Projects = StaticResource.ProjectsFolderName,
+                        HR = StaticResource.HRFolderName,
+                        Accounting = StaticResource.AccountingFolderName,
+                        Store = StaticResource.StoreFolderName
+                    };
+
+                    //Console.WriteLine("--------- check For upload----- ----------");
+
+                    ProjectProposalDetail proposaldata = new ProjectProposalDetail();
+                    try
+                    {
+                        // --------------------code to get response credential from environment variables.
+                        string obj = await GCBucket.StartProposalCreateFile(BucketName, folderName, filename);
+                        proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == Projectid && x.IsDeleted == false);
+                        Console.WriteLine($"Final bucket response : {obj}");
+
+                        if (obj != null)
+                        {
+                            if (proposaldata == null)
+                            {
+                                proposaldata = new ProjectProposalDetail();
+                                proposaldata.FolderName = folderName;
+                                proposaldata.ProposalFileName = filename;
+                                proposaldata.ProposalWebLink = obj;
+                                proposaldata.ProjectId = Projectid;
+                                proposaldata.IsDeleted = false;
+                                proposaldata.ProposalExtType = ".docx";
+                                proposaldata.CreatedById = userid;
+                                proposaldata.CreatedDate = DateTime.Now;
+                                await _uow.ProjectProposalDetailRepository.AddAsyn(proposaldata);
+                            }
+                            else
+                            {
+                                proposaldata.FolderName = folderName;
+                                proposaldata.ProposalFileName = filename;
+                                proposaldata.ProposalWebLink = obj;
+                                proposaldata.ProjectId = Projectid;
+                                proposaldata.IsDeleted = false;
+                                proposaldata.ProposalExtType = ".docx";
+                                proposaldata.ModifiedDate = DateTime.Now;
+                                proposaldata.ModifiedById = userid;
+
+
+                                await _uow.ProjectProposalDetailRepository.UpdateAsyn(proposaldata);
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Failed to upload. Try again!");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Upload using Environment variable failed");
+                        Console.WriteLine($"--------------Using environment variable exception--: {ex}");
+
+                    }
+
+                    response.data.ProjectProposalDetail = proposaldata;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Upload other document for proposal pk  new 26/03/2019
+        /// </summary>
+        /// <param name="Projectid"></param>
+        /// <returns></returns>
+
+        public async Task<APIResponse> UploadOtherDocuments(IFormFile file, string UserId, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                long projectId = projectid;
+
+                var folderDetail = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectId && x.IsDeleted == false);
+
+                //Console.WriteLine("------Before other file Credential path Upload----------");
+
+                string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                if (googleApplicationCredentail == null)
+                {
+                    string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                    //Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
+                    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
+                }
+
+                GoogleCredentialModel result = new GoogleCredentialModel
+                {
+                    ApplicationName = StaticResource.ApplicationName,
+                    BucketName = StaticResource.BucketName,
+                    EmailId = StaticResource.EmailId,
+                    ProjectId = StaticResource.ProjectId,
+                    Projects = StaticResource.ProjectsFolderName,
+                    HR = StaticResource.HRFolderName,
+                    Accounting = StaticResource.AccountingFolderName,
+                    Store = StaticResource.StoreFolderName
+                };
+
+                using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
+                {
+
+                    var proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectId && x.IsDeleted == false);
+                    string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
+                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderDetail.FolderName + "/" + fileName;
+
+                    //Console.WriteLine($"BucketName:{BucketName}");
+                    string uploadedFileResponse = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, file, fileName, ext);
+                    if (uploadedFileResponse != null)
+                    {
+                        ProjectProposalDetail proposaldetails = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectId && x.IsDeleted == false);
+
+                        if (proposaldetails == null)
+                        {
+                            proposaldetails = new ProjectProposalDetail();
+                        }
+
+                        if (ProposalType == "Proposal")
+                        {
+                            proposaldetails.FolderName = folderDetail.FolderName;
+                            proposaldetails.ProposalFileName = fileName;
+                            proposaldetails.ProposalWebLink = uploadedFileResponse;
+                            proposaldetails.ProjectId = projectid;
+                            proposaldetails.CreatedDate = DateTime.UtcNow;
+                            proposaldetails.IsDeleted = false;
+                            proposaldetails.CreatedById = UserId;
+                            response.data.ProposalWebLink = uploadedFileResponse;
+                            response.data.ProposalWebLinkExtType = ext;
+                        }
+                        else
+                        {
+                            if (ProposalType == "EOI")
+                            {
+                                proposaldetails.FolderName = folderDetail.FolderName;
+                                proposaldetails.EDIFileName = fileName;
+                                proposaldetails.EDIFileWebLink = uploadedFileResponse;
+                                proposaldetails.EDIFileExtType = ext;
+                                // response folder path
+                                response.data.EDIWebLink = uploadedFileResponse;
+                                response.data.EDIWebLinkExtType = ext;
+                            }
+                            else if (ProposalType == "BUDGET")
+                            {
+                                proposaldetails.FolderName = folderDetail.FolderName;
+
+                                proposaldetails.BudgetFileName = fileName;
+                                proposaldetails.BudgetFileWebLink = uploadedFileResponse;
+                                proposaldetails.BudgetFileExtType = ext;
+
+                                // response folder path
+                                response.data.BudgetWebLink = uploadedFileResponse;
+                                response.data.BudgetWebLinkExtType = ext;
+                            }
+                            else if (ProposalType == "CONCEPT")
+                            {
+                                proposaldetails.FolderName = folderDetail.FolderName;
+                                proposaldetails.ConceptFileName = fileName;
+                                proposaldetails.ConceptFileWebLink = uploadedFileResponse;
+                                proposaldetails.ConceptFileExtType = ext;
+                                response.data.ConceptWebLink = uploadedFileResponse;
+                                response.data.ConceptWebLinkExtType = ext;
+                            }
+                            else if (ProposalType == "PRESENTATION")
+                            {
+                                proposaldetails.FolderName = folderDetail.FolderName;
+                                proposaldetails.PresentationFileName = fileName;
+                                proposaldetails.PresentationFileWebLink = uploadedFileResponse;
+                                proposaldetails.PresentationExtType = ext;
+
+                                // response folder path
+                                response.data.PresentationWebLink = uploadedFileResponse;
+                                response.data.PresentationWebLinkExtType = ext;
+                            }
+                            proposaldata.ProjectId = projectid;
+                            proposaldata.ModifiedDate = DateTime.UtcNow;
+
+                        }
+
+                        if (proposaldetails.ProjectProposaldetailId == 0)
+                        {
+                            await _uow.ProjectProposalDetailRepository.AddAsyn(proposaldetails);
+                        }
+                        else
+                        {
+                            await _uow.ProjectProposalDetailRepository.UpdateAsyn(proposaldetails);
+                        }
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
+                    }
+
+                    else
+                    {
+                        throw new Exception("Failed to upload. Try again!");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
         public APIResponse GetProjectproposalsById(long Projectid)
         {
@@ -2833,7 +3259,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
                     _uow.DonorCriteriaDetailsRepository.Add(_detail);
                 }
                 else
@@ -2859,7 +3285,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.PoliticalStanding = model.PoliticalStanding;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
-                    _detail.ModifiedDate = DateTime.Now;
+                    _detail.ModifiedDate = DateTime.UtcNow;
                     _uow.GetDbContext().SaveChanges();
                 }
                 response.StatusCode = StaticResource.successStatusCode;
@@ -2918,7 +3344,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
                     _detail.Product = model.Product;
                     _detail.Service = model.Service;
                     _uow.PurposeofInitiativeCriteriaRepository.Add(_detail);
@@ -2957,7 +3383,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.TargetBenificiaryaOccupation = model.TargetBenificiaryaOccupation;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
-                    _detail.ModifiedDate = DateTime.Now;
+                    _detail.ModifiedDate = DateTime.UtcNow;
                     _detail.Product = model.Product;
                     _detail.Service = model.Service;
                     _uow.GetDbContext().SaveChanges();
@@ -2989,7 +3415,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
                     _uow.EligibilityCriteriaDetailRepository.Add(_detail);
                 }
                 else
@@ -3000,7 +3426,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
-                    _detail.ModifiedDate = DateTime.Now;
+                    _detail.ModifiedDate = DateTime.UtcNow;
                     _uow.GetDbContext().SaveChanges();
                 }
                 response.data.eligibilityCriteriaDetail = _detail;
@@ -3054,7 +3480,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
                     _uow.FeasibilityCriteriaDetailRepository.Add(_detail);
                 }
                 else
@@ -3087,7 +3513,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
-                    _detail.ModifiedDate = DateTime.Now;
+                    _detail.ModifiedDate = DateTime.UtcNow;
                     _uow.GetDbContext().SaveChanges();
                 }
                 response.StatusCode = StaticResource.successStatusCode;
@@ -3297,7 +3723,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
                     _uow.PriorityCriteriaDetailRepository.Add(_detail);
                 }
                 else
@@ -3317,7 +3743,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
-                    _detail.ModifiedDate = DateTime.Now;
+                    _detail.ModifiedDate = DateTime.UtcNow;
                     _uow.GetDbContext().SaveChanges();
                 }
                 response.StatusCode = StaticResource.successStatusCode;
@@ -3348,7 +3774,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
                     _uow.FinancialCriteriaDetailRepository.Add(_detail);
                 }
                 else
@@ -3360,7 +3786,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
-                    _detail.ModifiedDate = DateTime.Now;
+                    _detail.ModifiedDate = DateTime.UtcNow;
                     _uow.GetDbContext().SaveChanges();
                 }
                 response.StatusCode = StaticResource.successStatusCode;
@@ -3411,7 +3837,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
 
 
                     _uow.RiskCriteriaDetailRepository.Add(_detail);
@@ -3447,7 +3873,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId.Value;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
-                    _detail.ModifiedDate = DateTime.Now;
+                    _detail.ModifiedDate = DateTime.UtcNow;
 
 
                     _uow.GetDbContext().SaveChanges();
@@ -3481,7 +3907,7 @@ namespace HumanitarianAssistance.Service.Classes
                         _data.ProjectId = model.ProjectId.Value;
                         _data.IsDeleted = false;
                         _data.CreatedById = UserId;
-                        _data.CreatedDate = DateTime.Now;
+                        _data.CreatedDate = DateTime.UtcNow;
 
                         projectList.Add(_data);
                     }
@@ -3518,7 +3944,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
                     _uow.TargetBeneficiaryDetailRepository.Add(_detail);
                 }
                 else
@@ -3528,7 +3954,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectId = model.ProjectId;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
-                    _detail.ModifiedDate = DateTime.Now;
+                    _detail.ModifiedDate = DateTime.UtcNow;
                     _uow.GetDbContext().SaveChanges();
                 }
                 response.CommonId.LongId = _detail.TargetId;
@@ -3559,7 +3985,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectName = model.ProjectName;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
                     _uow.FinancialProjectDetailRepository.Add(_detail);
                 }
                 else
@@ -3569,7 +3995,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ProjectName = model.ProjectName;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
                     _uow.FinancialProjectDetailRepository.Add(_detail);
                     _uow.GetDbContext().SaveChanges();
                 }
@@ -3640,7 +4066,7 @@ namespace HumanitarianAssistance.Service.Classes
                 _detail.ProjectId = model.ProjectId;
                 _detail.IsDeleted = false;
                 _detail.CreatedById = UserId;
-                _detail.CreatedDate = DateTime.Now;
+                _detail.CreatedDate = DateTime.UtcNow;
 
                 await _uow.PriorityOtherDetailRepository.AddAsyn(_detail);
 
@@ -3668,7 +4094,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.Name = model.Name;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
 
                     await _uow.PriorityOtherDetailRepository.UpdateAsyn(_detail);
                 }
@@ -3693,7 +4119,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 priorityInfo.IsDeleted = true;
                 priorityInfo.ModifiedById = userId;
-                priorityInfo.ModifiedDate = DateTime.Now;
+                priorityInfo.ModifiedDate = DateTime.UtcNow;
 
                 await _uow.PriorityOtherDetailRepository.UpdateAsyn(priorityInfo);
                 response.StatusCode = StaticResource.successStatusCode;
@@ -3763,7 +4189,7 @@ namespace HumanitarianAssistance.Service.Classes
                 _detail.ProjectId = model.ProjectId;
                 _detail.IsDeleted = false;
                 _detail.CreatedById = UserId;
-                _detail.CreatedDate = DateTime.Now;
+                _detail.CreatedDate = DateTime.UtcNow;
 
                 await _uow.CEFeasibilityExpertOtherDetail.AddAsyn(_detail);
 
@@ -3791,7 +4217,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.Name = model.Name;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
 
                     await _uow.CEFeasibilityExpertOtherDetail.UpdateAsyn(_detail);
                 }
@@ -3816,7 +4242,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 expertInfo.IsDeleted = true;
                 expertInfo.ModifiedById = userId;
-                expertInfo.ModifiedDate = DateTime.Now;
+                expertInfo.ModifiedDate = DateTime.UtcNow;
 
                 await _uow.CEFeasibilityExpertOtherDetail.UpdateAsyn(expertInfo);
                 response.StatusCode = StaticResource.successStatusCode;
@@ -3886,7 +4312,7 @@ namespace HumanitarianAssistance.Service.Classes
                 _detail.ProjectId = model.ProjectId;
                 _detail.IsDeleted = false;
                 _detail.CreatedById = UserId;
-                _detail.CreatedDate = DateTime.Now;
+                _detail.CreatedDate = DateTime.UtcNow;
 
                 await _uow.CEAgeGroupDetail.AddAsyn(_detail);
 
@@ -3914,7 +4340,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.Name = model.Name;
                     _detail.IsDeleted = false;
                     _detail.CreatedById = UserId;
-                    _detail.CreatedDate = DateTime.Now;
+                    _detail.CreatedDate = DateTime.UtcNow;
 
                     await _uow.CEAgeGroupDetail.UpdateAsyn(_detail);
                 }
@@ -3939,7 +4365,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 expertInfo.IsDeleted = true;
                 expertInfo.ModifiedById = userId;
-                expertInfo.ModifiedDate = DateTime.Now;
+                expertInfo.ModifiedDate = DateTime.UtcNow;
 
                 await _uow.CEAgeGroupDetail.UpdateAsyn(expertInfo);
                 response.StatusCode = StaticResource.successStatusCode;
@@ -4012,7 +4438,7 @@ namespace HumanitarianAssistance.Service.Classes
                 _detail.ProjectId = model.ProjectId;
                 _detail.IsDeleted = false;
                 _detail.CreatedById = UserId;
-                _detail.CreatedDate = DateTime.Now;
+                _detail.CreatedDate = DateTime.UtcNow;
 
                 await _uow.CEOccupationDetail.AddAsyn(_detail);
 
@@ -5190,6 +5616,25 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
+        #region "DownloadFileFromBucket"
+        public async Task<APIResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                string bucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
 
+                response.data.SignedUrl = await GCBucket.GetSignedURL(bucketName, model.ObjectName);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+            return response;
+        }
+        #endregion
     }
 }

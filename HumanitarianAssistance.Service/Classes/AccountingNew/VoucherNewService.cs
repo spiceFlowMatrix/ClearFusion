@@ -209,6 +209,11 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                 Task<List<int>> currencyListTask = _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false).Select(x => x.CurrencyId).ToListAsync();
 
+                if (model.IsExchangeGainLossVoucher)
+                {
+                    model.VoucherDate = DateTime.UtcNow;
+                }
+
                 Task<List<ExchangeRateDetail>> exchangeRatePresentTask = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.Date.Date == model.VoucherDate.Date && x.IsDeleted == false).ToListAsync();
 
                 List<int> currencyList = await currencyListTask;
