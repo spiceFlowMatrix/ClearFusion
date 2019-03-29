@@ -367,7 +367,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         existRecord.ModifiedById = userId;
                         existRecord.ModifiedDate = DateTime.Now;
                         //existRecord.ProjectId = model.ProjectId;
-                        if (model.ProjectId != 0)
+                        if (model.ProjectId != null)
                         {
                             existRecord.ProjectId = model.ProjectId;
                         }
@@ -375,7 +375,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         {
                             existRecord.ProjectId = null;
                         }
-                        if (model.PolicyId != 0)
+                        if (model.PolicyId != null)
                         {
                             existRecord.PolicyId = model.PolicyId;
                         }
@@ -383,7 +383,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         {
                             existRecord.ProjectId = null;
                         }
-                        if (model.JobId != 0)
+                        if (model.JobId != null)
                         {
                             existRecord.JobId = model.JobId;
                         }
@@ -436,6 +436,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         }
                         await _uow.ScheduleDetailsRepository.UpdateAsyn(existRecord);
                         response.data.schedulerDetails = existRecord;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Schedule Updated";
                     }
                 }
             }
