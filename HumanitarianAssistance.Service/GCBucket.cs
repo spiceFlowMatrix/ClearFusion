@@ -695,7 +695,7 @@ namespace HumanitarianAssistance.Service
 
                     return resp.Name;
                 }
-                   
+
             }
             catch (Exception ex)
             {
@@ -735,7 +735,24 @@ namespace HumanitarianAssistance.Service
             {
                 throw new Exception(StaticResource.UnableToGenerateSignedUrl);
             }
-        
+
+        }
+
+        public async static Task<bool> DeleteObject(string bucketName, string objectName)
+        {
+            try
+            {
+                var storage = StorageClient.Create();
+
+                await storage.DeleteObjectAsync(bucketName, objectName);
+                Console.WriteLine($"Deleted {objectName}.");
+
+                return true;
+            }
+            catch (Exception)
+            {
+                throw new Exception(StaticResource.UnableToDeleteBucketObject);
+            }
         }
 
     }
