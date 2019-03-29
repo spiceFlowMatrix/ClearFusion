@@ -6,31 +6,21 @@ using HumanitarianAssistance.Service.APIResponses;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models.Project;
 using DataAccess.DbEntities.Project;
 using HumanitarianAssistance.Common.Enums;
 using Microsoft.EntityFrameworkCore;
-using HumanitarianAssistance.Entities;
 using System.Linq;
-using System.Data.Common;
 using Microsoft.EntityFrameworkCore.Storage;
 using HumanitarianAssistance.ViewModels.Models;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using DataAccess.DbEntities.ErrorLog;
-using System.Globalization;
-using Google.Cloud.Storage.V1;
-using System.Security.Cryptography.X509Certificates;
-using Google.Apis.Storage.v1;
-using Google.Apis.Services;
-using Google.Apis.Auth.OAuth2;
+using HumanitarianAssistance.ViewModels.SPModels;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -5458,39 +5448,52 @@ namespace HumanitarianAssistance.Service.Classes
         #region "Project Cash Flow"
         public async Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowFilterModel model)
         {
+            int index = 0;
             APIResponse response = new APIResponse();
             List<VoucherTransactions> transList = new List<VoucherTransactions>();
 
             try
             {
-                transList = await _uow.GetDbContext().VoucherTransactions
-                                  .Where(x => x.IsDeleted == false &&
-                                              x.ProjectId == model.ProjectId)
-                                  .ToListAsync();
+                //get Journal Report from sp get_journal_report by passing parameters
+                var spProjectCashFlow = await _uow.GetDbContext().LoadStoredProc("get_projectcashflow")
+                                      .WithSqlParam("currency", model.CurrencyId)
+                                      .WithSqlParam("projectid", model.ProjectId)
+                                      .WithSqlParam("projectstartdate", model.ProjectStartDate.ToString())
+                                      .WithSqlParam("projectenddate", model.ProjectEndDate.ToString())
+                                      .WithSqlParam("donorid", model.DonorID)
+                                      .ExecuteStoredProc<SPProjectCashFlowModel>();
 
-                //transList = await _uow.GetDbContext().VoucherTransactions
-                //                          .Where(x => x.IsDeleted == false &&
-                //                                      x.ProjectId == model.ProjectId &&
-                //                                      x.ProjectDetail.CreatedDate.Value.Date >= model.ProjectStartDate.Date &&
-                //                                      x.ProjectDetail.EndDate.Value.Date <= model.ProjectEndDate.Date)
-                //                          .OrderBy(x => x.ProjectDetail.CreatedDate)
-                //                          .ToListAsync();
-
-                var budgetDetailList = transList.Select(b => new ProjectCashFlowModel
+                if (spProjectCashFlow.Any())
                 {
-                    DebitList = b.Debit,
-                    CreditList = b.Credit,
-                    Date = b.TransactionDate?.Date.ToShortDateString()
-                }).GroupBy(x => x.Date, x => x, (key, g) => new ProjectCashFlowModel
-                {
-                    Date = key,
-                    DebitList = g.Sum(x => x.DebitList),
-                    CreditList = g.Sum(x => x.CreditList),
-                })
-               .OrderBy(x => x.Date)
-               .ToList();
+                    response.data.ProjectCashFlowModel = new ProjectCashFlowModel();
+                    response.data.ProjectCashFlowModel.Expenditure = new List<double>();
+                    response.data.ProjectCashFlowModel.Income = new List<double>();
+                    response.data.ProjectCashFlowModel.Date = new List<DateTime>();
 
-                response.data.ProjectCashFlowList = budgetDetailList;
+                    foreach (var item in spProjectCashFlow)
+                    {
+
+                        // adding previous expenditure to the current expenditure
+                        double previousExpenditure = 0;
+
+                        if (index == 0)
+                        {
+                            previousExpenditure = 0;
+                        }
+                        else
+                        {
+                            previousExpenditure = spProjectCashFlow[index - 1].Expenditure;
+                            item.Expenditure = item.Expenditure + previousExpenditure;
+
+                        }
+
+                        response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
+                        response.data.ProjectCashFlowModel.Income.Add(item.Income);
+                        response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
+                        index++;
+                    }
+                }
+                
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }
@@ -5505,43 +5508,84 @@ namespace HumanitarianAssistance.Service.Classes
 
         public async Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineBreakdownFilterModel model)
         {
+            int index = 0;
             APIResponse response = new APIResponse();
+
             try
             {
-                List<VoucherTransactions> transList = new List<VoucherTransactions>();
-                if (model.BudgetLineId.Count == 0 || model.BudgetLineId == null)
+                //List<VoucherTransactions> transList = new List<VoucherTransactions>();
+                //if (model.BudgetLineId.Count == 0 || model.BudgetLineId == null)
+                //{
+                //    transList = await _uow.GetDbContext().VoucherTransactions
+                //                              .Where(x => x.IsDeleted == false && x.ProjectId == model.ProjectId)
+                //                              .ToListAsync();
+                //}
+                //else
+                //{
+                //    transList = await _uow.GetDbContext().VoucherTransactions.Include(x => x.ProjectBudgetLineDetail)
+                //                                         .Where(x => x.IsDeleted == false &&
+                //                                                     x.ProjectId == model.ProjectId &&
+                //                                                     model.BudgetLineId.Contains(x.BudgetLineId) &&
+                //                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date >= model.BudgetLineStartDate.Value.Date &&
+                //                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date <= model.BudgetLineEndDate.Value.Date)
+                //                                         .ToListAsync();
+                //}
+
+                //List<BudgetLineBreakdownListModel> budgetDetailList = transList.Select(b => new BudgetLineBreakdownModel
+                //{
+                //    ProjectId = b.ProjectId,
+                //    Debit = b.Debit,
+                //    TransactionDate = b.TransactionDate,
+                //    Date = b.ProjectBudgetLineDetail?.CreatedDate?.ToShortDateString()
+                //}).GroupBy(x => x.Date, x => x, (key, g) =>
+                //new BudgetLineBreakdownListModel
+                //{
+                //    Date = key,
+                //    DebitTotal = g.Sum(x => x.Debit)
+                //})
+                //  .OrderBy(x => x.Date)
+                //  .ToList();
+
+                //get Journal Report from sp get_journal_report by passing parameters
+                var spBudgetLineBreakdown = await _uow.GetDbContext().LoadStoredProc("get_budgetlinebreakdown")
+                                      .WithSqlParam("currency", model.CurrencyId)
+                                      .WithSqlParam("projectid", model.ProjectId)
+                                      .WithSqlParam("budgetlinestartdate", model.BudgetLineStartDate.ToString())
+                                      .WithSqlParam("budgetlineenddate", model.BudgetLineEndDate.ToString())
+                                      .WithSqlParam("budgetlineids", model.BudgetLineId)
+                                      .ExecuteStoredProc<SPBudgetLineBeakdown>();
+
+                if (spBudgetLineBreakdown.Any())
                 {
-                    transList = await _uow.GetDbContext().VoucherTransactions
-                                              .Where(x => x.IsDeleted == false && x.ProjectId == model.ProjectId)
-                                              .ToListAsync();
-                }
-                else
-                {
-                    transList = await _uow.GetDbContext().VoucherTransactions.Include(x => x.ProjectBudgetLineDetail)
-                                                         .Where(x => x.IsDeleted == false &&
-                                                                     x.ProjectId == model.ProjectId &&
-                                                                     model.BudgetLineId.Contains(x.BudgetLineId) &&
-                                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date >= model.BudgetLineStartDate.Value.Date &&
-                                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date <= model.BudgetLineEndDate.Value.Date)
-                                                         .ToListAsync();
+                    response.data.BudgetLineBreakdownModel = new BudgetLineBreakdownModel();
+                    response.data.BudgetLineBreakdownModel.Expenditure = new List<double>();
+                    response.data.BudgetLineBreakdownModel.Date = new List<DateTime>();
+
+                    foreach (var item in spBudgetLineBreakdown)
+                    {
+                        // adding previous expenditure to the current expenditure
+                        double previousExpenditure = 0;
+
+                        if (index == 0)
+                        {
+                            previousExpenditure = 0;
+                        }
+                        else
+                        {
+                            previousExpenditure = spBudgetLineBreakdown[index-1].Expenditure;
+                            item.Expenditure = item.Expenditure + previousExpenditure;
+                                
+                        }
+
+                        response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
+                        response.data.BudgetLineBreakdownModel.Date.Add(item.VoucherDate);
+                        index++;
+                    }
                 }
 
-                List<BudgetLineBreakdownListModel> budgetDetailList = transList.Select(b => new BudgetLineBreakdownModel
-                {
-                    ProjectId = b.ProjectId,
-                    Debit = b.Debit,
-                    TransactionDate = b.TransactionDate,
-                    Date = b.ProjectBudgetLineDetail?.CreatedDate?.ToShortDateString()
-                }).GroupBy(x => x.Date, x => x, (key, g) =>
-                new BudgetLineBreakdownListModel
-                {
-                    Date = key,
-                    DebitTotal = g.Sum(x => x.Debit)
-                })
-                  .OrderBy(x => x.Date)
-                  .ToList();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
 
-                response.data.BudgetLineBreakdownList = budgetDetailList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

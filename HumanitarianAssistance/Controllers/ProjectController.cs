@@ -1863,6 +1863,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #endregion
 
+    #region "DeleteActivityDocument"
+    [HttpPost]
+    public async Task<APIResponse> DeleteActivityDocument([FromBody]long activityDocumentId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        response = await _iActivity.DeleteActivityDocument(activityDocumentId, id);
+      }
+      return response;
+    }
+    #endregion
 
   }
 }

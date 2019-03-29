@@ -216,6 +216,5 @@ namespace HumanitarianAssistance.Service.interfaces
         #endregion
 
         Task<APIResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model);
-
     }
 }

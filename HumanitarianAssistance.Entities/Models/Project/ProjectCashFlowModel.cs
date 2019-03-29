@@ -15,9 +15,9 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     }
     public class ProjectCashFlowModel
     {
-        public double? CreditList { get; set; }
-        public double? DebitList { get; set; }
-        public string Date { get; set; }
+        public List<DateTime> Date { get; set; }
+        public List<double> Expenditure { get; set; }
+        public List<double> Income { get; set; }
     }
 
     #endregion
@@ -28,21 +28,19 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     {
         BudgetLineBreakdownFilterModel()
         {
-            BudgetLineId = new List<long?>();
+            BudgetLineId = new List<long>();
         }
 
-        public long? ProjectId { get; set; }
+        public long ProjectId { get; set; }
+        public List<long> BudgetLineId { get; set; }
+        public DateTime BudgetLineStartDate { get; set; }
+        public DateTime BudgetLineEndDate { get; set; }
         public int CurrencyId { get; set; }
-        public List<long?> BudgetLineId { get; set; }
-        public DateTime? BudgetLineStartDate { get; set; }
-        public DateTime? BudgetLineEndDate { get; set; }
     }
     public class BudgetLineBreakdownModel
     {
-        public long? ProjectId { get; set; }
-        public double? Debit { get; set; }
-        public DateTime? TransactionDate { get; set; }
-        public string Date { get; set; }
+        public List<double> Expenditure { get; set; }
+        public List<DateTime> Date { get; set; }
     }
 
     public class BudgetLineBreakdownListModel
