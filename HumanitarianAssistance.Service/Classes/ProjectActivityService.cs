@@ -469,8 +469,97 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         }
+        /// <summary>
+        /// Upload project activity documents 28/03/2019 pk
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="UserId"></param>
+        /// <param name="activityId"></param>
+        /// <param name="fileName"></param>
+        /// <param name="logginUserEmailId"></param>
+        /// <param name="ext"></param>
+        /// <param name="statusID"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> UploadProjectActivityDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ActivityDocumentDetailModel activityModel = new ActivityDocumentDetailModel();
+                var projectCode = await _uow.GetDbContext().ProjectActivityDetail.Include(x => x.ProjectBudgetLineDetail.ProjectDetail)
+                                                                      .FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+                string folderName = projectCode.ProjectBudgetLineDetail.ProjectDetail.ProjectCode;
 
-        public async Task<APIResponse> UploadDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID)
+                string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+                if (googleApplicationCredentail == null)
+                {
+                    string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                    //Console.WriteLine($"*********GoogleServiceAccountDirectory :{GoogleServiceAccountDirectory}");
+                    GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
+                    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
+                }
+                using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
+                {
+                    string BucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
+                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
+                    string uploadedFileResponse = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, file, fileName, ext);
+                    ActivityDocumentsDetail docObj = new ActivityDocumentsDetail();
+                    if (!string.IsNullOrEmpty(uploadedFileResponse))
+                    {
+                        //if (activityExixt == null)
+                        //{
+                        docObj.ActivityId = activityId;
+                        docObj.ActivityDocumentsFilePath = uploadedFileResponse;
+                        docObj.StatusId = statusID;
+                        docObj.CreatedById = UserId;
+                        docObj.IsDeleted = false;
+                        docObj.CreatedDate = DateTime.UtcNow;
+
+                        await _uow.ActivityDocumentsDetailRepository.AddAsyn(docObj);
+
+                        //}
+
+                        //else
+                        //{
+                        //    activityExixt.ActivityId = activityId;
+                        //    activityExixt.ActivityDocumentsFilePath = bucketResponse;
+                        //    activityExixt.IsDeleted = false;
+                        //    activityExixt.ModifiedById = UserId;
+                        //    activityExixt.ModifiedDate = DateTime.UtcNow;
+                        //    activityExixt.StatusId = 1;
+                        //    _uow.GetDbContext().ActivityDocumentsDetail.Update(activityExixt);
+                        //    _uow.GetDbContext().SaveChanges();
+                        //}
+
+                    }
+
+                    ActivityDocumentsDetailModel obj = new ActivityDocumentsDetailModel
+                    {
+                        ActtivityDocumentId = docObj.ActtivityDocumentId,
+                        ActivityDocumentsFilePath = StaticResource.uploadUrl + docObj.ActivityDocumentsFilePath,
+                        ActivityDocumentsFileName = docObj.ActivityDocumentsFilePath.Split('/').Last(),
+                        StatusId = docObj.StatusId,
+                        ActivityId = docObj.ActivityId,
+                    };
+
+                    await _uow.GetDbContext().SaveChangesAsync();
+
+                    response.data.activityDocumnentDetail = obj;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> UploadAcitvityDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID)
         {
             APIResponse response = new APIResponse();
             try
@@ -570,6 +659,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+
         public async Task<APIResponse> GetUploadedDocument(long activityId)
         {
             APIResponse apiResponse = new APIResponse();
@@ -581,7 +671,7 @@ namespace HumanitarianAssistance.Service.Classes
                         ActivityId = x.ActivityId,
                         StatusId = x.StatusId,
                         ActivityDocumentsFilePath = StaticResource.uploadUrl + x.ActivityDocumentsFilePath,
-                        ActivityDocumentsFileName = x.ActivityDocumentsFilePath.Substring(x.ActivityDocumentsFilePath.LastIndexOf('/')),
+                        ActivityDocumentsFileName = x.ActivityDocumentsFilePath.Substring(x.ActivityDocumentsFilePath.LastIndexOf('/')+1),
                         ActtivityDocumentId = x.ActtivityDocumentId
                     }).ToListAsync();
                 if (listobj.Any())
@@ -600,11 +690,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return apiResponse;
         }
-
-
-
-
-
+        //upload file demo
         public async Task<APIResponse> UploadFileDemo(IFormFile filesData, string userId, string userName)
         {
             APIResponse apiResponse = new APIResponse();
@@ -647,7 +733,7 @@ namespace HumanitarianAssistance.Service.Classes
                 }
 
 
-                }
+            }
             catch (Exception ex)
             {
                 apiResponse.StatusCode = StaticResource.failStatusCode;
@@ -655,8 +741,6 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return apiResponse;
         }
-
-
 
 
     }

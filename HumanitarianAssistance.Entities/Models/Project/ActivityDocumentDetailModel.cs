@@ -11,6 +11,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string ActivityDocumentsFileName { get; set; }
         public int? StatusId { get; set; }
         public long ActivityId { get; set; }
+        public string ActivityDocumentName { get; set; }
 
 
     }

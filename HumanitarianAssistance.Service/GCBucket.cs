@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -678,7 +679,7 @@ namespace HumanitarianAssistance.Service
 
         ///UPLOAD OTHER DOCUMENT OF PROPOSAL USING SERVICE ACCOUNT  new CREDENTAIL PK 26/03/2019
         ///
-        public static async Task<string> UploadOtherProposalDocuments(string bucketName, string folderName, IFormFile filedata, string fileName, string ext)
+        public static async Task<string> UploadOtherProposalDocuments(string bucketName, string folderWithProposalFile, IFormFile filedata, string fileName, string ext)
         {
             string exten = Path.GetExtension(fileName).ToLower();
             var mimetype = GetMimeType(ext);
@@ -688,16 +689,17 @@ namespace HumanitarianAssistance.Service
                 var storage = StorageClient.Create();
                 using (filestream = filedata.OpenReadStream())
                 {
-                    string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
                     var resp = await storage.UploadObjectAsync(bucketName, folderWithProposalFile, mimetype, filestream);
-                    Console.WriteLine($"------------Uploaded file Bucket Response:{resp.Name}");
-                    var uploadedFileName = bucketName + "/" + resp.Name;
-                    return uploadedFileName;
+                    //Console.WriteLine($"------------Uploaded file Bucket Response:{resp.Name}");
+                    //var uploadedFileName = bucketName + "/" + resp.Name;
+
+                    return resp.Name;
                 }
+                   
             }
             catch (Exception ex)
             {
-                Console.WriteLine("-------------Exception of upload other documents  on bucket------------:");
+                Console.WriteLine("-------------Exception of upload other documents on bucket------------:");
                 Console.WriteLine(ex.Message);
                 throw;
             }
@@ -711,9 +713,31 @@ namespace HumanitarianAssistance.Service
 
         }
 
+        public async static Task<string> GetSignedURL(string bucketName, string objectName)
+        {
+            try
+            {
+                var scopes = new string[] { "https://www.googleapis.com/auth/devstorage.read_write" };
+                ServiceAccountCredential cred;
+
+                using (var stream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
+                {
+                    cred = GoogleCredential.FromStream(stream)
+                                           .CreateScoped(scopes)
+                                           .UnderlyingCredential as ServiceAccountCredential;
+                }
+
+                var urlSigner = UrlSigner.FromServiceAccountCredential(cred);
+
+                return await urlSigner.SignAsync(bucketName, objectName, TimeSpan.FromMinutes(10), HttpMethod.Get);
+            }
+            catch (Exception)
+            {
+                throw new Exception(StaticResource.UnableToGenerateSignedUrl);
+            }
+        
+        }
 
     }
-
-
 
 }

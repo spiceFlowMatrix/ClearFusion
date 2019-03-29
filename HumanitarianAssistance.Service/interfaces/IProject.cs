@@ -2,6 +2,7 @@
 using DataAccess.DbEntities.ErrorLog;
 using DataAccess.DbEntities.Project;
 using HumanitarianAssistance.Service.APIResponses;
+using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.Project;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -202,8 +203,7 @@ namespace HumanitarianAssistance.Service.interfaces
         #endregion
         #region "cashflow"
         Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowFilterModel model);
-        Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineBreakdownFilterModel model);
-
+        Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineBreakdownFilterModel model);        
         #endregion
 
         #region start proposal 25/03/219
@@ -215,5 +215,8 @@ namespace HumanitarianAssistance.Service.interfaces
 
 
         #endregion
+
+        Task<APIResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model);
+
     }
 }
