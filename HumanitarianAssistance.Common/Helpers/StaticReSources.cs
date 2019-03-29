@@ -397,5 +397,7 @@ namespace HumanitarianAssistance.Common.Helpers
         #endregion
 
         public const string UnableToGenerateSignedUrl = "Unable to generate signed Url. Try Again!";
+        public const string BucketNameNotFound = "Bucket name not found.";
+        public const string UnableToDeleteBucketObject = "Unable to delete file. Try Again!";
     }
 }
