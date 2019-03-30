@@ -47,84 +47,84 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         public async Task<List<JobDetailsModel>> GetJobsList()
         {
             var JobList = await (from j in _uow.GetDbContext().JobDetails
-                                join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
-                                where !j.IsDeleted.Value && !jp.IsDeleted.Value
-                                select (new JobDetailsModel
-                                {
-                                    JobId = j.JobId,
-                                    JobCode = j.JobCode,
-                                    JobName = j.JobName,
-                                    Description = j.Description,
-                                    JobPhaseId = j.JobPhaseId,
-                                    StartDate = j.StartDate,
-                                    EndDate = j.EndDate,
-                                    IsActive = j.IsActive,
-                                    IsApproved = j.IsApproved,
-                                    UnitRate = jp.UnitRate,
-                                    Units = jp.Units,
-                                    FinalRate = jp.FinalRate,
-                                    FinalPrice = jp.FinalPrice,
-                                    TotalPrice = jp.TotalPrice,
-                                    CreatedDate = j.CreatedDate,
-                                    IsInvoiceApproved = jp.IsInvoiceApproved
-                                })).ToListAsync();
+                                 join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
+                                 where !j.IsDeleted.Value && !jp.IsDeleted.Value
+                                 select (new JobDetailsModel
+                                 {
+                                     JobId = j.JobId,
+                                     JobCode = j.JobCode,
+                                     JobName = j.JobName,
+                                     Description = j.Description,
+                                     JobPhaseId = j.JobPhaseId,
+                                     StartDate = j.StartDate,
+                                     EndDate = j.EndDate,
+                                     IsActive = j.IsActive,
+                                     IsApproved = j.IsApproved,
+                                     UnitRate = jp.UnitRate,
+                                     Units = jp.Units,
+                                     FinalRate = jp.FinalRate,
+                                     FinalPrice = jp.FinalPrice,
+                                     TotalPrice = jp.TotalPrice,
+                                     CreatedDate = j.CreatedDate,
+                                     IsInvoiceApproved = jp.IsInvoiceApproved
+                                 })).ToListAsync();
             return JobList;
         }
 
         public async Task<List<ScheduleDetailModel>> GetPolicyScheduleList()
         {
             var policyScheduleList = await (from j in _uow.GetDbContext().PolicyTimeSchedules
-                                           join mc in _uow.GetDbContext().PolicyDetails on j.PolicyId equals mc.PolicyId
-                                           join pd in _uow.GetDbContext().PolicyDaySchedules on j.PolicyId equals pd.PolicyId
-                                           join po in _uow.GetDbContext().PolicyOrderSchedules on j.PolicyId equals po.PolicyId
-                                           where !j.IsDeleted.Value && !mc.IsDeleted.Value
-                                            && !pd.IsDeleted.Value && !po.IsDeleted.Value
-                                            && po.StartDate<=DateTime.UtcNow.Date && DateTime.UtcNow.Date<=po.EndDate
-                                           //&& !jp.IsDeleted.Value && !me.IsDeleted.Value
-                                           //&& !mc.IsDeleted.Value
-                                           select (new ScheduleDetailModel
-                                           {
-                                               PolicyId = mc.PolicyId,
-                                               PolicyDayId = pd.Id,
-                                               PolicyOrderId = po.Id,
-                                               PolicyTimeId = j.Id,
-                                               Name = mc.PolicyName,
-                                               StartTime = j.StartTime.ToString(@"hh\:mm"),
-                                               EndTime = j.EndTime.ToString(@"hh\:mm"),
-                                               StartDate = po.StartDate,
-                                               EndDate = po.EndDate,
-                                               Sunday = pd.Sunday,
-                                               Monday = pd.Monday,
-                                               Tuesday = pd.Tuesday,
-                                               Wednesday = pd.Wednesday,
-                                               Thursday = pd.Thursday,
-                                               Friday = pd.Friday,
-                                               Saturday = pd.Saturday
-                                           })).ToListAsync();
+                                            join mc in _uow.GetDbContext().PolicyDetails on j.PolicyId equals mc.PolicyId
+                                            join pd in _uow.GetDbContext().PolicyDaySchedules on j.PolicyId equals pd.PolicyId
+                                            join po in _uow.GetDbContext().PolicyOrderSchedules on j.PolicyId equals po.PolicyId
+                                            where !j.IsDeleted.Value && !mc.IsDeleted.Value
+                                             && !pd.IsDeleted.Value && !po.IsDeleted.Value
+                                             && po.StartDate<=DateTime.UtcNow.Date && DateTime.UtcNow.Date<=po.EndDate
+                                            //&& !jp.IsDeleted.Value && !me.IsDeleted.Value
+                                            //&& !mc.IsDeleted.Value
+                                            select (new ScheduleDetailModel
+                                            {
+                                                PolicyId = mc.PolicyId,
+                                                PolicyDayId = pd.Id,
+                                                PolicyOrderId = po.Id,
+                                                PolicyTimeId = j.Id,
+                                                Name = mc.PolicyName,
+                                                StartTime = j.StartTime.ToString(@"hh\:mm"),
+                                                EndTime = j.EndTime.ToString(@"hh\:mm"),
+                                                StartDate = po.StartDate,
+                                                EndDate = po.EndDate,
+                                                Sunday = pd.Sunday,
+                                                Monday = pd.Monday,
+                                                Tuesday = pd.Tuesday,
+                                                Wednesday = pd.Wednesday,
+                                                Thursday = pd.Thursday,
+                                                Friday = pd.Friday,
+                                                Saturday = pd.Saturday
+                                            })).ToListAsync();
             return policyScheduleList;
         }
 
         public async Task<List<PolicyModel>> PolicyList()
         {
             var policyDetail = await (from j in _uow.GetDbContext().PolicyDetails
-                                     join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
-                                     join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
-                                     join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
-                                     where !j.IsDeleted.Value && !jp.IsDeleted.Value && !me.IsDeleted.Value
-                                     && !mc.IsDeleted.Value
-                                     select (new PolicyModel
-                                     {
-                                         PolicyId = j.PolicyId,
-                                         PolicyName = j.PolicyName,
-                                         PolicyCode = j.PolicyCode,
-                                         Description = j.Description,
-                                         LanguageId = jp.LanguageId,
-                                         LanguageName = jp.LanguageName,
-                                         MediumId = me.MediumId,
-                                         MediumName = me.MediumName,
-                                         MediaCategoryId = mc.MediaCategoryId,
-                                         MediaCategoryName = mc.CategoryName
-                                     })).OrderByDescending(x => x.CreatedDate).ToListAsync();
+                                      join jp in _uow.GetDbContext().LanguageDetail on j.LanguageId equals jp.LanguageId
+                                      join me in _uow.GetDbContext().Mediums on j.MediumId equals me.MediumId
+                                      join mc in _uow.GetDbContext().MediaCategories on j.MediaCategoryId equals mc.MediaCategoryId
+                                      where !j.IsDeleted.Value && !jp.IsDeleted.Value && !me.IsDeleted.Value
+                                      && !mc.IsDeleted.Value
+                                      select (new PolicyModel
+                                      {
+                                          PolicyId = j.PolicyId,
+                                          PolicyName = j.PolicyName,
+                                          PolicyCode = j.PolicyCode,
+                                          Description = j.Description,
+                                          LanguageId = jp.LanguageId,
+                                          LanguageName = jp.LanguageName,
+                                          MediumId = me.MediumId,
+                                          MediumName = me.MediumName,
+                                          MediaCategoryId = mc.MediaCategoryId,
+                                          MediaCategoryName = mc.CategoryName
+                                      })).OrderByDescending(x => x.CreatedDate).ToListAsync();
             return policyDetail;
         }
 
@@ -138,7 +138,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                              ProjectCode = x.ProjectCode,
                                              ProjectName = x.ProjectName,
                                              ProjectDescription = x.ProjectDescription
-                                            }).ToListAsync();
+                                         }).ToListAsync();
             return ProjectList;
         }
         public async Task<APIResponse> GetAllPolicyScheduleList()
@@ -166,7 +166,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         }
 
         public async Task<APIResponse> GetScheduleDetailsById(int model)
-        {           
+        {
             APIResponse response = new APIResponse();
             try
             {
@@ -246,7 +246,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         response.Message = "Success";
                     }
                 }
-                             
+
             }
             catch (Exception ex)
             {
@@ -276,21 +276,21 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 if (model.ScheduleId == 0 || model.ScheduleId == null)
                 {
                     //var schedule = _uow.GetDbContext().ScheduleDetails.Where(x => x.ScheduleName == model.ScheduleName && x.IsDeleted == false).FirstOrDefault();
-                    
-                        var scheduleDetail = _uow.GetDbContext().ScheduleDetails.OrderByDescending(x => x.ScheduleId)
-                                                                                       .FirstOrDefault();
-                        if (scheduleDetail == null)
-                        {
-                            LatestScheduleId = 1;
-                            scheduleCode = getScheduleCode(LatestScheduleId.ToString());
-                        }
-                        else
-                        {
-                            LatestScheduleId = Convert.ToInt32(scheduleDetail.ScheduleId) + 1;
-                            scheduleCode = getScheduleCode(LatestScheduleId.ToString());
-                        }
-                        ScheduleDetails obj = _mapper.Map<SchedulerModel, ScheduleDetails>(model);
-                        obj.CreatedById = userId;
+
+                    var scheduleDetail = _uow.GetDbContext().ScheduleDetails.OrderByDescending(x => x.ScheduleId)
+                                                                                   .FirstOrDefault();
+                    if (scheduleDetail == null)
+                    {
+                        LatestScheduleId = 1;
+                        scheduleCode = getScheduleCode(LatestScheduleId.ToString());
+                    }
+                    else
+                    {
+                        LatestScheduleId = Convert.ToInt32(scheduleDetail.ScheduleId) + 1;
+                        scheduleCode = getScheduleCode(LatestScheduleId.ToString());
+                    }
+                    ScheduleDetails obj = _mapper.Map<SchedulerModel, ScheduleDetails>(model);
+                    obj.CreatedById = userId;
                     if(model.ProjectId != null)
                     {
                         obj.ProjectId = model.ProjectId ?? null;
@@ -305,57 +305,57 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     {
                         obj.JobId = model.JobId ?? null;
                         obj.ScheduleType = "Job";
-                    }                 
-                                        
-                       
-                        obj.StartTime = TimeSpan.Parse(model.StartTime);
-                        obj.EndTime = TimeSpan.Parse(model.EndTime);
-                        obj.ScheduleName = model.ScheduleName;
-                        obj.CreatedDate = DateTime.Now;
-                        obj.IsDeleted = false;
-                        obj.ScheduleCode = scheduleCode;
-                        obj.MediumId = model.MediumId;
-                        obj.ChannelId = model.ChannelId;
-                        obj.Description = model.Description;
-                        if (model.RepeatDays != null && model.RepeatDays.Count > 0)
+                    }
+
+
+                    obj.StartTime = TimeSpan.Parse(model.StartTime);
+                    obj.EndTime = TimeSpan.Parse(model.EndTime);
+                    obj.ScheduleName = model.ScheduleName;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.ScheduleCode = scheduleCode;
+                    obj.MediumId = model.MediumId;
+                    obj.ChannelId = model.ChannelId;
+                    obj.Description = model.Description;
+                    if (model.RepeatDays != null && model.RepeatDays.Count > 0)
+                    {
+                        foreach (var items in model.RepeatDays)
                         {
-                            foreach (var items in model.RepeatDays)
+                            if (items.Value == "MON")
                             {
-                                if (items.Value == "MON")
-                                {
-                                    obj.Monday = items.status;
-                                }
-                                if (items.Value == "TUE")
-                                {
-                                    obj.Tuesday = items.status;
-                                }
-                                if (items.Value == "WED")
-                                {
-                                    obj.Wednesday = items.status;
-                                }
-                                if (items.Value == "THU")
-                                {
-                                    obj.Thursday = items.status;
-                                }
-                                if (items.Value == "FRI")
-                                {
-                                    obj.Friday = items.status;
-                                }
-                                if (items.Value == "SAT")
-                                {
-                                    obj.Saturday = items.status;
-                                }
-                                if (items.Value == "SUN")
-                                {
-                                    obj.Sunday = items.status;
-                                }
+                                obj.Monday = items.status;
+                            }
+                            if (items.Value == "TUE")
+                            {
+                                obj.Tuesday = items.status;
+                            }
+                            if (items.Value == "WED")
+                            {
+                                obj.Wednesday = items.status;
+                            }
+                            if (items.Value == "THU")
+                            {
+                                obj.Thursday = items.status;
+                            }
+                            if (items.Value == "FRI")
+                            {
+                                obj.Friday = items.status;
+                            }
+                            if (items.Value == "SAT")
+                            {
+                                obj.Saturday = items.status;
+                            }
+                            if (items.Value == "SUN")
+                            {
+                                obj.Sunday = items.status;
                             }
                         }
-                        await _uow.ScheduleDetailsRepository.AddAsyn(obj);
-                        APIResponse response1 = await GetScheduleDetailsById(Convert.ToInt32(obj.ScheduleId));
-                        response.data.scheduleDetailsModel = response1.data.scheduleDetailsModel;
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Schedule created successfully";
+                    }
+                    await _uow.ScheduleDetailsRepository.AddAsyn(obj);
+                    APIResponse response1 = await GetScheduleDetailsById(Convert.ToInt32(obj.ScheduleId));
+                    response.data.scheduleDetailsModel = response1.data.scheduleDetailsModel;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Schedule created successfully";
                 }
                 else
                 {
@@ -501,6 +501,82 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.data.SchedulerList = ScheduleList;
                 response.StatusCode = 200;
                 response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteSchedule(int id, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var scheduleInfo = await _uow.ScheduleDetailsRepository.FindAsync(c => c.ScheduleId == id);
+                scheduleInfo.IsDeleted = true;
+                scheduleInfo.ModifiedById = userId;
+                scheduleInfo.ModifiedDate = DateTime.UtcNow;
+                await _uow.ScheduleDetailsRepository.UpdateAsyn(scheduleInfo, scheduleInfo.ScheduleId);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Scehdule Deleted Successfully";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        public async Task<APIResponse> FilterScheduleList(FilterSchedulerModel model)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var activityList = await _uow.GetDbContext().ScheduleDetails
+                                      .Include(p => p.Mediums)
+                                      .Include(p => p.ProjectDetail)
+                                      .Include(e => e.PolicyDetails)
+                                      .Include(o => o.JobDetails)
+                                      .Where(v => v.IsDeleted == false && v.JobDetails.JobId == v.JobId)
+                                      .Where(v => v.ProjectDetail.ProjectId == v.ProjectId)
+                                      .Where(v => v.PolicyDetails.PolicyId == v.PolicyId)
+                                      .Where(v => v.StartDate <= DateTime.UtcNow && DateTime.UtcNow.Date <= v.EndDate)
+                                      .ToListAsync();
+                var ScheduleList = activityList.Select(b => new SchedulerModel
+                {
+                    PolicyId = b.PolicyId,
+                    Name = b.PolicyDetails != null ? b.PolicyDetails.PolicyName : b.ProjectDetail != null ? b.ProjectDetail.ProjectName : b.JobDetails != null ? b.JobDetails.JobName : null,
+                    StartTime = b.StartTime.ToString(@"hh\:mm"),
+                    EndTime = b.EndTime.ToString(@"hh\:mm"),
+                    StartDate = b.StartDate.ToShortDateString(),
+                    EndDate = b.EndDate.ToShortDateString(),
+                    ProjectId = b.ProjectId,
+                    JobId = b.JobId,
+                    MediumId = b.MediumId,
+                    ChannelId = b.ChannelId,
+                    ScheduleType = b.ScheduleType,
+                    ScheduleId = b.ScheduleId
+                }).ToList();
+                if (ScheduleList != null)
+                {
+                    if (model.StartDate != null)
+                    {
+                        ScheduleList = ScheduleList.Where(x => x.MediumId == model.MediumId && x.ChannelId == model.ChannelId && x.StartDate == model.StartDate.ToString()).ToList();
+                    }
+                    else
+                    {
+                        ScheduleList = ScheduleList.Where(x => x.MediumId == model.MediumId && x.ChannelId == model.ChannelId).ToList();
+                    }
+
+                }
+                response.data.SchedulerList = ScheduleList;
+                response.StatusCode = 200;
+                response.Message = "Success";
+
+
             }
             catch (Exception ex)
             {

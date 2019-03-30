@@ -129,4 +129,11 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public List<string> repeatDays { get; set; }
         public List<RepeatDaysModel> RepeatDays { get; set; }
     }
+
+    public class FilterSchedulerModel
+    {
+        public long? MediumId { get; set; }
+        public long? ChannelId { get; set; }
+        public string StartDate { get; set; }
+    }
 }

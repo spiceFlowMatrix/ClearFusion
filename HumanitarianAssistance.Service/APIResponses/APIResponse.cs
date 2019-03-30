@@ -382,6 +382,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ScheduleTimeModel> scheduleTimeList { get; set; }
         public ScheduleDetails scheduleDetails { get; set; }
         public SchedulerModel scheduleDetailsModel { get; set; }
+        public List<ScheduleDetails> scheduleDetailsLists { get; set; }
         public List<ScheduleDetailModel> scheduleDetailsList { get; set; }
         public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
