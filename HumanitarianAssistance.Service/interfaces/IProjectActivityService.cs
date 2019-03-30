@@ -22,7 +22,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> UploadProjectActivityDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID);
         Task<APIResponse> GetUploadedDocument(long activityId);
         Task<APIResponse> UploadFileDemo(IFormFile file, string UserId, string userName);
-        Task<APIResponse> UploadAcitvityDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID);
+        Task<APIResponse> DeleteActivityDocument(long activityDocumentId, string userId);
 
 
     }

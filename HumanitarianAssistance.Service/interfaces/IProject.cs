@@ -213,10 +213,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> UploadReviewDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, ApproveProjectDetailModel model);
         Task<APIResponse> UploadFinalizeDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, WinApprovalProjectModel model);
 
-
         #endregion
 
         Task<APIResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model);
-
     }
 }
