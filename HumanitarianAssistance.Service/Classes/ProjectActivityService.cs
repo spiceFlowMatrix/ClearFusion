@@ -423,6 +423,7 @@ namespace HumanitarianAssistance.Service.Classes
             return await _uow.GetDbContext().ProjectActivityDetail.Where(x => x.ProjectBudgetLineDetail.ProjectId == projectId && x.IsDeleted == false)
                                                                   .MinAsync(x => x.StartDate);
         }
+
         public async Task<DateTime?> GetMaximumProjectActivityEndDate(long projectId)
         {
             return await _uow.GetDbContext().ProjectActivityDetail.Where(x => x.ProjectBudgetLineDetail.ProjectId == projectId && x.IsDeleted == false)
@@ -470,98 +471,77 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
 
-        public async Task<APIResponse> UploadDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID)
+        /// <summary>
+        /// Upload project activity documents 28/03/2019 pk
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="UserId"></param>
+        /// <param name="activityId"></param>
+        /// <param name="fileName"></param>
+        /// <param name="logginUserEmailId"></param>
+        /// <param name="ext"></param>
+        /// <param name="statusID"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> UploadProjectActivityDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID)
         {
             APIResponse response = new APIResponse();
             try
             {
-
                 ActivityDocumentDetailModel activityModel = new ActivityDocumentDetailModel();
-                var projectCode = await _uow.GetDbContext().ProjectActivityDetail.Include(x => x.ProjectBudgetLineDetail.ProjectDetail)
-                                                                      .FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
-                string folderName = projectCode.ProjectBudgetLineDetail.ProjectDetail.ProjectCode;
+                var projectDetail = await _uow.GetDbContext().ProjectActivityDetail
+                                                           .Include(x => x.ProjectBudgetLineDetail.ProjectDetail)
+                                                           .FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
 
-                Console.WriteLine("------Before Credential path Upload----------");
+                string folderName = projectDetail?.ProjectBudgetLineDetail.ProjectDetail.ProjectCode;
 
-                //read credientials
-                // string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
-                // Console.WriteLine(googleCredentialPathFile1);
-                JObject googleCredentialPathFile1 = JObject.Parse(Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL"));
-
-                Console.WriteLine(googleCredentialPathFile1);
-
-                Console.WriteLine("------------After Credential path Upload-------------");
-
-                GoogleCredentialModel result = new GoogleCredentialModel();
-                //using (StreamReader files = File.OpenText(googleCredentialPathFile1))
-                //using (JsonTextReader reader = new JsonTextReader(files))
-                //{
-                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
-
-                //    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
-                //}
-
-                var completePath = googleCredentialPathFile1["GoogleCredential"];
-                result.ApplicationName = StaticResource.ApplicationName;
-                result.BucketName = StaticResource.BucketName;
-                result.EmailId = StaticResource.EmailId;
-                result.ProjectId = StaticResource.ProjectId;
-                result.Projects = StaticResource.ProjectsFolderName;
-                result.HR = StaticResource.HRFolderName;
-                result.Accounting = StaticResource.AccountingFolderName;
-                result.Store = StaticResource.StoreFolderName;
-
-                string bucketResponse = await GCBucket.UploadDocument(folderName, file, fileName, ext, googleCredentialPathFile1, result);
-                Console.WriteLine($"bucketResponse : {bucketResponse}");
-                //ActivityDocumentsDetail activityExixt = _uow.GetDbContext().ActivityDocumentsDetail.FirstOrDefault(x => x.ActivityId == activityId && x.IsDeleted == false);
-                ActivityDocumentsDetail docObj = new ActivityDocumentsDetail();
-
-                if (!string.IsNullOrEmpty(bucketResponse))
+                string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+                if (googleApplicationCredentail == null)
                 {
-                    //if (activityExixt == null)
-                    //{
-                    docObj.ActivityId = activityId;
-                    docObj.ActivityDocumentsFilePath = bucketResponse;
-                    docObj.StatusId = statusID;
-                    docObj.CreatedById = UserId;
-                    docObj.IsDeleted = false;
-                    docObj.CreatedDate = DateTime.UtcNow;
-
-                    await _uow.ActivityDocumentsDetailRepository.AddAsyn(docObj);
-
-                    //}
-
-                    //else
-                    //{
-                    //    activityExixt.ActivityId = activityId;
-                    //    activityExixt.ActivityDocumentsFilePath = bucketResponse;
-                    //    activityExixt.IsDeleted = false;
-                    //    activityExixt.ModifiedById = UserId;
-                    //    activityExixt.ModifiedDate = DateTime.UtcNow;
-                    //    activityExixt.StatusId = 1;
-                    //    _uow.GetDbContext().ActivityDocumentsDetail.Update(activityExixt);
-                    //    _uow.GetDbContext().SaveChanges();
-                    //}
-
+                    string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
+                    GoogleServiceAccountDirectory = GoogleServiceAccountDirectory.Replace(@"\", "/");
+                    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", GoogleServiceAccountDirectory);
                 }
-
-                ActivityDocumentsDetailModel obj = new ActivityDocumentsDetailModel
+                using (Stream objStream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
                 {
-                    ActtivityDocumentId = docObj.ActtivityDocumentId,
-                    ActivityDocumentsFilePath = docObj.ActivityDocumentsFilePath,
-                    ActivityDocumentsFileName = docObj.ActivityDocumentsFilePath.Split('/').Last(),
-                    StatusId = docObj.StatusId,
-                    ActivityId = docObj.ActivityId,
-                };
+                    string bucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
+                    if (bucketName != null)
+                    {
+                        ActivityDocumentsDetail docObj = new ActivityDocumentsDetail();
 
-                await _uow.GetDbContext().SaveChangesAsync();
+                        string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
+                        string uploadedFileResponse = await GCBucket.UploadOtherProposalDocuments(bucketName, folderWithProposalFile, file, fileName, ext);
+                        if (!string.IsNullOrEmpty(uploadedFileResponse))
+                        {
+                            docObj.ActivityId = activityId;
+                            docObj.ActivityDocumentsFilePath = uploadedFileResponse;
+                            docObj.StatusId = statusID;
+                            docObj.CreatedById = UserId;
+                            docObj.IsDeleted = false;
+                            docObj.CreatedDate = DateTime.UtcNow;
 
-                response.data.activityDocumnentDetail = obj;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                            await _uow.ActivityDocumentsDetailRepository.AddAsyn(docObj);
+                        }
 
+                        ActivityDocumentsDetailModel obj = new ActivityDocumentsDetailModel
+                        {
+                            ActtivityDocumentId = docObj.ActtivityDocumentId,
+                            ActivityDocumentsFilePath = docObj.ActivityDocumentsFilePath,
+                            ActivityDocumentsFileName = docObj.ActivityDocumentsFilePath.Split('/').Last(),
+                            StatusId = docObj.StatusId,
+                            ActivityId = docObj.ActivityId,
+                        };
+
+                        response.data.activityDocumnentDetail = obj;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = StaticResource.SuccessText;
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.BucketNameNotFound;
+                    }
+                }
             }
-
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
@@ -580,17 +560,14 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         ActivityId = x.ActivityId,
                         StatusId = x.StatusId,
-                        ActivityDocumentsFilePath = StaticResource.uploadUrl + x.ActivityDocumentsFilePath,
-                        ActivityDocumentsFileName = x.ActivityDocumentsFilePath.Substring(x.ActivityDocumentsFilePath.LastIndexOf('/')),
+                        ActivityDocumentsFilePath = x.ActivityDocumentsFilePath,
+                        ActivityDocumentsFileName = x.ActivityDocumentsFilePath.Substring(x.ActivityDocumentsFilePath.LastIndexOf('/') + 1),
                         ActtivityDocumentId = x.ActtivityDocumentId
                     }).ToListAsync();
-                if (listobj.Any())
-                {
-                    apiResponse.data.ActivityDocumentDetailModel = listobj;
-                    apiResponse.StatusCode = StaticResource.successStatusCode;
-                    apiResponse.Message = StaticResource.SuccessText;
-                }
 
+                apiResponse.data.ActivityDocumentDetailModel = listobj;
+                apiResponse.StatusCode = StaticResource.successStatusCode;
+                apiResponse.Message = StaticResource.SuccessText;
 
             }
             catch (Exception ex)
@@ -601,10 +578,14 @@ namespace HumanitarianAssistance.Service.Classes
             return apiResponse;
         }
 
-
-
-
-
+        /// <summary>
+        /// Its a test API to check file upload functionality (DEMO)
+        /// NOT FOR PRODUCTION
+        /// </summary>
+        /// <param name="filesData"></param>
+        /// <param name="userId"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         public async Task<APIResponse> UploadFileDemo(IFormFile filesData, string userId, string userName)
         {
             APIResponse apiResponse = new APIResponse();
@@ -634,7 +615,7 @@ namespace HumanitarianAssistance.Service.Classes
                         Console.WriteLine($"obj stream:{"GOOGLE_APPLICATION_CREDENTIALS"}");
                         //UploadFile(StaticResource.BucketName, @"D:\poonam\newdoc.docx", "abc");
 
-                        var intdata = GCBucket.UploadFile(StaticResource.BucketName, path);
+                        var intdata = GCBucket.UploadFile(Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME"), path);
                     }
 
                     // Upload
@@ -647,7 +628,7 @@ namespace HumanitarianAssistance.Service.Classes
                 }
 
 
-                }
+            }
             catch (Exception ex)
             {
                 apiResponse.StatusCode = StaticResource.failStatusCode;
@@ -656,14 +637,54 @@ namespace HumanitarianAssistance.Service.Classes
             return apiResponse;
         }
 
+        /// <summary>
+        /// Delete Activity Document 29/03/2019
+        /// </summary>
+        /// <param name="activityDocumentId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> DeleteActivityDocument(long activityDocumentId, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                string bucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
+                if (bucketName != null)
+                {
+                    // Get document
+                    var documentDetail = await _uow.ActivityDocumentsDetailRepository.FindAsync(x => x.ActtivityDocumentId == activityDocumentId);
+
+                    if (documentDetail != null)
+                    {
+                        if (await GCBucket.DeleteObject(bucketName, documentDetail.ActivityDocumentsFilePath))
+                        {
+                            documentDetail.IsDeleted = true;
+                            documentDetail.ModifiedById = userId;
+                            documentDetail.ModifiedDate = DateTime.UtcNow;
+
+                            await _uow.ActivityDocumentsDetailRepository.UpdateAsyn(documentDetail);
+
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = StaticResource.SuccessText;
+                        }
+                    }
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = StaticResource.BucketNameNotFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+            return response;
+        }
 
 
+        #endregion
 
     }
-
-
-    #endregion
-
-
-
 }

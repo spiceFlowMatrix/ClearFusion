@@ -348,9 +348,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ActivityDocumentDetailModel> ActivityDocumentDetailModel { get; set; }
 
 
-        public List<ProjectCashFlowModel> ProjectCashFlowList { get; set; }
+        public ProjectCashFlowModel ProjectCashFlowModel { get; set; }
         public List<BudgetLineBreakdownListModel> BudgetLineBreakdownList { get; set; }
-
+        public BudgetLineBreakdownModel BudgetLineBreakdownModel { get; set; }
 
         #region Marketing    
         public PolicyTimeSchedule policyTimeScheduleDetails { get; set; }
@@ -466,6 +466,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public DateTime DateTime { get; set; }
         public bool ImplementationStatus { get; set; }
         public bool MonitoringStatus { get; set; }
+        public string SignedUrl{ get; set; }
 
     }
 
