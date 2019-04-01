@@ -139,11 +139,33 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
+    public async Task<APIResponse> DeleteSchedule([FromBody]int model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iScheduleService.DeleteSchedule(model, id);
+      }
+      return apiRespone;
+    }
+
+    [HttpPost]
     public async Task<APIResponse> GetAllScheduleList(string text)
     {
       APIResponse apiRespone = null;
       apiRespone = await _iScheduleService.GetAllScheduleList();
       return apiRespone;
-    }    
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> FilterScheduleList([FromBody]FilterSchedulerModel mediumId)
+    {
+      APIResponse apiRespone = null;
+      apiRespone = await _iScheduleService.FilterScheduleList(mediumId);
+      return apiRespone;
+    }
+
   }
 }
