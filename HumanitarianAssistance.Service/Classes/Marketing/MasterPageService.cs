@@ -177,6 +177,13 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             try
             {
                 ICollection<Medium> Mediums = await _uow.MediumRepository.FindAllAsync(x => x.IsDeleted == false);
+                ICollection<Channel> Channels = await _uow.ChannelRepository.FindAllAsync(x => x.IsDeleted == false);
+                if (Channels.Count > 0)
+                {
+                    var channelById = Channels.Where(x => x.MediumId == Mediums.First().MediumId).FirstOrDefault();
+                    response.data.channelById = channelById;
+                    response.data.Channels = Channels;
+                }               
                 response.data.Mediums = Mediums;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1392,6 +1399,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                       })).ToListAsync();
                 Channel obj = await _uow.ChannelRepository.FindAsync(x => x.ChannelId == model && x.IsDeleted == false && x.MediumId == model);
                 ICollection<Medium> Mediums = await _uow.MediumRepository.FindAllAsync(x => x.IsDeleted == false);
+                response.data.channelById = obj;
                 response.data.ChannelList = Channels;
                 response.data.Mediums = Mediums;
                 response.StatusCode = StaticResource.successStatusCode;
