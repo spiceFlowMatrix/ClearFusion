@@ -514,34 +514,6 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                             existRecord.IsDeleted = false;
                             existRecord.ModifiedById = userId;
                             existRecord.ModifiedDate = DateTime.Now;
-                            existRecord.ScheduleType = model.ScheduleType;
-                            //existRecord.ProjectId = model.ProjectId;
-                            if (model.ProjectId != null)
-                            {
-                                existRecord.ProjectId = model.ProjectId;
-                            }
-                            else
-                            {
-                                existRecord.ProjectId = null;
-                            }
-                            if (model.PolicyId != null)
-                            {
-                                existRecord.PolicyId = model.PolicyId;
-                            }
-                            else
-                            {
-                                existRecord.ProjectId = null;
-                            }
-                            if (model.JobId != null)
-                            {
-                                existRecord.JobId = model.JobId;
-                            }
-                            else
-                            {
-                                existRecord.JobId = null;
-                            }
-                            //existRecord.JobId = model.JobId;
-                            //existRecord.PolicyId = model.PolicyId;
                             existRecord.MediumId = model.MediumId;
                             existRecord.ChannelId = model.ChannelId;
                             existRecord.StartTime = TimeSpan.Parse(model.StartTime);
