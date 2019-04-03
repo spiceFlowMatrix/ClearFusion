@@ -5130,14 +5130,16 @@ namespace HumanitarianAssistance.Service.Classes
 
                 await _uow.VoucherDetailRepository.AddAsyn(obj);
 
-                obj.ReferenceNo = officeCode + "-" + currencyCode + "-" + DateTime.Now.Month + "-" + obj.VoucherNo + "-" + DateTime.Now.Year;
+                int voucherCount = _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == DateTime.Now.Month).Count();
+
+                obj.ReferenceNo = AccountingNew.AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, voucherCount, currencyCode, officeCode);
 
                 await _uow.VoucherDetailRepository.UpdateAsyn(obj);
 
                 foreach (SalaryHeadModel salaryhead in EmployeeSalaryVoucher.EmployeePayrollLists)
                 {
-
                     VoucherTransactions xVoucherTransactions = new VoucherTransactions();
+
                     //Creating Voucher Transaction for Credit
                     xVoucherTransactions.IsDeleted = false;
                     xVoucherTransactions.VoucherNo = obj.VoucherNo;
@@ -5165,10 +5167,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 xVoucherTransactions.CurrencyId = obj.CurrencyId;
 
                                 voucherTransactionsList.Add(xVoucherTransactions);
-
-                                //await _uow.GetDbContext().VoucherTransactions.AddAsync(xVoucherTransactions);
-                                //await _uow.SaveAsync();
-
+                                
                             }//Include only salary heads in voucher that has transaction type as debit and salary head type is not general
                             else if (salaryhead.TransactionTypeId == (int)TransactionType.Credit && (salaryhead.MonthlyAmount != null && salaryhead.MonthlyAmount != 0) && salaryhead.HeadTypeId != (int)SalaryHeadType.GENERAL)
                             {
@@ -5179,10 +5178,8 @@ namespace HumanitarianAssistance.Service.Classes
                                 xVoucherTransactions.Debit = 0;
 
                                 voucherTransactionsList.Add(xVoucherTransactions);
-
                             }
                         }
-
                     }
                     catch (Exception ex)
                     {
@@ -5193,6 +5190,7 @@ namespace HumanitarianAssistance.Service.Classes
                 foreach (PayrollHeadModel payrollHead in EmployeeSalaryVoucher.EmployeePayrollListPrimary)
                 {
                     VoucherTransactions xVoucherTransactions = new VoucherTransactions();
+
                     //Creating Voucher Transaction for Credit
                     xVoucherTransactions.IsDeleted = false;
                     xVoucherTransactions.VoucherNo = obj.VoucherNo;
@@ -5228,9 +5226,6 @@ namespace HumanitarianAssistance.Service.Classes
 
                                 voucherTransactionsList.Add(xVoucherTransactions);
 
-                                //await _uow.GetDbContext().VoucherTransactions.AddAsync(xVoucherTransactions);
-                                //await _uow.SaveAsync();
-
                             }//Include only salary heads in voucher that has transaction type as debit
                             else if (payrollHead.TransactionTypeId == (int)TransactionType.Credit && (payrollHead.Amount != null && payrollHead.Amount != 0))
                             {
@@ -5253,9 +5248,6 @@ namespace HumanitarianAssistance.Service.Classes
                                 xVoucherTransactions.CurrencyId = obj.CurrencyId;
 
                                 voucherTransactionsList.Add(xVoucherTransactions);
-
-                                //await _uow.GetDbContext().VoucherTransactions.AddAsync(xVoucherTransactions);
-                                //await _uow.SaveAsync();
                             }
                         }
                     }
@@ -5289,7 +5281,6 @@ namespace HumanitarianAssistance.Service.Classes
 
                     await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(voucherTransactionsList);
                     await _uow.SaveAsync();
-
                 }
 
                 //Creating an entry in EmployeeSalaryPaymentHistory Table
@@ -5300,8 +5291,8 @@ namespace HumanitarianAssistance.Service.Classes
                 employeeSalaryPaymentHistory.EmployeeId = EmployeeSalaryVoucher.EmployeeId;
                 employeeSalaryPaymentHistory.VoucherNo = obj.VoucherNo;
                 employeeSalaryPaymentHistory.IsSalaryReverse = false;
-                employeeSalaryPaymentHistory.Year = DateTime.Now.Year;
-                employeeSalaryPaymentHistory.Month = DateTime.Now.Month;
+                employeeSalaryPaymentHistory.Year = EmployeeSalaryVoucher.PayrollMonth.Year;
+                employeeSalaryPaymentHistory.Month = EmployeeSalaryVoucher.PayrollMonth.Month;
 
                 await _uow.EmployeeSalaryPaymentHistoryRepository.AddAsyn(employeeSalaryPaymentHistory);
 
