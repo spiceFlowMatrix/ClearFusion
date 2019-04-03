@@ -1760,30 +1760,48 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       string localFolderfullPath = string.Empty;
       try
       {
-
-        var file = Request.Form.Files[0];
-        long ProjectId = Convert.ToInt64(model.ProjectId);
-        string fileName = Request.Form.Files[0].FileName;
-
-        string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
+        if (filesData == null)
         {
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = await _iProject.UploadReviewDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ext, model);
+            apiRespone = await _iProject.AddApprovalDetail( model,id);
 
+          }
+          else
+          {
+            apiRespone.StatusCode = StaticResource.FileNotSupported;
+            apiRespone.Message = StaticResource.FileText;
           }
         }
         else
         {
-          apiRespone.StatusCode = StaticResource.FileNotSupported;
-          apiRespone.Message = StaticResource.FileText;
-        }
+          var file = Request.Form.Files[0];
+          long ProjectId = Convert.ToInt64(model.ProjectId);
+          string fileName = Request.Form.Files[0].FileName;
 
-        //}
+          string ext = System.IO.Path.GetExtension(fileName).ToLower();
+          if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
+          {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (user != null)
+            {
+              string logginUserEmailId = user.Email;
+              var id = user.Id;
+              apiRespone = await _iProject.UploadReviewDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ext, model);
+
+            }
+          }
+
+          else
+          {
+            apiRespone.StatusCode = StaticResource.FileNotSupported;
+            apiRespone.Message = StaticResource.FileText;
+          }
+
+        }   //}
       }
       catch (Exception ex)
       {
