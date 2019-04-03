@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
         //Implementation
         [Range(0, 100)]
-        public int? ImplementationProgress { get; set; }
+        public float? ImplementationProgress { get; set; }
         public bool? ImplementationStatus { get; set; }
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
@@ -47,7 +47,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
         //Monitoring
         [Range(0, 100)]
-        public int? MonitoringProgress { get; set; }
+        public float? MonitoringProgress { get; set; }
         public bool? MonitoringStatus { get; set; }
 
         public int? MonitoringScore { get; set; }
