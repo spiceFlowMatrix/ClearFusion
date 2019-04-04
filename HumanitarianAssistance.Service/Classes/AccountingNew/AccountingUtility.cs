@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HumanitarianAssistance.Common.Helpers;
+using System;
 namespace HumanitarianAssistance.Service.Classes.AccountingNew
 {
     public static class AccountingUtility
@@ -22,6 +23,22 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
             return voucherReferenceNo;
 
+        }
+
+        public static string GetSalaryDescription(string employeeCode, string employeeName, int month, decimal? totalSalary)
+        {
+            string salaryDescription = string.Empty;
+
+            try
+            {
+                salaryDescription = StaticResource.SalaryPaymentDone + employeeCode + "-" + employeeName + "-" + month + "-" + totalSalary;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+
+            return salaryDescription;
         }
     }
 }
