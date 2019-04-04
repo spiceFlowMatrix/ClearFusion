@@ -281,9 +281,28 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.Now;
                     await _uow.SectorDetailsRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+
+                    if (obj.SectorId != 0)
+                    {
+                        ProjectSectorModel projectSectorModel = new ProjectSectorModel()
+                        {
+                            SectorId = obj.SectorId,
+                            ProjectId = model.ProjectId,
+                            ProjectSectorId = 0
+                        };
+
+                        var addEditProjectSector = await AddEditProjectSector(projectSectorModel, UserId);
+
+                        if (addEditProjectSector.StatusCode == 200)
+                        {
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Success";
+                        }
+                        else
+                        {
+                            throw new Exception("Project Sector could not be saved");
+                        }
+                    }
                 }
                 else
                 {
@@ -425,10 +444,29 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.Now;
                     await _uow.ProgramDetailRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
-                    response.data.ProgramDetail = obj;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+
+                    if (obj.ProgramId != 0)
+                    {
+                        ProjectProgramModel projectProgramModel = new ProjectProgramModel
+                        {
+                            ProgramId = obj.ProgramId,
+                            ProjectId = model.ProjectId.Value,
+                            ProjectProgramId = 0
+                        };
+
+                       var addEditProjectProgram = await AddEditProjectProgram(projectProgramModel, UserId);
+
+                        if (addEditProjectProgram.StatusCode == 200)
+                        {
+                            response.data.ProgramDetail = obj;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Success";
+                        }
+                        else
+                        {
+                            throw new Exception("Project Program could not be saved");
+                        }
+                    }
                 }
                 else
                 {
@@ -1118,32 +1156,40 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var existRecord = await _uow.ProjectProgramRepository.FindAsync(x => x.IsDeleted == false && x.ProjectId == model.ProjectId);
-                if (existRecord == null)
+                if (model != null)
                 {
-                    ProjectProgram obj = new ProjectProgram();
-                    obj.ProjectId = model.ProjectId;
-                    obj.ProgramId = model.ProgramId;
-                    obj.IsDeleted = false;
-                    obj.CreatedById = UserId;
-                    obj.CreatedDate = DateTime.Now;
-                    await _uow.ProjectProgramRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
+                    var existRecord = await _uow.ProjectProgramRepository.FindAsync(x => x.IsDeleted == false && x.ProjectId == model.ProjectId);
+                    if (existRecord == null)
+                    {
+                        ProjectProgram obj = new ProjectProgram();
+                        obj.ProjectId = model.ProjectId;
+                        obj.ProgramId = model.ProgramId;
+                        obj.IsDeleted = false;
+                        obj.CreatedById = UserId;
+                        obj.CreatedDate = DateTime.Now;
+                        await _uow.ProjectProgramRepository.AddAsyn(obj);
+                        await _uow.SaveAsync();
+                    }
+                    else
+                    {
+                        if (existRecord != null)
+                        {
+                            existRecord.ProjectId = model.ProjectId;
+                            existRecord.ProgramId = model.ProgramId;
+                            existRecord.IsDeleted = false;
+                            existRecord.ModifiedById = UserId;
+                            existRecord.ModifiedDate = DateTime.Now;
+                            _uow.GetDbContext().SaveChanges();
+                        }
+                    }
+                    response.StatusCode = 200;
+                    response.Message = "Success";
+
                 }
                 else
                 {
-                    if (existRecord != null)
-                    {
-                        existRecord.ProjectId = model.ProjectId;
-                        existRecord.ProgramId = model.ProgramId;
-                        existRecord.IsDeleted = false;
-                        existRecord.ModifiedById = UserId;
-                        existRecord.ModifiedDate = DateTime.Now;
-                        _uow.GetDbContext().SaveChanges();
-                    }
+                    throw new Exception("Project Program Not Selected");
                 }
-                response.StatusCode = 200;
-                response.Message = "Success";
             }
             catch (Exception ex)
             {

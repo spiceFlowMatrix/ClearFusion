@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190403033747_addSchedulerToAppPageTbl")]
+    partial class addSchedulerToAppPageTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6620,7 +6622,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("ImplementationMethod");
 
-                    b.Property<float?>("ImplementationProgress");
+                    b.Property<int?>("ImplementationProgress");
 
                     b.Property<bool?>("ImplementationStatus");
 
@@ -6634,7 +6636,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("MonitoringFrequency");
 
-                    b.Property<float?>("MonitoringProgress");
+                    b.Property<int?>("MonitoringProgress");
 
                     b.Property<int?>("MonitoringScore");
 
