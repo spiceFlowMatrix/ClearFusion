@@ -3131,7 +3131,7 @@ namespace HumanitarianAssistance.Service.Classes
                     details = new ProjectProposalDetail();
                     details.ProposalStartDate = DateTime.UtcNow;
 
-                    details.ProposalBudget = model.ProposalBudget;
+                    //details.ProposalBudget = model.ProposalBudget;
                     details.ProposalDueDate = model.ProposalDueDate;
                     details.ProjectAssignTo = model.UserId;
                     details.IsProposalAccept = model.IsProposalAccept;
@@ -5500,6 +5500,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
+
                 //get Journal Report from sp get_journal_report by passing parameters
                 var spProjectCashFlow = await _uow.GetDbContext().LoadStoredProc("get_projectcashflow")
                                       .WithSqlParam("currency", model.CurrencyId)
@@ -5509,12 +5510,17 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("donorid", model.DonorID)
                                       .ExecuteStoredProc<SPProjectCashFlowModel>();
 
+                Task<double?> projectsExpectedBudget = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.IsDeleted == false && model.ProjectId.Contains(x.ProjectId)).SumAsync(x => x.ProposalBudget);
+
                 if (spProjectCashFlow.Any())
                 {
                     response.data.ProjectCashFlowModel = new ProjectCashFlowModel();
                     response.data.ProjectCashFlowModel.Expenditure = new List<double>();
                     response.data.ProjectCashFlowModel.Income = new List<double>();
                     response.data.ProjectCashFlowModel.Date = new List<DateTime>();
+                    response.data.ProjectCashFlowModel.TotalExpectedBudget = new List<double?>();
+
+                    double? totalExpectedBudget = await projectsExpectedBudget;
 
                     foreach (var item in spProjectCashFlow)
                     {
@@ -5533,6 +5539,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                         }
 
+                        response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
                         response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
                         response.data.ProjectCashFlowModel.Income.Add(item.Income);
                         response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);

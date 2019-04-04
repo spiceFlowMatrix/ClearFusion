@@ -7,7 +7,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     #region "Cash Flow"
     public class ProjectCashFlowFilterModel
     {
-        public long ProjectId { get; set; }
+        public List<long> ProjectId { get; set; }
         public int CurrencyId { get; set; }
         public DateTime ProjectStartDate { get; set; }
         public DateTime ProjectEndDate { get; set; }
@@ -18,6 +18,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public List<DateTime> Date { get; set; }
         public List<double> Expenditure { get; set; }
         public List<double> Income { get; set; }
+        public List<double?> TotalExpectedBudget { get; set; }
     }
 
     #endregion
