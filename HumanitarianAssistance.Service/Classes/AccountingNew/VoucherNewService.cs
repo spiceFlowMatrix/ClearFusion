@@ -229,12 +229,14 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         Task<CurrencyDetails> currencyDetailTask = _uow.GetDbContext().CurrencyDetails.FirstOrDefaultAsync(o => o.CurrencyId == model.CurrencyId);
                         // NOTE: Dont remove this as we will need journal details in response
                         Task<JournalDetail> journaldetailTask = _uow.GetDbContext().JournalDetail.FirstOrDefaultAsync(o => o.JournalCode == model.JournalCode);
+                        int voucherCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == model.VoucherDate.Month).CountAsync();
 
                         FinancialYearDetail fincancialYear = await fincancialYearTask;
 
                         if (fincancialYear != null)
                         {
                             CurrencyDetails currencyDetail = await currencyDetailTask;
+
                             if (currencyDetail != null)
                             {
                                 JournalDetail journaldetail = await journaldetailTask;
@@ -251,8 +253,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                                 if (obj.VoucherNo != 0)
                                 {
-                                    // Pattern: Office Code - Currency Code - Month Number - Voucher Primary Key (sequential) - Year
-                                    obj.ReferenceNo = officeDetail.OfficeCode + "-" + currencyDetail.CurrencyCode + "-" + model.VoucherDate.Month + "-" + obj.VoucherNo + "-" + model.VoucherDate.Year;
+                                    // Pattern: Office Code - Currency Code - Month Number - voucher count on selected month - Year
+                                    obj.ReferenceNo = AccountingUtility.GenerateVoucherReferenceCode(model.VoucherDate, voucherCount, currencyDetail.CurrencyCode, officeDetail.OfficeCode);
 
                                     await _uow.VoucherDetailRepository.UpdateAsyn(obj);
                                 }
