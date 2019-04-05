@@ -468,6 +468,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public bool ImplementationStatus { get; set; }
         public bool MonitoringStatus { get; set; }
         public string SignedUrl{ get; set; }
+        public string TrainingLink{ get; set; }
 
     }
 

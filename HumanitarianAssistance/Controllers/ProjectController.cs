@@ -15,7 +15,6 @@ using DataAccess.DbEntities.Project;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using System.Net.Http.Headers;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.ViewModels.Models;
 
