@@ -652,7 +652,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = _iProject.AddEditProjectotherDetail(OtherDetail, id);
+        apiRespone =  _iProject.AddEditProjectotherDetail(OtherDetail, id);
       }
       return apiRespone;
     }

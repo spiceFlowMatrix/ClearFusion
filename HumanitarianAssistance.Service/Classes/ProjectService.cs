@@ -1816,7 +1816,7 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.SecurityRemarks = model.SecurityRemarks;
                         obj.IsDeleted = false;
                         obj.CreatedById = UserId;
-                        obj.CreatedDate = DateTime.Now;
+                        obj.CreatedDate = DateTime.UtcNow;
                         _uow.ProjectOtherDetailRepository.Add(obj);
                         LatestProjectOtherDetailId = obj.ProjectOtherDetailId;
                     }
@@ -1852,7 +1852,7 @@ namespace HumanitarianAssistance.Service.Classes
                             existProjectRecord.SecurityRemarks = model.SecurityRemarks;
                             existProjectRecord.IsDeleted = false;
                             existProjectRecord.ModifiedById = UserId;
-                            existProjectRecord.ModifiedDate = DateTime.Now;
+                            existProjectRecord.ModifiedDate = DateTime.UtcNow;
                             _uow.GetDbContext().SaveChanges();
                             LatestProjectOtherDetailId = model.ProjectOtherDetailId;
                         }
