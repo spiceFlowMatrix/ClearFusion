@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json.Linq;
 using DataAccess.DbEntities.ErrorLog;
 using HumanitarianAssistance.ViewModels.SPModels;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -5518,7 +5520,8 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("donorid", model.DonorID)
                                       .ExecuteStoredProc<SPProjectCashFlowModel>();
 
-                Task<double?> projectsExpectedBudget = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.IsDeleted == false && model.ProjectId.Contains(x.ProjectId)).SumAsync(x => x.ProposalBudget);
+
+               
 
                 if (spProjectCashFlow.Any())
                 {
@@ -5528,23 +5531,52 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.ProjectCashFlowModel.Date = new List<DateTime>();
                     response.data.ProjectCashFlowModel.TotalExpectedBudget = new List<double?>();
 
-                    double? totalExpectedBudget = await projectsExpectedBudget;
+                    var projectsExpectedBudget = await _uow.GetDbContext().LoadStoredProc("get_totalexpectedprojectbudget")
+                                     .WithSqlParam("currencyid", model.CurrencyId)
+                                     .WithSqlParam("projectid", model.ProjectId)
+                                     .WithSqlParam("comparisiondate", DateTime.UtcNow.ToString())
+                                     .ExecuteStoredProc<ProjectExpectedBudget>();
+
+                    double? totalExpectedBudget = 0.0;
+
+                    if (projectsExpectedBudget.Any())
+                    {
+                        totalExpectedBudget = projectsExpectedBudget.FirstOrDefault().TotalExpectedProjectBudget;
+                    }
+
+                    //DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
+                    //DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count - 1].VoucherDate;
+
+                    //TimeSpan diff = (endDate - startDate)/7;
+
+                    //List<DateTime> sevenIntervalVoucherDate = new List<DateTime>();
+
+                    //for (int i = 0; i < 7; i++)
+                    //{
+                       
+                    //    startDate.Add(diff) ;
+                    //    sevenIntervalVoucherDate.Add(startDate);
+                    //}
 
                     foreach (var item in spProjectCashFlow)
                     {
 
                         // adding previous expenditure to the current expenditure
                         double previousExpenditure = 0;
+                        double previousIncome = 0;
 
                         if (index == 0)
                         {
                             previousExpenditure = 0;
+                            previousIncome = 0;
                         }
                         else
                         {
                             previousExpenditure = spProjectCashFlow[index - 1].Expenditure;
-                            item.Expenditure = item.Expenditure + previousExpenditure;
+                            item.Expenditure += previousExpenditure;
 
+                            previousIncome = spProjectCashFlow[index - 1].Income;
+                            item.Income += previousIncome;
                         }
 
                         response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
@@ -5553,6 +5585,7 @@ namespace HumanitarianAssistance.Service.Classes
                         response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
                         index++;
                     }
+                    //response.data.ProjectCashFlowModel.Date.AddRange(sevenIntervalVoucherDate);
                 }
 
                 response.StatusCode = StaticResource.successStatusCode;
