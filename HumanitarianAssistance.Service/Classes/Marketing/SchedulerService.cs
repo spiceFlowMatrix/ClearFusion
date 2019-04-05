@@ -14,6 +14,7 @@ using HumanitarianAssistance.ViewModels.Models.Marketing;
 using Microsoft.EntityFrameworkCore;
 using HumanitarianAssistance.ViewModels.Models.Project;
 using DataAccess.DbEntities.Marketing;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Service.Classes.Marketing
 {
@@ -544,15 +545,13 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-
+                var dateTime = DateTime.Now;
+                string today = dateTime.DayOfWeek.ToString();
                 var activityList = await _uow.GetDbContext().ScheduleDetails
                                           .Include(p => p.ProjectDetail)
                                           .Include(e => e.PolicyDetails)
                                           .Include(o => o.JobDetails)
-                                          .Where(v => v.IsDeleted == false && v.JobDetails.JobId == v.JobId)
-                                          .Where(v => v.ProjectDetail.ProjectId == v.ProjectId)
-                                          .Where(v => v.PolicyDetails.PolicyId == v.PolicyId)
-                                          .Where(v => v.StartDate <= DateTime.UtcNow && DateTime.UtcNow.Date <= v.EndDate)
+                                          .Where(v => v.IsDeleted == false && (v.JobDetails.JobId == v.JobId || v.ProjectDetail.ProjectId == v.ProjectId || v.PolicyDetails.PolicyId == v.PolicyId) && v.StartDate <= DateTime.UtcNow && DateTime.UtcNow.Date <= v.EndDate)
                                           .ToListAsync();
                 var ScheduleList = activityList.Select(b => new SchedulerModel
                 {
@@ -567,8 +566,41 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     ChannelId = b.ChannelId,
                     MediumId = b.MediumId,
                     ScheduleType = b.ScheduleType,
-                    ScheduleId = b.ScheduleId
+                    ScheduleId = b.ScheduleId,
+                    Monday = b.Monday,
+                    Tuesday = b.Tuesday,
+                    Wednesday = b.Wednesday,
+                    Thursday = b.Thursday,
+                    Friday = b.Friday,
+                    Saturday = b.Saturday,
+                    Sunday = b.Sunday
                 }).ToList();
+                switch (today)
+                {
+                    case Weekdays.Monday:
+                        ScheduleList = ScheduleList.Where(p => p.Monday == true).ToList();
+                        break;
+                    case Weekdays.Tuesday:
+                        ScheduleList = ScheduleList.Where(p => p.Tuesday == true).ToList();
+                        break;
+                    case Weekdays.Wednesday:
+                        ScheduleList = ScheduleList.Where(p => p.Wednesday == true).ToList();
+                        break;
+                    case Weekdays.Thursday:
+                        ScheduleList = ScheduleList.Where(p => p.Thursday == true).ToList();
+                        break;
+                    case Weekdays.Friday:
+                        ScheduleList = ScheduleList.Where(p => p.Friday == true).ToList();
+                        break;
+                    case Weekdays.Saturday:
+                        ScheduleList = ScheduleList.Where(p => p.Saturday == true).ToList();
+                        break;
+                    case Weekdays.Sunday:
+                        ScheduleList = ScheduleList.Where(p => p.Sunday == true).ToList();
+                        break;
+                    default:
+                        break;
+                }
                 //var ScheduleList = await (from j in _uow.GetDbContext().ScheduleDetails
                 //                                join mc in _uow.GetDbContext().PolicyDetails on j.PolicyId equals mc.PolicyId
                 //                                join pd in _uow.GetDbContext().JobDetails on j.JobId equals pd.JobId
@@ -622,6 +654,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         }
         public async Task<APIResponse> FilterScheduleList(FilterSchedulerModel model)
         {
+            var dateTime = DateTime.Now;
+            var currentTime = dateTime.Hour + ":" + dateTime.Minute;
+            string today = dateTime.DayOfWeek.ToString();
             APIResponse response = new APIResponse();
             try
             {
@@ -649,10 +684,44 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     MediumId = b.MediumId,
                     ChannelId = b.ChannelId,
                     ScheduleType = b.ScheduleType,
-                    ScheduleId = b.ScheduleId
+                    ScheduleId = b.ScheduleId,
+                    Monday = b.Monday,
+                    Tuesday = b.Tuesday,
+                    Wednesday = b.Wednesday,
+                    Thursday = b.Thursday,
+                    Friday = b.Friday,
+                    Saturday = b.Saturday,
+                    Sunday = b.Sunday
                 }).ToList();
                 if (ScheduleList != null)
                 {
+                    switch (today)
+                    {
+                        case Weekdays.Monday:
+                            ScheduleList = ScheduleList.Where(p => p.Monday == true).ToList();
+                            break;
+                        case Weekdays.Tuesday:
+                            ScheduleList = ScheduleList.Where(p => p.Tuesday == true).ToList();
+                            break;
+                        case Weekdays.Wednesday:
+                            ScheduleList = ScheduleList.Where(p => p.Wednesday == true).ToList();
+                            break;
+                        case Weekdays.Thursday:
+                            ScheduleList = ScheduleList.Where(p => p.Thursday == true).ToList();
+                            break;
+                        case Weekdays.Friday:
+                            ScheduleList = ScheduleList.Where(p => p.Friday == true).ToList();
+                            break;
+                        case Weekdays.Saturday:
+                            ScheduleList = ScheduleList.Where(p => p.Saturday == true).ToList();
+                            break;
+                        case Weekdays.Sunday:
+                            ScheduleList = ScheduleList.Where(p => p.Sunday == true).ToList();
+                            break;
+                        default:
+                            break;
+                    }
+                    
                     if (model.StartDate != null)
                     {
                         ScheduleList = ScheduleList.Where(x => x.MediumId == model.MediumId && x.ChannelId == model.ChannelId && x.StartDate == model.StartDate.ToString()).ToList();
