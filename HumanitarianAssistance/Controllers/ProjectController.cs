@@ -645,15 +645,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<APIResponse> AddEditProjectotherDetail([FromBody]ProjectOtherDetail OtherDetail)
+    public async Task<APIResponse> AddEditProjectotherDetail([FromBody]ProjectOtherDetailModel OtherDetail)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-
-        apiRespone = _iProject.AddEditProjectotherDetail(OtherDetail, id);
+        apiRespone =  _iProject.AddEditProjectotherDetail(OtherDetail, id);
       }
       return apiRespone;
     }

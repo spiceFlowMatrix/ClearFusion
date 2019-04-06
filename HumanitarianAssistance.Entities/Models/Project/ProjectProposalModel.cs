@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string ConceptFileExtType { get; set; }
         public string PresentationExtType { get; set; }
         public DateTime? ProposalStartDate { get; set; }
-        public string ProposalBudget { get; set; }
+        public double? ProposalBudget { get; set; }
         public DateTime? ProposalDueDate { get; set; }
         public int? ProjectAssignTo { get; set; }
         public bool? IsProposalAccept { get; set; }

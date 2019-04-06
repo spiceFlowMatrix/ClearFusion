@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190402063343_ProjectActivityDatatypeChanges")]
+    partial class ProjectActivityDatatypeChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -539,8 +541,7 @@ namespace DataAccess.Migrations
                         new { PageId = 73, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Policy" },
                         new { PageId = 74, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectJobs" },
                         new { PageId = 75, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectActivities" },
-                        new { PageId = 76, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Channel" },
-                        new { PageId = 77, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Scheduler" }
+                        new { PageId = 76, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Channel" }
                     );
                 });
 
@@ -6960,10 +6961,6 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("GenderRemarks");
 
-                    b.Property<int?>("InDirectBeneficiaryFemale");
-
-                    b.Property<int?>("InDirectBeneficiaryMale");
-
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
@@ -6971,8 +6968,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<int?>("OfficeId");
-
-                    b.Property<int?>("OpportunityType");
 
                     b.Property<long>("ProjectId");
 
@@ -6992,9 +6987,9 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("SubmissionDate");
 
-                    b.Property<int?>("beneficiaryFemale");
+                    b.Property<string>("beneficiaryFemale");
 
-                    b.Property<int?>("beneficiaryMale");
+                    b.Property<string>("beneficiaryMale");
 
                     b.Property<string>("budget");
 
@@ -7182,7 +7177,7 @@ namespace DataAccess.Migrations
 
                     b.Property<long>("ProjectId");
 
-                    b.Property<double?>("ProposalBudget");
+                    b.Property<string>("ProposalBudget");
 
                     b.Property<DateTime?>("ProposalDueDate");
 

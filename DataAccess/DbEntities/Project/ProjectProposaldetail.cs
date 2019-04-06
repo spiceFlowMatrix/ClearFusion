@@ -8,6 +8,12 @@ namespace DataAccess.DbEntities.Project
 {
     public class ProjectProposalDetail : BaseEntityWithoutId
     {
+
+        public ProjectProposalDetail()
+        {
+            ProposalBudget = 0;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
@@ -40,7 +46,7 @@ namespace DataAccess.DbEntities.Project
         public string ConceptFileExtType { get; set; }
         public string PresentationExtType { get; set; }
         public DateTime? ProposalStartDate { get; set; }
-        public string ProposalBudget { get; set; }
+        public double? ProposalBudget { get; set; }
         public DateTime? ProposalDueDate { get; set; }
         public int? ProjectAssignTo { get; set; }
         public bool? IsProposalAccept { get; set; }
