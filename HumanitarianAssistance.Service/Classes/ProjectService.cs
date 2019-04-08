@@ -2345,9 +2345,9 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 string folderName = projectDetail.ProjectCode;
                 //code to read credential from environment variables
-                Console.WriteLine("---------- Before Credential create path----------");
+                //Console.WriteLine("---------- Before Credential create path----------");
                 string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-                Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
                 if (googleApplicationCredentail == null)
                 {
                     string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
