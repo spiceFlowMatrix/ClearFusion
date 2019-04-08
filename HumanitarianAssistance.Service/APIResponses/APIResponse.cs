@@ -310,6 +310,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectProgram projectProgram { get; set; }
         public ProjectArea projectArea { get; set; }
         public ProjectSector projectSector { get; set; }
+        public ProjectSectorModel ProjectSectorModel { get; set; }
+        public SectorDetails SectorDetails { get; set; }
+
 
         public ProjectProposalModel ProjectProposalModel { get; set; }
         public ProjectProposalDetail ProjectProposalDetail { get; set; }

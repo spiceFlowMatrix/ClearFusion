@@ -299,6 +299,7 @@ namespace HumanitarianAssistance.Service.Classes
                         if (addEditProjectSector.StatusCode == 200)
                         {
                             response.StatusCode = StaticResource.successStatusCode;
+                            response.data.SectorDetails = obj;
                             response.Message = "Success";
                         }
                         else
