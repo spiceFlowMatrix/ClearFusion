@@ -23,6 +23,7 @@ using DataAccess.DbEntities.ErrorLog;
 using HumanitarianAssistance.ViewModels.SPModels;
 using System.Data;
 using System.Data.SqlClient;
+using HumanitarianAssistance.Service.Classes.AccountingNew;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -5536,19 +5537,10 @@ namespace HumanitarianAssistance.Service.Classes
                         totalExpectedBudget = projectsExpectedBudget.FirstOrDefault().TotalExpectedProjectBudget;
                     }
 
-                    //DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
-                    //DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count - 1].VoucherDate;
+                    DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
+                    DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count - 1].VoucherDate;
 
-                    //TimeSpan diff = (endDate - startDate)/7;
-
-                    //List<DateTime> sevenIntervalVoucherDate = new List<DateTime>();
-
-                    //for (int i = 0; i < 7; i++)
-                    //{
-                       
-                    //    startDate.Add(diff) ;
-                    //    sevenIntervalVoucherDate.Add(startDate);
-                    //}
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
 
                     foreach (var item in spProjectCashFlow)
                     {
@@ -5574,10 +5566,15 @@ namespace HumanitarianAssistance.Service.Classes
                         response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
                         response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
                         response.data.ProjectCashFlowModel.Income.Add(item.Income);
-                        response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
+                       // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
                         index++;
                     }
-                    //response.data.ProjectCashFlowModel.Date.AddRange(sevenIntervalVoucherDate);
+
+                    if (regularIntervalDates != null && regularIntervalDates.Any())
+                    {
+                        response.data.ProjectCashFlowModel.Date.AddRange(regularIntervalDates);
+                    }
+
                 }
                 
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5647,6 +5644,11 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.BudgetLineBreakdownModel.Expenditure = new List<double>();
                     response.data.BudgetLineBreakdownModel.Date = new List<DateTime>();
 
+                    DateTime startDate = spBudgetLineBreakdown.FirstOrDefault().VoucherDate;
+                    DateTime endDate = spBudgetLineBreakdown[spBudgetLineBreakdown.Count - 1].VoucherDate;
+
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
+
                     foreach (var item in spBudgetLineBreakdown)
                     {
                         // adding previous expenditure to the current expenditure
@@ -5664,8 +5666,12 @@ namespace HumanitarianAssistance.Service.Classes
                         }
 
                         response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
-                        response.data.BudgetLineBreakdownModel.Date.Add(item.VoucherDate);
                         index++;
+                    }
+
+                    if (regularIntervalDates.Any())
+                    {
+                        response.data.BudgetLineBreakdownModel.Date.AddRange(regularIntervalDates);
                     }
                 }
 
