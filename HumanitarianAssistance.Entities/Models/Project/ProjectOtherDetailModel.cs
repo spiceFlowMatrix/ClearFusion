@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace DataAccess.DbEntities.Project
+namespace HumanitarianAssistance.ViewModels.Models.Project
 {
-   public class ProjectOtherDetail : BaseEntityWithoutId
+  public  class ProjectOtherDetailModel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 1, TypeName = "serial")]
         public long ProjectOtherDetailId { get; set; }
         public long ProjectId { get; set; }
-        [ForeignKey("ProjectId")]
-        public ProjectDetail ProjectDetail { get; set; }
         public string opportunityNo { get; set; }
         public string opportunity { get; set; }
         public string opportunitydescription { get; set; }
@@ -42,7 +35,6 @@ namespace DataAccess.DbEntities.Project
         public int? InDirectBeneficiaryFemale { get; set; }
         public int? InDirectBeneficiaryMale { get; set; }
         public int? OpportunityType { get; set; }
-
 
     }
 }
