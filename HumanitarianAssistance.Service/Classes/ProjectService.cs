@@ -23,6 +23,7 @@ using DataAccess.DbEntities.ErrorLog;
 using HumanitarianAssistance.ViewModels.SPModels;
 using System.Data;
 using System.Data.SqlClient;
+using HumanitarianAssistance.Service.Classes.AccountingNew;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -456,7 +457,7 @@ namespace HumanitarianAssistance.Service.Classes
                             ProjectProgramId = 0
                         };
 
-                       var addEditProjectProgram = await AddEditProjectProgram(projectProgramModel, UserId);
+                        var addEditProjectProgram = await AddEditProjectProgram(projectProgramModel, UserId);
 
                         if (addEditProjectProgram.StatusCode == 200)
                         {
@@ -1823,7 +1824,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public APIResponse AddEditProjectotherDetail(ProjectOtherDetail model, string UserId)
+        public APIResponse AddEditProjectotherDetail(ProjectOtherDetailModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             DbContext db = _uow.GetDbContext();
@@ -1836,35 +1837,40 @@ namespace HumanitarianAssistance.Service.Classes
                     var Projectdetail = _uow.ProjectOtherDetailRepository.Find(x => x.IsDeleted == false && x.ProjectId == model.ProjectId);
                     if (Projectdetail == null)
                     {
-                        ProjectOtherDetail obj = new ProjectOtherDetail();
-                        obj.opportunityNo = model.opportunityNo;
-                        obj.opportunity = model.opportunity;
-                        obj.opportunitydescription = model.opportunitydescription;
-                        obj.ProvinceId = model.ProvinceId;
-                        obj.ProjectId = model.ProjectId;
-                        obj.DistrictID = model.DistrictID;
-                        obj.OfficeId = model.OfficeId;
-                        obj.StartDate = model.StartDate;
-                        obj.EndDate = model.EndDate;
-                        obj.CurrencyId = model.CurrencyId;
-                        obj.budget = model.budget;
-                        obj.beneficiaryMale = model.beneficiaryMale;
-                        obj.beneficiaryFemale = model.beneficiaryFemale;
-                        obj.projectGoal = model.projectGoal;
-                        obj.projectObjective = model.projectObjective;
-                        obj.mainActivities = model.mainActivities;
-                        obj.DonorId = model.DonorId;
-                        obj.SubmissionDate = model.SubmissionDate;
-                        obj.REOIReceiveDate = model.REOIReceiveDate;
-                        obj.StrengthConsiderationId = model.StrengthConsiderationId;
-                        obj.GenderConsiderationId = model.GenderConsiderationId;
-                        obj.GenderRemarks = model.GenderRemarks;
-                        obj.SecurityId = model.SecurityId;
-                        obj.SecurityConsiderationId = model.SecurityConsiderationId;
-                        obj.SecurityRemarks = model.SecurityRemarks;
-                        obj.IsDeleted = false;
-                        obj.CreatedById = UserId;
-                        obj.CreatedDate = DateTime.Now;
+                        ProjectOtherDetail obj = new ProjectOtherDetail
+                        {
+                            opportunityNo = model.opportunityNo,
+                            opportunity = model.opportunity,
+                            opportunitydescription = model.opportunitydescription,
+                            ProvinceId = model.ProvinceId,
+                            ProjectId = model.ProjectId,
+                            DistrictID = model.DistrictID,
+                            OfficeId = model.OfficeId,
+                            StartDate = model.StartDate,
+                            EndDate = model.EndDate,
+                            CurrencyId = model.CurrencyId,
+                            budget = model.budget,
+                            beneficiaryMale = model.beneficiaryMale,
+                            beneficiaryFemale = model.beneficiaryFemale,
+                            projectGoal = model.projectGoal,
+                            projectObjective = model.projectObjective,
+                            mainActivities = model.mainActivities,
+                            DonorId = model.DonorId,
+                            SubmissionDate = model.SubmissionDate,
+                            REOIReceiveDate = model.REOIReceiveDate,
+                            StrengthConsiderationId = model.StrengthConsiderationId,
+                            GenderConsiderationId = model.GenderConsiderationId,
+                            GenderRemarks = model.GenderRemarks,
+                            SecurityId = model.SecurityId,
+                            SecurityConsiderationId = model.SecurityConsiderationId,
+                            SecurityRemarks = model.SecurityRemarks,
+                            IsDeleted = false,
+                            CreatedById = UserId,
+                            CreatedDate = DateTime.UtcNow,
+                            InDirectBeneficiaryFemale = model.InDirectBeneficiaryFemale,
+                            InDirectBeneficiaryMale = model.InDirectBeneficiaryMale,
+                            OpportunityType = model.OpportunityType
+                        };
                         _uow.ProjectOtherDetailRepository.Add(obj);
                         LatestProjectOtherDetailId = obj.ProjectOtherDetailId;
                     }
@@ -1900,7 +1906,10 @@ namespace HumanitarianAssistance.Service.Classes
                             existProjectRecord.SecurityRemarks = model.SecurityRemarks;
                             existProjectRecord.IsDeleted = false;
                             existProjectRecord.ModifiedById = UserId;
-                            existProjectRecord.ModifiedDate = DateTime.Now;
+                            existProjectRecord.ModifiedDate = DateTime.UtcNow;
+                            existProjectRecord.InDirectBeneficiaryFemale = model.InDirectBeneficiaryFemale;
+                            existProjectRecord.InDirectBeneficiaryMale = model.InDirectBeneficiaryMale;
+                            existProjectRecord.OpportunityType = model.OpportunityType;
                             _uow.GetDbContext().SaveChanges();
                             LatestProjectOtherDetailId = model.ProjectOtherDetailId;
                         }
@@ -1929,7 +1938,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var OtherProjectDetail = _uow.GetDbContext().ProjectOtherDetail
-                                         .FirstOrDefault(x => !x.IsDeleted.Value && x.ProjectId == ProjectId);
+                                         .FirstOrDefault(x => x.IsDeleted == false && x.ProjectId == ProjectId);
 
                 response.data.OtherProjectDetailById = OtherProjectDetail;
                 response.StatusCode = 200;
@@ -2041,7 +2050,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 ApproveProjectDetails obj = new ApproveProjectDetails();
 
-                obj =  await _uow.GetDbContext().ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                obj = await _uow.GetDbContext().ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
                 if (obj == null)
                 {
                     obj = new ApproveProjectDetails();
@@ -2054,7 +2063,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.Now;
                     await _uow.ApproveProjectDetailsRepository.AddAsyn(obj);
-                    
+
                     if (model.IsApproved == false)
                     {
                         var details = _uow.GetDbContext().ProjectProposalDetail.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).FirstOrDefault();
@@ -2064,7 +2073,7 @@ namespace HumanitarianAssistance.Service.Classes
                             details.ModifiedById = UserId;
                             details.IsDeleted = false;
                             details.ModifiedDate = DateTime.Now;
-                           await _uow.GetDbContext().SaveChangesAsync();
+                            await _uow.GetDbContext().SaveChangesAsync();
                         }
                     }
 
@@ -2091,7 +2100,7 @@ namespace HumanitarianAssistance.Service.Classes
                             details.ModifiedById = UserId;
                             details.IsDeleted = false;
                             details.ModifiedDate = DateTime.Now;
-                           await _uow.GetDbContext().SaveChangesAsync();
+                            await _uow.GetDbContext().SaveChangesAsync();
                         }
                     }
                 }
@@ -5536,19 +5545,10 @@ namespace HumanitarianAssistance.Service.Classes
                         totalExpectedBudget = projectsExpectedBudget.FirstOrDefault().TotalExpectedProjectBudget;
                     }
 
-                    //DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
-                    //DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count - 1].VoucherDate;
+                    DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
+                    DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count - 1].VoucherDate;
 
-                    //TimeSpan diff = (endDate - startDate)/7;
-
-                    //List<DateTime> sevenIntervalVoucherDate = new List<DateTime>();
-
-                    //for (int i = 0; i < 7; i++)
-                    //{
-                       
-                    //    startDate.Add(diff) ;
-                    //    sevenIntervalVoucherDate.Add(startDate);
-                    //}
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
 
                     foreach (var item in spProjectCashFlow)
                     {
@@ -5574,12 +5574,17 @@ namespace HumanitarianAssistance.Service.Classes
                         response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
                         response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
                         response.data.ProjectCashFlowModel.Income.Add(item.Income);
-                        response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
+                       // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
                         index++;
                     }
-                    //response.data.ProjectCashFlowModel.Date.AddRange(sevenIntervalVoucherDate);
+
+                    if (regularIntervalDates != null && regularIntervalDates.Any())
+                    {
+                        response.data.ProjectCashFlowModel.Date.AddRange(regularIntervalDates);
+                    }
+
                 }
-                
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }
@@ -5647,6 +5652,11 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.BudgetLineBreakdownModel.Expenditure = new List<double>();
                     response.data.BudgetLineBreakdownModel.Date = new List<DateTime>();
 
+                    DateTime startDate = spBudgetLineBreakdown.FirstOrDefault().VoucherDate;
+                    DateTime endDate = spBudgetLineBreakdown[spBudgetLineBreakdown.Count - 1].VoucherDate;
+
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
+
                     foreach (var item in spBudgetLineBreakdown)
                     {
                         // adding previous expenditure to the current expenditure
@@ -5658,14 +5668,18 @@ namespace HumanitarianAssistance.Service.Classes
                         }
                         else
                         {
-                            previousExpenditure = spBudgetLineBreakdown[index-1].Expenditure;
+                            previousExpenditure = spBudgetLineBreakdown[index - 1].Expenditure;
                             item.Expenditure = item.Expenditure + previousExpenditure;
-                                
+
                         }
 
                         response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
-                        response.data.BudgetLineBreakdownModel.Date.Add(item.VoucherDate);
                         index++;
+                    }
+
+                    if (regularIntervalDates.Any())
+                    {
+                        response.data.BudgetLineBreakdownModel.Date.AddRange(regularIntervalDates);
                     }
                 }
 
