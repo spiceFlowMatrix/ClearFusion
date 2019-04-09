@@ -5553,7 +5553,6 @@ namespace HumanitarianAssistance.Service.Classes
                     foreach (var item in spProjectCashFlow)
                     {
 
-                        // adding previous expenditure to the current expenditure
                         double previousExpenditure = 0;
                         double previousIncome = 0;
 
@@ -5564,22 +5563,38 @@ namespace HumanitarianAssistance.Service.Classes
                         }
                         else
                         {
+                            // adding previous expenditure to the current expenditure
                             previousExpenditure = spProjectCashFlow[index - 1].Expenditure;
                             item.Expenditure += previousExpenditure;
 
+                            // adding previous income to the current income
                             previousIncome = spProjectCashFlow[index - 1].Income;
                             item.Income += previousIncome;
                         }
 
                         response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
+
                         response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
                         response.data.ProjectCashFlowModel.Income.Add(item.Income);
-                       // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
                         index++;
                     }
 
                     if (regularIntervalDates != null && regularIntervalDates.Any())
                     {
+                        //if x axes dates are greater than y axes data
+                        int count = regularIntervalDates.Count - spProjectCashFlow.Count;
+
+                        if (count>0)
+                        {
+                            //add last inserted value for missing count to display even graph on x axes and y axes.
+                            for (int i = 0; i < count; i++)
+                            {
+                                response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                                response.data.ProjectCashFlowModel.Expenditure.Add(response.data.ProjectCashFlowModel.Expenditure[spProjectCashFlow.Count-1]);
+                                response.data.ProjectCashFlowModel.Income.Add(response.data.ProjectCashFlowModel.Income[spProjectCashFlow.Count - 1]);
+                            }
+                        }
+
                         response.data.ProjectCashFlowModel.Date.AddRange(regularIntervalDates);
                     }
 
@@ -5679,6 +5694,19 @@ namespace HumanitarianAssistance.Service.Classes
 
                     if (regularIntervalDates.Any())
                     {
+                        //if x axes dates are greater than y axes data
+                        int count = regularIntervalDates.Count - spBudgetLineBreakdown.Count;
+
+                        if (count > 0)
+                        {
+
+                            //add last inserted value for missing count to display even graph on x axes and y axes.
+                            for (int i = 0; i < count; i++)
+                            {
+                                response.data.BudgetLineBreakdownModel.Expenditure.Add(response.data.BudgetLineBreakdownModel.Expenditure[spBudgetLineBreakdown.Count - 1]);
+                            }
+                        }
+
                         response.data.BudgetLineBreakdownModel.Date.AddRange(regularIntervalDates);
                     }
                 }

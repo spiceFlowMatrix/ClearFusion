@@ -238,7 +238,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         Task<CurrencyDetails> currencyDetailTask = _uow.GetDbContext().CurrencyDetails.FirstOrDefaultAsync(o => o.CurrencyId == model.CurrencyId);
                         // NOTE: Dont remove this as we will need journal details in response
                         Task<JournalDetail> journaldetailTask = _uow.GetDbContext().JournalDetail.FirstOrDefaultAsync(o => o.JournalCode == model.JournalCode);
-                        int voucherCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == model.VoucherDate.Month).CountAsync();
+                        int voucherCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == model.VoucherDate.Month && x.VoucherDate.Year== filterVoucherDate.Year && x.OfficeId== model.OfficeId).CountAsync();
 
                         FinancialYearDetail fincancialYear = await fincancialYearTask;
 
@@ -263,30 +263,21 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                                 if (!string.IsNullOrEmpty(obj.ReferenceNo))
                                 {
-                                    int sameVoucherReferenceNoCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == obj.ReferenceNo && x.VoucherDate.Month == filterVoucherDate.Month).CountAsync();
+                                    int sameVoucherReferenceNoCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == obj.ReferenceNo).CountAsync();
 
                                     if (sameVoucherReferenceNoCount != 0)
                                     {
                                    
-                                        VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.OrderByDescending(x=> x.VoucherDate).FirstOrDefault(x => x.VoucherDate.Month == filterVoucherDate.Month);
-
+                                        VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.OrderByDescending(x=> x.VoucherDate).FirstOrDefault(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId== model.OfficeId && x.VoucherDate.Year== model.VoucherDate.Year);
                                         var refNo = voucherDetail.ReferenceNo.Split('-');
-
                                         int count = Convert.ToInt32(refNo[3]);
-
                                         string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(model.VoucherDate, count, currencyCode, officeDetail.OfficeCode);
-
                                         obj.ReferenceNo = referenceNo;
                                     }
                                 }
 
                                 await _uow.VoucherDetailRepository.AddAsyn(obj);
-
-                                //if (obj.VoucherNo != 0)
-                                //{
-                                   
-                                //    await _uow.VoucherDetailRepository.UpdateAsyn(obj);
-                                //}
+                                
                                 VoucherDetailEntityModel voucherModel = _mapper.Map<VoucherDetail, VoucherDetailEntityModel>(obj);
 
                                 response.data.VoucherDetailEntity = voucherModel;
@@ -367,7 +358,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                         if (!string.IsNullOrEmpty(referenceNo))
                         {
-                            int sameVoucherReferenceNoCount=  await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == referenceNo && x.VoucherDate.Month== filterVoucherDate.Month).CountAsync();
+                            //check if same sequence number is already present in the voucher table
+                            int sameVoucherReferenceNoCount=  await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == referenceNo).CountAsync();
 
                             if (sameVoucherReferenceNoCount == 0)
                             {
@@ -375,7 +367,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                             }
                             else
                             {
-                                VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.OrderByDescending(x=> x.VoucherDate).FirstOrDefault(x => x.VoucherDate.Month == filterVoucherDate.Month);
+                                //DO NOT REMOVE: This is used to get the latest voucher and then we will get the count of vouhcer sequence from it
+                                VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.OrderByDescending(x=> x.VoucherDate).FirstOrDefault(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId== model.OfficeId && x.VoucherDate.Year== filterVoucherDate.Year);
 
                                 var refNo = voucherDetail.ReferenceNo.Split('-');
 
