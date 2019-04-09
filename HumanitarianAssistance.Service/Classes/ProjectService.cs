@@ -23,6 +23,8 @@ using DataAccess.DbEntities.ErrorLog;
 using HumanitarianAssistance.ViewModels.SPModels;
 using System.Data;
 using System.Data.SqlClient;
+using HumanitarianAssistance.Service.Classes.AccountingNew;
+using HumanitarianAssistance.Service.CommonUtility;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -298,6 +300,7 @@ namespace HumanitarianAssistance.Service.Classes
                         if (addEditProjectSector.StatusCode == 200)
                         {
                             response.StatusCode = StaticResource.successStatusCode;
+                            response.data.SectorDetails = obj;
                             response.Message = "Success";
                         }
                         else
@@ -2343,9 +2346,9 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 string folderName = projectDetail.ProjectCode;
                 //code to read credential from environment variables
-                Console.WriteLine("---------- Before Credential create path----------");
+                //Console.WriteLine("---------- Before Credential create path----------");
                 string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-                Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
                 if (googleApplicationCredentail == null)
                 {
                     string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
@@ -5521,7 +5524,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .ExecuteStoredProc<SPProjectCashFlowModel>();
 
 
-               
+
 
                 if (spProjectCashFlow.Any())
                 {
@@ -5544,19 +5547,10 @@ namespace HumanitarianAssistance.Service.Classes
                         totalExpectedBudget = projectsExpectedBudget.FirstOrDefault().TotalExpectedProjectBudget;
                     }
 
-                    //DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
-                    //DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count - 1].VoucherDate;
+                    DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
+                    DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count - 1].VoucherDate;
 
-                    //TimeSpan diff = (endDate - startDate)/7;
-
-                    //List<DateTime> sevenIntervalVoucherDate = new List<DateTime>();
-
-                    //for (int i = 0; i < 7; i++)
-                    //{
-                       
-                    //    startDate.Add(diff) ;
-                    //    sevenIntervalVoucherDate.Add(startDate);
-                    //}
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
 
                     foreach (var item in spProjectCashFlow)
                     {
@@ -5582,10 +5576,15 @@ namespace HumanitarianAssistance.Service.Classes
                         response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
                         response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
                         response.data.ProjectCashFlowModel.Income.Add(item.Income);
-                        response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
+                        // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
                         index++;
                     }
-                    //response.data.ProjectCashFlowModel.Date.AddRange(sevenIntervalVoucherDate);
+
+                    if (regularIntervalDates != null && regularIntervalDates.Any())
+                    {
+                        response.data.ProjectCashFlowModel.Date.AddRange(regularIntervalDates);
+                    }
+
                 }
 
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5655,6 +5654,11 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.BudgetLineBreakdownModel.Expenditure = new List<double>();
                     response.data.BudgetLineBreakdownModel.Date = new List<DateTime>();
 
+                    DateTime startDate = spBudgetLineBreakdown.FirstOrDefault().VoucherDate;
+                    DateTime endDate = spBudgetLineBreakdown[spBudgetLineBreakdown.Count - 1].VoucherDate;
+
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
+
                     foreach (var item in spBudgetLineBreakdown)
                     {
                         // adding previous expenditure to the current expenditure
@@ -5672,8 +5676,12 @@ namespace HumanitarianAssistance.Service.Classes
                         }
 
                         response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
-                        response.data.BudgetLineBreakdownModel.Date.Add(item.VoucherDate);
                         index++;
+                    }
+
+                    if (regularIntervalDates.Any())
+                    {
+                        response.data.BudgetLineBreakdownModel.Date.AddRange(regularIntervalDates);
                     }
                 }
 
@@ -5710,6 +5718,55 @@ namespace HumanitarianAssistance.Service.Classes
                 response.Message = StaticResource.SomethingWrong + ex;
             }
             return response;
+        }
+        #endregion
+
+
+        #region "Project Proposal report"
+        public async Task<APIResponse> GetProjectProposalReport(string model)
+        {
+            APIResponse response = new APIResponse();
+            List<SPProjectProposalReportModel> proposalReport = new List<SPProjectProposalReportModel>();
+
+            try
+            {
+
+                ////get Journal Report from sp get_journal_report by passing parameters
+                //var spProposalReport = await _uow.GetDbContext().LoadStoredProc("get_projectproposalreport")
+                //                      //.WithSqlParam("currency", model.CurrencyId)
+                //                      //.WithSqlParam("projectstartdate", model.ProjectStartDate.ToString())
+                //                      //.WithSqlParam("projectenddate", model.ProjectEndDate.ToString())
+                //                      //.WithSqlParam("donorid", model.DonorID)
+                //                      .ExecuteStoredProc<SPProjectProposalReportModel>();
+
+                var total = await _uow.GetDbContext().ProjectProposalDetail.CountAsync();
+                proposalReport = await _uow.GetDbContext().ProjectProposalDetail
+                                                    .Skip(10)
+                                                    .Take(500)
+                                                    .Select(x => new SPProjectProposalReportModel
+                                                    {
+                                                        ProjectCode = x.ProjectDetail.ProjectCode,
+                                                        ProjectName = x.ProjectDetail.ProjectName,
+                                                        Progress = CommonFunctions.DateDifference(DateTime.UtcNow, x.ProposalStartDate ?? DateTime.UtcNow),
+                                                        StartDate = x.ProposalStartDate ?? DateTime.UtcNow,
+                                                        DueDate = x.ProposalDueDate ?? DateTime.UtcNow,
+                                                        BudgetEstimate = x.ProposalBudget ?? 0
+                                                    })
+                                                    .ToListAsync();
+
+
+                response.data.TotalCount = total;
+                response.data.ProjectProposalReportList = proposalReport;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+            return response;
+
         }
         #endregion
     }

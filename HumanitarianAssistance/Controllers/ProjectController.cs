@@ -15,7 +15,6 @@ using DataAccess.DbEntities.Project;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using System.Net.Http.Headers;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.ViewModels.Models;
 
@@ -1875,6 +1874,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         response = await _iActivity.DeleteActivityDocument(activityDocumentId, id);
       }
       return response;
+    }
+    #endregion
+
+
+
+    #region "GetProjectProposalReport"
+    [HttpPost]
+    public async Task<APIResponse> GetProjectProposalReport(string model)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectProposalReport(model);
+      return apiresponse;
     }
     #endregion
 
