@@ -713,6 +713,12 @@ namespace HumanitarianAssistance.Service
 
         }
 
+        /// <summary>
+        /// DOWNlOAD BUCKET OBJECT BY USING SIGNED URL CREDENTIALS OF ServiceAccountCredential 28/03/2019
+        /// </summary>
+        /// <param name="bucketName"></param>
+        /// <param name="objectName"></param>
+        /// <returns></returns>
         public async static Task<string> GetSignedURL(string bucketName, string objectName)
         {
             try
@@ -738,6 +744,12 @@ namespace HumanitarianAssistance.Service
 
         }
 
+        /// <summary>
+        /// DELETE OBJECT FROM BUCKET 28/03/2019
+        /// </summary>
+        /// <param name="bucketName"></param>
+        /// <param name="objectName"></param>
+        /// <returns></returns>
         public async static Task<bool> DeleteObject(string bucketName, string objectName)
         {
             try
