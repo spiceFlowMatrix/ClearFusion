@@ -24,6 +24,7 @@ using HumanitarianAssistance.ViewModels.SPModels;
 using System.Data;
 using System.Data.SqlClient;
 using HumanitarianAssistance.Service.Classes.AccountingNew;
+using HumanitarianAssistance.Service.CommonUtility;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -5522,7 +5523,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .ExecuteStoredProc<SPProjectCashFlowModel>();
 
 
-               
+
 
                 if (spProjectCashFlow.Any())
                 {
@@ -5574,7 +5575,7 @@ namespace HumanitarianAssistance.Service.Classes
                         response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
                         response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
                         response.data.ProjectCashFlowModel.Income.Add(item.Income);
-                       // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
+                        // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
                         index++;
                     }
 
@@ -5716,6 +5717,55 @@ namespace HumanitarianAssistance.Service.Classes
                 response.Message = StaticResource.SomethingWrong + ex;
             }
             return response;
+        }
+        #endregion
+
+
+        #region "Project Proposal report"
+        public async Task<APIResponse> GetProjectProposalReport(string model)
+        {
+            APIResponse response = new APIResponse();
+            List<SPProjectProposalReportModel> proposalReport = new List<SPProjectProposalReportModel>();
+
+            try
+            {
+
+                ////get Journal Report from sp get_journal_report by passing parameters
+                //var spProposalReport = await _uow.GetDbContext().LoadStoredProc("get_projectproposalreport")
+                //                      //.WithSqlParam("currency", model.CurrencyId)
+                //                      //.WithSqlParam("projectstartdate", model.ProjectStartDate.ToString())
+                //                      //.WithSqlParam("projectenddate", model.ProjectEndDate.ToString())
+                //                      //.WithSqlParam("donorid", model.DonorID)
+                //                      .ExecuteStoredProc<SPProjectProposalReportModel>();
+
+                var total = await _uow.GetDbContext().ProjectProposalDetail.CountAsync();
+                proposalReport = await _uow.GetDbContext().ProjectProposalDetail
+                                                    .Skip(10)
+                                                    .Take(500)
+                                                    .Select(x => new SPProjectProposalReportModel
+                                                    {
+                                                        ProjectCode = x.ProjectDetail.ProjectCode,
+                                                        ProjectName = x.ProjectDetail.ProjectName,
+                                                        Progress = CommonFunctions.DateDifference(DateTime.UtcNow, x.ProposalStartDate ?? DateTime.UtcNow),
+                                                        StartDate = x.ProposalStartDate ?? DateTime.UtcNow,
+                                                        DueDate = x.ProposalDueDate ?? DateTime.UtcNow,
+                                                        BudgetEstimate = x.ProposalBudget ?? 0
+                                                    })
+                                                    .ToListAsync();
+
+
+                response.data.TotalCount = total;
+                response.data.ProjectProposalReportList = proposalReport;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+            return response;
+
         }
         #endregion
     }

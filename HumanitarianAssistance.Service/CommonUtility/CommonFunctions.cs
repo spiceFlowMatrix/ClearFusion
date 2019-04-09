@@ -66,5 +66,9 @@ namespace HumanitarianAssistance.Service.CommonUtility
             return accountsLevelFourth;
         }
 
+        public static double DateDifference(DateTime endDate, DateTime startDate)
+        {
+            return (endDate.Date - startDate.Date).Days;
+        }
     }
 }
