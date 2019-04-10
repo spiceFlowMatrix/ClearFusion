@@ -24,6 +24,7 @@ using HumanitarianAssistance.ViewModels.SPModels;
 using System.Data;
 using System.Data.SqlClient;
 using HumanitarianAssistance.Service.Classes.AccountingNew;
+using HumanitarianAssistance.Service.CommonUtility;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -299,6 +300,7 @@ namespace HumanitarianAssistance.Service.Classes
                         if (addEditProjectSector.StatusCode == 200)
                         {
                             response.StatusCode = StaticResource.successStatusCode;
+                            response.data.SectorDetails = obj;
                             response.Message = "Success";
                         }
                         else
@@ -2344,9 +2346,9 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 string folderName = projectDetail.ProjectCode;
                 //code to read credential from environment variables
-                Console.WriteLine("---------- Before Credential create path----------");
+                //Console.WriteLine("---------- Before Credential create path----------");
                 string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-                Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
+                //Console.WriteLine($"*******************googleApplicationCredentail are:{googleApplicationCredentail}");
                 if (googleApplicationCredentail == null)
                 {
                     string GoogleServiceAccountDirectory = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
@@ -5522,7 +5524,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .ExecuteStoredProc<SPProjectCashFlowModel>();
 
 
-               
+
 
                 if (spProjectCashFlow.Any())
                 {
@@ -5576,6 +5578,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                         response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
                         response.data.ProjectCashFlowModel.Income.Add(item.Income);
+                        // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
                         index++;
                     }
 
@@ -5746,5 +5749,69 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
         #endregion
+
+
+        #region "Project Proposal report"
+        public async Task<APIResponse> GetProjectProposalReport(string model)
+        {
+            APIResponse response = new APIResponse();
+            List<SPProjectProposalReportModel> proposalReport = new List<SPProjectProposalReportModel>();
+
+            try
+            {
+
+                ////get Journal Report from sp get_journal_report by passing parameters
+                //var spProposalReport = await _uow.GetDbContext().LoadStoredProc("get_projectproposalreport")
+                //                      //.WithSqlParam("currency", model.CurrencyId)
+                //                      //.WithSqlParam("projectstartdate", model.ProjectStartDate.ToString())
+                //                      //.WithSqlParam("projectenddate", model.ProjectEndDate.ToString())
+                //                      //.WithSqlParam("donorid", model.DonorID)
+                //                      .ExecuteStoredProc<SPProjectProposalReportModel>();
+
+                var total = await _uow.GetDbContext().ProjectProposalDetail.CountAsync();
+                proposalReport = await _uow.GetDbContext().ProjectProposalDetail
+                                                    .Skip(10)
+                                                    .Take(500)
+                                                    .Select(x => new SPProjectProposalReportModel
+                                                    {
+                                                        ProjectCode = x.ProjectDetail.ProjectCode,
+                                                        ProjectName = x.ProjectDetail.ProjectName,
+                                                        Progress = GetProgress(x.ProposalDueDate, x.ProposalStartDate),
+                                                        StartDate = x.ProposalStartDate,
+                                                        DueDate = x.ProposalDueDate,
+                                                        BudgetEstimate = x.ProposalBudget ?? 0
+                                                    })
+                                                    .ToListAsync();
+
+
+                response.data.TotalCount = total;
+                response.data.ProjectProposalReportList = proposalReport;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+            return response;
+
+        }
+        #endregion
+        public float GetProgress(DateTime? dueDate, DateTime? startDate)
+        {
+            float percentage = 0;
+            if (dueDate != null && startDate != null)
+            {
+                float currentDiff = CommonFunctions.DateDifference(DateTime.UtcNow, startDate.Value);
+                float totalDiff = CommonFunctions.DateDifference(dueDate.Value, startDate.Value);
+                if (currentDiff != 0 || totalDiff != 0)
+                {
+                    percentage = (float)Math.Round(currentDiff / totalDiff * 100, 2);
+                }
+            }
+            return percentage;
+        }
+
     }
 }

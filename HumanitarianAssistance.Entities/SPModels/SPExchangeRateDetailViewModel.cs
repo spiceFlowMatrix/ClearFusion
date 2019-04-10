@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HumanitarianAssistance.ViewModels.SPModels
 {
-   public class ExchangeRateDetailViewModel
+   public class SPExchangeRateDetailViewModel
     {
 
         public int ToCurrency { get; set; }
