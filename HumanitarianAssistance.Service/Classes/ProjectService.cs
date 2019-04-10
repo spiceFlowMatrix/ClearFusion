@@ -5747,9 +5747,9 @@ namespace HumanitarianAssistance.Service.Classes
                                                     {
                                                         ProjectCode = x.ProjectDetail.ProjectCode,
                                                         ProjectName = x.ProjectDetail.ProjectName,
-                                                        Progress = CommonFunctions.DateDifference(DateTime.UtcNow, x.ProposalStartDate ?? DateTime.UtcNow),
-                                                        StartDate = x.ProposalStartDate ?? DateTime.UtcNow,
-                                                        DueDate = x.ProposalDueDate ?? DateTime.UtcNow,
+                                                        Progress = GetProgress(x.ProposalDueDate, x.ProposalStartDate),
+                                                        StartDate = x.ProposalStartDate,
+                                                        DueDate = x.ProposalDueDate,
                                                         BudgetEstimate = x.ProposalBudget ?? 0
                                                     })
                                                     .ToListAsync();
@@ -5769,5 +5769,20 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
         #endregion
+        public float GetProgress(DateTime? dueDate, DateTime? startDate)
+        {
+            float percentage = 0;
+            if (dueDate != null && startDate != null)
+            {
+                float currentDiff = CommonFunctions.DateDifference(DateTime.UtcNow, startDate.Value);
+                float totalDiff = CommonFunctions.DateDifference(dueDate.Value, startDate.Value);
+                if (currentDiff != 0 || totalDiff != 0)
+                {
+                    percentage = (float)Math.Round(currentDiff / totalDiff * 100, 2);
+                }
+            }
+            return percentage;
+        }
+
     }
 }
