@@ -5760,13 +5760,16 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
 
+                string startDate = model.StartDate == null ? string.Empty : model.StartDate.ToString();
+                string endDate = model.EndDate == null ? string.Empty : model.EndDate.ToString();
+
                 //get Project Proposal Report from sp get_projectproposalreport by passing parameters
                 var spProposalReport = await _uow.GetDbContext().LoadStoredProc("get_projectproposalreport")
                                       .WithSqlParam("projectname", model.ProjectName)
-                                      .WithSqlParam("startdate", model.StartDate.ToString())
-                                      .WithSqlParam("enddate", model.EndDate.ToString())
+                                      .WithSqlParam("startdate", startDate)
+                                      .WithSqlParam("enddate", endDate)
                                       .WithSqlParam("startdatefilteroption", model.StartDateFilterOption)
-                                      .WithSqlParam("enddatefilteroption", model.DueDateFilterOption)
+                                      .WithSqlParam("duedatefilteroption", model.DueDateFilterOption)
                                       .WithSqlParam("currencyid", model.CurrencyId)
                                       .WithSqlParam("amount", model.Amount)
                                       .WithSqlParam("amountfilteroption", model.AmountFilterOption)
@@ -5775,21 +5778,6 @@ namespace HumanitarianAssistance.Service.Classes
                                       .ExecuteStoredProc<SPProjectProposalReportModel>();
 
                 var total = await _uow.GetDbContext().ProjectProposalDetail.CountAsync();
-
-                //proposalReport = await _uow.GetDbContext().ProjectProposalDetail
-                //                                    .Skip(10)
-                //                                    .Take(500)
-                //                                    .Select(x => new SPProjectProposalReportModel
-                //                                    {
-                //                                        ProjectCode = x.ProjectDetail.ProjectCode,
-                //                                        ProjectName = x.ProjectDetail.ProjectName,
-                //                                        Progress = GetProgress(x.ProposalDueDate, x.ProposalStartDate),
-                //                                        StartDate = x.ProposalStartDate,
-                //                                        DueDate = x.ProposalDueDate,
-                //                                        BudgetEstimate = x.ProposalBudget ?? 0
-                //                                    })
-                //                                    .ToListAsync();
-
 
                 response.data.TotalCount = total;
                 response.data.ProjectProposalReportList = spProposalReport;
