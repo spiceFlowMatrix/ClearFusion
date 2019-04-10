@@ -1881,7 +1881,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region "GetProjectProposalReport"
     [HttpPost]
-    public async Task<APIResponse> GetProjectProposalReport(string model)
+    public async Task<APIResponse> GetProjectProposalReport(ProjectProposalReportFilterModel model)
     {
       APIResponse apiresponse = await _iProject.GetProjectProposalReport(model);
       return apiresponse;

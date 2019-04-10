@@ -8,9 +8,9 @@ namespace HumanitarianAssistance.ViewModels.SPModels
     {
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
-        public float Progress { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? DueDate { get; set; }
-        public double BudgetEstimate { get; set; }
+        public DateTime? ProjectStartDate { get; set; }
+        public DateTime? ProjectEndDate { get; set; }
+        public int ProjectCurrencyId { get; set; }
+        public double BudgetEstimation { get; set; }
     }
 }
