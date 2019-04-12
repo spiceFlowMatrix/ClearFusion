@@ -2064,6 +2064,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.UtcNow;
+                    obj.ReviewCompletionDate = DateTime.UtcNow;
                     await _uow.ApproveProjectDetailsRepository.AddAsyn(obj);
 
                     if (model.IsApproved == false)
@@ -2091,6 +2092,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.UtcNow;
+                    obj.ReviewCompletionDate = DateTime.UtcNow;
                     await _uow.ApproveProjectDetailsRepository.UpdateAsyn(obj);
 
                     if (model.IsApproved == false)
@@ -2486,6 +2488,8 @@ namespace HumanitarianAssistance.Service.Classes
                                 objRes.CreatedById = userid;
                                 objRes.IsApproved = model.IsApproved;
                                 objRes.CreatedDate = DateTime.UtcNow;
+                                //Review completion date for proposal report when proposal is completed as isapproved is true
+                                objRes.ReviewCompletionDate = DateTime.UtcNow;
                                 await _uow.ApproveProjectDetailsRepository.AddAsyn(objRes);
                             }
                             else
@@ -2499,6 +2503,8 @@ namespace HumanitarianAssistance.Service.Classes
                                 objRes.ModifiedDate = DateTime.UtcNow;
                                 objRes.ModifiedById = userid;
                                 objRes.IsApproved = model.IsApproved;
+                                //Review completion date for proposal report when proposal is completed as isapproved is true
+                                objRes.ReviewCompletionDate = DateTime.UtcNow;
                                 await _uow.ApproveProjectDetailsRepository.UpdateAsyn(objRes);
                             }
                         }
