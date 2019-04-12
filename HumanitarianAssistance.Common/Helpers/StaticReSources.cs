@@ -23,6 +23,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string StoreFolderName = "Store";
         public const string ProjectActivityFolderName = "Activity";
         public const string uploadUrl = "https://storage.cloud.google.com/";
+        public const string TrainingDocUrl = "https://drive.google.com/3r234?fa4r";
 
 
         public const string credentialsJsonFile = "credentials.json";

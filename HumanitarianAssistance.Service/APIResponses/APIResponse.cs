@@ -14,6 +14,7 @@ using System.Text;
 using DataAccess.DbEntities.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using HumanitarianAssistance.Entities.Models;
+using HumanitarianAssistance.ViewModels.SPModels;
 
 namespace HumanitarianAssistance.Service.APIResponses
 {
@@ -310,6 +311,9 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectProgram projectProgram { get; set; }
         public ProjectArea projectArea { get; set; }
         public ProjectSector projectSector { get; set; }
+        public ProjectSectorModel ProjectSectorModel { get; set; }
+        public SectorDetails SectorDetails { get; set; }
+
 
         public ProjectProposalModel ProjectProposalModel { get; set; }
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
@@ -468,6 +472,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public bool ImplementationStatus { get; set; }
         public bool MonitoringStatus { get; set; }
         public string SignedUrl{ get; set; }
+        public string TrainingLink{ get; set; }
+        public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
 
     }
 

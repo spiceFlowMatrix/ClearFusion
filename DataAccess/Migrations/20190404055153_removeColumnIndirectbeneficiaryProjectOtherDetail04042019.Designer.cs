@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190404055153_removeColumnIndirectbeneficiaryProjectOtherDetail04042019")]
+    partial class removeColumnIndirectbeneficiaryProjectOtherDetail04042019
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -539,10 +541,7 @@ namespace DataAccess.Migrations
                         new { PageId = 73, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Policy" },
                         new { PageId = 74, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectJobs" },
                         new { PageId = 75, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectActivities" },
-                        new { PageId = 76, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Channel" },
-                        new { PageId = 77, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Scheduler" },
-                        new { PageId = 78, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectDashboard" },
-                        new { PageId = 79, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectCashFlow" }
+                        new { PageId = 76, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Channel" }
                     );
                 });
 
@@ -6962,10 +6961,6 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("GenderRemarks");
 
-                    b.Property<int?>("InDirectBeneficiaryFemale");
-
-                    b.Property<int?>("InDirectBeneficiaryMale");
-
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
@@ -6974,7 +6969,11 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("OfficeId");
 
-                    b.Property<int?>("OpportunityType");
+                    b.Property<string>("Opportunity");
+
+                    b.Property<string>("OpportunityNo");
+
+                    b.Property<string>("Opportunitydescription");
 
                     b.Property<long>("ProjectId");
 
@@ -6994,19 +6993,9 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("SubmissionDate");
 
-                    b.Property<int?>("beneficiaryFemale");
-
-                    b.Property<int?>("beneficiaryMale");
-
                     b.Property<string>("budget");
 
                     b.Property<string>("mainActivities");
-
-                    b.Property<string>("opportunity");
-
-                    b.Property<string>("opportunityNo");
-
-                    b.Property<string>("opportunitydescription");
 
                     b.Property<string>("projectGoal");
 
@@ -7184,7 +7173,7 @@ namespace DataAccess.Migrations
 
                     b.Property<long>("ProjectId");
 
-                    b.Property<double?>("ProposalBudget");
+                    b.Property<string>("ProposalBudget");
 
                     b.Property<DateTime?>("ProposalDueDate");
 

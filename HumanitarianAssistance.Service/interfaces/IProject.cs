@@ -104,7 +104,7 @@ namespace HumanitarianAssistance.Service.interfaces
         //Task<APIResponse> AddEditProjectproposals(long projectId, string UserId,string logginUserEmailId);
         APIResponse GetProjectproposalsById(long projectId);
 
-        APIResponse AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
+        APIResponse AddEditProjectotherDetail(ProjectOtherDetailModel otherDetail, string UserId);
         //APIResponse UploadOtherProposalFile(IFormFile file, string UserId);
         Task<APIResponse> UploadOtherProposalFile(IFormFile file, string UserId, long projectid, string fullPath, string fileName, string logginUserEmailId,string ProposalType,string ext);
         Task<APIResponse> UploadOtherDocuments(IFormFile file, string UserId, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
@@ -216,5 +216,6 @@ namespace HumanitarianAssistance.Service.interfaces
         #endregion
 
         Task<APIResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model);
+        Task<APIResponse> GetProjectProposalReport(ProjectProposalReportFilterModel model);
     }
 }

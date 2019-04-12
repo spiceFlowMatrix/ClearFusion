@@ -1,5 +1,7 @@
 ﻿using HumanitarianAssistance.Common.Helpers;
 using System;
+using System.Collections.Generic;
+
 namespace HumanitarianAssistance.Service.Classes.AccountingNew
 {
     public static class AccountingUtility
@@ -39,6 +41,39 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             }
 
             return salaryDescription;
+        }
+
+        public static List<DateTime> GetRegularIntervalDates(DateTime startDate, DateTime endDate, int interval)
+        {
+            List<DateTime> regularIntervalDates = new List<DateTime>();
+
+            try
+            {
+
+                TimeSpan timeDiff = (endDate - startDate) / interval;
+
+                TimeSpan timespan = TimeSpan.Zero;
+
+                for (int i = 0; i < interval; i++)
+                {
+                    timespan += timeDiff;
+                    regularIntervalDates.Add(startDate.Add(timespan));
+                }
+
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+
+            return regularIntervalDates;
+        }
+
+        public static string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
     }
 }

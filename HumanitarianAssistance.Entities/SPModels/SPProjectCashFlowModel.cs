@@ -11,4 +11,9 @@ namespace HumanitarianAssistance.ViewModels.SPModels
         public double Income { get; set; }
         public int Currencyid { get; set; }
         }
+
+    public class ProjectExpectedBudget
+    {
+        public double TotalExpectedProjectBudget { get; set; }
+    }
 }
