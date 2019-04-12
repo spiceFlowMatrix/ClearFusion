@@ -5706,13 +5706,13 @@ namespace HumanitarianAssistance.Service.Classes
             {
 
                 string startDate = model.StartDate == null ? string.Empty : model.StartDate.ToString();
-                string endDate = model.EndDate == null ? string.Empty : model.EndDate.ToString();
+                string dueDate = model.DueDate == null ? string.Empty : model.DueDate.ToString();
 
                 //get Project Proposal Report from sp get_projectproposalreport by passing parameters
                 var spProposalReport = await _uow.GetDbContext().LoadStoredProc("get_projectproposalreport")
                                       .WithSqlParam("projectname", model.ProjectName)
                                       .WithSqlParam("startdate", startDate)
-                                      .WithSqlParam("enddate", endDate)
+                                      .WithSqlParam("enddate", dueDate)
                                       .WithSqlParam("startdatefilteroption", model.StartDateFilterOption)
                                       .WithSqlParam("duedatefilteroption", model.DueDateFilterOption)
                                       .WithSqlParam("currencyid", model.CurrencyId)
