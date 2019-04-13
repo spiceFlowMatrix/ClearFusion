@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     {
         public string ProjectName { get; set; }
         public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateTime? DueDate { get; set; }
         public int StartDateFilterOption { get; set; }
         public int DueDateFilterOption { get; set; }
         public int CurrencyId { get; set; }
