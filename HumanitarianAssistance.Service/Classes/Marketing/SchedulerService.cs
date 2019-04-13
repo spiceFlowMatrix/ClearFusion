@@ -383,10 +383,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var record = await _uow.ScheduleDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime);
+                var record = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime);
                 if (record != null)
                 {
-                    CheckRepeatDays(record, model);
+                    CheckRepeatDays(record.FirstOrDefault(), model);
                     response.StatusCode = StaticResource.failStatusCode;
                     response.Message = "Schedule already exists for the time";
                 }
