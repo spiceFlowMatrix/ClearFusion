@@ -179,6 +179,7 @@ namespace HumanitarianAssistance
       services.AddTransient<ISchedulerService, SchedulerService>();
       services.AddTransient<IAccountBalance, AccountBalanceService>();
       services.AddTransient<IProjectActivityService, ProjectActivityService>();
+      services.AddTransient<IDashboardService, DashboardService>();
 
       //services.AddTransient<UserManager<AppUser>>();
 

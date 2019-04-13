@@ -20,5 +20,6 @@ namespace DataAccess.DbEntities.Project
         public string FilePath { get; set; }
         public bool? IsApproved { get; set; }
         public byte[] UploadedFile { get; set; }
+        public DateTime? ReviewCompletionDate { get; set; }
     }
 }

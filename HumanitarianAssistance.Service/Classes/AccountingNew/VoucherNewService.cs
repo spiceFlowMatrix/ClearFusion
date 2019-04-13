@@ -207,7 +207,11 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
 
-                Task<List<int>> currencyListTask = _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false).Select(x => x.CurrencyId).ToListAsync();
+                model.TimezoneOffset = model.TimezoneOffset > 0 ? model.TimezoneOffset * -1 : Math.Abs(model.TimezoneOffset.Value);
+
+                DateTime filterVoucherDate = model.VoucherDate.AddMinutes(model.TimezoneOffset.Value);
+
+                Task<List<CurrencyDetails>> currencyListTask = _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false).ToListAsync();
 
                 if (model.IsExchangeGainLossVoucher)
                 {
@@ -216,20 +220,25 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                 Task<List<ExchangeRateDetail>> exchangeRatePresentTask = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.Date.Date == model.VoucherDate.Date && x.IsDeleted == false).ToListAsync();
 
-                List<int> currencyList = await currencyListTask;
+                List<CurrencyDetails> currencyList = await currencyListTask;
+
+                List<int> currencyIds = currencyList.Select(x => x.CurrencyId).ToList();
+
+                string currencyCode = currencyList.FirstOrDefault(x => x.CurrencyId == model.CurrencyId).CurrencyCode;
+
                 List<ExchangeRateDetail> exchangeRatePresent = await exchangeRatePresentTask;
 
-                if (CheckExchangeRateIsPresent(currencyList, exchangeRatePresent))
+                if (CheckExchangeRateIsPresent(currencyIds, exchangeRatePresent))
                 {
                     var officeDetail = await _uow.GetDbContext().OfficeDetail.FirstOrDefaultAsync(o => o.OfficeId == model.OfficeId); //use OfficeCode
 
                     if (officeDetail != null)
                     {
-                        Task<FinancialYearDetail> fincancialYearTask = _uow.GetDbContext().FinancialYearDetail.FirstOrDefaultAsync(o => o.IsDefault); //use OfficeCode
+                        Task<FinancialYearDetail> fincancialYearTask = _uow.GetDbContext().FinancialYearDetail.FirstOrDefaultAsync(o => o.IsDefault);
                         Task<CurrencyDetails> currencyDetailTask = _uow.GetDbContext().CurrencyDetails.FirstOrDefaultAsync(o => o.CurrencyId == model.CurrencyId);
                         // NOTE: Dont remove this as we will need journal details in response
                         Task<JournalDetail> journaldetailTask = _uow.GetDbContext().JournalDetail.FirstOrDefaultAsync(o => o.JournalCode == model.JournalCode);
-                        int voucherCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == model.VoucherDate.Month).CountAsync();
+                        int voucherCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == model.VoucherDate.Month && x.VoucherDate.Year== filterVoucherDate.Year && x.OfficeId== model.OfficeId).CountAsync();
 
                         FinancialYearDetail fincancialYear = await fincancialYearTask;
 
@@ -249,15 +258,26 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                 obj.CreatedDate = DateTime.UtcNow;
                                 obj.IsDeleted = false;
 
-                                await _uow.VoucherDetailRepository.AddAsyn(obj);
+                                // Pattern: Office Code - Currency Code - Month Number - voucher count on selected month - Year
+                                obj.ReferenceNo = AccountingUtility.GenerateVoucherReferenceCode(model.VoucherDate, voucherCount, currencyDetail.CurrencyCode, officeDetail.OfficeCode);
 
-                                if (obj.VoucherNo != 0)
+                                if (!string.IsNullOrEmpty(obj.ReferenceNo))
                                 {
-                                    // Pattern: Office Code - Currency Code - Month Number - voucher count on selected month - Year
-                                    obj.ReferenceNo = AccountingUtility.GenerateVoucherReferenceCode(model.VoucherDate, voucherCount, currencyDetail.CurrencyCode, officeDetail.OfficeCode);
+                                    int sameVoucherReferenceNoCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == obj.ReferenceNo).CountAsync();
 
-                                    await _uow.VoucherDetailRepository.UpdateAsyn(obj);
+                                    if (sameVoucherReferenceNoCount != 0)
+                                    {
+                                   
+                                        VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.OrderByDescending(x=> x.VoucherDate).FirstOrDefault(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId== model.OfficeId && x.VoucherDate.Year== model.VoucherDate.Year);
+                                        var refNo = voucherDetail.ReferenceNo.Split('-');
+                                        int count = Convert.ToInt32(refNo[3]);
+                                        string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(model.VoucherDate, count, currencyCode, officeDetail.OfficeCode);
+                                        obj.ReferenceNo = referenceNo;
+                                    }
                                 }
+
+                                await _uow.VoucherDetailRepository.AddAsyn(obj);
+                                
                                 VoucherDetailEntityModel voucherModel = _mapper.Map<VoucherDetail, VoucherDetailEntityModel>(obj);
 
                                 response.data.VoucherDetailEntity = voucherModel;
@@ -305,46 +325,101 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         public async Task<APIResponse> EditVoucherNewDetail(VoucherDetailModel model)
         {
             APIResponse response = new APIResponse();
+
             try
             {
-                var voucherdetailInfo = await _uow.VoucherDetailRepository.FindAsync(c => c.VoucherNo == model.VoucherNo);
-                if (voucherdetailInfo != null)
-                {
-                    var officekey = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == model.OfficeId).Result.OfficeKey;
-                    voucherdetailInfo.CurrencyId = model.CurrencyId;
-                    voucherdetailInfo.OfficeId = model.OfficeId;
-                    voucherdetailInfo.VoucherDate = model.VoucherDate;
-                    voucherdetailInfo.ChequeNo = model.ChequeNo;
-                    // voucherdetailInfo.ReferenceNo = voucherdetailInfo.ReferenceNo;
-                    voucherdetailInfo.JournalCode = model.JournalCode;
-                    voucherdetailInfo.FinancialYearId = model.FinancialYearId;
-                    voucherdetailInfo.VoucherTypeId = model.VoucherTypeId;
-                    voucherdetailInfo.Description = model.Description;
-                    voucherdetailInfo.ModifiedById = model.ModifiedById;
-                    voucherdetailInfo.ModifiedDate = model.ModifiedDate;
-                    await _uow.VoucherDetailRepository.UpdateAsyn(voucherdetailInfo);
+                model.TimezoneOffset = model.TimezoneOffset > 0 ? model.TimezoneOffset *-1 : Math.Abs(model.TimezoneOffset.Value);
 
-                    if (_uow.GetDbContext().VoucherTransactions.Any(x => x.VoucherNo == voucherdetailInfo.VoucherNo))
+                DateTime filterVoucherDate = model.VoucherDate.AddMinutes(model.TimezoneOffset.Value);
+
+                Task<List<CurrencyDetails>> currencyListTask = _uow.GetDbContext().CurrencyDetails.Where(x => x.IsDeleted == false).ToListAsync();
+                Task<List<ExchangeRateDetail>> exchangeRatePresentTask = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.Date.Date == model.VoucherDate.Date && x.IsDeleted == false).ToListAsync();
+                Task<VoucherDetail> voucherDetailTask= _uow.VoucherDetailRepository.FindAsync(c => c.VoucherNo == model.VoucherNo);
+                Task<OfficeDetail> officeDetailTask= _uow.OfficeDetailRepository.FindAsync(x => x.IsDeleted == false && x.OfficeId == model.OfficeId);
+                List<CurrencyDetails> currencyDetailsList = await currencyListTask;
+
+                var currencyList = currencyDetailsList.Select(x => x.CurrencyId).ToList();
+
+                List<ExchangeRateDetail> exchangeRatePresent = await exchangeRatePresentTask;
+
+                if (CheckExchangeRateIsPresent(currencyList, exchangeRatePresent))
+                {
+                    VoucherDetail voucherdetailInfo = await voucherDetailTask;
+
+                    string currencyCode = currencyDetailsList.FirstOrDefault(x => x.CurrencyId == model.CurrencyId).CurrencyCode;
+
+                    int voucherCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId == model.OfficeId && x.VoucherDate.Year== filterVoucherDate.Year).CountAsync();
+
+                    if (voucherdetailInfo != null)
                     {
-                        var voucherTransactions =
-                            await _uow.VoucherTransactionsRepository.FindAllAsync(x =>
-                                x.VoucherNo == voucherdetailInfo.VoucherNo);
-                        foreach (var transaction in voucherTransactions)
+                        OfficeDetail officeDetail = await officeDetailTask;
+
+                        string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(filterVoucherDate, voucherCount, currencyCode, officeDetail.OfficeCode);
+
+                        if (!string.IsNullOrEmpty(referenceNo))
                         {
-                            transaction.TransactionDate = voucherdetailInfo.VoucherDate;
+                            //check if same sequence number is already present in the voucher table
+                            int sameVoucherReferenceNoCount=  await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == referenceNo).CountAsync();
+
+                            if (sameVoucherReferenceNoCount == 0)
+                            {
+                                voucherdetailInfo.ReferenceNo = referenceNo;
+                            }
+                            else
+                            {
+                                //DO NOT REMOVE: This is used to get the latest voucher and then we will get the count of vouhcer sequence from it
+                                VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.OrderByDescending(x=> x.VoucherDate).FirstOrDefault(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId== model.OfficeId && x.VoucherDate.Year== filterVoucherDate.Year);
+
+                                var refNo = voucherDetail.ReferenceNo.Split('-');
+
+                                int count = Convert.ToInt32(refNo[3]);
+
+                                referenceNo = AccountingUtility.GenerateVoucherReferenceCode(model.VoucherDate, count, currencyCode, officeDetail.OfficeCode);
+
+                                voucherdetailInfo.ReferenceNo = referenceNo;
+                            }
                         }
 
-                        _uow.GetDbContext().VoucherTransactions.UpdateRange(voucherTransactions);
-                        await _uow.SaveAsync();
-                    }
+                        voucherdetailInfo.CurrencyId = model.CurrencyId;
+                        voucherdetailInfo.OfficeId = model.OfficeId;
+                        voucherdetailInfo.VoucherDate = model.VoucherDate;
+                        voucherdetailInfo.ChequeNo = model.ChequeNo;
+                        // voucherdetailInfo.ReferenceNo = voucherdetailInfo.ReferenceNo;
+                        voucherdetailInfo.JournalCode = model.JournalCode;
+                        voucherdetailInfo.FinancialYearId = model.FinancialYearId;
+                        voucherdetailInfo.VoucherTypeId = model.VoucherTypeId;
+                        voucherdetailInfo.Description = model.Description;
+                        voucherdetailInfo.ModifiedById = model.ModifiedById;
+                        voucherdetailInfo.ModifiedDate = model.ModifiedDate;
+                        await _uow.VoucherDetailRepository.UpdateAsyn(voucherdetailInfo);
 
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                        if (_uow.GetDbContext().VoucherTransactions.Any(x => x.VoucherNo == voucherdetailInfo.VoucherNo))
+                        {
+                            var voucherTransactions =
+                                await _uow.VoucherTransactionsRepository.FindAllAsync(x =>
+                                    x.VoucherNo == voucherdetailInfo.VoucherNo);
+                            foreach (var transaction in voucherTransactions)
+                            {
+                                transaction.TransactionDate = voucherdetailInfo.VoucherDate;
+                            }
+
+                            _uow.GetDbContext().VoucherTransactions.UpdateRange(voucherTransactions);
+                            await _uow.SaveAsync();
+                        }
+
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.VoucherNotPresent;
+                    }
                 }
                 else
                 {
                     response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.VoucherNotPresent;
+                    response.Message = StaticResource.ExchagneRateNotDefined;
                 }
             }
             catch (Exception ex)
