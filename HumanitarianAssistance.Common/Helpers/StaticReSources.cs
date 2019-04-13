@@ -31,6 +31,9 @@ namespace HumanitarianAssistance.Common.Helpers
         public const int projectNotFound = 404;
 
         public const string invalidDate = "Actual date must be greater than or equal to start date";
+        public const string validData = "Please enter valid data";
+        public const int notValid = 501;
+
 
         public const int notFoundCode = 120;
         public const int successStatusCode = 200;
@@ -138,7 +141,7 @@ namespace HumanitarianAssistance.Common.Helpers
         //ListName Resourse
         public const string ListNameAdded = "ListName has added";
         public const string ListNameNotAdded = "ListName has not added";
-        public const string ListNameAlreadyExist = "ListName already exist";
+        public const string ListNameAlreadyExist = "Name already exist";
         public const string InvalidListNameId = "Invalid ListName Id";
         public const string ListNameDeleted = "ListName has deleted";
         public const string ListNameNotDeleted = "ListName has not deleted";
