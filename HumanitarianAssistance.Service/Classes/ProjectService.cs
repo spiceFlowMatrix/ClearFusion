@@ -247,6 +247,9 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+       
+
         /// <summary>
         /// Add New Sector Details 
         /// </summary>
@@ -1830,7 +1833,7 @@ namespace HumanitarianAssistance.Service.Classes
         {
             APIResponse response = new APIResponse();
             DbContext db = _uow.GetDbContext();
-            long LatestProjectOtherDetailId = 0;
+           long LatestProjectOtherDetailId = 0;
 
             using (IDbContextTransaction tran = db.Database.BeginTransaction())
             {
@@ -1912,6 +1915,8 @@ namespace HumanitarianAssistance.Service.Classes
                             existProjectRecord.InDirectBeneficiaryFemale = model.InDirectBeneficiaryFemale;
                             existProjectRecord.InDirectBeneficiaryMale = model.InDirectBeneficiaryMale;
                             existProjectRecord.OpportunityType = model.OpportunityType;
+
+                            _uow.ProjectOtherDetailRepository.Update(existProjectRecord, existProjectRecord.ProjectOtherDetailId);
                             _uow.GetDbContext().SaveChanges();
                             LatestProjectOtherDetailId = model.ProjectOtherDetailId;
                         }
