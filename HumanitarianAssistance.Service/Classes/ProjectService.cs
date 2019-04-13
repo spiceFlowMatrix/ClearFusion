@@ -2064,6 +2064,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.UtcNow;
+                    obj.ReviewCompletionDate = DateTime.UtcNow;
                     await _uow.ApproveProjectDetailsRepository.AddAsyn(obj);
 
                     if (model.IsApproved == false)
@@ -2091,6 +2092,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.UtcNow;
+                    obj.ReviewCompletionDate = DateTime.UtcNow;
                     await _uow.ApproveProjectDetailsRepository.UpdateAsyn(obj);
 
                     if (model.IsApproved == false)
@@ -2486,6 +2488,8 @@ namespace HumanitarianAssistance.Service.Classes
                                 objRes.CreatedById = userid;
                                 objRes.IsApproved = model.IsApproved;
                                 objRes.CreatedDate = DateTime.UtcNow;
+                                //Review completion date for proposal report when proposal is completed as isapproved is true
+                                objRes.ReviewCompletionDate = DateTime.UtcNow;
                                 await _uow.ApproveProjectDetailsRepository.AddAsyn(objRes);
                             }
                             else
@@ -2499,6 +2503,8 @@ namespace HumanitarianAssistance.Service.Classes
                                 objRes.ModifiedDate = DateTime.UtcNow;
                                 objRes.ModifiedById = userid;
                                 objRes.IsApproved = model.IsApproved;
+                                //Review completion date for proposal report when proposal is completed as isapproved is true
+                                objRes.ReviewCompletionDate = DateTime.UtcNow;
                                 await _uow.ApproveProjectDetailsRepository.UpdateAsyn(objRes);
                             }
                         }
@@ -5700,13 +5706,13 @@ namespace HumanitarianAssistance.Service.Classes
             {
 
                 string startDate = model.StartDate == null ? string.Empty : model.StartDate.ToString();
-                string endDate = model.EndDate == null ? string.Empty : model.EndDate.ToString();
+                string dueDate = model.DueDate == null ? string.Empty : model.DueDate.ToString();
 
                 //get Project Proposal Report from sp get_projectproposalreport by passing parameters
                 var spProposalReport = await _uow.GetDbContext().LoadStoredProc("get_projectproposalreport")
                                       .WithSqlParam("projectname", model.ProjectName)
                                       .WithSqlParam("startdate", startDate)
-                                      .WithSqlParam("enddate", endDate)
+                                      .WithSqlParam("enddate", dueDate)
                                       .WithSqlParam("startdatefilteroption", model.StartDateFilterOption)
                                       .WithSqlParam("duedatefilteroption", model.DueDateFilterOption)
                                       .WithSqlParam("currencyid", model.CurrencyId)

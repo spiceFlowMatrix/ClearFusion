@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using HumanitarianAssistance.Service.APIResponses;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
@@ -36,16 +37,31 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     //}
 
     [HttpGet]
-    public IActionResult GetTrainingLink()
+    public APIResponse GetTrainingLink()
     {
+      APIResponse response = new APIResponse();
       if (_configuration["DOCS_URL"] != null)
       {
-        return Ok(_configuration["DOCS_URL"].ToString());
+        response.StatusCode = 200;
+        response.data.TrainingLink = _configuration["DOCS_URL"].ToString();
+        response.Message = "Success";
       }
       else
       {
-        return NotFound();
+        response.StatusCode = 400;
+        response.data.TrainingLink = null;
+        response.Message = "Training link not provided";
       }
+      return response;
+
+      //if (_configuration["DOCS_URL"] != null)
+      //{
+      //  return Ok(_configuration["DOCS_URL"].ToString());
+      //}
+      //else
+      //{
+      //  return NotFound();
+      //}
     }
   }
 }
