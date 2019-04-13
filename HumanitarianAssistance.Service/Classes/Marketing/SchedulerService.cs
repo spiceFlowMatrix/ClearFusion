@@ -383,7 +383,6 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-
                 var record = await _uow.ScheduleDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime);
                 if (record != null)
                 {
@@ -724,7 +723,6 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-
         public async Task<APIResponse> DeleteSchedule(int id, string userId)
         {
             APIResponse response = new APIResponse();
@@ -846,6 +844,33 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     break;
             }
             return model;
-        }       
+        }
+        public async Task<APIResponse> AddPlayoutMinutes(PlayoutMinutesModel model, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                PlayoutMinutes obj = _mapper.Map<PlayoutMinutesModel, PlayoutMinutes>(model);
+                obj.TotalMinutes = model.TotalMinutes;
+                obj.DroppedMinutes = model.DroppedMinutes;
+                obj.PolicyId = model.PolicyId;
+                obj.CreatedById = userId;
+                obj.CreatedById = userId;
+                obj.CreatedDate = DateTime.Now;
+                obj.IsDeleted = false;
+                obj.CreatedDate = DateTime.Now;
+                await _uow.PlayoutMinutesRepository.AddAsyn(obj);
+                await _uow.SaveAsync();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
     }
 }

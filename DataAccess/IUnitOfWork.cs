@@ -213,6 +213,7 @@ namespace DataAccess
         IGenericRepository<ActivityType> ActivityTypeRepository { get; }
         IGenericRepository<ContractDetails> ContractDetailsRepository { get; }
         IGenericRepository<JobDetails> JobDetailsRepository { get; }
+        IGenericRepository<PlayoutMinutes> PlayoutMinutesRepository { get; }
         IGenericRepository<JobPhase> JobPhaseRepository { get; }
         IGenericRepository<Producer> ProducerRepository { get; }
         IGenericRepository<JobPriceDetails> JobPriceDetailsRepository { get; }

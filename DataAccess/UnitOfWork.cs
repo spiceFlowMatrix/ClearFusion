@@ -204,6 +204,7 @@ namespace DataAccess
         private IGenericRepository<ActivityType> _activityTypeRepository;
         private IGenericRepository<ContractDetails> _contractDetailsRepository;
         private IGenericRepository<JobDetails> _jobDetailsRepository;
+        private IGenericRepository<PlayoutMinutes> _playoutMinutesRepository;
         private IGenericRepository<JobPhase> _jobPhaseRepository;
         private IGenericRepository<Producer> _producerRepository;
         private IGenericRepository<JobPriceDetails> _jobPriceDetailsRepository;
@@ -1455,6 +1456,14 @@ namespace DataAccess
             get
             {
                 return _jobDetailsRepository = _jobDetailsRepository ?? new GenericRepository<JobDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<PlayoutMinutes> PlayoutMinutesRepository
+        {
+            get
+            {
+                return _playoutMinutesRepository = _playoutMinutesRepository ?? new GenericRepository<PlayoutMinutes>(_mschaContext);
             }
         }
 
