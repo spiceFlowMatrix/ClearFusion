@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DataAccess.DbEntities;
@@ -164,6 +161,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     {
       APIResponse apiRespone = null;
       apiRespone = await _iScheduleService.FilterScheduleList(mediumId);
+      return apiRespone;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddPlayoutMinutes([FromBody]PlayoutMinutesModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iScheduleService.AddPlayoutMinutes(model, id);
+      }     
       return apiRespone;
     }
 

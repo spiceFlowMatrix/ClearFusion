@@ -1,8 +1,5 @@
 ﻿using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models.Marketing;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HumanitarianAssistance.Service.interfaces.Marketing
@@ -15,5 +12,6 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> GetScheduleDetailsById(int model);
         Task<APIResponse> AddEditSchedule(SchedulerModel model, string userId);
         Task<APIResponse> DeleteSchedule(int model, string userId);
+        Task<APIResponse> AddPlayoutMinutes(PlayoutMinutesModel model, string userId);
     }
 }
