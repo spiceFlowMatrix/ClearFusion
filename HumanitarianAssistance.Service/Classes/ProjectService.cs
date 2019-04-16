@@ -5493,8 +5493,8 @@ namespace HumanitarianAssistance.Service.Classes
                 var spProjectCashFlow = await _uow.GetDbContext().LoadStoredProc("get_projectcashflow")
                                       .WithSqlParam("currency", model.CurrencyId)
                                       .WithSqlParam("projectid", model.ProjectId)
-                                      .WithSqlParam("projectstartdate", model.ProjectStartDate.ToString())
-                                      .WithSqlParam("projectenddate", model.ProjectEndDate.ToString())
+                                      .WithSqlParam("startdate", model.ProjectStartDate.ToString())
+                                      .WithSqlParam("enddate", model.ProjectEndDate.ToString())
                                       .WithSqlParam("donorid", model.DonorID)
                                       .ExecuteStoredProc<SPProjectCashFlowModel>();
 
@@ -5523,7 +5523,7 @@ namespace HumanitarianAssistance.Service.Classes
                     }
 
                     DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
-                    DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count - 1].VoucherDate;
+                    DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count-1].VoucherDate;
 
                     List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
 
@@ -5597,39 +5597,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                //List<VoucherTransactions> transList = new List<VoucherTransactions>();
-                //if (model.BudgetLineId.Count == 0 || model.BudgetLineId == null)
-                //{
-                //    transList = await _uow.GetDbContext().VoucherTransactions
-                //                              .Where(x => x.IsDeleted == false && x.ProjectId == model.ProjectId)
-                //                              .ToListAsync();
-                //}
-                //else
-                //{
-                //    transList = await _uow.GetDbContext().VoucherTransactions.Include(x => x.ProjectBudgetLineDetail)
-                //                                         .Where(x => x.IsDeleted == false &&
-                //                                                     x.ProjectId == model.ProjectId &&
-                //                                                     model.BudgetLineId.Contains(x.BudgetLineId) &&
-                //                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date >= model.BudgetLineStartDate.Value.Date &&
-                //                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date <= model.BudgetLineEndDate.Value.Date)
-                //                                         .ToListAsync();
-                //}
-
-                //List<BudgetLineBreakdownListModel> budgetDetailList = transList.Select(b => new BudgetLineBreakdownModel
-                //{
-                //    ProjectId = b.ProjectId,
-                //    Debit = b.Debit,
-                //    TransactionDate = b.TransactionDate,
-                //    Date = b.ProjectBudgetLineDetail?.CreatedDate?.ToShortDateString()
-                //}).GroupBy(x => x.Date, x => x, (key, g) =>
-                //new BudgetLineBreakdownListModel
-                //{
-                //    Date = key,
-                //    DebitTotal = g.Sum(x => x.Debit)
-                //})
-                //  .OrderBy(x => x.Date)
-                //  .ToList();
-
+                
                 //get Journal Report from sp get_journal_report by passing parameters
                 var spBudgetLineBreakdown = await _uow.GetDbContext().LoadStoredProc("get_budgetlinebreakdown")
                                       .WithSqlParam("currency", model.CurrencyId)
@@ -5644,11 +5612,30 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.BudgetLineBreakdownModel = new BudgetLineBreakdownModel();
                     response.data.BudgetLineBreakdownModel.Expenditure = new List<double>();
                     response.data.BudgetLineBreakdownModel.Date = new List<DateTime>();
+                    response.data.BudgetLineBreakdownModel.TotalExpectedBudget = new List<double?>();
 
-                    DateTime startDate = spBudgetLineBreakdown.FirstOrDefault().VoucherDate;
-                    DateTime endDate = spBudgetLineBreakdown[spBudgetLineBreakdown.Count - 1].VoucherDate;
+                    List<long> projects = new List<long>
+                    {
+                        model.ProjectId
+                    };
 
-                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
+                    var projectsExpectedBudget = await _uow.GetDbContext().LoadStoredProc("get_totalexpectedprojectbudget")
+                                     .WithSqlParam("currencyid", model.CurrencyId)
+                                     .WithSqlParam("projectid", projects)
+                                     .WithSqlParam("comparisiondate", DateTime.UtcNow.ToString())
+                                     .ExecuteStoredProc<ProjectExpectedBudget>();
+
+                    double? totalExpectedBudget = 0.0;
+
+                    if (projectsExpectedBudget.Any())
+                    {
+                        totalExpectedBudget = projectsExpectedBudget.FirstOrDefault().TotalExpectedProjectBudget;
+                    }
+
+                    DateTime budgetLineStartDate = spBudgetLineBreakdown.FirstOrDefault().VoucherDate;
+                    DateTime budgetLineEndDate = spBudgetLineBreakdown[spBudgetLineBreakdown.Count-1].VoucherDate;
+
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(budgetLineStartDate, budgetLineEndDate, 7);
 
                     foreach (var item in spBudgetLineBreakdown)
                     {
@@ -5667,6 +5654,7 @@ namespace HumanitarianAssistance.Service.Classes
                         }
 
                         response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
+                        response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
                         index++;
                     }
 
@@ -5677,11 +5665,11 @@ namespace HumanitarianAssistance.Service.Classes
 
                         if (count > 0)
                         {
-
                             //add last inserted value for missing count to display even graph on x axes and y axes.
                             for (int i = 0; i < count; i++)
                             {
                                 response.data.BudgetLineBreakdownModel.Expenditure.Add(response.data.BudgetLineBreakdownModel.Expenditure[spBudgetLineBreakdown.Count - 1]);
+                                response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
                             }
                         }
 
@@ -5752,7 +5740,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("islate", model.IsLate)
                                       .ExecuteStoredProc<SPProjectProposalReportModel>();
 
-                var total = await _uow.GetDbContext().ProjectProposalDetail.CountAsync();
+                var total = await _uow.GetDbContext().ProjectDetail.Where(x=> x.IsDeleted== false).CountAsync();
 
                 response.data.TotalCount = total;
                 response.data.ProjectProposalReportList = spProposalReport;
