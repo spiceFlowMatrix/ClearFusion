@@ -682,7 +682,11 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 76, PageName = "Channel", ModuleId = 6, ModuleName = "Marketing" },
                 new ApplicationPages { IsDeleted = false, PageId = 77, PageName = "Scheduler", ModuleId = 6, ModuleName = "Marketing" },
                 new ApplicationPages { IsDeleted = false, PageId = 78, PageName = "ProjectDashboard", ModuleId = 8, ModuleName = "Projects" },
-                new ApplicationPages { IsDeleted = false, PageId = 79, PageName = "ProjectCashFlow", ModuleId = 8, ModuleName = "Projects" }
+                new ApplicationPages { IsDeleted = false, PageId = 79, PageName = "ProjectCashFlow", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 80, PageName = "ProjectBudgetLine", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 81, PageName = "BroadCastPolicy", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 82, PageName = "ProposalReport", ModuleId = 8, ModuleName = "Projects" }
+
             );
 
             modelBuilder.Entity<FinancialYearDetail>().HasData(
