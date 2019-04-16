@@ -830,7 +830,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
-
+    //proposal other detail due date ,assign to ,budget
     [HttpPost]
     public async Task<APIResponse> AddEditProjectProposalDetail([FromBody]ProposalDocModel model)
     {

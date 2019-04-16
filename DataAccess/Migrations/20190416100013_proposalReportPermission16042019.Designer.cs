@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190416100013_proposalReportPermission16042019")]
+    partial class proposalReportPermission16042019
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4803,7 +4805,7 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<long?>("ScheduleId");
+                    b.Property<long?>("PolicyId");
 
                     b.Property<long?>("TotalMinutes");
 
@@ -4813,7 +4815,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ModifiedById");
 
-                    b.HasIndex("ScheduleId");
+                    b.HasIndex("PolicyId");
 
                     b.ToTable("PlayoutMinutes");
                 });
@@ -11084,9 +11086,9 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("ModifiedById");
 
-                    b.HasOne("DataAccess.DbEntities.Marketing.ScheduleDetails", "ScheduleDetails")
+                    b.HasOne("DataAccess.DbEntities.Marketing.PolicyDetail", "PolicyDetails")
                         .WithMany()
-                        .HasForeignKey("ScheduleId");
+                        .HasForeignKey("PolicyId");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.PolicyDaySchedule", b =>
