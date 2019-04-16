@@ -12,9 +12,9 @@ namespace DataAccess.DbEntities.Marketing
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public long PlayoutMinuteId { get; set; }
-        [ForeignKey("PolicyId")]
-        public long? PolicyId { get; set; }
-        public virtual PolicyDetail PolicyDetails { get; set; }
+        [ForeignKey("ScheduleId")]
+        public long? ScheduleId { get; set; }
+        public virtual ScheduleDetails ScheduleDetails { get; set; }
         public long? TotalMinutes { get; set; }
         public long? DroppedMinutes { get; set; }
 

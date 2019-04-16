@@ -721,7 +721,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 scheduleInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.ScheduleDetailsRepository.UpdateAsyn(scheduleInfo, scheduleInfo.ScheduleId);
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Scehdule Deleted Successfully";
+                response.Message = "Schedule Deleted Successfully";
             }
             catch (Exception ex)
             {
@@ -842,7 +842,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     PlayoutMinutes obj = _mapper.Map<PlayoutMinutesModel, PlayoutMinutes>(model);
                     obj.TotalMinutes = model.TotalMinutes;
                     obj.DroppedMinutes = model.DroppedMinutes;
-                    obj.PolicyId = model.PolicyId;
+                    obj.ScheduleId = model.ScheduleId;
                     obj.CreatedById = userId;
                     obj.CreatedById = userId;
                     obj.CreatedDate = DateTime.Now;
@@ -851,7 +851,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     await _uow.PlayoutMinutesRepository.AddAsyn(obj);
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Playout Minutes Added";
+                    response.Message = "Playout Minutes Added Successfully";
                 }
                 else
                 {
@@ -860,6 +860,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     {
                         _mapper.Map(model, existRecord);
                         existRecord.IsDeleted = false;
+                        existRecord.ScheduleId = model.ScheduleId;
                         existRecord.ModifiedById = userId;
                         existRecord.ModifiedDate = DateTime.Now;
                         existRecord.TotalMinutes = model.TotalMinutes;
@@ -871,7 +872,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         await _uow.PlayoutMinutesRepository.UpdateAsyn(existRecord);
                         response.data.playoutMinutesDetails = existRecord;
                         response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Playout minutes Updated";
+                        response.Message = "Playout minutes Updated successfully";
                     }
                 }
             }
@@ -893,7 +894,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 scheduleInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.PlayoutMinutesRepository.UpdateAsyn(scheduleInfo, scheduleInfo.PlayoutMinuteId);
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Scehdule Deleted Successfully";
+                response.Message = "Playout minutes Deleted Successfully";
             }
             catch (Exception ex)
             {
