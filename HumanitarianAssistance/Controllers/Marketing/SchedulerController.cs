@@ -165,17 +165,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     }
 
     [HttpPost]
-    public async Task<APIResponse> AddPlayoutMinutes([FromBody]PlayoutMinutesModel model)
+    public async Task<APIResponse> AddPlayoutMinute([FromBody]PlayoutMinutesModel model)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = await _iScheduleService.AddPlayoutMinutes(model, id);
+        apiRespone = await _iScheduleService.AddEditPlayoutMinutes(model, id);
       }     
       return apiRespone;
-    }
+    }  
 
   }
 }

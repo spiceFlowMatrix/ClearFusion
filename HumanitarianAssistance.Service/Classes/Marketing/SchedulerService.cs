@@ -79,7 +79,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                             join po in _uow.GetDbContext().PolicyOrderSchedules on j.PolicyId equals po.PolicyId
                                             where !j.IsDeleted.Value && !mc.IsDeleted.Value
                                             && !pd.IsDeleted.Value && !po.IsDeleted.Value
-                                             && po.StartDate<=DateTime.UtcNow.Date && DateTime.UtcNow.Date<=po.EndDate
+                                             && po.StartDate <= DateTime.UtcNow.Date && DateTime.UtcNow.Date <= po.EndDate
                                             //&& !jp.IsDeleted.Value && !me.IsDeleted.Value
                                             //&& !mc.IsDeleted.Value
                                             select (new ScheduleDetailModel
@@ -258,6 +258,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
         public bool CheckRepeatDays(ScheduleDetails data, SchedulerModel model)
         {
+            var status1 = false;
             bool save = false;
             bool status = false;
             DateTime startDate = DateTime.Parse(DateTime.Parse(model.StartDate).ToShortDateString());
@@ -268,212 +269,198 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 if (endDate >= dataStartDate)
                 {
-                    if (model.RepeatDays != null && model.RepeatDays.Count > 0)
+                    var istrueDays = model.RepeatDays.Where(d => d.status == true);
+                    foreach (var item in istrueDays)
                     {
-                        foreach (var items in model.RepeatDays)
+
+                        switch (item.Value)
                         {
-                            if (items.Value == "MON")
-                            {
-                                if (data.Monday)
-                                {
-                                    status = true;
-                                }
-                                else
-                                {
-                                    status = false;
-                                }
-                            }
-                            else if (items.Value == "TUE")
-                            {
-                                if (data.Tuesday)
-                                {
-                                    status = true;
-                                }
-                                else
-                                {
-                                    status = false;
-                                }
-                            }
-                            else if (items.Value == "WED")
-                            {
-                                if (data.Wednesday)
-                                {
-                                    status = true;
-                                }
-                                else
-                                {
-                                    status = false;
-                                }
-                            }
-                            else if (items.Value == "THU")
-                            {
-                                if (data.Thursday)
-                                {
-                                    status = true;
-                                }
-                                else
-                                {
-                                    status = false;
-                                }
-                            }
-                            else if (items.Value == "FRI")
-                            {
-                                if (data.Friday)
-                                {
-                                    status = true;
-                                }
-                                else
-                                {
-                                    status = false;
-                                }
-                            }
-                            else if (items.Value == "SAT")
-                            {
-                                if (data.Saturday)
-                                {
-                                    status = true;
-                                }
-                                else
-                                {
-                                    status = false;
-                                }
-                            }
-                            else if (items.Value == "SUN")
-                            {
-                                if (data.Sunday)
-                                {
-                                    status = true;
-                                }
-                                else
-                                {
-                                    status = false;
-                                }
-                            }
+                            case "MON":
+                                status1 = data.Monday == true ? false : true;
+                                break;
+                            case "TUE":
+                                status1 = data.Tuesday == true ? false : true;
+                                break;
+                            case "WED":
+                                status1 = data.Wednesday == true ? false : true;
+                                break;
+                            case "THU":
+                                status1 = data.Thursday == true ? false : true;
+                                break;
+                            case "FRI":
+                                status1 = data.Friday == true ? false : true;
+                                break;
+                            case "SAT":
+                                status1 = data.Saturday == true ? false : true;
+                                break;
+                            case "SUN":
+                                status1 = data.Sunday == true ? false : true;
+                                break;
                         }
-                    }
-                    if (status == true)
-                    {
-                        save = false;
-                    }
-                    else
-                    {
-                        save = true;
                     }
                 }
             }
-            return save;
+            return status1;
+        }
+
+        public async Task<APIResponse> SaveSchedule(SchedulerModel model, string userId)
+        {
+            long LatestScheduleId = 0;
+            var scheduleCode = string.Empty;
+            APIResponse response = new APIResponse();
+            //var schedule = _uow.GetDbContext().ScheduleDetails.Where(x => x.ScheduleName == model.ScheduleName && x.IsDeleted == false).FirstOrDefault();
+
+            var scheduleDetail = _uow.GetDbContext().ScheduleDetails.OrderByDescending(x => x.ScheduleId)
+                                                                           .FirstOrDefault();
+            if (scheduleDetail == null)
+            {
+                LatestScheduleId = 1;
+                scheduleCode = getScheduleCode(LatestScheduleId.ToString());
+            }
+            else
+            {
+                LatestScheduleId = Convert.ToInt32(scheduleDetail.ScheduleId) + 1;
+                scheduleCode = getScheduleCode(LatestScheduleId.ToString());
+            }
+            ScheduleDetails obj = _mapper.Map<SchedulerModel, ScheduleDetails>(model);
+            obj.CreatedById = userId;
+            if (model.ProjectId != null)
+            {
+                obj.ProjectId = model.ProjectId ?? null;
+                obj.ScheduleType = "Project";
+            }
+            if (model.PolicyId != null)
+            {
+                obj.PolicyId = model.PolicyId ?? null;
+                obj.ScheduleType = "Policy";
+            }
+            if (model.JobId != null)
+            {
+                obj.JobId = model.JobId ?? null;
+                obj.ScheduleType = "Job";
+            }
+
+
+            obj.StartTime = TimeSpan.Parse(model.StartTime);
+            obj.EndTime = TimeSpan.Parse(model.EndTime);
+            obj.ScheduleName = model.ScheduleName;
+            obj.CreatedDate = DateTime.Now;
+            obj.IsDeleted = false;
+            obj.ScheduleCode = scheduleCode;
+            obj.MediumId = model.MediumId;
+            obj.ChannelId = model.ChannelId;
+            obj.Description = model.Description;
+            if (model.RepeatDays != null && model.RepeatDays.Count > 0)
+            {
+                foreach (var items in model.RepeatDays)
+                {
+                    switch (items.Value)
+                    {
+                        case "MON":
+                            obj.Monday = items.status;
+                            break;
+                        case "TUE":
+                            obj.Tuesday = items.status;
+                            break;
+                        case "WED":
+                            obj.Wednesday = items.status;
+                            break;
+                        case "THU":
+                            obj.Thursday = items.status;
+                            break;
+                        case "FRI":
+                            obj.Friday = items.status;
+                            break;
+                        case "SAT":
+                            obj.Saturday = items.status;
+                            break;
+                        case "SUN":
+                            obj.Sunday = items.status;
+                            break;
+                    }
+                    //if (items.Value == "MON")
+                    //{
+                    //    obj.Monday = items.status;
+                    //}
+                    //if (items.Value == "TUE")
+                    //{
+                    //    obj.Tuesday = items.status;
+                    //}
+                    //if (items.Value == "WED")
+                    //{
+                    //    obj.Wednesday = items.status;
+                    //}
+                    //if (items.Value == "THU")
+                    //{
+                    //    obj.Thursday = items.status;
+                    //}
+                    //if (items.Value == "FRI")
+                    //{
+                    //    obj.Friday = items.status;
+                    //}
+                    //if (items.Value == "SAT")
+                    //{
+                    //    obj.Saturday = items.status;
+                    //}
+                    //if (items.Value == "SUN")
+                    //{
+                    //    obj.Sunday = items.status;
+                    //}
+                }
+            }
+            await _uow.ScheduleDetailsRepository.AddAsyn(obj);
+            response.data.scheduleDetails = obj;
+            return response;
         }
 
         public async Task<APIResponse> AddEditSchedule(SchedulerModel model, string userId)
         {
             long LatestScheduleId = 0;
             var scheduleCode = string.Empty;
-            if(model.ProjectId == 0)
-            {
-                model.ProjectId = null;
-            }
-            if (model.PolicyId == 0)
-            {
-                model.PolicyId = null;
-            }
-            if (model.JobId == 0)
-            {
-                model.JobId = null;
-            }
+            model.ProjectId = model.ProjectId == 0 ? null : model.ProjectId;
+            model.PolicyId = model.PolicyId == 0 ? null : model.PolicyId;
+            model.JobId = model.JobId == 0 ? null : model.JobId;
+            //if (model.ProjectId == 0)
+            //{
+            //    model.ProjectId = null;
+            //}
+            //if (model.PolicyId == 0)
+            //{
+            //    model.PolicyId = null;
+            //}
+            //if (model.JobId == 0)
+            //{
+            //    model.JobId = null;
+            //}
             APIResponse response = new APIResponse();
             try
             {
-                var record = await _uow.ScheduleDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime);
-                if (record != null)
+                var record = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime);
+                if (record.Count() > 0)
                 {
-                    CheckRepeatDays(record, model);
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "Schedule already exists for the time";
+                    bool stat = CheckRepeatDays(record.FirstOrDefault(), model);
+                    if (stat == false)
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = "Schedule already exists for the time";
+                    }
+                    else
+                    {
+                        APIResponse response2 = await SaveSchedule(model, userId);
+                        APIResponse response1 = await GetScheduleDetailsById(Convert.ToInt32(response2.data.scheduleDetails.ScheduleId));
+                        response.data.scheduleDetailsModel = response1.data.scheduleDetailsModel;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Schedule created successfully";
+                    }
+
                 }
                 else
                 {
                     if (model.ScheduleId == 0 || model.ScheduleId == null)
                     {
-                        //var schedule = _uow.GetDbContext().ScheduleDetails.Where(x => x.ScheduleName == model.ScheduleName && x.IsDeleted == false).FirstOrDefault();
-
-                        var scheduleDetail = _uow.GetDbContext().ScheduleDetails.OrderByDescending(x => x.ScheduleId)
-                                                                                       .FirstOrDefault();
-                        if (scheduleDetail == null)
-                        {
-                            LatestScheduleId = 1;
-                            scheduleCode = getScheduleCode(LatestScheduleId.ToString());
-                        }
-                        else
-                        {
-                            LatestScheduleId = Convert.ToInt32(scheduleDetail.ScheduleId) + 1;
-                            scheduleCode = getScheduleCode(LatestScheduleId.ToString());
-                        }
-                        ScheduleDetails obj = _mapper.Map<SchedulerModel, ScheduleDetails>(model);
-                        obj.CreatedById = userId;
-                        if(model.ProjectId != null)
-                        {
-                            obj.ProjectId = model.ProjectId ?? null;
-                            obj.ScheduleType = "Project";
-                        }
-                        if (model.PolicyId != null)
-                        {
-                            obj.PolicyId = model.PolicyId ?? null;
-                            obj.ScheduleType = "Policy";
-                        }
-                        if (model.JobId != null)
-                        {
-                            obj.JobId = model.JobId ?? null;
-                            obj.ScheduleType = "Job";
-                        }
-
-
-                        obj.StartTime = TimeSpan.Parse(model.StartTime);
-                        obj.EndTime = TimeSpan.Parse(model.EndTime);
-                        obj.ScheduleName = model.ScheduleName;
-                        obj.CreatedDate = DateTime.Now;
-                        obj.IsDeleted = false;
-                        obj.ScheduleCode = scheduleCode;
-                        obj.MediumId = model.MediumId;
-                        obj.ChannelId = model.ChannelId;
-                        obj.Description = model.Description;
-                        if (model.RepeatDays != null && model.RepeatDays.Count > 0)
-                        {
-                            foreach (var items in model.RepeatDays)
-                            {
-                                if (items.Value == "MON")
-                                {
-                                    obj.Monday = items.status;
-                                }
-                                if (items.Value == "TUE")
-                                {
-                                    obj.Tuesday = items.status;
-                                }
-                                if (items.Value == "WED")
-                                {
-                                    obj.Wednesday = items.status;
-                                }
-                                if (items.Value == "THU")
-                                {
-                                    obj.Thursday = items.status;
-                                }
-                                if (items.Value == "FRI")
-                                {
-                                    obj.Friday = items.status;
-                                }
-                                if (items.Value == "SAT")
-                                {
-                                    obj.Saturday = items.status;
-                                }
-                                if (items.Value == "SUN")
-                                {
-                                    obj.Sunday = items.status;
-                                }
-                            }
-                        }
-                        await _uow.ScheduleDetailsRepository.AddAsyn(obj);
-                        APIResponse response1 = await GetScheduleDetailsById(Convert.ToInt32(obj.ScheduleId));
-                        response.data.scheduleDetailsModel = response1.data.scheduleDetailsModel;
+                        APIResponse response1 = await SaveSchedule(model, userId);
                         response.StatusCode = StaticResource.successStatusCode;
+                        response.data.scheduleDetails = response1.data.scheduleDetails;
                         response.Message = "Schedule created successfully";
                     }
                     else
@@ -673,7 +660,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 var ScheduleList = activityList.Select(b => new SchedulerModel
                 {
                     PolicyId = b.PolicyId,
-                    Name = b.PolicyDetails != null ? b.PolicyDetails.PolicyName : b.ProjectDetail != null ? b.ProjectDetail.ProjectName : b.JobDetails != null? b.JobDetails.JobName : null,
+                    Name = b.PolicyDetails != null ? b.PolicyDetails.PolicyName : b.ProjectDetail != null ? b.ProjectDetail.ProjectName : b.JobDetails != null ? b.JobDetails.JobName : null,
                     StartTime = b.StartTime.ToString(@"hh\:mm"),
                     EndTime = b.EndTime.ToString(@"hh\:mm"),
                     StartDate = b.StartDate.ToShortDateString(),
@@ -734,7 +721,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 scheduleInfo.ModifiedDate = DateTime.UtcNow;
                 await _uow.ScheduleDetailsRepository.UpdateAsyn(scheduleInfo, scheduleInfo.ScheduleId);
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Scehdule Deleted Successfully";
+                response.Message = "Schedule Deleted Successfully";
             }
             catch (Exception ex)
             {
@@ -757,8 +744,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                       .Include(e => e.PolicyDetails)
                                       .Include(o => o.JobDetails)
                                       .Where(v => v.IsDeleted == false)
-                                      .Where(v => v.JobDetails != null ? v.JobDetails.JobId == v.JobId: true)
-                                      .Where(v => v.ProjectDetail != null ? v.ProjectDetail.ProjectId == v.ProjectId: true)
+                                      .Where(v => v.JobDetails != null ? v.JobDetails.JobId == v.JobId : true)
+                                      .Where(v => v.ProjectDetail != null ? v.ProjectDetail.ProjectId == v.ProjectId : true)
                                       .Where(v => v.PolicyDetails != null ? v.PolicyDetails.PolicyId == v.PolicyId : true)
                                       .Where(v => v.StartDate <= DateTime.UtcNow && DateTime.UtcNow.Date <= v.EndDate)
                                       .ToListAsync();
@@ -845,24 +832,49 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return model;
         }
-        public async Task<APIResponse> AddPlayoutMinutes(PlayoutMinutesModel model, string userId)
+        public async Task<APIResponse> AddEditPlayoutMinutes(PlayoutMinutesModel model, string userId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                PlayoutMinutes obj = _mapper.Map<PlayoutMinutesModel, PlayoutMinutes>(model);
-                obj.TotalMinutes = model.TotalMinutes;
-                obj.DroppedMinutes = model.DroppedMinutes;
-                obj.PolicyId = model.PolicyId;
-                obj.CreatedById = userId;
-                obj.CreatedById = userId;
-                obj.CreatedDate = DateTime.Now;
-                obj.IsDeleted = false;
-                obj.CreatedDate = DateTime.Now;
-                await _uow.PlayoutMinutesRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                if (model.PlayoutMinuteId == 0 || model.PlayoutMinuteId == null)
+                {
+                    PlayoutMinutes obj = _mapper.Map<PlayoutMinutesModel, PlayoutMinutes>(model);
+                    obj.TotalMinutes = model.TotalMinutes;
+                    obj.DroppedMinutes = model.DroppedMinutes;
+                    obj.ScheduleId = model.ScheduleId;
+                    obj.CreatedById = userId;
+                    obj.CreatedById = userId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.CreatedDate = DateTime.Now;
+                    await _uow.PlayoutMinutesRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Playout Minutes Added Successfully";
+                }
+                else
+                {
+                    var existRecord = await _uow.PlayoutMinutesRepository.FindAsync(x => x.IsDeleted == false && x.PlayoutMinuteId == model.PlayoutMinuteId);
+                    if (existRecord != null)
+                    {
+                        _mapper.Map(model, existRecord);
+                        existRecord.IsDeleted = false;
+                        existRecord.ScheduleId = model.ScheduleId;
+                        existRecord.ModifiedById = userId;
+                        existRecord.ModifiedDate = DateTime.Now;
+                        existRecord.TotalMinutes = model.TotalMinutes;
+                        existRecord.DroppedMinutes = model.DroppedMinutes;
+                        //existRecord.ScheduleName = model.ScheduleName;
+                        existRecord.CreatedDate = DateTime.Now;
+                        //existRecord.Description = model.Description;
+
+                        await _uow.PlayoutMinutesRepository.UpdateAsyn(existRecord);
+                        response.data.playoutMinutesDetails = existRecord;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Playout minutes Updated successfully";
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -871,6 +883,25 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-
+        public async Task<APIResponse> DeletePlayoutMinutes(int id, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var scheduleInfo = await _uow.PlayoutMinutesRepository.FindAsync(c => c.PlayoutMinuteId == id);
+                scheduleInfo.IsDeleted = true;
+                scheduleInfo.ModifiedById = userId;
+                scheduleInfo.ModifiedDate = DateTime.UtcNow;
+                await _uow.PlayoutMinutesRepository.UpdateAsyn(scheduleInfo, scheduleInfo.PlayoutMinuteId);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Playout minutes Deleted Successfully";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
     }
 }

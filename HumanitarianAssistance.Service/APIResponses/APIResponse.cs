@@ -386,6 +386,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<PolicyModel> policyList { get; set; }
         public List<ScheduleTimeModel> scheduleTimeList { get; set; }
         public ScheduleDetails scheduleDetails { get; set; }
+        public PlayoutMinutes playoutMinutesDetails { get; set; }
         public SchedulerModel scheduleDetailsModel { get; set; }
         public List<ScheduleDetails> scheduleDetailsLists { get; set; }
         public List<ScheduleDetailModel> scheduleDetailsList { get; set; }

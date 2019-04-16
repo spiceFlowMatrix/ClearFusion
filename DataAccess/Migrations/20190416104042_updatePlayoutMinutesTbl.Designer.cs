@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190416104042_updatePlayoutMinutesTbl")]
+    partial class updatePlayoutMinutesTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -542,10 +544,7 @@ namespace DataAccess.Migrations
                         new { PageId = 76, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Channel" },
                         new { PageId = 77, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Scheduler" },
                         new { PageId = 78, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectDashboard" },
-                        new { PageId = 79, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectCashFlow" },
-                        new { PageId = 80, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectBudgetLine" },
-                        new { PageId = 81, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "BroadCastPolicy" },
-                        new { PageId = 82, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProposalReport" }
+                        new { PageId = 79, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectCashFlow" }
                     );
                 });
 
