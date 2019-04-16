@@ -46,7 +46,6 @@ namespace HumanitarianAssistance
     private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
     private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
     public static IHostingEnvironment _Env;
-    string value;
 
     public Startup(IConfiguration configuration, IHostingEnvironment env)
     {
@@ -59,16 +58,6 @@ namespace HumanitarianAssistance
       string sAppPath = env.ContentRootPath; //Application Base Path
       string swwwRootPath = env.WebRootPath;  //wwwroot folder path
       Configuration = builder.Build();
-      //get and set environment variable at run time
-      //value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-
-      //if (value == null)
-      //{
-      //  Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json", EnvironmentVariableTarget.Machine);
-      //  var  vdsfdsfalue = Environment.GetEnvironmentVariable("PATH");
-      //  value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-      //}
-      //Console.WriteLine("GOOGLE_APPLICATION_CREDENTIALS: {0}\n", value);
     }
 
     public IConfiguration Configuration { get; }
@@ -89,9 +78,6 @@ namespace HumanitarianAssistance
       string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
       string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
       string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
-    // string GoogleCredentialsFile = Environment.GetEnvironmentVariable("GOOGLE");
-
-
 
       Console.WriteLine("Connection string: {0}\n", connectionString);
       Console.WriteLine("DefaultCorsPolicyName string: {0}\n", DefaultCorsPolicyName);
@@ -297,7 +283,7 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
 
-      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();   
 
       if (env.IsDevelopment())
       {
