@@ -172,7 +172,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = await _iScheduleService.AddPlayoutMinutes(model, id);
+        apiRespone = await _iScheduleService.AddEditPlayoutMinutes(model, id);
       }     
       return apiRespone;
     }

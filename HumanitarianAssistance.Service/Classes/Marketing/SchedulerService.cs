@@ -269,14 +269,14 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 if (endDate >= dataStartDate)
                 {
-                    var istrueDays = model.RepeatDays.Where(d => d.status == true);             
+                    var istrueDays = model.RepeatDays.Where(d => d.status == true);
                     foreach (var item in istrueDays)
                     {
-                        
+
                         switch (item.Value)
                         {
                             case "MON":
-                                status1 = data.Monday==true?false:true;
+                                status1 = data.Monday == true ? false : true;
                                 break;
                             case "TUE":
                                 status1 = data.Tuesday == true ? false : true;
@@ -832,24 +832,48 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return model;
         }
-        public async Task<APIResponse> AddPlayoutMinutes(PlayoutMinutesModel model, string userId)
+        public async Task<APIResponse> AddEditPlayoutMinutes(PlayoutMinutesModel model, string userId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                PlayoutMinutes obj = _mapper.Map<PlayoutMinutesModel, PlayoutMinutes>(model);
-                obj.TotalMinutes = model.TotalMinutes;
-                obj.DroppedMinutes = model.DroppedMinutes;
-                obj.PolicyId = model.PolicyId;
-                obj.CreatedById = userId;
-                obj.CreatedById = userId;
-                obj.CreatedDate = DateTime.Now;
-                obj.IsDeleted = false;
-                obj.CreatedDate = DateTime.Now;
-                await _uow.PlayoutMinutesRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                if (model.PlayoutMinuteId == 0 || model.PlayoutMinuteId == null)
+                {
+                    PlayoutMinutes obj = _mapper.Map<PlayoutMinutesModel, PlayoutMinutes>(model);
+                    obj.TotalMinutes = model.TotalMinutes;
+                    obj.DroppedMinutes = model.DroppedMinutes;
+                    obj.PolicyId = model.PolicyId;
+                    obj.CreatedById = userId;
+                    obj.CreatedById = userId;
+                    obj.CreatedDate = DateTime.Now;
+                    obj.IsDeleted = false;
+                    obj.CreatedDate = DateTime.Now;
+                    await _uow.PlayoutMinutesRepository.AddAsyn(obj);
+                    await _uow.SaveAsync();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Playout Minutes Added";
+                }
+                else
+                {
+                    var existRecord = await _uow.PlayoutMinutesRepository.FindAsync(x => x.IsDeleted == false && x.PlayoutMinuteId == model.PlayoutMinuteId);
+                    if (existRecord != null)
+                    {
+                        _mapper.Map(model, existRecord);
+                        existRecord.IsDeleted = false;
+                        existRecord.ModifiedById = userId;
+                        existRecord.ModifiedDate = DateTime.Now;
+                        existRecord.TotalMinutes = model.TotalMinutes;
+                        existRecord.DroppedMinutes = model.DroppedMinutes;
+                        //existRecord.ScheduleName = model.ScheduleName;
+                        existRecord.CreatedDate = DateTime.Now;
+                        //existRecord.Description = model.Description;
+
+                        await _uow.PlayoutMinutesRepository.UpdateAsyn(existRecord);
+                        response.data.playoutMinutesDetails = existRecord;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Playout minutes Updated";
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -858,6 +882,25 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-
+        public async Task<APIResponse> DeletePlayoutMinutes(int id, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var scheduleInfo = await _uow.PlayoutMinutesRepository.FindAsync(c => c.PlayoutMinuteId == id);
+                scheduleInfo.IsDeleted = true;
+                scheduleInfo.ModifiedById = userId;
+                scheduleInfo.ModifiedDate = DateTime.UtcNow;
+                await _uow.PlayoutMinutesRepository.UpdateAsyn(scheduleInfo, scheduleInfo.PlayoutMinuteId);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Scehdule Deleted Successfully";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
     }
 }
