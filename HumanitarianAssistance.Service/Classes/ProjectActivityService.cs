@@ -294,6 +294,7 @@ namespace HumanitarianAssistance.Service.Classes
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
 
                     response.data.ImplementationStatus = projectactivityDetail.ImplementationStatus.Value;
+                    response.data.ProjectActivityDetails = _mapper.Map<ProjectActivityDetail, ProjectActivityModel>(projectactivityDetail);
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;
                 }
@@ -330,6 +331,7 @@ namespace HumanitarianAssistance.Service.Classes
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
 
                     response.data.MonitoringStatus = projectactivityDetail.MonitoringStatus.Value;
+                    response.data.ProjectActivityDetails = _mapper.Map<ProjectActivityDetail, ProjectActivityModel>(projectactivityDetail);
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;
                 }
@@ -394,26 +396,20 @@ namespace HumanitarianAssistance.Service.Classes
 
         public async Task<float> GetProgress(long projectId)
         {
-
             float avg = 0;
-            float totalImplementationProgress = 0;
-            float totalMonitoringProgrss = 0;
-            var slippage = await _uow.GetDbContext().ProjectActivityDetail
-                                                    .Where(a => a.IsDeleted == false && a.ProjectBudgetLineDetail.ProjectId == projectId)
-                                                    .Select(x => new
-                                                    {
-                                                        x.ImplementationProgress,
-                                                        x.MonitoringProgress
-                                                    })
-                                                    .ToListAsync();
 
-            if (slippage.Count() > 0)
-            {
-                totalImplementationProgress = slippage.Sum(x => x.ImplementationProgress ?? 0);
-                totalMonitoringProgrss = slippage.Sum(x => x.MonitoringProgress ?? 0);
+            Task<long> totalProjectsTask =  _uow.GetDbContext().ProjectActivityDetail
+                                                    .LongCountAsync(a => a.IsDeleted == false && a.ProjectBudgetLineDetail.ProjectId == projectId);
+            Task<long> completedProjectsTask =  _uow.GetDbContext().ProjectActivityDetail
+                                                    .LongCountAsync(a => a.IsDeleted == false &&
+                                                                a.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                                a.StatusId == (int)ProjectPhaseType.Completed
+                                                           );
+            long totalProjects = await totalProjectsTask;
+            long completedProjects = await completedProjectsTask;
 
-                avg = (totalImplementationProgress + totalMonitoringProgrss) / (slippage.Count() + slippage.Count());
-            }
+            //Note: Here typecasting is important, else it will always return 0 
+            avg = (float)completedProjects / totalProjects * 100;
 
             return avg;
         }

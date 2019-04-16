@@ -2419,6 +2419,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 proposaldata.ProposalExtType = ".docx";
                                 proposaldata.CreatedById = userid;
                                 proposaldata.CreatedDate = DateTime.UtcNow;
+                                proposaldata.ProposalStartDate = DateTime.UtcNow;
                                 await _uow.ProjectProposalDetailRepository.AddAsyn(proposaldata);
                             }
                             else
@@ -2980,180 +2981,6 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-
-        public async Task<APIResponse> UploadOtherProposalFile(IFormFile file, string UserId, long projectid, string fullPath, string fileName, string logginUserEmailId, string ProposalType, string ext)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                long projectId = projectid;
-
-                var folderDetail = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectId && x.IsDeleted == false);
-
-                Console.WriteLine("------Before other file Credential path Upload----------");
-
-                JObject googleCredentialPathFile1 = JObject.Parse(Environment.GetEnvironmentVariable("GOOGLE_CREDENTIAL"));
-
-                Console.WriteLine("------------After other  file upload Credential path -------------");
-                Console.WriteLine(googleCredentialPathFile1);
-
-                // read credientials
-                // string googleCredentialPathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                // string googleCredentialPathFile1 = Path.Combine(Directory.GetCurrentDirectory(), StaticResource.googleCredential + StaticResource.credentialsJsonFile);
-
-
-
-                //using (StreamReader files = File.OpenText(googleCredentialPathFile1))
-                //using (JsonTextReader reader = new JsonTextReader(files))
-                //{
-                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
-
-                //    result = o2["GoogleCredential"].ToObject<GoogleCredential>();
-                //}
-
-
-                //result.ApplicationName = googleCredentialPathFile1["GoogleCredential"]["ApplicationName"].ToString();
-                //result.BucketName = googleCredentialPathFile1["GoogleCredential"]["BucketName"].ToString();
-                //result.EmailId = googleCredentialPathFile1["GoogleCredential"]["EmailId"].ToString();
-                //result.ProjectId = googleCredentialPathFile1["GoogleCredential"]["ProjectId"].ToString();
-                //result.Projects = googleCredentialPathFile1["GoogleCredential"]["Projects"].ToString();
-                //result.HR = googleCredentialPathFile1["GoogleCredential"]["HR"].ToString();
-                //result.Accounting = googleCredentialPathFile1["GoogleCredential"]["Accounting"].ToString();
-                //result.Store = googleCredentialPathFile1["GoogleCredential"]["Store"].ToString();
-
-
-                GoogleCredentialModel result = new GoogleCredentialModel
-                {
-                    ApplicationName = StaticResource.ApplicationName,
-                    BucketName = StaticResource.BucketName,
-                    EmailId = StaticResource.EmailId,
-                    ProjectId = StaticResource.ProjectId,
-                    Projects = StaticResource.ProjectsFolderName,
-                    HR = StaticResource.HRFolderName,
-                    Accounting = StaticResource.AccountingFolderName,
-                    Store = StaticResource.StoreFolderName
-                };
-
-                var proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectId && x.IsDeleted == false);
-
-                //UserDetails userDetail = new UserDetails();
-                //if (proposaldata != null)
-                //{
-                //    if (proposaldata.UserId != null)
-                //    {
-                //        userDetail = await  _uow.GetDbContext().UserDetails.FirstOrDefaultAsync(z => z.UserID == proposaldata.UserId);
-                //        if (proposaldata != null && userDetail.Username != null)
-                //        {
-                //            model = GCBucket.uploadOtherProposaldoc(folderDetail.FolderName, file, fileName, result, userDetail.Username, logginUserEmailId, ext, googleCredentialPathFile1, ProposalType).Result;
-                //        }
-                //    }
-                //    else
-                //    {
-                //}
-                //}
-
-                ProjectProposalDetail model = await GCBucket.uploadOtherProposaldoc(folderDetail.FolderName, file, fileName, result, UserId, logginUserEmailId, ext, googleCredentialPathFile1, ProposalType);
-
-                ProjectProposalDetail proposaldetails = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectId && x.IsDeleted == false);
-
-                if (proposaldetails == null)
-                {
-                    proposaldetails = new ProjectProposalDetail();
-                }
-
-                if (ProposalType == "Proposal")
-                {
-                    proposaldetails.FolderName = model.FolderName;
-                    proposaldetails.ProposalFileName = model.ProposalFileName;
-                    proposaldetails.ProposalWebLink = model.ProposalWebLink;
-                    proposaldetails.ProjectId = projectid;
-                    proposaldetails.CreatedDate = DateTime.UtcNow;
-                    proposaldetails.IsDeleted = false;
-                    proposaldetails.CreatedById = UserId;
-
-                    // response folder path
-                    response.data.ProposalWebLink = model.ProposalWebLink;
-                    response.data.ProposalWebLinkExtType = model.ProposalExtType;
-                }
-                else
-                {
-                    if (ProposalType == "EOI")
-                    {
-                        proposaldetails.FolderName = model.FolderName;
-
-                        proposaldetails.EdiFileId = model.EdiFileId;
-                        proposaldetails.EDIFileName = model.EDIFileName;
-                        proposaldetails.EDIFileWebLink = model.EDIFileWebLink;
-                        proposaldetails.EDIFileExtType = model.EDIFileExtType;
-
-                        // response folder path
-                        response.data.EDIWebLink = model.EDIFileWebLink;
-                        response.data.EDIWebLinkExtType = model.EDIFileExtType;
-                    }
-                    else if (ProposalType == "BUDGET")
-                    {
-                        proposaldetails.FolderName = model.FolderName;
-
-                        proposaldetails.BudgetFileId = model.BudgetFileId;
-                        proposaldetails.BudgetFileName = model.BudgetFileName;
-                        proposaldetails.BudgetFileWebLink = model.BudgetFileWebLink;
-                        proposaldetails.BudgetFileExtType = model.BudgetFileExtType;
-
-                        // response folder path
-                        response.data.BudgetWebLink = model.BudgetFileWebLink;
-                        response.data.BudgetWebLinkExtType = model.BudgetFileExtType;
-                    }
-                    else if (ProposalType == "CONCEPT")
-                    {
-                        proposaldetails.FolderName = model.FolderName;
-
-                        proposaldetails.ConceptFileId = model.ConceptFileId;
-                        proposaldetails.ConceptFileName = model.ConceptFileName;
-                        proposaldetails.ConceptFileWebLink = model.ConceptFileWebLink;
-                        proposaldetails.ConceptFileExtType = model.ConceptFileExtType;
-
-                        // response folder path
-                        response.data.ConceptWebLink = model.ConceptFileWebLink;
-                        response.data.ConceptWebLinkExtType = model.ConceptFileExtType;
-                    }
-                    else if (ProposalType == "PRESENTATION")
-                    {
-                        proposaldetails.FolderName = model.FolderName;
-
-                        proposaldetails.PresentationFileId = model.PresentationFileId;
-                        proposaldetails.PresentationFileName = model.PresentationFileName;
-                        proposaldetails.PresentationFileWebLink = model.PresentationFileWebLink;
-                        proposaldetails.PresentationExtType = model.PresentationExtType;
-
-                        // response folder path
-                        response.data.PresentationWebLink = model.PresentationFileWebLink;
-                        response.data.PresentationWebLinkExtType = model.PresentationExtType;
-                    }
-                    proposaldata.ProjectId = projectid;
-                    proposaldata.ModifiedDate = DateTime.UtcNow;
-
-                }
-
-                if (proposaldetails.ProjectProposaldetailId == 0)
-                {
-                    await _uow.ProjectProposalDetailRepository.AddAsyn(proposaldetails);
-                }
-                else
-                {
-                    await _uow.ProjectProposalDetailRepository.UpdateAsyn(proposaldetails);
-                }
-
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
-
 
 
         public APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId)
@@ -5493,8 +5320,8 @@ namespace HumanitarianAssistance.Service.Classes
                 var spProjectCashFlow = await _uow.GetDbContext().LoadStoredProc("get_projectcashflow")
                                       .WithSqlParam("currency", model.CurrencyId)
                                       .WithSqlParam("projectid", model.ProjectId)
-                                      .WithSqlParam("projectstartdate", model.ProjectStartDate.ToString())
-                                      .WithSqlParam("projectenddate", model.ProjectEndDate.ToString())
+                                      .WithSqlParam("startdate", model.ProjectStartDate.ToString())
+                                      .WithSqlParam("enddate", model.ProjectEndDate.ToString())
                                       .WithSqlParam("donorid", model.DonorID)
                                       .ExecuteStoredProc<SPProjectCashFlowModel>();
 
@@ -5523,7 +5350,7 @@ namespace HumanitarianAssistance.Service.Classes
                     }
 
                     DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
-                    DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count - 1].VoucherDate;
+                    DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count-1].VoucherDate;
 
                     List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
 
@@ -5597,39 +5424,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                //List<VoucherTransactions> transList = new List<VoucherTransactions>();
-                //if (model.BudgetLineId.Count == 0 || model.BudgetLineId == null)
-                //{
-                //    transList = await _uow.GetDbContext().VoucherTransactions
-                //                              .Where(x => x.IsDeleted == false && x.ProjectId == model.ProjectId)
-                //                              .ToListAsync();
-                //}
-                //else
-                //{
-                //    transList = await _uow.GetDbContext().VoucherTransactions.Include(x => x.ProjectBudgetLineDetail)
-                //                                         .Where(x => x.IsDeleted == false &&
-                //                                                     x.ProjectId == model.ProjectId &&
-                //                                                     model.BudgetLineId.Contains(x.BudgetLineId) &&
-                //                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date >= model.BudgetLineStartDate.Value.Date &&
-                //                                                     x.ProjectBudgetLineDetail.CreatedDate.Value.Date <= model.BudgetLineEndDate.Value.Date)
-                //                                         .ToListAsync();
-                //}
-
-                //List<BudgetLineBreakdownListModel> budgetDetailList = transList.Select(b => new BudgetLineBreakdownModel
-                //{
-                //    ProjectId = b.ProjectId,
-                //    Debit = b.Debit,
-                //    TransactionDate = b.TransactionDate,
-                //    Date = b.ProjectBudgetLineDetail?.CreatedDate?.ToShortDateString()
-                //}).GroupBy(x => x.Date, x => x, (key, g) =>
-                //new BudgetLineBreakdownListModel
-                //{
-                //    Date = key,
-                //    DebitTotal = g.Sum(x => x.Debit)
-                //})
-                //  .OrderBy(x => x.Date)
-                //  .ToList();
-
+                
                 //get Journal Report from sp get_journal_report by passing parameters
                 var spBudgetLineBreakdown = await _uow.GetDbContext().LoadStoredProc("get_budgetlinebreakdown")
                                       .WithSqlParam("currency", model.CurrencyId)
@@ -5644,11 +5439,30 @@ namespace HumanitarianAssistance.Service.Classes
                     response.data.BudgetLineBreakdownModel = new BudgetLineBreakdownModel();
                     response.data.BudgetLineBreakdownModel.Expenditure = new List<double>();
                     response.data.BudgetLineBreakdownModel.Date = new List<DateTime>();
+                    response.data.BudgetLineBreakdownModel.TotalExpectedBudget = new List<double?>();
 
-                    DateTime startDate = spBudgetLineBreakdown.FirstOrDefault().VoucherDate;
-                    DateTime endDate = spBudgetLineBreakdown[spBudgetLineBreakdown.Count - 1].VoucherDate;
+                    List<long> projects = new List<long>
+                    {
+                        model.ProjectId
+                    };
 
-                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
+                    var projectsExpectedBudget = await _uow.GetDbContext().LoadStoredProc("get_totalexpectedprojectbudget")
+                                     .WithSqlParam("currencyid", model.CurrencyId)
+                                     .WithSqlParam("projectid", projects)
+                                     .WithSqlParam("comparisiondate", DateTime.UtcNow.ToString())
+                                     .ExecuteStoredProc<ProjectExpectedBudget>();
+
+                    double? totalExpectedBudget = 0.0;
+
+                    if (projectsExpectedBudget.Any())
+                    {
+                        totalExpectedBudget = projectsExpectedBudget.FirstOrDefault().TotalExpectedProjectBudget;
+                    }
+
+                    DateTime budgetLineStartDate = spBudgetLineBreakdown.FirstOrDefault().VoucherDate;
+                    DateTime budgetLineEndDate = spBudgetLineBreakdown[spBudgetLineBreakdown.Count-1].VoucherDate;
+
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(budgetLineStartDate, budgetLineEndDate, 7);
 
                     foreach (var item in spBudgetLineBreakdown)
                     {
@@ -5667,6 +5481,7 @@ namespace HumanitarianAssistance.Service.Classes
                         }
 
                         response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
+                        response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
                         index++;
                     }
 
@@ -5677,11 +5492,11 @@ namespace HumanitarianAssistance.Service.Classes
 
                         if (count > 0)
                         {
-
                             //add last inserted value for missing count to display even graph on x axes and y axes.
                             for (int i = 0; i < count; i++)
                             {
                                 response.data.BudgetLineBreakdownModel.Expenditure.Add(response.data.BudgetLineBreakdownModel.Expenditure[spBudgetLineBreakdown.Count - 1]);
+                                response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
                             }
                         }
 
@@ -5752,7 +5567,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("islate", model.IsLate)
                                       .ExecuteStoredProc<SPProjectProposalReportModel>();
 
-                var total = await _uow.GetDbContext().ProjectProposalDetail.CountAsync();
+                var total = await _uow.GetDbContext().ProjectDetail.Where(x=> x.IsDeleted== false).CountAsync();
 
                 response.data.TotalCount = total;
                 response.data.ProjectProposalReportList = spProposalReport;
