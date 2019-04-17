@@ -435,7 +435,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var record = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime);
+                var record = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime && DateTime.UtcNow > x.EndDate);
                 if (record.Count() > 0)
                 {
                     bool stat = CheckRepeatDays(record.FirstOrDefault(), model);
@@ -449,6 +449,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         APIResponse response2 = await SaveSchedule(model, userId);
                         APIResponse response1 = await GetScheduleDetailsById(Convert.ToInt32(response2.data.scheduleDetails.ScheduleId));
                         response.data.scheduleDetailsModel = response1.data.scheduleDetailsModel;
+                        response.data.scheduleDetails = response1.data.scheduleDetails;
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = "Schedule created successfully";
                     }
@@ -459,6 +460,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     if (model.ScheduleId == 0 || model.ScheduleId == null)
                     {
                         APIResponse response1 = await SaveSchedule(model, userId);
+                        APIResponse response2 = await GetScheduleDetailsById(Convert.ToInt32(response1.data.scheduleDetails.ScheduleId));
+                        response.data.scheduleDetailsModel = response2.data.scheduleDetailsModel;
                         response.StatusCode = StaticResource.successStatusCode;
                         response.data.scheduleDetails = response1.data.scheduleDetails;
                         response.Message = "Schedule created successfully";
