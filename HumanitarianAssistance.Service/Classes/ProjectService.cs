@@ -5316,7 +5316,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
 
-                //get Journal Report from sp get_journal_report by passing parameters
+                //get Project Cashflow Report from sp get_projectcashflow by passing parameters
                 var spProjectCashFlow = await _uow.GetDbContext().LoadStoredProc("get_projectcashflow")
                                       .WithSqlParam("currency", model.CurrencyId)
                                       .WithSqlParam("projectid", model.ProjectId)
@@ -5432,8 +5432,8 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                
-                //get Journal Report from sp get_journal_report by passing parameters
+
+                //get Budget line Breakdown from sp get_budgetlinebreakdown by passing parameters
                 var spBudgetLineBreakdown = await _uow.GetDbContext().LoadStoredProc("get_budgetlinebreakdown")
                                       .WithSqlParam("currency", model.CurrencyId)
                                       .WithSqlParam("projectid", model.ProjectId)
