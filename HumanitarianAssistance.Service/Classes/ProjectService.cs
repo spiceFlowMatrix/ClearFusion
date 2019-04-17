@@ -5349,58 +5349,66 @@ namespace HumanitarianAssistance.Service.Classes
                         totalExpectedBudget = projectsExpectedBudget.FirstOrDefault().TotalExpectedProjectBudget;
                     }
 
-                    DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
-                    DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count-1].VoucherDate;
+                    DateTime startDate = model.ProjectStartDate;
+                    DateTime endDate = model.ProjectEndDate;
 
-                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 6);
 
-                    foreach (var item in spProjectCashFlow)
-                    {
+                    //foreach (var item in spProjectCashFlow)
+                    //{
 
-                        double previousExpenditure = 0;
-                        double previousIncome = 0;
+                    //    double previousExpenditure = 0;
+                    //    double previousIncome = 0;
 
-                        if (index == 0)
-                        {
-                            previousExpenditure = 0;
-                            previousIncome = 0;
-                        }
-                        else
-                        {
-                            // adding previous expenditure to the current expenditure
-                            previousExpenditure = spProjectCashFlow[index - 1].Expenditure;
-                            item.Expenditure += previousExpenditure;
+                    //    if (index == 0)
+                    //    {
+                    //        previousExpenditure = 0;
+                    //        previousIncome = 0;
+                    //    }
+                    //    else
+                    //    {
+                    //        // adding previous expenditure to the current expenditure
+                    //        previousExpenditure = spProjectCashFlow[index - 1].Expenditure;
+                    //        item.Expenditure += previousExpenditure;
 
-                            // adding previous income to the current income
-                            previousIncome = spProjectCashFlow[index - 1].Income;
-                            item.Income += previousIncome;
-                        }
+                    //        // adding previous income to the current income
+                    //        previousIncome = spProjectCashFlow[index - 1].Income;
+                    //        item.Income += previousIncome;
+                    //    }
 
-                        response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                    //    response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
 
-                        response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
-                        response.data.ProjectCashFlowModel.Income.Add(item.Income);
-                        // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
-                        index++;
-                    }
+                    //    response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
+                    //    response.data.ProjectCashFlowModel.Income.Add(item.Income);
+                    //    // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
+                    //    index++;
+                    //}
 
                     if (regularIntervalDates != null && regularIntervalDates.Any())
                     {
                         //if x axes dates are greater than y axes data
-                        int count = regularIntervalDates.Count - spProjectCashFlow.Count;
+                        //int count = regularIntervalDates.Count - spProjectCashFlow.Count;
 
-                        if (count > 0)
+                        //if (count > 0)
+                        //{
+                        //    //add last inserted value for missing count to display even graph on x axes and y axes.
+                        //    for (int i = 0; i < count; i++)
+                        //    {
+                        //        response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                        //        response.data.ProjectCashFlowModel.Expenditure.Add(response.data.ProjectCashFlowModel.Expenditure[spProjectCashFlow.Count - 1]);
+                        //        response.data.ProjectCashFlowModel.Income.Add(response.data.ProjectCashFlowModel.Income[spProjectCashFlow.Count - 1]);
+                        //    }
+                        //}
+
+                        //response.data.ProjectCashFlowModel.Date.AddRange(regularIntervalDates);
+
+                        foreach (var item in regularIntervalDates)
                         {
-                            //add last inserted value for missing count to display even graph on x axes and y axes.
-                            for (int i = 0; i < count; i++)
-                            {
-                                response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
-                                response.data.ProjectCashFlowModel.Expenditure.Add(response.data.ProjectCashFlowModel.Expenditure[spProjectCashFlow.Count - 1]);
-                                response.data.ProjectCashFlowModel.Income.Add(response.data.ProjectCashFlowModel.Income[spProjectCashFlow.Count - 1]);
-                            }
+                            response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                            response.data.ProjectCashFlowModel.Expenditure.Add(spProjectCashFlow.Where(x => x.VoucherDate <= item).Sum(x => x.Expenditure));
+                            response.data.ProjectCashFlowModel.Income.Add(spProjectCashFlow.Where(x => x.BudgetLineDate <= item).Sum(x => x.Income));
+                            response.data.ProjectCashFlowModel.Date.Add(item);
                         }
-
-                        response.data.ProjectCashFlowModel.Date.AddRange(regularIntervalDates);
                     }
 
                 }
@@ -5459,48 +5467,55 @@ namespace HumanitarianAssistance.Service.Classes
                         totalExpectedBudget = projectsExpectedBudget.FirstOrDefault().TotalExpectedProjectBudget;
                     }
 
-                    DateTime budgetLineStartDate = spBudgetLineBreakdown.FirstOrDefault().VoucherDate;
-                    DateTime budgetLineEndDate = spBudgetLineBreakdown[spBudgetLineBreakdown.Count-1].VoucherDate;
+                    DateTime budgetLineStartDate = model.BudgetLineStartDate;
+                    DateTime budgetLineEndDate = model.BudgetLineEndDate;
 
-                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(budgetLineStartDate, budgetLineEndDate, 7);
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(budgetLineStartDate, budgetLineEndDate, 6);
 
-                    foreach (var item in spBudgetLineBreakdown)
-                    {
-                        // adding previous expenditure to the current expenditure
-                        double previousExpenditure = 0;
+                    //foreach (var item in spBudgetLineBreakdown)
+                    //{
+                    //    // adding previous expenditure to the current expenditure
+                    //    double previousExpenditure = 0;
 
-                        if (index == 0)
-                        {
-                            previousExpenditure = 0;
-                        }
-                        else
-                        {
-                            previousExpenditure = spBudgetLineBreakdown[index - 1].Expenditure;
-                            item.Expenditure = item.Expenditure + previousExpenditure;
+                    //    if (index == 0)
+                    //    {
+                    //        previousExpenditure = 0;
+                    //    }
+                    //    else
+                    //    {
+                    //        previousExpenditure = spBudgetLineBreakdown[index - 1].Expenditure;
+                    //        item.Expenditure = item.Expenditure + previousExpenditure;
 
-                        }
+                    //    }
 
-                        response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
-                        response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
-                        index++;
-                    }
+                    //    response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
+                    //    response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                    //    index++;
+                    //}
 
                     if (regularIntervalDates.Any())
                     {
                         //if x axes dates are greater than y axes data
-                        int count = regularIntervalDates.Count - spBudgetLineBreakdown.Count;
+                        //int count = regularIntervalDates.Count - spBudgetLineBreakdown.Count;
 
-                        if (count > 0)
+                        //if (count > 0)
+                        //{
+                        //    //add last inserted value for missing count to display even graph on x axes and y axes.
+                        //    for (int i = 0; i < count; i++)
+                        //    {
+                        //        response.data.BudgetLineBreakdownModel.Expenditure.Add(response.data.BudgetLineBreakdownModel.Expenditure[spBudgetLineBreakdown.Count - 1]);
+                        //        response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                        //    }
+                        //}
+
+                       // response.data.BudgetLineBreakdownModel.Date.AddRange(regularIntervalDates);
+
+                        foreach (var item in regularIntervalDates)
                         {
-                            //add last inserted value for missing count to display even graph on x axes and y axes.
-                            for (int i = 0; i < count; i++)
-                            {
-                                response.data.BudgetLineBreakdownModel.Expenditure.Add(response.data.BudgetLineBreakdownModel.Expenditure[spBudgetLineBreakdown.Count - 1]);
-                                response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
-                            }
+                            response.data.BudgetLineBreakdownModel.Expenditure.Add(spBudgetLineBreakdown.Where(x => x.VoucherDate < item).Sum(x => x.Expenditure));
+                            response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                            response.data.BudgetLineBreakdownModel.Date.Add(item);
                         }
-
-                        response.data.BudgetLineBreakdownModel.Date.AddRange(regularIntervalDates);
                     }
                 }
 
