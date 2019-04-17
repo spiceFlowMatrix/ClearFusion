@@ -502,12 +502,12 @@ namespace HumanitarianAssistance.Service.Classes
                 }
 
             }
-            else if (model!=null && string.IsNullOrWhiteSpace(model.ProgramName))
+            else if (model != null && string.IsNullOrWhiteSpace(model.ProgramName))
             {//check for emptystring
                 response.StatusCode = StaticResource.notValid;
                 response.Message = StaticResource.validData;
             }
-            else if(model==null)
+            else if (model == null)
             {
                 response.StatusCode = StaticResource.NameAlreadyExist;
             }
@@ -5508,7 +5508,7 @@ namespace HumanitarianAssistance.Service.Classes
                         //    }
                         //}
 
-                       // response.data.BudgetLineBreakdownModel.Date.AddRange(regularIntervalDates);
+                        // response.data.BudgetLineBreakdownModel.Date.AddRange(regularIntervalDates);
 
                         foreach (var item in regularIntervalDates)
                         {
@@ -5582,7 +5582,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("islate", model.IsLate)
                                       .ExecuteStoredProc<SPProjectProposalReportModel>();
 
-                var total = await _uow.GetDbContext().ProjectDetail.Where(x=> x.IsDeleted== false).CountAsync();
+                var total = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).CountAsync();
 
                 response.data.TotalCount = total;
                 response.data.ProjectProposalReportList = spProposalReport;
@@ -5613,5 +5613,68 @@ namespace HumanitarianAssistance.Service.Classes
             return percentage;
         }
 
+        public async Task<APIResponse> GetProjectProposalAmountSummary(ProjectProposalReportFilterModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            List<ProjectProposalAmountSummary> projectProposalAmountSummary = new List<ProjectProposalAmountSummary>();
+
+            try
+            {
+                var currencyTask = _uow.GetDbContext().CurrencyDetails.ToListAsync();
+                string startDate = model.StartDate == null ? string.Empty : model.StartDate.ToString();
+                string dueDate = model.DueDate == null ? string.Empty : model.DueDate.ToString();
+
+                //get GetProjectProposalAmountSummary from sp get_projectproposalreport by passing parameters
+                var spAmountSummaryInCommonCurrency = await _uow.GetDbContext().LoadStoredProc("get_projectproposalreportamountsummary")
+                                      .WithSqlParam("projectname", model.ProjectName)
+                                      .WithSqlParam("startdate", startDate)
+                                      .WithSqlParam("enddate", dueDate)
+                                      .WithSqlParam("startdatefilteroption", model.StartDateFilterOption)
+                                      .WithSqlParam("duedatefilteroption", model.DueDateFilterOption)
+                                      .WithSqlParam("currencyid", model.CurrencyId)
+                                      .WithSqlParam("amount", model.Amount)
+                                      .WithSqlParam("amountfilteroption", model.AmountFilterOption)
+                                      .WithSqlParam("iscompleted", model.IsCompleted)
+                                      .WithSqlParam("islate", model.IsLate)
+                                      .ExecuteStoredProc<SPProjectProposalReportAmountSummaryModel>();
+
+                if (spAmountSummaryInCommonCurrency.Any())
+                {
+                    int amountSummaryCurrencyId = spAmountSummaryInCommonCurrency.FirstOrDefault().ProjectCurrency;
+                    double totalAmount = spAmountSummaryInCommonCurrency.Sum(x => x.ProjectAmount);
+
+                    List<CurrencyDetails> currencies =  await currencyTask;
+
+                    foreach (CurrencyDetails currency in currencies)
+                    {
+                        ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).Where(x=> x.FromCurrency== amountSummaryCurrencyId && x.ToCurrency== currency.CurrencyId).FirstOrDefaultAsync();
+
+                        if (exchangeRate != null)
+                        {
+                            ProjectProposalAmountSummary amountSummary = new ProjectProposalAmountSummary
+                            {
+                                CurrencyId = currency.CurrencyId,
+                                ProposalAmount = totalAmount * (double)exchangeRate.Rate
+                            };
+                            projectProposalAmountSummary.Add(amountSummary);
+                        }
+                        else
+                        {
+                            throw new Exception("Exchange Rate not defined");
+                        }
+                    }
+
+                    response.data.ProjectProposalAmountSummary = projectProposalAmountSummary;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+
+            return response;
+        }
     }
 }

@@ -17,4 +17,10 @@ namespace HumanitarianAssistance.ViewModels.SPModels
         public DateTime? ReviewCompletionDate { get; set; }
         public int DueDays { get; set; }
     }
+
+    public class SPProjectProposalReportAmountSummaryModel
+    {
+        public double ProjectAmount { get; set; }
+        public int ProjectCurrency { get; set; }
+    }
 }
