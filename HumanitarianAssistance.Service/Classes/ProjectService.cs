@@ -502,12 +502,12 @@ namespace HumanitarianAssistance.Service.Classes
                 }
 
             }
-            else if (model!=null && string.IsNullOrWhiteSpace(model.ProgramName))
+            else if (model != null && string.IsNullOrWhiteSpace(model.ProgramName))
             {//check for emptystring
                 response.StatusCode = StaticResource.notValid;
                 response.Message = StaticResource.validData;
             }
-            else if(model==null)
+            else if (model == null)
             {
                 response.StatusCode = StaticResource.NameAlreadyExist;
             }
@@ -5316,7 +5316,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
 
-                //get Journal Report from sp get_journal_report by passing parameters
+                //get Project Cashflow Report from sp get_projectcashflow by passing parameters
                 var spProjectCashFlow = await _uow.GetDbContext().LoadStoredProc("get_projectcashflow")
                                       .WithSqlParam("currency", model.CurrencyId)
                                       .WithSqlParam("projectid", model.ProjectId)
@@ -5349,58 +5349,66 @@ namespace HumanitarianAssistance.Service.Classes
                         totalExpectedBudget = projectsExpectedBudget.FirstOrDefault().TotalExpectedProjectBudget;
                     }
 
-                    DateTime startDate = spProjectCashFlow.FirstOrDefault().VoucherDate;
-                    DateTime endDate = spProjectCashFlow[spProjectCashFlow.Count-1].VoucherDate;
+                    DateTime startDate = model.ProjectStartDate;
+                    DateTime endDate = model.ProjectEndDate;
 
-                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 7);
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(startDate, endDate, 6);
 
-                    foreach (var item in spProjectCashFlow)
-                    {
+                    //foreach (var item in spProjectCashFlow)
+                    //{
 
-                        double previousExpenditure = 0;
-                        double previousIncome = 0;
+                    //    double previousExpenditure = 0;
+                    //    double previousIncome = 0;
 
-                        if (index == 0)
-                        {
-                            previousExpenditure = 0;
-                            previousIncome = 0;
-                        }
-                        else
-                        {
-                            // adding previous expenditure to the current expenditure
-                            previousExpenditure = spProjectCashFlow[index - 1].Expenditure;
-                            item.Expenditure += previousExpenditure;
+                    //    if (index == 0)
+                    //    {
+                    //        previousExpenditure = 0;
+                    //        previousIncome = 0;
+                    //    }
+                    //    else
+                    //    {
+                    //        // adding previous expenditure to the current expenditure
+                    //        previousExpenditure = spProjectCashFlow[index - 1].Expenditure;
+                    //        item.Expenditure += previousExpenditure;
 
-                            // adding previous income to the current income
-                            previousIncome = spProjectCashFlow[index - 1].Income;
-                            item.Income += previousIncome;
-                        }
+                    //        // adding previous income to the current income
+                    //        previousIncome = spProjectCashFlow[index - 1].Income;
+                    //        item.Income += previousIncome;
+                    //    }
 
-                        response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                    //    response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
 
-                        response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
-                        response.data.ProjectCashFlowModel.Income.Add(item.Income);
-                        // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
-                        index++;
-                    }
+                    //    response.data.ProjectCashFlowModel.Expenditure.Add(item.Expenditure);
+                    //    response.data.ProjectCashFlowModel.Income.Add(item.Income);
+                    //    // response.data.ProjectCashFlowModel.Date.Add(item.VoucherDate);
+                    //    index++;
+                    //}
 
                     if (regularIntervalDates != null && regularIntervalDates.Any())
                     {
                         //if x axes dates are greater than y axes data
-                        int count = regularIntervalDates.Count - spProjectCashFlow.Count;
+                        //int count = regularIntervalDates.Count - spProjectCashFlow.Count;
 
-                        if (count > 0)
+                        //if (count > 0)
+                        //{
+                        //    //add last inserted value for missing count to display even graph on x axes and y axes.
+                        //    for (int i = 0; i < count; i++)
+                        //    {
+                        //        response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                        //        response.data.ProjectCashFlowModel.Expenditure.Add(response.data.ProjectCashFlowModel.Expenditure[spProjectCashFlow.Count - 1]);
+                        //        response.data.ProjectCashFlowModel.Income.Add(response.data.ProjectCashFlowModel.Income[spProjectCashFlow.Count - 1]);
+                        //    }
+                        //}
+
+                        //response.data.ProjectCashFlowModel.Date.AddRange(regularIntervalDates);
+
+                        foreach (var item in regularIntervalDates)
                         {
-                            //add last inserted value for missing count to display even graph on x axes and y axes.
-                            for (int i = 0; i < count; i++)
-                            {
-                                response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
-                                response.data.ProjectCashFlowModel.Expenditure.Add(response.data.ProjectCashFlowModel.Expenditure[spProjectCashFlow.Count - 1]);
-                                response.data.ProjectCashFlowModel.Income.Add(response.data.ProjectCashFlowModel.Income[spProjectCashFlow.Count - 1]);
-                            }
+                            response.data.ProjectCashFlowModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                            response.data.ProjectCashFlowModel.Expenditure.Add(spProjectCashFlow.Where(x => x.VoucherDate <= item).Sum(x => x.Expenditure));
+                            response.data.ProjectCashFlowModel.Income.Add(spProjectCashFlow.Where(x => x.BudgetLineDate <= item).Sum(x => x.Income));
+                            response.data.ProjectCashFlowModel.Date.Add(item);
                         }
-
-                        response.data.ProjectCashFlowModel.Date.AddRange(regularIntervalDates);
                     }
 
                 }
@@ -5424,8 +5432,8 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                
-                //get Journal Report from sp get_journal_report by passing parameters
+
+                //get Budget line Breakdown from sp get_budgetlinebreakdown by passing parameters
                 var spBudgetLineBreakdown = await _uow.GetDbContext().LoadStoredProc("get_budgetlinebreakdown")
                                       .WithSqlParam("currency", model.CurrencyId)
                                       .WithSqlParam("projectid", model.ProjectId)
@@ -5459,48 +5467,55 @@ namespace HumanitarianAssistance.Service.Classes
                         totalExpectedBudget = projectsExpectedBudget.FirstOrDefault().TotalExpectedProjectBudget;
                     }
 
-                    DateTime budgetLineStartDate = spBudgetLineBreakdown.FirstOrDefault().VoucherDate;
-                    DateTime budgetLineEndDate = spBudgetLineBreakdown[spBudgetLineBreakdown.Count-1].VoucherDate;
+                    DateTime budgetLineStartDate = model.BudgetLineStartDate;
+                    DateTime budgetLineEndDate = model.BudgetLineEndDate;
 
-                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(budgetLineStartDate, budgetLineEndDate, 7);
+                    List<DateTime> regularIntervalDates = AccountingUtility.GetRegularIntervalDates(budgetLineStartDate, budgetLineEndDate, 6);
 
-                    foreach (var item in spBudgetLineBreakdown)
-                    {
-                        // adding previous expenditure to the current expenditure
-                        double previousExpenditure = 0;
+                    //foreach (var item in spBudgetLineBreakdown)
+                    //{
+                    //    // adding previous expenditure to the current expenditure
+                    //    double previousExpenditure = 0;
 
-                        if (index == 0)
-                        {
-                            previousExpenditure = 0;
-                        }
-                        else
-                        {
-                            previousExpenditure = spBudgetLineBreakdown[index - 1].Expenditure;
-                            item.Expenditure = item.Expenditure + previousExpenditure;
+                    //    if (index == 0)
+                    //    {
+                    //        previousExpenditure = 0;
+                    //    }
+                    //    else
+                    //    {
+                    //        previousExpenditure = spBudgetLineBreakdown[index - 1].Expenditure;
+                    //        item.Expenditure = item.Expenditure + previousExpenditure;
 
-                        }
+                    //    }
 
-                        response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
-                        response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
-                        index++;
-                    }
+                    //    response.data.BudgetLineBreakdownModel.Expenditure.Add(item.Expenditure);
+                    //    response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                    //    index++;
+                    //}
 
                     if (regularIntervalDates.Any())
                     {
                         //if x axes dates are greater than y axes data
-                        int count = regularIntervalDates.Count - spBudgetLineBreakdown.Count;
+                        //int count = regularIntervalDates.Count - spBudgetLineBreakdown.Count;
 
-                        if (count > 0)
+                        //if (count > 0)
+                        //{
+                        //    //add last inserted value for missing count to display even graph on x axes and y axes.
+                        //    for (int i = 0; i < count; i++)
+                        //    {
+                        //        response.data.BudgetLineBreakdownModel.Expenditure.Add(response.data.BudgetLineBreakdownModel.Expenditure[spBudgetLineBreakdown.Count - 1]);
+                        //        response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                        //    }
+                        //}
+
+                        // response.data.BudgetLineBreakdownModel.Date.AddRange(regularIntervalDates);
+
+                        foreach (var item in regularIntervalDates)
                         {
-                            //add last inserted value for missing count to display even graph on x axes and y axes.
-                            for (int i = 0; i < count; i++)
-                            {
-                                response.data.BudgetLineBreakdownModel.Expenditure.Add(response.data.BudgetLineBreakdownModel.Expenditure[spBudgetLineBreakdown.Count - 1]);
-                                response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
-                            }
+                            response.data.BudgetLineBreakdownModel.Expenditure.Add(spBudgetLineBreakdown.Where(x => x.VoucherDate < item).Sum(x => x.Expenditure));
+                            response.data.BudgetLineBreakdownModel.TotalExpectedBudget.Add(totalExpectedBudget);
+                            response.data.BudgetLineBreakdownModel.Date.Add(item);
                         }
-
-                        response.data.BudgetLineBreakdownModel.Date.AddRange(regularIntervalDates);
                     }
                 }
 
@@ -5567,7 +5582,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("islate", model.IsLate)
                                       .ExecuteStoredProc<SPProjectProposalReportModel>();
 
-                var total = await _uow.GetDbContext().ProjectDetail.Where(x=> x.IsDeleted== false).CountAsync();
+                var total = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).CountAsync();
 
                 response.data.TotalCount = total;
                 response.data.ProjectProposalReportList = spProposalReport;
@@ -5598,5 +5613,68 @@ namespace HumanitarianAssistance.Service.Classes
             return percentage;
         }
 
+        public async Task<APIResponse> GetProjectProposalAmountSummary(ProjectProposalReportFilterModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            List<ProjectProposalAmountSummary> projectProposalAmountSummary = new List<ProjectProposalAmountSummary>();
+
+            try
+            {
+                var currencyTask = _uow.GetDbContext().CurrencyDetails.ToListAsync();
+                string startDate = model.StartDate == null ? string.Empty : model.StartDate.ToString();
+                string dueDate = model.DueDate == null ? string.Empty : model.DueDate.ToString();
+
+                //get GetProjectProposalAmountSummary from sp get_projectproposalreport by passing parameters
+                var spAmountSummaryInCommonCurrency = await _uow.GetDbContext().LoadStoredProc("get_projectproposalreportamountsummary")
+                                      .WithSqlParam("projectname", model.ProjectName)
+                                      .WithSqlParam("startdate", startDate)
+                                      .WithSqlParam("enddate", dueDate)
+                                      .WithSqlParam("startdatefilteroption", model.StartDateFilterOption)
+                                      .WithSqlParam("duedatefilteroption", model.DueDateFilterOption)
+                                      .WithSqlParam("currencyid", model.CurrencyId)
+                                      .WithSqlParam("amount", model.Amount)
+                                      .WithSqlParam("amountfilteroption", model.AmountFilterOption)
+                                      .WithSqlParam("iscompleted", model.IsCompleted)
+                                      .WithSqlParam("islate", model.IsLate)
+                                      .ExecuteStoredProc<SPProjectProposalReportAmountSummaryModel>();
+
+                if (spAmountSummaryInCommonCurrency.Any())
+                {
+                    int amountSummaryCurrencyId = spAmountSummaryInCommonCurrency.FirstOrDefault().ProjectCurrency;
+                    double totalAmount = spAmountSummaryInCommonCurrency.Sum(x => x.ProjectAmount);
+
+                    List<CurrencyDetails> currencies =  await currencyTask;
+
+                    foreach (CurrencyDetails currency in currencies)
+                    {
+                        ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).Where(x=> x.FromCurrency== amountSummaryCurrencyId && x.ToCurrency== currency.CurrencyId).FirstOrDefaultAsync();
+
+                        if (exchangeRate != null)
+                        {
+                            ProjectProposalAmountSummary amountSummary = new ProjectProposalAmountSummary
+                            {
+                                CurrencyId = currency.CurrencyId,
+                                ProposalAmount = totalAmount * (double)exchangeRate.Rate
+                            };
+                            projectProposalAmountSummary.Add(amountSummary);
+                        }
+                        else
+                        {
+                            throw new Exception("Exchange Rate not defined");
+                        }
+                    }
+
+                    response.data.ProjectProposalAmountSummary = projectProposalAmountSummary;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+
+            return response;
+        }
     }
 }

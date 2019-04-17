@@ -476,6 +476,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public string SignedUrl{ get; set; }
         public string TrainingLink{ get; set; }
         public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
+        public List<ProjectProposalAmountSummary> ProjectProposalAmountSummary { get; set; }
 
     }
 

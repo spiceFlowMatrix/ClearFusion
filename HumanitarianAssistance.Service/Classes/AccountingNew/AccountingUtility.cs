@@ -54,6 +54,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                 TimeSpan timespan = TimeSpan.Zero;
 
+                regularIntervalDates.Add(startDate);
+
                 for (int i = 0; i < interval; i++)
                 {
                     timespan += timeDiff;

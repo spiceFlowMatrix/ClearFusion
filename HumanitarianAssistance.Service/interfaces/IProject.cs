@@ -216,5 +216,6 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model);
         Task<APIResponse> GetProjectProposalReport(ProjectProposalReportFilterModel model);
+        Task<APIResponse> GetProjectProposalAmountSummary(ProjectProposalReportFilterModel model);
     }
 }
