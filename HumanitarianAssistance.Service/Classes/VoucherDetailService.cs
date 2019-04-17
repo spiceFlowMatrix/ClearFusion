@@ -5127,7 +5127,12 @@ namespace HumanitarianAssistance.Service.Classes
                     var employeeDetails = await EmployeeDetailsTask;
                     var currency = await currencyCodeTask;
 
-                    int voucherCount = _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == DateTime.UtcNow.Month).Count();
+                    int voucherCount = _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == DateTime.UtcNow.Month && x.OfficeId== EmployeeSalaryVoucher.OfficeId && x.VoucherDate.Year== DateTime.UtcNow.Year).Count();
+
+                    // Pattern: Office Code - Currency Code - Month Number - voucher count on selected month - Year
+                    string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, voucherCount, currency.CurrencyCode, office.OfficeCode);
+
+                    int sameVoucherReferenceNoCount = 0;
 
                     //Creating Voucher for Voucher transaction
                     VoucherDetail obj = new VoucherDetail
@@ -5142,8 +5147,31 @@ namespace HumanitarianAssistance.Service.Classes
                         VoucherDate = DateTime.UtcNow,
                         JournalCode = EmployeeSalaryVoucher.JournalCode,//null for now as per client
                         OfficeId = EmployeeSalaryVoucher.OfficeId,
-                        ReferenceNo= AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, voucherCount, currency.CurrencyCode, office.OfficeCode)
-                };
+                        //ReferenceNo= AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, voucherCount, currency.CurrencyCode, office.OfficeCode)
+                    };
+
+                    if (!string.IsNullOrEmpty(referenceNo))
+                    {
+                        do
+                        {
+                            sameVoucherReferenceNoCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == referenceNo).CountAsync();
+
+                            if (sameVoucherReferenceNoCount == 0)
+                            {
+                                obj.ReferenceNo = referenceNo;
+                            }
+                            else
+                            {
+                                //DO NOT REMOVE: This is used to get the latest voucher and then we will get the count of vouhcer sequence from it
+                                // VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.OrderByDescending(x => x.VoucherDate).FirstOrDefault(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId == model.OfficeId && x.VoucherDate.Year == filterVoucherDate.Year);
+
+                                var refNo = referenceNo.Split('-');
+                                int count = Convert.ToInt32(refNo[3]);
+                                referenceNo = AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, count, currency.CurrencyCode, office.OfficeCode);
+                            }
+                        }
+                        while (sameVoucherReferenceNoCount != 0);
+                    }
 
                     await _uow.VoucherDetailRepository.AddAsyn(obj);
 
