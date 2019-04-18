@@ -409,6 +409,12 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 }
             }
             await _uow.ScheduleDetailsRepository.AddAsyn(obj);
+            FilterSchedulerModel data = new FilterSchedulerModel();
+            data.ChannelId = obj.ChannelId;
+            data.MediumId = obj.MediumId;
+            data.StartDate = obj.StartDate.ToShortDateString();
+            APIResponse responseData  = await FilterScheduleList(data);
+            response.data.SchedulerList = responseData.data.SchedulerList;
             response.data.scheduleDetails = obj;
             return response;
         }
@@ -435,205 +441,208 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var record = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime);
-                if (record.Count() > 0)
+                if (model.ScheduleId == 0 || model.ScheduleId == null)
                 {
-                    bool stat = CheckRepeatDays(record.FirstOrDefault(), model);
-                    if (stat == false)
+                    var record = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime && DateTime.UtcNow > x.EndDate);
+                    if (record.Count() > 0)
                     {
-                        response.StatusCode = StaticResource.failStatusCode;
-                        response.Message = "Schedule already exists for the time";
+                        bool stat = CheckRepeatDays(record.FirstOrDefault(), model);
+                        if (stat == false)
+                        {
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = "Schedule already exists for the time";
+                        }
+                        else
+                        {
+                            APIResponse response2 = await SaveSchedule(model, userId);
+                            APIResponse response1 = await GetScheduleDetailsById(Convert.ToInt32(response2.data.scheduleDetails.ScheduleId));
+                            response.data.scheduleDetailsModel = response1.data.scheduleDetailsModel;
+                            response.data.scheduleDetails = response1.data.scheduleDetails;
+                            response.data.SchedulerList = response1.data.SchedulerList;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Schedule created successfully";
+                        }
+
                     }
                     else
                     {
-                        APIResponse response2 = await SaveSchedule(model, userId);
-                        APIResponse response1 = await GetScheduleDetailsById(Convert.ToInt32(response2.data.scheduleDetails.ScheduleId));
-                        response.data.scheduleDetailsModel = response1.data.scheduleDetailsModel;
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Schedule created successfully";
-                    }
-
-                }
-                else
-                {
-                    if (model.ScheduleId == 0 || model.ScheduleId == null)
-                    {
                         APIResponse response1 = await SaveSchedule(model, userId);
+                        APIResponse response2 = await GetScheduleDetailsById(Convert.ToInt32(response1.data.scheduleDetails.ScheduleId));
+                        response.data.scheduleDetailsModel = response2.data.scheduleDetailsModel;
+                        response.data.SchedulerList = response1.data.SchedulerList;
                         response.StatusCode = StaticResource.successStatusCode;
                         response.data.scheduleDetails = response1.data.scheduleDetails;
                         response.Message = "Schedule created successfully";
                     }
-                    else
+                }
+
+                else
+                {
+                    var existRecord = await _uow.ScheduleDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ScheduleId == model.ScheduleId);
+                    if (existRecord != null)
                     {
-                        var existRecord = await _uow.ScheduleDetailsRepository.FindAsync(x => x.IsDeleted == false && x.ScheduleId == model.ScheduleId);
-                        if (existRecord != null)
+
+                        bool status = false;
+                        var dateTime = DateTime.Now;
+                        var today = dateTime.DayOfWeek.ToString();
+                        var currentTime = dateTime.Hour + ":" + dateTime.Minute;
+                        if (TimeSpan.Parse(existRecord.StartTime.ToString(@"hh\:mm")) < TimeSpan.Parse(currentTime))
                         {
-
-                            bool status = false;
-                            var dateTime = DateTime.Now;
-                            var today = dateTime.DayOfWeek.ToString();
-                            var currentTime = dateTime.Hour + ":" + dateTime.Minute;
-                            if (TimeSpan.Parse(existRecord.StartTime.ToString(@"hh\:mm")) < TimeSpan.Parse(currentTime))
+                            if (TimeSpan.Parse(currentTime) < TimeSpan.Parse(existRecord.EndTime.ToString(@"hh\:mm")))
                             {
-                                if (TimeSpan.Parse(currentTime) < TimeSpan.Parse(existRecord.EndTime.ToString(@"hh\:mm")))
+                                if (existRecord.Monday == true)
                                 {
-                                    if (existRecord.Monday == true)
+                                    if (today == "Monday")
                                     {
-                                        if (today == "Monday")
-                                        {
-                                            status = true;
-                                        }
-                                        else
-                                        {
-                                            status = false;
-                                        }
+                                        status = true;
                                     }
-                                    if (existRecord.Tuesday == true)
+                                    else
                                     {
-                                        if (today == "Tuesday")
-                                        {
-                                            status = true;
-                                        }
-                                        else
-                                        {
-                                            status = false;
-                                        }
+                                        status = false;
                                     }
-                                    if (existRecord.Wednesday == true)
+                                }
+                                if (existRecord.Tuesday == true)
+                                {
+                                    if (today == "Tuesday")
                                     {
-                                        if (today == "Wednesday")
-                                        {
-                                            status = true;
-                                        }
-                                        else
-                                        {
-                                            status = false;
-                                        }
+                                        status = true;
                                     }
-                                    if (existRecord.Thursday == true)
+                                    else
                                     {
-                                        if (today == "Thursday")
-                                        {
-                                            status = true;
-                                        }
-                                        else
-                                        {
-                                            status = false;
-                                        }
+                                        status = false;
                                     }
-                                    if (existRecord.Friday == true)
+                                }
+                                if (existRecord.Wednesday == true)
+                                {
+                                    if (today == "Wednesday")
                                     {
-                                        if (today == "Friday")
-                                        {
-                                            status = true;
-                                        }
-                                        else
-                                        {
-                                            status = false;
-                                        }
+                                        status = true;
                                     }
-                                    if (existRecord.Saturday == true)
+                                    else
                                     {
-                                        if (today == "Saturday")
-                                        {
-                                            status = true;
-                                        }
-                                        else
-                                        {
-                                            status = false;
-                                        }
+                                        status = false;
                                     }
-                                    if (existRecord.Sunday == true)
+                                }
+                                if (existRecord.Thursday == true)
+                                {
+                                    if (today == "Thursday")
                                     {
-                                        if (today == "Sunday")
-                                        {
-                                            status = true;
-                                        }
-                                        else
-                                        {
-                                            status = false;
-                                        }
+                                        status = true;
+                                    }
+                                    else
+                                    {
+                                        status = false;
+                                    }
+                                }
+                                if (existRecord.Friday == true)
+                                {
+                                    if (today == "Friday")
+                                    {
+                                        status = true;
+                                    }
+                                    else
+                                    {
+                                        status = false;
+                                    }
+                                }
+                                if (existRecord.Saturday == true)
+                                {
+                                    if (today == "Saturday")
+                                    {
+                                        status = true;
+                                    }
+                                    else
+                                    {
+                                        status = false;
+                                    }
+                                }
+                                if (existRecord.Sunday == true)
+                                {
+                                    if (today == "Sunday")
+                                    {
+                                        status = true;
+                                    }
+                                    else
+                                    {
+                                        status = false;
                                     }
                                 }
                             }
-                            if (status == true)
-                            {
-                                response.data.schedulerDetails = existRecord;
-                                response.StatusCode = StaticResource.failStatusCode;
-                                response.Message = "Schedule is running, can not be updated.";
-                            }
-                            else
-                            {
-                                _mapper.Map(model, existRecord);
-                                if (model.RepeatDays != null && model.RepeatDays.Count > 0)
-                                {
-                                    foreach (var items in model.RepeatDays)
-                                    {
-                                        if (items.Value == "MON")
-                                        {
-                                            existRecord.Monday = items.status;
-                                        }
-                                        if (items.Value == "TUE")
-                                        {
-                                            existRecord.Tuesday = items.status;
-                                        }
-                                        if (items.Value == "WED")
-                                        {
-                                            existRecord.Wednesday = items.status;
-                                        }
-                                        if (items.Value == "THU")
-                                        {
-                                            existRecord.Thursday = items.status;
-                                        }
-                                        if (items.Value == "FRI")
-                                        {
-                                            existRecord.Friday = items.status;
-                                        }
-                                        if (items.Value == "SAT")
-                                        {
-                                            existRecord.Saturday = items.status;
-                                        }
-                                        if (items.Value == "SUN")
-                                        {
-                                            existRecord.Sunday = items.status;
-                                        }
-                                    }
-                                }
-                                if (model.ProjectId != null)
-                                {
-                                    existRecord.ProjectId = model.ProjectId ?? null;
-                                    existRecord.ScheduleType = "Project";
-                                }
-                                if (model.PolicyId != null)
-                                {
-                                    existRecord.PolicyId = model.PolicyId ?? null;
-                                    existRecord.ScheduleType = "Policy";
-                                }
-                                if (model.JobId != null)
-                                {
-                                    existRecord.JobId = model.JobId ?? null;
-                                    existRecord.ScheduleType = "Job";
-                                }
-                                existRecord.ScheduleCode = existRecord.ScheduleCode;
-                                existRecord.IsDeleted = false;
-                                existRecord.ModifiedById = userId;
-                                existRecord.ModifiedDate = DateTime.Now;
-                                existRecord.MediumId = model.MediumId;
-                                existRecord.ChannelId = model.ChannelId;
-                                existRecord.StartTime = TimeSpan.Parse(model.StartTime);
-                                existRecord.EndTime = TimeSpan.Parse(model.EndTime);
-                                //existRecord.ScheduleName = model.ScheduleName;
-                                existRecord.CreatedDate = DateTime.Now;
-                                //existRecord.Description = model.Description;
-
-                                await _uow.ScheduleDetailsRepository.UpdateAsyn(existRecord);
-                                response.data.schedulerDetails = existRecord;
-                                response.StatusCode = StaticResource.successStatusCode;
-                                response.Message = "Schedule Updated";
-                            }
-
                         }
+                        if (status == true)
+                        {
+                            response.data.schedulerDetails = existRecord;
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = "Schedule is running, can not be updated.";
+                        }
+                        else
+                        {
+                            _mapper.Map(model, existRecord);
+                            if (model.RepeatDays != null && model.RepeatDays.Count > 0)
+                            {
+                                foreach (var items in model.RepeatDays)
+                                {
+                                    switch (items.Value)
+                                    {
+                                        case "MON":
+                                            existRecord.Monday = items.status;
+                                            break;
+                                        case "TUE":
+                                            existRecord.Tuesday = items.status;
+                                            break;
+                                        case "WED":
+                                            existRecord.Wednesday = items.status;
+                                            break;
+                                        case "THU":
+                                            existRecord.Thursday = items.status;
+                                            break;
+                                        case "FRI":
+                                            existRecord.Friday = items.status;
+                                            break;
+                                        case "SAT":
+                                            existRecord.Saturday = items.status;
+                                            break;
+                                        case "SUN":
+                                            existRecord.Sunday = items.status;
+                                            break;
+                                    }
+                                }
+                            }
+                            if (model.ProjectId != null)
+                            {
+                                existRecord.ProjectId = model.ProjectId ?? null;
+                                existRecord.ScheduleType = "Project";
+                            }
+                            if (model.PolicyId != null)
+                            {
+                                existRecord.PolicyId = model.PolicyId ?? null;
+                                existRecord.ScheduleType = "Policy";
+                            }
+                            if (model.JobId != null)
+                            {
+                                existRecord.JobId = model.JobId ?? null;
+                                existRecord.ScheduleType = "Job";
+                            }
+                            existRecord.ScheduleCode = existRecord.ScheduleCode;
+                            existRecord.IsDeleted = false;
+                            existRecord.ModifiedById = userId;
+                            existRecord.ModifiedDate = DateTime.Now;
+                            existRecord.MediumId = model.MediumId;
+                            existRecord.ChannelId = model.ChannelId;
+                            existRecord.StartTime = TimeSpan.Parse(model.StartTime);
+                            existRecord.EndTime = TimeSpan.Parse(model.EndTime);
+                            //existRecord.ScheduleName = model.ScheduleName;
+                            existRecord.CreatedDate = DateTime.Now;
+                            //existRecord.Description = model.Description;
+
+                            await _uow.ScheduleDetailsRepository.UpdateAsyn(existRecord);
+                            response.data.schedulerDetails = existRecord;
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = "Schedule Updated";
+                        }
+
                     }
+
                 }
             }
             catch (Exception ex)

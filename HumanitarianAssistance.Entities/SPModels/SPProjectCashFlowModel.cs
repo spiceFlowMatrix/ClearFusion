@@ -10,6 +10,7 @@ namespace HumanitarianAssistance.ViewModels.SPModels
         public double Expenditure { get; set; }
         public double Income { get; set; }
         public int Currencyid { get; set; }
+        public DateTime BudgetLineDate { get; set; }
         }
 
     public class ProjectExpectedBudget

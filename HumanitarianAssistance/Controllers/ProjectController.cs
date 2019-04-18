@@ -1888,5 +1888,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #endregion
 
+    [HttpPost]
+    public async Task<APIResponse> GetProjectProposalAmountSummary([FromBody]ProjectProposalReportFilterModel model)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectProposalAmountSummary(model);
+      return apiresponse;
+    }
+
   }
 }
