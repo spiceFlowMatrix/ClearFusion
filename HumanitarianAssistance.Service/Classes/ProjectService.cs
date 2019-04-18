@@ -5325,9 +5325,6 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("donorid", model.DonorID)
                                       .ExecuteStoredProc<SPProjectCashFlowModel>();
 
-
-
-
                 if (spProjectCashFlow.Any())
                 {
                     response.data.ProjectCashFlowModel = new ProjectCashFlowModel();
@@ -5410,7 +5407,6 @@ namespace HumanitarianAssistance.Service.Classes
                             response.data.ProjectCashFlowModel.Date.Add(item);
                         }
                     }
-
                 }
 
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5421,7 +5417,6 @@ namespace HumanitarianAssistance.Service.Classes
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
-
             return response;
         }
 
@@ -5585,7 +5580,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var total = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).CountAsync();
 
                 response.data.TotalCount = total;
-                response.data.ProjectProposalReportList = spProposalReport;
+                response.data.ProjectProposalReportList = spProposalReport.Skip(model.PageIndex.Value * model.PageSize.Value).Take(model.PageSize.Value).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }
@@ -5643,6 +5638,9 @@ namespace HumanitarianAssistance.Service.Classes
 
                 if (spAmountSummaryInCommonCurrency.Any())
                 {
+
+                    spAmountSummaryInCommonCurrency= spAmountSummaryInCommonCurrency.Skip(model.PageIndex.Value * model.PageSize.Value).Take(model.PageSize.Value).ToList();
+
                     int amountSummaryCurrencyId = spAmountSummaryInCommonCurrency.FirstOrDefault().ProjectCurrency;
                     double totalAmount = spAmountSummaryInCommonCurrency.Sum(x => x.ProjectAmount);
 

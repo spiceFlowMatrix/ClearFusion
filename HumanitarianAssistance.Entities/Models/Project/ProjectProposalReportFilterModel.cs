@@ -14,5 +14,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public int AmountFilterOption { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsLate { get; set; }
+        public int? PageSize { get; set; }
+        public int? PageIndex { get; set; }
     }
 }

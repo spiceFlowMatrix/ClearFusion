@@ -706,7 +706,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                          {
                                                                              ExchangeRateId = x.ExchangeRateId,
                                                                              FromCurrency = x.FromCurrency,
-                                                                             Rate = (double)x.Rate,
+                                                                             Rate = (double)Math.Round(x.Rate,4),
                                                                              ToCurrency = x.ToCurrency
                                                                          }).OrderBy(x => x.FromCurrency).ThenBy(x=> x.ToCurrency).ToListAsync();
 
