@@ -5621,7 +5621,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                var currencyTask = _uow.GetDbContext().CurrencyDetails.ToListAsync();
+                
                 string startDate = model.StartDate == null ? string.Empty : model.StartDate.ToString();
                 string dueDate = model.DueDate == null ? string.Empty : model.DueDate.ToString();
 
@@ -5638,6 +5638,8 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("iscompleted", model.IsCompleted)
                                       .WithSqlParam("islate", model.IsLate)
                                       .ExecuteStoredProc<SPProjectProposalReportAmountSummaryModel>();
+
+                var currencyTask = _uow.GetDbContext().CurrencyDetails.ToListAsync();
 
                 if (spAmountSummaryInCommonCurrency.Any())
                 {
