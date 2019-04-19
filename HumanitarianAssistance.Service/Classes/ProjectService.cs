@@ -2432,6 +2432,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 proposaldata.ProposalExtType = ".docx";
                                 proposaldata.ModifiedDate = DateTime.UtcNow;
                                 proposaldata.ModifiedById = userid;
+                                proposaldata.ProposalStartDate = DateTime.UtcNow;
                                 await _uow.ProjectProposalDetailRepository.UpdateAsyn(proposaldata);
                             }
                         }
