@@ -269,33 +269,40 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 if (endDate >= dataStartDate)
                 {
-                    var istrueDays = model.RepeatDays.Where(d => d.status == true);
-                    foreach (var item in istrueDays)
+                    var istrueDays = model.RepeatDays.Where(d => d.status == true).ToList();
+                    if(istrueDays.Count() == 0)
                     {
-
-                        switch (item.Value)
+                        status1 = true;
+                    }
+                    else
+                    {
+                        foreach (var item in istrueDays)
                         {
-                            case "MON":
-                                status1 = data.Monday == true ? false : true;
-                                break;
-                            case "TUE":
-                                status1 = data.Tuesday == true ? false : true;
-                                break;
-                            case "WED":
-                                status1 = data.Wednesday == true ? false : true;
-                                break;
-                            case "THU":
-                                status1 = data.Thursday == true ? false : true;
-                                break;
-                            case "FRI":
-                                status1 = data.Friday == true ? false : true;
-                                break;
-                            case "SAT":
-                                status1 = data.Saturday == true ? false : true;
-                                break;
-                            case "SUN":
-                                status1 = data.Sunday == true ? false : true;
-                                break;
+
+                            switch (item.Value)
+                            {
+                                case "MON":
+                                    status1 = data.Monday == true ? false : true;
+                                    break;
+                                case "TUE":
+                                    status1 = data.Tuesday == true ? false : true;
+                                    break;
+                                case "WED":
+                                    status1 = data.Wednesday == true ? false : true;
+                                    break;
+                                case "THU":
+                                    status1 = data.Thursday == true ? false : true;
+                                    break;
+                                case "FRI":
+                                    status1 = data.Friday == true ? false : true;
+                                    break;
+                                case "SAT":
+                                    status1 = data.Saturday == true ? false : true;
+                                    break;
+                                case "SUN":
+                                    status1 = data.Sunday == true ? false : true;
+                                    break;
+                            }
                         }
                     }
                 }
