@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Service.APIResponses;
