@@ -15,9 +15,9 @@ namespace DataAccess.DbEntities
 		public int EmployeeSalaryAnalyticalInfoId { get; set; }
 		public int AccountCode { get; set; }
 		public long ProjectId { get; set; }
-		public ProjectDetails ProjectDetails { get; set; }
-		public long BudgetLineId { get; set; }
-		public ProjectBudgetLine ProjectBudgetLine { get; set; }
+		public ProjectDetail ProjectDetail { get; set; }
+		public long BudgetlineId { get; set; }
+		public ProjectBudgetLineDetail ProjectBudgetLine { get; set; }
 		public double SalaryPercentage { get; set; }
 		public int EmployeeID { get; set; }
 		public EmployeeDetail EmployeeDetail { get; set; }
