@@ -5636,8 +5636,6 @@ namespace HumanitarianAssistance.Service.Classes
                 if (spAmountSummaryInCommonCurrency.Any())
                 {
 
-                    spAmountSummaryInCommonCurrency = spAmountSummaryInCommonCurrency.Skip(model.PageIndex.Value * model.PageSize.Value).Take(model.PageSize.Value).ToList();
-
                     int amountSummaryCurrencyId = spAmountSummaryInCommonCurrency.FirstOrDefault().ProjectCurrency;
                     double totalAmount = spAmountSummaryInCommonCurrency.Sum(x => x.ProjectAmount);
 

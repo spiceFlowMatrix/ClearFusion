@@ -888,19 +888,19 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var employeeHistoryRecord = await _uow.GetDbContext().EmployeeAnalyticalDetail.Where(x => x.IsDeleted == false && x.EmployeeID == EmployeeId).ToListAsync();
+                var employeeSalaryAnalyticalInfo = await _uow.GetDbContext().EmployeeSalaryAnalyticalInfo.Include(x=> x.ProjectBudgetLine).Where(x => x.IsDeleted == false && x.EmployeeID == EmployeeId).ToListAsync();
 
-                if (employeeHistoryRecord.Count > 0)
+                if (employeeSalaryAnalyticalInfo.Any())
                 {
-                    response.data.EmployeeSalaryAnalyticalInfoList = employeeHistoryRecord.Select(x => new EmployeeSalaryAnalyticalInfoModel
+                    response.data.EmployeeSalaryAnalyticalInfoList = employeeSalaryAnalyticalInfo.Select(x => new EmployeeSalaryAnalyticalInfoModel
                     {
-                        EmployeeSalaryAnalyticalInfoId = x.AnalyticalID,
-                        AccountCode = Convert.ToInt32(x.AccountCode),
-                        //BudgetLineId = x.BudgetLineId,
+                        EmployeeSalaryAnalyticalInfoId = x.EmployeeSalaryAnalyticalInfoId,
+                        AccountCode = x.AccountCode,
+                        BudgetLineId = x.BudgetlineId,
                         EmployeeID = x.EmployeeID,
-                        ProjectId = Convert.ToInt64(x.Project),
-                        SalaryPercentage = Convert.ToDouble(x.SalaryPercentage),
-                        //BudgetLineName = x.ProjectBudgetLine?.Description
+                        ProjectId = x.ProjectId,
+                        SalaryPercentage = x.SalaryPercentage,
+                        BudgetLineName = x.ProjectBudgetLine.BudgetName
 
                     }).ToList();
                     response.StatusCode = StaticResource.successStatusCode;
@@ -927,7 +927,7 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.EmployeeSalaryAnalyticalInfoId = 0;
                 obj.EmployeeID = model.EmployeeID;
                 obj.ProjectId = model.ProjectId;
-                obj.BudgetLineId = model.BudgetLineId;
+                obj.BudgetlineId = model.BudgetLineId;
                 obj.AccountCode = model.AccountCode;
                 obj.SalaryPercentage = model.SalaryPercentage;
 
