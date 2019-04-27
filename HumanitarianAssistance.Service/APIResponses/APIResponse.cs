@@ -439,6 +439,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ChartOfAccountNew ChartOfAccountNewDetail { get; set; }
         public List<VoucherTransactionsModel> VoucherTransactions { get; set; }
         public List<AccountBalance> AccountBalanceList { get; internal set; }
+        public InvoiceModel invoiceDetails { get; set; }
         public List<SchedulerModel> SchedulerList { get; internal set; }
 
         public List<AccountBalance> AccountBalances { get; set; }
