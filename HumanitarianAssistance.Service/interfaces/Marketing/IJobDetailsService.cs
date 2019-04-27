@@ -22,5 +22,7 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> ApproveJob(int model, string UserId);
         Task<APIResponse> AcceptAgreement(int model, string UserId);
         Task<APIResponse> CreatePDF(int JobId);
+        Task<APIResponse> GenerateInvoice(int jobId, string userId);
+        Task<APIResponse> ApproveInvoice(int jobId, string userId);
     }
 }
