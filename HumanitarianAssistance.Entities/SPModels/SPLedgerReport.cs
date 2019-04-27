@@ -12,8 +12,8 @@ namespace HumanitarianAssistance.ViewModels.SPModels
         public string Description { get; set; }
         public string VoucherReferenceNo { get; set; }
         public string CurrencyName { get; set; }
-        public long DebitAmount { get; set; }
-        public long CreditAmount { get; set; }
+        public double DebitAmount { get; set; }
+        public double CreditAmount { get; set; }
         public DateTime TransactionDate { get; set; }
         public int CurrencyId { get; set; }
         public string ChartOfAccountNewCode { get; set; }

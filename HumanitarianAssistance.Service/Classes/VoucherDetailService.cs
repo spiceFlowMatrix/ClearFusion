@@ -2589,18 +2589,18 @@ namespace HumanitarianAssistance.Service.Classes
 
                             obj = item.FirstOrDefault();
 
-                            var debit = item.Sum(x => x.DebitAmount);
-                            var credit = item.Sum(x => x.CreditAmount);
+                            var debit = Math.Round((decimal)item.Sum(x => x.DebitAmount), 4);
+                            var credit = Math.Round((decimal)item.Sum(x => x.CreditAmount),4);
 
                             if (debit > credit)
                             {
-                                obj.DebitAmount = debit - credit;
+                                obj.DebitAmount = Convert.ToDouble(Math.Round((debit - credit),4));
                                 obj.CreditAmount = 0;
                             }
                             else if (debit < credit)
                             {
                                 obj.DebitAmount = 0;
-                                obj.CreditAmount = credit - debit;
+                                obj.CreditAmount = Convert.ToDouble(Math.Round((credit - debit),4));
                             }
                             else if (debit == credit)
                             {
@@ -2673,18 +2673,18 @@ namespace HumanitarianAssistance.Service.Classes
 
                             obj = item.FirstOrDefault();
 
-                            var debit = item.Sum(x => x.DebitAmount);
-                            var credit = item.Sum(x => x.CreditAmount);
+                            var debit = Math.Round((decimal)item.Sum(x => x.DebitAmount), 4);
+                            var credit = Math.Round((decimal)item.Sum(x => x.CreditAmount),4);
 
                             if (debit > credit)
                             {
-                                obj.DebitAmount = debit - credit;
+                                obj.DebitAmount = Convert.ToDouble(Math.Round((debit - credit),4));
                                 obj.CreditAmount = 0;
                             }
                             else if (debit < credit)
                             {
                                 obj.DebitAmount = 0;
-                                obj.CreditAmount = credit - debit;
+                                obj.CreditAmount = Convert.ToDouble(Math.Round((credit - debit), 4));
                             }
                             else if (debit == credit)
                             {
@@ -5098,10 +5098,11 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                var officeCodeTask = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == EmployeeSalaryVoucher.OfficeId); //use OfficeCode
-                var financialYearTask = _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDefault == true && x.IsDeleted == false);
-                var EmployeeDetailsTask = _uow.EmployeeDetailRepository.FindAsync(x => x.EmployeeID == EmployeeSalaryVoucher.EmployeeId && x.IsDeleted == false);
-                var currencyCodeTask = _uow.CurrencyDetailsRepository.FindAsync(x => x.IsDeleted == false && x.CurrencyId == EmployeeSalaryVoucher.CurrencyId);
+                var exchangeRates = await _uow.ExchangeRateDetailRepository.FindAllAsync(x => x.IsDeleted == false && x.Date.Date == DateTime.UtcNow.Date && x.OfficeId == EmployeeSalaryVoucher.OfficeId);
+                var financialYear = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDefault == true && x.IsDeleted == false);
+                var office = await _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == EmployeeSalaryVoucher.OfficeId); //use OfficeCode
+                var employeeDetails = await _uow.EmployeeDetailRepository.FindAsync(x => x.EmployeeID == EmployeeSalaryVoucher.EmployeeId && x.IsDeleted == false);
+                var currency = await _uow.CurrencyDetailsRepository.FindAsync(x => x.IsDeleted == false && x.CurrencyId == EmployeeSalaryVoucher.CurrencyId);
 
                 List<VoucherTransactions> voucherTransactionsList = new List<VoucherTransactions>();
 
@@ -5117,244 +5118,258 @@ namespace HumanitarianAssistance.Service.Classes
                 decimal? totalDeductionsPayrollHeads = EmployeeSalaryVoucher.EmployeePayrollListPrimary.Sum(x => x.Amount);
 
                 //total salary payable to employee in a month
-                decimal? totalSalaryOfEmployee = (grossSalary + totalAllowance) - totalDeductions;
+                decimal? totalSalaryOfEmployee = grossSalary + totalAllowance;
 
-                // check for voucher to be balanced
-                if ((grossSalary + totalAllowance) == (totalDeductions+ totalDeductionsPayrollHeads))
+                //var exchangeRates= await exchangeRateTask;
+                //exchangeRateTask.Dispose();
+
+                if (exchangeRates.Any())
                 {
-                    var financialYear = await financialYearTask;
-                    var office = await officeCodeTask;
-                    var employeeDetails = await EmployeeDetailsTask;
-                    var currency = await currencyCodeTask;
-
-                    int voucherCount = _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == DateTime.UtcNow.Month && x.OfficeId== EmployeeSalaryVoucher.OfficeId && x.VoucherDate.Year== DateTime.UtcNow.Year).Count();
-
-                    // Pattern: Office Code - Currency Code - Month Number - voucher count on selected month - Year
-                    string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, voucherCount, currency.CurrencyCode, office.OfficeCode);
-
-                    int sameVoucherReferenceNoCount = 0;
-
-                    //Creating Voucher for Voucher transaction
-                    VoucherDetail obj = new VoucherDetail
+                    // check for voucher to be balanced
+                    if ((grossSalary + totalAllowance) == (totalDeductions + totalDeductionsPayrollHeads))
                     {
-                        CreatedById = EmployeeSalaryVoucher.CreatedById,
-                        CreatedDate = DateTime.UtcNow,
-                        IsDeleted = false,
-                        FinancialYearId = financialYear.FinancialYearId,
-                        VoucherTypeId = (int)VoucherTypes.Journal,
-                        Description = AccountingNew.AccountingUtility.GetSalaryDescription(employeeDetails.EmployeeCode, employeeDetails.EmployeeName, EmployeeSalaryVoucher.PayrollMonth.Month, totalSalaryOfEmployee),
-                        CurrencyId = EmployeeSalaryVoucher.CurrencyId,
-                        VoucherDate = DateTime.UtcNow,
-                        JournalCode = EmployeeSalaryVoucher.JournalCode,//null for now as per client
-                        OfficeId = EmployeeSalaryVoucher.OfficeId,
-                        //ReferenceNo= AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, voucherCount, currency.CurrencyCode, office.OfficeCode)
-                    };
+                        //var financialYear = await financialYearTask;
+                        //financialYearTask.Dispose();
+                        //var office = await officeCodeTask;
+                        //officeCodeTask.Dispose();
+                        //var employeeDetails = await employeeDetailsTask;
+                        //employeeDetailsTask.Dispose();
+                        //var currency = await currencyCodeTask;
+                        //currencyCodeTask.Dispose();
 
-                    if (!string.IsNullOrEmpty(referenceNo))
-                    {
-                        do
+                        int voucherCount = _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == DateTime.UtcNow.Month && x.OfficeId == EmployeeSalaryVoucher.OfficeId && x.VoucherDate.Year == DateTime.UtcNow.Year).Count();
+
+                        // Pattern: Office Code - Currency Code - Month Number - voucher count on selected month - Year
+                        string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(DateTime.UtcNow, voucherCount, currency.CurrencyCode, office.OfficeCode);
+
+                        int sameVoucherReferenceNoCount = 0;
+
+                        //Creating Voucher for Voucher transaction
+                        VoucherDetail obj = new VoucherDetail
                         {
-                            sameVoucherReferenceNoCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == referenceNo).CountAsync();
+                            CreatedById = EmployeeSalaryVoucher.CreatedById,
+                            CreatedDate = DateTime.UtcNow,
+                            IsDeleted = false,
+                            FinancialYearId = financialYear.FinancialYearId,
+                            VoucherTypeId = (int)VoucherTypes.Journal,
+                            Description = AccountingNew.AccountingUtility.GetSalaryDescription(employeeDetails.EmployeeCode, employeeDetails.EmployeeName, EmployeeSalaryVoucher.PayrollMonth.Month, totalSalaryOfEmployee),
+                            CurrencyId = EmployeeSalaryVoucher.CurrencyId,
+                            VoucherDate = DateTime.UtcNow,
+                            JournalCode = EmployeeSalaryVoucher.JournalCode,//null for now as per client
+                            OfficeId = EmployeeSalaryVoucher.OfficeId,
+                            //ReferenceNo= AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, voucherCount, currency.CurrencyCode, office.OfficeCode)
+                        };
 
-                            if (sameVoucherReferenceNoCount == 0)
-                            {
-                                obj.ReferenceNo = referenceNo;
-                            }
-                            else
-                            {
-                                //DO NOT REMOVE: This is used to get the latest voucher and then we will get the count of vouhcer sequence from it
-                                // VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.OrderByDescending(x => x.VoucherDate).FirstOrDefault(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId == model.OfficeId && x.VoucherDate.Year == filterVoucherDate.Year);
-
-                                var refNo = referenceNo.Split('-');
-                                int count = Convert.ToInt32(refNo[3]);
-                                referenceNo = AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, count, currency.CurrencyCode, office.OfficeCode);
-                            }
-                        }
-                        while (sameVoucherReferenceNoCount != 0);
-                    }
-
-                    await _uow.VoucherDetailRepository.AddAsyn(obj);
-
-                    foreach (SalaryHeadModel salaryhead in EmployeeSalaryVoucher.EmployeePayrollLists)
-                    {
-                        VoucherTransactions xVoucherTransactions = new VoucherTransactions();
-
-                        //Creating Voucher Transaction for Credit
-                        xVoucherTransactions.IsDeleted = false;
-                        xVoucherTransactions.VoucherNo = obj.VoucherNo;
-                        xVoucherTransactions.FinancialYearId = financialYear.FinancialYearId;
-                        xVoucherTransactions.CurrencyId = EmployeeSalaryVoucher.CurrencyId;
-                        xVoucherTransactions.OfficeId = EmployeeSalaryVoucher.OfficeId;
-
-                        try
+                        if (!string.IsNullOrEmpty(referenceNo))
                         {
-                            //Include only salary heads in voucher that contain transaction type ""
-                            if (salaryhead.TransactionTypeId != null && salaryhead.TransactionTypeId != 0)
+                            do
                             {
-                                //Include only salary heads in voucher that has transaction type as credit and salary head type is not general
-                                if (salaryhead.TransactionTypeId == (int)TransactionType.Debit && (salaryhead.MonthlyAmount != null && salaryhead.MonthlyAmount != 0) && salaryhead.HeadTypeId != (int)SalaryHeadType.GENERAL)
+                                sameVoucherReferenceNoCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == referenceNo).CountAsync();
+
+                                if (sameVoucherReferenceNoCount == 0)
                                 {
-                                    xVoucherTransactions.ChartOfAccountNewId = salaryhead.AccountNo;
-                                    xVoucherTransactions.DebitAccount = salaryhead.AccountNo;
-                                    xVoucherTransactions.Description = string.Format(StaticResource.SalaryHeadAllowances, salaryhead.HeadName);
-                                    xVoucherTransactions.Debit = Convert.ToDouble(salaryhead.MonthlyAmount);
-                                    xVoucherTransactions.Credit = 0;
-
-                                    //Note : These values are associated with Voucher and Transactions
-                                    xVoucherTransactions.TransactionDate = obj.VoucherDate;
-                                    xVoucherTransactions.FinancialYearId = obj.FinancialYearId;
-                                    xVoucherTransactions.CurrencyId = obj.CurrencyId;
-
-                                    voucherTransactionsList.Add(xVoucherTransactions);
-
-                                }//Include only salary heads in voucher that has transaction type as debit and salary head type is not general
-                                else if (salaryhead.TransactionTypeId == (int)TransactionType.Credit && (salaryhead.MonthlyAmount != null && salaryhead.MonthlyAmount != 0) && salaryhead.HeadTypeId != (int)SalaryHeadType.GENERAL)
+                                    obj.ReferenceNo = referenceNo;
+                                }
+                                else
                                 {
-                                    xVoucherTransactions.ChartOfAccountNewId = salaryhead.AccountNo;
-                                    xVoucherTransactions.CreditAccount = salaryhead.AccountNo;
-                                    xVoucherTransactions.Description = string.Format(StaticResource.SalaryHeadDeductions, salaryhead.HeadName);
-                                    xVoucherTransactions.Credit = Convert.ToDouble(salaryhead.MonthlyAmount);
-                                    xVoucherTransactions.Debit = 0;
+                                    //DO NOT REMOVE: This is used to get the latest voucher and then we will get the count of vouhcer sequence from it
+                                    // VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.OrderByDescending(x => x.VoucherDate).FirstOrDefault(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId == model.OfficeId && x.VoucherDate.Year == filterVoucherDate.Year);
 
-                                    voucherTransactionsList.Add(xVoucherTransactions);
+                                    var refNo = referenceNo.Split('-');
+                                    int count = Convert.ToInt32(refNo[3]);
+                                    referenceNo = AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, count, currency.CurrencyCode, office.OfficeCode);
                                 }
                             }
+                            while (sameVoucherReferenceNoCount != 0);
                         }
-                        catch (Exception ex)
+
+                        await _uow.VoucherDetailRepository.AddAsyn(obj);
+
+                        foreach (SalaryHeadModel salaryhead in EmployeeSalaryVoucher.EmployeePayrollLists)
                         {
-                            throw new Exception(ex.Message);
-                        }
-                    }
+                            VoucherTransactions xVoucherTransactions = new VoucherTransactions();
 
-                    foreach (PayrollHeadModel payrollHead in EmployeeSalaryVoucher.EmployeePayrollListPrimary)
-                    {
-                        VoucherTransactions xVoucherTransactions = new VoucherTransactions();
+                            //Creating Voucher Transaction for Credit
+                            xVoucherTransactions.IsDeleted = false;
+                            xVoucherTransactions.VoucherNo = obj.VoucherNo;
+                            xVoucherTransactions.FinancialYearId = financialYear.FinancialYearId;
+                            xVoucherTransactions.CurrencyId = EmployeeSalaryVoucher.CurrencyId;
+                            xVoucherTransactions.OfficeId = EmployeeSalaryVoucher.OfficeId;
 
-                        //Creating Voucher Transaction for Credit
-                        xVoucherTransactions.IsDeleted = false;
-                        xVoucherTransactions.VoucherNo = obj.VoucherNo;
-                        xVoucherTransactions.FinancialYearId = financialYear.FinancialYearId;
-                        xVoucherTransactions.CurrencyId = EmployeeSalaryVoucher.CurrencyId;
-                        xVoucherTransactions.OfficeId = EmployeeSalaryVoucher.OfficeId;
-
-                        try
-                        {
-                            //Include only salary heads in voucher that contain transaction type ""
-                            if (payrollHead.TransactionTypeId != null && payrollHead.TransactionTypeId != 0)
+                            try
                             {
-                                //Include only salary heads in voucher that has transaction type as credit
-                                if (payrollHead.TransactionTypeId == (int)TransactionType.Debit && (payrollHead.Amount != null && payrollHead.Amount != 0))
+                                //Include only salary heads in voucher that contain transaction type ""
+                                if (salaryhead.TransactionTypeId != null && salaryhead.TransactionTypeId != 0)
                                 {
-                                    xVoucherTransactions.ChartOfAccountNewId = payrollHead.AccountNo;
-                                    xVoucherTransactions.DebitAccount = payrollHead.AccountNo;
-
-                                    if (payrollHead.PayrollHeadTypeId != (int)SalaryHeadType.GENERAL)
+                                    //Include only salary heads in voucher that has transaction type as credit and salary head type is not general
+                                    if (salaryhead.TransactionTypeId == (int)TransactionType.Debit && (salaryhead.MonthlyAmount != null && salaryhead.MonthlyAmount != 0) && salaryhead.HeadTypeId != (int)SalaryHeadType.GENERAL)
                                     {
-                                        xVoucherTransactions.Description = string.Format(StaticResource.SalaryHeadAllowances, payrollHead.PayrollHeadName);
-                                    }
-                                    else
+                                        xVoucherTransactions.ChartOfAccountNewId = salaryhead.AccountNo;
+                                        xVoucherTransactions.DebitAccount = salaryhead.AccountNo;
+                                        xVoucherTransactions.Description = string.Format(StaticResource.SalaryHeadAllowances, salaryhead.HeadName);
+                                        xVoucherTransactions.Debit = Convert.ToDouble(salaryhead.MonthlyAmount);
+                                        xVoucherTransactions.Credit = 0;
+
+                                        //Note : These values are associated with Voucher and Transactions
+                                        xVoucherTransactions.TransactionDate = obj.VoucherDate;
+                                        xVoucherTransactions.FinancialYearId = obj.FinancialYearId;
+                                        xVoucherTransactions.CurrencyId = obj.CurrencyId;
+
+                                        voucherTransactionsList.Add(xVoucherTransactions);
+
+                                    }//Include only salary heads in voucher that has transaction type as debit and salary head type is not general
+                                    else if (salaryhead.TransactionTypeId == (int)TransactionType.Credit && (salaryhead.MonthlyAmount != null && salaryhead.MonthlyAmount != 0) && salaryhead.HeadTypeId != (int)SalaryHeadType.GENERAL)
                                     {
-                                        xVoucherTransactions.Description = payrollHead.PayrollHeadName + "Debited";
+                                        xVoucherTransactions.ChartOfAccountNewId = salaryhead.AccountNo;
+                                        xVoucherTransactions.CreditAccount = salaryhead.AccountNo;
+                                        xVoucherTransactions.Description = string.Format(StaticResource.SalaryHeadDeductions, salaryhead.HeadName);
+                                        xVoucherTransactions.Credit = Convert.ToDouble(salaryhead.MonthlyAmount);
+                                        xVoucherTransactions.Debit = 0;
+
+                                        voucherTransactionsList.Add(xVoucherTransactions);
                                     }
-
-                                    xVoucherTransactions.Debit = Convert.ToDouble(payrollHead.Amount);
-                                    xVoucherTransactions.Credit = 0;
-                                    xVoucherTransactions.TransactionDate = obj.VoucherDate;
-                                    xVoucherTransactions.FinancialYearId = obj.FinancialYearId;
-                                    xVoucherTransactions.CurrencyId = obj.CurrencyId;
-
-                                    voucherTransactionsList.Add(xVoucherTransactions);
-
-                                }//Include only salary heads in voucher that has transaction type as debit
-                                else if (payrollHead.TransactionTypeId == (int)TransactionType.Credit && (payrollHead.Amount != null && payrollHead.Amount != 0))
-                                {
-                                    xVoucherTransactions.ChartOfAccountNewId = Convert.ToInt32(payrollHead.AccountNo);
-                                    xVoucherTransactions.CreditAccount = Convert.ToInt32(payrollHead.AccountNo);
-
-                                    if (payrollHead.PayrollHeadTypeId != (int)SalaryHeadType.GENERAL)
-                                    {
-                                        xVoucherTransactions.Description = string.Format(StaticResource.SalaryHeadDeductions, payrollHead.PayrollHeadName);
-                                    }
-                                    else
-                                    {
-                                        xVoucherTransactions.Description = payrollHead.PayrollHeadName + "Credited";
-                                    }
-
-                                    xVoucherTransactions.Credit = Convert.ToDouble(payrollHead.Amount);
-                                    xVoucherTransactions.Debit = 0;
-                                    xVoucherTransactions.TransactionDate = obj.VoucherDate;
-                                    xVoucherTransactions.FinancialYearId = obj.FinancialYearId;
-                                    xVoucherTransactions.CurrencyId = obj.CurrencyId;
-
-                                    voucherTransactionsList.Add(xVoucherTransactions);
                                 }
                             }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(ex.Message);
+                            }
                         }
-                        catch (Exception ex)
+
+                        foreach (PayrollHeadModel payrollHead in EmployeeSalaryVoucher.EmployeePayrollListPrimary)
                         {
-                            throw new Exception(ex.Message);
+                            VoucherTransactions xVoucherTransactions = new VoucherTransactions();
+
+                            //Creating Voucher Transaction for Credit
+                            xVoucherTransactions.IsDeleted = false;
+                            xVoucherTransactions.VoucherNo = obj.VoucherNo;
+                            xVoucherTransactions.FinancialYearId = financialYear.FinancialYearId;
+                            xVoucherTransactions.CurrencyId = EmployeeSalaryVoucher.CurrencyId;
+                            xVoucherTransactions.OfficeId = EmployeeSalaryVoucher.OfficeId;
+
+                            try
+                            {
+                                //Include only salary heads in voucher that contain transaction type ""
+                                if (payrollHead.TransactionTypeId != null && payrollHead.TransactionTypeId != 0)
+                                {
+                                    //Include only salary heads in voucher that has transaction type as credit
+                                    if (payrollHead.TransactionTypeId == (int)TransactionType.Debit && (payrollHead.Amount != null && payrollHead.Amount != 0))
+                                    {
+                                        xVoucherTransactions.ChartOfAccountNewId = payrollHead.AccountNo;
+                                        xVoucherTransactions.DebitAccount = payrollHead.AccountNo;
+
+                                        if (payrollHead.PayrollHeadTypeId != (int)SalaryHeadType.GENERAL)
+                                        {
+                                            xVoucherTransactions.Description = string.Format(StaticResource.SalaryHeadAllowances, payrollHead.PayrollHeadName);
+                                        }
+                                        else
+                                        {
+                                            xVoucherTransactions.Description = payrollHead.PayrollHeadName + "Debited";
+                                        }
+
+                                        xVoucherTransactions.Debit = Convert.ToDouble(payrollHead.Amount);
+                                        xVoucherTransactions.Credit = 0;
+                                        xVoucherTransactions.TransactionDate = obj.VoucherDate;
+                                        xVoucherTransactions.FinancialYearId = obj.FinancialYearId;
+                                        xVoucherTransactions.CurrencyId = obj.CurrencyId;
+
+                                        voucherTransactionsList.Add(xVoucherTransactions);
+
+                                    }//Include only salary heads in voucher that has transaction type as debit
+                                    else if (payrollHead.TransactionTypeId == (int)TransactionType.Credit && (payrollHead.Amount != null && payrollHead.Amount != 0))
+                                    {
+                                        xVoucherTransactions.ChartOfAccountNewId = Convert.ToInt32(payrollHead.AccountNo);
+                                        xVoucherTransactions.CreditAccount = Convert.ToInt32(payrollHead.AccountNo);
+
+                                        if (payrollHead.PayrollHeadTypeId != (int)SalaryHeadType.GENERAL)
+                                        {
+                                            xVoucherTransactions.Description = string.Format(StaticResource.SalaryHeadDeductions, payrollHead.PayrollHeadName);
+                                        }
+                                        else
+                                        {
+                                            xVoucherTransactions.Description = payrollHead.PayrollHeadName + "Credited";
+                                        }
+
+                                        xVoucherTransactions.Credit = Convert.ToDouble(payrollHead.Amount);
+                                        xVoucherTransactions.Debit = 0;
+                                        xVoucherTransactions.TransactionDate = obj.VoucherDate;
+                                        xVoucherTransactions.FinancialYearId = obj.FinancialYearId;
+                                        xVoucherTransactions.CurrencyId = obj.CurrencyId;
+
+                                        voucherTransactionsList.Add(xVoucherTransactions);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(ex.Message);
+                            }
                         }
-                    }
 
-                    //Creating Voucher transactions for Gross Salary it is being calculated in this method so we need to insert record for it separately
-                    if (grossSalary != null && grossSalary != 0)
+                        //Creating Voucher transactions for Gross Salary it is being calculated in this method so we need to insert record for it separately
+                        if (grossSalary != null && grossSalary != 0)
+                        {
+                            VoucherTransactions xVoucherTransactions = new VoucherTransactions();
+                            //Creating Voucher Transaction for Credit
+                            xVoucherTransactions.IsDeleted = false;
+                            xVoucherTransactions.VoucherNo = obj.VoucherNo;
+                            xVoucherTransactions.FinancialYearId = financialYear.FinancialYearId;
+                            xVoucherTransactions.CurrencyId = EmployeeSalaryVoucher.CurrencyId;
+                            xVoucherTransactions.OfficeId = EmployeeSalaryVoucher.OfficeId;
+
+                            xVoucherTransactions.ChartOfAccountNewId = EmployeeSalaryVoucher.EmployeePayrollLists.FirstOrDefault(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).AccountNo;
+                            xVoucherTransactions.CreditAccount = xVoucherTransactions.ChartOfAccountNewId;
+                            xVoucherTransactions.Description = "Basic Pay Debited";
+                            xVoucherTransactions.Debit = Convert.ToDouble(grossSalary);
+                            xVoucherTransactions.Credit = 0;
+                            xVoucherTransactions.TransactionDate = obj.VoucherDate;
+                            xVoucherTransactions.FinancialYearId = obj.FinancialYearId;
+                            xVoucherTransactions.CurrencyId = obj.CurrencyId;
+
+                            voucherTransactionsList.Add(xVoucherTransactions);
+
+                            await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(voucherTransactionsList);
+                            await _uow.SaveAsync();
+                        }
+
+                        //Creating an entry in EmployeeSalaryPaymentHistory Table
+                        EmployeeSalaryPaymentHistory employeeSalaryPaymentHistory = new EmployeeSalaryPaymentHistory();
+                        employeeSalaryPaymentHistory.CreatedById = EmployeeSalaryVoucher.CreatedById;
+                        employeeSalaryPaymentHistory.CreatedDate = DateTime.UtcNow;
+                        employeeSalaryPaymentHistory.IsDeleted = false;
+                        employeeSalaryPaymentHistory.EmployeeId = EmployeeSalaryVoucher.EmployeeId;
+                        employeeSalaryPaymentHistory.VoucherNo = obj.VoucherNo;
+                        employeeSalaryPaymentHistory.IsSalaryReverse = false;
+                        employeeSalaryPaymentHistory.Year = EmployeeSalaryVoucher.PayrollMonth.Year;
+                        employeeSalaryPaymentHistory.Month = EmployeeSalaryVoucher.PayrollMonth.Month;
+
+                        await _uow.EmployeeSalaryPaymentHistoryRepository.AddAsyn(employeeSalaryPaymentHistory);
+
+                        response.data.VoucherReferenceNo = obj.ReferenceNo;
+                        response.data.VoucherNo = obj.VoucherNo;
+
+                        var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == EmployeeSalaryVoucher.CreatedById);
+
+                        LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                        loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
+                        loggerObj.IsRead = false;
+                        loggerObj.UserName = user.FirstName + " " + user.LastName;
+                        loggerObj.UserId = EmployeeSalaryVoucher.CreatedById;
+                        loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
+                        loggerObj.CreatedDate = DateTime.Now;
+
+                        response.LoggerDetailsModel = loggerObj;
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
+                    }
+                    else
                     {
-                        VoucherTransactions xVoucherTransactions = new VoucherTransactions();
-                        //Creating Voucher Transaction for Credit
-                        xVoucherTransactions.IsDeleted = false;
-                        xVoucherTransactions.VoucherNo = obj.VoucherNo;
-                        xVoucherTransactions.FinancialYearId = financialYear.FinancialYearId;
-                        xVoucherTransactions.CurrencyId = EmployeeSalaryVoucher.CurrencyId;
-                        xVoucherTransactions.OfficeId = EmployeeSalaryVoucher.OfficeId;
-
-                        xVoucherTransactions.ChartOfAccountNewId = EmployeeSalaryVoucher.EmployeePayrollLists.FirstOrDefault(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).AccountNo;
-                        xVoucherTransactions.CreditAccount = xVoucherTransactions.ChartOfAccountNewId;
-                        xVoucherTransactions.Description = "Basic Pay Debited";
-                        xVoucherTransactions.Debit = Convert.ToDouble(grossSalary);
-                        xVoucherTransactions.Credit = 0;
-                        xVoucherTransactions.TransactionDate = obj.VoucherDate;
-                        xVoucherTransactions.FinancialYearId = obj.FinancialYearId;
-                        xVoucherTransactions.CurrencyId = obj.CurrencyId;
-
-                        voucherTransactionsList.Add(xVoucherTransactions);
-
-                        await _uow.GetDbContext().VoucherTransactions.AddRangeAsync(voucherTransactionsList);
-                        await _uow.SaveAsync();
+                        throw new Exception("Salary Voucher is not balanced");
                     }
-
-                    //Creating an entry in EmployeeSalaryPaymentHistory Table
-                    EmployeeSalaryPaymentHistory employeeSalaryPaymentHistory = new EmployeeSalaryPaymentHistory();
-                    employeeSalaryPaymentHistory.CreatedById = EmployeeSalaryVoucher.CreatedById;
-                    employeeSalaryPaymentHistory.CreatedDate = DateTime.UtcNow;
-                    employeeSalaryPaymentHistory.IsDeleted = false;
-                    employeeSalaryPaymentHistory.EmployeeId = EmployeeSalaryVoucher.EmployeeId;
-                    employeeSalaryPaymentHistory.VoucherNo = obj.VoucherNo;
-                    employeeSalaryPaymentHistory.IsSalaryReverse = false;
-                    employeeSalaryPaymentHistory.Year = EmployeeSalaryVoucher.PayrollMonth.Year;
-                    employeeSalaryPaymentHistory.Month = EmployeeSalaryVoucher.PayrollMonth.Month;
-
-                    await _uow.EmployeeSalaryPaymentHistoryRepository.AddAsyn(employeeSalaryPaymentHistory);
-
-                    response.data.VoucherReferenceNo = obj.ReferenceNo;
-                    response.data.VoucherNo = obj.VoucherNo;
-
-                    var user = await _uow.UserDetailsRepository.FindAsync(x => x.AspNetUserId == EmployeeSalaryVoucher.CreatedById);
-
-                    LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                    loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.VoucherCreated;
-                    loggerObj.IsRead = false;
-                    loggerObj.UserName = user.FirstName + " " + user.LastName;
-                    loggerObj.UserId = EmployeeSalaryVoucher.CreatedById;
-                    loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
-                    loggerObj.CreatedDate = DateTime.Now;
-
-                    response.LoggerDetailsModel = loggerObj;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
                 }
                 else
                 {
-                    throw new Exception("Salary Voucher is not balanced");
+                    throw new Exception($"Exchange Rate not Defined for {DateTime.UtcNow.Date}");
                 }
             }
             catch (Exception ex)

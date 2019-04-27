@@ -398,19 +398,24 @@ namespace HumanitarianAssistance.Service.Classes
         {
             float avg = 0;
 
-            Task<long> totalProjectsTask =  _uow.GetDbContext().ProjectActivityDetail
+            Task<long> totalProjectsTask = _uow.GetDbContext().ProjectActivityDetail
                                                     .LongCountAsync(a => a.IsDeleted == false && a.ProjectBudgetLineDetail.ProjectId == projectId);
-            Task<long> completedProjectsTask =  _uow.GetDbContext().ProjectActivityDetail
+            Task<long> completedProjectsTask = _uow.GetDbContext().ProjectActivityDetail
                                                     .LongCountAsync(a => a.IsDeleted == false &&
                                                                 a.ProjectBudgetLineDetail.ProjectId == projectId &&
                                                                 a.StatusId == (int)ProjectPhaseType.Completed
                                                            );
             long totalProjects = await totalProjectsTask;
             long completedProjects = await completedProjectsTask;
-
-            //Note: Here typecasting is important, else it will always return 0 
-            avg = (float)completedProjects / totalProjects * 100;
-
+            if (totalProjects == 0 || completedProjects == 0)
+            {
+                avg = 0;
+            }
+            else
+            {
+                //Note: Here typecasting is important, else it will always return 0 
+                avg = (float)completedProjects / totalProjects * 100;
+            }
             return avg;
         }
 
