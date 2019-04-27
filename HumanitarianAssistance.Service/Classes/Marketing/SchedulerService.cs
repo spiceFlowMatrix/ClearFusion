@@ -48,7 +48,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         {
             var JobList = await (from j in _uow.GetDbContext().JobDetails
                                  join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
-                                 where !j.IsDeleted.Value && !jp.IsDeleted.Value
+                                 where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.IsApproved
                                  select (new JobDetailsModel
                                  {
                                      JobId = j.JobId,
