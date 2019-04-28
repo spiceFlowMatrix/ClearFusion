@@ -312,8 +312,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    ClientId = cd.ClientId,
                                    ClientName = cd.ClientName,
                                    JobPriceId = jp.JobPriceId,
-                                   CurrencyCode = cur.CurrencyCode                                 
-                                  
+                                   CurrencyCode = cur.CurrencyCode
+
                                })).FirstOrDefault();
                 response.data.JobPriceDetail = JobList;
                 response.StatusCode = 200;
@@ -895,7 +895,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                      </div>
                  </div>";
 
-                PdfDocument doc = converter.ConvertHtmlString(TxtHtmlCode);                       
+                PdfDocument doc = converter.ConvertHtmlString(TxtHtmlCode);
                 pdf = doc.Save();
                 Console.WriteLine(doc);
                 response.StatusCode = StaticResource.successStatusCode;
@@ -911,6 +911,83 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
 
+        }
+
+        public async Task<APIResponse> GenerateInvoice(int jobId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var scheduleList = await _uow.ScheduleDetailsRepository.FindAllAsync(x => x.JobId == jobId);
+                var playout = _uow.PlayoutMinutesRepository.FindAll(x => scheduleList.Any(s => s.ScheduleId == x.ScheduleId)).ToList();
+                APIResponse response1 = await GetJobDetailsById(jobId, userId);
+                InvoiceModel invoiceDetails = new InvoiceModel();
+
+                if (playout.Count > 0)
+                {
+                    var TotalMinutes = (from n in playout
+                                        group n by 1 into og
+                                        select new
+                                        {
+                                            TotalTransacted = og.Sum(item => item.TotalMinutes),
+                                        }).FirstOrDefault().TotalTransacted;
+
+                    //var currency = _uow.CurrencyDetailsRepository.GetAll().AsQueryable().Where(x => x.CurrencyCode == response1.data.JobPriceDetail.CurrencyCode).FirstOrDefault();
+                    //response.data.JobPriceDetail = response1.data.JobPriceDetail;
+
+
+                    invoiceDetails.TotalRunningMinutes = TotalMinutes;
+                }
+                else
+                {
+                    var minutes = from n in scheduleList
+                                  select new
+                                  {
+                                      TotalTransacted = ((n.EndTime - n.StartTime).TotalHours) * 60,
+                                  };
+                    var TotalMinutes = (from n in minutes
+                                        group n by 1 into og
+                                        select new
+                                        {
+                                            TotalTransacted = og.Sum(item => item.TotalTransacted),
+                                        }).FirstOrDefault().TotalTransacted;
+                    invoiceDetails.TotalRunningMinutes = Convert.ToInt32(TotalMinutes);
+                }
+
+                invoiceDetails.JobId = jobId;
+                //response1.data.JobPriceDetail.CurrencyCode;
+                invoiceDetails.EndDate = response1.data.JobPriceDetail.EndDate;
+                invoiceDetails.JobRate = response1.data.JobPriceDetail.TotalPrice;
+                invoiceDetails.CurrencyCode = response1.data.JobPriceDetail.CurrencyCode;
+                invoiceDetails.TotalMinutes = response1.data.JobPriceDetail.Minutes;
+                invoiceDetails.JobName = response1.data.JobPriceDetail.JobName;
+                invoiceDetails.ClientName = response1.data.JobPriceDetail.ClientName;
+                invoiceDetails.FinalPrice = (invoiceDetails.JobRate / invoiceDetails.TotalMinutes) * invoiceDetails.TotalRunningMinutes;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.data.invoiceDetails = invoiceDetails;
+                response.Message = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> ApproveInvoice(int jobId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
         }
     }
 }

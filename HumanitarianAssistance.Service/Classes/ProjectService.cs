@@ -18,13 +18,11 @@ using HumanitarianAssistance.ViewModels.Models;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
-using Newtonsoft.Json.Linq;
 using DataAccess.DbEntities.ErrorLog;
 using HumanitarianAssistance.ViewModels.SPModels;
-using System.Data;
-using System.Data.SqlClient;
 using HumanitarianAssistance.Service.Classes.AccountingNew;
 using HumanitarianAssistance.Service.CommonUtility;
+using HumanitarianAssistance.Service.Classes.ProjectManagement;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -276,12 +274,12 @@ namespace HumanitarianAssistance.Service.Classes
                         if (sectorDetail == null)
                         {
                             LatestCodeId = 1;
-                            code = genrateCode(LatestCodeId.ToString());
+                            code = ProjectUtility.GenerateCode(LatestCodeId);
                         }
                         else
                         {
                             LatestCodeId = sectorDetail.SectorId + 1;
-                            code = genrateCode(LatestCodeId.ToString());
+                            code = ProjectUtility.GenerateCode(LatestCodeId);
                         }
                         obj.SectorName = model.SectorName;
                         obj.IsDeleted = false;
@@ -452,12 +450,12 @@ namespace HumanitarianAssistance.Service.Classes
                         if (ProgramDetail == null)
                         {
                             LatestCodeId = 1;
-                            code = genrateCode(LatestCodeId.ToString());
+                            code = ProjectUtility.GenerateCode(LatestCodeId);
                         }
                         else
                         {
                             LatestCodeId = ProgramDetail.ProgramId + 1;
-                            code = genrateCode(LatestCodeId.ToString());
+                            code = ProjectUtility.GenerateCode(LatestCodeId);
                         }
                         obj.ProgramName = model.ProgramName;
                         obj.IsDeleted = false;
@@ -614,23 +612,23 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
 
-                var data = _uow.GetDbContext().AreaDetail.FirstOrDefault(x => x.IsDeleted == false && x.AreaName.Trim().ToLower() == model.AreaName.Trim().ToLower());
+                var data = await _uow.GetDbContext().AreaDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.AreaName.Trim().ToLower() == model.AreaName.Trim().ToLower());
 
                 if (data == null)
                 {
                     AreaDetail obj = _mapper.Map<AreaModel, AreaDetail>(model);
-                    var AreaDetail = _uow.GetDbContext().AreaDetail
+                    var AreaDetail = await _uow.GetDbContext().AreaDetail
                                                                .OrderByDescending(x => x.AreaId)
-                                                               .FirstOrDefault(x => x.IsDeleted == false);
+                                                               .FirstOrDefaultAsync(x => x.IsDeleted == false);
                     if (AreaDetail == null)
                     {
                         LatestCodeId = 1;
-                        code = genrateCode(LatestCodeId.ToString());
+                        code = ProjectUtility.GenerateCode(LatestCodeId);
                     }
                     else
                     {
                         LatestCodeId = AreaDetail.AreaId + 1;
-                        code = genrateCode(LatestCodeId.ToString());
+                        code = ProjectUtility.GenerateCode(LatestCodeId);
                     }
                     obj.AreaCode = code;
                     obj.AreaName = model.AreaName;
@@ -638,7 +636,6 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.CreatedById = UserId;
                     obj.CreatedDate = DateTime.UtcNow;
                     await _uow.AreaDetailRepository.AddAsyn(obj);
-                    await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
@@ -837,12 +834,12 @@ namespace HumanitarianAssistance.Service.Classes
                         if (ProjectDetail == null)
                         {
                             LatestprojectId = 1;
-                            projectcode = genrateCode(LatestprojectId.ToString());
+                            projectcode = ProjectUtility.GenerateProjectCode(LatestprojectId);
                         }
                         else
                         {
                             LatestprojectId = ProjectDetail.ProjectId + 1;
-                            projectcode = genrateCode(LatestprojectId.ToString());
+                            projectcode = ProjectUtility.GenerateProjectCode(LatestprojectId);
                         }
 
                         ProjectDetail obj = _mapper.Map<ProjectDetailNewModel, ProjectDetail>(model);
@@ -918,21 +915,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        //crete code
-        public string genrateCode(string id)
-        {
-            string code = string.Empty;
-            if (id.Length == 1)
-                return code = "0000" + id;
-            else if (id.Length == 2)
-                return code = "000" + id;
-            else if (id.Length == 3)
-                return code = "00" + id;
-            else if (id.Length == 4)
-                return code = "0" + id;
-            else
-                return code = id;
-        }
+
 
         public async Task<APIResponse> DeleteProjectDetail(long ProjectId, string UserId)
         {
@@ -4656,6 +4639,15 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #region ProjectJobDetail
+
+        public async Task<string> GetProjectJobCode(ProjectJobDetail model)
+        {
+            ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId);
+            long projectjobCount = await _uow.GetDbContext().ProjectJobDetail.LongCountAsync(x => x.ProjectId == model.ProjectId);
+
+            return ProjectUtility.GenerateProjectJobCode(projectDetail.ProjectCode, projectjobCount++);
+        }
+
         public async Task<APIResponse> AddEditProjectJobDetail(ProjectJobDetailModel model, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -4665,29 +4657,26 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model.ProjectId != 0)
                 {
                     ProjectJobDetail obj = _mapper.Map<ProjectJobDetailModel, ProjectJobDetail>(model);
+
                     if (model.ProjectJobId == 0)
                     {
-
-                        //var  latestProjectJobId = await _uow.GetDbContext().ProjectJobDetail
-                        //                                         .OrderByDescending(x => x.ProjectJobId)
-                        //                                        .FirstOrDefaultAsync();
-
                         obj.CreatedDate = DateTime.UtcNow;
                         obj.IsDeleted = false;
                         obj.CreatedById = UserId;
-                        var listobj = await _uow.ProjectJobDetailRepository.AddAsyn(obj);
+
+                        await _uow.ProjectJobDetailRepository.AddAsyn(obj);
 
                         if (obj.ProjectJobId != 0)
                         {
-                            obj.ProjectJobCode = string.Format("{0:D5}", obj.ProjectJobId);
+                            // update project job code
+                            obj.ProjectJobCode = await GetProjectJobCode(obj);
+
                             await _uow.ProjectJobDetailRepository.UpdateAsyn(obj);
                         }
-
-
                     }
                     else
                     {
-                        ProjectJobDetail projectJobDetail = _uow.GetDbContext().ProjectJobDetail.FirstOrDefault(x => x.IsDeleted == false && x.ProjectJobId == model.ProjectJobId);
+                        ProjectJobDetail projectJobDetail = await _uow.GetDbContext().ProjectJobDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ProjectJobId == model.ProjectJobId);
 
                         projectJobDetail.ProjectJobCode = obj.ProjectJobCode;
                         projectJobDetail.ProjectJobName = obj.ProjectJobName;
@@ -4784,10 +4773,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
 
-
-
-
-
         public async Task<APIResponse> GetAllProjectJobByProjectId(long projectJobId)
         {
             APIResponse response = new APIResponse();
@@ -4852,6 +4837,18 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        #endregion
+
+        #region ProjectBudgetLineDetail
+
+        public async Task<string> GetProjectBudgetLineCode(ProjectBudgetLineDetail model)
+        {
+            ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId);
+            long projectjobCount = await _uow.GetDbContext().ProjectBudgetLineDetail.LongCountAsync(x => x.ProjectId == model.ProjectId);
+
+            return ProjectUtility.GenerateProjectBudgetLineCode(projectDetail.ProjectCode, projectjobCount++);
+        }
+
         public async Task<APIResponse> GetProjectJobDetailByBudgetLineId(long budgetLineId)
         {
             APIResponse response = new APIResponse();
@@ -4888,25 +4885,24 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId)
         {
             APIResponse response = new APIResponse();
-            long LatestprojectId = 0;
 
             try
             {
-
                 ProjectBudgetLineDetail obj = _mapper.Map<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>(model);
 
                 if (model.BudgetLineId == 0)
                 {
-                    //obj.BudgetCode = LatestprojectId != 0 ? string.Format("{0:D5}", ++LatestprojectId) : string.Format("{0:D5}", 1);
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
                     obj.CreatedById = UserId;
-                    var objeList = await _uow.ProjectBudgetLineDetailRepository.AddAsyn(obj);
+
+                    await _uow.ProjectBudgetLineDetailRepository.AddAsyn(obj);
+
                     if (obj.BudgetLineId != 0)
                     {
-                        obj.BudgetCode = string.Format("{0:D5}", obj.BudgetLineId);
-                        await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(obj);
+                        obj.BudgetCode = await GetProjectBudgetLineCode(obj);
 
+                        await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(obj);
                     }
 
                 }
@@ -5617,7 +5613,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                
+
                 string startDate = model.StartDate == null ? string.Empty : model.StartDate.ToString();
                 string dueDate = model.DueDate == null ? string.Empty : model.DueDate.ToString();
 
@@ -5640,16 +5636,14 @@ namespace HumanitarianAssistance.Service.Classes
                 if (spAmountSummaryInCommonCurrency.Any())
                 {
 
-                    spAmountSummaryInCommonCurrency= spAmountSummaryInCommonCurrency.Skip(model.PageIndex.Value * model.PageSize.Value).Take(model.PageSize.Value).ToList();
-
                     int amountSummaryCurrencyId = spAmountSummaryInCommonCurrency.FirstOrDefault().ProjectCurrency;
                     double totalAmount = spAmountSummaryInCommonCurrency.Sum(x => x.ProjectAmount);
 
-                    List<CurrencyDetails> currencies =  await currencyTask;
+                    List<CurrencyDetails> currencies = await currencyTask;
 
                     foreach (CurrencyDetails currency in currencies)
                     {
-                        ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).Where(x=> x.FromCurrency== amountSummaryCurrencyId && x.ToCurrency== currency.CurrencyId).FirstOrDefaultAsync();
+                        ExchangeRateDetail exchangeRate = await _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x => x.Date).Where(x => x.FromCurrency == amountSummaryCurrencyId && x.ToCurrency == currency.CurrencyId).FirstOrDefaultAsync();
 
                         if (exchangeRate != null)
                         {

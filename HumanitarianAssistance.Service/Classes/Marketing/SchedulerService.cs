@@ -763,7 +763,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                       .Where(v => v.JobDetails != null ? v.JobDetails.JobId == v.JobId : true)
                                       .Where(v => v.ProjectDetail != null ? v.ProjectDetail.ProjectId == v.ProjectId : true)
                                       .Where(v => v.PolicyDetails != null ? v.PolicyDetails.PolicyId == v.PolicyId : true)
-                                      .Where(v => v.StartDate <= DateTime.UtcNow && DateTime.UtcNow.Date <= v.EndDate)
+                                      .Where(v => v.StartDate.Date <= DateTime.UtcNow.Date && DateTime.UtcNow.Date <= v.EndDate.Date)
                                       .ToListAsync();
                 var ScheduleList = activityList.Select(b => new SchedulerModel
                 {

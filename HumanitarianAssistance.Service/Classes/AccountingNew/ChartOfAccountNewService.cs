@@ -7,8 +7,6 @@ using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using Microsoft.EntityFrameworkCore;
@@ -509,18 +507,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
-        }
-
-
-
-        //Create code
-        public string genrateCode(string id)
-        {
-            string code = string.Empty;
-            if (id.Length == 1)
-                return code = "0" + id;
-            else
-                return code = id;
         }
 
     }
