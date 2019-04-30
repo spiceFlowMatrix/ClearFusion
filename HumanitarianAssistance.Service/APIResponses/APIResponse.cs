@@ -226,7 +226,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<NotesMasterModel> NotesDetailsList { get; set; }
         public BalanceSheet BalanceSheet { get; set; }
         public IList<CurrentFinancialYear> CurrentFinancialYearList { get; set; }
-
+       
         public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
         public List<DetailsOfNotesFinalModel> DetailsOfNotesFinalList { get; set; }
 
@@ -305,6 +305,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<long> SecurityConsiderationMultiSelectById { get; set; }
         public List<int> ProvinceMultiSelectById { get; set; }
         public List<long> DistrictMultiSelectById { get; set; }
+        public EditIndicatorModel IndicatorModel { get; set; }
 
 
         public List<ProjectCommunicationModel> ProjectCommunicationModel { get; set; }
@@ -356,6 +357,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectCashFlowModel ProjectCashFlowModel { get; set; }
         public List<BudgetLineBreakdownListModel> BudgetLineBreakdownList { get; set; }
         public BudgetLineBreakdownModel BudgetLineBreakdownModel { get; set; }
+        public ProjectIndicatorViewModel ProjectIndicator { get; set; }
 
         #region Marketing    
         public PolicyTimeSchedule policyTimeScheduleDetails { get; set; }
@@ -478,7 +480,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public string TrainingLink{ get; set; }
         public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
         public List<ProjectProposalAmountSummary> ProjectProposalAmountSummary { get; set; }
-
+        public ProjectIndicatorModel ProjectIndicatorList { get; set; }
     }
 
 

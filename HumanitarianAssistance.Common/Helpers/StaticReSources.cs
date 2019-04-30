@@ -373,8 +373,10 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string FileText = "File Not Supported";
         public const int FileNotSupported = 4440;
 
-        #region "Project Activity"
+        #region "Project"
         public const string ActivityNotFound = "Activity Not Found";
+        public const string ProjectIndicatorNotFound = "Project Indicator Record Not Found";
+        public const string IndicatorNameEmpty = "Project Indicator Name Can Not Be Empty";
         #endregion
 
         #region "Accounting New"

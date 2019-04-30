@@ -23,6 +23,7 @@ using HumanitarianAssistance.ViewModels.SPModels;
 using HumanitarianAssistance.Service.Classes.AccountingNew;
 using HumanitarianAssistance.Service.CommonUtility;
 using HumanitarianAssistance.Service.Classes.ProjectManagement;
+using HumanitarianAssistance.ViewModels.Models.Common;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -146,41 +147,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        public async Task<APIResponse> EditDonorDetails(DonorModel model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var existRecord = await _uow.DonorDetailRepository.FindAsync(x => x.IsDeleted == false && x.DonorId == model.DonorId);
-                if (existRecord != null)
-                {
-                    existRecord.Name = model.Name;
-                    existRecord.ContactPerson = model.ContactPerson;
-                    existRecord.ContactDesignation = model.ContactDesignation;
-                    existRecord.ContactPersonEmail = model.ContactPersonEmail;
-                    existRecord.ContactPersonCell = model.ContactPersonCell;
-                    existRecord.ModifiedById = UserId;
-                    existRecord.ModifiedDate = DateTime.UtcNow;
-                    _uow.GetDbContext().SaveChanges();
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "Record not found";
-                }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
-
+       
         public async Task<APIResponse> DeleteDonorDetails(long DonarId, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -5661,6 +5628,8 @@ namespace HumanitarianAssistance.Service.Classes
                     }
 
                     response.data.ProjectProposalAmountSummary = projectProposalAmountSummary;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
                 }
             }
             catch (Exception ex)
@@ -5671,5 +5640,207 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
+
+        #region "ProjectIndicators"
+        public async Task<APIResponse> GetAllProjectIndicators(PagingModel paging)
+        {
+            APIResponse response = new APIResponse();
+
+            ProjectIndicatorModel projectIndicators = new ProjectIndicatorModel();
+
+            try
+            {
+               var indicators = await _uow.GetDbContext().ProjectIndicators
+                                              .Where(x => x.IsDeleted == false)
+                                              .Select(x=> new ProjectIndicatorViewModel {
+                                                  IndicatorCode= x.IndicatorCode,
+                                                  IndicatorName= x.IndicatorName,
+                                                  ProjectIndicatorId= x.ProjectIndicatorId
+                                              }).Skip((paging.PageIndex * paging.PageSize)).Take(paging.PageSize).ToListAsync();
+
+                long recordCount = await _uow.GetDbContext().ProjectIndicators
+                                              .Where(x => x.IsDeleted == false).CountAsync();
+
+                if (indicators.Any())
+                {
+                    projectIndicators.ProjectIndicators.AddRange(indicators);
+                    response.data.ProjectIndicatorList = new ProjectIndicatorModel();
+                    response.data.ProjectIndicatorList.ProjectIndicators = projectIndicators.ProjectIndicators;
+                    response.data.ProjectIndicatorList.IndicatorRecordCount = recordCount;
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> GetProjectIndicatorDetailById(long IndicatorId)
+        {
+            APIResponse response = new APIResponse();
+
+            ProjectIndicatorModel projectIndicators = new ProjectIndicatorModel();
+
+            try
+            {
+                if (IndicatorId == 0)
+                {
+                    throw new Exception("Project Indicator Id Cannot be 0");
+                }
+
+                var indicators = await _uow.GetDbContext().ProjectIndicators.Include(x => x.ProjectIndicatorQuestions)
+                                                .Select(x => new EditIndicatorModel
+                                                {
+                                                    IndicatorCode = x.IndicatorCode,
+                                                    IndicatorName = x.IndicatorName,
+                                                    IndicatorId = x.ProjectIndicatorId,
+                                                    IsDeleted = x.IsDeleted,
+                                                    IndicatorQuestions = x.ProjectIndicatorQuestions.Select(y => new IndicatorQuestions {
+                                                        QuestionId = y.IndicatorQuestionId,
+                                                        QuestionText = y.IndicatorQuestion,
+                                                        IsDeleted = y.IsDeleted
+                                                    }).Where(y => y.IsDeleted == false).ToList()
+                                                })
+                                               .FirstOrDefaultAsync(x => x.IsDeleted == false && x.IndicatorId == IndicatorId);
+
+                if (indicators != null)
+                {
+                    response.data.IndicatorModel = indicators;
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> AddProjectIndicator(string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                    ProjectIndicators indicator = new ProjectIndicators();
+                    indicator.CreatedById = userId;
+                    indicator.IsDeleted = false;
+                    indicator.CreatedDate = DateTime.UtcNow;
+
+                    await _uow.GetDbContext().ProjectIndicators.AddAsync(indicator);
+                    await _uow.GetDbContext().SaveChangesAsync();
+
+                    indicator.IndicatorCode = ProjectUtility.GenerateCode(indicator.ProjectIndicatorId);
+
+                    _uow.GetDbContext().ProjectIndicators.Update(indicator);
+                    await _uow.GetDbContext().SaveChangesAsync();
+
+                    int count=  await _uow.GetDbContext().ProjectIndicators.Where(x => x.IsDeleted == false).CountAsync();
+
+                    response.data.ProjectIndicator = new ProjectIndicatorViewModel();
+                    response.data.TotalCount = count;
+                    response.data.ProjectIndicator.ProjectIndicatorId = indicator.ProjectIndicatorId;
+                    response.data.ProjectIndicator.IndicatorCode = indicator.IndicatorCode;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception exception)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + exception.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> EditProjectIndicator(EditIndicatorModel model, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (model != null)
+                {
+                    ProjectIndicators indicator = await _uow.GetDbContext().ProjectIndicators.FirstOrDefaultAsync(x=> x.IsDeleted== false && x.ProjectIndicatorId== model.IndicatorId);
+
+                    if (indicator != null)
+                    {
+                        if (!string.IsNullOrEmpty(model.IndicatorName))
+                        {
+                            indicator.ModifiedById = userId;
+                            indicator.ModifiedDate = DateTime.UtcNow;
+                            indicator.IndicatorName = model.IndicatorName;
+
+                            _uow.GetDbContext().ProjectIndicators.Update(indicator);
+                            await _uow.GetDbContext().SaveChangesAsync();
+
+                            if (model.IndicatorQuestions.Any())
+                            {
+                                List<ProjectIndicatorQuestions> projectIndicatorQuestions = await _uow.GetDbContext()
+                                                                                                      .ProjectIndicatorQuestions
+                                                                                                      .Where(x => x.IsDeleted == false && x.ProjectIndicatorId == model.IndicatorId)
+                                                                                                      .ToListAsync();
+
+                                projectIndicatorQuestions.ForEach(x => x.IsDeleted = true);
+
+                                _uow.GetDbContext().ProjectIndicatorQuestions.UpdateRange(projectIndicatorQuestions);
+                                await _uow.GetDbContext().SaveChangesAsync();
+
+                                projectIndicatorQuestions = new List<ProjectIndicatorQuestions>();
+
+                                foreach (var item in model.IndicatorQuestions)
+                                {
+                                    ProjectIndicatorQuestions question = new ProjectIndicatorQuestions();
+                                    question.IsDeleted = false;
+                                    question.CreatedById = userId;
+                                    question.CreatedDate = DateTime.UtcNow;
+                                    question.ProjectIndicatorId = model.IndicatorId;
+                                    question.IndicatorQuestion = item.QuestionText;
+                                    projectIndicatorQuestions.Add(question);
+                                }
+
+                               await _uow.GetDbContext().ProjectIndicatorQuestions.AddRangeAsync(projectIndicatorQuestions);
+                                await _uow.GetDbContext().SaveChangesAsync();
+                            }
+
+                            response.StatusCode = StaticResource.successStatusCode;
+                            response.Message = StaticResource.SuccessText;
+                        }
+                        else
+                        {
+                            response.StatusCode = StaticResource.failStatusCode;
+                            response.Message = StaticResource.IndicatorNameEmpty;
+                        }
+                    }
+                    else
+                    {
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.ProjectIndicatorNotFound;
+                    }
+                }
+                else
+                {
+                    throw new Exception("model is null");
+                }
+            }
+            catch (Exception exception)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + exception.Message;
+            }
+
+            return response;
+        }
+        #endregion
     }
 }

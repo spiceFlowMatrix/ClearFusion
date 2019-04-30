@@ -5369,7 +5369,7 @@ namespace HumanitarianAssistance.Service.Classes
                 }
                 else
                 {
-                    throw new Exception($"Exchange Rate not Defined for {DateTime.UtcNow.Date}");
+                    throw new Exception($"Exchange Rate not Defined for {DateTime.UtcNow.Date.Day}/{DateTime.UtcNow.Date.Month}/{DateTime.UtcNow.Date.Year}");
                 }
             }
             catch (Exception ex)

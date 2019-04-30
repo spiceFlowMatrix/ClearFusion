@@ -246,8 +246,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectActivityDetail> ProjectActivityDetail { get; set; }
         public DbSet<ActivityDocumentsDetail> ActivityDocumentsDetail { get; set; }
 
-
-
+        public DbSet<ProjectIndicatorQuestions> ProjectIndicatorQuestions { get; set; }
+        public DbSet<ProjectIndicators> ProjectIndicators { get; set; }
 
 
         #endregion
