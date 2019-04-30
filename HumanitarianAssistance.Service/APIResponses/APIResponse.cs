@@ -75,7 +75,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double TotalPayable { get; set; }
         public double Balance { get; set; }
         public long TotalExchangeRateCount { get; set; }
-        
+
         public double TotalIncome { get; set; }
         public int TotalPresentDays { get; set; }
         public int TotalAbsentDays { get; set; }
@@ -299,6 +299,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<ProjectDetailNewModel> ProjectDetailModel { get; set; }
         public ProjectDetailNewModel ProjectDetailModel1 { get; set; }
         public ProjectDetail ProjectDetail { get; set; }
+        public bool ProjectWinLoss { get; set; }
         public DonorDetail DonorDetailById { get; set; }
         public ProjectOtherDetail OtherProjectDetailById { get; set; }
         public SecurityConsiderationMultiSelect MultiSecurityConsiderationById { get; set; }
@@ -346,7 +347,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public IList<ProjectActivityModel> ProjectActivityList { get; set; }
         public ProjectActivityModel ProjectActivityDetails { get; set; }
-        
+
         public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
         public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
         public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
@@ -426,7 +427,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<CodeType> SourceCodeTypelist { get; set; }
         public List<StoreSourceCodeDetailModel> SourceCodeDatalist { get; set; }
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
-        public Dictionary<string,List<string>> Permissions { get; set; }
+        public Dictionary<string, List<string>> Permissions { get; set; }
 
 
 
@@ -476,8 +477,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public DateTime DateTime { get; set; }
         public bool ImplementationStatus { get; set; }
         public bool MonitoringStatus { get; set; }
-        public string SignedUrl{ get; set; }
-        public string TrainingLink{ get; set; }
+        public string SignedUrl { get; set; }
+        public string TrainingLink { get; set; }
         public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
         public List<ProjectProposalAmountSummary> ProjectProposalAmountSummary { get; set; }
         public ProjectIndicatorModel ProjectIndicatorList { get; set; }

@@ -540,6 +540,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #endregion
 
+    #region "GetProjectWinLossStatus"
+    public async Task<APIResponse> GetProjectWinLossStatus([FromBody]long ProjectId)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectWinLossStatus(ProjectId);
+      return apiresponse;
+    }
+    #endregion
 
     #region Project Communication
     [HttpPost]
@@ -651,7 +658,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       if (user != null)
       {
         var id = user.Id;
-        apiRespone =  _iProject.AddEditProjectotherDetail(OtherDetail, id);
+        apiRespone = _iProject.AddEditProjectotherDetail(OtherDetail, id);
       }
       return apiRespone;
     }
@@ -1765,7 +1772,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = await _iProject.AddApprovalDetail( model,id);
+            apiRespone = await _iProject.AddApprovalDetail(model, id);
 
           }
           else

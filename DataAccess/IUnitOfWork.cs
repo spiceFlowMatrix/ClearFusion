@@ -202,6 +202,7 @@ namespace DataAccess
         #endregion
 
         #region Marketing
+        IGenericRepository<InvoiceApproval> InvoiceApprovalRepository { get; }
         IGenericRepository<ScheduleDetails> ScheduleDetailsRepository { get; }
         IGenericRepository<Channel> ChannelRepository { get; }
         IGenericRepository<UnitRate> UnitRateRepository { get; }

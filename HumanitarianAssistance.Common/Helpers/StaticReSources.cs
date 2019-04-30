@@ -29,6 +29,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string credentialsJsonFile = "credentials.json";
 
         public const int projectNotFound = 404;
+        public const string projectNotFoundText = "Project not found";
 
         public const string invalidDate = "Actual date must be greater than or equal to start date";
         public const string validData = "Please enter valid data";

@@ -87,6 +87,8 @@ namespace HumanitarianAssistance.Service.interfaces
 
         #endregion
 
+        Task<APIResponse> GetProjectWinLossStatus(long ProjectId);
+
         #region Project Communication
         Task<APIResponse> GetChatByProjectId(long ProjectId);
         Task<APIResponse> AddProjectChat(ProjectCommunicationModel model, string UserId);

@@ -131,7 +131,6 @@ namespace HumanitarianAssistance.Service.Classes
                         existRecord.ModifiedById = UserId;
                         existRecord.ModifiedDate = DateTime.UtcNow;
                         _uow.GetDbContext().SaveChanges();
-                        response.StatusCode = StaticResource.successStatusCode;
                         response.data.DonorDetailById = existRecord;
                         response.Message = "Success";
                     }
@@ -1389,6 +1388,31 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
+
+        #region "Project win / loss status"
+        public async Task<APIResponse> GetProjectWinLossStatus(long projectId)
+        {
+            APIResponse response = new APIResponse();
+
+            var projectDetail = await _uow.GetDbContext().WinProjectDetails
+                                                         .FirstOrDefaultAsync(x => x.ProjectId == projectId);
+            if (projectDetail != null)
+            {
+                response.data.ProjectWinLoss = projectDetail.IsWin ?? false;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            else
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.projectNotFoundText;
+            }
+
+            return response;
+
+        }
+        #endregion
+
         #endregion
 
         #region Project Communication
