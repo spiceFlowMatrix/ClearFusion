@@ -48,7 +48,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         {
             var JobList = await (from j in _uow.GetDbContext().JobDetails
                                  join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
-                                 where !j.IsDeleted.Value && !jp.IsDeleted.Value
+                                 where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.IsApproved
                                  select (new JobDetailsModel
                                  {
                                      JobId = j.JobId,
@@ -450,7 +450,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 if (model.ScheduleId == 0 || model.ScheduleId == null)
                 {
-                    var record = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime && DateTime.UtcNow > x.EndDate);
+                    var record = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime);
                     if (record.Count() > 0)
                     {
                         bool stat = CheckRepeatDays(record.FirstOrDefault(), model);
