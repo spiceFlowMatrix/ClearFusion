@@ -918,7 +918,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var scheduleList = await _uow.ScheduleDetailsRepository.FindAllAsync(x => x.JobId == jobId);
+                var scheduleList = await _uow.ScheduleDetailsRepository.FindAllAsync(x => x.JobId == jobId && x.IsDeleted == false);
                 var playout = _uow.PlayoutMinutesRepository.FindAll(x => scheduleList.Any(s => s.ScheduleId == x.ScheduleId)).ToList();
                 APIResponse response1 = await GetJobDetailsById(jobId, userId);
                 InvoiceModel invoiceDetails = new InvoiceModel();
