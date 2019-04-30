@@ -450,7 +450,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
                 if (model.ScheduleId == 0 || model.ScheduleId == null)
                 {
-                    var record = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime && DateTime.UtcNow.Date < x.EndDate.Date);
+                    var record = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.ChannelId == model.ChannelId && x.JobId == (model.JobId == 0 ? null : model.JobId) && x.PolicyId == (model.PolicyId == 0 ? null : model.PolicyId) && x.ProjectId == (model.ProjectId == 0 ? null : model.ProjectId) && x.StartTime.ToString(@"hh\:mm") == model.StartTime && x.EndTime.ToString(@"hh\:mm") == model.EndTime && DateTime.UtcNow.Date <= x.EndDate.Date);
                     if (record.Count() > 0)
                     {
                         bool stat = CheckRepeatDays(record.FirstOrDefault(), model);
