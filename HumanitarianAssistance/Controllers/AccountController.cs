@@ -19,8 +19,6 @@ using Newtonsoft.Json;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
-using System.IO;
 using DataAccess;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
