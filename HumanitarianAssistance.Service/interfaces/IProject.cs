@@ -3,6 +3,7 @@ using DataAccess.DbEntities.ErrorLog;
 using DataAccess.DbEntities.Project;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Common;
 using HumanitarianAssistance.ViewModels.Models.Project;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -85,6 +86,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetProjectJobDetailByBudgetLineId(long budgetLineId);
 
         #endregion
+
+        Task<APIResponse> GetProjectWinLossStatus(long ProjectId);
 
         #region Project Communication
         Task<APIResponse> GetChatByProjectId(long ProjectId);
@@ -198,6 +201,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetTransactionList(string username, int currencyId, long budgetLineId);
 
         Task<APIResponse> DeleteProjectJob(long jobId, string UserId);
+        Task<APIResponse> GetAllProjectIndicators(PagingModel paging);
 
         #endregion
         #region "cashflow"
@@ -217,5 +221,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model);
         Task<APIResponse> GetProjectProposalReport(ProjectProposalReportFilterModel model);
         Task<APIResponse> GetProjectProposalAmountSummary(ProjectProposalReportFilterModel model);
+        Task<APIResponse> AddProjectIndicator(string userId);
+        Task<APIResponse> EditProjectIndicator(EditIndicatorModel model, string userId);
+        Task<APIResponse> GetProjectIndicatorDetailById(long IndicatorId);
     }
 }

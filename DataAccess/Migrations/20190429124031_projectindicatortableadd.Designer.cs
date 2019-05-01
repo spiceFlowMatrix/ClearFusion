@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190429124031_projectindicatortableadd")]
+    partial class projectindicatortableadd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4634,36 +4636,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("UnitRateId");
 
                     b.ToTable("ContractDetails");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.InvoiceApproval", b =>
-                {
-                    b.Property<long>("InvoiceApprovalId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<bool>("IsInvoiceApproved");
-
-                    b.Property<long?>("JobId");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("InvoiceApprovalId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("JobId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("InvoiceApproval");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.JobPriceDetails", b =>
@@ -11102,21 +11074,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.Marketing.UnitRate", "UnitRates")
                         .WithMany()
                         .HasForeignKey("UnitRateId");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.InvoiceApproval", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.JobDetails", "JobDetails")
-                        .WithMany()
-                        .HasForeignKey("JobId");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.JobPriceDetails", b =>
