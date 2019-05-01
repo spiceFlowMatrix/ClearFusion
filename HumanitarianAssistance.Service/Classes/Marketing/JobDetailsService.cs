@@ -923,49 +923,58 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 APIResponse response1 = await GetJobDetailsById(jobId, userId);
                 InvoiceModel invoiceDetails = new InvoiceModel();
 
-                if (playout.Count > 0)
+                if (scheduleList.Count > 0)
                 {
-                    var TotalMinutes = (from n in playout
-                                        group n by 1 into og
-                                        select new
-                                        {
-                                            TotalTransacted = og.Sum(item => item.TotalMinutes),
-                                        }).FirstOrDefault().TotalTransacted;
+                    if (playout.Count > 0)
+                    {
+                        var TotalMinutes = (from n in playout
+                                            group n by 1 into og
+                                            select new
+                                            {
+                                                TotalTransacted = og.Sum(item => item.TotalMinutes),
+                                            }).FirstOrDefault().TotalTransacted;
 
-                    //var currency = _uow.CurrencyDetailsRepository.GetAll().AsQueryable().Where(x => x.CurrencyCode == response1.data.JobPriceDetail.CurrencyCode).FirstOrDefault();
-                    //response.data.JobPriceDetail = response1.data.JobPriceDetail;
+                        //var currency = _uow.CurrencyDetailsRepository.GetAll().AsQueryable().Where(x => x.CurrencyCode == response1.data.JobPriceDetail.CurrencyCode).FirstOrDefault();
+                        //response.data.JobPriceDetail = response1.data.JobPriceDetail;
 
 
-                    invoiceDetails.TotalRunningMinutes = TotalMinutes;
+                        invoiceDetails.TotalRunningMinutes = TotalMinutes;
+                    }
+                    else
+                    {
+                        var minutes = from n in scheduleList
+                                      select new
+                                      {
+                                          TotalTransacted = ((n.EndTime - n.StartTime).TotalHours) * 60,
+                                      };
+                        var TotalMinutes = (from n in minutes
+                                            group n by 1 into og
+                                            select new
+                                            {
+                                                TotalTransacted = og.Sum(item => item.TotalTransacted),
+                                            }).FirstOrDefault().TotalTransacted;
+                        invoiceDetails.TotalRunningMinutes = Convert.ToInt32(TotalMinutes);
+                    }
+
+                    invoiceDetails.JobId = jobId;
+                    //response1.data.JobPriceDetail.CurrencyCode;
+                    invoiceDetails.EndDate = response1.data.JobPriceDetail.EndDate;
+                    invoiceDetails.JobRate = response1.data.JobPriceDetail.TotalPrice;
+                    invoiceDetails.CurrencyCode = response1.data.JobPriceDetail.CurrencyCode;
+                    invoiceDetails.TotalMinutes = response1.data.JobPriceDetail.Minutes;
+                    invoiceDetails.JobName = response1.data.JobPriceDetail.JobName;
+                    invoiceDetails.ClientName = response1.data.JobPriceDetail.ClientName;
+                    invoiceDetails.FinalPrice = (invoiceDetails.JobRate / invoiceDetails.TotalMinutes) * invoiceDetails.TotalRunningMinutes;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.data.invoiceDetails = invoiceDetails;
+                    response.Message = "Success";
                 }
+
                 else
                 {
-                    var minutes = from n in scheduleList
-                                  select new
-                                  {
-                                      TotalTransacted = ((n.EndTime - n.StartTime).TotalHours) * 60,
-                                  };
-                    var TotalMinutes = (from n in minutes
-                                        group n by 1 into og
-                                        select new
-                                        {
-                                            TotalTransacted = og.Sum(item => item.TotalTransacted),
-                                        }).FirstOrDefault().TotalTransacted;
-                    invoiceDetails.TotalRunningMinutes = Convert.ToInt32(TotalMinutes);
+                    response.Message = "Schedule does not exist";
+                    response.StatusCode = StaticResource.notFoundCode;
                 }
-
-                invoiceDetails.JobId = jobId;
-                //response1.data.JobPriceDetail.CurrencyCode;
-                invoiceDetails.EndDate = response1.data.JobPriceDetail.EndDate;
-                invoiceDetails.JobRate = response1.data.JobPriceDetail.TotalPrice;
-                invoiceDetails.CurrencyCode = response1.data.JobPriceDetail.CurrencyCode;
-                invoiceDetails.TotalMinutes = response1.data.JobPriceDetail.Minutes;
-                invoiceDetails.JobName = response1.data.JobPriceDetail.JobName;
-                invoiceDetails.ClientName = response1.data.JobPriceDetail.ClientName;
-                invoiceDetails.FinalPrice = (invoiceDetails.JobRate / invoiceDetails.TotalMinutes) * invoiceDetails.TotalRunningMinutes;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.data.invoiceDetails = invoiceDetails;
-                response.Message = "Success";
 
             }
             catch (Exception ex)
@@ -981,6 +990,33 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
+                var invoiceDetails = _uow.InvoiceApprovalRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId).FirstOrDefault();
+                if (invoiceDetails == null)
+                {
+                    InvoiceApproval obj = new InvoiceApproval();
+                    obj.IsDeleted = false;
+                    obj.JobId = jobId;
+                    obj.IsInvoiceApproved = true;
+                    obj.CreatedById = userId;
+                    obj.CreatedDate = DateTime.Now;
+                    await _uow.InvoiceApprovalRepository.AddAsyn(obj);
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Invoice Approved successfully";
+                }
+                else
+                {
+                    var existRecord = await _uow.InvoiceApprovalRepository.FindAsync(x => x.IsDeleted == false && x.JobId == jobId);
+                    if (existRecord != null)
+                    {
+                        existRecord.IsInvoiceApproved = true;
+                        existRecord.IsDeleted = false;
+                        existRecord.ModifiedById = userId;
+                        existRecord.ModifiedDate = DateTime.Now;
+                        await _uow.InvoiceApprovalRepository.UpdateAsyn(existRecord);
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Invoice Approved successfully";
+                    }
+                }
             }
             catch (Exception ex)
             {
