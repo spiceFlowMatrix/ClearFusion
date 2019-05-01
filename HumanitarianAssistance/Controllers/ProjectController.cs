@@ -41,6 +41,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       _iActivity = iActivity;
       _hostingEnvironment = hostingEnvironment;
       _serializerSettings = new JsonSerializerSettings
+
       {
         Formatting = Formatting.Indented,
         NullValueHandling = NullValueHandling.Ignore
@@ -1893,6 +1894,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       APIResponse apiresponse = await _iProject.GetProjectProposalAmountSummary(model);
       return apiresponse;
     }
+
+
+    #region "upload file using signed url"
+    [HttpPost]
+    public async Task<APIResponse> UploadDemoUsingBSignedUrlBucket([FromBody]DownloadObjectGCBucketModel model)
+    {
+      APIResponse apiresponse = await _iProject.DownloadFileFromBucket(model);
+      return apiresponse;
+    }
+    #endregion
+
 
   }
 }
