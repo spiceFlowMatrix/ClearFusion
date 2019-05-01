@@ -1939,6 +1939,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiresponse;
     }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectIndicatorQuestionsById([FromBody]long indicatorId)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectIndicatorQuestionsById(indicatorId);
+      return apiresponse;
+    }
     #endregion
 
     [HttpPost]

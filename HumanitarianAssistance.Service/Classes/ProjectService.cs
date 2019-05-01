@@ -5674,20 +5674,30 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-               var indicators = await _uow.GetDbContext().ProjectIndicators
+               var indicators = _uow.GetDbContext().ProjectIndicators
+                                              .OrderByDescending(x=> x.CreatedDate)
                                               .Where(x => x.IsDeleted == false)
                                               .Select(x=> new ProjectIndicatorViewModel {
                                                   IndicatorCode= x.IndicatorCode,
                                                   IndicatorName= x.IndicatorName,
                                                   ProjectIndicatorId= x.ProjectIndicatorId
-                                              }).Skip((paging.PageIndex * paging.PageSize)).Take(paging.PageSize).ToListAsync();
+                                              }).AsQueryable();
+
+                
+
+                if (paging.PageIndex != 0 && paging.PageSize != 0)
+                {
+                    indicators = indicators.Skip((paging.PageIndex * paging.PageSize)).Take(paging.PageSize);
+                }
 
                 long recordCount = await _uow.GetDbContext().ProjectIndicators
                                               .Where(x => x.IsDeleted == false).CountAsync();
 
-                if (indicators.Any())
+                var indicatorList= await indicators.ToListAsync();
+
+                if (indicatorList.Any())
                 {
-                    projectIndicators.ProjectIndicators.AddRange(indicators);
+                    projectIndicators.ProjectIndicators.AddRange(indicatorList);
                     response.data.ProjectIndicatorList = new ProjectIndicatorModel();
                     response.data.ProjectIndicatorList.ProjectIndicators = projectIndicators.ProjectIndicators;
                     response.data.ProjectIndicatorList.IndicatorRecordCount = recordCount;
@@ -5837,6 +5847,14 @@ namespace HumanitarianAssistance.Service.Classes
                                 await _uow.GetDbContext().SaveChangesAsync();
                             }
 
+
+                            ProjectIndicatorViewModel pIndicatorModel = new ProjectIndicatorViewModel();
+
+                            pIndicatorModel.IndicatorName = indicator.IndicatorName;
+                            pIndicatorModel.IndicatorCode = indicator.IndicatorCode;
+                            pIndicatorModel.ProjectIndicatorId = indicator.ProjectIndicatorId;
+
+                            response.data.ProjectIndicator = pIndicatorModel;
                             response.StatusCode = StaticResource.successStatusCode;
                             response.Message = StaticResource.SuccessText;
                         }
@@ -5856,6 +5874,32 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     throw new Exception("model is null");
                 }
+            }
+            catch (Exception exception)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + exception.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> GetProjectIndicatorQuestionsById(long id)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                List<IndicatorQuestions> projectIndicatorQuestions = await _uow.GetDbContext().ProjectIndicatorQuestions
+                                                                               .Where(x => x.IsDeleted == false && x.ProjectIndicatorId == id)
+                                                                               .Select(x=> new IndicatorQuestions {
+                                                                                   QuestionId= x.IndicatorQuestionId,
+                                                                                   QuestionText= x.IndicatorQuestion
+                                                                               })
+                                                                               .ToListAsync();
+                response.data.Questions = projectIndicatorQuestions;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
             }
             catch (Exception exception)
             {
