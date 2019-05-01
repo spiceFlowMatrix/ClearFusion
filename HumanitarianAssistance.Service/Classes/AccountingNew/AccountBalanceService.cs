@@ -60,7 +60,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
-                    .Where(x => x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
+                    .Where(x => x.IsDeleted== false && x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
                     .Include(x => x.AccountType)
                     .ToListAsync();
 

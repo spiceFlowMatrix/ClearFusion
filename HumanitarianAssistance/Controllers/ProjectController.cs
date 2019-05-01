@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Common;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
@@ -539,6 +540,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #endregion
 
+    #region "GetProjectWinLossStatus"
+    public async Task<APIResponse> GetProjectWinLossStatus([FromBody]long ProjectId)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectWinLossStatus(ProjectId);
+      return apiresponse;
+    }
+    #endregion
 
     #region Project Communication
     [HttpPost]
@@ -650,7 +658,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       if (user != null)
       {
         var id = user.Id;
-        apiRespone =  _iProject.AddEditProjectotherDetail(OtherDetail, id);
+        apiRespone = _iProject.AddEditProjectotherDetail(OtherDetail, id);
       }
       return apiRespone;
     }
@@ -1764,7 +1772,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = await _iProject.AddApprovalDetail( model,id);
+            apiRespone = await _iProject.AddApprovalDetail(model, id);
 
           }
           else
@@ -1883,6 +1891,52 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     public async Task<APIResponse> GetProjectProposalReport([FromBody]ProjectProposalReportFilterModel model)
     {
       APIResponse apiresponse = await _iProject.GetProjectProposalReport(model);
+      return apiresponse;
+    }
+    #endregion
+
+    #region "ProjectIndicators"
+    [HttpPost]
+    public async Task<APIResponse> GetAllProjectIndicators([FromBody]PagingModel paging)
+    {
+      APIResponse apiresponse = await _iProject.GetAllProjectIndicators(paging);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectIndicatorDetailById([FromBody]long indicatorId)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectIndicatorDetailById(indicatorId);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddProjectIndicator()
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iProject.AddProjectIndicator(id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectIndicator([FromBody]EditIndicatorModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iProject.EditProjectIndicator(model, id);
+      }
+
       return apiresponse;
     }
     #endregion
