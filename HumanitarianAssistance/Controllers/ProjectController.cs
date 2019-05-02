@@ -1955,5 +1955,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> AddProjectMonitoringReview([FromBody]ProjectMonitoringViewModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.AddProjectMonitoringReview(model, id);
+      }
+       
+      return apiresponse;
+    }
   }
 }
