@@ -1559,61 +1559,61 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpPost]
-    public async Task<APIResponse> StartProjectActivity([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.StartProjectActivity(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> StartProjectActivity([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.StartProjectActivity(activityId, id);
+    //  }
+    //  return response;
+    //}
 
-    [HttpPost]
-    public async Task<APIResponse> EndProjectActivity([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.EndProjectActivity(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> EndProjectActivity([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.EndProjectActivity(activityId, id);
+    //  }
+    //  return response;
+    //}
 
-    [HttpPost]
-    public async Task<APIResponse> MarkImplementationAsCompleted([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.MarkImplementationAsCompleted(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> MarkImplementationAsCompleted([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.MarkImplementationAsCompleted(activityId, id);
+    //  }
+    //  return response;
+    //}
 
-    [HttpPost]
-    public async Task<APIResponse> MarkMonitoringAsCompleted([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.MarkMonitoringAsCompleted(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> MarkMonitoringAsCompleted([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.MarkMonitoringAsCompleted(activityId, id);
+    //  }
+    //  return response;
+    //}
 
 
     [HttpPost]
@@ -1945,6 +1945,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     public async Task<APIResponse> GetProjectProposalAmountSummary([FromBody]ProjectProposalReportFilterModel model)
     {
       APIResponse apiresponse = await _iProject.GetProjectProposalAmountSummary(model);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public APIResponse GetProjectActivityAdvanceFilterList([FromBody]ActivityAdvanceFilterModel model)
+    {
+      APIResponse apiresponse = _iActivity.GetProjectActivityAdvanceFilterList(model);
       return apiresponse;
     }
 

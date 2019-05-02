@@ -238,6 +238,7 @@ namespace DataAccess
 
 
         private IGenericRepository<Errorlog> _errorlogRepository { get; set; }
+        private IGenericRepository<ProjectActivityProvinceDetail> _projectActivityProvinceDetailRepository;
 
 
         public UnitOfWork(ApplicationDbContext mschaContext)
@@ -264,6 +265,15 @@ namespace DataAccess
             GC.SuppressFinalize(this);
         }
 
+
+        public IGenericRepository<ProjectActivityProvinceDetail> ProjectActivityProvinceDetailRepository
+        {
+            get
+            {
+                return _projectActivityProvinceDetailRepository =
+                    _projectActivityProvinceDetailRepository ?? new GenericRepository<ProjectActivityProvinceDetail>(_mschaContext);
+            }
+        }
 
         public IGenericRepository<GainLossSelectedAccounts> GainLossSelectedAccountsRepository
         {
