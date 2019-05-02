@@ -38,6 +38,10 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public int? RecurringCount { get; set; }
         public int RecurrinTypeId { get; set; }
 
+
+        public IEnumerable<int> ProvinceList { get; set; }
+        public IEnumerable<long?> DistrictList { get; set; }
+
         ////Implementation
         //[Range(0, 100)]
         //public float? ImplementationProgress { get; set; }

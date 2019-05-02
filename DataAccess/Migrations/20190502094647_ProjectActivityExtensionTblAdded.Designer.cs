@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190502094647_ProjectActivityExtensionTblAdded")]
+    partial class ProjectActivityExtensionTblAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6689,10 +6691,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<long?>("ParentId");
-
-                    b.Property<DateTime?>("PlannedEndDate");
-
-                    b.Property<DateTime?>("PlannedStartDate");
 
                     b.Property<int>("RecurrinTypeId");
 

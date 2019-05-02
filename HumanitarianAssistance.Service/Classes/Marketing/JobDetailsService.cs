@@ -918,7 +918,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var scheduleList = await _uow.ScheduleDetailsRepository.FindAllAsync(x => x.JobId == jobId);
+                var scheduleList = await _uow.ScheduleDetailsRepository.FindAllAsync(x => x.JobId == jobId && x.IsDeleted == false);
                 var playout = _uow.PlayoutMinutesRepository.FindAll(x => scheduleList.Any(s => s.ScheduleId == x.ScheduleId)).ToList();
                 APIResponse response1 = await GetJobDetailsById(jobId, userId);
                 InvoiceModel invoiceDetails = new InvoiceModel();
@@ -999,9 +999,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     obj.IsInvoiceApproved = true;
                     obj.CreatedById = userId;
                     obj.CreatedDate = DateTime.Now;
-                    await _uow.InvoiceApprovalRepository.AddAsyn(obj);
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Invoice Approved successfully";
+                    await _uow.InvoiceApprovalRepository.AddAsyn(obj);                   
                 }
                 else
                 {
@@ -1013,10 +1011,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         existRecord.ModifiedById = userId;
                         existRecord.ModifiedDate = DateTime.Now;
                         await _uow.InvoiceApprovalRepository.UpdateAsyn(existRecord);
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Invoice Approved successfully";
                     }
                 }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Invoice Approved successfully";
             }
             catch (Exception ex)
             {
