@@ -248,6 +248,7 @@ namespace HumanitarianAssistance.Entities
 
         public DbSet<ProjectIndicatorQuestions> ProjectIndicatorQuestions { get; set; }
         public DbSet<ProjectIndicators> ProjectIndicators { get; set; }
+        public DbSet<ProjectActivityProvinceDetail> ProjectActivityProvinceDetail { get; set; }
 
 
         #endregion
@@ -292,15 +293,11 @@ namespace HumanitarianAssistance.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
-            // modelBuilder.Entity<RolePermissions>().HasKey(s => new { s.RoleId});
 
             modelBuilder.Entity<VoucherTransactions>().HasOne(x => x.ChartOfAccountDetail).WithMany(b => b.VoucherTransactionsList);
             modelBuilder.Entity<VoucherTransactions>().HasOne(p => p.VoucherDetails).WithMany(b => b.VoucherTransactionDetails);
 
-            //modelBuilder.Entity<ChartOfAccountNew>().HasMany(x => x.CreditAccountlist);
-            //modelBuilder.Entity<ChartOfAccountNew>().HasMany(x => x.DebitAccountlist);
-
-
+            modelBuilder.Entity<ProjectActivityDetail>().HasMany(g => g.ProjectActivityProvinceDetail);
 
 
             //Global filter on table
