@@ -818,5 +818,32 @@ namespace HumanitarianAssistance.Service.Classes
             return activityList;
         }
 
+        public async Task<APIResponse> GetProjectActivityDetail(int parentId)
+
+        {
+
+            APIResponse response = new APIResponse();
+            try
+            {
+                var activityDetails = await _uow.GetDbContext().ProjectActivityDetail
+                                          .Include(p => p.ProjectSubActivityList)
+                                          .FirstOrDefaultAsync(v => v.IsDeleted == false &&
+                                                      v.ParentId == parentId
+                                          );
+                
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+
+
+        }
+
+
     }
 }

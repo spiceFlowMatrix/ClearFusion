@@ -1955,5 +1955,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetProjectActivityDetail([FromBody]int projectId)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectActivityDetail(projectId);
+      return apiresponse;
+    }
+
   }
 }
