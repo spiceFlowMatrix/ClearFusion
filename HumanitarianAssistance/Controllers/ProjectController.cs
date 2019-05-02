@@ -1956,9 +1956,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<APIResponse> GetProjectActivityDetail([FromBody]int projectId)
+    public async Task<APIResponse> GetProjectActivityDetailList([FromBody]int projectId)
     {
-      APIResponse apiresponse = await _iActivity.GetProjectActivityDetail(projectId);
+      APIResponse apiresponse = await _iActivity.GetProjectActivityDetailList(projectId);
       return apiresponse;
     }
 
