@@ -12,6 +12,7 @@ namespace DataAccess.DbEntities.Project
         {
             Recurring = false;
             RecurringCount = 0;
+            IsCompleted = false;
             //ImplementationProgress = 0;
             //ImplementationStatus = false;
 
@@ -26,10 +27,14 @@ namespace DataAccess.DbEntities.Project
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
         public long ActivityId { get; set; }
+
+        [MaxLength(200)]
         public string ActivityName { get; set; }
+
         public string ActivityDescription { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public string ChallengesAndSolutions { get; set; }
+        public DateTime? PlannedStartDate { get; set; }
+        public DateTime? PlannedEndDate { get; set; }
 
         public long? BudgetLineId { get; set; }
         [ForeignKey("BudgetLineId")]
@@ -47,7 +52,18 @@ namespace DataAccess.DbEntities.Project
         public int? RecurringCount { get; set; }
         public int RecurrinTypeId { get; set; }
 
+        public DateTime? ActualStartDate { get; set; }
+        public DateTime? ActualEndDate { get; set; }
+        public bool IsCompleted{ get; set; }
+
+
         public ICollection<ProjectActivityProvinceDetail> ProjectActivityProvinceDetail { get; set; }
+        public ICollection<ProjectActivityExtensions> ProjectActivityExtensionList { get; set; }
+
+        public long? ParentId { get; set; }
+        [ForeignKey("ParentId")]
+        public ICollection<ProjectActivityDetail> ProjectSubActivityList { get; set; }
+
 
         ////Implementation
         //[Range(0, 100)]

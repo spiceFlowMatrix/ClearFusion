@@ -50,51 +50,32 @@ namespace HumanitarianAssistance.Service.Classes
                                           .Include(o => o.ProjectActivityProvinceDetail)
                                           .Include(s => s.ActivityStatusDetail)
                                           .Where(v => v.IsDeleted == false &&
+                                                      v.ParentId == null &&
                                                       v.ProjectBudgetLineDetail.ProjectId == projectId
                                           )
-                                          .OrderBy(x => x.ActivityId)
+                                          .OrderByDescending(x => x.ActivityId)
+                                          .Select(b => new ProjectActivityModel {
+
+                                              ActivityId = b.ActivityId,
+                                              ActivityName = b.ActivityName,
+                                              ActivityDescription = b.ActivityDescription,
+                                              BudgetLineId = b.ProjectBudgetLineDetail.BudgetLineId,
+                                              BudgetName = b.ProjectBudgetLineDetail.BudgetName,
+                                              EmployeeID = b.EmployeeDetail.EmployeeID,
+                                              EmployeeName = b.EmployeeDetail.EmployeeName,
+                                              StatusId = b.ActivityStatusDetail.StatusId,
+                                              StatusName = b.ActivityStatusDetail.StatusName,
+                                              StartDate = b.PlannedStartDate,
+                                              EndDate = b.PlannedEndDate,
+                                              Recurring = b.Recurring,
+                                              RecurringCount = b.RecurringCount,
+                                              RecurrinTypeId = b.RecurrinTypeId,
+                                              ProvinceList = b.ProjectActivityProvinceDetail.Select(x => x.ProvinceId),
+                                              DistrictList = b.ProjectActivityProvinceDetail.Select(x => x.DistrictID)
+                                          })
                                           .ToListAsync();
-                var activityDetaillist = activityList.Select(b => new ProjectActivityModel
-                {
-                    ActivityId = b.ActivityId,
-                    ActivityName = b.ActivityName,
-                    ActivityDescription = b.ActivityDescription,
-                    BudgetLineId = b.ProjectBudgetLineDetail?.BudgetLineId,
-                    BudgetName = b.ProjectBudgetLineDetail?.BudgetName,
-                    EmployeeID = b.EmployeeDetail?.EmployeeID,
-                    EmployeeName = b.EmployeeDetail?.EmployeeName,
-                    StatusId = b.ActivityStatusDetail?.StatusId,
-                    StatusName = b.ActivityStatusDetail?.StatusName,
-                    StartDate = b.StartDate,
-                    EndDate = b.EndDate,
-                    Recurring = b.Recurring,
-                    RecurringCount = b.RecurringCount,
-                    RecurrinTypeId = b.RecurrinTypeId,
-
-                    //ActualEndDate = b.ActualEndDate,
-                    //ActualStartDate = b.ActualStartDate,
-                    //OfficeId = b.OfficeDetail?.OfficeId,
-                    //OfficeName = b.OfficeDetail?.OfficeName,
-                    //ExtensionEndDate = b.ExtensionEndDate,
-                    //ExtensionStartDate = b.ExtensionStartDate,
-                    //ImplementationChalanges = b.ImplementationChalanges,
-                    //ImplementationMethod = b.ImplementationMethod,
-                    //ImplementationProgress = b.ImplementationProgress,
-                    //ImplementationStatus = b.ImplementationStatus,
-                    //MonitoringChallenges = b.MonitoringChallenges,
-                    //MonitoringFrequency = b.MonitoringFrequency,
-                    //MonitoringProgress = b.MonitoringProgress,
-                    //MonitoringScore = b.MonitoringScore,
-                    //MonitoringStatus = b.MonitoringStatus,
-                    //OvercomingChallanges = b.OvercomingChallanges,
-                    //Recommendation = b.Recommendation,
-                    //Strengths = b.Strengths,
-                    //VerificationSource = b.VerificationSource,
-                    //Weeknesses = b.Weeknesses,
-                    //Comments = b.Comments
-
-                }).ToList();
-                response.data.ProjectActivityList = activityDetaillist.OrderByDescending(x => x.ActivityId).ToList();
+              
+                response.data.ProjectActivityList = activityList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -431,13 +412,13 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<DateTime?> GetMinimumProjectActivityStartDate(long projectId)
         {
             return await _uow.GetDbContext().ProjectActivityDetail.Where(x => x.ProjectBudgetLineDetail.ProjectId == projectId && x.IsDeleted == false)
-                                                                  .MinAsync(x => x.StartDate);
+                                                                  .MinAsync(x => x.PlannedStartDate);
         }
 
         public async Task<DateTime?> GetMaximumProjectActivityEndDate(long projectId)
         {
             return await _uow.GetDbContext().ProjectActivityDetail.Where(x => x.ProjectBudgetLineDetail.ProjectId == projectId && x.IsDeleted == false)
-                                                                  .MaxAsync(x => x.EndDate);
+                                                                  .MaxAsync(x => x.PlannedEndDate);
         }
 
         public async Task<APIResponse> AllProjectActivityStatus(long projectId)
@@ -725,8 +706,8 @@ namespace HumanitarianAssistance.Service.Classes
                     EmployeeName = b.EmployeeDetail.EmployeeName,
                     StatusId = b.ActivityStatusDetail.StatusId,
                     StatusName = b.ActivityStatusDetail.StatusName,
-                    StartDate = b.StartDate,
-                    EndDate = b.EndDate,
+                    StartDate = b.PlannedStartDate,
+                    EndDate = b.PlannedEndDate,
                     Recurring = b.Recurring,
                     RecurringCount = b.RecurringCount,
                     RecurrinTypeId = b.RecurrinTypeId,
@@ -770,11 +751,11 @@ namespace HumanitarianAssistance.Service.Classes
         {
             if (model.PlannedStartDate != null)
             {
-                activityList = activityList.Where(x => x.StartDate.Value.Date >= model.PlannedStartDate.Value.Date);
+                activityList = activityList.Where(x => x.PlannedStartDate.Value.Date >= model.PlannedStartDate.Value.Date);
             }
             if (model.PlannedEndDate != null)
             {
-                activityList = activityList.Where(x => x.EndDate.Value.Date <= model.PlannedEndDate.Value.Date);
+                activityList = activityList.Where(x => x.PlannedEndDate.Value.Date <= model.PlannedEndDate.Value.Date);
             }
             if (model.ActualStartDate != null)
             {
