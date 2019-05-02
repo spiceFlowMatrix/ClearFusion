@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190427110222_addInvoiceApprovalTbl")]
+    partial class addInvoiceApprovalTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6974,66 +6976,6 @@ namespace DataAccess.Migrations
                     b.ToTable("ProjectDetail");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectIndicatorQuestions", b =>
-                {
-                    b.Property<long>("IndicatorQuestionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("IndicatorQuestion");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long>("ProjectIndicatorId");
-
-                    b.HasKey("IndicatorQuestionId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectIndicatorId");
-
-                    b.ToTable("ProjectIndicatorQuestions");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectIndicators", b =>
-                {
-                    b.Property<long>("ProjectIndicatorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("IndicatorCode");
-
-                    b.Property<string>("IndicatorName");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("ProjectIndicatorId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("ProjectIndicators");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectJobDetail", b =>
                 {
                     b.Property<long>("ProjectJobId")
@@ -11974,33 +11916,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.Project.ProjectPhaseDetails", "ProjectPhaseDetails")
                         .WithMany()
                         .HasForeignKey("ProjectPhaseDetailsId");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectIndicatorQuestions", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectIndicators", "ProjectIndicators")
-                        .WithMany("ProjectIndicatorQuestions")
-                        .HasForeignKey("ProjectIndicatorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectIndicators", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectJobDetail", b =>

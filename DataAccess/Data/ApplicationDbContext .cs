@@ -246,13 +246,14 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectActivityDetail> ProjectActivityDetail { get; set; }
         public DbSet<ActivityDocumentsDetail> ActivityDocumentsDetail { get; set; }
 
-
-
+        public DbSet<ProjectIndicatorQuestions> ProjectIndicatorQuestions { get; set; }
+        public DbSet<ProjectIndicators> ProjectIndicators { get; set; }
 
 
         #endregion
 
         #region Marketing
+        public DbSet<InvoiceApproval> InvoiceApproval { get; set; }
         public DbSet<PlayoutMinutes> PlayoutMinutes { get; set; }
         public DbSet<ScheduleDetails> ScheduleDetails { get; set; }
         public DbSet<PolicyTimeSchedule> PolicyTimeSchedules { get; set; }
