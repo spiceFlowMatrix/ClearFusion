@@ -23,8 +23,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public long ActivityId { get; set; }
         public string ActivityName { get; set; }
         public string ActivityDescription { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateTime? PlannedStartDate { get; set; }
+        public DateTime? PlannedEndDate { get; set; }
         public long? BudgetLineId { get; set; }
         public string BudgetName { get; set; }
 
@@ -41,6 +41,9 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
         public IEnumerable<int> ProvinceList { get; set; }
         public IEnumerable<long?> DistrictList { get; set; }
+
+        public long? ParentId { get; set; }
+        public int? Target { get; set; }
 
         ////Implementation
         //[Range(0, 100)]
