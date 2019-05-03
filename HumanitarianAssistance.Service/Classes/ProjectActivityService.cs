@@ -917,6 +917,8 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                             }).ToList()
                                                                 }).ToListAsync();
 
+                projectMonitoring.ForEach(x => x.MonitoringReviewModel.ForEach(y => y.TotalScore = y.IndicatorQuestions.Sum(z => z.Score)));
+
                 response.data.ProjectMonitoring = projectMonitoring;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
