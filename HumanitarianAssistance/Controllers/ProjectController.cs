@@ -1976,5 +1976,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetProjectMonitoringList([FromBody] long activityId)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectMonitoringList(activityId);
+      return apiresponse;
+    }
+
   }
 }

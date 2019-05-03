@@ -26,6 +26,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> UploadFileDemo(IFormFile file, string UserId, string userName);
         Task<APIResponse> DeleteActivityDocument(long activityDocumentId, string userId);
         Task<APIResponse> AddProjectMonitoringReview(ProjectMonitoringViewModel model, string UserId);
+        Task<APIResponse> GetProjectMonitoringList(long activityId);
 
     }
 }

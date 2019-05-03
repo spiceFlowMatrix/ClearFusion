@@ -19,6 +19,6 @@ namespace DataAccess.DbEntities.Project
         public string Remarks { get; set; }
         public long ProjectId { get; set; }
         public long ActivityId { get; set; }
-        public ICollection<ProjectMonitoringIndicatorDetail> ProjectMonitoringIndicatorDetail { get; set; }
+        public virtual ICollection<ProjectMonitoringIndicatorDetail> ProjectMonitoringIndicatorDetail { get; set; }
     }
 }

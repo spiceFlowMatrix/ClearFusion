@@ -17,5 +17,7 @@ namespace DataAccess.DbEntities.Project
         public string Verification { get; set; }
         public int? Score { get; set; }
         public long MonitoringIndicatorId { get; set; }
+        [ForeignKey("QuestionId")]
+        public ProjectIndicatorQuestions ProjectIndicatorQuestions { get; set; }
     }
 }

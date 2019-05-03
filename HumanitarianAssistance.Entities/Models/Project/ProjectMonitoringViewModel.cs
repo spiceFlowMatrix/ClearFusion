@@ -11,19 +11,25 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string PositivePoints { get; set; }
         public string Recommendations { get; set; }
         public string Remarks { get; set; }
-
+        public long ProjectId { get; set; }
+        public long ActivityId { get; set; }
+        public long? ProjectMonitoringReviewId { get; set; }
     }
 
     public class ProjectMonitoringReviewModel
     {
         public long ProjectIndicatorId { get; set; }
-        public List<ProjectMonitoringQuestionModel> ProjectMonitoringReview { get; set; }
+        public string IndicatorName { get; set; }
+        public long? MonitoringIndicatorId { get; set; }
+        public List<ProjectMonitoringQuestionModel> IndicatorQuestions { get; set; }
     }
 
     public class ProjectMonitoringQuestionModel
     {
         public long QuestionId { get; set; }
-        public int Score { get; set; }
+        public int? Score { get; set; }
         public string Verification { get; set; }
-    }
+        public string Question { get; set; }
+        public long MonitoringIndicatorQuestionId { get; set; }
+}
 }
