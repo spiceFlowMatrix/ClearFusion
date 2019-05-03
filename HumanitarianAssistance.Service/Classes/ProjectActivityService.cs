@@ -903,5 +903,118 @@ namespace HumanitarianAssistance.Service.Classes
             return activityList;
         }
 
+
+        #region projectMonitoringActivity
+        public async Task<APIResponse> AddProjectMonitoringReview(ProjectMonitoringViewModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                ProjectMonitoringReviewDetail projectMonitoringReviewDetail = new ProjectMonitoringReviewDetail();
+                projectMonitoringReviewDetail.ActivityId = model.ActivityId;
+                projectMonitoringReviewDetail.CreatedById = UserId;
+                projectMonitoringReviewDetail.ProjectId = model.ProjectId;
+                projectMonitoringReviewDetail.CreatedDate = DateTime.UtcNow;
+                projectMonitoringReviewDetail.IsDeleted = false;
+                projectMonitoringReviewDetail.NegativePoints = model.NegativePoints;
+                projectMonitoringReviewDetail.PostivePoints = model.PositivePoints;
+                projectMonitoringReviewDetail.Recommendations = model.Recommendations;
+                projectMonitoringReviewDetail.Remarks = model.Remarks;
+
+                await _uow.GetDbContext().ProjectMonitoringReviewDetail.AddAsync(projectMonitoringReviewDetail);
+                await _uow.GetDbContext().SaveChangesAsync();
+
+                foreach (var item in model.MonitoringReviewModel)
+                {
+                    ProjectMonitoringIndicatorDetail monitoringIndicatorDetail = new ProjectMonitoringIndicatorDetail();
+                    monitoringIndicatorDetail.CreatedById = UserId;
+                    monitoringIndicatorDetail.CreatedDate = DateTime.UtcNow;
+                    monitoringIndicatorDetail.IsDeleted = false;
+                    monitoringIndicatorDetail.ProjectMonitoringReviewId = projectMonitoringReviewDetail.ProjectMonitoringReviewId;
+                    monitoringIndicatorDetail.ProjectIndicatorId = item.ProjectIndicatorId;
+
+                    await _uow.GetDbContext().ProjectMonitoringIndicatorDetail.AddAsync(monitoringIndicatorDetail);
+                    await _uow.GetDbContext().SaveChangesAsync();
+
+                    foreach (var obj in item.IndicatorQuestions)
+                    {
+                        ProjectMonitoringIndicatorQuestions monitoringQuestions = new ProjectMonitoringIndicatorQuestions();
+                        monitoringQuestions.IsDeleted = false;
+                        monitoringQuestions.CreatedDate = DateTime.UtcNow;
+                        monitoringQuestions.CreatedById = UserId;
+                        monitoringQuestions.QuestionId = obj.QuestionId;
+                        monitoringQuestions.Verification = obj.Verification;
+                        monitoringQuestions.MonitoringIndicatorId = monitoringIndicatorDetail.MonitoringIndicatorId;
+                        monitoringQuestions.Score = obj.Score;
+
+                        await _uow.GetDbContext().ProjectMonitoringIndicatorQuestions.AddAsync(monitoringQuestions);
+                        await _uow.GetDbContext().SaveChangesAsync();
+                    }
+                }
+
+                
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetProjectMonitoringList(long activityId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var projectMonitoring = await _uow.GetDbContext().ProjectMonitoringReviewDetail
+                                                                .Include(y => y.ProjectMonitoringIndicatorDetail)
+                                                                .ThenInclude(z => z.ProjectMonitoringIndicatorQuestions)
+                                                                .ThenInclude(x=> x.ProjectIndicatorQuestions)
+                                                                .Where(x => x.IsDeleted == false && x.ActivityId == activityId)
+                                                                .Select(x => new ProjectMonitoringViewModel {
+                                                                    ActivityId = x.ActivityId,
+                                                                    NegativePoints = x.NegativePoints,
+                                                                    PositivePoints = x.PostivePoints,
+                                                                    ProjectId = x.ProjectId,
+                                                                    Recommendations = x.Recommendations,
+                                                                    Remarks = x.Remarks,
+                                                                    ProjectMonitoringReviewId = x.ProjectMonitoringReviewId,
+                                                                    MonitoringReviewModel = x.ProjectMonitoringIndicatorDetail
+                                                                                            .Select(y => new ProjectMonitoringReviewModel {
+                                                                                                ProjectIndicatorId = y.ProjectIndicatorId,
+                                                                                                MonitoringIndicatorId = y.MonitoringIndicatorId,
+                                                                                                IndicatorName= y.ProjectIndicators.IndicatorName,
+                                                                                                IndicatorQuestions = y.ProjectMonitoringIndicatorQuestions
+                                                                                                                      .Where(z => z.IsDeleted == false)
+                                                                                                                      .Select(z => new ProjectMonitoringQuestionModel
+                                                                                                                      {
+                                                                                                                        MonitoringIndicatorQuestionId= z.Id,
+                                                                                                                        QuestionId = z.QuestionId,
+                                                                                                                        Score = z.Score,
+                                                                                                                        Verification = z.Verification,
+                                                                                                                        Question= z.ProjectIndicatorQuestions.IndicatorQuestion
+                                                                                                                      }).ToList()
+                                                                                            }).ToList()
+                                                                }).ToListAsync();
+
+                response.data.ProjectMonitoring = projectMonitoring;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
     }
 }

@@ -1940,6 +1940,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiresponse;
     }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectIndicatorQuestionsById([FromBody]long indicatorId)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectIndicatorQuestionsById(indicatorId);
+      return apiresponse;
+    }
     #endregion
 
     [HttpPost]
@@ -1961,9 +1968,30 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
+    public async Task<APIResponse> AddProjectMonitoringReview([FromBody]ProjectMonitoringViewModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.AddProjectMonitoringReview(model, id);
+      }
+       
+      return apiresponse;
+    }
+    [HttpPost]
     public APIResponse GetProjectActivityAdvanceFilterList([FromBody]ActivityAdvanceFilterModel model)
     {
       APIResponse apiresponse = _iActivity.GetProjectActivityAdvanceFilterList(model);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectMonitoringList([FromBody] long activityId)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectMonitoringList(activityId);
       return apiresponse;
     }
 
