@@ -70,8 +70,8 @@ namespace HumanitarianAssistance.Service.Classes
                                               Recurring = b.Recurring,
                                               RecurringCount = b.RecurringCount,
                                               RecurrinTypeId = b.RecurrinTypeId,
-                                              ProvinceList = b.ProjectActivityProvinceDetail.Select(x => x.ProvinceId),
-                                              DistrictList = b.ProjectActivityProvinceDetail.Select(x => x.DistrictID)
+                                              ProvinceId = b.ProjectActivityProvinceDetail.Select(x=>x.ProvinceId),
+                                              DistrictID = b.ProjectActivityProvinceDetail.Select(x => x.DistrictID)
                                           })
                                           .ToListAsync();
               
@@ -100,6 +100,46 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.IsDeleted = false;
                 obj.CreatedById = UserId;
                 await _uow.ProjectActivityDetailRepository.AddAsyn(obj);
+
+
+                if (model.ProvinceId.Any())
+                {
+                    List<ProjectActivityProvinceDetail> activityProvienceList = new List<ProjectActivityProvinceDetail>();
+
+                    var districts = _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted == false && model.ProvinceId.Contains(x.ProvinceID.Value)).ToList();
+
+                    var selectedDistrict = districts.Where(x => model.DistrictID.Contains(x.DistrictID))
+                                                                     .Select(x=> new ProjectActivityProvinceDetail
+                                                                     {
+                                                                     DistrictID= x.DistrictID,
+                                                                     ProvinceId= x.ProvinceID.Value
+                                                                     }).ToList();
+
+                    // var provincesWithNoDistrict= selectedDistrict.Where(x => !model.ProvinceId.Contains(x.ProvinceId));
+
+                    var provincesWithNoDistrict = model.ProvinceId.Where(x => !selectedDistrict.Select(y => y.ProvinceId).Contains(x)).ToList();
+
+                    foreach (var item in provincesWithNoDistrict)
+                    {
+                        ProjectActivityProvinceDetail projectActivityProvinceDetail = new ProjectActivityProvinceDetail();
+                        projectActivityProvinceDetail.ProvinceId = item;
+                        selectedDistrict.Add(projectActivityProvinceDetail);
+                    }
+
+                    foreach (var item in selectedDistrict)
+                    {
+
+                        item.ActivityId = obj.ActivityId;
+                        item.CreatedById = UserId;
+                        item.CreatedDate = DateTime.UtcNow;
+                        item.IsDeleted = false;
+                    }
+                   // await _uow.ProjectActivityProvinceDetailRepository.A(obj);
+                   await _uow.GetDbContext().ProjectActivityProvinceDetail.AddRangeAsync(selectedDistrict);
+                    await _uow.GetDbContext().SaveChangesAsync();
+
+                }
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -126,6 +166,51 @@ namespace HumanitarianAssistance.Service.Classes
                     projectactivityDetail.IsDeleted = false;
 
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+
+                    if (model.ProvinceId.Any())
+                    {
+                        var projectActivityProvinceDetailExist = _uow.GetDbContext().ProjectActivityProvinceDetail.Where(x => x.ActivityId == model.ActivityId && x.IsDeleted == false);
+
+                        if (projectActivityProvinceDetailExist.Any())
+                        {
+                            _uow.GetDbContext().ProjectActivityProvinceDetail.RemoveRange(projectActivityProvinceDetailExist);
+                            _uow.GetDbContext().SaveChanges();
+                        }
+                        
+                            List<ProjectActivityProvinceDetail> activityProvienceList = new List<ProjectActivityProvinceDetail>();
+
+
+                            var districts = _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted == false && model.ProvinceId.Contains(x.ProvinceID.Value)).ToList();
+
+                            var selectedDistrict = districts.Where(x => model.DistrictID.Contains(x.DistrictID))
+                                                                             .Select(x => new ProjectActivityProvinceDetail
+                                                                             {
+                                                                                 DistrictID = x.DistrictID,
+                                                                                 ProvinceId = x.ProvinceID.Value
+                                                                             }).ToList();
+
+
+                            var provincesWithNoDistrict = model.ProvinceId.Where(x => !selectedDistrict.Select(y => y.ProvinceId).Contains(x)).ToList();
+
+                            foreach (var item in provincesWithNoDistrict)
+                            {
+                                ProjectActivityProvinceDetail projectActivityProvince = new ProjectActivityProvinceDetail();
+                                projectActivityProvince.ProvinceId = item;
+                                selectedDistrict.Add(projectActivityProvince);
+                            }
+
+                            foreach (var item in selectedDistrict)
+                            {
+
+                                item.ActivityId = projectactivityDetail.ActivityId;
+                                item.ModifiedById = UserId;
+                                item.ModifiedDate = DateTime.UtcNow;
+                                item.IsDeleted = false;
+                            }
+                            await _uow.GetDbContext().ProjectActivityProvinceDetail.AddRangeAsync(selectedDistrict);
+                            await _uow.GetDbContext().SaveChangesAsync();
+                        
+                    }
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
