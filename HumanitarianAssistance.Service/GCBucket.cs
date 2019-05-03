@@ -515,7 +515,7 @@ namespace HumanitarianAssistance.Service
         {
             string mimeType = "application/unknown";
             string ext = (extension).ToLower();
-            if (ext == ".docx" || ext == ".doc")
+            if (ext == ".docx" || ext == ".doc" || ext == ".txt")
             {
                 mimeType = "application/vnd.google-apps.document";
             }

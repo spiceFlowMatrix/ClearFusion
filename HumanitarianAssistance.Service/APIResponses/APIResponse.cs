@@ -347,7 +347,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public IList<ProjectActivityModel> ProjectActivityList { get; set; }
         public ProjectActivityModel ProjectActivityDetails { get; set; }
-
+        public ICollection<ProjectSubActivityListModel> ProjectSubActivityListModel { get; set; }
         public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
         public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
         public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }

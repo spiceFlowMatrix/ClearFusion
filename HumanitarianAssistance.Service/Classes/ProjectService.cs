@@ -1814,7 +1814,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var DistrictDetailList = _uow.GetDbContext().DistrictDetail.Where(x => !x.IsDeleted.Value).ToList();
+                var DistrictDetailList = _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted==false).ToList();
                 var Newlist = DistrictDetailList.Where(x => ProvinceId.Any(y => x.ProvinceID == y)).ToList();
                 response.data.Districtlist = Newlist;
                 response.StatusCode = StaticResource.successStatusCode;
