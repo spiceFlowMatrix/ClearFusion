@@ -359,6 +359,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<BudgetLineBreakdownListModel> BudgetLineBreakdownList { get; set; }
         public BudgetLineBreakdownModel BudgetLineBreakdownModel { get; set; }
         public ProjectIndicatorViewModel ProjectIndicator { get; set; }
+        public List<IndicatorQuestions> Questions { get; set; }
 
         #region Marketing    
         public PolicyTimeSchedule policyTimeScheduleDetails { get; set; }
@@ -454,7 +455,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public VoucherDetailEntityModel VoucherDetailEntity { get; set; }
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }
         public GainLossVoucherList GainLossVoucherDetail { get; set; }
-
+        public List<ProjectMonitoringViewModel> ProjectMonitoring { get; set; }
 
         #endregion
 

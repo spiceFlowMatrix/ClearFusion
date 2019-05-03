@@ -20,7 +20,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
             //MonitoringFrequency = 0;
         }
         //Planning
-        public long ActivityId { get; set; }
+        public long? ActivityId { get; set; }
         public string ActivityName { get; set; }
         public string ActivityDescription { get; set; }
         public DateTime? PlannedStartDate { get; set; }
@@ -36,11 +36,11 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
         public bool? Recurring { get; set; }
         public int? RecurringCount { get; set; }
-        public int RecurrinTypeId { get; set; }
+        public int? RecurrinTypeId { get; set; }
 
 
-        public IEnumerable<int> ProvinceList { get; set; }
-        public IEnumerable<long?> DistrictList { get; set; }
+        public IEnumerable<int> ProvinceId { get; set; }
+        public IEnumerable<long?> DistrictID { get; set; }
 
         public long? ParentId { get; set; }
         public int? Target { get; set; }

@@ -42,6 +42,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       _iActivity = iActivity;
       _hostingEnvironment = hostingEnvironment;
       _serializerSettings = new JsonSerializerSettings
+
       {
         Formatting = Formatting.Indented,
         NullValueHandling = NullValueHandling.Ignore
@@ -1939,6 +1940,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiresponse;
     }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectIndicatorQuestionsById([FromBody]long indicatorId)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectIndicatorQuestionsById(indicatorId);
+      return apiresponse;
+    }
     #endregion
 
     [HttpPost]
@@ -1948,12 +1956,80 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+
+    #region "upload file using signed url"
+    [HttpPost]
+    public async Task<APIResponse> UploadDemoUsingBSignedUrlBucket([FromBody]DownloadObjectGCBucketModel model)
+    {
+      APIResponse apiresponse = await _iProject.DownloadFileFromBucket(model);
+      return apiresponse;
+    }
+    #endregion
+
+
+    #region "project activity monitoring"
+    [HttpPost]
+    public async Task<APIResponse> AddProjectMonitoringReview([FromBody]ProjectMonitoringViewModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.AddProjectMonitoringReview(model, id);
+      }
+       
+      return apiresponse;
+    }
     [HttpPost]
     public APIResponse GetProjectActivityAdvanceFilterList([FromBody]ActivityAdvanceFilterModel model)
     {
       APIResponse apiresponse = _iActivity.GetProjectActivityAdvanceFilterList(model);
       return apiresponse;
     }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectMonitoringList([FromBody] long activityId)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectMonitoringList(activityId);
+      return apiresponse;
+    }
+    #endregion
+
+    #region" project activity extension"
+    [HttpPost]
+    public async Task<APIResponse> AddProjectActivityExtension([FromBody]ProjectExtensionModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.AddProjectActivityExtension(model, id);
+      }
+
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectActivityExtension([FromBody]ProjectExtensionModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.EditProjectActivityExtension(model, id);
+      }
+
+      return apiresponse;
+    }
+
+    #endregion
 
     [HttpPost]
     public async Task<APIResponse> GetProjectActivityDetailList([FromBody]int projectId)

@@ -193,6 +193,7 @@ namespace DataAccess
         private IGenericRepository<SecurityConsiderationMultiSelect> _securityConsiderationMultiSelectRepository;
         private IGenericRepository<HRJobInterviewers> _hRJobInterviewers;
         private IGenericRepository<ActivityDocumentsDetail> _activityDocumentsDetailRepository;
+        private IGenericRepository<ProjectActivityExtensions> _projectActivityExtensionRepository;
 
         
 
@@ -1886,6 +1887,14 @@ namespace DataAccess
             get
             {
                 return _activityDocumentsDetailRepository = _activityDocumentsDetailRepository ?? new GenericRepository<ActivityDocumentsDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectActivityExtensions> ProjectActivityExtensionsRepository
+        {
+            get
+            {
+                return _projectActivityExtensionRepository = _projectActivityExtensionRepository ?? new GenericRepository<ProjectActivityExtensions>(_mschaContext);
             }
         }
         public void Save()
