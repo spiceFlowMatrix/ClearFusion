@@ -1967,6 +1967,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
 
+    #region "project activity monitoring"
     [HttpPost]
     public async Task<APIResponse> AddProjectMonitoringReview([FromBody]ProjectMonitoringViewModel model)
     {
@@ -1994,6 +1995,41 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       APIResponse apiresponse = await _iActivity.GetProjectMonitoringList(activityId);
       return apiresponse;
     }
+    #endregion
+
+    #region" project activity extension"
+    [HttpPost]
+    public async Task<APIResponse> AddProjectActivityExtension([FromBody]ProjectExtensionModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.AddProjectActivityExtension(model, id);
+      }
+
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectActivityExtension([FromBody]ProjectExtensionModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.EditProjectActivityExtension(model, id);
+      }
+
+      return apiresponse;
+    }
+
+    #endregion
 
   }
 }

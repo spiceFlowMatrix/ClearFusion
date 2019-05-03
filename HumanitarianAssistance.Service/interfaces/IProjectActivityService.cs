@@ -27,6 +27,9 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteActivityDocument(long activityDocumentId, string userId);
         Task<APIResponse> AddProjectMonitoringReview(ProjectMonitoringViewModel model, string UserId);
         Task<APIResponse> GetProjectMonitoringList(long activityId);
+        Task<APIResponse> AddProjectActivityExtension(ProjectExtensionModel model, string UserId);
+        Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string UserId);
+
 
     }
 }

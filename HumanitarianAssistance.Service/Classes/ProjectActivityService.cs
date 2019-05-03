@@ -1016,5 +1016,81 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
+
+
+
+        #region "Project activity extension"
+        /// <summary>
+        /// AddProjectExtension of project activity detail 03/05/2019 pk
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> AddProjectActivityExtension(ProjectExtensionModel model,string UserId)
+         {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityExtensions extensionObj = new ProjectActivityExtensions();
+                extensionObj.ActivityId = model.ActivityId;
+                extensionObj.StartDate = model.StartDate;
+                extensionObj.EndDate = model.EndDate;
+                extensionObj.Description = model.Description;
+                extensionObj.CreatedById = UserId;
+                extensionObj.IsDeleted = false;
+                extensionObj.CreatedDate = DateTime.UtcNow;
+
+                await _uow.ProjectActivityExtensionsRepository.AddAsyn(extensionObj);
+                await _uow.GetDbContext().SaveChangesAsync();
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityExtensions extensionDetail = await _uow.GetDbContext().ProjectActivityExtensions.FirstOrDefaultAsync(x => x.ActivityId == model.ActivityId);
+
+                if (extensionDetail!=null)
+                {
+                    extensionDetail = new ProjectActivityExtensions();
+                    extensionDetail.ActivityId = model.ActivityId;
+                    extensionDetail.StartDate = model.StartDate;
+                    extensionDetail.EndDate = model.EndDate;
+                    extensionDetail.Description = model.Description;
+                    extensionDetail.ModifiedById = UserId;
+                    extensionDetail.IsDeleted = false;
+                    extensionDetail.ModifiedDate = DateTime.UtcNow;
+                    await _uow.ProjectActivityExtensionsRepository.UpdateAsyn(extensionDetail);
+                    await _uow.GetDbContext().SaveChangesAsync();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                    
+            }
+
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        #endregion
+
+
     }
 }

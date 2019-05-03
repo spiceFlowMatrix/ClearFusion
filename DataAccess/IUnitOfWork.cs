@@ -199,6 +199,7 @@ namespace DataAccess
 
         IGenericRepository<ActivityDocumentsDetail> ActivityDocumentsDetailRepository { get; }
 
+        IGenericRepository<ProjectActivityExtensions> ProjectActivityExtensionsRepository { get; }
 
         #endregion
 
