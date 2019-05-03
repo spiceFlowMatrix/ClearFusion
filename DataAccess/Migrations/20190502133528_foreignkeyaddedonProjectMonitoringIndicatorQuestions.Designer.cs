@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190502133528_foreignkeyaddedonProjectMonitoringIndicatorQuestions")]
+    partial class foreignkeyaddedonProjectMonitoringIndicatorQuestions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7137,8 +7139,6 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ModifiedById");
 
-                    b.HasIndex("ProjectIndicatorId");
-
                     b.HasIndex("ProjectMonitoringReviewId");
 
                     b.ToTable("ProjectMonitoringIndicatorDetail");
@@ -12220,11 +12220,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectIndicators", "ProjectIndicators")
-                        .WithMany()
-                        .HasForeignKey("ProjectIndicatorId")
-                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataAccess.DbEntities.Project.ProjectMonitoringReviewDetail")
                         .WithMany("ProjectMonitoringIndicatorDetail")
