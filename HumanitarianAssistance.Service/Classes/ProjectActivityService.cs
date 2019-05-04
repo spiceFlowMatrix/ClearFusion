@@ -45,10 +45,6 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var activityList = await _uow.GetDbContext().ProjectActivityDetail
-                                          .Include(p => p.ProjectBudgetLineDetail)
-                                          .Include(e => e.EmployeeDetail)
-                                          .Include(o => o.ProjectActivityProvinceDetail)
-                                          .Include(s => s.ActivityStatusDetail)
                                           .Where(v => v.IsDeleted == false &&
                                                       v.ParentId == null &&
                                                       v.ProjectBudgetLineDetail.ProjectId == projectId
@@ -1020,13 +1016,38 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #region "Project activity extension"
+
+        public async Task<APIResponse> GetProjectActivityExtension(long activityId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var extensionList = await _uow.GetDbContext().ProjectActivityExtensions
+                                                             .Where(x => x.IsDeleted == false &&
+                                                                         x.ActivityId == activityId
+                                                                   )
+                                                              .ToListAsync();
+
+                response.data.ProjectActivityExtensionsList = extensionList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
         /// <summary>
         /// AddProjectExtension of project activity detail 03/05/2019 pk
         /// </summary>
         /// <param name="model"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public async Task<APIResponse> AddProjectActivityExtension(ProjectExtensionModel model,string UserId)
+        public async Task<APIResponse> AddProjectActivityExtension(ProjectExtensionModel model,string userId)
          {
             APIResponse response = new APIResponse();
             try
@@ -1036,16 +1057,15 @@ namespace HumanitarianAssistance.Service.Classes
                 extensionObj.StartDate = model.StartDate;
                 extensionObj.EndDate = model.EndDate;
                 extensionObj.Description = model.Description;
-                extensionObj.CreatedById = UserId;
+                extensionObj.CreatedById = userId;
                 extensionObj.IsDeleted = false;
                 extensionObj.CreatedDate = DateTime.UtcNow;
 
                 await _uow.ProjectActivityExtensionsRepository.AddAsyn(extensionObj);
-                await _uow.GetDbContext().SaveChangesAsync();
+
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = StaticResource.SuccessText;
             }
-            
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
@@ -1055,31 +1075,33 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
 
-        public async Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string UserId)
+        public async Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string userId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                ProjectActivityExtensions extensionDetail = await _uow.GetDbContext().ProjectActivityExtensions.FirstOrDefaultAsync(x => x.ActivityId == model.ActivityId);
+                ProjectActivityExtensions extensionDetail = await _uow.GetDbContext().ProjectActivityExtensions.FirstOrDefaultAsync(x => x.ActivityId == model.ActivityId && x.IsDeleted == false);
 
-                if (extensionDetail!=null)
+                if (extensionDetail != null)
                 {
-                    extensionDetail = new ProjectActivityExtensions();
                     extensionDetail.ActivityId = model.ActivityId;
                     extensionDetail.StartDate = model.StartDate;
                     extensionDetail.EndDate = model.EndDate;
                     extensionDetail.Description = model.Description;
-                    extensionDetail.ModifiedById = UserId;
                     extensionDetail.IsDeleted = false;
+                    extensionDetail.ModifiedById = userId;
                     extensionDetail.ModifiedDate = DateTime.UtcNow;
-                    await _uow.ProjectActivityExtensionsRepository.UpdateAsyn(extensionDetail);
-                    await _uow.GetDbContext().SaveChangesAsync();
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-                }
-                    
-            }
 
+                    await _uow.ProjectActivityExtensionsRepository.UpdateAsyn(extensionDetail);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    throw new Exception(StaticResource.ActivityExtensionNotFound);
+                }
+            }
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
@@ -1088,6 +1110,36 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+
+        public async Task<APIResponse> DeleteProjectActivityExtension(long extensionId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityExtensions extensionDetail = await _uow.GetDbContext().ProjectActivityExtensions.FirstOrDefaultAsync(x => x.ExtensionId == extensionId && x.IsDeleted == false);
+
+                if (extensionDetail != null)
+                {
+                    extensionDetail.IsDeleted = true;
+                    extensionDetail.ModifiedById = userId;
+                    extensionDetail.ModifiedDate = DateTime.UtcNow;
+
+                    await _uow.ProjectActivityExtensionsRepository.UpdateAsyn(extensionDetail);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else {
+                    throw new Exception(StaticResource.ActivityExtensionNotFound);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
 
         #endregion
 

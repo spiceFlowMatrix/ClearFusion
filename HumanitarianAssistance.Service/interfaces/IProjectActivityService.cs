@@ -25,11 +25,14 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetUploadedDocument(long activityId);
         Task<APIResponse> UploadFileDemo(IFormFile file, string UserId, string userName);
         Task<APIResponse> DeleteActivityDocument(long activityDocumentId, string userId);
-        Task<APIResponse> AddProjectMonitoringReview(ProjectMonitoringViewModel model, string UserId);
+        Task<APIResponse> AddProjectMonitoringReview(ProjectMonitoringViewModel model, string userId);
         Task<APIResponse> GetProjectMonitoringList(long activityId);
-        Task<APIResponse> AddProjectActivityExtension(ProjectExtensionModel model, string UserId);
-        Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string UserId);
+        
+        Task<APIResponse> GetProjectActivityExtension(long activityId);
+        Task<APIResponse> AddProjectActivityExtension(ProjectExtensionModel model, string userId);
+        Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string userId);
+        Task<APIResponse> DeleteProjectActivityExtension(long extensionId, string userId);
 
-
+        
     }
 }
