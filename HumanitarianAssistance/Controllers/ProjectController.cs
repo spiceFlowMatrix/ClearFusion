@@ -42,6 +42,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       _iActivity = iActivity;
       _hostingEnvironment = hostingEnvironment;
       _serializerSettings = new JsonSerializerSettings
+
       {
         Formatting = Formatting.Indented,
         NullValueHandling = NullValueHandling.Ignore
@@ -1559,61 +1560,61 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpPost]
-    public async Task<APIResponse> StartProjectActivity([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.StartProjectActivity(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> StartProjectActivity([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.StartProjectActivity(activityId, id);
+    //  }
+    //  return response;
+    //}
 
-    [HttpPost]
-    public async Task<APIResponse> EndProjectActivity([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.EndProjectActivity(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> EndProjectActivity([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.EndProjectActivity(activityId, id);
+    //  }
+    //  return response;
+    //}
 
-    [HttpPost]
-    public async Task<APIResponse> MarkImplementationAsCompleted([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.MarkImplementationAsCompleted(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> MarkImplementationAsCompleted([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.MarkImplementationAsCompleted(activityId, id);
+    //  }
+    //  return response;
+    //}
 
-    [HttpPost]
-    public async Task<APIResponse> MarkMonitoringAsCompleted([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.MarkMonitoringAsCompleted(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> MarkMonitoringAsCompleted([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.MarkMonitoringAsCompleted(activityId, id);
+    //  }
+    //  return response;
+    //}
 
 
     [HttpPost]
@@ -1939,12 +1940,127 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiresponse;
     }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectIndicatorQuestionsById([FromBody]long indicatorId)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectIndicatorQuestionsById(indicatorId);
+      return apiresponse;
+    }
     #endregion
 
     [HttpPost]
     public async Task<APIResponse> GetProjectProposalAmountSummary([FromBody]ProjectProposalReportFilterModel model)
     {
       APIResponse apiresponse = await _iProject.GetProjectProposalAmountSummary(model);
+      return apiresponse;
+    }
+
+
+    #region "upload file using signed url"
+    [HttpPost]
+    public async Task<APIResponse> UploadDemoUsingBSignedUrlBucket([FromBody]DownloadObjectGCBucketModel model)
+    {
+      APIResponse apiresponse = await _iProject.DownloadFileFromBucket(model);
+      return apiresponse;
+    }
+    #endregion
+
+
+    #region "project activity monitoring"
+    [HttpPost]
+    public async Task<APIResponse> AddProjectMonitoringReview([FromBody]ProjectMonitoringViewModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.AddProjectMonitoringReview(model, id);
+      }
+       
+      return apiresponse;
+    }
+    [HttpPost]
+    public APIResponse GetProjectActivityAdvanceFilterList([FromBody]ActivityAdvanceFilterModel model)
+    {
+      APIResponse apiresponse = _iActivity.GetProjectActivityAdvanceFilterList(model);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectMonitoringList([FromBody] long activityId)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectMonitoringList(activityId);
+      return apiresponse;
+    }
+    #endregion
+
+    #region" project activity extension"
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectActivityExtension([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+        apiresponse = await _iActivity.GetProjectActivityExtension(activityId);
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddProjectActivityExtension([FromBody]ProjectExtensionModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.AddProjectActivityExtension(model, id);
+      }
+
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectActivityExtension([FromBody]ProjectExtensionModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.EditProjectActivityExtension(model, id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteProjectActivityExtension([FromBody]long extensionId)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iActivity.DeleteProjectActivityExtension(extensionId, user.Id);
+      }
+
+      return apiresponse;
+
+    }
+
+    
+    #endregion
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectActivityDetailList([FromBody]int projectId)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectActivityDetailList(projectId);
       return apiresponse;
     }
 

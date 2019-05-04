@@ -347,7 +347,7 @@ namespace HumanitarianAssistance.Service.APIResponses
 
         public IList<ProjectActivityModel> ProjectActivityList { get; set; }
         public ProjectActivityModel ProjectActivityDetails { get; set; }
-
+        public ICollection<ProjectSubActivityListModel> ProjectSubActivityListModel { get; set; }
         public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
         public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
         public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
@@ -359,6 +359,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<BudgetLineBreakdownListModel> BudgetLineBreakdownList { get; set; }
         public BudgetLineBreakdownModel BudgetLineBreakdownModel { get; set; }
         public ProjectIndicatorViewModel ProjectIndicator { get; set; }
+        public List<IndicatorQuestions> Questions { get; set; }
 
         #region Marketing    
         public PolicyTimeSchedule policyTimeScheduleDetails { get; set; }
@@ -454,7 +455,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public VoucherDetailEntityModel VoucherDetailEntity { get; set; }
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }
         public GainLossVoucherList GainLossVoucherDetail { get; set; }
-
+        public List<ProjectMonitoringViewModel> ProjectMonitoring { get; set; }
 
         #endregion
 
@@ -482,6 +483,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
         public List<ProjectProposalAmountSummary> ProjectProposalAmountSummary { get; set; }
         public ProjectIndicatorModel ProjectIndicatorList { get; set; }
+
+        public ICollection<ProjectActivityExtensions> ProjectActivityExtensionsList { get; set; }
     }
 
 

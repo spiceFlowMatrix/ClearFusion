@@ -45,55 +45,33 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var activityList = await _uow.GetDbContext().ProjectActivityDetail
-                                          .Include(p => p.ProjectBudgetLineDetail)
-                                          .Include(e => e.EmployeeDetail)
-                                          .Include(o => o.OfficeDetail)
-                                          .Include(s => s.ActivityStatusDetail)
                                           .Where(v => v.IsDeleted == false &&
+                                                      v.ParentId == null &&
                                                       v.ProjectBudgetLineDetail.ProjectId == projectId
                                           )
-                                          .OrderBy(x => x.ActivityId)
-                                          .ToListAsync();
-                var activityDetaillist = activityList.Select(b => new ProjectActivityModel
-                {
-                    ActivityId = b.ActivityId,
-                    ActivityName = b.ActivityName,
-                    ActivityDescription = b.ActivityDescription,
-                    BudgetLineId = b.ProjectBudgetLineDetail?.BudgetLineId,
-                    BudgetName = b.ProjectBudgetLineDetail?.BudgetName,
-                    ActualStartDate = b.ActualStartDate,
-                    OfficeId = b.OfficeDetail?.OfficeId,
-                    OfficeName = b.OfficeDetail?.OfficeName,
-                    EmployeeID = b.EmployeeDetail?.EmployeeID,
-                    EmployeeName = b.EmployeeDetail?.EmployeeName,
-                    StatusId = b.ActivityStatusDetail?.StatusId,
-                    StatusName = b.ActivityStatusDetail?.StatusName,
-                    ActualEndDate = b.ActualEndDate,
-                    EndDate = b.EndDate,
-                    ExtensionEndDate = b.ExtensionEndDate,
-                    ExtensionStartDate = b.ExtensionStartDate,
-                    ImplementationChalanges = b.ImplementationChalanges,
-                    ImplementationMethod = b.ImplementationMethod,
-                    ImplementationProgress = b.ImplementationProgress,
-                    ImplementationStatus = b.ImplementationStatus,
-                    MonitoringChallenges = b.MonitoringChallenges,
-                    MonitoringFrequency = b.MonitoringFrequency,
-                    MonitoringProgress = b.MonitoringProgress,
-                    MonitoringScore = b.MonitoringScore,
-                    MonitoringStatus = b.MonitoringStatus,
-                    OvercomingChallanges = b.OvercomingChallanges,
-                    Recommendation = b.Recommendation,
-                    Recurring = b.Recurring,
-                    RecurringCount = b.RecurringCount,
-                    RecurrinTypeId = b.RecurrinTypeId,
-                    StartDate = b.StartDate,
-                    Strengths = b.Strengths,
-                    VerificationSource = b.VerificationSource,
-                    Weeknesses = b.Weeknesses,
-                    Comments = b.Comments
+                                          .OrderByDescending(x => x.ActivityId)
+                                          .Select(b => new ProjectActivityModel {
 
-                }).ToList();
-                response.data.ProjectActivityList = activityDetaillist.OrderByDescending(x => x.ActivityId).ToList();
+                                              ActivityId = b.ActivityId,
+                                              ActivityName = b.ActivityName,
+                                              ActivityDescription = b.ActivityDescription,
+                                              BudgetLineId = b.ProjectBudgetLineDetail.BudgetLineId,
+                                              BudgetName = b.ProjectBudgetLineDetail.BudgetName,
+                                              EmployeeID = b.EmployeeDetail.EmployeeID,
+                                              EmployeeName = b.EmployeeDetail.EmployeeName,
+                                              StatusId = b.ActivityStatusDetail.StatusId,
+                                              StatusName = b.ActivityStatusDetail.StatusName,
+                                              PlannedStartDate = b.PlannedStartDate,
+                                              PlannedEndDate = b.PlannedEndDate,
+                                              Recurring = b.Recurring,
+                                              RecurringCount = b.RecurringCount,
+                                              RecurrinTypeId = b.RecurrinTypeId,
+                                              ProvinceId = b.ProjectActivityProvinceDetail.Select(x=>x.ProvinceId),
+                                              DistrictID = b.ProjectActivityProvinceDetail.Select(x => x.DistrictID)
+                                          })
+                                          .ToListAsync();
+              
+                response.data.ProjectActivityList = activityList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -118,6 +96,46 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.IsDeleted = false;
                 obj.CreatedById = UserId;
                 await _uow.ProjectActivityDetailRepository.AddAsyn(obj);
+
+
+                if (model.ProvinceId.Any())
+                {
+                    List<ProjectActivityProvinceDetail> activityProvienceList = new List<ProjectActivityProvinceDetail>();
+
+                    var districts = _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted == false && model.ProvinceId.Contains(x.ProvinceID.Value)).ToList();
+
+                    var selectedDistrict = districts.Where(x => model.DistrictID.Contains(x.DistrictID))
+                                                                     .Select(x=> new ProjectActivityProvinceDetail
+                                                                     {
+                                                                     DistrictID= x.DistrictID,
+                                                                     ProvinceId= x.ProvinceID.Value
+                                                                     }).ToList();
+
+                    // var provincesWithNoDistrict= selectedDistrict.Where(x => !model.ProvinceId.Contains(x.ProvinceId));
+
+                    var provincesWithNoDistrict = model.ProvinceId.Where(x => !selectedDistrict.Select(y => y.ProvinceId).Contains(x)).ToList();
+
+                    foreach (var item in provincesWithNoDistrict)
+                    {
+                        ProjectActivityProvinceDetail projectActivityProvinceDetail = new ProjectActivityProvinceDetail();
+                        projectActivityProvinceDetail.ProvinceId = item;
+                        selectedDistrict.Add(projectActivityProvinceDetail);
+                    }
+
+                    foreach (var item in selectedDistrict)
+                    {
+
+                        item.ActivityId = obj.ActivityId;
+                        item.CreatedById = UserId;
+                        item.CreatedDate = DateTime.UtcNow;
+                        item.IsDeleted = false;
+                    }
+                   // await _uow.ProjectActivityProvinceDetailRepository.A(obj);
+                   await _uow.GetDbContext().ProjectActivityProvinceDetail.AddRangeAsync(selectedDistrict);
+                    await _uow.GetDbContext().SaveChangesAsync();
+
+                }
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -144,6 +162,51 @@ namespace HumanitarianAssistance.Service.Classes
                     projectactivityDetail.IsDeleted = false;
 
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+
+                    if (model.ProvinceId.Any())
+                    {
+                        var projectActivityProvinceDetailExist = _uow.GetDbContext().ProjectActivityProvinceDetail.Where(x => x.ActivityId == model.ActivityId && x.IsDeleted == false);
+
+                        if (projectActivityProvinceDetailExist.Any())
+                        {
+                            _uow.GetDbContext().ProjectActivityProvinceDetail.RemoveRange(projectActivityProvinceDetailExist);
+                            _uow.GetDbContext().SaveChanges();
+                        }
+                        
+                            List<ProjectActivityProvinceDetail> activityProvienceList = new List<ProjectActivityProvinceDetail>();
+
+
+                            var districts = _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted == false && model.ProvinceId.Contains(x.ProvinceID.Value)).ToList();
+
+                            var selectedDistrict = districts.Where(x => model.DistrictID.Contains(x.DistrictID))
+                                                                             .Select(x => new ProjectActivityProvinceDetail
+                                                                             {
+                                                                                 DistrictID = x.DistrictID,
+                                                                                 ProvinceId = x.ProvinceID.Value
+                                                                             }).ToList();
+
+
+                            var provincesWithNoDistrict = model.ProvinceId.Where(x => !selectedDistrict.Select(y => y.ProvinceId).Contains(x)).ToList();
+
+                            foreach (var item in provincesWithNoDistrict)
+                            {
+                                ProjectActivityProvinceDetail projectActivityProvince = new ProjectActivityProvinceDetail();
+                                projectActivityProvince.ProvinceId = item;
+                                selectedDistrict.Add(projectActivityProvince);
+                            }
+
+                            foreach (var item in selectedDistrict)
+                            {
+
+                                item.ActivityId = projectactivityDetail.ActivityId;
+                                item.ModifiedById = UserId;
+                                item.ModifiedDate = DateTime.UtcNow;
+                                item.IsDeleted = false;
+                            }
+                            await _uow.GetDbContext().ProjectActivityProvinceDetail.AddRangeAsync(selectedDistrict);
+                            await _uow.GetDbContext().SaveChangesAsync();
+                        
+                    }
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
@@ -195,167 +258,170 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> StartProjectActivity(long activityId, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+        //public async Task<APIResponse> StartProjectActivity(long activityId, string UserId)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
 
-                if (projectactivityDetail != null)
-                {
-                    // Actual start date
-                    projectactivityDetail.ActualStartDate = DateTime.UtcNow;
-                    projectactivityDetail.StatusId = (int)ProjectPhaseType.Implementation;
+        //        if (projectactivityDetail != null)
+        //        {
+        //            // Actual start date
+        //            projectactivityDetail.ActualStartDate = DateTime.UtcNow;
+        //            projectactivityDetail.StatusId = (int)ProjectPhaseType.Implementation;
 
-                    projectactivityDetail.ModifiedDate = DateTime.UtcNow;
-                    projectactivityDetail.ModifiedById = UserId;
-                    projectactivityDetail.IsDeleted = false;
+        //            projectactivityDetail.ModifiedDate = DateTime.UtcNow;
+        //            projectactivityDetail.ModifiedById = UserId;
+        //            projectactivityDetail.IsDeleted = false;
 
-                    if (projectactivityDetail.StartDate <= projectactivityDetail.ActualStartDate)
-                    {
-                        await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
-                        response.data.DateTime = projectactivityDetail.ActualStartDate.Value.Date;
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = StaticResource.SuccessText;
-                    }
-                    else
-                    {
-                        response.StatusCode = StaticResource.failStatusCode;
-                        response.Message = StaticResource.invalidDate;
-                    }
+        //            if (projectactivityDetail.StartDate <= projectactivityDetail.ActualStartDate)
+        //            {
+        //                await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+        //                response.data.DateTime = projectactivityDetail.ActualStartDate.Value.Date;
+        //                response.StatusCode = StaticResource.successStatusCode;
+        //                response.Message = StaticResource.SuccessText;
+        //            }
+        //            else
+        //            {
+        //                response.StatusCode = StaticResource.failStatusCode;
+        //                response.Message = StaticResource.invalidDate;
+        //            }
 
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.ActivityNotFound;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
+        //        }
+        //        else
+        //        {
+        //            response.StatusCode = StaticResource.failStatusCode;
+        //            response.Message = StaticResource.ActivityNotFound;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //    }
+        //    return response;
+        //}
 
-        public async Task<APIResponse> EndProjectActivity(long activityId, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
-                if (projectactivityDetail != null)
-                {
-                    // Actual end date
-                    projectactivityDetail.ActualEndDate = DateTime.UtcNow;
+        //public async Task<APIResponse> EndProjectActivity(long activityId, string UserId)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+        //        if (projectactivityDetail != null)
+        //        {
+        //            // Actual end date
+        //            projectactivityDetail.ActualEndDate = DateTime.UtcNow;
 
-                    projectactivityDetail.ModifiedDate = DateTime.UtcNow;
-                    projectactivityDetail.ModifiedById = UserId;
-                    projectactivityDetail.IsDeleted = false;
+        //            projectactivityDetail.ModifiedDate = DateTime.UtcNow;
+        //            projectactivityDetail.ModifiedById = UserId;
+        //            projectactivityDetail.IsDeleted = false;
 
-                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+        //            await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
 
-                    response.data.DateTime = projectactivityDetail.ActualEndDate.Value.Date;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = StaticResource.SuccessText;
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.ActivityNotFound;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
+        //            response.data.DateTime = projectactivityDetail.ActualEndDate.Value.Date;
+        //            response.StatusCode = StaticResource.successStatusCode;
+        //            response.Message = StaticResource.SuccessText;
+        //        }
+        //        else
+        //        {
+        //            response.StatusCode = StaticResource.failStatusCode;
+        //            response.Message = StaticResource.ActivityNotFound;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //    }
+        //    return response;
+        //}
 
-        public async Task<APIResponse> MarkImplementationAsCompleted(long activityId, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
-                if (projectactivityDetail != null)
-                {
-                    // Actual end date
-                    projectactivityDetail.ImplementationStatus = !projectactivityDetail.ImplementationStatus;
-                    projectactivityDetail.StatusId = (int)ProjectPhaseType.Monitoring;
+        //public async Task<APIResponse> MarkImplementationAsCompleted(long activityId, string UserId)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+        //        if (projectactivityDetail != null)
+        //        {
+        //            // Actual end date
+        //            projectactivityDetail.ImplementationStatus = !projectactivityDetail.ImplementationStatus;
+        //            projectactivityDetail.StatusId = (int)ProjectPhaseType.Monitoring;
 
-                    projectactivityDetail.ModifiedDate = DateTime.UtcNow;
-                    projectactivityDetail.ModifiedById = UserId;
-                    projectactivityDetail.IsDeleted = false;
+        //            projectactivityDetail.ModifiedDate = DateTime.UtcNow;
+        //            projectactivityDetail.ModifiedById = UserId;
+        //            projectactivityDetail.IsDeleted = false;
 
-                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+        //            await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
 
-                    response.data.ImplementationStatus = projectactivityDetail.ImplementationStatus.Value;
-                    response.data.ProjectActivityDetails = _mapper.Map<ProjectActivityDetail, ProjectActivityModel>(projectactivityDetail);
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = StaticResource.SuccessText;
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.ActivityNotFound;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
+        //            response.data.ImplementationStatus = projectactivityDetail.ImplementationStatus.Value;
+        //            response.data.ProjectActivityDetails = _mapper.Map<ProjectActivityDetail, ProjectActivityModel>(projectactivityDetail);
+        //            response.StatusCode = StaticResource.successStatusCode;
+        //            response.Message = StaticResource.SuccessText;
+        //        }
+        //        else
+        //        {
+        //            response.StatusCode = StaticResource.failStatusCode;
+        //            response.Message = StaticResource.ActivityNotFound;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //    }
+        //    return response;
+        //}
 
-        public async Task<APIResponse> MarkMonitoringAsCompleted(long activityId, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
-                if (projectactivityDetail != null)
-                {
-                    // Actual end date
-                    projectactivityDetail.MonitoringStatus = !projectactivityDetail.MonitoringStatus;
-                    projectactivityDetail.StatusId = (int)ProjectPhaseType.Completed;
+        //public async Task<APIResponse> MarkMonitoringAsCompleted(long activityId, string UserId)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        var projectactivityDetail = await _uow.ProjectActivityDetailRepository.FindAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+        //        if (projectactivityDetail != null)
+        //        {
+        //            // Actual end date
+        //            projectactivityDetail.MonitoringStatus = !projectactivityDetail.MonitoringStatus;
+        //            projectactivityDetail.StatusId = (int)ProjectPhaseType.Completed;
 
-                    projectactivityDetail.ModifiedDate = DateTime.UtcNow;
-                    projectactivityDetail.ModifiedById = UserId;
-                    projectactivityDetail.IsDeleted = false;
+        //            projectactivityDetail.ModifiedDate = DateTime.UtcNow;
+        //            projectactivityDetail.ModifiedById = UserId;
+        //            projectactivityDetail.IsDeleted = false;
 
-                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
+        //            await _uow.ProjectActivityDetailRepository.UpdateAsyn(projectactivityDetail);
 
-                    response.data.MonitoringStatus = projectactivityDetail.MonitoringStatus.Value;
-                    response.data.ProjectActivityDetails = _mapper.Map<ProjectActivityDetail, ProjectActivityModel>(projectactivityDetail);
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = StaticResource.SuccessText;
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.ActivityNotFound;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
+        //            response.data.MonitoringStatus = projectactivityDetail.MonitoringStatus.Value;
+        //            response.data.ProjectActivityDetails = _mapper.Map<ProjectActivityDetail, ProjectActivityModel>(projectactivityDetail);
+        //            response.StatusCode = StaticResource.successStatusCode;
+        //            response.Message = StaticResource.SuccessText;
+        //        }
+        //        else
+        //        {
+        //            response.StatusCode = StaticResource.failStatusCode;
+        //            response.Message = StaticResource.ActivityNotFound;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //    }
+        //    return response;
+        //}
 
         public async Task<int> GetActivityOnSchedule(long projectId)
         {
 
-            int totalCount = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
-                                                                                   a.ProjectBudgetLineDetail.ProjectId == projectId &&
-                                                                                   a.StartDate == (a.ActualStartDate.Value.Date != null ?
-                                                                                   a.ActualStartDate.Value.Date : DateTime.UtcNow.Date));
+            int totalCount = await _uow.GetDbContext().ProjectActivityDetail
+                                                      .CountAsync(a => a.IsDeleted == false &&
+                                                                       a.ProjectBudgetLineDetail.ProjectId == projectId 
+                                                                       //&&
+                                                                       //a.StartDate == (a.ActualStartDate.Value.Date != null ?
+                                                                       //a.ActualStartDate.Value.Date : DateTime.UtcNow.Date)
+                                                                       );
             return totalCount;
         }
 
@@ -363,10 +429,11 @@ namespace HumanitarianAssistance.Service.Classes
         {
 
             int totalCount = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
-                                                                                  a.ProjectBudgetLineDetail.ProjectId == projectId &&
-                                                                                  a.StartDate.Value.Date < (a.ActualStartDate != null ?
-                                                                                                           a.ActualStartDate.Value.Date :
-                                                                                                           DateTime.UtcNow.Date)
+                                                                                  a.ProjectBudgetLineDetail.ProjectId == projectId 
+                                                                                  //&&
+                                                                                  //a.StartDate.Value.Date < (a.ActualStartDate != null ?
+                                                                                  //                         a.ActualStartDate.Value.Date :
+                                                                                  //                         DateTime.UtcNow.Date)
                                                                               );
             return totalCount;
 
@@ -376,10 +443,12 @@ namespace HumanitarianAssistance.Service.Classes
         {
 
             int totalCount = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
-                                                                                   a.ProjectBudgetLineDetail.ProjectId == projectId &&
-                                                                                   (a.EndDate.Value.Date != null ? a.EndDate.Value.Date : DateTime.UtcNow.Date) < (
-                                                                                   a.ActualEndDate.Value.Date != null ?
-                                                                                   a.ActualEndDate.Value.Date : DateTime.UtcNow.Date));
+                                                                                   a.ProjectBudgetLineDetail.ProjectId == projectId 
+                                                                                   //&&
+                                                                                   //(a.EndDate.Value.Date != null ? a.EndDate.Value.Date : DateTime.UtcNow.Date) < (
+                                                                                   //a.ActualEndDate.Value.Date != null ?
+                                                                                   //a.ActualEndDate.Value.Date : DateTime.UtcNow.Date)
+                                                                                   );
             return totalCount;
         }
 
@@ -387,10 +456,12 @@ namespace HumanitarianAssistance.Service.Classes
         {
 
             int slippage = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
-                                                                                      a.ProjectBudgetLineDetail.ProjectId == projectId &&
-                                                                                      (a.ActualEndDate.Value.Date != null ?
-                                                                                      a.ActualEndDate.Value.Date : DateTime.UtcNow.Date) >
-                                                                                      (a.EndDate.Value.Date != null ? a.EndDate.Value.Date : DateTime.UtcNow.Date));
+                                                                                      a.ProjectBudgetLineDetail.ProjectId == projectId 
+                                                                                      //&&
+                                                                                      //(a.ActualEndDate.Value.Date != null ?
+                                                                                      //a.ActualEndDate.Value.Date : DateTime.UtcNow.Date) >
+                                                                                      //(a.EndDate.Value.Date != null ? a.EndDate.Value.Date : DateTime.UtcNow.Date)
+                                                                                      );
             return slippage;
         }
 
@@ -422,13 +493,13 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<DateTime?> GetMinimumProjectActivityStartDate(long projectId)
         {
             return await _uow.GetDbContext().ProjectActivityDetail.Where(x => x.ProjectBudgetLineDetail.ProjectId == projectId && x.IsDeleted == false)
-                                                                  .MinAsync(x => x.StartDate);
+                                                                  .MinAsync(x => x.PlannedStartDate);
         }
 
         public async Task<DateTime?> GetMaximumProjectActivityEndDate(long projectId)
         {
             return await _uow.GetDbContext().ProjectActivityDetail.Where(x => x.ProjectBudgetLineDetail.ProjectId == projectId && x.IsDeleted == false)
-                                                                  .MaxAsync(x => x.EndDate);
+                                                                  .MaxAsync(x => x.PlannedEndDate);
         }
 
         public async Task<APIResponse> AllProjectActivityStatus(long projectId)
@@ -686,6 +757,436 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
+
+        #region GetProjectActivityAdvanceFilterList
+        public APIResponse GetProjectActivityAdvanceFilterList(ActivityAdvanceFilterModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var activityList = _uow.GetDbContext().ProjectActivityDetail
+                                          .Where(v => v.IsDeleted == false &&
+                                                      v.ProjectBudgetLineDetail.ProjectId == model.ProjectId
+                                          )
+                                          .OrderBy(x => x.ActivityId)
+                                          .AsQueryable();
+
+                activityList = FilterAdvanceList(activityList, model);
+
+
+
+                var activityDetaillist = activityList.Select(b => new ProjectActivityModel
+                {
+                    ActivityId = b.ActivityId,
+                    ActivityName = b.ActivityName,
+                    ActivityDescription = b.ActivityDescription,
+                    BudgetLineId = b.ProjectBudgetLineDetail.BudgetLineId,
+                    BudgetName = b.ProjectBudgetLineDetail.BudgetName,
+                    EmployeeID = b.EmployeeDetail.EmployeeID,
+                    EmployeeName = b.EmployeeDetail.EmployeeName,
+                    StatusId = b.ActivityStatusDetail.StatusId,
+                    StatusName = b.ActivityStatusDetail.StatusName,
+                    PlannedStartDate = b.PlannedStartDate,
+                    PlannedEndDate = b.PlannedEndDate,
+                    Recurring = b.Recurring,
+                    RecurringCount = b.RecurringCount,
+                    RecurrinTypeId = b.RecurrinTypeId,
+                    //ActualEndDate = b.ActualEndDate,
+                    //ActualStartDate = b.ActualStartDate,
+                    //OfficeId = b.OfficeDetail.OfficeId,
+                    //OfficeName = b.OfficeDetail.OfficeName,
+                    //ExtensionEndDate = b.ExtensionEndDate,
+                    //ExtensionStartDate = b.ExtensionStartDate,
+                    //ImplementationChalanges = b.ImplementationChalanges,
+                    //ImplementationMethod = b.ImplementationMethod,
+                    //ImplementationProgress = b.ImplementationProgress,
+                    //ImplementationStatus = b.ImplementationStatus,
+                    //MonitoringChallenges = b.MonitoringChallenges,
+                    //MonitoringFrequency = b.MonitoringFrequency,
+                    //MonitoringProgress = b.MonitoringProgress,
+                    //MonitoringScore = b.MonitoringScore,
+                    //MonitoringStatus = b.MonitoringStatus,
+                    //OvercomingChallanges = b.OvercomingChallanges,
+                    //Recommendation = b.Recommendation,
+                    //Strengths = b.Strengths,
+                    //VerificationSource = b.VerificationSource,
+                    //Weeknesses = b.Weeknesses,
+                    //Comments = b.Comments
+                }).OrderByDescending(x => x.ActivityId)
+                  .ToList();
+                response.data.ProjectActivityList = activityDetaillist;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+            return response;
+        }
+        #endregion
+
+        public IQueryable<ProjectActivityDetail> FilterAdvanceList(IQueryable<ProjectActivityDetail> activityList, ActivityAdvanceFilterModel model)
+        {
+            if (model.PlannedStartDate != null)
+            {
+                activityList = activityList.Where(x => x.PlannedStartDate.Value.Date >= model.PlannedStartDate.Value.Date);
+            }
+            if (model.PlannedEndDate != null)
+            {
+                activityList = activityList.Where(x => x.PlannedEndDate.Value.Date <= model.PlannedEndDate.Value.Date);
+            }
+            if (model.ActualStartDate != null)
+            {
+                //activityList = activityList.Where(x => x.ActualStartDate.Value.Date >= model.ActualStartDate.Value.Date);
+            }
+            if (model.ActualEndDate != null)
+            {
+                //activityList = activityList.Where(x => x.ActualEndDate.Value.Date <= model.ActualEndDate.Value.Date);
+            }
+            if (model.BudgetLineId.Any())
+            {
+                activityList = activityList.Where(x => model.BudgetLineId.Contains(x.BudgetLineId));
+            }
+            if (model.AssigneeId.Any())
+            {
+                activityList = activityList.Where(x => model.AssigneeId.Contains(x.EmployeeID));
+            }
+
+            if (model.Planning)
+            {
+                //activityList.Where(x => x.StatusId);
+            }
+            if (model.Implementation)
+            {
+            }
+            if (model.Monitoring)
+            {
+            }
+            if (model.ImplementationCompleted)
+            {
+            }
+            if (model.MonitoringCheck)
+            {
+            }
+            if (model.MonitoringCompleted)
+            {
+            }
+
+            if (model.ProgressRange.Any())
+            {
+            }
+            if (model.SleepageRange.Any())
+            {
+            }
+            if (model.ProgressRange.Any())
+            {
+            }
+
+            if (model.LateStart)
+            {
+            }
+
+            if (model.LateEnd)
+            {
+            }
+
+            if (model.OnSchedule)
+            {
+            }
+            return activityList;
+        }
+
+
+        #region projectMonitoringActivity
+        public async Task<APIResponse> AddProjectMonitoringReview(ProjectMonitoringViewModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                ProjectMonitoringReviewDetail projectMonitoringReviewDetail = new ProjectMonitoringReviewDetail();
+                projectMonitoringReviewDetail.ActivityId = model.ActivityId;
+                projectMonitoringReviewDetail.CreatedById = UserId;
+                projectMonitoringReviewDetail.ProjectId = model.ProjectId;
+                projectMonitoringReviewDetail.CreatedDate = DateTime.UtcNow;
+                projectMonitoringReviewDetail.IsDeleted = false;
+                projectMonitoringReviewDetail.NegativePoints = model.NegativePoints;
+                projectMonitoringReviewDetail.PostivePoints = model.PositivePoints;
+                projectMonitoringReviewDetail.Recommendations = model.Recommendations;
+                projectMonitoringReviewDetail.Remarks = model.Remarks;
+
+                await _uow.GetDbContext().ProjectMonitoringReviewDetail.AddAsync(projectMonitoringReviewDetail);
+                await _uow.GetDbContext().SaveChangesAsync();
+
+                foreach (var item in model.MonitoringReviewModel)
+                {
+                    ProjectMonitoringIndicatorDetail monitoringIndicatorDetail = new ProjectMonitoringIndicatorDetail();
+                    monitoringIndicatorDetail.CreatedById = UserId;
+                    monitoringIndicatorDetail.CreatedDate = DateTime.UtcNow;
+                    monitoringIndicatorDetail.IsDeleted = false;
+                    monitoringIndicatorDetail.ProjectMonitoringReviewId = projectMonitoringReviewDetail.ProjectMonitoringReviewId;
+                    monitoringIndicatorDetail.ProjectIndicatorId = item.ProjectIndicatorId;
+
+                    await _uow.GetDbContext().ProjectMonitoringIndicatorDetail.AddAsync(monitoringIndicatorDetail);
+                    await _uow.GetDbContext().SaveChangesAsync();
+
+                    foreach (var obj in item.IndicatorQuestions)
+                    {
+                        ProjectMonitoringIndicatorQuestions monitoringQuestions = new ProjectMonitoringIndicatorQuestions();
+                        monitoringQuestions.IsDeleted = false;
+                        monitoringQuestions.CreatedDate = DateTime.UtcNow;
+                        monitoringQuestions.CreatedById = UserId;
+                        monitoringQuestions.QuestionId = obj.QuestionId;
+                        monitoringQuestions.Verification = obj.Verification;
+                        monitoringQuestions.MonitoringIndicatorId = monitoringIndicatorDetail.MonitoringIndicatorId;
+                        monitoringQuestions.Score = obj.Score;
+
+                        await _uow.GetDbContext().ProjectMonitoringIndicatorQuestions.AddAsync(monitoringQuestions);
+                        await _uow.GetDbContext().SaveChangesAsync();
+                    }
+                }
+
+                
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetProjectMonitoringList(long activityId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var projectMonitoring = await _uow.GetDbContext().ProjectMonitoringReviewDetail
+                                                                .Include(y => y.ProjectMonitoringIndicatorDetail)
+                                                                .ThenInclude(z => z.ProjectMonitoringIndicatorQuestions)
+                                                                .ThenInclude(x=> x.ProjectIndicatorQuestions)
+                                                                .Where(x => x.IsDeleted == false && x.ActivityId == activityId)
+                                                                .Select(x => new ProjectMonitoringViewModel {
+                                                                    ActivityId = x.ActivityId,
+                                                                    NegativePoints = x.NegativePoints,
+                                                                    PositivePoints = x.PostivePoints,
+                                                                    ProjectId = x.ProjectId,
+                                                                    Recommendations = x.Recommendations,
+                                                                    Remarks = x.Remarks,
+                                                                    ProjectMonitoringReviewId = x.ProjectMonitoringReviewId,
+                                                                    MonitoringReviewModel = x.ProjectMonitoringIndicatorDetail
+                                                                                            .Select(y => new ProjectMonitoringReviewModel {
+                                                                                                ProjectIndicatorId = y.ProjectIndicatorId,
+                                                                                                MonitoringIndicatorId = y.MonitoringIndicatorId,
+                                                                                                IndicatorName= y.ProjectIndicators.IndicatorName,
+                                                                                                IndicatorQuestions = y.ProjectMonitoringIndicatorQuestions
+                                                                                                                      .Where(z => z.IsDeleted == false)
+                                                                                                                      .Select(z => new ProjectMonitoringQuestionModel
+                                                                                                                      {
+                                                                                                                        MonitoringIndicatorQuestionId= z.Id,
+                                                                                                                        QuestionId = z.QuestionId,
+                                                                                                                        Score = z.Score,
+                                                                                                                        Verification = z.Verification,
+                                                                                                                        Question= z.ProjectIndicatorQuestions.IndicatorQuestion
+                                                                                                                      }).ToList()
+                                                                                            }).ToList()
+                                                                }).ToListAsync();
+
+                projectMonitoring.ForEach(x => x.MonitoringReviewModel.ForEach(y => y.TotalScore = y.IndicatorQuestions.Sum(z => z.Score)));
+
+                response.data.ProjectMonitoring = projectMonitoring;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
+
+
+
+        #region "Project activity extension"
+
+        public async Task<APIResponse> GetProjectActivityExtension(long activityId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var extensionList = await _uow.GetDbContext().ProjectActivityExtensions
+                                                             .Where(x => x.IsDeleted == false &&
+                                                                         x.ActivityId == activityId
+                                                                   )
+                                                              .ToListAsync();
+
+                response.data.ProjectActivityExtensionsList = extensionList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        /// <summary>
+        /// AddProjectExtension of project activity detail 03/05/2019 pk
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public async Task<APIResponse> AddProjectActivityExtension(ProjectExtensionModel model,string userId)
+         {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityExtensions extensionObj = new ProjectActivityExtensions();
+                extensionObj.ActivityId = model.ActivityId;
+                extensionObj.StartDate = model.StartDate;
+                extensionObj.EndDate = model.EndDate;
+                extensionObj.Description = model.Description;
+                extensionObj.CreatedById = userId;
+                extensionObj.IsDeleted = false;
+                extensionObj.CreatedDate = DateTime.UtcNow;
+
+                await _uow.ProjectActivityExtensionsRepository.AddAsyn(extensionObj);
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityExtensions extensionDetail = await _uow.GetDbContext().ProjectActivityExtensions.FirstOrDefaultAsync(x => x.ActivityId == model.ActivityId && x.IsDeleted == false);
+
+                if (extensionDetail != null)
+                {
+                    extensionDetail.ActivityId = model.ActivityId;
+                    extensionDetail.StartDate = model.StartDate;
+                    extensionDetail.EndDate = model.EndDate;
+                    extensionDetail.Description = model.Description;
+                    extensionDetail.IsDeleted = false;
+                    extensionDetail.ModifiedById = userId;
+                    extensionDetail.ModifiedDate = DateTime.UtcNow;
+
+                    await _uow.ProjectActivityExtensionsRepository.UpdateAsyn(extensionDetail);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else
+                {
+                    throw new Exception(StaticResource.ActivityExtensionNotFound);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+
+        public async Task<APIResponse> DeleteProjectActivityExtension(long extensionId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityExtensions extensionDetail = await _uow.GetDbContext().ProjectActivityExtensions.FirstOrDefaultAsync(x => x.ExtensionId == extensionId && x.IsDeleted == false);
+
+                if (extensionDetail != null)
+                {
+                    extensionDetail.IsDeleted = true;
+                    extensionDetail.ModifiedById = userId;
+                    extensionDetail.ModifiedDate = DateTime.UtcNow;
+
+                    await _uow.ProjectActivityExtensionsRepository.UpdateAsyn(extensionDetail);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                else {
+                    throw new Exception(StaticResource.ActivityExtensionNotFound);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
+
+        public async Task<APIResponse> GetProjectActivityDetailList(int parentId)
+
+        {
+
+            APIResponse response = new APIResponse();
+            try
+            {
+                var projectActivityDetails = await _uow.GetDbContext().ProjectActivityDetail
+                                          .Include(p => p.ProjectSubActivityList)
+                                          .FirstOrDefaultAsync(v => v.IsDeleted == false &&
+                                                      v.ActivityId == parentId
+                                          );
+
+                List<ProjectSubActivityListModel> activityDetaillist = new List<ProjectSubActivityListModel>();
+
+                activityDetaillist = projectActivityDetails.ProjectSubActivityList.Select(b => new ProjectSubActivityListModel
+                {
+                    ActivityId = b.ActivityId,
+                    BudgetLineId = b.BudgetLineId,
+                    EmployeeID = b.EmployeeID,
+                    PlannedStartDate = b.PlannedStartDate,
+                    PlannedEndDate = b.PlannedEndDate,
+                    Recurring = b.Recurring,
+                    RecurrinTypeId = b.RecurrinTypeId,
+                    IsCompleted = b.IsCompleted
+                }).OrderByDescending(x => x.ActivityId)
+                  .ToList();
+                response.data.ProjectSubActivityListModel = activityDetaillist;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+
+
+        }
+
 
     }
 }

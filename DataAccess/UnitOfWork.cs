@@ -193,6 +193,7 @@ namespace DataAccess
         private IGenericRepository<SecurityConsiderationMultiSelect> _securityConsiderationMultiSelectRepository;
         private IGenericRepository<HRJobInterviewers> _hRJobInterviewers;
         private IGenericRepository<ActivityDocumentsDetail> _activityDocumentsDetailRepository;
+        private IGenericRepository<ProjectActivityExtensions> _projectActivityExtensionRepository;
 
         
 
@@ -238,6 +239,7 @@ namespace DataAccess
 
 
         private IGenericRepository<Errorlog> _errorlogRepository { get; set; }
+        private IGenericRepository<ProjectActivityProvinceDetail> _projectActivityProvinceDetailRepository;
 
 
         public UnitOfWork(ApplicationDbContext mschaContext)
@@ -264,6 +266,15 @@ namespace DataAccess
             GC.SuppressFinalize(this);
         }
 
+
+        public IGenericRepository<ProjectActivityProvinceDetail> ProjectActivityProvinceDetailRepository
+        {
+            get
+            {
+                return _projectActivityProvinceDetailRepository =
+                    _projectActivityProvinceDetailRepository ?? new GenericRepository<ProjectActivityProvinceDetail>(_mschaContext);
+            }
+        }
 
         public IGenericRepository<GainLossSelectedAccounts> GainLossSelectedAccountsRepository
         {
@@ -1876,6 +1887,14 @@ namespace DataAccess
             get
             {
                 return _activityDocumentsDetailRepository = _activityDocumentsDetailRepository ?? new GenericRepository<ActivityDocumentsDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectActivityExtensions> ProjectActivityExtensionsRepository
+        {
+            get
+            {
+                return _projectActivityExtensionRepository = _projectActivityExtensionRepository ?? new GenericRepository<ProjectActivityExtensions>(_mschaContext);
             }
         }
         public void Save()
