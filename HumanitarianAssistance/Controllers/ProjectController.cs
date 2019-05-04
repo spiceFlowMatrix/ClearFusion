@@ -2057,5 +2057,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     
     #endregion
 
+    [HttpPost]
+    public async Task<APIResponse> GetProjectActivityDetailList([FromBody]int projectId)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectActivityDetailList(projectId);
+      return apiresponse;
+    }
+
   }
 }
