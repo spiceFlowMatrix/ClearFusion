@@ -5685,7 +5685,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 
 
-                if (paging.PageIndex != 0 && paging.PageSize != 0)
+                if (paging.PageIndex != 0  || paging.PageSize != 0)
                 {
                     indicators = indicators.Skip((paging.PageIndex * paging.PageSize)).Take(paging.PageSize);
                 }

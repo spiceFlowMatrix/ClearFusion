@@ -258,6 +258,7 @@ namespace HumanitarianAssistance.Entities
         #endregion
 
         #region Marketing
+        public DbSet<InvoiceGeneration> InvoiceGeneration { get; set; }
         public DbSet<InvoiceApproval> InvoiceApproval { get; set; }
         public DbSet<PlayoutMinutes> PlayoutMinutes { get; set; }
         public DbSet<ScheduleDetails> ScheduleDetails { get; set; }

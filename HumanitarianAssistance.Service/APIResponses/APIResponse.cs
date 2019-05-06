@@ -483,6 +483,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
         public List<ProjectProposalAmountSummary> ProjectProposalAmountSummary { get; set; }
         public ProjectIndicatorModel ProjectIndicatorList { get; set; }
+
+        public ICollection<ProjectActivityExtensions> ProjectActivityExtensionsList { get; set; }
     }
 
 
