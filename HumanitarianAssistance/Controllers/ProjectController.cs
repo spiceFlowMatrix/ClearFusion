@@ -2032,9 +2032,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
     [HttpPost]
-    public async Task<APIResponse> GetProjectActivityDetailList([FromBody]int projectId)
+    public async Task<APIResponse> GetProjectSubActivityDetail([FromBody]int projectId)
     {
-      APIResponse apiresponse = await _iActivity.GetProjectActivityDetailList(projectId);
+      APIResponse apiresponse = await _iActivity.GetProjectSubActivityDetails(projectId);
       return apiresponse;
     }
 

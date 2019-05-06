@@ -1092,7 +1092,7 @@ namespace HumanitarianAssistance.Service.Classes
         #endregion
 
 
-        public async Task<APIResponse> GetProjectActivityDetailList(int parentId)
+        public async Task<APIResponse> GetProjectSubActivityDetails(int parentId)
 
         {
 
@@ -1116,7 +1116,9 @@ namespace HumanitarianAssistance.Service.Classes
                     PlannedEndDate = b.PlannedEndDate,
                     Recurring = b.Recurring,
                     RecurrinTypeId = b.RecurrinTypeId,
-                    IsCompleted = b.IsCompleted
+                    IsCompleted = b.IsCompleted,
+                    ActivityDescription =b.ActivityDescription,
+                    ChallengesAndSolutions=b.ChallengesAndSolutions,
                 }).OrderByDescending(x => x.ActivityId)
                   .ToList();
                 response.data.ProjectSubActivityListModel = activityDetaillist;
