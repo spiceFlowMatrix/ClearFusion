@@ -98,7 +98,7 @@ namespace HumanitarianAssistance.Service.Classes
                 await _uow.ProjectActivityDetailRepository.AddAsyn(obj);
 
 
-                if (model.ProvinceId.Any())
+                if (model.ProvinceId!= null)
                 {
                     List<ProjectActivityProvinceDetail> activityProvienceList = new List<ProjectActivityProvinceDetail>();
 
@@ -1173,6 +1173,10 @@ namespace HumanitarianAssistance.Service.Classes
                     IsCompleted = b.IsCompleted,
                     ActivityDescription =b.ActivityDescription,
                     ChallengesAndSolutions=b.ChallengesAndSolutions,
+                    Target=b.Target,
+                    Achieved=b.Achieved,
+                    ActualStartDate=b.ActualStartDate,
+                    ActualEndDate=b.ActualEndDate,
                 }).OrderByDescending(x => x.ActivityId)
                   .ToList();
                 response.data.ProjectSubActivityListModel = activityDetaillist;
@@ -1189,6 +1193,137 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
 
+        public async Task<APIResponse> AddProjectSubActivityDetail(ProjectActivityModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityDetail obj = _mapper.Map<ProjectActivityModel, ProjectActivityDetail>(model);
+                obj.CreatedDate = DateTime.UtcNow;
+                obj.IsDeleted = false;
+                obj.CreatedById = UserId;
+                await _uow.ProjectActivityDetailRepository.AddAsyn(obj);
 
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> EditProjectSubActivityDetail(ProjectSubActivityListModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == model.ActivityId && x.IsDeleted == false);
+                if (obj != null)
+                {
+                    obj.ActivityDescription = model.ActivityDescription;
+                    obj.ChallengesAndSolutions = model.ChallengesAndSolutions;
+                    obj.EmployeeID = model.EmployeeID;
+                    obj.IsCompleted = model.IsCompleted;
+                    obj.BudgetLineId = model.BudgetLineId;
+                    obj.Achieved = model.Achieved;
+                    obj.Target = model.Target;
+                    obj.ModifiedDate = DateTime.UtcNow;
+                    obj.IsDeleted = false;
+                    obj.ModifiedById = UserId;
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> ProjectSubActivityIscomplete(long activityId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted==false);
+                if (obj != null)
+                {
+                   
+                    obj.IsCompleted = !obj.IsCompleted;
+                    obj.ModifiedDate = DateTime.UtcNow;
+                    obj.IsDeleted = false;
+                    obj.ModifiedById = UserId;
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
+                }
+                response.data.ProjectActivityDetail = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> StartProjectSubActivity(long activityId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+                if (obj != null)
+                {
+
+                    obj.ActualStartDate = DateTime.UtcNow;
+                    obj.ModifiedDate = DateTime.UtcNow;
+                    obj.IsDeleted = false;
+                    obj.ModifiedById = UserId;
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
+                }
+                response.data.ProjectActivityDetail = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        public async Task<APIResponse> EndProjectSubActivity(long activityId, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+                if (obj != null)
+                {
+
+                    obj.ActualEndDate = DateTime.UtcNow;
+                    obj.ModifiedDate = DateTime.UtcNow;
+                    obj.IsDeleted = false;
+                    obj.ModifiedById = UserId;
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
+                }
+                response.data.ProjectActivityDetail = obj;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
     }
 }

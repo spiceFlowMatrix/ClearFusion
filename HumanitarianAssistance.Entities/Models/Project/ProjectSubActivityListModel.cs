@@ -24,7 +24,11 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
-        public bool? IsCompleted { get; set; }
+        public bool IsCompleted { get; set; }
+
+        public float? Achieved { get; set; }
+        public float? Target { get; set; }
+
 
     }
 }
