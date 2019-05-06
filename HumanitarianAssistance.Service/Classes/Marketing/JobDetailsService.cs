@@ -1092,31 +1092,41 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var invoiceDetails = _uow.InvoiceApprovalRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId).FirstOrDefault();
-                if (invoiceDetails == null)
+                var invoiceGeneration = _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).FirstOrDefault();
+                if(invoiceGeneration != null)
                 {
-                    InvoiceApproval obj = new InvoiceApproval();
-                    obj.IsDeleted = false;
-                    obj.JobId = jobId;
-                    obj.IsInvoiceApproved = true;
-                    obj.CreatedById = userId;
-                    obj.CreatedDate = DateTime.Now;
-                    await _uow.InvoiceApprovalRepository.AddAsyn(obj);                   
+                    var invoiceDetails = _uow.InvoiceApprovalRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId).FirstOrDefault();
+                    if (invoiceDetails == null)
+                    {
+                        InvoiceApproval obj = new InvoiceApproval();
+                        obj.IsDeleted = false;
+                        obj.JobId = jobId;
+                        obj.IsInvoiceApproved = true;
+                        obj.CreatedById = userId;
+                        obj.CreatedDate = DateTime.Now;
+                        await _uow.InvoiceApprovalRepository.AddAsyn(obj);
+                    }
+                    else
+                    {
+                        var existRecord = await _uow.InvoiceApprovalRepository.FindAsync(x => x.IsDeleted == false && x.JobId == jobId);
+                        if (existRecord != null)
+                        {
+                            existRecord.IsInvoiceApproved = true;
+                            existRecord.IsDeleted = false;
+                            existRecord.ModifiedById = userId;
+                            existRecord.ModifiedDate = DateTime.Now;
+                            await _uow.InvoiceApprovalRepository.UpdateAsyn(existRecord);
+                        }
+                    }
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Invoice Approved successfully";
                 }
                 else
                 {
-                    var existRecord = await _uow.InvoiceApprovalRepository.FindAsync(x => x.IsDeleted == false && x.JobId == jobId);
-                    if (existRecord != null)
-                    {
-                        existRecord.IsInvoiceApproved = true;
-                        existRecord.IsDeleted = false;
-                        existRecord.ModifiedById = userId;
-                        existRecord.ModifiedDate = DateTime.Now;
-                        await _uow.InvoiceApprovalRepository.UpdateAsyn(existRecord);
-                    }
+                    response.StatusCode = StaticResource.notFoundCode;
+                    response.Message = "Invoice Not yet generated";
                 }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Invoice Approved successfully";
+                
             }
             catch (Exception ex)
             {
