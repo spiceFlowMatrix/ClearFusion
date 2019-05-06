@@ -58,7 +58,7 @@ namespace DataAccess.DbEntities.Project
 
 
         public ICollection<ProjectActivityProvinceDetail> ProjectActivityProvinceDetail { get; set; }
-        public ICollection<ProjectActivityExtensions> ProjectActivityExtensionList { get; set; }
+        public List<ProjectActivityExtensions> ProjectActivityExtensionList { get; set; }
 
         public long? ParentId { get; set; }
         [ForeignKey("ParentId")]

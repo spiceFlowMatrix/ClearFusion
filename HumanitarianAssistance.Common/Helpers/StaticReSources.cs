@@ -400,6 +400,7 @@ namespace HumanitarianAssistance.Common.Helpers
 
         #region "Exception Throw Error Text"
         public const string UnableToUploadFile = "Unable To Upload File";
+        public const string ActivityExtensionNotFound = "Activity extension not found";
 
         #endregion
 

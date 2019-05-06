@@ -21,6 +21,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public long ProjectIndicatorId { get; set; }
         public string IndicatorName { get; set; }
         public long? MonitoringIndicatorId { get; set; }
+        public int? TotalScore { get; set; }
         public List<ProjectMonitoringQuestionModel> IndicatorQuestions { get; set; }
     }
 

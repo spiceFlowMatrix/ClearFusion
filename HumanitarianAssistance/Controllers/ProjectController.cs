@@ -1998,6 +1998,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
     #region" project activity extension"
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectActivityExtension([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+        apiresponse = await _iActivity.GetProjectActivityExtension(activityId);
+
+      return apiresponse;
+    }
+
     [HttpPost]
     public async Task<APIResponse> AddProjectActivityExtension([FromBody]ProjectExtensionModel model)
     {
@@ -2029,6 +2040,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> DeleteProjectActivityExtension([FromBody]long extensionId)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iActivity.DeleteProjectActivityExtension(extensionId, user.Id);
+      }
+
+      return apiresponse;
+
+    }
+
+    
     #endregion
 
     [HttpPost]
