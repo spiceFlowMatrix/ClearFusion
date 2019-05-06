@@ -15,5 +15,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
         public string ClientName { get; set; }
         public string CurrencyCode { get; set; }
         public DateTime EndDate { get; set; }
+        public bool IsApproved { get; set; }
+        public bool IsScheduleExist { get; set; }
     }
 }
