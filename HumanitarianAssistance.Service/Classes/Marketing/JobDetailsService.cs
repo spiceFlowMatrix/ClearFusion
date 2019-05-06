@@ -921,7 +921,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 InvoiceModel model = new InvoiceModel();
                 var invoiceDetails = _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).OrderByDescending(x => x.InvoiceId).FirstOrDefault();
                 var invoiceApproval = await _uow.InvoiceApprovalRepository.FindAsync(x => x.JobId == jobId && x.IsDeleted == false);
-                var isScheduleExists = await _uow.ScheduleDetailsRepository.FindAsync(x => x.JobId == jobId && x.IsDeleted == false);
+                var isScheduleExists = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).FirstOrDefault();
                 APIResponse response1 = await GetJobDetailsById(jobId, userId);
                 if (invoiceDetails != null)
                 {
