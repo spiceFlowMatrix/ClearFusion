@@ -1016,9 +1016,60 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetProjectMonitoringByMonitoringId(long Id)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var monitoring = await _uow.GetDbContext().ProjectMonitoringReviewDetail
+                                                   .Include(x => x.ProjectMonitoringIndicatorDetail)
+                                                   .ThenInclude(x => x.ProjectMonitoringIndicatorQuestions)
+                                                                .Select(x => new ProjectMonitoringViewModel
+                                                                {
+                                                                    ActivityId = x.ActivityId,
+                                                                    NegativePoints = x.NegativePoints,
+                                                                    PositivePoints = x.PostivePoints,
+                                                                    ProjectId = x.ProjectId,
+                                                                    MonitoringDate = x.MonitoringDate,
+                                                                    Recommendations = x.Recommendations,
+                                                                    Remarks = x.Remarks,
+                                                                    ProjectMonitoringReviewId = x.ProjectMonitoringReviewId,
+                                                                    MonitoringReviewModel = x.ProjectMonitoringIndicatorDetail
+                                                                                            .Select(y => new ProjectMonitoringReviewModel
+                                                                                            {
+                                                                                                ProjectIndicatorId = y.ProjectIndicatorId,
+                                                                                                MonitoringIndicatorId = y.MonitoringIndicatorId,
+                                                                                                IndicatorName = y.ProjectIndicators.IndicatorName,
+                                                                                                IndicatorQuestions = y.ProjectMonitoringIndicatorQuestions
+                                                                                                                      .Where(z => z.IsDeleted == false)
+                                                                                                                      .Select(z => new ProjectMonitoringQuestionModel
+                                                                                                                      {
+                                                                                                                          MonitoringIndicatorQuestionId = z.Id,
+                                                                                                                          QuestionId = z.QuestionId,
+                                                                                                                          Score = z.Score,
+                                                                                                                          VerificationId = z.VerificationId,
+                                                                                                                          Verification = z.Verification,
+                                                                                                                          Question = z.ProjectIndicatorQuestions.IndicatorQuestion
+                                                                                                                      }).ToList()
+                                                                                            }).ToList()
+                                                                }).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ProjectMonitoringReviewId == Id);
+
+                response.data.ProjectMonitoringModel = monitoring;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+
+            }
+
+            return response;
+        }
+
         #endregion
-
-
 
 
         #region "Project activity extension"
@@ -1149,6 +1200,7 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
+        #region "Project SubActivity Details "
 
         public async Task<APIResponse> GetProjectSubActivityDetails(int parentId)
 
@@ -1331,58 +1383,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
 
-        public async Task<APIResponse> GetProjectMonitoringByMonitoringId(long Id)
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                var monitoring = await _uow.GetDbContext().ProjectMonitoringReviewDetail
-                                                   .Include(x => x.ProjectMonitoringIndicatorDetail)
-                                                   .ThenInclude(x => x.ProjectMonitoringIndicatorQuestions)
-                                                                .Select(x => new ProjectMonitoringViewModel
-                                                                {
-                                                                    ActivityId = x.ActivityId,
-                                                                    NegativePoints = x.NegativePoints,
-                                                                    PositivePoints = x.PostivePoints,
-                                                                    ProjectId = x.ProjectId,
-                                                                    MonitoringDate = x.MonitoringDate,
-                                                                    Recommendations = x.Recommendations,
-                                                                    Remarks = x.Remarks,
-                                                                    ProjectMonitoringReviewId = x.ProjectMonitoringReviewId,
-                                                                    MonitoringReviewModel = x.ProjectMonitoringIndicatorDetail
-                                                                                            .Select(y => new ProjectMonitoringReviewModel
-                                                                                            {
-                                                                                                ProjectIndicatorId = y.ProjectIndicatorId,
-                                                                                                MonitoringIndicatorId = y.MonitoringIndicatorId,
-                                                                                                IndicatorName = y.ProjectIndicators.IndicatorName,
-                                                                                                IndicatorQuestions = y.ProjectMonitoringIndicatorQuestions
-                                                                                                                      .Where(z => z.IsDeleted == false)
-                                                                                                                      .Select(z => new ProjectMonitoringQuestionModel
-                                                                                                                      {
-                                                                                                                          MonitoringIndicatorQuestionId = z.Id,
-                                                                                                                          QuestionId = z.QuestionId,
-                                                                                                                          Score = z.Score,
-                                                                                                                          VerificationId = z.VerificationId,
-                                                                                                                          Verification = z.Verification,
-                                                                                                                          Question = z.ProjectIndicatorQuestions.IndicatorQuestion
-                                                                                                                      }).ToList()
-                                                                                            }).ToList()
-                                                                }).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ProjectMonitoringReviewId == Id);
-
-                response.data.ProjectMonitoringModel = monitoring;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-
-            }
-
-            return response;
-        }
+        #endregion
 
     }
 }
