@@ -826,8 +826,6 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        #endregion
-
         public IQueryable<ProjectActivityDetail> FilterAdvanceList(IQueryable<ProjectActivityDetail> activityList, ActivityAdvanceFilterModel model)
         {
             if (model.PlannedStartDate.HasValue)
@@ -898,6 +896,8 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return activityList;
         }
+
+        #endregion
 
 
         #region projectMonitoringActivity
