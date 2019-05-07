@@ -921,7 +921,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 InvoiceModel model = new InvoiceModel();
                 var invoiceDetails = _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).OrderByDescending(x => x.InvoiceId).FirstOrDefault();
                 var invoiceApproval = await _uow.InvoiceApprovalRepository.FindAsync(x => x.JobId == jobId && x.IsDeleted == false);
-                var isScheduleExists = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).FirstOrDefault();
+                //var isScheduleExists = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).FirstOrDefault();
                 APIResponse response1 = await GetJobDetailsById(jobId, userId);
                 if (invoiceDetails != null)
                 {
@@ -935,22 +935,22 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     model.JobRate = Convert.ToInt32(invoiceDetails.JobPrice);
                     model.TotalRunningMinutes = invoiceDetails.PlayoutMinutes;
                     model.TotalMinutes = invoiceDetails.TotalMinutes;
-                    if (isScheduleExists != null)
-                    {
-                        model.IsScheduleExist = true;
-                    }
-                    else
-                    {
-                        model.IsScheduleExist = false;
-                    }
-                    if(invoiceApproval.IsInvoiceApproved == true)
-                    {
-                        model.IsApproved = true;
-                    }
-                    else
-                    {
-                        model.IsApproved = false;
-                    }
+                    //if (isScheduleExists != null)
+                    //{
+                    //    model.IsScheduleExist = true;
+                    //}
+                    //else
+                    //{
+                    //    model.IsScheduleExist = false;
+                    ////}
+                    //if(invoiceApproval.IsInvoiceApproved == true)
+                    //{
+                    //    model.IsApproved = true;
+                    //}
+                    //else
+                    //{
+                    //    model.IsApproved = false;
+                    //}
                     response.StatusCode = StaticResource.successStatusCode;
                     response.data.invoiceDetails = model;
                     response.Message = "Success";
