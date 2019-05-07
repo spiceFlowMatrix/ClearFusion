@@ -16,6 +16,6 @@ namespace DataAccess.DbEntities.Project
         public long ProjectMonitoringReviewId { get; set; }
         public virtual ICollection<ProjectMonitoringIndicatorQuestions> ProjectMonitoringIndicatorQuestions { get; set; }
         [ForeignKey("ProjectIndicatorId")]
-        public ProjectIndicators ProjectIndicators { get; set; }
+        public virtual ProjectIndicators ProjectIndicators { get; set; }
     }
 }

@@ -6,6 +6,10 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 {
     public class ProjectMonitoringViewModel
     {
+        public ProjectMonitoringViewModel()
+        {
+            MonitoringReviewModel = new List<ProjectMonitoringReviewModel>();
+        }
         public List<ProjectMonitoringReviewModel> MonitoringReviewModel { get; set; }
         public string NegativePoints { get; set; }
         public string PositivePoints { get; set; }
@@ -15,11 +19,15 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public long ActivityId { get; set; }
         public long? ProjectMonitoringReviewId { get; set; }
         public DateTime? MonitoringDate { get; set; }
-        public bool? IsDeleted { get; set; }
+        public double? Rating { get; set; }
     }
 
     public class ProjectMonitoringReviewModel
     {
+        public ProjectMonitoringReviewModel()
+        {
+            IndicatorQuestions = new List<ProjectMonitoringQuestionModel>();
+        }
         public long ProjectIndicatorId { get; set; }
         public string IndicatorName { get; set; }
         public long? MonitoringIndicatorId { get; set; }
@@ -34,6 +42,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public int? VerificationId { get; set; }
         public string Verification { get; set; }
         public string Question { get; set; }
-        public long MonitoringIndicatorQuestionId { get; set; }
+        public long? MonitoringIndicatorQuestionId { get; set; }
 }
 }

@@ -417,50 +417,50 @@ namespace HumanitarianAssistance.Service.Classes
 
             int totalCount = await _uow.GetDbContext().ProjectActivityDetail
                                                       .CountAsync(a => a.IsDeleted == false &&
-                                                                       a.ProjectBudgetLineDetail.ProjectId == projectId 
-                                                                       //&&
-                                                                       //a.StartDate == (a.ActualStartDate.Value.Date != null ?
-                                                                       //a.ActualStartDate.Value.Date : DateTime.UtcNow.Date)
+                                                                       a.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                                       a.ParentId == null &&
+                                                                       a.PlannedStartDate ==
+                                                                       (a.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date) != null ?
+                                                                            a.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date) : DateTime.UtcNow.Date) &&
+                                                                       a.PlannedEndDate >= (a.ProjectSubActivityList.Max(y => y.ActualEndDate.Value.Date) != null ?
+                                                                            a.ProjectSubActivityList.Max(y => y.ActualEndDate.Value.Date) : DateTime.UtcNow.Date)
                                                                        );
             return totalCount;
         }
 
         public async Task<int> GetLateStart(long projectId)
         {
-
+            //NOTE: PlannedStart < ActualStartDate
             int totalCount = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
-                                                                                  a.ProjectBudgetLineDetail.ProjectId == projectId 
-                                                                                  //&&
-                                                                                  //a.StartDate.Value.Date < (a.ActualStartDate != null ?
-                                                                                  //                         a.ActualStartDate.Value.Date :
-                                                                                  //                         DateTime.UtcNow.Date)
+                                                                                  a.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                                                  a.ParentId == null &&
+                                                                                  a.PlannedStartDate.Value.Date < (a.ProjectSubActivityList.Min(x => x.ActualStartDate.Value.Date) != null ?
+                                                                                                                   a.ProjectSubActivityList.Min(x => x.ActualStartDate.Value.Date) : DateTime.UtcNow.Date)
                                                                               );
             return totalCount;
-
         }
 
         public async Task<int> GetLateEnd(long projectId)
         {
-
+            //NOTE: PlannedEndDate < ActualEndDate
             int totalCount = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
-                                                                                   a.ProjectBudgetLineDetail.ProjectId == projectId 
-                                                                                   //&&
-                                                                                   //(a.EndDate.Value.Date != null ? a.EndDate.Value.Date : DateTime.UtcNow.Date) < (
-                                                                                   //a.ActualEndDate.Value.Date != null ?
-                                                                                   //a.ActualEndDate.Value.Date : DateTime.UtcNow.Date)
-                                                                                   );
+                                                                                   a.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                                                   a.ParentId == null &&
+                                                                                   a.PlannedEndDate.Value.Date < (a.ProjectSubActivityList.Min(x => x.ActualEndDate.Value.Date) != null ?
+                                                                                                                  a.ProjectSubActivityList.Min(x => x.ActualEndDate.Value.Date) : DateTime.UtcNow.Date)
+                                                                              );
             return totalCount;
         }
 
         public async Task<int> GetSlippage(long projectId)
         {
-
+            // NOTE: PlannedEndDate - ActualEndDate
             int slippage = await _uow.GetDbContext().ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
-                                                                                      a.ProjectBudgetLineDetail.ProjectId == projectId 
-                                                                                      //&&
-                                                                                      //(a.ActualEndDate.Value.Date != null ?
-                                                                                      //a.ActualEndDate.Value.Date : DateTime.UtcNow.Date) >
-                                                                                      //(a.EndDate.Value.Date != null ? a.EndDate.Value.Date : DateTime.UtcNow.Date)
+                                                                                      a.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                                                      a.ParentId == null
+                                                                                      &&
+                                                                                      (a.ActualEndDate != null ? a.ActualEndDate.Value.Date : DateTime.UtcNow.Date) >
+                                                                                      (a.PlannedEndDate != null ? a.PlannedEndDate.Value.Date : DateTime.UtcNow.Date)
                                                                                       );
             return slippage;
         }
@@ -470,12 +470,14 @@ namespace HumanitarianAssistance.Service.Classes
             float avg = 0;
 
             Task<long> totalProjectsTask = _uow.GetDbContext().ProjectActivityDetail
-                                                    .LongCountAsync(a => a.IsDeleted == false && a.ProjectBudgetLineDetail.ProjectId == projectId);
+                                                    .LongCountAsync(a => a.IsDeleted == false && 
+                                                                         a.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                                         a.ParentId == null);
             Task<long> completedProjectsTask = _uow.GetDbContext().ProjectActivityDetail
                                                     .LongCountAsync(a => a.IsDeleted == false &&
-                                                                a.ProjectBudgetLineDetail.ProjectId == projectId &&
-                                                                a.StatusId == (int)ProjectPhaseType.Completed
-                                                           );
+                                                                         a.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                                         a.ParentId == null &&
+                                                                         a.StatusId == (int)ProjectPhaseType.Completed);
             long totalProjects = await totalProjectsTask;
             long completedProjects = await completedProjectsTask;
             if (totalProjects == 0 || completedProjects == 0)
@@ -492,13 +494,17 @@ namespace HumanitarianAssistance.Service.Classes
 
         public async Task<DateTime?> GetMinimumProjectActivityStartDate(long projectId)
         {
-            return await _uow.GetDbContext().ProjectActivityDetail.Where(x => x.ProjectBudgetLineDetail.ProjectId == projectId && x.IsDeleted == false)
+            return await _uow.GetDbContext().ProjectActivityDetail.Where(x => x.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                                              x.ParentId == null &&
+                                                                              x.IsDeleted == false)
                                                                   .MinAsync(x => x.PlannedStartDate);
         }
 
         public async Task<DateTime?> GetMaximumProjectActivityEndDate(long projectId)
         {
-            return await _uow.GetDbContext().ProjectActivityDetail.Where(x => x.ProjectBudgetLineDetail.ProjectId == projectId && x.IsDeleted == false)
+            return await _uow.GetDbContext().ProjectActivityDetail.Where(x => x.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                                              x.ParentId == null &&
+                                                                              x.IsDeleted == false)
                                                                   .MaxAsync(x => x.PlannedEndDate);
         }
 
@@ -507,26 +513,36 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                Task<DateTime?> minStartDate = GetMinimumProjectActivityStartDate(projectId);
-                Task<DateTime?> maxEndDate = GetMaximumProjectActivityEndDate(projectId);
+                //Task<DateTime?> minStartDate = GetMinimumProjectActivityStartDate(projectId);
+                //Task<DateTime?> maxEndDate = GetMaximumProjectActivityEndDate(projectId);
 
-                Task<int> ActivityOnSchedule = GetActivityOnSchedule(projectId);
-                Task<int> LateStart = GetLateStart(projectId);
-                Task<int> LateEnd = GetLateEnd(projectId);
-                Task<float> Progress = GetProgress(projectId);
-                Task<int> Slippage = GetSlippage(projectId);
+                //Task<int> ActivityOnSchedule = GetActivityOnSchedule(projectId);
+                //Task<int> LateStart = GetLateStart(projectId);
+                //Task<int> LateEnd = GetLateEnd(projectId);
+                //Task<float> Progress = GetProgress(projectId);
+                //Task<int> Slippage = GetSlippage(projectId);
 
-                DateTime minDate = await minStartDate ?? DateTime.UtcNow;
-                DateTime maxDate = await maxEndDate ?? DateTime.UtcNow;
+                //DateTime minDate = await minStartDate ?? DateTime.UtcNow;
+                //DateTime maxDate = await maxEndDate ?? DateTime.UtcNow;
+
+                //ProjectActivityStatusModel obj = new ProjectActivityStatusModel
+                //{
+                //    ProjectDuration = (maxDate.Date - minDate.Date).Days,
+                //    ActivityOnSchedule = await ActivityOnSchedule,
+                //    LateStart = await LateStart,
+                //    LateEnd = await LateEnd,
+                //    Progress = await Progress,
+                //    Slippage = await Slippage,
+                //};
 
                 ProjectActivityStatusModel obj = new ProjectActivityStatusModel
                 {
-                    ProjectDuration = (maxDate.Date - minDate.Date).Days,
-                    ActivityOnSchedule = await ActivityOnSchedule,
-                    LateStart = await LateStart,
-                    LateEnd = await LateEnd,
-                    Progress = await Progress,
-                    Slippage = await Slippage,
+                    ProjectDuration = 0,
+                    ActivityOnSchedule = 0,
+                    LateStart = 0,
+                    LateEnd = 0,
+                    Progress = 0,
+                    Slippage = 0
                 };
 
                 response.data.ProjectActivityStatusModel = obj;
@@ -767,7 +783,8 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var activityList = _uow.GetDbContext().ProjectActivityDetail
                                           .Where(v => v.IsDeleted == false &&
-                                                      v.ProjectBudgetLineDetail.ProjectId == model.ProjectId
+                                                      v.ProjectBudgetLineDetail.ProjectId == model.ProjectId &&
+                                                      v.ParentId == null
                                           )
                                           .OrderBy(x => x.ActivityId)
                                           .AsQueryable();
@@ -792,27 +809,6 @@ namespace HumanitarianAssistance.Service.Classes
                     Recurring = b.Recurring,
                     RecurringCount = b.RecurringCount,
                     RecurrinTypeId = b.RecurrinTypeId,
-                    //ActualEndDate = b.ActualEndDate,
-                    //ActualStartDate = b.ActualStartDate,
-                    //OfficeId = b.OfficeDetail.OfficeId,
-                    //OfficeName = b.OfficeDetail.OfficeName,
-                    //ExtensionEndDate = b.ExtensionEndDate,
-                    //ExtensionStartDate = b.ExtensionStartDate,
-                    //ImplementationChalanges = b.ImplementationChalanges,
-                    //ImplementationMethod = b.ImplementationMethod,
-                    //ImplementationProgress = b.ImplementationProgress,
-                    //ImplementationStatus = b.ImplementationStatus,
-                    //MonitoringChallenges = b.MonitoringChallenges,
-                    //MonitoringFrequency = b.MonitoringFrequency,
-                    //MonitoringProgress = b.MonitoringProgress,
-                    //MonitoringScore = b.MonitoringScore,
-                    //MonitoringStatus = b.MonitoringStatus,
-                    //OvercomingChallanges = b.OvercomingChallanges,
-                    //Recommendation = b.Recommendation,
-                    //Strengths = b.Strengths,
-                    //VerificationSource = b.VerificationSource,
-                    //Weeknesses = b.Weeknesses,
-                    //Comments = b.Comments
                 }).OrderByDescending(x => x.ActivityId)
                   .ToList();
                 response.data.ProjectActivityList = activityDetaillist;
@@ -855,46 +851,77 @@ namespace HumanitarianAssistance.Service.Classes
 
             if (model.Planning)
             {
-                //activityList.Where(x => x.StatusId);
+                activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Planning);
             }
             if (model.Implementation)
             {
+                activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Implementation);
             }
-            if (model.Monitoring)
+            if (model.Completed)
             {
+                activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Completed);
             }
-            if (model.ImplementationCompleted)
-            {
-            }
-            if (model.MonitoringCheck)
-            {
-            }
-            if (model.MonitoringCompleted)
-            {
-            }
-
             if (model.ProgressRange.Any())
             {
             }
             if (model.SleepageRange.Any())
             {
             }
-            if (model.ProgressRange.Any())
+            if (model.DurationRange.Any())
             {
             }
 
             if (model.LateStart)
             {
+                //NOTE: PlannedStartDate < ActualStartDate
+                activityList.Where(x => x.PlannedStartDate.Value.Date < x.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date));
             }
-
             if (model.LateEnd)
             {
+                //NOTE: PlannedEndDate < ActualEndDate
+                activityList.Where(x => x.PlannedEndDate.Value.Date <
+                                            (x.ProjectSubActivityList.Min(y => y.ActualEndDate.Value.Date) != null ?
+                                            x.ProjectSubActivityList.Min(y => y.ActualEndDate.Value.Date) : DateTime.UtcNow.Date));
             }
-
             if (model.OnSchedule)
             {
+                //NOTE: PlannedStartDate >= ActualStartDate &&  PlannedEndDate >= ActualEndDate
+                activityList.Where(x => x.PlannedStartDate.Value.Date >= 
+                                            (x.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date) != null ? 
+                                             x.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date) : DateTime.UtcNow.Date) &&
+                                        x.PlannedEndDate.Value.Date >= 
+                                            (x.ProjectSubActivityList.Max(y => y.ActualEndDate.Value.Date) != null ?
+                                             x.ProjectSubActivityList.Max(y => y.ActualEndDate.Value.Date) : DateTime.UtcNow.Date)
+                );
             }
             return activityList;
+        }
+
+        public async Task<float> FilterProgressRange(long projectId, int minRange, int maxRange)
+        {
+            float avg = 0;
+
+            Task<long> totalProjectsTask = _uow.GetDbContext().ProjectActivityDetail
+                                                    .LongCountAsync(a => a.IsDeleted == false &&
+                                                      a.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                      a.ParentId == null);
+            Task<long> completedProjectsTask = _uow.GetDbContext().ProjectActivityDetail
+                                                    .LongCountAsync(a => a.IsDeleted == false &&
+                                                      a.ProjectBudgetLineDetail.ProjectId == projectId &&
+                                                      a.ParentId == null &&
+                                                      a.StatusId == (int)ProjectPhaseType.Completed);
+            long totalProjects = await totalProjectsTask;
+            long completedProjects = await completedProjectsTask;
+            if (totalProjects == 0 || completedProjects == 0)
+            {
+                avg = 0;
+            }
+            else
+            {
+                //Note: Here typecasting is important, else it will always return 0 
+                avg = (float)completedProjects / totalProjects * 100;
+            }
+            return avg;
         }
 
         #endregion
@@ -984,6 +1011,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                     Remarks = x.Remarks,
                                                                     ProjectMonitoringReviewId = x.ProjectMonitoringReviewId,
                                                                     MonitoringReviewModel = x.ProjectMonitoringIndicatorDetail
+                                                                                            .Where(y => y.IsDeleted == false)
                                                                                             .Select(y => new ProjectMonitoringReviewModel {
                                                                                                 ProjectIndicatorId = y.ProjectIndicatorId,
                                                                                                 MonitoringIndicatorId = y.MonitoringIndicatorId,
@@ -1002,7 +1030,17 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                             }).ToList()
                                                                 }).ToListAsync();
 
-                projectMonitoring.ForEach(x => x.MonitoringReviewModel.ForEach(y => y.TotalScore = y.IndicatorQuestions.Sum(z => z.Score)));
+                if (projectMonitoring.Any())
+                {
+                    foreach (var item in projectMonitoring)
+                    {
+                        if (item.MonitoringReviewModel.Any())
+                        {
+                            item.MonitoringReviewModel.ForEach(x => x.TotalScore = x.IndicatorQuestions.Sum(y => y.Score));
+                            item.Rating = Math.Round(((float)item.MonitoringReviewModel.Sum(y => y.TotalScore.Value) / (float)item.MonitoringReviewModel.Count),2);
+                        }
+                    }
+                }
 
                 response.data.ProjectMonitoring = projectMonitoring;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -1022,40 +1060,58 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                var monitoring = await _uow.GetDbContext().ProjectMonitoringReviewDetail
-                                                   .Include(x => x.ProjectMonitoringIndicatorDetail)
-                                                   .ThenInclude(x => x.ProjectMonitoringIndicatorQuestions)
-                                                                .Select(x => new ProjectMonitoringViewModel
-                                                                {
-                                                                    ActivityId = x.ActivityId,
-                                                                    NegativePoints = x.NegativePoints,
-                                                                    PositivePoints = x.PostivePoints,
-                                                                    ProjectId = x.ProjectId,
-                                                                    MonitoringDate = x.MonitoringDate,
-                                                                    Recommendations = x.Recommendations,
-                                                                    Remarks = x.Remarks,
-                                                                    ProjectMonitoringReviewId = x.ProjectMonitoringReviewId,
-                                                                    MonitoringReviewModel = x.ProjectMonitoringIndicatorDetail
-                                                                                            .Select(y => new ProjectMonitoringReviewModel
-                                                                                            {
-                                                                                                ProjectIndicatorId = y.ProjectIndicatorId,
-                                                                                                MonitoringIndicatorId = y.MonitoringIndicatorId,
-                                                                                                IndicatorName = y.ProjectIndicators.IndicatorName,
-                                                                                                IndicatorQuestions = y.ProjectMonitoringIndicatorQuestions
-                                                                                                                      .Where(z => z.IsDeleted == false)
-                                                                                                                      .Select(z => new ProjectMonitoringQuestionModel
-                                                                                                                      {
-                                                                                                                          MonitoringIndicatorQuestionId = z.Id,
-                                                                                                                          QuestionId = z.QuestionId,
-                                                                                                                          Score = z.Score,
-                                                                                                                          VerificationId = z.VerificationId,
-                                                                                                                          Verification = z.Verification,
-                                                                                                                          Question = z.ProjectIndicatorQuestions.IndicatorQuestion
-                                                                                                                      }).ToList()
-                                                                                            }).ToList()
-                                                                }).FirstOrDefaultAsync(x => x.IsDeleted == false && x.ProjectMonitoringReviewId == Id);
 
-                response.data.ProjectMonitoringModel = monitoring;
+                var monitoring = await _uow.GetDbContext().ProjectMonitoringReviewDetail
+                                                .Include(y => y.ProjectMonitoringIndicatorDetail)
+                                                .ThenInclude(x => x.ProjectMonitoringIndicatorQuestions)
+                                                .ThenInclude(x => x.ProjectIndicatorQuestions)
+                                                .Include(x => x.ProjectMonitoringIndicatorDetail)
+                                                .ThenInclude(y => y.ProjectIndicators)
+                                                .FirstOrDefaultAsync(x => x.IsDeleted == false && x.ProjectMonitoringReviewId == Id);
+
+
+
+                ProjectMonitoringViewModel obj = new ProjectMonitoringViewModel();
+
+                obj.ActivityId = monitoring.ActivityId;
+                obj.MonitoringDate = monitoring.MonitoringDate;
+                obj.NegativePoints = monitoring.NegativePoints;
+                obj.PositivePoints = monitoring.PostivePoints;
+                obj.ProjectId = monitoring.ProjectId;
+                obj.ProjectMonitoringReviewId = monitoring.ProjectMonitoringReviewId;
+                obj.Recommendations = monitoring.Recommendations;
+                obj.Remarks = monitoring.Remarks;
+
+                if (monitoring.ProjectMonitoringIndicatorDetail.Any())
+                {
+                    foreach (var item in monitoring.ProjectMonitoringIndicatorDetail)
+                    {
+                        ProjectMonitoringReviewModel model = new ProjectMonitoringReviewModel();
+                        model.IndicatorName = item.ProjectIndicators.IndicatorName;
+                        model.ProjectIndicatorId = item.ProjectIndicatorId;
+                        model.MonitoringIndicatorId = item.MonitoringIndicatorId;
+
+                        if (item.ProjectMonitoringIndicatorQuestions.Any())
+                        {
+                            foreach (var question in item.ProjectMonitoringIndicatorQuestions)
+                            {
+                                ProjectMonitoringQuestionModel questions = new ProjectMonitoringQuestionModel
+                                {
+                                    MonitoringIndicatorQuestionId = question.Id,
+                                    Question = question.ProjectIndicatorQuestions.IndicatorQuestion,
+                                    QuestionId = question.QuestionId,
+                                    Score = question.Score,
+                                    Verification = question.Verification,
+                                    VerificationId = question.VerificationId
+                                };
+                                model.IndicatorQuestions.Add(questions);
+                            }
+                        }
+                        obj.MonitoringReviewModel.Add(model);
+                    }
+                }
+
+                response.data.ProjectMonitoringModel = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1069,6 +1125,114 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> EditProjectMonitoringByMonitoringId(ProjectMonitoringViewModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+
+                var monitoring = await _uow.GetDbContext().ProjectMonitoringReviewDetail
+                                                .FirstOrDefaultAsync(x => x.IsDeleted == false && x.ProjectMonitoringReviewId == model.ProjectMonitoringReviewId);
+
+                // monitoring.ActivityId = model.ActivityId;
+                monitoring.ModifiedById = UserId;
+                // monitoring.ProjectId = model.ProjectId;
+                monitoring.MonitoringDate = model.MonitoringDate;
+                monitoring.ModifiedDate = DateTime.UtcNow;
+                monitoring.IsDeleted = false;
+                monitoring.NegativePoints = model.NegativePoints;
+                monitoring.PostivePoints = model.PositivePoints;
+                monitoring.Recommendations = model.Recommendations;
+                monitoring.Remarks = model.Remarks;
+
+                _uow.GetDbContext().ProjectMonitoringReviewDetail.Update(monitoring);
+                await _uow.GetDbContext().SaveChangesAsync();
+
+                List<ProjectMonitoringIndicatorDetail> indicators = await _uow.GetDbContext().ProjectMonitoringIndicatorDetail.Where(x => x.IsDeleted == false && x.ProjectMonitoringReviewId == monitoring.ProjectMonitoringReviewId).ToListAsync();
+
+                indicators.ForEach(x => x.IsDeleted = true);
+
+                _uow.GetDbContext().ProjectMonitoringIndicatorDetail.UpdateRange(indicators);
+                await _uow.GetDbContext().SaveChangesAsync();
+
+                foreach (var item in model.MonitoringReviewModel)
+                {
+                    ProjectMonitoringIndicatorDetail monitoringIndicatorDetail = new ProjectMonitoringIndicatorDetail();
+
+                    if (item.MonitoringIndicatorId == null)
+                    {
+                        monitoringIndicatorDetail.CreatedById = UserId;
+                        monitoringIndicatorDetail.CreatedDate = DateTime.UtcNow;
+                        monitoringIndicatorDetail.IsDeleted = false;
+                        monitoringIndicatorDetail.ProjectMonitoringReviewId = monitoring.ProjectMonitoringReviewId;
+                        monitoringIndicatorDetail.ProjectIndicatorId = item.ProjectIndicatorId;
+
+                        await _uow.GetDbContext().ProjectMonitoringIndicatorDetail.AddAsync(monitoringIndicatorDetail);
+                        await _uow.GetDbContext().SaveChangesAsync();
+                    }
+                    else
+                    {
+                        monitoringIndicatorDetail = await _uow.GetDbContext().ProjectMonitoringIndicatorDetail
+                                                                                    .FirstOrDefaultAsync(x => x.MonitoringIndicatorId == item.MonitoringIndicatorId);
+
+                        monitoringIndicatorDetail.ModifiedById = UserId;
+                        monitoringIndicatorDetail.IsDeleted = false;
+                        monitoringIndicatorDetail.ModifiedDate = DateTime.UtcNow;
+                        monitoringIndicatorDetail.ProjectIndicatorId = item.ProjectIndicatorId;
+                        _uow.GetDbContext().ProjectMonitoringIndicatorDetail.Update(monitoringIndicatorDetail);
+                        await _uow.GetDbContext().SaveChangesAsync();
+                    }
+
+                    if (item.IndicatorQuestions.Any())
+                    {
+                        foreach (var obj in item.IndicatorQuestions)
+                        {
+                            ProjectMonitoringIndicatorQuestions monitoringQuestions = new ProjectMonitoringIndicatorQuestions();
+
+                            if (obj.MonitoringIndicatorQuestionId == null)
+                            {
+                                monitoringQuestions.IsDeleted = false;
+                                monitoringQuestions.CreatedDate = DateTime.UtcNow;
+                                monitoringQuestions.CreatedById = UserId;
+                                monitoringQuestions.QuestionId = obj.QuestionId;
+                                monitoringQuestions.Verification = obj.Verification;
+                                monitoringQuestions.VerificationId = obj.VerificationId;
+                                monitoringQuestions.MonitoringIndicatorId = monitoringIndicatorDetail.MonitoringIndicatorId;
+                                monitoringQuestions.Score = obj.Score;
+                                await _uow.GetDbContext().ProjectMonitoringIndicatorQuestions.AddAsync(monitoringQuestions);
+                                await _uow.GetDbContext().SaveChangesAsync();
+                            }
+                            else
+                            {
+                                monitoringQuestions = await _uow.GetDbContext().ProjectMonitoringIndicatorQuestions
+                                                                               .FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == obj.MonitoringIndicatorQuestionId);
+
+
+                                monitoringQuestions.ModifiedDate = DateTime.UtcNow;
+                                monitoringQuestions.ModifiedById = UserId;
+                                monitoringQuestions.QuestionId = obj.QuestionId;
+                                monitoringQuestions.Score = obj.Score;
+                                monitoringQuestions.Verification = obj.Verification;
+                                monitoringQuestions.VerificationId = obj.VerificationId;
+                                _uow.GetDbContext().ProjectMonitoringIndicatorQuestions.Update(monitoringQuestions);
+                                await _uow.GetDbContext().SaveChangesAsync();
+                            }
+                        }
+                    }
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+       
         #endregion
 
 
@@ -1200,6 +1364,48 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
+
+        public async Task<APIResponse> GetProjectActivityDetailList(int parentId)
+
+        {
+
+            APIResponse response = new APIResponse();
+            try
+            {
+                var projectActivityDetails = await _uow.GetDbContext().ProjectActivityDetail
+                                          .Include(p => p.ProjectSubActivityList)
+                                          .FirstOrDefaultAsync(v => v.IsDeleted == false &&
+                                                      v.ActivityId == parentId
+                                          );
+
+                List<ProjectSubActivityListModel> activityDetaillist = new List<ProjectSubActivityListModel>();
+
+                activityDetaillist = projectActivityDetails.ProjectSubActivityList.Select(b => new ProjectSubActivityListModel
+                {
+                    ActivityId = b.ActivityId,
+                    BudgetLineId = b.BudgetLineId,
+                    EmployeeID = b.EmployeeID,
+                    PlannedStartDate = b.PlannedStartDate,
+                    PlannedEndDate = b.PlannedEndDate,
+                    Recurring = b.Recurring,
+                    RecurrinTypeId = b.RecurrinTypeId,
+                    IsCompleted = b.IsCompleted
+                }).OrderByDescending(x => x.ActivityId)
+                  .ToList();
+                response.data.ProjectSubActivityListModel = activityDetaillist;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+
+
+        }
+
         #region "Project SubActivity Details "
 
         public async Task<APIResponse> GetProjectSubActivityDetails(int parentId)
@@ -1227,12 +1433,12 @@ namespace HumanitarianAssistance.Service.Classes
                     Recurring = b.Recurring,
                     RecurrinTypeId = b.RecurrinTypeId,
                     IsCompleted = b.IsCompleted,
-                    ActivityDescription =b.ActivityDescription,
-                    ChallengesAndSolutions=b.ChallengesAndSolutions,
-                    Target=b.Target,
-                    Achieved=b.Achieved,
-                    ActualStartDate=b.ActualStartDate,
-                    ActualEndDate=b.ActualEndDate,
+                    ActivityDescription = b.ActivityDescription,
+                    ChallengesAndSolutions = b.ChallengesAndSolutions,
+                    Target = b.Target,
+                    Achieved = b.Achieved,
+                    ActualStartDate = b.ActualStartDate,
+                    ActualEndDate = b.ActualEndDate,
                 }).OrderByDescending(x => x.ActivityId)
                   .ToList();
                 response.data.ProjectSubActivityListModel = activityDetaillist;
@@ -1308,10 +1514,10 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted==false);
+                ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
                 if (obj != null)
                 {
-                   
+
                     obj.IsCompleted = !obj.IsCompleted;
                     obj.ModifiedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;

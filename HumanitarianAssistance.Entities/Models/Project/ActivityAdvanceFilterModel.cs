@@ -6,6 +6,21 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 {
     public class ActivityAdvanceFilterModel
     {
+
+        public ActivityAdvanceFilterModel()
+        {
+
+            // status
+            Planning = false;
+            Implementation = false;
+            Completed = false;
+
+
+            LateStart = false;
+            LateEnd = false;
+            OnSchedule = false;
+        }
+
         public long ProjectId { get; set; }
         public DateTime? PlannedStartDate { get; set; }
         public DateTime? PlannedEndDate { get; set; }
@@ -18,13 +33,9 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         // status
         public bool Planning { get; set; }
         public bool Implementation { get; set; }
-        public bool Monitoring { get; set; }
-        public bool ImplementationCompleted { get; set; }
-        public bool MonitoringCheck { get; set; }
-        public bool MonitoringCompleted { get; set; }
+        public bool Completed { get; set; }
 
         // range
-
         public List<int?> ProgressRange { get; set; }
         public List<int?> SleepageRange { get; set; }
         public List<int?> DurationRange { get; set; }
