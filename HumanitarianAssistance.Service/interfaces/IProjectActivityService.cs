@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetProjectMonitoringList(long activityId);
         Task<APIResponse> AddProjectActivityExtension(ProjectExtensionModel model, string UserId);
         Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string UserId);
-
+        Task<APIResponse> GetProjectMonitoringByMonitoringId(long Id);
 
     }
 }

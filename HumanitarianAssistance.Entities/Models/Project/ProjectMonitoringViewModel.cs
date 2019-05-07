@@ -14,6 +14,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public long ProjectId { get; set; }
         public long ActivityId { get; set; }
         public long? ProjectMonitoringReviewId { get; set; }
+        public DateTime? MonitoringDate { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 
     public class ProjectMonitoringReviewModel
@@ -29,6 +31,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     {
         public long QuestionId { get; set; }
         public int? Score { get; set; }
+        public int? VerificationId { get; set; }
         public string Verification { get; set; }
         public string Question { get; set; }
         public long MonitoringIndicatorQuestionId { get; set; }

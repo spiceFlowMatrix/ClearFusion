@@ -2038,5 +2038,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetProjectMonitoringByMonitoringId([FromBody]int Id)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectMonitoringByMonitoringId(Id);
+      return apiresponse;
+    }
+
   }
 }

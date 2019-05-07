@@ -2080,9 +2080,7 @@ namespace HumanitarianAssistance.Service.Classes
                 //List<EmployeeProfessionalDetail> employeeList = await _uow.GetDbContext().EmployeeProfessionalDetail.Where(x => x.IsDeleted == false).ToListAsync();
 
                 IEnumerable<int> employeeIds = _uow.GetDbContext().EmployeeDetail
-                                                  .Include(x => x.EmployeeProfessionalDetail)
-                                              .Where(x => x.IsDeleted == false && x.EmployeeProfessionalDetail.OfficeId ==
-                                              model.FirstOrDefault().OfficeId).Select(x => x.EmployeeID).ToList();
+                                              .Where(x => x.IsDeleted == false).Select(x => x.EmployeeID).ToList();
 
                 IEnumerable<int> employeeWithNoPayrollHead;
                 IEnumerable<int> employeeWithPayrollHead;
@@ -2106,19 +2104,20 @@ namespace HumanitarianAssistance.Service.Classes
                     xPayrollAccountHead.IsDeleted = false;
 
                     await _uow.PayrollAccountHeadRepository.UpdateAsyn(xPayrollAccountHead);
+                    await _uow.SaveAsync();
 
                     List<EmployeePayrollAccountHead> xEmployeePayrollAccount = xEmployeePayrollAccountHead.Where(x => x.IsDeleted == false && x.PayrollHeadId == payrollHead.PayrollHeadId).ToList();
 
-                    if (xEmployeePayrollAccountHead.Any())
+                    if (xEmployeePayrollAccount.Any())
                     {
-                        xEmployeePayrollAccountHead.ForEach(x =>
+                        xEmployeePayrollAccount.ForEach(x =>
                         {
                             x.AccountNo = payrollHead.AccountNo; x.Description = payrollHead.Description;
                             x.PayrollHeadTypeId = payrollHead.PayrollHeadTypeId; x.TransactionTypeId = payrollHead.TransactionTypeId;
                         });
 
                         _uow.GetDbContext().EmployeePayrollAccountHead.UpdateRange(xEmployeePayrollAccountHead);
-                        _uow.Save();
+                        await _uow.GetDbContext().SaveChangesAsync();
                     }
 
                     List<EmployeePayrollAccountHead> employeePayrollHeads = new List<EmployeePayrollAccountHead>();
@@ -2140,7 +2139,7 @@ namespace HumanitarianAssistance.Service.Classes
                     }
 
                     _uow.GetDbContext().EmployeePayrollAccountHead.AddRange(employeePayrollHeads);
-                    _uow.Save();
+                    await _uow.GetDbContext().SaveChangesAsync();
 
                 }
 
