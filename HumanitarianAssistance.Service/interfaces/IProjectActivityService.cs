@@ -28,9 +28,12 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetProjectActivityDetailList(int parentId);
         Task<APIResponse> AddProjectMonitoringReview(ProjectMonitoringViewModel model, string UserId);
         Task<APIResponse> GetProjectMonitoringList(long activityId);
-        Task<APIResponse> AddProjectActivityExtension(ProjectExtensionModel model, string UserId);
-        Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string UserId);
-        Task<APIResponse> GetProjectMonitoringByMonitoringId(long Id);
+        
+        Task<APIResponse> GetProjectActivityExtension(long activityId);
+        Task<APIResponse> AddProjectActivityExtension(ProjectExtensionModel model, string userId);
+        Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string userId);
+        Task<APIResponse> DeleteProjectActivityExtension(long extensionId, string userId);
 
+        
     }
 }

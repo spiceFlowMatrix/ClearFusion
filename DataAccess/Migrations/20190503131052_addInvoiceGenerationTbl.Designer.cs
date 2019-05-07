@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190503131052_addInvoiceGenerationTbl")]
+    partial class addInvoiceGenerationTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7210,8 +7212,6 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Verification");
 
-                    b.Property<int?>("VerificationId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
@@ -7242,8 +7242,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<DateTime?>("MonitoringDate");
 
                     b.Property<string>("NegativePoints");
 
