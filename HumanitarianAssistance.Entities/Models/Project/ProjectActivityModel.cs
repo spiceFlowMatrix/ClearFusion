@@ -45,6 +45,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public long? ParentId { get; set; }
         public int? Target { get; set; }
 
+
+
         ////Implementation
         //[Range(0, 100)]
         //public float? ImplementationProgress { get; set; }

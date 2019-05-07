@@ -1259,7 +1259,7 @@ namespace HumanitarianAssistance.Service.Classes
                 obj.IsDeleted = false;
                 obj.CreatedById = UserId;
                 await _uow.ProjectActivityDetailRepository.AddAsyn(obj);
-
+                response.data.ProjectActivityDetail = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1291,6 +1291,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.ModifiedById = UserId;
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
                 }
+                response.data.ProjectActivityDetail = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1337,7 +1338,7 @@ namespace HumanitarianAssistance.Service.Classes
                 ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
                 if (obj != null)
                 {
-
+                    obj.StatusId= (int)ProjectPhaseType.Implementation;
                     obj.ActualStartDate = DateTime.UtcNow;
                     obj.ModifiedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
@@ -1382,8 +1383,8 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-
+       
         #endregion
 
-    }
+        }
 }
