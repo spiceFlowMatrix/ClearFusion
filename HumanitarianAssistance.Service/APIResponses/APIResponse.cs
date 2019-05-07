@@ -348,6 +348,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<ProjectActivityModel> ProjectActivityList { get; set; }
         public ProjectActivityModel ProjectActivityDetails { get; set; }
         public ICollection<ProjectSubActivityListModel> ProjectSubActivityListModel { get; set; }
+        public  ProjectSubActivityListModel ProjectSubActivityList { get; set; }
         public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
         public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
         public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
@@ -429,6 +430,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<StoreSourceCodeDetailModel> SourceCodeDatalist { get; set; }
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
         public Dictionary<string, List<string>> Permissions { get; set; }
+        public ProjectMonitoringViewModel ProjectMonitoringModel { get; set; }
 
 
 
@@ -456,6 +458,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }
         public GainLossVoucherList GainLossVoucherDetail { get; set; }
         public List<ProjectMonitoringViewModel> ProjectMonitoring { get; set; }
+        public ProjectActivityDetail ProjectActivityDetail { get; set; }
 
         #endregion
 

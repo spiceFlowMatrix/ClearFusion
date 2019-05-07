@@ -913,6 +913,63 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
         }
 
+        public async Task<APIResponse> FetchInvoice(int jobId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                InvoiceModel model = new InvoiceModel();
+                var invoiceDetails = _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).OrderByDescending(x => x.InvoiceId).FirstOrDefault();
+                var invoiceApproval = await _uow.InvoiceApprovalRepository.FindAsync(x => x.JobId == jobId && x.IsDeleted == false);
+                //var isScheduleExists = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).FirstOrDefault();
+                APIResponse response1 = await GetJobDetailsById(jobId, userId);
+                if (invoiceDetails != null)
+                {
+                    var jobDetails = await _uow.JobDetailsRepository.FindAsync(x => x.JobId == jobId & x.IsDeleted == false);
+                    model.JobName = jobDetails.JobName;
+                    model.JobId = jobId;
+                    model.ClientName = response1.data.JobPriceDetail.ClientName;
+                    model.CurrencyCode = response1.data.JobPriceDetail.CurrencyCode;
+                    model.EndDate = response1.data.JobPriceDetail.EndDate;
+                    model.FinalPrice = invoiceDetails.TotalPrice;
+                    model.JobRate = Convert.ToInt32(invoiceDetails.JobPrice);
+                    model.TotalRunningMinutes = invoiceDetails.PlayoutMinutes;
+                    model.TotalMinutes = invoiceDetails.TotalMinutes;
+                    //if (isScheduleExists != null)
+                    //{
+                    //    model.IsScheduleExist = true;
+                    //}
+                    //else
+                    //{
+                    //    model.IsScheduleExist = false;
+                    ////}
+                    //if(invoiceApproval.IsInvoiceApproved == true)
+                    //{
+                    //    model.IsApproved = true;
+                    //}
+                    //else
+                    //{
+                    //    model.IsApproved = false;
+                    //}
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.data.invoiceDetails = model;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.notFoundCode;
+                    response.Message = "Data not found";
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> GenerateInvoice(int jobId, string userId)
         {
             APIResponse response = new APIResponse();
@@ -955,7 +1012,6 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                             }).FirstOrDefault().TotalTransacted;
                         invoiceDetails.TotalRunningMinutes = Convert.ToInt32(TotalMinutes);
                     }
-
                     invoiceDetails.JobId = jobId;
                     //response1.data.JobPriceDetail.CurrencyCode;
                     invoiceDetails.EndDate = response1.data.JobPriceDetail.EndDate;
@@ -965,6 +1021,52 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     invoiceDetails.JobName = response1.data.JobPriceDetail.JobName;
                     invoiceDetails.ClientName = response1.data.JobPriceDetail.ClientName;
                     invoiceDetails.FinalPrice = (invoiceDetails.JobRate / invoiceDetails.TotalMinutes) * invoiceDetails.TotalRunningMinutes;
+                    //var existRecord = await _uow.InvoiceGenerationRepository.FindAsync(x => x.IsDeleted == false && x.JobId == jobId);
+                    var currencyDetails = _uow.CurrencyDetailsRepository.GetAll().AsQueryable().Where(x => x.CurrencyCode == invoiceDetails.CurrencyCode).FirstOrDefault();
+                    //if (existRecord == null)
+                    {
+                        InvoiceGeneration obj = new InvoiceGeneration();
+                        obj.IsDeleted = false;
+                        obj.CurrencyId = currencyDetails.CurrencyId;
+                        obj.JobPrice = Convert.ToInt32(invoiceDetails.JobRate);
+                        obj.PlayoutMinutes = invoiceDetails.TotalRunningMinutes;
+                        obj.TotalMinutes = invoiceDetails.TotalMinutes;
+                        obj.TotalPrice = invoiceDetails.FinalPrice;
+                        obj.JobId = jobId;
+                        obj.CreatedById = userId;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.ModifiedById = userId;
+                        obj.ModifiedDate = DateTime.Now;
+                        await _uow.InvoiceGenerationRepository.AddAsyn(obj);
+                    }
+                    //else
+                    //{                        
+                    //    if (existRecord != null)
+                    //    {
+                    //        existRecord.CurrencyId = currencyDetails.CurrencyId;
+                    //        existRecord.JobPrice = Convert.ToInt32(invoiceDetails.JobRate);
+                    //        existRecord.PlayoutMinutes = invoiceDetails.TotalRunningMinutes;
+                    //        existRecord.TotalMinutes = invoiceDetails.TotalMinutes;
+                    //        existRecord.TotalPrice = invoiceDetails.FinalPrice;
+                    //        existRecord.JobId = jobId;
+                    //        existRecord.IsDeleted = false;
+                    //        existRecord.ModifiedById = userId;
+                    //        existRecord.ModifiedDate = DateTime.Now;
+                    //        await _uow.InvoiceGenerationRepository.UpdateAsyn(existRecord);
+                    //    }
+                    //}
+                    invoiceDetails = new InvoiceModel
+                    {
+                        ClientName = invoiceDetails.ClientName,
+                        CurrencyCode = currencyDetails.CurrencyCode,
+                        EndDate = invoiceDetails.EndDate,
+                        FinalPrice = invoiceDetails.FinalPrice,
+                        JobId = jobId,
+                        JobName = invoiceDetails.JobName,
+                        JobRate = invoiceDetails.JobRate,
+                        TotalMinutes = invoiceDetails.TotalMinutes,
+                        TotalRunningMinutes = invoiceDetails.TotalRunningMinutes
+                    };
                     response.StatusCode = StaticResource.successStatusCode;
                     response.data.invoiceDetails = invoiceDetails;
                     response.Message = "Success";
@@ -990,31 +1092,41 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var invoiceDetails = _uow.InvoiceApprovalRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId).FirstOrDefault();
-                if (invoiceDetails == null)
+                var invoiceGeneration = _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).FirstOrDefault();
+                if(invoiceGeneration != null)
                 {
-                    InvoiceApproval obj = new InvoiceApproval();
-                    obj.IsDeleted = false;
-                    obj.JobId = jobId;
-                    obj.IsInvoiceApproved = true;
-                    obj.CreatedById = userId;
-                    obj.CreatedDate = DateTime.Now;
-                    await _uow.InvoiceApprovalRepository.AddAsyn(obj);                   
+                    var invoiceDetails = _uow.InvoiceApprovalRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId).FirstOrDefault();
+                    if (invoiceDetails == null)
+                    {
+                        InvoiceApproval obj = new InvoiceApproval();
+                        obj.IsDeleted = false;
+                        obj.JobId = jobId;
+                        obj.IsInvoiceApproved = true;
+                        obj.CreatedById = userId;
+                        obj.CreatedDate = DateTime.Now;
+                        await _uow.InvoiceApprovalRepository.AddAsyn(obj);
+                    }
+                    else
+                    {
+                        var existRecord = await _uow.InvoiceApprovalRepository.FindAsync(x => x.IsDeleted == false && x.JobId == jobId);
+                        if (existRecord != null)
+                        {
+                            existRecord.IsInvoiceApproved = true;
+                            existRecord.IsDeleted = false;
+                            existRecord.ModifiedById = userId;
+                            existRecord.ModifiedDate = DateTime.Now;
+                            await _uow.InvoiceApprovalRepository.UpdateAsyn(existRecord);
+                        }
+                    }
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Invoice Approved successfully";
                 }
                 else
                 {
-                    var existRecord = await _uow.InvoiceApprovalRepository.FindAsync(x => x.IsDeleted == false && x.JobId == jobId);
-                    if (existRecord != null)
-                    {
-                        existRecord.IsInvoiceApproved = true;
-                        existRecord.IsDeleted = false;
-                        existRecord.ModifiedById = userId;
-                        existRecord.ModifiedDate = DateTime.Now;
-                        await _uow.InvoiceApprovalRepository.UpdateAsyn(existRecord);
-                    }
+                    response.StatusCode = StaticResource.notFoundCode;
+                    response.Message = "Invoice Not yet generated";
                 }
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Invoice Approved successfully";
+                
             }
             catch (Exception ex)
             {

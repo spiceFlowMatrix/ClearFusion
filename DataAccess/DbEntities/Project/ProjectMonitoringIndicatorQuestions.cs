@@ -14,6 +14,7 @@ namespace DataAccess.DbEntities.Project
         [Column(Order = 1, TypeName = "serial")]
         public long Id { get; set; }
         public long QuestionId { get; set; }
+        public int? VerificationId { get; set; }
         public string Verification { get; set; }
         public int? Score { get; set; }
         public long MonitoringIndicatorId { get; set; }

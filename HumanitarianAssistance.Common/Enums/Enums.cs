@@ -152,9 +152,7 @@ namespace HumanitarianAssistance.Common.Enums
     {
         Planning = 1,
         Implementation = 2,
-        Monitoring = 3,
-        Completed = 4
-
+        Completed = 3
     }
     public enum RoleName
     {
