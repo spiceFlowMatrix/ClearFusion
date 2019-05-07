@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190506113820_ProjectMonitoringIndicatorQuestionsVerificationIdColumnAdd")]
+    partial class ProjectMonitoringIndicatorQuestionsVerificationIdColumnAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4666,48 +4668,6 @@ namespace DataAccess.Migrations
                     b.ToTable("InvoiceApproval");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.InvoiceGeneration", b =>
-                {
-                    b.Property<long>("InvoiceId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int?>("CurrencyDetailsCurrencyId");
-
-                    b.Property<long?>("CurrencyId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<long?>("JobId");
-
-                    b.Property<long?>("JobPrice");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long?>("PlayoutMinutes");
-
-                    b.Property<long?>("TotalMinutes");
-
-                    b.Property<double?>("TotalPrice");
-
-                    b.HasKey("InvoiceId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("CurrencyDetailsCurrencyId");
-
-                    b.HasIndex("JobId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("InvoiceGeneration");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.JobPriceDetails", b =>
                 {
                     b.Property<long>("JobPriceId")
@@ -6703,8 +6663,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<float?>("Achieved");
-
                     b.Property<string>("ActivityDescription");
 
                     b.Property<string>("ActivityName")
@@ -6745,8 +6703,6 @@ namespace DataAccess.Migrations
                     b.Property<int?>("RecurringCount");
 
                     b.Property<int?>("StatusId");
-
-                    b.Property<float?>("Target");
 
                     b.HasKey("ActivityId");
 
@@ -7211,8 +7167,6 @@ namespace DataAccess.Migrations
                     b.Property<long>("QuestionId");
 
                     b.Property<int?>("Score");
-
-                    b.Property<string>("Verification");
 
                     b.Property<int?>("VerificationId");
 
@@ -11310,25 +11264,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.JobDetails", "JobDetails")
-                        .WithMany()
-                        .HasForeignKey("JobId");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Marketing.InvoiceGeneration", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.CurrencyDetails", "CurrencyDetails")
-                        .WithMany()
-                        .HasForeignKey("CurrencyDetailsCurrencyId");
 
                     b.HasOne("DataAccess.DbEntities.JobDetails", "JobDetails")
                         .WithMany()

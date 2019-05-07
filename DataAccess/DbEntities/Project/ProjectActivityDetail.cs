@@ -13,13 +13,9 @@ namespace DataAccess.DbEntities.Project
             Recurring = false;
             RecurringCount = 0;
             IsCompleted = false;
-            //ImplementationProgress = 0;
-            //ImplementationStatus = false;
+            Target = 0;
+            Achieved = 0;
 
-            //MonitoringProgress = 0;
-            //MonitoringStatus = false;
-            //MonitoringScore = 0;
-            //MonitoringFrequency = 0;
         }
 
         //Planning
@@ -54,7 +50,7 @@ namespace DataAccess.DbEntities.Project
 
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
-        public bool IsCompleted{ get; set; }
+        public bool IsCompleted { get; set; }
 
 
         public ICollection<ProjectActivityProvinceDetail> ProjectActivityProvinceDetail { get; set; }
@@ -65,10 +61,10 @@ namespace DataAccess.DbEntities.Project
         public ICollection<ProjectActivityDetail> ProjectSubActivityList { get; set; }
 
 
-        ////Implementation
-        //[Range(0, 100)]
-        //public float? ImplementationProgress { get; set; }
-        //public bool? ImplementationStatus { get; set; }
+        [Range(0, 100)]
+        public float? Target { get; set; }
+        [Range(0, 100)]
+        public float? Achieved { get; set; }
         //public DateTime? ActualStartDate { get; set; }
         //public DateTime? ActualEndDate { get; set; }
         //public string ImplementationMethod { get; set; }

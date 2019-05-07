@@ -1979,7 +1979,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string id = user.Id;
         apiresponse = await _iActivity.AddProjectMonitoringReview(model, id);
       }
-       
+
       return apiresponse;
     }
     [HttpPost]
@@ -2004,7 +2004,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     {
       APIResponse apiresponse = new APIResponse();
 
-        apiresponse = await _iActivity.GetProjectActivityExtension(activityId);
+      apiresponse = await _iActivity.GetProjectActivityExtension(activityId);
 
       return apiresponse;
     }
@@ -2054,13 +2054,96 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     }
 
-    
+
     #endregion
 
     [HttpPost]
-    public async Task<APIResponse> GetProjectActivityDetailList([FromBody]int projectId)
+    public async Task<APIResponse> GetProjectSubActivityDetail([FromBody]int projectId)
     {
-      APIResponse apiresponse = await _iActivity.GetProjectActivityDetailList(projectId);
+      APIResponse apiresponse = await _iActivity.GetProjectSubActivityDetails(projectId);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddProjectSubActivityDetail([FromBody]ProjectActivityModel model)
+    {
+      APIResponse apiRespone = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        apiRespone = await _iActivity.AddProjectSubActivityDetail(model, id);
+      }
+
+      return apiRespone;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectSubActivity([FromBody]ProjectSubActivityListModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.EditProjectSubActivityDetail(model, id);
+      }
+
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> ProjectSubActivityIscomplete([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.ProjectSubActivityIscomplete(activityId, id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> StartProjectSubActivity([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.StartProjectSubActivity(activityId, id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EndProjectSubActivity([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.EndProjectSubActivity(activityId, id);
+      }
+
+      return apiresponse;
+    }
+    [HttpPost]
+    public async Task<APIResponse> GetProjectMonitoringByMonitoringId([FromBody]int Id)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectMonitoringByMonitoringId(Id);
       return apiresponse;
     }
 
