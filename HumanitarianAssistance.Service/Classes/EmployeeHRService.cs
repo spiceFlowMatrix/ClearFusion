@@ -686,7 +686,7 @@ namespace HumanitarianAssistance.Service.Classes
                     EmployeeApprovedPayroll.IsDeleted = false;
                     EmployeeApprovedPayroll.Absent = finalPayroll.AbsentDays;
                     EmployeeApprovedPayroll.AdvanceAmount = finalPayroll.AdvanceAmount;
-                    EmployeeApprovedPayroll.AdvanceRecoveryAmount = finalPayroll.AdvanceRecoveryAmount;
+                    EmployeeApprovedPayroll.AdvanceRecoveryAmount = finalPayroll.IsAdvanceRecovery? finalPayroll.AdvanceRecoveryAmount:0;
                     EmployeeApprovedPayroll.Attendance = finalPayroll.PresentDays;
                     EmployeeApprovedPayroll.BasicPay = Convert.ToSingle(finalPayroll.TotalGeneralAmount);
                     EmployeeApprovedPayroll.CurrencyId = finalPayroll.CurrencyId;

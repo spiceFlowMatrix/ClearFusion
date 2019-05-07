@@ -429,6 +429,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<StoreSourceCodeDetailModel> SourceCodeDatalist { get; set; }
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
         public Dictionary<string, List<string>> Permissions { get; set; }
+        public ProjectMonitoringViewModel ProjectMonitoringModel { get; set; }
 
 
 
