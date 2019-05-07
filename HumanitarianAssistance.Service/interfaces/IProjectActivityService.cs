@@ -34,6 +34,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string userId);
         Task<APIResponse> DeleteProjectActivityExtension(long extensionId, string userId);
         Task<APIResponse> GetProjectMonitoringByMonitoringId(long Id);
-        
+        Task<APIResponse> EditProjectMonitoringByMonitoringId(ProjectMonitoringViewModel model, string UserId);
+
+
     }
 }
