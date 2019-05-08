@@ -1546,12 +1546,12 @@ namespace HumanitarianAssistance.Service.Classes
                 var parent = await _uow.GetDbContext().ProjectActivityDetail.AnyAsync(x => x.IsDeleted == false &&
                                                                                       x.ParentId == obj.ParentId &&
                                                                                       x.IsCompleted == false);
-
+                ProjectActivityDetail detail = new ProjectActivityDetail();
                 if (!parent)
                 {
                     //foreach (var item in parent)
                     //{
-                        ProjectActivityDetail detail = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ActivityId == obj.ParentId);
+                        detail = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ActivityId == obj.ParentId);
                         if (detail != null)
                         {
                             detail.StatusId = (int)ProjectPhaseType.Completed;
@@ -1560,7 +1560,7 @@ namespace HumanitarianAssistance.Service.Classes
                     //}
 
                 }
-                response.data.ProjectActivityDetail = obj;
+                response.data.ProjectActivityDetail = detail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
