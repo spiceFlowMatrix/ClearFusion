@@ -37,8 +37,15 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
         // range
         public List<int?> ProgressRange { get; set; }
-        public List<int?> SleepageRange { get; set; }
-        public List<int?> DurationRange { get; set; }
+
+        //public List<int?> SleepageRange { get; set; }
+        //public List<int?> DurationRange { get; set; }
+
+        public int? SleepageMin { get; set; }
+        public int? SleepageMax { get; set; }
+        public int? DurationMin { get; set; }
+        public int? DurationMax { get; set; }
+
 
         public bool LateStart { get; set; }
         public bool LateEnd { get; set; }
