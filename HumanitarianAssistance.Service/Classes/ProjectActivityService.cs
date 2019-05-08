@@ -44,6 +44,8 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
+                //var activutydetail =  _uow.GetDbContext().ProjectActivityDetail.Where(x => x.IsDeleted == false).ToList();
+
                 var activityList = await _uow.GetDbContext().ProjectActivityDetail
                                           .Where(v => v.IsDeleted == false &&
                                                       v.ParentId == null &&
@@ -1439,6 +1441,7 @@ namespace HumanitarianAssistance.Service.Classes
                     Achieved = b.Achieved,
                     ActualStartDate = b.ActualStartDate,
                     ActualEndDate = b.ActualEndDate,
+                    StatusId = b.StatusId,
                 }).OrderByDescending(x => x.ActivityId)
                   .ToList();
                 response.data.ProjectSubActivityListModel = activityDetaillist;
@@ -1542,6 +1545,9 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+
+                ProjectActivityDetail parent = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ActivityId == obj.ParentId);
+
                 if (obj != null)
                 {
                     obj.StatusId= (int)ProjectPhaseType.Implementation;
@@ -1551,6 +1557,13 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.ModifiedById = UserId;
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
                 }
+
+                if (parent != null)
+                {
+                    parent.StatusId = (int)ProjectPhaseType.Implementation;
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(parent);
+                }
+
                 response.data.ProjectActivityDetail = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
