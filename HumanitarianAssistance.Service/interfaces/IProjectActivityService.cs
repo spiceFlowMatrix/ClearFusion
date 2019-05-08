@@ -31,6 +31,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> ProjectSubActivityIscomplete(long activityId, string UserId);
         Task<APIResponse> StartProjectSubActivity(long activityId, string UserId);
         Task<APIResponse> EndProjectSubActivity(long activityId, string UserId);
+        
 
 
         Task<APIResponse> AddProjectMonitoringReview(ProjectMonitoringViewModel model, string UserId);
@@ -41,6 +42,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditProjectActivityExtension(ProjectExtensionModel model, string userId);
         Task<APIResponse> DeleteProjectActivityExtension(long extensionId, string userId);
         Task<APIResponse> GetProjectMonitoringByMonitoringId(long Id);
-        
+        Task<APIResponse> EditProjectMonitoringByMonitoringId(ProjectMonitoringViewModel model, string UserId);
+
+
     }
 }
