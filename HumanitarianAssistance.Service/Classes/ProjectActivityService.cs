@@ -44,7 +44,6 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                //var activutydetail =  _uow.GetDbContext().ProjectActivityDetail.Where(x => x.IsDeleted == false).ToList();
 
                 var activityList = await _uow.GetDbContext().ProjectActivityDetail
                                           .Where(v => v.IsDeleted == false &&
@@ -1518,6 +1517,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+             
                 if (obj != null)
                 {
 
@@ -1526,6 +1526,23 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.IsDeleted = false;
                     obj.ModifiedById = UserId;
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
+                }
+                var parent = await _uow.GetDbContext().ProjectActivityDetail.AnyAsync(x => x.IsDeleted == false &&
+                                                                                      x.ParentId == obj.ParentId &&
+                                                                                      x.IsCompleted == false);
+
+                if (!parent)
+                {
+                    //foreach (var item in parent)
+                    //{
+                        ProjectActivityDetail detail = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ActivityId == obj.ParentId);
+                        if (detail != null)
+                        {
+                            detail.StatusId = (int)ProjectPhaseType.Completed;
+                            await _uow.ProjectActivityDetailRepository.UpdateAsyn(detail);
+                        }
+                    //}
+
                 }
                 response.data.ProjectActivityDetail = obj;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -1581,6 +1598,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+
                 if (obj != null)
                 {
 
@@ -1590,6 +1608,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.ModifiedById = UserId;
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
                 }
+               
                 response.data.ProjectActivityDetail = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
