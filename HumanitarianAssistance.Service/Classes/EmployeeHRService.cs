@@ -452,7 +452,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 if (xAdvances.RecoveredAmount == 0)
                                 {
 
-                                    obj.AdvanceRecoveryAmount = Convert.ToInt64(xAdvances.AdvanceAmount / xAdvances.NumberOfInstallments);
+                                    obj.AdvanceRecoveryAmount = Convert.ToInt64(xAdvances.AdvanceAmount / xAdvances.NumberOfInstallments ?? 1);
                                     obj.AdvanceAmount = xAdvances.AdvanceAmount;
                                     obj.IsAdvanceApproved = xAdvances.IsApproved;
                                 }
@@ -463,6 +463,12 @@ namespace HumanitarianAssistance.Service.Classes
                                     obj.IsAdvanceApproved = xAdvances.IsApproved;
                                     obj.AdvanceAmount = iBalanceAmount;
                                 }
+                            }
+                            else
+                            {
+                                obj.AdvanceRecoveryAmount = 0;
+                                obj.AdvanceAmount = 0;
+                                obj.IsAdvanceApproved = false;
                             }
                         }
                         else
