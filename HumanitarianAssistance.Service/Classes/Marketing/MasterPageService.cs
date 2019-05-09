@@ -1397,7 +1397,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                           ChannelName = j.ChannelName,
                                           MediumId = j.MediumId
                                       })).ToListAsync();
-                Channel obj = await _uow.ChannelRepository.FindAsync(x => x.ChannelId == model && x.IsDeleted == false && x.MediumId == model);
+                Channel obj = await _uow.ChannelRepository.GetAll().AsQueryable().Where(x => x.IsDeleted == false && x.MediumId == model).FirstOrDefaultAsync();
                 ICollection<Medium> Mediums = await _uow.MediumRepository.FindAllAsync(x => x.IsDeleted == false);
                 response.data.channelById = obj;
                 response.data.ChannelList = Channels;

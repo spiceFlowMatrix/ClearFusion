@@ -11,13 +11,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HumanitarianAssistance.Service.Classes
@@ -44,6 +41,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
+
                 var activityList = await _uow.GetDbContext().ProjectActivityDetail
                                           .Where(v => v.IsDeleted == false &&
                                                       v.ParentId == null &&
@@ -782,6 +780,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var activityList = _uow.GetDbContext().ProjectActivityDetail
+                                          .Include(x => x.ProjectSubActivityList)
                                           .Where(v => v.IsDeleted == false &&
                                                       v.ProjectBudgetLineDetail.ProjectId == model.ProjectId &&
                                                       v.ParentId == null
@@ -818,7 +817,7 @@ namespace HumanitarianAssistance.Service.Classes
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex;
+                response.Message = ex.Message;
             }
             return response;
         }
@@ -851,35 +850,53 @@ namespace HumanitarianAssistance.Service.Classes
 
             if (model.Planning)
             {
-                activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Planning);
+                activityList = activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Planning);
             }
             if (model.Implementation)
             {
-                activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Implementation);
+                activityList = activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Implementation);
             }
             if (model.Completed)
             {
-                activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Completed);
+                activityList = activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Completed);
             }
             if (model.ProgressRange.Any())
             {
             }
-            if (model.SleepageRange.Any())
+            if (model.SleepageMin.HasValue)
             {
+                //activityList = activityList.Where(x => x.ProjectSubActivityList.Where(a => a.ActualEndDate != null)
+                //                                                .Select(y => y.ActualEndDate)
+                //                                                .Min(z => z).Value.Day - x.PlannedEndDate.Value.Day >= model.SleepageMin.Value);
+                //activityList = activityList.Where(x => x.ProjectSubActivityList.Any() ? x.ProjectSubActivityList.Min(y => y.ActualEndDate).Value.Day >= model.SleepageMin.Value : false);
             }
-            if (model.DurationRange.Any())
+            if (model.SleepageMax.HasValue)
             {
+                //activityList = activityList.Where(x => x.ProjectSubActivityList.Where(a => a.ActualEndDate != null)
+                //                                                        .Select(y => y.ActualEndDate)
+                //                                                        .Min(z => z).Value.Day - x.PlannedEndDate.Value.Day <= model.SleepageMax.Value);
             }
-
+            if (model.DurationMin.HasValue)
+            {
+                // NOTE: (PlanneEndDate - PlanneStartDate).Days
+                activityList = activityList.Where(x => ((x.PlannedEndDate != null ? x.PlannedEndDate.Value.Date : DateTime.UtcNow.Date) -
+                (x.PlannedStartDate != null ? x.PlannedStartDate.Value.Date : DateTime.UtcNow.Date)).Days >= model.DurationMin.Value);
+            }
+            if (model.DurationMax.HasValue)
+            {
+                // NOTE: (PlanneEndDate - PlanneStartDate).Days
+                activityList = activityList.Where(x => ((x.PlannedEndDate != null ? x.PlannedEndDate.Value.Date : DateTime.UtcNow.Date) -
+                                (x.PlannedStartDate != null ? x.PlannedStartDate.Value.Date : DateTime.UtcNow.Date)).Days <= model.DurationMax.Value);
+            }
             if (model.LateStart)
             {
                 //NOTE: PlannedStartDate < ActualStartDate
-                activityList.Where(x => x.PlannedStartDate.Value.Date < x.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date));
+                activityList = activityList.Where(x => x.PlannedStartDate.Value.Date < x.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date));
             }
             if (model.LateEnd)
             {
                 //NOTE: PlannedEndDate < ActualEndDate
-                activityList.Where(x => x.PlannedEndDate.Value.Date <
+                activityList = activityList.Where(x => x.PlannedEndDate.Value.Date <
                                             (x.ProjectSubActivityList.Min(y => y.ActualEndDate.Value.Date) != null ?
                                             x.ProjectSubActivityList.Min(y => y.ActualEndDate.Value.Date) : DateTime.UtcNow.Date));
             }
@@ -1439,6 +1456,7 @@ namespace HumanitarianAssistance.Service.Classes
                     Achieved = b.Achieved,
                     ActualStartDate = b.ActualStartDate,
                     ActualEndDate = b.ActualEndDate,
+                    StatusId = b.StatusId,
                 }).OrderByDescending(x => x.ActivityId)
                   .ToList();
                 response.data.ProjectSubActivityListModel = activityDetaillist;
@@ -1515,6 +1533,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+             
                 if (obj != null)
                 {
 
@@ -1524,7 +1543,24 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.ModifiedById = UserId;
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
                 }
-                response.data.ProjectActivityDetail = obj;
+                var parent = await _uow.GetDbContext().ProjectActivityDetail.AnyAsync(x => x.IsDeleted == false &&
+                                                                                      x.ParentId == obj.ParentId &&
+                                                                                      x.IsCompleted == false);
+                ProjectActivityDetail detail = new ProjectActivityDetail();
+                if (!parent)
+                {
+                    //foreach (var item in parent)
+                    //{
+                        detail = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ActivityId == obj.ParentId);
+                        if (detail != null)
+                        {
+                            detail.StatusId = (int)ProjectPhaseType.Completed;
+                            await _uow.ProjectActivityDetailRepository.UpdateAsyn(detail);
+                        }
+                    //}
+
+                }
+                response.data.ProjectActivityDetail = detail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1542,6 +1578,9 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+
+                ProjectActivityDetail parent = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ActivityId == obj.ParentId);
+
                 if (obj != null)
                 {
                     obj.StatusId= (int)ProjectPhaseType.Implementation;
@@ -1551,6 +1590,13 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.ModifiedById = UserId;
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
                 }
+
+                if (parent != null)
+                {
+                    parent.StatusId = (int)ProjectPhaseType.Implementation;
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(parent);
+                }
+
                 response.data.ProjectActivityDetail = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1568,6 +1614,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ProjectActivityDetail obj = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsDeleted == false);
+
                 if (obj != null)
                 {
 
@@ -1577,6 +1624,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.ModifiedById = UserId;
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
                 }
+               
                 response.data.ProjectActivityDetail = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
