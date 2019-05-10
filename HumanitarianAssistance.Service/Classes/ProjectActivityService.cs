@@ -833,98 +833,6 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        public IQueryable<ProjectActivityDetail> FilterAdvanceList(IQueryable<ProjectActivityDetail> activityList, ActivityAdvanceFilterModel model)
-        {
-            if (model.PlannedStartDate.HasValue)
-            {
-                activityList = activityList.Where(x => x.PlannedStartDate.Value.Date >= model.PlannedStartDate.Value.Date);
-            }
-            if (model.PlannedEndDate.HasValue)
-            {
-                activityList = activityList.Where(x => x.PlannedEndDate.Value.Date <= model.PlannedEndDate.Value.Date);
-            }
-            if (model.ActualStartDate.HasValue)
-            {
-                activityList = activityList.Where(x => x.ActualStartDate.Value.Date >= model.ActualStartDate.Value.Date);
-            }
-            if (model.ActualEndDate.HasValue)
-            {
-                activityList = activityList.Where(x => x.ActualEndDate.Value.Date <= model.ActualEndDate.Value.Date);
-            }
-            if (model.BudgetLineId.Any())
-            {
-                activityList = activityList.Where(x => model.BudgetLineId.Contains(x.BudgetLineId));
-            }
-            if (model.AssigneeId.Any())
-            {
-                activityList = activityList.Where(x => model.AssigneeId.Contains(x.EmployeeID));
-            }
-
-            if (model.Planning)
-            {
-                activityList = activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Planning);
-            }
-            if (model.Implementation)
-            {
-                activityList = activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Implementation);
-            }
-            if (model.Completed)
-            {
-                activityList = activityList.Where(x => x.StatusId == (int)ProjectPhaseType.Completed);
-            }
-            if (model.ProgressRange.Any())
-            {
-            }
-            if (model.SleepageMin.HasValue)
-            {
-                //activityList = activityList.Where(x => x.ProjectSubActivityList.Where(a => a.ActualEndDate != null)
-                //                                                .Select(y => y.ActualEndDate)
-                //                                                .Min(z => z).Value.Day - x.PlannedEndDate.Value.Day >= model.SleepageMin.Value);
-                //activityList = activityList.Where(x => x.ProjectSubActivityList.Any() ? x.ProjectSubActivityList.Min(y => y.ActualEndDate).Value.Day >= model.SleepageMin.Value : false);
-            }
-            if (model.SleepageMax.HasValue)
-            {
-                //activityList = activityList.Where(x => x.ProjectSubActivityList.Where(a => a.ActualEndDate != null)
-                //                                                        .Select(y => y.ActualEndDate)
-                //                                                        .Min(z => z).Value.Day - x.PlannedEndDate.Value.Day <= model.SleepageMax.Value);
-            }
-            if (model.DurationMin.HasValue)
-            {
-                // NOTE: (PlanneEndDate - PlanneStartDate).Days
-                activityList = activityList.Where(x => ((x.PlannedEndDate != null ? x.PlannedEndDate.Value.Date : DateTime.UtcNow.Date) -
-                (x.PlannedStartDate != null ? x.PlannedStartDate.Value.Date : DateTime.UtcNow.Date)).Days >= model.DurationMin.Value);
-            }
-            if (model.DurationMax.HasValue)
-            {
-                // NOTE: (PlanneEndDate - PlanneStartDate).Days
-                activityList = activityList.Where(x => ((x.PlannedEndDate != null ? x.PlannedEndDate.Value.Date : DateTime.UtcNow.Date) -
-                                (x.PlannedStartDate != null ? x.PlannedStartDate.Value.Date : DateTime.UtcNow.Date)).Days <= model.DurationMax.Value);
-            }
-            if (model.LateStart)
-            {
-                //NOTE: PlannedStartDate < ActualStartDate
-                activityList = activityList.Where(x => x.PlannedStartDate.Value.Date < x.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date));
-            }
-            if (model.LateEnd)
-            {
-                //NOTE: PlannedEndDate < ActualEndDate
-                activityList = activityList.Where(x => x.PlannedEndDate.Value.Date <
-                                            (x.ProjectSubActivityList.Min(y => y.ActualEndDate.Value.Date) != null ?
-                                            x.ProjectSubActivityList.Min(y => y.ActualEndDate.Value.Date) : DateTime.UtcNow.Date));
-            }
-            if (model.OnSchedule)
-            {
-                //NOTE: PlannedStartDate >= ActualStartDate &&  PlannedEndDate >= ActualEndDate
-                activityList.Where(x => x.PlannedStartDate.Value.Date >=
-                                            (x.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date) != null ?
-                                             x.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date) : DateTime.UtcNow.Date) &&
-                                        x.PlannedEndDate.Value.Date >=
-                                            (x.ProjectSubActivityList.Max(y => y.ActualEndDate.Value.Date) != null ?
-                                             x.ProjectSubActivityList.Max(y => y.ActualEndDate.Value.Date) : DateTime.UtcNow.Date)
-                );
-            }
-            return activityList;
-        }
 
         public async Task<float> FilterProgressRange(long projectId, int minRange, int maxRange)
         {
@@ -1655,7 +1563,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
 
-        public async Task<APIResponse> GetProjectActivityByActivityId(long activityId,string UserId)
+        public async Task<APIResponse> GetProjectActivityByActivityId(long activityId, string UserId)
         {
             APIResponse response = new APIResponse();
             try
