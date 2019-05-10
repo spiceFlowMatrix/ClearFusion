@@ -1018,6 +1018,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                 .ThenInclude(z => z.ProjectMonitoringIndicatorQuestions)
                                                                 .ThenInclude(x=> x.ProjectIndicatorQuestions)
                                                                 .Where(x => x.IsDeleted == false && x.ActivityId == activityId)
+                                                                .OrderByDescending(x=> x.CreatedDate)
                                                                 .Select(x => new ProjectMonitoringViewModel {
                                                                     ActivityId = x.ActivityId,
                                                                     NegativePoints = x.NegativePoints,
