@@ -11,7 +11,7 @@ namespace HumanitarianAssistance.Service.interfaces
     public interface IProjectActivityService
     {
         Task<APIResponse> GetallProjectActivityDetail(long projectId);
-        APIResponse GetProjectActivityAdvanceFilterList(ActivityAdvanceFilterModel model);
+        Task<APIResponse> GetProjectActivityAdvanceFilterList(ActivityAdvanceFilterModel model);
 
         Task<APIResponse> AddProjectActivityDetail(ProjectActivityModel model, string UserId);
         Task<APIResponse> EditProjectActivityDetail(ProjectActivityModel model, string UserId);
