@@ -779,50 +779,49 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var spActivityList = await _uow.GetDbContext().LoadStoredProc("get_project_projectactivitylist_filter")
-                                      //.WithSqlParam("planned_start_date", model.PlannedStartDate == null ? string.Empty : model.PlannedStartDate.Value.ToString())
-                                      //.WithSqlParam("planned_end_date", model.PlannedEndDate == null ? string.Empty : model.PlannedEndDate.Value.ToString())
-                                      //.WithSqlParam("actual_start_date", model.ActualStartDate == null ? string.Empty : model.ActualStartDate.Value.ToString())
-                                      //.WithSqlParam("actual_end_date", model.ActualEndDate == null ? string.Empty : model.ActualEndDate.Value.ToString())
+                                      .WithSqlParam("planned_start_date", model.PlannedStartDate == null ? string.Empty : model.PlannedStartDate.Value.ToString())
+                                      .WithSqlParam("planned_end_date", model.PlannedEndDate == null ? string.Empty : model.PlannedEndDate.Value.ToString())
+                                      .WithSqlParam("actual_start_date", model.ActualStartDate == null ? string.Empty : model.ActualStartDate.Value.ToString())
+                                      .WithSqlParam("actual_end_date", model.ActualEndDate == null ? string.Empty : model.ActualEndDate.Value.ToString())
 
-                                      //.WithSqlParam("assignee_id", model.AssigneeId)
-                                      //.WithSqlParam("budget_line_id", model.BudgetLineId)
-                                      //.WithSqlParam("planning", model.Planning)
-                                      //.WithSqlParam("implementations", model.Implementation)
-                                      //.WithSqlParam("completed", model.Completed)
+                                      .WithSqlParam("assignee_id", model.AssigneeId)
+                                      .WithSqlParam("budget_line_id", model.BudgetLineId)
+                                      .WithSqlParam("planning", model.Planning)
+                                      .WithSqlParam("implementations", model.Implementation)
+                                      .WithSqlParam("completed", model.Completed)
 
-                                      //.WithSqlParam("progress_range", model.ProgressRange)
-                                      //.WithSqlParam("sleepage_min", model.SleepageMin)
-                                      //.WithSqlParam("sleepage_max", model.SleepageMax)
+                                      .WithSqlParam("progress_range", model.ProgressRange)
+                                      .WithSqlParam("sleepage_min", model.SleepageMin)
+                                      .WithSqlParam("sleepage_max", model.SleepageMax)
 
-                                      //.WithSqlParam("duration_min", model.DurationMin)
-                                      //.WithSqlParam("duration_max", model.DurationMax)
+                                      .WithSqlParam("duration_min", model.DurationMin)
+                                      .WithSqlParam("duration_max", model.DurationMax)
 
-                                      //.WithSqlParam("late_start", model.LateStart)
-                                      //.WithSqlParam("late_end", model.LateEnd)
-                                      //.WithSqlParam("on_schedule", model.OnSchedule)
+                                      .WithSqlParam("late_start", model.LateStart)
+                                      .WithSqlParam("late_end", model.LateEnd)
+                                      .WithSqlParam("on_schedule", model.OnSchedule)
 
                                       .ExecuteStoredProc<SPProjectActivityDetail>();
 
-                //var sdf = spActivityList.Select(x => new ProjectActivityModel
-                //{
-                //    ActivityId = x.ActivityId,
-                //    ActivityName
-                //    ActivityDescription
-                //    PlannedStartDate
-                //    PlannedEndDate
-                //    BudgetLineId
-                //    BudgetName
-                //    EmployeeID
-                //    EmployeeName
-                //    StatusId
-                //    StatusName
-                //    Recurring
-                //    RecurringCount
-                //    RecurrinTypeId
+                var activityList = spActivityList.Select(x => new ProjectActivityModel
+                {
+                    ActivityId = x.ActivityId,
+                    ActivityName = x.ActivityName,
+                    ActivityDescription = x.ActivityDescription,
+                    PlannedStartDate = x.PlannedStartDate,
+                    PlannedEndDate = x.PlannedEndDate,
+                    BudgetLineId = x.BudgetLineId,
+                    BudgetName = x.BudgetName,
+                    EmployeeID = x.EmployeeID,
+                    EmployeeName = x.EmployeeName,
+                    StatusId = x.StatusId,
+                    StatusName = x.StatusName,
+                    Recurring = x.Recurring,
+                    RecurringCount = x.RecurringCount,
+                    RecurrinTypeId = x.RecurrinTypeId
+                }).ToList();
 
-                //});
-           
-                //response.data.ProjectActivityList = spActivityList;
+                response.data.ProjectActivityList = activityList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
