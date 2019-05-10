@@ -5555,14 +5555,32 @@ namespace HumanitarianAssistance.Service.Classes
 
                                 //update employee monthly salary heads 
                                 _uow.GetDbContext().EmployeePayrollMonth.UpdateRange(EmployeePayrollMonthList);
-                                _uow.Save();
+                                await _uow.GetDbContext().SaveChangesAsync();
 
                                 //Retrieving employee monthly attendance record
-                                EmployeeMonthlyAttendance employeeMonthlyAttendance = _uow.EmployeeMonthlyAttendanceRepository.Find(x => x.IsDeleted == false && x.EmployeeId == Employee.EmployeeId
+                                EmployeeMonthlyAttendance employeeMonthlyAttendance = await _uow.GetDbContext().EmployeeMonthlyAttendance.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeId == Employee.EmployeeId
                                                                                                                                     && x.Month == model.Month && x.Year == model.Year);
+
+
+                                // add advances back to the advances table if present
+                                Advances xAdvances = await _uow.GetDbContext().Advances.OrderByDescending(x=> x.AdvanceDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.IsApproved == true
+                                                                           && x.EmployeeId == employeeMonthlyAttendance.EmployeeId && x.OfficeId == employeeMonthlyAttendance.OfficeId
+                                                                           && x.AdvanceDate < DateTime.Now);
+
+
+                                if (xAdvances != null && employeeMonthlyAttendance.AdvanceRecoveryAmount != 0)
+                                {
+                                    // xAdvances.AdvanceAmount = xAdvances.AdvanceAmount + employeeMonthlyAttendance.AdvanceRecoveryAmount;
+                                    xAdvances.RecoveredAmount = xAdvances.RecoveredAmount - employeeMonthlyAttendance.AdvanceRecoveryAmount;
+                                    xAdvances.IsDeducted = false;
+                                    xAdvances.NumberOfInstallments = xAdvances.NumberOfInstallments + 1;
+                                    _uow.GetDbContext().Advances.Update(xAdvances);
+                                    await _uow.GetDbContext().SaveChangesAsync();
+                                }
 
                                 //Setting monthly attendance approved to false
                                 employeeMonthlyAttendance.IsApproved = false;
+                                employeeMonthlyAttendance.IsAdvanceRecovery = false;
                                 employeeMonthlyAttendance.AdvanceAmount = 0;
                                 employeeMonthlyAttendance.AdvanceRecoveryAmount = 0;
                                 employeeMonthlyAttendance.GrossSalary = 0;
@@ -5596,11 +5614,29 @@ namespace HumanitarianAssistance.Service.Classes
 
                         //update employee monthly salary heads 
                         _uow.GetDbContext().EmployeePayrollMonth.UpdateRange(EmployeePayrollMonthList);
-                        _uow.Save();
+                        await _uow.GetDbContext().SaveChangesAsync();
 
                         //Retrieving employee monthly attendance record
-                        EmployeeMonthlyAttendance employeeMonthlyAttendance = _uow.EmployeeMonthlyAttendanceRepository.Find(x => x.IsDeleted == false && x.EmployeeId == Employee.EmployeeId
+                        EmployeeMonthlyAttendance employeeMonthlyAttendance = await _uow.GetDbContext().EmployeeMonthlyAttendance.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeId == Employee.EmployeeId
                                                                                                                             && x.Month == model.Month && x.Year == model.Year);
+
+                        // add advances back to the advances table if present
+                        Advances xAdvances = await _uow.GetDbContext().Advances.OrderByDescending(x => x.AdvanceDate).FirstOrDefaultAsync(x => x.IsDeleted == false && x.IsApproved == true
+                                                                    && x.EmployeeId == employeeMonthlyAttendance.EmployeeId && x.OfficeId == employeeMonthlyAttendance.OfficeId
+                                                                    && x.AdvanceDate < DateTime.Now);
+
+                        if (xAdvances != null && employeeMonthlyAttendance.AdvanceRecoveryAmount != 0)
+                        {
+                           // xAdvances.AdvanceAmount = xAdvances.AdvanceAmount + employeeMonthlyAttendance.AdvanceRecoveryAmount;
+                            xAdvances.RecoveredAmount = xAdvances.RecoveredAmount - employeeMonthlyAttendance.AdvanceRecoveryAmount;
+                            xAdvances.NumberOfInstallments = xAdvances.NumberOfInstallments + 1;
+                            xAdvances.IsDeducted = false;
+                            _uow.GetDbContext().Advances.Update(xAdvances);
+                            await _uow.GetDbContext().SaveChangesAsync();
+                        }
+
+                        employeeMonthlyAttendance.IsAdvanceRecovery = false;
+                        employeeMonthlyAttendance.IsAdvanceApproved = false;
                         employeeMonthlyAttendance.AdvanceAmount = 0;
                         employeeMonthlyAttendance.AdvanceRecoveryAmount = 0;
                         employeeMonthlyAttendance.GrossSalary = 0;
