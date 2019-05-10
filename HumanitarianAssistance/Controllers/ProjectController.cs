@@ -2147,6 +2147,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
+
+    [HttpPost]
+
+    public async Task<APIResponse> GetProjectActivityDetailByActivityId([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.GetProjectActivityByActivityId(activityId, id);
+      }
+      return apiresponse;
+    }
+
     [HttpPost]
     public async Task<APIResponse> EditProjectMonitoringByMonitoringId([FromBody]ProjectMonitoringViewModel model)
     {
