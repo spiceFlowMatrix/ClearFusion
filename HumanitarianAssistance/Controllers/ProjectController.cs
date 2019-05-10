@@ -1983,9 +1983,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
     [HttpPost]
-    public APIResponse GetProjectActivityAdvanceFilterList([FromBody]ActivityAdvanceFilterModel model)
+    public async Task<APIResponse> GetProjectActivityAdvanceFilterList([FromBody]ActivityAdvanceFilterModel model)
     {
-      APIResponse apiresponse = _iActivity.GetProjectActivityAdvanceFilterList(model);
+      APIResponse apiresponse = await _iActivity.GetProjectActivityAdvanceFilterList(model);
       return apiresponse;
     }
 
