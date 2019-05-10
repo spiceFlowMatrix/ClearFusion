@@ -65,9 +65,9 @@ namespace HumanitarianAssistance.Service.Classes
                                               PlannedEndDate = b.PlannedEndDate,
                                               Recurring = b.Recurring,
                                               RecurringCount = b.RecurringCount,
-                                              RecurrinTypeId = b.RecurrinTypeId,
-                                              ProvinceId = b.ProjectActivityProvinceDetail.Select(x => x.ProvinceId),
-                                              DistrictID = b.ProjectActivityProvinceDetail.Select(x => x.DistrictID)
+                                              RecurrinTypeId = b.RecurrinTypeId
+                                              //ProvinceId = b.ProjectActivityProvinceDetail.Select(x => x.ProvinceId),
+                                              //DistrictID = b.ProjectActivityProvinceDetail.Select(x => x.DistrictID)
                                           })
                                           .ToListAsync();
 
