@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> StartProjectSubActivity(long activityId, string UserId);
         Task<APIResponse> EndProjectSubActivity(long activityId, string UserId);
 
-        Task<APIResponse> GetProjectActivityByActivityId(long activityId, string UserId);
+        Task<APIResponse> GetProjectActivityByActivityId(long activityId);
 
 
 

@@ -1563,41 +1563,44 @@ namespace HumanitarianAssistance.Service.Classes
 
 
 
-        public async Task<APIResponse> GetProjectActivityByActivityId(long activityId, string UserId)
+        public async Task<APIResponse> GetProjectActivityByActivityId(long activityId)
         {
             APIResponse response = new APIResponse();
             try
             {
+                var activityDetail = await _uow.GetDbContext().ProjectActivityDetail
+                                                              .Include(x => x.ProjectBudgetLineDetail)
+                                                              .Include(x => x.EmployeeDetail)
+                                                              .Include(x => x.ActivityStatusDetail)
+                                                              .Include(x => x.ProjectActivityProvinceDetail)
+                                                              .Include(x => x.ProjectActivityProvinceDetail)
+                                                              .FirstOrDefaultAsync(v => v.IsDeleted == false &&
+                                                                                  v.ParentId == null &&
+                                                                                  v.ActivityId == activityId
+                                                              );
+                ProjectActivityModel obj = new ProjectActivityModel();
 
-                var activityList = await _uow.GetDbContext().ProjectActivityDetail
-                                          .Where(v => v.IsDeleted == false &&
-                                                      v.ParentId == null &&
-                                                      v.ActivityId == activityId
-                                          )
-                                          .OrderByDescending(x => x.ActivityId)
-                                          .Select(b => new ProjectActivityModel
-                                          {
-
-                                              ActivityId = b.ActivityId,
-                                              ActivityName = b.ActivityName,
-                                              ActivityDescription = b.ActivityDescription,
-                                              BudgetLineId = b.ProjectBudgetLineDetail.BudgetLineId,
-                                              BudgetName = b.ProjectBudgetLineDetail.BudgetName,
-                                              EmployeeID = b.EmployeeDetail.EmployeeID,
-                                              EmployeeName = b.EmployeeDetail.EmployeeName,
-                                              StatusId = b.ActivityStatusDetail.StatusId,
-                                              StatusName = b.ActivityStatusDetail.StatusName,
-                                              PlannedStartDate = b.PlannedStartDate,
-                                              PlannedEndDate = b.PlannedEndDate,
-                                              Recurring = b.Recurring,
-                                              RecurringCount = b.RecurringCount,
-                                              RecurrinTypeId = b.RecurrinTypeId,
-                                              ProvinceId = b.ProjectActivityProvinceDetail.Select(x => x.ProvinceId),
-                                              DistrictID = b.ProjectActivityProvinceDetail.Select(x => x.DistrictID)
-                                          })
-                                          .ToListAsync();
-
-                response.data.ProjectActivityList = activityList;
+                if (activityDetail != null)
+                {
+                    obj.ActivityId = activityDetail.ActivityId;
+                    obj.ActivityName = activityDetail.ActivityName;
+                    obj.ActivityDescription = activityDetail.ActivityDescription;
+                    obj.BudgetLineId = activityDetail.ProjectBudgetLineDetail.BudgetLineId;
+                    obj.BudgetName = activityDetail.ProjectBudgetLineDetail.BudgetName;
+                    obj.EmployeeID = activityDetail.EmployeeDetail.EmployeeID;
+                    obj.EmployeeName = activityDetail.EmployeeDetail.EmployeeName;
+                    obj.StatusId = activityDetail.ActivityStatusDetail.StatusId;
+                    obj.StatusName = activityDetail.ActivityStatusDetail.StatusName;
+                    obj.PlannedStartDate = activityDetail.PlannedStartDate;
+                    obj.PlannedEndDate = activityDetail.PlannedEndDate;
+                    obj.Recurring = activityDetail.Recurring;
+                    obj.RecurringCount = activityDetail.RecurringCount;
+                    obj.RecurrinTypeId = activityDetail.RecurrinTypeId;
+                    obj.ProvinceId = activityDetail.ProjectActivityProvinceDetail.Select(x => x.ProvinceId);
+                    obj.DistrictID = activityDetail.ProjectActivityProvinceDetail.Select(x => x.DistrictID);
+                }
+              
+                response.data.ProjectActivityDetails = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

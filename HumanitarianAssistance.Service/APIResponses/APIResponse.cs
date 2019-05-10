@@ -344,6 +344,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
         public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
+        public ProjectActivityDetail ProjectActivityLst { get; set; }
 
         public ICollection<ProjectActivityModel> ProjectActivityList { get; set; }
         public ProjectActivityModel ProjectActivityDetails { get; set; }

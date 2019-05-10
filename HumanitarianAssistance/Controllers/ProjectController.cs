@@ -2153,12 +2153,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     public async Task<APIResponse> GetProjectActivityDetailByActivityId([FromBody]long activityId)
     {
       APIResponse apiresponse = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        string id = user.Id;
-        apiresponse = await _iActivity.GetProjectActivityByActivityId(activityId, id);
-      }
+        apiresponse = await _iActivity.GetProjectActivityByActivityId(activityId);
       return apiresponse;
     }
 
