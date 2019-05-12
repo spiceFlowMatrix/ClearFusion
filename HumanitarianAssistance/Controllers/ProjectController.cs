@@ -1983,9 +1983,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
     [HttpPost]
-    public APIResponse GetProjectActivityAdvanceFilterList([FromBody]ActivityAdvanceFilterModel model)
+    public async Task<APIResponse> GetProjectActivityAdvanceFilterList([FromBody]ActivityAdvanceFilterModel model)
     {
-      APIResponse apiresponse = _iActivity.GetProjectActivityAdvanceFilterList(model);
+      APIResponse apiresponse = await _iActivity.GetProjectActivityAdvanceFilterList(model);
       return apiresponse;
     }
 
@@ -2144,6 +2144,16 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     public async Task<APIResponse> GetProjectMonitoringByMonitoringId([FromBody]int Id)
     {
       APIResponse apiresponse = await _iActivity.GetProjectMonitoringByMonitoringId(Id);
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+
+    public async Task<APIResponse> GetProjectActivityDetailByActivityId([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+        apiresponse = await _iActivity.GetProjectActivityByActivityId(activityId);
       return apiresponse;
     }
 
