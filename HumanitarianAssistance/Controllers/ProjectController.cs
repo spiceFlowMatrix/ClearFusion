@@ -1628,7 +1628,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region upload files for activity documents 28/03/2019
     [HttpPost, DisableRequestSizeLimit]
-    public async Task<APIResponse> UploadProjectDocumnentFile([FromForm] IFormFile filesData, string activityId, string statusId)
+    public async Task<APIResponse> UploadProjectDocumnentFile([FromForm] IFormFile filesData, string activityId, string statusId, string monitoringId)
     {
       APIResponse apiRespone = new APIResponse();
       string localFolderfullPath1 = string.Empty;
@@ -1636,6 +1636,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         //var filrec = Request.Form.Files;
 
+        long monitoringID = monitoringId != null ? Convert.ToInt64(monitoringId) : 0;
         var file = Request.Form.Files[0];
         long activityID = Convert.ToInt64(activityId);
         int statusID = Convert.ToInt32(statusId);
@@ -1648,7 +1649,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = await _iActivity.UploadProjectActivityDocumentFile(file, id, activityID, fileName, logginUserEmailId, ext, statusID);
+            apiRespone = await _iActivity.UploadProjectActivityDocumentFile(file, id, activityID, fileName, logginUserEmailId, ext, statusID, monitoringID);
           }
         }
         else
@@ -1671,6 +1672,14 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     {
       APIResponse response = new APIResponse();
       response = await _iActivity.GetUploadedDocument(activityId);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetActivityDocumentDetails([FromBody]ProjectActivityDocumentViewModel model)
+    {
+      APIResponse response = new APIResponse();
+      response = await _iActivity.GetUploadedDocuments(model);
       return response;
     }
 

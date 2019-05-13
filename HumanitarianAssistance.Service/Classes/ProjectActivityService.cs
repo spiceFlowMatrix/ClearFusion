@@ -570,7 +570,7 @@ namespace HumanitarianAssistance.Service.Classes
         /// <param name="ext"></param>
         /// <param name="statusID"></param>
         /// <returns></returns>
-        public async Task<APIResponse> UploadProjectActivityDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID)
+        public async Task<APIResponse> UploadProjectActivityDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID, long monitoringId)
         {
             APIResponse response = new APIResponse();
             try
@@ -605,6 +605,7 @@ namespace HumanitarianAssistance.Service.Classes
                             docObj.StatusId = statusID;
                             docObj.CreatedById = UserId;
                             docObj.IsDeleted = false;
+                            docObj.MonitoringId = monitoringId;
                             docObj.CreatedDate = DateTime.UtcNow;
 
                             await _uow.ActivityDocumentsDetailRepository.AddAsyn(docObj);
@@ -654,6 +655,40 @@ namespace HumanitarianAssistance.Service.Classes
                     }).ToListAsync();
 
                 apiResponse.data.ActivityDocumentDetailModel = listobj;
+                apiResponse.StatusCode = StaticResource.successStatusCode;
+                apiResponse.Message = StaticResource.SuccessText;
+
+            }
+            catch (Exception ex)
+            {
+                apiResponse.StatusCode = StaticResource.failStatusCode;
+                apiResponse.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return apiResponse;
+        }
+
+        public async Task<APIResponse> GetUploadedDocuments(ProjectActivityDocumentViewModel model)
+        {
+            APIResponse apiResponse = new APIResponse();
+            try
+            {
+                var listobj = _uow.GetDbContext().ActivityDocumentsDetail.Where(x => x.ActivityId == model.ActivityId && x.IsDeleted == false).AsQueryable();
+                    if (model.MonitoringId != null)
+                    {
+                    listobj = listobj.Where(x => x.MonitoringId == model.MonitoringId);
+                    }
+
+                     var obj= await listobj.Select(x => new ActivityDocumentDetailModel()
+                            {
+                            ActivityId = x.ActivityId,
+                            StatusId = x.StatusId,
+                            ActivityDocumentsFilePath = x.ActivityDocumentsFilePath,
+                            ActivityDocumentsFileName = x.ActivityDocumentsFilePath.Substring(x.ActivityDocumentsFilePath.LastIndexOf('/') + 1),
+                            ActtivityDocumentId = x.ActtivityDocumentId
+
+                     }).ToListAsync();
+
+                apiResponse.data.ActivityDocumentDetailModel = obj;
                 apiResponse.StatusCode = StaticResource.successStatusCode;
                 apiResponse.Message = StaticResource.SuccessText;
 
@@ -793,7 +828,8 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("implementations", model.Implementation)
                                       .WithSqlParam("completed", model.Completed)
 
-                                      .WithSqlParam("progress_range", model.ProgressRange)
+                                      .WithSqlParam("progress_range_min", model.ProgressRangeMin)
+                                      .WithSqlParam("progress_range_max", model.ProgressRangeMax)
                                       .WithSqlParam("sleepage_min", model.SleepageMin)
                                       .WithSqlParam("sleepage_max", model.SleepageMax)
 
@@ -940,8 +976,8 @@ namespace HumanitarianAssistance.Service.Classes
                                                                 .ThenInclude(z => z.ProjectMonitoringIndicatorQuestions)
                                                                 .ThenInclude(x => x.ProjectIndicatorQuestions)
                                                                 .Where(x => x.IsDeleted == false && x.ActivityId == activityId)
-                                                                .Select(x => new ProjectMonitoringViewModel
-                                                                {
+                                                                .OrderByDescending(x=> x.CreatedDate)
+                                                                .Select(x => new ProjectMonitoringViewModel {
                                                                     ActivityId = x.ActivityId,
                                                                     NegativePoints = x.NegativePoints,
                                                                     PositivePoints = x.PostivePoints,
