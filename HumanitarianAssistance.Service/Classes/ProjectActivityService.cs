@@ -826,7 +826,8 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("implementations", model.Implementation)
                                       .WithSqlParam("completed", model.Completed)
 
-                                      .WithSqlParam("progress_range", model.ProgressRange)
+                                      .WithSqlParam("progress_range_min", model.ProgressRangeMin)
+                                      .WithSqlParam("progress_range_max", model.ProgressRangeMax)
                                       .WithSqlParam("sleepage_min", model.SleepageMin)
                                       .WithSqlParam("sleepage_max", model.SleepageMax)
 
