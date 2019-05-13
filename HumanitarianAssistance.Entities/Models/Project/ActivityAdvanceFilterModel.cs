@@ -17,10 +17,13 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
             BudgetLineId = new List<long>();
             AssigneeId = new List<int>();
-            ProgressRange = new List<int>();
+
+            ProgressRangeMin = 0;
+            ProgressRangeMax = 0;
 
             SleepageMin = 0;
             SleepageMax = 0;
+
             DurationMin = 0;
             DurationMax = 0;
 
@@ -44,13 +47,12 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool Completed { get; set; }
 
         // range
-        public List<int> ProgressRange { get; set; }
-
-        //public List<int?> SleepageRange { get; set; }
-        //public List<int?> DurationRange { get; set; }
+        public int ProgressRangeMin { get; set; }
+        public int ProgressRangeMax { get; set; }
 
         public int SleepageMin { get; set; }
         public int SleepageMax { get; set; }
+
         public int DurationMin { get; set; }
         public int DurationMax { get; set; }
 
