@@ -11,7 +11,7 @@ namespace HumanitarianAssistance.Service.interfaces
     public interface IProjectActivityService
     {
         Task<APIResponse> GetallProjectActivityDetail(long projectId);
-        APIResponse GetProjectActivityAdvanceFilterList(ActivityAdvanceFilterModel model);
+        Task<APIResponse> GetProjectActivityAdvanceFilterList(ActivityAdvanceFilterModel model);
 
         Task<APIResponse> AddProjectActivityDetail(ProjectActivityModel model, string UserId);
         Task<APIResponse> EditProjectActivityDetail(ProjectActivityModel model, string UserId);
@@ -31,7 +31,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> ProjectSubActivityIscomplete(long activityId, string UserId);
         Task<APIResponse> StartProjectSubActivity(long activityId, string UserId);
         Task<APIResponse> EndProjectSubActivity(long activityId, string UserId);
-        
+
+        Task<APIResponse> GetProjectActivityByActivityId(long activityId);
+
+
 
 
         Task<APIResponse> AddProjectMonitoringReview(ProjectMonitoringViewModel model, string UserId);
@@ -43,6 +46,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteProjectActivityExtension(long extensionId, string userId);
         Task<APIResponse> GetProjectMonitoringByMonitoringId(long Id);
         Task<APIResponse> EditProjectMonitoringByMonitoringId(ProjectMonitoringViewModel model, string UserId);
+
 
 
     }

@@ -410,7 +410,7 @@ namespace HumanitarianAssistance.Service.Classes
                             }
 
                             obj.GrossSalary = obj.TotalGeneralAmount * (obj.PresentDays + obj.LeaveHours + obj.OverTimeHours) + obj.TotalAllowance;
-                            obj.PensionAmount = (obj.GrossSalary * payrollDetail.FirstOrDefault().PensionRate) / 100; // i.e. 4.5 % => 0.045
+                            obj.PensionAmount = Math.Round(((double)(obj.GrossSalary * payrollDetail.FirstOrDefault().PensionRate) / 100),2); // i.e. 4.5 % => 0.045
 
                             if (obj.GrossSalary > 5000)
                             {
@@ -437,7 +437,7 @@ namespace HumanitarianAssistance.Service.Classes
                             }
 
                             //Net Salary  = (Gross + Allowances) - Deductions
-                            obj.NetSalary = obj.GrossSalary - (obj.TotalDeduction != null ? obj.TotalDeduction : 0) - (obj.SalaryTax != null ? obj.SalaryTax : 0) - payrollAttendance.AdvanceRecoveryAmount - (obj.PensionAmount != null ? obj.PensionAmount : 0);
+                            obj.NetSalary = Math.Round((double)(obj.GrossSalary - (obj.TotalDeduction != null ? obj.TotalDeduction : 0) - (obj.SalaryTax != null ? obj.SalaryTax : 0) - payrollAttendance.AdvanceRecoveryAmount - (obj.PensionAmount != null ? obj.PensionAmount : 0)),2);
 
                             obj.employeepayrolllist.AddRange(payrollDetail);
 

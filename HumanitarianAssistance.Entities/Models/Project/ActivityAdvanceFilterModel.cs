@@ -15,6 +15,14 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
             Implementation = false;
             Completed = false;
 
+            BudgetLineId = new List<long>();
+            AssigneeId = new List<int>();
+            ProgressRange = new List<int>();
+
+            SleepageMin = 0;
+            SleepageMax = 0;
+            DurationMin = 0;
+            DurationMax = 0;
 
             LateStart = false;
             LateEnd = false;
@@ -27,8 +35,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
 
-        public List<long?> BudgetLineId { get; set; }
-        public List<long?> AssigneeId { get; set; }
+        public List<long> BudgetLineId { get; set; }
+        public List<int> AssigneeId { get; set; }
 
         // status
         public bool Planning { get; set; }
@@ -36,15 +44,15 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool Completed { get; set; }
 
         // range
-        public List<int?> ProgressRange { get; set; }
+        public List<int> ProgressRange { get; set; }
 
         //public List<int?> SleepageRange { get; set; }
         //public List<int?> DurationRange { get; set; }
 
-        public int? SleepageMin { get; set; }
-        public int? SleepageMax { get; set; }
-        public int? DurationMin { get; set; }
-        public int? DurationMax { get; set; }
+        public int SleepageMin { get; set; }
+        public int SleepageMax { get; set; }
+        public int DurationMin { get; set; }
+        public int DurationMax { get; set; }
 
 
         public bool LateStart { get; set; }

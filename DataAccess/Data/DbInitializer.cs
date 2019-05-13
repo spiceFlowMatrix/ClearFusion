@@ -321,9 +321,7 @@ namespace DataAccess.Data
                 {
                     new ActivityStatusDetail { IsDeleted = false, StatusId = 1, StatusName="Planning" },
                     new ActivityStatusDetail { IsDeleted = false, StatusId = 2, StatusName = "Implementation" },
-                    new ActivityStatusDetail { IsDeleted = false, StatusId = 3, StatusName = "Monitoring" },
-                    new ActivityStatusDetail { IsDeleted = false, StatusId = 4, StatusName = "Completed" }
-                  
+                    new ActivityStatusDetail { IsDeleted = false, StatusId = 3, StatusName = "Completed" }
                 };
                 await context.ActivityStatusDetail.AddRangeAsync(list);
                 context.SaveChanges();
