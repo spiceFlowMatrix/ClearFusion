@@ -63,6 +63,8 @@ namespace HumanitarianAssistance.Service.Classes
                                               StatusName = b.ActivityStatusDetail.StatusName,
                                               PlannedStartDate = b.PlannedStartDate,
                                               PlannedEndDate = b.PlannedEndDate,
+                                              ActualStartDate = b.ActualStartDate,
+                                              ActualEndDate = b.ActualStartDate,
                                               Recurring = b.Recurring,
                                               RecurringCount = b.RecurringCount,
                                               RecurrinTypeId = b.RecurrinTypeId
@@ -1402,10 +1404,20 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ProjectActivityDetail obj = _mapper.Map<ProjectActivityModel, ProjectActivityDetail>(model);
+                ProjectActivityDetail parent = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                                                        x.ActivityId == model.ParentId &&
+                                                                                                                     x.StatusId == 3);
+                obj.StatusId = (int)ProjectPhaseType.Planning;
                 obj.CreatedDate = DateTime.UtcNow;
                 obj.IsDeleted = false;
                 obj.CreatedById = UserId;
                 await _uow.ProjectActivityDetailRepository.AddAsyn(obj);
+
+                if (parent != null)
+                {
+                    parent.StatusId = (int)ProjectPhaseType.Implementation;
+                    await _uow.ProjectActivityDetailRepository.UpdateAsyn(parent);
+                }
                 response.data.ProjectActivityDetail = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1596,6 +1608,8 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.Recurring = activityDetail.Recurring;
                     obj.RecurringCount = activityDetail.RecurringCount;
                     obj.RecurrinTypeId = activityDetail.RecurrinTypeId;
+                    obj.ActualStartDate = activityDetail.ActualStartDate;
+                    obj.ActualEndDate = activityDetail.ActualEndDate;
                     obj.ProvinceId = activityDetail.ProjectActivityProvinceDetail.Select(x => x.ProvinceId);
                     obj.DistrictID = activityDetail.ProjectActivityProvinceDetail.Select(x => x.DistrictID);
                 }
