@@ -460,6 +460,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public GainLossVoucherList GainLossVoucherDetail { get; set; }
         public List<ProjectMonitoringViewModel> ProjectMonitoring { get; set; }
         public ProjectActivityDetail ProjectActivityDetail { get; set; }
+        public ProjectActivityModel ProjectActivityModel { get; set; }
 
         #endregion
 
