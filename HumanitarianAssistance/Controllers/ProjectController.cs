@@ -1667,13 +1667,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
 
-    [HttpPost]
-    public async Task<APIResponse> GetActivityDocumentDetail([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      response = await _iActivity.GetUploadedDocument(activityId);
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> GetActivityDocumentDetail([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  response = await _iActivity.GetUploadedDocument(activityId);
+    //  return response;
+    //}
 
     [HttpPost]
     public async Task<APIResponse> GetActivityDocumentDetails([FromBody]ProjectActivityDocumentViewModel model)
