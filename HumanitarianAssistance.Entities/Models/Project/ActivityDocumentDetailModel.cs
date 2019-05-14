@@ -18,5 +18,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
     {
         public long ActivityId { get; set; }
         public long? MonitoringId { get; set; }
+        public long? ProjectPhaseId { get; set; }
     }
 }
