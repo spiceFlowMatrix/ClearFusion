@@ -1444,7 +1444,7 @@ namespace HumanitarianAssistance.Service.Classes
                 ProjectActivityDetail parent = await _uow.GetDbContext().ProjectActivityDetail
                                                                         .FirstOrDefaultAsync(x => x.IsDeleted == false &&
                                                                                                   x.ActivityId == model.ParentId &&
-                                                                                                  x.StatusId == 3);
+                                                                                                  x.StatusId == (int)ProjectPhaseType.Completed);
                 obj.StatusId = (int)ProjectPhaseType.Planning;
                 obj.CreatedDate = DateTime.UtcNow;
                 obj.IsDeleted = false;
