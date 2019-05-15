@@ -596,7 +596,7 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         ActivityDocumentsDetail docObj = new ActivityDocumentsDetail();
 
-                        string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + fileName;
+                        string folderWithProposalFile = StaticResource.ProjectsFolderName +  "/" + folderName  + "/" + StaticResource.ProjectActivityFolderName + "/" + fileName;
                         string uploadedFileResponse = await GCBucket.UploadOtherProposalDocuments(bucketName, folderWithProposalFile, file, fileName, ext);
                         if (!string.IsNullOrEmpty(uploadedFileResponse))
                         {
@@ -1440,21 +1440,41 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ProjectActivityDetail obj = _mapper.Map<ProjectActivityModel, ProjectActivityDetail>(model);
-                ProjectActivityDetail parent = await _uow.GetDbContext().ProjectActivityDetail.FirstOrDefaultAsync(x => x.IsDeleted == false &&
-                                                                                                                        x.ActivityId == model.ParentId &&
-                                                                                                                     x.StatusId == 3);
+                //Note : check for all the subactivity are completed or not.
+                ProjectActivityDetail parent = await _uow.GetDbContext().ProjectActivityDetail
+                                                                        .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                                  x.ActivityId == model.ParentId &&
+                                                                                                  x.StatusId == (int)ProjectPhaseType.Completed);
                 obj.StatusId = (int)ProjectPhaseType.Planning;
                 obj.CreatedDate = DateTime.UtcNow;
                 obj.IsDeleted = false;
                 obj.CreatedById = UserId;
                 await _uow.ProjectActivityDetailRepository.AddAsyn(obj);
 
+                ProjectActivityModel actvityModel = new ProjectActivityModel()
+                {
+                    ActivityDescription = obj.ActivityDescription,
+                    ActivityId=obj.ActivityId,
+                     StatusId=obj.StatusId,
+                      ActivityName=obj.ActivityName,
+                       ActualEndDate=obj.ActualEndDate,
+                        ActualStartDate=obj.ActualStartDate,
+                         BudgetLineId=obj.BudgetLineId,
+                          ParentId=obj.ParentId,
+                           Target= obj.Target,
+                           PlannedEndDate= obj.PlannedEndDate,
+                            PlannedStartDate =obj.PlannedStartDate,
+                            EmployeeID=obj.EmployeeID
+                             
+                };
+
                 if (parent != null)
                 {
                     parent.StatusId = (int)ProjectPhaseType.Implementation;
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(parent);
+                    actvityModel.StatusId = parent.StatusId;
                 }
-                response.data.ProjectActivityDetail = obj;
+                response.data.ProjectActivityModel = actvityModel;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
