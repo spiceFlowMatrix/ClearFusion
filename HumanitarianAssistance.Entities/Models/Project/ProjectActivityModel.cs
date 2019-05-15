@@ -36,6 +36,9 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public IEnumerable<long?> DistrictID { get; set; }
 
         public long? ParentId { get; set; }
-        public int? Target { get; set; }
+        public float? Target { get; set; }
+        public DateTime? ActualStartDate { get; set; }
+        public DateTime? ActualEndDate { get; set; }
+
     }
 }
