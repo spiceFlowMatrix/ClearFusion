@@ -3892,658 +3892,658 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                if (financialyearid != null && currencyid != null)
-                {
-                    var financialYearDetails = await _uow.FinancialYearDetailRepository.FindAsync(x => x.FinancialYearId == financialyearid);
-
-                    //Grouped
-                    var allNotes = await _uow.GetDbContext().NotesMaster
-                            .Include(c => c.ChartOfAccountNew)
-                            .Where(x => x.IsDeleted == false)
-                            .OrderBy(o => o.Notes)
-                            //.GroupBy(g => g.Notes)
-                            .ToListAsync();
-
-                    //var allAccounts = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).ToListAsync();
-
-
-                    var allAccounts = await _uow.GetDbContext().ChartOfAccountNew.Include(x => x.VoucherTransactionsList)
-                        .Select(x => new
-                        {
-                            ChartOfAccountNewId = x.ChartOfAccountNewId,
-                            AccountLevelId = x.AccountLevelId,
-                            AccountLevels = x.AccountLevels,
-                            AccountName = x.AccountName,
-                            AccountType = x.AccountType,
-                            AccountTypeId = x.AccountTypeId,
-                            ChartOfAccountNewCode = x.ChartOfAccountNewCode,
-                            CreatedById = x.CreatedById,
-                            CreatedDate = x.CreatedDate,
-                            ParentID = x.ParentID,
-                            //CreditAccountlist = x.CreditAccountlist.Where(o => o.FinancialYearId == financialyearid).ToList(),
-                        }).ToListAsync();
-
-
-                    //var allAccounts1 = allAccounts.Where(x => x.CreditAccountlist.Count > 0).ToList();
-
-                    List<DetailsOfNotesModel> lst = new List<DetailsOfNotesModel>();
-                    List<VoucherTransactions> transactionDetail = null;
-
-                    foreach (var items in allNotes)
-                    {
-
-                        var accountDetails = items.ChartOfAccountNew;       // Just used for finding the details of this account
-
-                        double? creditAmount = 0, debitAmount = 0;
-                        #region 
-                        if (accountDetails.AccountLevelId == 4)
-                        {
-
-                            #region 
-
-                            if (currencyid == 1)               // For AFG
-                            {
-                                transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                            .Where(x => x.IsDeleted == false &&
-                                                            x.ChartOfAccountNewId == items.ChartOfAccountNewId &&
-                                                            //model.OfficeList.Contains(x.OfficeId) &&
-                                                            x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                            x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                            {
-                                                                Credit = (x.Credit > 0 ? x.AFGAmount : 0) ?? 0,
-                                                                Debit = (x.Debit > 0 ? x.AFGAmount : 0) ?? 0
-                                                            }
-                                                            ).ToListAsync();
-                            }
-                            if (currencyid == 2)               // For EURO
-                            {
-                                transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                            .Where(x => x.IsDeleted == false &&
-                                                            x.ChartOfAccountNewId == items.ChartOfAccountNewId &&
-                                                             //model.OfficeList.Contains(x.OfficeId) &&
-                                                             x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                            x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                            {
-                                                                Credit = (x.Credit > 0 ? x.EURAmount : 0) ?? 0,
-                                                                Debit = (x.Debit > 0 ? x.EURAmount : 0) ?? 0
-                                                            }
-                                                            ).ToListAsync();
-                            }
-                            if (currencyid == 3)               // For PKR
-                            {
-                                transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                            .Where(x => x.IsDeleted == false &&
-                                                            x.ChartOfAccountNewId == items.ChartOfAccountNewId &&
-                                                             //model.OfficeList.Contains(x.OfficeId) &&
-                                                             x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                            x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                            {
-                                                                Credit = (x.Credit > 0 ? x.PKRAmount : 0) ?? 0,
-                                                                Debit = (x.Debit > 0 ? x.PKRAmount : 0) ?? 0
-                                                            }
-                                                            ).ToListAsync();
-                            }
-                            if (currencyid == 4)               // For USD
-                            {
-                                transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                            .Where(x => x.IsDeleted == false &&
-                                                            x.ChartOfAccountNewId == items.ChartOfAccountNewId &&
-                                                             //model.OfficeList.Contains(x.OfficeId) &&
-                                                             x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                            x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                            {
-                                                                Credit = (x.Credit > 0 ? x.USDAmount : 0) ?? 0,
-                                                                Debit = (x.Debit > 0 ? x.USDAmount : 0) ?? 0,
-                                                            }
-                                                            ).ToListAsync();
-                            }
-
-                            #endregion
-                            // Gets the transactions for level 4th account
-                            //var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == items.AccountCode).ToList();
-                            //var accountsLevelFourthWithTransactions = await _uow.GetDbContext().VoucherTransactions
-                            //										.Where(x => x.IsDeleted == false &&
-                            //										x.AccountNo == items.AccountCode &&
-                            //										x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                            //										x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                            //										{
-                            //											Credit = (x.Credit > 0 ? x.AFGAmount : 0) ?? 0,
-                            //											Debit = (x.Debit > 0 ? x.AFGAmount : 0) ?? 0
-                            //										}
-                            //										).ToListAsync();
-
-                            #region "For calculations of Balance TYPE"
-
-                            creditAmount = Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Credit)), 3);
-                            debitAmount = Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Debit)), 3);
-
-                            #region "Not USE"						
-                            //foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                            //{
-                            //	foreach (var trans in transactionCalcuate.CreditAccountlist)
-                            //	{
-                            //		if (trans.CurrencyId == currencyid)
-                            //		{
-                            //			//creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Credit);
-                            //			//debitAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Debit);
-
-                            //			creditAmount += trans.Credit;
-                            //			debitAmount += trans.Debit;
-                            //		}
-                            //		else
-                            //		{
-                            //			//var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-                            //			var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == trans.CurrencyId && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-                            //			if (trans.CurrencyId == currencyid)
-                            //			{
-                            //				creditAmount += Math.Round(trans.Credit * exchangeRate?.Rate ?? 0, 2);
-                            //				debitAmount += Math.Round(trans.Debit * exchangeRate?.Rate ?? 0, 2);
-
-                            //			}
-                            //			else
-                            //			{
-                            //				var exchangeRate2 = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == currencyid && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-                            //				creditAmount += Math.Round((trans.Credit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
-                            //				debitAmount += Math.Round((trans.Debit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
-                            //			}
-                            //		}
-                            //	}
-                            //}
-                            //balanceAmount = debitAmount - creditAmount;
-                            #endregion
-
-                            DetailsOfNotesModel obj = new DetailsOfNotesModel();
-                            obj.ChartOfAccountNewCode = accountDetails.ChartOfAccountNewCode;
-                            obj.CreditAmount = creditAmount;
-                            obj.DebitAmount = debitAmount;
-                            obj.AccountName = accountDetails.AccountName;
-                            obj.Notes = items.Notes;
-                            lst.Add(obj);
-
-                            #endregion
-                        }
-                        else if (accountDetails.AccountLevelId == 3)
-                        {
-                            // Gets the fourth level accounts
-                            var accountsLevelFourth = allAccounts.FindAll(x => x.ParentID == accountDetails.ChartOfAccountNewId && x.AccountLevelId == 4);
-
-                            foreach (var elements in accountsLevelFourth)
-                            {
-                                creditAmount = 0; debitAmount = 0;
-
-                                #region 
-
-                                if (currencyid == 1)               // For AFG
-                                {
-                                    transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                .Where(x => x.IsDeleted == false &&
-                                                                x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                //model.OfficeList.Contains(x.OfficeId) &&
-                                                                x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                {
-                                                                    Credit = (x.Credit > 0 ? x.AFGAmount : 0) ?? 0,
-                                                                    Debit = (x.Debit > 0 ? x.AFGAmount : 0) ?? 0
-                                                                }
-                                                                ).ToListAsync();
-                                }
-                                if (currencyid == 2)               // For EURO
-                                {
-                                    transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                .Where(x => x.IsDeleted == false &&
-                                                                x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                 //model.OfficeList.Contains(x.OfficeId) &&
-                                                                 x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                {
-                                                                    Credit = (x.Credit > 0 ? x.EURAmount : 0) ?? 0,
-                                                                    Debit = (x.Debit > 0 ? x.EURAmount : 0) ?? 0
-                                                                }
-                                                                ).ToListAsync();
-                                }
-                                if (currencyid == 3)               // For PKR
-                                {
-                                    transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                .Where(x => x.IsDeleted == false &&
-                                                                x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                 //model.OfficeList.Contains(x.OfficeId) &&
-                                                                 x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                {
-                                                                    Credit = (x.Credit > 0 ? x.PKRAmount : 0) ?? 0,
-                                                                    Debit = (x.Debit > 0 ? x.PKRAmount : 0) ?? 0
-                                                                }
-                                                                ).ToListAsync();
-                                }
-                                if (currencyid == 4)               // For USD
-                                {
-                                    transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                .Where(x => x.IsDeleted == false &&
-                                                                x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                 //model.OfficeList.Contains(x.OfficeId) &&
-                                                                 x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                {
-                                                                    Credit = (x.Credit > 0 ? x.USDAmount : 0) ?? 0,
-                                                                    Debit = (x.Debit > 0 ? x.USDAmount : 0) ?? 0,
-                                                                }
-                                                                ).ToListAsync();
-                                }
-
-                                #endregion
-
-                                creditAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Credit)), 3);
-                                debitAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Debit)), 3);
-
-                                #region "Not Use"
-                                //// Gets the transactions for level 4th account
-                                //var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
-
-                                //#region "For calculations of Balance TYPE"
-
-                                //foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                //{
-                                //	foreach (var trans in transactionCalcuate.CreditAccountlist)
-                                //	{
-                                //		if (trans.CurrencyId == currencyid)
-                                //		{
-                                //			//creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Credit);
-                                //			//debitAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Debit);
-
-                                //			creditAmount += trans.Credit;
-                                //			debitAmount += trans.Debit;
-                                //		}
-                                //		else
-                                //		{
-                                //			//var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-
-                                //			var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == trans.CurrencyId && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-                                //			if (trans.CurrencyId == currencyid)
-                                //			{
-
-                                //				creditAmount += Math.Round(trans.Credit * exchangeRate?.Rate ?? 0, 2);
-                                //				debitAmount += Math.Round(trans.Debit * exchangeRate?.Rate ?? 0, 2);
-
-                                //			}
-                                //			else
-                                //			{
-                                //				var exchangeRate2 = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == currencyid && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-                                //				creditAmount += Math.Round((trans.Credit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
-                                //				debitAmount += Math.Round((trans.Debit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
-                                //			}
-
-                                //		}
-                                //	}
-                                //}
-                                ////balanceAmount = debitAmount - creditAmount;
-
-                                #endregion
-
-                                DetailsOfNotesModel obj = new DetailsOfNotesModel();
-                                obj.ChartOfAccountNewCode = elements.ChartOfAccountNewCode;
-                                obj.CreditAmount = creditAmount;
-                                obj.DebitAmount = debitAmount;
-                                obj.AccountName = elements.AccountName;
-                                obj.Notes = items.Notes;
-                                lst.Add(obj);
-
-                            }
-
-
-
-                        }
-                        else if (accountDetails.AccountLevelId == 2)
-                        {
-                            // Gets the level 3rd accounts
-                            var accountsLevelThird = allAccounts.FindAll(x => x.ParentID == accountDetails.ChartOfAccountNewId && x.AccountLevelId == 3);
-
-                            foreach (var element in accountsLevelThird)
-                            {
-                                // Gets the fourth level accounts
-                                var accountsLevelFourth = allAccounts.FindAll(x => x.ParentID == element.ChartOfAccountNewId && x.AccountLevelId == 4);
-
-                                foreach (var elements in accountsLevelFourth)
-                                {
-                                    creditAmount = 0; debitAmount = 0;
-
-                                    #region 
-
-                                    if (currencyid == 1)               // For AFG
-                                    {
-                                        transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                    .Where(x => x.IsDeleted == false &&
-                                                                    x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                    //model.OfficeList.Contains(x.OfficeId) &&
-                                                                    x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                    x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                    {
-                                                                        Credit = (x.Credit > 0 ? x.AFGAmount : 0) ?? 0,
-                                                                        Debit = (x.Debit > 0 ? x.AFGAmount : 0) ?? 0
-                                                                    }
-                                                                    ).ToListAsync();
-                                    }
-                                    if (currencyid == 2)               // For EURO
-                                    {
-                                        transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                    .Where(x => x.IsDeleted == false &&
-                                                                    x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                     //model.OfficeList.Contains(x.OfficeId) &&
-                                                                     x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                    x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                    {
-                                                                        Credit = (x.Credit > 0 ? x.EURAmount : 0) ?? 0,
-                                                                        Debit = (x.Debit > 0 ? x.EURAmount : 0) ?? 0
-                                                                    }
-                                                                    ).ToListAsync();
-                                    }
-                                    if (currencyid == 3)               // For PKR
-                                    {
-                                        transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                    .Where(x => x.IsDeleted == false &&
-                                                                    x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                     //model.OfficeList.Contains(x.OfficeId) &&
-                                                                     x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                    x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                    {
-                                                                        Credit = (x.Credit > 0 ? x.PKRAmount : 0) ?? 0,
-                                                                        Debit = (x.Debit > 0 ? x.PKRAmount : 0) ?? 0
-                                                                    }
-                                                                    ).ToListAsync();
-                                    }
-                                    if (currencyid == 4)               // For USD
-                                    {
-                                        transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                    .Where(x => x.IsDeleted == false &&
-                                                                    x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                     //model.OfficeList.Contains(x.OfficeId) &&
-                                                                     x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                    x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                    {
-                                                                        Credit = (x.Credit > 0 ? x.USDAmount : 0) ?? 0,
-                                                                        Debit = (x.Debit > 0 ? x.USDAmount : 0) ?? 0,
-                                                                    }
-                                                                    ).ToListAsync();
-                                    }
-
-                                    #endregion
-
-                                    creditAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Credit)), 3);
-                                    debitAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Debit)), 3);
-
-                                    #region "NOT USE"
-                                    //// Gets the transactions for level 4th account
-                                    //var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
-
-                                    //#region "For calculations of Balance TYPE"
-
-                                    //foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                    //{
-                                    //	foreach (var trans in transactionCalcuate.CreditAccountlist)
-                                    //	{
-                                    //		if (trans.CurrencyId == currencyid)
-                                    //		{
-                                    //			//creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Credit);
-                                    //			//debitAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Debit);
-
-                                    //			creditAmount += trans.Credit;
-                                    //			debitAmount += trans.Debit;
-                                    //		}
-                                    //		else
-                                    //		{
-                                    //			//var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-
-                                    //			var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == trans.CurrencyId && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-                                    //			if (trans.CurrencyId == currencyid)
-                                    //			{
-
-                                    //				creditAmount += Math.Round(trans.Credit * exchangeRate?.Rate ?? 0, 2);
-                                    //				debitAmount += Math.Round(trans.Debit * exchangeRate?.Rate ?? 0, 2);
-
-                                    //			}
-                                    //			else
-                                    //			{
-                                    //				var exchangeRate2 = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == currencyid && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-                                    //				creditAmount += Math.Round((trans.Credit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
-                                    //				debitAmount += Math.Round((trans.Debit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
-                                    //			}
-
-                                    //		}
-                                    //	}
-
-                                    //}
-                                    ////balanceAmount = debitAmount - creditAmount;	
-                                    //#endregion
-
-                                    #endregion
-
-                                    DetailsOfNotesModel obj = new DetailsOfNotesModel();
-                                    obj.ChartOfAccountNewCode = elements.ChartOfAccountNewCode;
-                                    obj.CreditAmount = creditAmount;
-                                    obj.DebitAmount = debitAmount;
-                                    obj.AccountName = elements.AccountName;
-                                    obj.Notes = items.Notes;
-                                    lst.Add(obj);
-
-                                }
-                            }
-
-                        }
-                        else if (accountDetails.AccountLevelId == 1)
-                        {
-                            // Gets the level 2nd accounts
-                            var accountsLevelSecond = allAccounts.FindAll(x => x.ParentID == accountDetails.ChartOfAccountNewId && x.AccountLevelId == 2);
-
-                            foreach (var item in accountsLevelSecond)
-                            {
-                                // Gets the level 3rd accounts
-                                var accountsLevelThird = allAccounts.FindAll(x => x.ParentID == item.ChartOfAccountNewId && x.AccountLevelId == 3);
-
-                                foreach (var element in accountsLevelThird)
-                                {
-                                    // Gets the fourth level accounts
-                                    var accountsLevelFourth = allAccounts.FindAll(x => x.ParentID == element.ChartOfAccountNewId && x.AccountLevelId == 4);
-
-                                    foreach (var elements in accountsLevelFourth)
-                                    {
-                                        creditAmount = 0; debitAmount = 0;
-
-                                        #region 
-
-                                        if (currencyid == 1)               // For AFG
-                                        {
-                                            transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                        .Where(x => x.IsDeleted == false &&
-                                                                        x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                        //model.OfficeList.Contains(x.OfficeId) &&
-                                                                        x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                        x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                        {
-                                                                            Credit = (x.Credit > 0 ? x.AFGAmount : 0) ?? 0,
-                                                                            Debit = (x.Debit > 0 ? x.AFGAmount : 0) ?? 0
-                                                                        }
-                                                                        ).ToListAsync();
-                                        }
-                                        if (currencyid == 2)               // For EURO
-                                        {
-                                            transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                        .Where(x => x.IsDeleted == false &&
-                                                                        x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                         //model.OfficeList.Contains(x.OfficeId) &&
-                                                                         x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                        x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                        {
-                                                                            Credit = (x.Credit > 0 ? x.EURAmount : 0) ?? 0,
-                                                                            Debit = (x.Debit > 0 ? x.EURAmount : 0) ?? 0
-                                                                        }
-                                                                        ).ToListAsync();
-                                        }
-                                        if (currencyid == 3)               // For PKR
-                                        {
-                                            transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                        .Where(x => x.IsDeleted == false &&
-                                                                        x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                         //model.OfficeList.Contains(x.OfficeId) &&
-                                                                         x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                        x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                        {
-                                                                            Credit = (x.Credit > 0 ? x.PKRAmount : 0) ?? 0,
-                                                                            Debit = (x.Debit > 0 ? x.PKRAmount : 0) ?? 0
-                                                                        }
-                                                                        ).ToListAsync();
-                                        }
-                                        if (currencyid == 4)               // For USD
-                                        {
-                                            transactionDetail = await _uow.GetDbContext().VoucherTransactions
-                                                                        .Where(x => x.IsDeleted == false &&
-                                                                        x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
-                                                                         //model.OfficeList.Contains(x.OfficeId) &&
-                                                                         x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
-                                                                        x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
-                                                                        {
-                                                                            Credit = (x.Credit > 0 ? x.USDAmount : 0) ?? 0,
-                                                                            Debit = (x.Debit > 0 ? x.USDAmount : 0) ?? 0,
-                                                                        }
-                                                                        ).ToListAsync();
-                                        }
-
-                                        #endregion
-
-                                        creditAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Credit)), 3);
-                                        debitAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Debit)), 3);
-
-                                        #region "NOT USE"
-                                        //// Gets the transactions for level 4th account
-                                        //// Gets the transactions for level 4th account
-                                        //var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
-
-                                        //#region "For calculations of Balance TYPE"
-
-                                        //foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
-                                        //{
-                                        //	foreach (var trans in transactionCalcuate.CreditAccountlist)
-                                        //	{
-                                        //		if (trans.CurrencyId == currencyid)
-                                        //		{
-                                        //			//creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Credit);
-                                        //			//debitAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Debit);
-
-                                        //			creditAmount += trans.Credit;
-                                        //			debitAmount += trans.Debit;
-                                        //		}
-                                        //		else
-                                        //		{
-                                        //			//var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-
-                                        //			var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == trans.CurrencyId && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-                                        //			if (trans.CurrencyId == currencyid)
-                                        //			{
-
-                                        //				creditAmount += Math.Round(trans.Credit * exchangeRate?.Rate ?? 0, 2);
-                                        //				debitAmount += Math.Round(trans.Debit * exchangeRate?.Rate ?? 0, 2);
-
-                                        //			}
-                                        //			else
-                                        //			{
-                                        //				var exchangeRate2 = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == currencyid && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-                                        //				creditAmount += Math.Round((trans.Credit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
-                                        //				debitAmount += Math.Round((trans.Debit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
-                                        //			}
-
-                                        //		}
-                                        //	}
-                                        //}
-                                        ////balanceAmount = debitAmount - creditAmount;
-                                        //#endregion
-                                        #endregion
-
-                                        DetailsOfNotesModel obj = new DetailsOfNotesModel();
-                                        obj.ChartOfAccountNewCode = elements.ChartOfAccountNewCode;
-                                        obj.CreditAmount = creditAmount;
-                                        obj.DebitAmount = debitAmount;
-                                        obj.AccountName = elements.AccountName;
-                                        obj.Notes = items.Notes;
-                                        lst.Add(obj);
-                                    }
-                                }
-                            }
-                        }
-                        #endregion
-                    }
-
-
-                    //allNotes = allNotes.Where(x => x.ChartAccountDetails.AccountLevelId == 4).ToList();
-                    var Noteslist = lst.GroupBy(g => g.Notes).ToList();
-
-                    if (Noteslist != null)
-                    {
-                        List<DetailsOfNotesFinalModel> detailsOfNotesFinalList = new List<DetailsOfNotesFinalModel>();
-
-                        foreach (var groupedItem in Noteslist)
-                        {
-                            DetailsOfNotesFinalModel finalObj = new DetailsOfNotesFinalModel();
-                            List<DetailsOfNotesModel> detailsOfNoteList = new List<DetailsOfNotesModel>();
-
-                            foreach (var item in groupedItem)
-                            {
-                                DetailsOfNotesModel obj = new DetailsOfNotesModel();
-
-                                obj.CreditAmount = item.CreditAmount;
-                                obj.DebitAmount = item.DebitAmount;
-                                //obj.BalanceAmount = obj.CreditAmount.Value - obj.DebitAmount.Value;
-
-                                obj.ChartOfAccountNewCode = item.ChartOfAccountNewCode;
-                                obj.AccountName = item.AccountName;
-                                obj.Notes = item.Notes;
-                                detailsOfNoteList.Add(obj);
-                            }
-
-                            finalObj.DetailsOfNotesList = detailsOfNoteList.ToList();
-
-                            finalObj.CreditSum = Math.Round(Convert.ToDouble(detailsOfNoteList.Sum(x => x.CreditAmount)), 3);
-                            finalObj.DebitSum = Math.Round(Convert.ToDouble(detailsOfNoteList.Sum(x => x.DebitAmount)), 3);
-                            finalObj.BalanceSum = (finalObj.DebitSum - finalObj.CreditSum).Value;
-
-                            detailsOfNotesFinalList.Add(finalObj);
-                        }
-
-                        response.data.DetailsOfNotesFinalList = detailsOfNotesFinalList.ToList();
-                    }
-
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = "Record Not Found";
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
+        //public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        if (financialyearid != null && currencyid != null)
+        //        {
+        //            var financialYearDetails = await _uow.FinancialYearDetailRepository.FindAsync(x => x.FinancialYearId == financialyearid);
+
+        //            //Grouped
+        //            var allNotes = await _uow.GetDbContext().NotesMaster
+        //                    .Include(c => c.ChartOfAccountNew)
+        //                    .Where(x => x.IsDeleted == false)
+        //                    .OrderBy(o => o.Notes)
+        //                    //.GroupBy(g => g.Notes)
+        //                    .ToListAsync();
+
+        //            //var allAccounts = await _uow.GetDbContext().ChartAccountDetail.Include(x => x.CreditAccountlist).Include(x => x.DebitAccountlist).ToListAsync();
+
+
+        //            var allAccounts = await _uow.GetDbContext().ChartOfAccountNew.Include(x => x.VoucherTransactionsList)
+        //                .Select(x => new
+        //                {
+        //                    ChartOfAccountNewId = x.ChartOfAccountNewId,
+        //                    AccountLevelId = x.AccountLevelId,
+        //                    AccountLevels = x.AccountLevels,
+        //                    AccountName = x.AccountName,
+        //                    AccountType = x.AccountType,
+        //                    AccountTypeId = x.AccountTypeId,
+        //                    ChartOfAccountNewCode = x.ChartOfAccountNewCode,
+        //                    CreatedById = x.CreatedById,
+        //                    CreatedDate = x.CreatedDate,
+        //                    ParentID = x.ParentID,
+        //                    //CreditAccountlist = x.CreditAccountlist.Where(o => o.FinancialYearId == financialyearid).ToList(),
+        //                }).ToListAsync();
+
+
+        //            //var allAccounts1 = allAccounts.Where(x => x.CreditAccountlist.Count > 0).ToList();
+
+        //            List<DetailsOfNotesModel> lst = new List<DetailsOfNotesModel>();
+        //            List<VoucherTransactions> transactionDetail = null;
+
+        //            foreach (var items in allNotes)
+        //            {
+
+        //                var accountDetails = items.ChartOfAccountNew;       // Just used for finding the details of this account
+
+        //                double? creditAmount = 0, debitAmount = 0;
+        //                #region 
+        //                if (accountDetails.AccountLevelId == 4)
+        //                {
+
+        //                    #region 
+
+        //                    if (currencyid == 1)               // For AFG
+        //                    {
+        //                        transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                    .Where(x => x.IsDeleted == false &&
+        //                                                    x.ChartOfAccountNewId == items.ChartOfAccountNewId &&
+        //                                                    //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                    x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                    x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                    {
+        //                                                        Credit = (x.Credit > 0 ? x.AFGAmount : 0) ?? 0,
+        //                                                        Debit = (x.Debit > 0 ? x.AFGAmount : 0) ?? 0
+        //                                                    }
+        //                                                    ).ToListAsync();
+        //                    }
+        //                    if (currencyid == 2)               // For EURO
+        //                    {
+        //                        transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                    .Where(x => x.IsDeleted == false &&
+        //                                                    x.ChartOfAccountNewId == items.ChartOfAccountNewId &&
+        //                                                     //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                     x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                    x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                    {
+        //                                                        Credit = (x.Credit > 0 ? x.EURAmount : 0) ?? 0,
+        //                                                        Debit = (x.Debit > 0 ? x.EURAmount : 0) ?? 0
+        //                                                    }
+        //                                                    ).ToListAsync();
+        //                    }
+        //                    if (currencyid == 3)               // For PKR
+        //                    {
+        //                        transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                    .Where(x => x.IsDeleted == false &&
+        //                                                    x.ChartOfAccountNewId == items.ChartOfAccountNewId &&
+        //                                                     //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                     x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                    x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                    {
+        //                                                        Credit = (x.Credit > 0 ? x.PKRAmount : 0) ?? 0,
+        //                                                        Debit = (x.Debit > 0 ? x.PKRAmount : 0) ?? 0
+        //                                                    }
+        //                                                    ).ToListAsync();
+        //                    }
+        //                    if (currencyid == 4)               // For USD
+        //                    {
+        //                        transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                    .Where(x => x.IsDeleted == false &&
+        //                                                    x.ChartOfAccountNewId == items.ChartOfAccountNewId &&
+        //                                                     //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                     x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                    x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                    {
+        //                                                        Credit = (x.Credit > 0 ? x.USDAmount : 0) ?? 0,
+        //                                                        Debit = (x.Debit > 0 ? x.USDAmount : 0) ?? 0,
+        //                                                    }
+        //                                                    ).ToListAsync();
+        //                    }
+
+        //                    #endregion
+        //                    // Gets the transactions for level 4th account
+        //                    //var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == items.AccountCode).ToList();
+        //                    //var accountsLevelFourthWithTransactions = await _uow.GetDbContext().VoucherTransactions
+        //                    //										.Where(x => x.IsDeleted == false &&
+        //                    //										x.AccountNo == items.AccountCode &&
+        //                    //										x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                    //										x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                    //										{
+        //                    //											Credit = (x.Credit > 0 ? x.AFGAmount : 0) ?? 0,
+        //                    //											Debit = (x.Debit > 0 ? x.AFGAmount : 0) ?? 0
+        //                    //										}
+        //                    //										).ToListAsync();
+
+        //                    #region "For calculations of Balance TYPE"
+
+        //                    creditAmount = Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Credit)), 3);
+        //                    debitAmount = Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Debit)), 3);
+
+        //                    #region "Not USE"						
+        //                    //foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+        //                    //{
+        //                    //	foreach (var trans in transactionCalcuate.CreditAccountlist)
+        //                    //	{
+        //                    //		if (trans.CurrencyId == currencyid)
+        //                    //		{
+        //                    //			//creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Credit);
+        //                    //			//debitAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Debit);
+
+        //                    //			creditAmount += trans.Credit;
+        //                    //			debitAmount += trans.Debit;
+        //                    //		}
+        //                    //		else
+        //                    //		{
+        //                    //			//var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+        //                    //			var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == trans.CurrencyId && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+        //                    //			if (trans.CurrencyId == currencyid)
+        //                    //			{
+        //                    //				creditAmount += Math.Round(trans.Credit * exchangeRate?.Rate ?? 0, 2);
+        //                    //				debitAmount += Math.Round(trans.Debit * exchangeRate?.Rate ?? 0, 2);
+
+        //                    //			}
+        //                    //			else
+        //                    //			{
+        //                    //				var exchangeRate2 = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == currencyid && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+        //                    //				creditAmount += Math.Round((trans.Credit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
+        //                    //				debitAmount += Math.Round((trans.Debit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
+        //                    //			}
+        //                    //		}
+        //                    //	}
+        //                    //}
+        //                    //balanceAmount = debitAmount - creditAmount;
+        //                    #endregion
+
+        //                    DetailsOfNotesModel obj = new DetailsOfNotesModel();
+        //                    obj.ChartOfAccountNewCode = accountDetails.ChartOfAccountNewCode;
+        //                    obj.CreditAmount = creditAmount;
+        //                    obj.DebitAmount = debitAmount;
+        //                    obj.AccountName = accountDetails.AccountName;
+        //                    obj.Notes = items.Notes;
+        //                    lst.Add(obj);
+
+        //                    #endregion
+        //                }
+        //                else if (accountDetails.AccountLevelId == 3)
+        //                {
+        //                    // Gets the fourth level accounts
+        //                    var accountsLevelFourth = allAccounts.FindAll(x => x.ParentID == accountDetails.ChartOfAccountNewId && x.AccountLevelId == 4);
+
+        //                    foreach (var elements in accountsLevelFourth)
+        //                    {
+        //                        creditAmount = 0; debitAmount = 0;
+
+        //                        #region 
+
+        //                        if (currencyid == 1)               // For AFG
+        //                        {
+        //                            transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                        .Where(x => x.IsDeleted == false &&
+        //                                                        x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                        //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                        x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                        x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                        {
+        //                                                            Credit = (x.Credit > 0 ? x.AFGAmount : 0) ?? 0,
+        //                                                            Debit = (x.Debit > 0 ? x.AFGAmount : 0) ?? 0
+        //                                                        }
+        //                                                        ).ToListAsync();
+        //                        }
+        //                        if (currencyid == 2)               // For EURO
+        //                        {
+        //                            transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                        .Where(x => x.IsDeleted == false &&
+        //                                                        x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                         //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                         x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                        x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                        {
+        //                                                            Credit = (x.Credit > 0 ? x.EURAmount : 0) ?? 0,
+        //                                                            Debit = (x.Debit > 0 ? x.EURAmount : 0) ?? 0
+        //                                                        }
+        //                                                        ).ToListAsync();
+        //                        }
+        //                        if (currencyid == 3)               // For PKR
+        //                        {
+        //                            transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                        .Where(x => x.IsDeleted == false &&
+        //                                                        x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                         //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                         x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                        x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                        {
+        //                                                            Credit = (x.Credit > 0 ? x.PKRAmount : 0) ?? 0,
+        //                                                            Debit = (x.Debit > 0 ? x.PKRAmount : 0) ?? 0
+        //                                                        }
+        //                                                        ).ToListAsync();
+        //                        }
+        //                        if (currencyid == 4)               // For USD
+        //                        {
+        //                            transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                        .Where(x => x.IsDeleted == false &&
+        //                                                        x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                         //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                         x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                        x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                        {
+        //                                                            Credit = (x.Credit > 0 ? x.USDAmount : 0) ?? 0,
+        //                                                            Debit = (x.Debit > 0 ? x.USDAmount : 0) ?? 0,
+        //                                                        }
+        //                                                        ).ToListAsync();
+        //                        }
+
+        //                        #endregion
+
+        //                        creditAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Credit)), 3);
+        //                        debitAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Debit)), 3);
+
+        //                        #region "Not Use"
+        //                        //// Gets the transactions for level 4th account
+        //                        //var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
+
+        //                        //#region "For calculations of Balance TYPE"
+
+        //                        //foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+        //                        //{
+        //                        //	foreach (var trans in transactionCalcuate.CreditAccountlist)
+        //                        //	{
+        //                        //		if (trans.CurrencyId == currencyid)
+        //                        //		{
+        //                        //			//creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Credit);
+        //                        //			//debitAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Debit);
+
+        //                        //			creditAmount += trans.Credit;
+        //                        //			debitAmount += trans.Debit;
+        //                        //		}
+        //                        //		else
+        //                        //		{
+        //                        //			//var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+
+        //                        //			var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == trans.CurrencyId && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+        //                        //			if (trans.CurrencyId == currencyid)
+        //                        //			{
+
+        //                        //				creditAmount += Math.Round(trans.Credit * exchangeRate?.Rate ?? 0, 2);
+        //                        //				debitAmount += Math.Round(trans.Debit * exchangeRate?.Rate ?? 0, 2);
+
+        //                        //			}
+        //                        //			else
+        //                        //			{
+        //                        //				var exchangeRate2 = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == currencyid && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+        //                        //				creditAmount += Math.Round((trans.Credit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
+        //                        //				debitAmount += Math.Round((trans.Debit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
+        //                        //			}
+
+        //                        //		}
+        //                        //	}
+        //                        //}
+        //                        ////balanceAmount = debitAmount - creditAmount;
+
+        //                        #endregion
+
+        //                        DetailsOfNotesModel obj = new DetailsOfNotesModel();
+        //                        obj.ChartOfAccountNewCode = elements.ChartOfAccountNewCode;
+        //                        obj.CreditAmount = creditAmount;
+        //                        obj.DebitAmount = debitAmount;
+        //                        obj.AccountName = elements.AccountName;
+        //                        obj.Notes = items.Notes;
+        //                        lst.Add(obj);
+
+        //                    }
+
+
+
+        //                }
+        //                else if (accountDetails.AccountLevelId == 2)
+        //                {
+        //                    // Gets the level 3rd accounts
+        //                    var accountsLevelThird = allAccounts.FindAll(x => x.ParentID == accountDetails.ChartOfAccountNewId && x.AccountLevelId == 3);
+
+        //                    foreach (var element in accountsLevelThird)
+        //                    {
+        //                        // Gets the fourth level accounts
+        //                        var accountsLevelFourth = allAccounts.FindAll(x => x.ParentID == element.ChartOfAccountNewId && x.AccountLevelId == 4);
+
+        //                        foreach (var elements in accountsLevelFourth)
+        //                        {
+        //                            creditAmount = 0; debitAmount = 0;
+
+        //                            #region 
+
+        //                            if (currencyid == 1)               // For AFG
+        //                            {
+        //                                transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                            .Where(x => x.IsDeleted == false &&
+        //                                                            x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                            //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                            x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                            x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                            {
+        //                                                                Credit = (x.Credit > 0 ? x.AFGAmount : 0) ?? 0,
+        //                                                                Debit = (x.Debit > 0 ? x.AFGAmount : 0) ?? 0
+        //                                                            }
+        //                                                            ).ToListAsync();
+        //                            }
+        //                            if (currencyid == 2)               // For EURO
+        //                            {
+        //                                transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                            .Where(x => x.IsDeleted == false &&
+        //                                                            x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                             //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                             x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                            x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                            {
+        //                                                                Credit = (x.Credit > 0 ? x.EURAmount : 0) ?? 0,
+        //                                                                Debit = (x.Debit > 0 ? x.EURAmount : 0) ?? 0
+        //                                                            }
+        //                                                            ).ToListAsync();
+        //                            }
+        //                            if (currencyid == 3)               // For PKR
+        //                            {
+        //                                transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                            .Where(x => x.IsDeleted == false &&
+        //                                                            x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                             //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                             x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                            x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                            {
+        //                                                                Credit = (x.Credit > 0 ? x.PKRAmount : 0) ?? 0,
+        //                                                                Debit = (x.Debit > 0 ? x.PKRAmount : 0) ?? 0
+        //                                                            }
+        //                                                            ).ToListAsync();
+        //                            }
+        //                            if (currencyid == 4)               // For USD
+        //                            {
+        //                                transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                            .Where(x => x.IsDeleted == false &&
+        //                                                            x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                             //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                             x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                            x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                            {
+        //                                                                Credit = (x.Credit > 0 ? x.USDAmount : 0) ?? 0,
+        //                                                                Debit = (x.Debit > 0 ? x.USDAmount : 0) ?? 0,
+        //                                                            }
+        //                                                            ).ToListAsync();
+        //                            }
+
+        //                            #endregion
+
+        //                            creditAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Credit)), 3);
+        //                            debitAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Debit)), 3);
+
+        //                            #region "NOT USE"
+        //                            //// Gets the transactions for level 4th account
+        //                            //var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
+
+        //                            //#region "For calculations of Balance TYPE"
+
+        //                            //foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+        //                            //{
+        //                            //	foreach (var trans in transactionCalcuate.CreditAccountlist)
+        //                            //	{
+        //                            //		if (trans.CurrencyId == currencyid)
+        //                            //		{
+        //                            //			//creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Credit);
+        //                            //			//debitAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Debit);
+
+        //                            //			creditAmount += trans.Credit;
+        //                            //			debitAmount += trans.Debit;
+        //                            //		}
+        //                            //		else
+        //                            //		{
+        //                            //			//var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+
+        //                            //			var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == trans.CurrencyId && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+        //                            //			if (trans.CurrencyId == currencyid)
+        //                            //			{
+
+        //                            //				creditAmount += Math.Round(trans.Credit * exchangeRate?.Rate ?? 0, 2);
+        //                            //				debitAmount += Math.Round(trans.Debit * exchangeRate?.Rate ?? 0, 2);
+
+        //                            //			}
+        //                            //			else
+        //                            //			{
+        //                            //				var exchangeRate2 = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == currencyid && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+        //                            //				creditAmount += Math.Round((trans.Credit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
+        //                            //				debitAmount += Math.Round((trans.Debit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
+        //                            //			}
+
+        //                            //		}
+        //                            //	}
+
+        //                            //}
+        //                            ////balanceAmount = debitAmount - creditAmount;	
+        //                            //#endregion
+
+        //                            #endregion
+
+        //                            DetailsOfNotesModel obj = new DetailsOfNotesModel();
+        //                            obj.ChartOfAccountNewCode = elements.ChartOfAccountNewCode;
+        //                            obj.CreditAmount = creditAmount;
+        //                            obj.DebitAmount = debitAmount;
+        //                            obj.AccountName = elements.AccountName;
+        //                            obj.Notes = items.Notes;
+        //                            lst.Add(obj);
+
+        //                        }
+        //                    }
+
+        //                }
+        //                else if (accountDetails.AccountLevelId == 1)
+        //                {
+        //                    // Gets the level 2nd accounts
+        //                    var accountsLevelSecond = allAccounts.FindAll(x => x.ParentID == accountDetails.ChartOfAccountNewId && x.AccountLevelId == 2);
+
+        //                    foreach (var item in accountsLevelSecond)
+        //                    {
+        //                        // Gets the level 3rd accounts
+        //                        var accountsLevelThird = allAccounts.FindAll(x => x.ParentID == item.ChartOfAccountNewId && x.AccountLevelId == 3);
+
+        //                        foreach (var element in accountsLevelThird)
+        //                        {
+        //                            // Gets the fourth level accounts
+        //                            var accountsLevelFourth = allAccounts.FindAll(x => x.ParentID == element.ChartOfAccountNewId && x.AccountLevelId == 4);
+
+        //                            foreach (var elements in accountsLevelFourth)
+        //                            {
+        //                                creditAmount = 0; debitAmount = 0;
+
+        //                                #region 
+
+        //                                if (currencyid == 1)               // For AFG
+        //                                {
+        //                                    transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                                .Where(x => x.IsDeleted == false &&
+        //                                                                x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                                //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                                x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                                x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                                {
+        //                                                                    Credit = (x.Credit > 0 ? x.AFGAmount : 0) ?? 0,
+        //                                                                    Debit = (x.Debit > 0 ? x.AFGAmount : 0) ?? 0
+        //                                                                }
+        //                                                                ).ToListAsync();
+        //                                }
+        //                                if (currencyid == 2)               // For EURO
+        //                                {
+        //                                    transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                                .Where(x => x.IsDeleted == false &&
+        //                                                                x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                                 //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                                 x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                                x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                                {
+        //                                                                    Credit = (x.Credit > 0 ? x.EURAmount : 0) ?? 0,
+        //                                                                    Debit = (x.Debit > 0 ? x.EURAmount : 0) ?? 0
+        //                                                                }
+        //                                                                ).ToListAsync();
+        //                                }
+        //                                if (currencyid == 3)               // For PKR
+        //                                {
+        //                                    transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                                .Where(x => x.IsDeleted == false &&
+        //                                                                x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                                 //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                                 x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                                x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                                {
+        //                                                                    Credit = (x.Credit > 0 ? x.PKRAmount : 0) ?? 0,
+        //                                                                    Debit = (x.Debit > 0 ? x.PKRAmount : 0) ?? 0
+        //                                                                }
+        //                                                                ).ToListAsync();
+        //                                }
+        //                                if (currencyid == 4)               // For USD
+        //                                {
+        //                                    transactionDetail = await _uow.GetDbContext().VoucherTransactions
+        //                                                                .Where(x => x.IsDeleted == false &&
+        //                                                                x.ChartOfAccountNewId == elements.ChartOfAccountNewId &&
+        //                                                                 //model.OfficeList.Contains(x.OfficeId) &&
+        //                                                                 x.TransactionDate.Value.Date >= financialYearDetails.StartDate.Date &&
+        //                                                                x.TransactionDate.Value.Date <= financialYearDetails.EndDate.Date).Select(x => new VoucherTransactions
+        //                                                                {
+        //                                                                    Credit = (x.Credit > 0 ? x.USDAmount : 0) ?? 0,
+        //                                                                    Debit = (x.Debit > 0 ? x.USDAmount : 0) ?? 0,
+        //                                                                }
+        //                                                                ).ToListAsync();
+        //                                }
+
+        //                                #endregion
+
+        //                                creditAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Credit)), 3);
+        //                                debitAmount += Math.Round(Convert.ToDouble(transactionDetail.Sum(x => x.Debit)), 3);
+
+        //                                #region "NOT USE"
+        //                                //// Gets the transactions for level 4th account
+        //                                //// Gets the transactions for level 4th account
+        //                                //var accountsLevelFourthWithTransactions = allAccounts.Where(x => x.AccountCode == elements.AccountCode).ToList();
+
+        //                                //#region "For calculations of Balance TYPE"
+
+        //                                //foreach (var transactionCalcuate in accountsLevelFourthWithTransactions)
+        //                                //{
+        //                                //	foreach (var trans in transactionCalcuate.CreditAccountlist)
+        //                                //	{
+        //                                //		if (trans.CurrencyId == currencyid)
+        //                                //		{
+        //                                //			//creditAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Credit);
+        //                                //			//debitAmount += transactionCalcuate.CreditAccountlist.Where(f => f.FinancialYearId == financialyearid).Sum(x => x.Debit);
+
+        //                                //			creditAmount += trans.Credit;
+        //                                //			debitAmount += trans.Debit;
+        //                                //		}
+        //                                //		else
+        //                                //		{
+        //                                //			//var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.FromCurrency == transactionCalcuate.CreditAccountlist.FirstOrDefault().CurrencyId && x.ToCurrency == currencyid).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+
+        //                                //			var exchangeRate = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == trans.CurrencyId && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+        //                                //			if (trans.CurrencyId == currencyid)
+        //                                //			{
+
+        //                                //				creditAmount += Math.Round(trans.Credit * exchangeRate?.Rate ?? 0, 2);
+        //                                //				debitAmount += Math.Round(trans.Debit * exchangeRate?.Rate ?? 0, 2);
+
+        //                                //			}
+        //                                //			else
+        //                                //			{
+        //                                //				var exchangeRate2 = await _uow.GetDbContext().ExchangeRates.Where(x => x.IsDeleted == false && x.FromCurrency == currencyid && x.Date.Value.Date <= trans.TransactionDate.Value.Date).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
+
+        //                                //				creditAmount += Math.Round((trans.Credit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
+        //                                //				debitAmount += Math.Round((trans.Debit * exchangeRate?.Rate) / exchangeRate2?.Rate ?? 0, 2);
+        //                                //			}
+
+        //                                //		}
+        //                                //	}
+        //                                //}
+        //                                ////balanceAmount = debitAmount - creditAmount;
+        //                                //#endregion
+        //                                #endregion
+
+        //                                DetailsOfNotesModel obj = new DetailsOfNotesModel();
+        //                                obj.ChartOfAccountNewCode = elements.ChartOfAccountNewCode;
+        //                                obj.CreditAmount = creditAmount;
+        //                                obj.DebitAmount = debitAmount;
+        //                                obj.AccountName = elements.AccountName;
+        //                                obj.Notes = items.Notes;
+        //                                lst.Add(obj);
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //                #endregion
+        //            }
+
+
+        //            //allNotes = allNotes.Where(x => x.ChartAccountDetails.AccountLevelId == 4).ToList();
+        //            var Noteslist = lst.GroupBy(g => g.Notes).ToList();
+
+        //            if (Noteslist != null)
+        //            {
+        //                List<DetailsOfNotesFinalModel> detailsOfNotesFinalList = new List<DetailsOfNotesFinalModel>();
+
+        //                foreach (var groupedItem in Noteslist)
+        //                {
+        //                    DetailsOfNotesFinalModel finalObj = new DetailsOfNotesFinalModel();
+        //                    List<DetailsOfNotesModel> detailsOfNoteList = new List<DetailsOfNotesModel>();
+
+        //                    foreach (var item in groupedItem)
+        //                    {
+        //                        DetailsOfNotesModel obj = new DetailsOfNotesModel();
+
+        //                        obj.CreditAmount = item.CreditAmount;
+        //                        obj.DebitAmount = item.DebitAmount;
+        //                        //obj.BalanceAmount = obj.CreditAmount.Value - obj.DebitAmount.Value;
+
+        //                        obj.ChartOfAccountNewCode = item.ChartOfAccountNewCode;
+        //                        obj.AccountName = item.AccountName;
+        //                        obj.Notes = item.Notes;
+        //                        detailsOfNoteList.Add(obj);
+        //                    }
+
+        //                    finalObj.DetailsOfNotesList = detailsOfNoteList.ToList();
+
+        //                    finalObj.CreditSum = Math.Round(Convert.ToDouble(detailsOfNoteList.Sum(x => x.CreditAmount)), 3);
+        //                    finalObj.DebitSum = Math.Round(Convert.ToDouble(detailsOfNoteList.Sum(x => x.DebitAmount)), 3);
+        //                    finalObj.BalanceSum = (finalObj.DebitSum - finalObj.CreditSum).Value;
+
+        //                    detailsOfNotesFinalList.Add(finalObj);
+        //                }
+
+        //                response.data.DetailsOfNotesFinalList = detailsOfNotesFinalList.ToList();
+        //            }
+
+        //            response.StatusCode = StaticResource.successStatusCode;
+        //            response.Message = "Success";
+        //        }
+        //        else
+        //        {
+        //            response.StatusCode = StaticResource.failStatusCode;
+        //            response.Message = "Record Not Found";
+
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = ex.Message;
+        //    }
+        //    return response;
+        //}
 
 
 

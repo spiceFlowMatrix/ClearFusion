@@ -14,6 +14,7 @@ using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
+using HumanitarianAssistance.ViewModels.SPModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,7 +61,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
-                    .Where(x => x.IsDeleted== false && x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
+                    .Where(x => x.IsDeleted == false && x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
                     .Include(x => x.AccountType)
                     .ToListAsync();
 
@@ -906,5 +907,48 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         #endregion
 
         #endregion
+
+
+
+        public async Task<APIResponse> GetDetailOfNotes(DetailOfNotesFilterModel model)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                List<SPDetailOfNotes> spNotesDetail = await _uow.GetDbContext().LoadStoredProc("get_detailofnote_pdf")
+                                                              .WithSqlParam("to_currency_id", model.CurrencyId)
+                                                              .ExecuteStoredProc<SPDetailOfNotes>();
+
+                List<DetailsOfNotesFinalModel> notesDetail = spNotesDetail.GroupBy(x => new { x.NoteId, x.NoteName })
+                                               .Select(x => new DetailsOfNotesFinalModel
+                                               {
+                                                   NoteName = x.First().NoteName,
+                                                   TotalDebits = Math.Round(x.Sum(y => y.Debit), 3),
+                                                   TotalCredits = Math.Round(x.Sum(y => y.Credit), 3),
+                                                   Balance = Math.Round(x.Sum(y => y.Debit) - x.Sum(y => y.Credit), 3),
+                                                   AccountSummary = x.Select(s => new DetailsOfNotesModel
+                                                   {
+                                                       AccountCode = s.AccountCode,
+                                                       AccountName = s.AccountName,
+                                                       Debit = Math.Round(s.Debit, 3),
+                                                       Credit = Math.Round(s.Credit,3)
+                                                   }).ToList()
+                                               }).ToList();
+
+
+
+                response.data.DetailsOfNotesFinalList = notesDetail;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
     }
 }
