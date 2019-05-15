@@ -226,8 +226,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<NotesMasterModel> NotesDetailsList { get; set; }
         public BalanceSheet BalanceSheet { get; set; }
         public IList<CurrentFinancialYear> CurrentFinancialYearList { get; set; }
-       
-        public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
+
         public List<DetailsOfNotesFinalModel> DetailsOfNotesFinalList { get; set; }
 
         public IList<ScheduleCandidateModel> ScheduledProspectiveEmployee { get; set; }
