@@ -39,6 +39,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public float? Target { get; set; }
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
+        public double? Progress { get; set; }
+        public double? Slippage { get; set; }
 
     }
 }
