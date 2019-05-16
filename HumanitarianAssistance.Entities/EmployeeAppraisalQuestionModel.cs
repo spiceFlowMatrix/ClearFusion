@@ -6,7 +6,8 @@ namespace HumanitarianAssistance.ViewModels
 {
     public class EmployeeAppraisalQuestionModel
     {
-		public string QuestionEnglish { get; set; }
+        public int? EmployeeAppraisalQuestionsId { get; set; }
+        public string QuestionEnglish { get; set; }
 		public string QuestionDari { get; set; }
 		public int AppraisalGeneralQuestionsId { get; set; }
 		public int SequenceNo { get; set; }

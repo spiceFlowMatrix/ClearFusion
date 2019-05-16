@@ -1019,14 +1019,14 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    public async Task<object> GetAppraisalQuestions([FromQuery] int OfficeId)
+    public async Task<object> GetAppraisalQuestions()
     {
       APIResponse response = new APIResponse();
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-        response = await _icode.GetAppraisalQuestions(OfficeId);
+        response = await _icode.GetAppraisalQuestions();
       }
       return response;
     }

@@ -921,12 +921,12 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAppraisalQuestions(int OfficeId)
+        public async Task<APIResponse> GetAppraisalQuestions()
         {
             APIResponse response = new APIResponse();
             try
             {
-                response.data.AppraisalList = await _uow.GetDbContext().AppraisalGeneralQuestions.Where(x => x.IsDeleted == false && x.OfficeId == OfficeId).ToListAsync();
+                response.data.AppraisalList = await _uow.GetDbContext().AppraisalGeneralQuestions.Where(x => x.IsDeleted == false).ToListAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -982,7 +982,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var emp = await _uow.EmployeeAppraisalDetailsRepository.FindAsync(x => x.EmployeeId == model.EmployeeId && x.OfficeId == model.OfficeId && x.CurrentAppraisalDate.Date == model.CurrentAppraisalDate.Date);
+                var emp = await _uow.EmployeeAppraisalDetailsRepository.FindAsync(x => x.EmployeeAppraisalDetailsId== model.EmployeeAppraisalDetailsId);
                 emp.Position = model.Position;
                 emp.Department = model.Department;
                 emp.DutyStation = model.DutyStation;
@@ -990,7 +990,7 @@ namespace HumanitarianAssistance.Service.Classes
                 emp.TotalScore = model.TotalScore;
                 foreach (var item in model.EmployeeAppraisalQuestionList)
                 {
-                    var question = await _uow.EmployeeAppraisalQuestionsRepository.FindAsync(x => x.EmployeeId == model.EmployeeId && x.CurrentAppraisalDate.Date == model.CurrentAppraisalDate.Date && x.AppraisalGeneralQuestionsId == item.AppraisalGeneralQuestionsId);
+                    var question = await _uow.EmployeeAppraisalQuestionsRepository.FindAsync(x => x.EmployeeAppraisalQuestionsId== item.EmployeeAppraisalQuestionsId);
                     question.Score = item.Score;
                     question.Remarks = item.Remarks;
                     await _uow.EmployeeAppraisalQuestionsRepository.UpdateAsyn(question);
@@ -1042,6 +1042,7 @@ namespace HumanitarianAssistance.Service.Classes
                         questions.AppraisalGeneralQuestionsId = element.AppraisalGeneralQuestionsId;
                         questions.Score = element.Score;
                         questions.Remarks = element.Remarks;
+                        questions.EmployeeAppraisalQuestionsId = element.EmployeeAppraisalQuestionsId;
                         model.EmployeeAppraisalQuestionList.Add(questions);
                     }
                     lst.Add(model);
