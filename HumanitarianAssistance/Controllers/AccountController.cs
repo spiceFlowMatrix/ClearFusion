@@ -1050,13 +1050,13 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
-    {
-      APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData(financialyearid, currencyid);
-      return response;
-    }
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
+    //{
+    //  APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData(financialyearid, currencyid);
+    //  return response;
+    //}
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

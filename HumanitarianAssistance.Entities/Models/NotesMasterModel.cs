@@ -22,19 +22,18 @@ namespace HumanitarianAssistance.ViewModels.Models
 
     public class DetailsOfNotesModel
     {
-        public string ChartOfAccountNewCode { get; set; }
+        public string AccountCode { get; set; }
         public string AccountName { get; set; }
-        public int Notes { get; set; }
-        public double? BalanceAmount { get; set; }
-        public double? CreditAmount { get; set; }
-        public double? DebitAmount { get; set; }		
-	}
+        public double Debit { get; set; }
+        public double Credit { get; set; }
+    }
 
     public class DetailsOfNotesFinalModel
     {
-        public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
-        public double? CreditSum { get; set; }
-        public double? DebitSum { get; set; }
-        public double BalanceSum { get; set; }
+        public string NoteName { get; set; }
+        public double TotalDebits { get; set; }
+        public double TotalCredits { get; set; }
+        public double Balance { get; set; }
+        public List<DetailsOfNotesModel> AccountSummary { get; set; }
     }
 }
