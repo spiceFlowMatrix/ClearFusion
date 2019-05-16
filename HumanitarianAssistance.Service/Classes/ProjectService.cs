@@ -5156,7 +5156,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var TransList = await _uow.GetDbContext().VoucherTransactions
                                           .Include(c => c.CurrencyDetails)
                                           .Where(x => x.IsDeleted == false && x.ProjectId == projectId && x.ProjectId != null)
-                                          .OrderBy(x => x.CreatedDate)
+                                          .OrderByDescending(x => x.Debit)
                                           .ToListAsync();
 
                 var budgetDetaillist = TransList.Select(b => new TransactionBudgetModel
@@ -5192,7 +5192,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var TransList = await _uow.GetDbContext().VoucherTransactions
                                           .Include(c => c.CurrencyDetails)
                                           .Where(x => x.IsDeleted == false && x.VoucherDetails.CurrencyId == currencyId && x.BudgetLineId == budgetLineId)
-                                          .OrderBy(x => x.CreatedDate)
+                                          .OrderByDescending(x => x.Debit)
                                           .ToListAsync();
 
                 var budgetDetaillist = TransList.Select(b => new TransactionBudgetModel
@@ -5205,6 +5205,7 @@ namespace HumanitarianAssistance.Service.Classes
                     TransactionDate = b.TransactionDate,
                     UserName = userName
                 }).ToList();
+
                 response.data.TransactionBudgetModelList = budgetDetaillist;
                 if (response.data.TransactionBudgetModelList.Count == 0)
                 {
