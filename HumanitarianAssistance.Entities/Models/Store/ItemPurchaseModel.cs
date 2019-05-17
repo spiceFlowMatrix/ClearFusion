@@ -39,5 +39,6 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public int? OfficeId { get; set; }
         public int? JournalCode { get; set; }
         public string VerifiedPurchaseVoucherReferenceNo { get; set; }
+        public int? TimezoneOffset { get; set; }
     }
 }
