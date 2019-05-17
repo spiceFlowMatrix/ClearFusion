@@ -1478,5 +1478,30 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> AddEditPensionDebitAccount([FromBody]long accountId)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      string Id = string.Empty;
+
+      if (user != null)
+      {
+        Id = user.Id;
+      }
+
+      APIResponse response = await _icode.AddEditPensionDebitAccount(accountId, Id);
+      return response;
+    }
+
+    [HttpGet]
+    public async Task<APIResponse> GetPensionDebitAccount()
+    {
+      APIResponse response = new APIResponse();
+      response = await _icode.GetPensionDebitAccount();
+
+      return response;
+    }
+
   }
 }

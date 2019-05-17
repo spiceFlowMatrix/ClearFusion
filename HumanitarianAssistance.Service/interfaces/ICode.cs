@@ -81,6 +81,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllDistrictDetailByProvinceId(List<int?> ProvinceId);
         Task<APIResponse> UpdatePayrollAccountHeadAllEmployees(List<PayrollHeadModel> model, string UserId);
         Task<APIResponse> GetApplicationPages();
+        Task<APIResponse> AddEditPensionDebitAccount(long accountId, string userId);
+        Task<APIResponse> GetPensionDebitAccount();
 
         #region Language
         Task<APIResponse> EditLanguage(LanguageModel model, string UserId);
