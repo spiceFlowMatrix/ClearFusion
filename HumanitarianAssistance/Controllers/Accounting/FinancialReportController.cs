@@ -87,5 +87,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetDetailOfNotes([FromBody] DetailOfNotesFilterModel model)
+    {
+      APIResponse response = new APIResponse();
+      response = await _financialReportService.GetDetailOfNotes(model);
+      return response;
+    }
   }
 }

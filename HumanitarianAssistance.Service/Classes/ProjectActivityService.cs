@@ -817,6 +817,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var spActivityList = await _uow.GetDbContext().LoadStoredProc("get_project_projectactivitylist_filter")
+                                      .WithSqlParam("projectid", model.ProjectId)
                                       .WithSqlParam("planned_start_date", model.PlannedStartDate == null ? string.Empty : model.PlannedStartDate.Value.ToString())
                                       .WithSqlParam("planned_end_date", model.PlannedEndDate == null ? string.Empty : model.PlannedEndDate.Value.ToString())
                                       .WithSqlParam("actual_start_date", model.ActualStartDate == null ? string.Empty : model.ActualStartDate.Value.ToString())
@@ -857,7 +858,9 @@ namespace HumanitarianAssistance.Service.Classes
                     StatusName = x.StatusName,
                     Recurring = x.Recurring,
                     RecurringCount = x.RecurringCount,
-                    RecurrinTypeId = x.RecurrinTypeId
+                    RecurrinTypeId = x.RecurrinTypeId,
+                    Progress = Math.Round(x.Progress, 2),
+                    Slippage= x.Sleepage
                 }).ToList();
 
                 response.data.ProjectActivityList = activityList;

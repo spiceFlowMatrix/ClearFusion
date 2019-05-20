@@ -97,6 +97,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public bool isPayrollHeadSaved { get; set; }
         public string ItemGroupCode { get; set; }
         public string JobCode { get; set; }
+        public long? PensionDebitAccountId { get; set; }
         public VoucherTransactionModel VoucherTransactionModel { get; set; }
         public List<VoucherTransactionModel> VoucherTransactionModelList { get; set; }
         public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
@@ -226,8 +227,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<NotesMasterModel> NotesDetailsList { get; set; }
         public BalanceSheet BalanceSheet { get; set; }
         public IList<CurrentFinancialYear> CurrentFinancialYearList { get; set; }
-       
-        public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
+
         public List<DetailsOfNotesFinalModel> DetailsOfNotesFinalList { get; set; }
 
         public IList<ScheduleCandidateModel> ScheduledProspectiveEmployee { get; set; }

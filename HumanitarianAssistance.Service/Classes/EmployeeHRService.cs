@@ -378,8 +378,8 @@ namespace HumanitarianAssistance.Service.Classes
 
                     if (payrollDetail.Count > 0)
                     {
-                        //if (payrollAttendance.GrossSalary == 0 || payrollAttendance.GrossSalary == null)
-                        //{
+                        if (payrollAttendance.GrossSalary == 0 || payrollAttendance.GrossSalary == null)
+                        {
                             int iCurrencyId = payrollDetail.FirstOrDefault(x => x.HeadTypeId == 3).CurrencyId;
 
                             EmployeeMonthlyPayrollModel obj = new EmployeeMonthlyPayrollModel();
@@ -475,37 +475,37 @@ namespace HumanitarianAssistance.Service.Classes
                                 obj.AdvanceAmount = 0;
                                 obj.IsAdvanceApproved = false;
                             }
-                        //}
-                        //else
-                        //{
-                        //    EmployeeMonthlyPayrollModel obj = new EmployeeMonthlyPayrollModel();
-                        //    obj.AbsentDays = payrollAttendance.AbsentHours == null ? 0 : payrollAttendance.AbsentHours.Value;
-                        //    obj.OverTimeHours = payrollAttendance.OvertimeHours;
-                        //    obj.AdvanceAmount = payrollAttendance.AdvanceAmount;
-                        //    obj.AdvanceRecoveryAmount = payrollAttendance.AdvanceRecoveryAmount;
-                        //    obj.CurrencyId = payrollDetail[0].CurrencyId;
-                        //    obj.EmployeeId = payrollAttendance.EmployeeId.Value;
-                        //    obj.EmployeeCode = payrollAttendance.EmployeeDetails.EmployeeCode;
-                        //    obj.EmployeeName = payrollAttendance.EmployeeDetails.EmployeeName;
-                        //    obj.GrossSalary = payrollAttendance.GrossSalary == null ? 0 : payrollAttendance.GrossSalary;
-                        //    obj.IsAdvanceApproved = payrollAttendance.IsAdvanceApproved;
-                        //    obj.IsAdvanceRecovery = payrollAttendance.IsAdvanceRecovery;
-                        //    obj.LeaveDays = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
-                        //    obj.LeaveHours = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
-                        //    obj.NetSalary = payrollAttendance.NetSalary == null ? 0 : payrollAttendance.NetSalary;
-                        //    obj.PaymentType = 2;
-                        //    obj.PensionAmount = payrollAttendance.PensionAmount == null ? 0 : payrollAttendance.PensionAmount;
-                        //    obj.PresentDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
-                        //    obj.SalaryTax = payrollAttendance.SalaryTax == null ? 0 : payrollAttendance.SalaryTax.Value;
-                        //    obj.TotalAllowance = payrollAttendance.TotalAllowance == null ? 0 : payrollAttendance.TotalAllowance.Value;
-                        //    obj.TotalDeduction = payrollAttendance.TotalDeduction == null ? 0 : payrollAttendance.TotalDeduction.Value;
-                        //    obj.TotalGeneralAmount = payrollAttendance.TotalGeneralAmount == null ? 0 : payrollAttendance.TotalGeneralAmount.Value;
-                        //    obj.WorkingDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
-                        //    obj.TotalWorkHours = payrollAttendance.TotalDuration == null ? 0 : payrollAttendance.TotalDuration.Value;
+                        }
+                        else
+                        {
+                            EmployeeMonthlyPayrollModel obj = new EmployeeMonthlyPayrollModel();
+                            obj.AbsentDays = payrollAttendance.AbsentHours == null ? 0 : payrollAttendance.AbsentHours.Value;
+                            obj.OverTimeHours = payrollAttendance.OvertimeHours;
+                            obj.AdvanceAmount = payrollAttendance.AdvanceAmount;
+                            obj.AdvanceRecoveryAmount = payrollAttendance.AdvanceRecoveryAmount;
+                            obj.CurrencyId = payrollDetail[0].CurrencyId;
+                            obj.EmployeeId = payrollAttendance.EmployeeId.Value;
+                            obj.EmployeeCode = payrollAttendance.EmployeeDetails.EmployeeCode;
+                            obj.EmployeeName = payrollAttendance.EmployeeDetails.EmployeeName;
+                            obj.GrossSalary = payrollAttendance.GrossSalary == null ? 0 : payrollAttendance.GrossSalary;
+                            obj.IsAdvanceApproved = payrollAttendance.IsAdvanceApproved;
+                            obj.IsAdvanceRecovery = payrollAttendance.IsAdvanceRecovery;
+                            obj.LeaveDays = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
+                            obj.LeaveHours = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
+                            obj.NetSalary = payrollAttendance.NetSalary == null ? 0 : payrollAttendance.NetSalary;
+                            obj.PaymentType = 2;
+                            obj.PensionAmount = payrollAttendance.PensionAmount == null ? 0 : payrollAttendance.PensionAmount;
+                            obj.PresentDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
+                            obj.SalaryTax = payrollAttendance.SalaryTax == null ? 0 : payrollAttendance.SalaryTax.Value;
+                            obj.TotalAllowance = payrollAttendance.TotalAllowance == null ? 0 : payrollAttendance.TotalAllowance.Value;
+                            obj.TotalDeduction = payrollAttendance.TotalDeduction == null ? 0 : payrollAttendance.TotalDeduction.Value;
+                            obj.TotalGeneralAmount = payrollAttendance.TotalGeneralAmount == null ? 0 : payrollAttendance.TotalGeneralAmount.Value;
+                            obj.WorkingDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
+                            obj.TotalWorkHours = payrollAttendance.TotalDuration == null ? 0 : payrollAttendance.TotalDuration.Value;
 
-                        //    obj.employeepayrolllist.AddRange(payrollDetail.Where(x => x.EmployeeId == obj.EmployeeId));
-                        //    payrollFinal.Add(obj);
-                        //}
+                            obj.employeepayrolllist.AddRange(payrollDetail.Where(x => x.EmployeeId == obj.EmployeeId));
+                            payrollFinal.Add(obj);
+                        }
                     }
                     else
                     {
@@ -943,7 +943,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var salaryTaxReportList = from eptypes in _uow.GetDbContext().EmployeePaymentTypes.Include(x => x.EmployeeDetail)
                                           join ed in _uow.GetDbContext().EmployeeDetail on eptypes.EmployeeID equals ed.EmployeeID
                                           join epd in _uow.GetDbContext().EmployeeProfessionalDetail on ed.EmployeeID equals epd.EmployeeId
-                                          where eptypes.IsDeleted == false && eptypes.OfficeId == OfficeId && eptypes.IsApproved == true &&
+                                          where eptypes.IsDeleted == false && ed.IsDeleted== false && eptypes.OfficeId == OfficeId && eptypes.IsApproved == true &&
                                           epd.EmployeeTypeId != (int)EmployeeTypeStatus.Prospective
                                           group eptypes by eptypes.EmployeeID
                                                                   into eGroup
@@ -1022,6 +1022,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 //Get Employees total pension from approved payroll
                 List<PensionPaymentHistory> pensionPaymentList = await _uow.GetDbContext().PensionPaymentHistory.Include(x => x.EmployeeDetail).ThenInclude(x => x.EmployeeProfessionalDetail)
+                                                                                          .OrderByDescending(x=> x.PaymentDate)
                                                                                           .Where(x => x.EmployeeDetail.EmployeeProfessionalDetail.OfficeId == OfficeId && x.EmployeeId == EmployeeId && x.IsDeleted == false)
                                                                                           .ToListAsync();
 

@@ -1151,7 +1151,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                 CreatedDate = DateTime.UtcNow,
                                 IsDeleted = false,
                                 FinancialYearId = financialYearDetails.FinancialYearId,
-                                VoucherDate = DateTime.UtcNow
+                                VoucherDate = DateTime.UtcNow,
+                                TimezoneOffset= model.TimezoneOffset
                             };
 
                             var responseVoucher = await AddVoucherNewDetail(voucherModel);
@@ -1391,8 +1392,14 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
                 var officeCode = _uow.OfficeDetailRepository.FindAsync(o => o.OfficeId == EmployeePensionPayment.OfficeId).Result.OfficeCode; //use OfficeCode
-                var financialYear = _uow.GetDbContext().FinancialYearDetail.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
-                var EmployeeDetails = _uow.GetDbContext().EmployeeDetail.FirstOrDefault(x => x.EmployeeID == EmployeePensionPayment.EmployeeId && x.IsDeleted == false);
+                var financialYear = await _uow.GetDbContext().FinancialYearDetail.FirstOrDefaultAsync(x => x.IsDefault == true && x.IsDeleted == false);
+                var EmployeeDetails = await _uow.GetDbContext().EmployeeDetail.FirstOrDefaultAsync(x => x.EmployeeID == EmployeePensionPayment.EmployeeId && x.IsDeleted == false);
+                PensionDebitAccountMaster pensionDebitAccountMaster = await _uow.GetDbContext().PensionDebitAccountMaster.FirstOrDefaultAsync(x => x.IsDeleted == false);
+
+                if (pensionDebitAccountMaster == null)
+                {
+                    throw new Exception("Pension Debit Account Not Set");
+                }
 
 
                 #region "Generate Voucher"
@@ -1408,7 +1415,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     CreatedDate = DateTime.UtcNow,
                     IsDeleted = false,
                     FinancialYearId = financialYear.FinancialYearId,
-                    VoucherDate = DateTime.UtcNow
+                    VoucherDate = DateTime.UtcNow,
+                    TimezoneOffset= EmployeePensionPayment.TimezoneOffset
                 };
 
                 var responseVoucher = await AddVoucherNewDetail(voucherModel);
@@ -1436,7 +1444,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     {
                         TransactionId = 0,
                         VoucherNo = responseVoucher.data.VoucherDetailEntity.VoucherNo,
-                        AccountNo = EmployeePensionPayment.DebitAccount,
+                        AccountNo = pensionDebitAccountMaster.ChartOfAccountNewId,
                         Debit = Convert.ToDouble(EmployeePensionPayment.PensionAmount),
                         Credit = 0,
                         Description = StaticResource.PurchaseVoucherCreated,

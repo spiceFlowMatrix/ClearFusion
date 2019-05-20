@@ -29,5 +29,7 @@ namespace HumanitarianAssistance.ViewModels.SPModels
         public bool Recurring { get; set; }
         public int RecurringCount { get; set; }
         public int RecurrinTypeId { get; set; }
+        public double Progress { get; set; }
+        public double Sleepage { get; set; }
     }
 }

@@ -48,7 +48,7 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> GetBlanceSheetDetails(FinancialReportModel model);
 		//Task<APIResponse> GetDetailsOfNotes(int? GetDetailsOfNotes, int? financialyearid, int? currencyid);
 
-		Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid);
+		//Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid);
 
         Task<APIResponse> DeleteVoucherTransactionDetail(int transactionId, string modifiedById);
         Task<APIResponse> GetAllUserNotifications(string userid);

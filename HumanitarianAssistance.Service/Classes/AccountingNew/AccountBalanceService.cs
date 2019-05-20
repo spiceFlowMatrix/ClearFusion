@@ -14,6 +14,7 @@ using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
+using HumanitarianAssistance.ViewModels.SPModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,7 +61,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             try
             {
                 var inputLevelList = await _uow.GetDbContext().ChartOfAccountNew
-                    .Where(x => x.IsDeleted== false && x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
+                    .Where(x => x.IsDeleted == false && x.AccountHeadTypeId == headTypeId && x.AccountLevelId == (int)AccountLevels.InputLevel)
                     .Include(x => x.AccountType)
                     .ToListAsync();
 
@@ -94,7 +95,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -143,7 +144,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -173,7 +174,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -203,7 +204,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -233,7 +234,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -263,7 +264,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -510,7 +511,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -540,7 +541,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -791,7 +792,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
             return response;
         }
@@ -836,7 +837,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
             return response;
         }
@@ -858,53 +859,49 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return detail;
         }
         #endregion
+     
+        #endregion
 
-        #region "GetCurrencyGainLossReport"
-        public async Task<APIResponse> GetCurrencyGainLossReport(ExchangeGainLossFilterModel exchangeGainLossFilterModel)
+        public async Task<APIResponse> GetDetailOfNotes(DetailOfNotesFilterModel model)
         {
             APIResponse response = new APIResponse();
             try
             {
-                // Transaction List
-                var transactionList = await GetAllTransaction(
-                                                exchangeGainLossFilterModel.AccountIdList,
-                                                exchangeGainLossFilterModel.FromDate,
-                                                exchangeGainLossFilterModel.ToDate,
-                                                exchangeGainLossFilterModel.OfficeIdList,
-                                                exchangeGainLossFilterModel.JournalIdList,
-                                                exchangeGainLossFilterModel.ProjectIdList
-                                            );
+                List<SPDetailOfNotes> spNotesDetail = await _uow.GetDbContext().LoadStoredProc("get_detailofnote_pdf")
+                                                              .WithSqlParam("to_currency_id", model.CurrencyId)
+                                                              .WithSqlParam("till_date", model.TillDate.ToString())
+                                                              .ExecuteStoredProc<SPDetailOfNotes>();
 
-                var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == exchangeGainLossFilterModel.ToCurrencyId
-                                                                              && transactionList.data.VoucherTransactionList.Select(y => y.CurrencyId).Contains(x.FromCurrency)
-                                                                              && transactionList.data.VoucherTransactionList.Select(y => y.TransactionDate)
-                                                                       .Any(z => z >= x.Date));
-
-                //var comparisonDateRates = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == exchangeGainLossFilterModel.ToCurrencyId
-                //                                                              && transactionList.data.VoucherTransactionList.Select(y => y.CurrencyId).Contains(x.FromCurrency)
-                //                                                              && transactionList.data.VoucherTransactionList.Select(y => y.TransactionDate).Where(z => z.Equals(exchangeGainLossFilterModel.ComparisionDate.ToLongDateString()));
-
-
-                //// Filter transaction Dates
-                //var dateListExchagneRates = FetchAllDatesFromTransactions(transactionList.data.VoucherTransactionList);
-                //dateListExchagneRates.Add(exchangeGainLossFilterModel.ComparisionDate); // Add Comparison Date
-                //// Exchagne Rate List
-                //var exchangeRateList = await GetAllExchageRatesByDates(dateListExchagneRates);
+                List<DetailsOfNotesFinalModel> notesDetail = spNotesDetail.GroupBy(x => new { x.NoteId, x.NoteName })
+                                               .Select(x => new DetailsOfNotesFinalModel
+                                               {
+                                                   NoteName = x.First().NoteName,
+                                                   TotalDebits = Math.Round(x.Sum(y => y.Debit), 3),
+                                                   TotalCredits = Math.Round(x.Sum(y => y.Credit), 3),
+                                                   Balance = Math.Round(x.Sum(y => y.Debit) - x.Sum(y => y.Credit), 3),
+                                                   AccountSummary = x.Select(s => new DetailsOfNotesModel
+                                                   {
+                                                       AccountCode = s.AccountCode,
+                                                       AccountName = s.AccountName,
+                                                       Debit = Math.Round(s.Debit, 3),
+                                                       Credit = Math.Round(s.Credit,3)
+                                                   }).ToList()
+                                               }).ToList();
 
 
-                //response.data.VoucherTransactionList = transactionList;
+
+                response.data.DetailsOfNotesFinalList = notesDetail;
                 response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
+                response.Message = StaticResource.SuccessText;
             }
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
+
             return response;
         }
-        #endregion
 
-        #endregion
     }
 }
