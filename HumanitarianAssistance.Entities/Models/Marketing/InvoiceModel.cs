@@ -6,6 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Marketing
 {
     public class InvoiceModel
     {
+        public long? InvoiceId { get; set; }
         public long JobId { get; set; }
         public long? TotalRunningMinutes { get; set; }
         public long? TotalMinutes { get; set; }
