@@ -21,6 +21,7 @@ using NpgsqlTypes;
 using Npgsql;
 using HumanitarianAssistance.ViewModels.SPModels;
 using System.Diagnostics;
+using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -88,5 +89,53 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetVoucherSummaryList(VoucherSummaryFilterModel voucherSummaryFilter)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                //var voucherDetails = _uow.GetDbContext()
+                //                                              .VoucherDetail
+                //                                              .Include(x => x.VoucherTransactionDetails)
+                //                                              .Where(x => x.IsDeleted == false &&
+                //                                              x.VoucherTransactionDetails.Select(z => z.ChartOfAccountNewId).Intersect(voucherSummaryFilter.Accounts).Any() &&
+                //                                              x.VoucherTransactionDetails.Select(z => z.BudgetLineId).Intersect(voucherSummaryFilter.BudgetLines).Any() &&
+                //                                              x.CurrencyId == voucherSummaryFilter.Currency && voucherSummaryFilter.Journals.Contains(x.JournalCode) &&
+                //                                              voucherSummaryFilter.Offices.Contains(x.OfficeId) &&
+                //                                              x.VoucherTransactionDetails.Select(z => z.JobId).Intersect(voucherSummaryFilter.ProjectJobs).Any() &&
+                //                                              x.VoucherTransactionDetails.Select(z => z.ProjectId).Intersect(voucherSummaryFilter.Projects).Any());
+
+                //if (voucherSummaryFilter.TransactionType == (int)RECORDTYPE.Credit)
+                //{
+                //    voucherDetails = voucherDetails.Where(x => x.VoucherTransactionDetails.Where(z => z.Credit != 0).Any());
+                //}
+                //else
+                //{
+                //    voucherDetails = voucherDetails.Where(x => x.VoucherTransactionDetails.Where(z => z.Debit != 0).Any());
+                //}
+
+                // var result = await voucherDetails.ToListAsync();
+
+                var spVoucherSummaryList = await _uow.GetDbContext().LoadStoredProc("get_vouchersummaryreport")
+                                      .WithSqlParam("accounts", voucherSummaryFilter.Accounts)
+                                      .WithSqlParam("budgetlines", voucherSummaryFilter.BudgetLines)
+                                      .WithSqlParam("currencyid", voucherSummaryFilter.Currency)
+                                      .WithSqlParam("journals", voucherSummaryFilter.Journals)
+                                      .WithSqlParam("offices", voucherSummaryFilter.Offices)
+                                      .WithSqlParam("projectjobs", voucherSummaryFilter.ProjectJobs)
+                                      .WithSqlParam("projects", voucherSummaryFilter.Projects)
+                                      .WithSqlParam("recordtype", voucherSummaryFilter.RecordType)
+                                      .ExecuteStoredProc<SPVoucherSummaryReportModel>();
+            }
+            catch (Exception exception)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + exception.Message;
+            }
+
+            return response;
+
+        }
     }
 }

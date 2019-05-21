@@ -619,12 +619,38 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> AddSalaryHead(SalaryHeadModel model)
         {
             APIResponse response = new APIResponse();
+
             try
             {
+
                 SalaryHeadDetails obj = _mapper.Map<SalaryHeadDetails>(model);
                 obj.IsDeleted = false;
                 await _uow.SalaryHeadDetailsRepository.AddAsyn(obj);
                 await _uow.SaveAsync();
+
+                List<int> employeeIds = await _uow.GetDbContext().EmployeeDetail.Where(x => x.IsDeleted == false && x.EmployeeTypeId == (int)EmployeeTypeStatus.Active).Select(x => x.EmployeeID).ToListAsync();
+
+                if (employeeIds.Any())
+                {
+                    List<EmployeePayroll> employeePayrollList = new List<EmployeePayroll>();
+
+                    foreach (int employeeid in employeeIds)
+                    {
+                        EmployeePayroll employeePayroll = new EmployeePayroll();
+                        employeePayroll.IsDeleted = false;
+                        employeePayroll.AccountNo = model.AccountNo;
+                        employeePayroll.SalaryHeadId = obj.SalaryHeadId;
+                        employeePayroll.HeadTypeId = model.HeadTypeId;
+                        employeePayroll.AccountNo = model.AccountNo;
+                        employeePayroll.TransactionTypeId = model.TransactionTypeId;
+                        employeePayroll.MonthlyAmount = (double)model.MonthlyAmount;
+                        employeePayrollList.Add(employeePayroll);
+                    }
+
+                    await _uow.GetDbContext().EmployeePayroll.AddRangeAsync(employeePayrollList);
+                    await _uow.SaveAsync();
+                }
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -671,17 +697,6 @@ namespace HumanitarianAssistance.Service.Classes
                         _uow.GetDbContext().EmployeePayroll.UpdateRange(employeePayrollList);
                         _uow.Save();
                     }
-
-
-                    //foreach (EmployeePayroll employeePayroll in employeePayrollList)
-                    //{
-                    //    employeePayroll.AccountNo = model.AccountNo;
-                    //    employeePayroll.TransactionTypeId = model.TransactionTypeId;
-                    //    employeePayroll.HeadTypeId = model.HeadTypeId;
-
-                    //    await _uow.EmployeePayrollRepository.UpdateAsyn(employeePayroll);
-
-                    //}
                 }
 
                 response.StatusCode = StaticResource.successStatusCode;
