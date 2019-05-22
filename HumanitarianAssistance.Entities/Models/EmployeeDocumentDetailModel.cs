@@ -15,5 +15,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string FilePath { get; set; }
         public string DocumentGUID { get; set; }
         public string Extension { get; set; }
+        public int? DocumentType { get; set; }
+
     }
 }

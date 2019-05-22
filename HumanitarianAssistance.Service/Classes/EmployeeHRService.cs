@@ -943,7 +943,7 @@ namespace HumanitarianAssistance.Service.Classes
                 var salaryTaxReportList = from eptypes in _uow.GetDbContext().EmployeePaymentTypes.Include(x => x.EmployeeDetail)
                                           join ed in _uow.GetDbContext().EmployeeDetail on eptypes.EmployeeID equals ed.EmployeeID
                                           join epd in _uow.GetDbContext().EmployeeProfessionalDetail on ed.EmployeeID equals epd.EmployeeId
-                                          where eptypes.IsDeleted == false && eptypes.OfficeId == OfficeId && eptypes.IsApproved == true &&
+                                          where eptypes.IsDeleted == false && ed.IsDeleted== false && eptypes.OfficeId == OfficeId && eptypes.IsApproved == true &&
                                           epd.EmployeeTypeId != (int)EmployeeTypeStatus.Prospective
                                           group eptypes by eptypes.EmployeeID
                                                                   into eGroup
@@ -1022,6 +1022,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 //Get Employees total pension from approved payroll
                 List<PensionPaymentHistory> pensionPaymentList = await _uow.GetDbContext().PensionPaymentHistory.Include(x => x.EmployeeDetail).ThenInclude(x => x.EmployeeProfessionalDetail)
+                                                                                          .OrderByDescending(x=> x.PaymentDate)
                                                                                           .Where(x => x.EmployeeDetail.EmployeeProfessionalDetail.OfficeId == OfficeId && x.EmployeeId == EmployeeId && x.IsDeleted == false)
                                                                                           .ToListAsync();
 

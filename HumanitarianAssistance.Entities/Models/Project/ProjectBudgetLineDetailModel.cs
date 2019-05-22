@@ -17,6 +17,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public int? CurrencyId { get; set; }
         public string  CurrencyName { get; set; }
         public string BudgetCodeName { get; set; }
+        public double? DebitPercentage { get; set; }
         public  DateTime? CreatedDate { get; set; }
 
 

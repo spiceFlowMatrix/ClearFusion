@@ -29,13 +29,14 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? EmployeeId { get; set; }
         public decimal PensionAmount { get; set; }
         public int? CurrencyId { get; set; }
-        public int? DebitAccount { get; set; }
+        // public int? DebitAccount { get; set; }
         public int? CreditAccount { get; set; }
         public int? OfficeId { get; set; }
         public string CreatedById { get; set; }
         public int? JournalId { get; set; }
         public int VoucherTypeId { get; set; }
         public int? JournalCode { get; set; }
+        public int? TimezoneOffset { get; set; }
     }
 
     public class PensionPaymentHistoryModel

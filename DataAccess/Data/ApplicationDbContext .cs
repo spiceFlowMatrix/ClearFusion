@@ -253,7 +253,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectMonitoringIndicatorDetail> ProjectMonitoringIndicatorDetail { get; set; }
         public DbSet<ProjectActivityProvinceDetail> ProjectActivityProvinceDetail { get; set; }
         public DbSet<ProjectActivityExtensions> ProjectActivityExtensions { get; set; }
-
+        public DbSet<PensionDebitAccountMaster> PensionDebitAccountMaster { get; set; }
 
         #endregion
 

@@ -932,6 +932,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     model.CurrencyCode = response1.data.JobPriceDetail.CurrencyCode;
                     model.EndDate = response1.data.JobPriceDetail.EndDate;
                     model.FinalPrice = invoiceDetails.TotalPrice;
+                    model.InvoiceId = invoiceDetails.InvoiceId;
                     model.JobRate = Convert.ToInt32(invoiceDetails.JobPrice);
                     model.TotalRunningMinutes = invoiceDetails.PlayoutMinutes;
                     model.TotalMinutes = invoiceDetails.TotalMinutes;
@@ -1023,6 +1024,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     invoiceDetails.FinalPrice = (invoiceDetails.JobRate / invoiceDetails.TotalMinutes) * invoiceDetails.TotalRunningMinutes;
                     //var existRecord = await _uow.InvoiceGenerationRepository.FindAsync(x => x.IsDeleted == false && x.JobId == jobId);
                     var currencyDetails = _uow.CurrencyDetailsRepository.GetAll().AsQueryable().Where(x => x.CurrencyCode == invoiceDetails.CurrencyCode).FirstOrDefault();
+                    long? invoiceId = 0;
                     //if (existRecord == null)
                     {
                         InvoiceGeneration obj = new InvoiceGeneration();
@@ -1038,6 +1040,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         obj.ModifiedById = userId;
                         obj.ModifiedDate = DateTime.Now;
                         await _uow.InvoiceGenerationRepository.AddAsyn(obj);
+                        invoiceId = obj.InvoiceId;
                     }
                     //else
                     //{                        
@@ -1057,6 +1060,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     //}
                     invoiceDetails = new InvoiceModel
                     {
+                        InvoiceId = invoiceId,
                         ClientName = invoiceDetails.ClientName,
                         CurrencyCode = currencyDetails.CurrencyCode,
                         EndDate = invoiceDetails.EndDate,

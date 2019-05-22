@@ -1019,14 +1019,14 @@ namespace HumanitarianAssistance.Controllers
     }
 
     [HttpGet]
-    public async Task<object> GetAppraisalQuestions([FromQuery] int OfficeId)
+    public async Task<object> GetAppraisalQuestions()
     {
       APIResponse response = new APIResponse();
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-        response = await _icode.GetAppraisalQuestions(OfficeId);
+        response = await _icode.GetAppraisalQuestions();
       }
       return response;
     }
@@ -1474,6 +1474,31 @@ namespace HumanitarianAssistance.Controllers
     {
       APIResponse response = new APIResponse();
       response = await _icode.GetApplicationPages();
+
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddEditPensionDebitAccount([FromBody]long accountId)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      string Id = string.Empty;
+
+      if (user != null)
+      {
+        Id = user.Id;
+      }
+
+      APIResponse response = await _icode.AddEditPensionDebitAccount(accountId, Id);
+      return response;
+    }
+
+    [HttpGet]
+    public async Task<APIResponse> GetPensionDebitAccount()
+    {
+      APIResponse response = new APIResponse();
+      response = await _icode.GetPensionDebitAccount();
 
       return response;
     }
