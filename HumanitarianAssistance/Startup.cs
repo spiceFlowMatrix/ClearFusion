@@ -80,9 +80,9 @@ namespace HumanitarianAssistance
       string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
 
       Console.WriteLine("Connection string: {0}\n", connectionString);
-      Console.WriteLine("DefaultCorsPolicyName string: {0}\n", DefaultCorsPolicyName);
-      Console.WriteLine("DefaultCorsPolicyUrl string: {0}\n", DefaultCorsPolicyUrl);
-      Console.WriteLine("WebSiteUrl string: {0}\n", WebSiteUrl);
+      //Console.WriteLine("DefaultCorsPolicyName string: {0}\n", DefaultCorsPolicyName);
+      //Console.WriteLine("DefaultCorsPolicyUrl string: {0}\n", DefaultCorsPolicyUrl);
+      //Console.WriteLine("WebSiteUrl string: {0}\n", WebSiteUrl);
 
 
       services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
