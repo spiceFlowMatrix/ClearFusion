@@ -9,6 +9,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
         public ActivityAdvanceFilterModel()
         {
+            ActivityDescription = string.Empty;
 
             // status
             Planning = false;
@@ -33,6 +34,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         }
 
         public long ProjectId { get; set; }
+        public string ActivityDescription { get; set; }
+
         public DateTime? PlannedStartDate { get; set; }
         public DateTime? PlannedEndDate { get; set; }
         public DateTime? ActualStartDate { get; set; }

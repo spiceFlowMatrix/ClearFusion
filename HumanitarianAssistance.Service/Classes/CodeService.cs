@@ -921,12 +921,12 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAppraisalQuestions(int OfficeId)
+        public async Task<APIResponse> GetAppraisalQuestions()
         {
             APIResponse response = new APIResponse();
             try
             {
-                response.data.AppraisalList = await _uow.GetDbContext().AppraisalGeneralQuestions.Where(x => x.IsDeleted == false && x.OfficeId == OfficeId).ToListAsync();
+                response.data.AppraisalList = await _uow.GetDbContext().AppraisalGeneralQuestions.Where(x => x.IsDeleted == false).ToListAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -982,7 +982,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var emp = await _uow.EmployeeAppraisalDetailsRepository.FindAsync(x => x.EmployeeId == model.EmployeeId && x.OfficeId == model.OfficeId && x.CurrentAppraisalDate.Date == model.CurrentAppraisalDate.Date);
+                var emp = await _uow.EmployeeAppraisalDetailsRepository.FindAsync(x => x.EmployeeAppraisalDetailsId== model.EmployeeAppraisalDetailsId);
                 emp.Position = model.Position;
                 emp.Department = model.Department;
                 emp.DutyStation = model.DutyStation;
@@ -990,7 +990,7 @@ namespace HumanitarianAssistance.Service.Classes
                 emp.TotalScore = model.TotalScore;
                 foreach (var item in model.EmployeeAppraisalQuestionList)
                 {
-                    var question = await _uow.EmployeeAppraisalQuestionsRepository.FindAsync(x => x.EmployeeId == model.EmployeeId && x.CurrentAppraisalDate.Date == model.CurrentAppraisalDate.Date && x.AppraisalGeneralQuestionsId == item.AppraisalGeneralQuestionsId);
+                    var question = await _uow.EmployeeAppraisalQuestionsRepository.FindAsync(x => x.EmployeeAppraisalQuestionsId== item.EmployeeAppraisalQuestionsId);
                     question.Score = item.Score;
                     question.Remarks = item.Remarks;
                     await _uow.EmployeeAppraisalQuestionsRepository.UpdateAsyn(question);
@@ -1042,6 +1042,7 @@ namespace HumanitarianAssistance.Service.Classes
                         questions.AppraisalGeneralQuestionsId = element.AppraisalGeneralQuestionsId;
                         questions.Score = element.Score;
                         questions.Remarks = element.Remarks;
+                        questions.EmployeeAppraisalQuestionsId = element.EmployeeAppraisalQuestionsId;
                         model.EmployeeAppraisalQuestionList.Add(questions);
                     }
                     lst.Add(model);
@@ -1551,7 +1552,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var OfficeDetail = await _uow.OfficeDetailRepository.FindAsync(x => x.OfficeId == OfficeId);
 
-                response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x => x.EmployeeProfessionalDetail.OfficeId == OfficeId && x.EmployeeTypeId == 2).Select(x => new EmployeeDetailList
+                response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x => x.EmployeeProfessionalDetail.OfficeId == OfficeId && x.EmployeeTypeId != 1 && x.IsDeleted== false).Select(x => new EmployeeDetailList
                 {
                     EmployeeId = x.EmployeeID,
                     EmployeeName = x.EmployeeName,
@@ -2310,6 +2311,76 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        /// <summary>
+        /// Add/Edit Pension Debit Account
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="userId"></param>
+        /// <returns>Success/ Failure</returns>
+        public async Task<APIResponse> AddEditPensionDebitAccount(long accountId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            PensionDebitAccountMaster pensionDebitAccount;
 
+            try
+            {
+                pensionDebitAccount = _uow.GetDbContext().PensionDebitAccountMaster.FirstOrDefault(x => x.IsDeleted == false);
+
+                if (pensionDebitAccount == null)
+                {
+                    pensionDebitAccount = new PensionDebitAccountMaster();
+                    pensionDebitAccount.ChartOfAccountNewId = accountId;
+                    pensionDebitAccount.CreatedDate = DateTime.UtcNow;
+                    pensionDebitAccount.CreatedById = userId;
+                    pensionDebitAccount.IsDeleted = false;
+
+                    await _uow.GetDbContext().PensionDebitAccountMaster.AddAsync(pensionDebitAccount);
+                    await _uow.GetDbContext().SaveChangesAsync();
+                }
+                else
+                {
+                    pensionDebitAccount.ModifiedById = userId;
+                    pensionDebitAccount.ModifiedDate = DateTime.UtcNow;
+                    pensionDebitAccount.ChartOfAccountNewId = accountId;
+
+                     _uow.GetDbContext().PensionDebitAccountMaster.Update(pensionDebitAccount);
+                    await _uow.GetDbContext().SaveChangesAsync();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> GetPensionDebitAccount()
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                PensionDebitAccountMaster pensionDebitAccount = await _uow.GetDbContext().PensionDebitAccountMaster.FirstOrDefaultAsync(x => x.IsDeleted == false);
+
+                if (pensionDebitAccount != null)
+                {
+                    response.data.PensionDebitAccountId = pensionDebitAccount.ChartOfAccountNewId;
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }
