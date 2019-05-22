@@ -95,7 +95,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -144,7 +144,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -174,7 +174,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -204,7 +204,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -234,7 +234,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -264,7 +264,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -511,7 +511,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -541,7 +541,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -792,7 +792,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
             return response;
         }
@@ -837,7 +837,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
             return response;
         }
@@ -859,56 +859,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             return detail;
         }
         #endregion
-
-        #region "GetCurrencyGainLossReport"
-        public async Task<APIResponse> GetCurrencyGainLossReport(ExchangeGainLossFilterModel exchangeGainLossFilterModel)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                // Transaction List
-                var transactionList = await GetAllTransaction(
-                                                exchangeGainLossFilterModel.AccountIdList,
-                                                exchangeGainLossFilterModel.FromDate,
-                                                exchangeGainLossFilterModel.ToDate,
-                                                exchangeGainLossFilterModel.OfficeIdList,
-                                                exchangeGainLossFilterModel.JournalIdList,
-                                                exchangeGainLossFilterModel.ProjectIdList
-                                            );
-
-                var ratesQuery = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == exchangeGainLossFilterModel.ToCurrencyId
-                                                                              && transactionList.data.VoucherTransactionList.Select(y => y.CurrencyId).Contains(x.FromCurrency)
-                                                                              && transactionList.data.VoucherTransactionList.Select(y => y.TransactionDate)
-                                                                       .Any(z => z >= x.Date));
-
-                //var comparisonDateRates = _uow.GetDbContext().ExchangeRateDetail.Where(x => x.ToCurrency == exchangeGainLossFilterModel.ToCurrencyId
-                //                                                              && transactionList.data.VoucherTransactionList.Select(y => y.CurrencyId).Contains(x.FromCurrency)
-                //                                                              && transactionList.data.VoucherTransactionList.Select(y => y.TransactionDate).Where(z => z.Equals(exchangeGainLossFilterModel.ComparisionDate.ToLongDateString()));
-
-
-                //// Filter transaction Dates
-                //var dateListExchagneRates = FetchAllDatesFromTransactions(transactionList.data.VoucherTransactionList);
-                //dateListExchagneRates.Add(exchangeGainLossFilterModel.ComparisionDate); // Add Comparison Date
-                //// Exchagne Rate List
-                //var exchangeRateList = await GetAllExchageRatesByDates(dateListExchagneRates);
-
-
-                //response.data.VoucherTransactionList = transactionList;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
+     
         #endregion
-
-        #endregion
-
-
 
         public async Task<APIResponse> GetDetailOfNotes(DetailOfNotesFilterModel model)
         {
@@ -917,6 +869,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
             {
                 List<SPDetailOfNotes> spNotesDetail = await _uow.GetDbContext().LoadStoredProc("get_detailofnote_pdf")
                                                               .WithSqlParam("to_currency_id", model.CurrencyId)
+                                                              .WithSqlParam("till_date", model.TillDate.ToString())
                                                               .ExecuteStoredProc<SPDetailOfNotes>();
 
                 List<DetailsOfNotesFinalModel> notesDetail = spNotesDetail.GroupBy(x => new { x.NoteId, x.NoteName })
