@@ -146,7 +146,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-       
+
         public async Task<APIResponse> DeleteDonorDetails(long DonarId, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -1814,7 +1814,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var DistrictDetailList = _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted==false).ToList();
+                var DistrictDetailList = _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted == false).ToList();
                 var Newlist = DistrictDetailList.Where(x => ProvinceId.Any(y => x.ProvinceID == y)).ToList();
                 response.data.Districtlist = Newlist;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5134,6 +5134,24 @@ namespace HumanitarianAssistance.Service.Classes
                                       .Skip(budgeLineFilterModel.pageSize.Value * budgeLineFilterModel.pageIndex.Value)
                                       .Take(budgeLineFilterModel.pageSize.Value)
                                       .ToListAsync();
+                if (budgetLineList.Count > 0)
+                {
+                    foreach (var item in budgetLineList)
+                    {
+                        var TransList = await _uow.GetDbContext().VoucherTransactions
+                                                                 .Include(c => c.CurrencyDetails)
+                                                                 .Where(x => x.IsDeleted == false &&
+                                                                             x.VoucherDetails.CurrencyId == item.CurrencyId &&
+                                                                             x.BudgetLineId == item.BudgetLineId)
+                                                                 .OrderByDescending(x => x.Debit)
+                                                                 .ToListAsync();
+
+                        var debitSum = TransList.Sum(x => x.Debit);
+                        var debitPercentage = (debitSum / item.InitialBudget) * 100;
+                        item.DebitPercentage = debitPercentage;
+                    }
+
+                }
                 response.data.ProjectBudgetLineList = budgetLineList;
                 response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5675,18 +5693,19 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-               var indicators = _uow.GetDbContext().ProjectIndicators
-                                              .OrderByDescending(x=> x.CreatedDate)
-                                              .Where(x => x.IsDeleted == false)
-                                              .Select(x=> new ProjectIndicatorViewModel {
-                                                  IndicatorCode= x.IndicatorCode,
-                                                  IndicatorName= x.IndicatorName,
-                                                  ProjectIndicatorId= x.ProjectIndicatorId
-                                              }).AsQueryable();
+                var indicators = _uow.GetDbContext().ProjectIndicators
+                                               .OrderByDescending(x => x.CreatedDate)
+                                               .Where(x => x.IsDeleted == false)
+                                               .Select(x => new ProjectIndicatorViewModel
+                                               {
+                                                   IndicatorCode = x.IndicatorCode,
+                                                   IndicatorName = x.IndicatorName,
+                                                   ProjectIndicatorId = x.ProjectIndicatorId
+                                               }).AsQueryable();
 
-                
 
-                if (paging.PageIndex != 0  || paging.PageSize != 0)
+
+                if (paging.PageIndex != 0 || paging.PageSize != 0)
                 {
                     indicators = indicators.Skip((paging.PageIndex * paging.PageSize)).Take(paging.PageSize);
                 }
@@ -5694,7 +5713,7 @@ namespace HumanitarianAssistance.Service.Classes
                 long recordCount = await _uow.GetDbContext().ProjectIndicators
                                               .Where(x => x.IsDeleted == false).CountAsync();
 
-                var indicatorList= await indicators.ToListAsync();
+                var indicatorList = await indicators.ToListAsync();
 
                 if (indicatorList.Any())
                 {
@@ -5736,7 +5755,8 @@ namespace HumanitarianAssistance.Service.Classes
                                                     IndicatorName = x.IndicatorName,
                                                     IndicatorId = x.ProjectIndicatorId,
                                                     IsDeleted = x.IsDeleted,
-                                                    IndicatorQuestions = x.ProjectIndicatorQuestions.Select(y => new IndicatorQuestions {
+                                                    IndicatorQuestions = x.ProjectIndicatorQuestions.Select(y => new IndicatorQuestions
+                                                    {
                                                         QuestionId = y.IndicatorQuestionId,
                                                         QuestionText = y.IndicatorQuestion,
                                                         IsDeleted = y.IsDeleted
@@ -5767,27 +5787,27 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                    ProjectIndicators indicator = new ProjectIndicators();
-                    indicator.CreatedById = userId;
-                    indicator.IsDeleted = false;
-                    indicator.CreatedDate = DateTime.UtcNow;
+                ProjectIndicators indicator = new ProjectIndicators();
+                indicator.CreatedById = userId;
+                indicator.IsDeleted = false;
+                indicator.CreatedDate = DateTime.UtcNow;
 
-                    await _uow.GetDbContext().ProjectIndicators.AddAsync(indicator);
-                    await _uow.GetDbContext().SaveChangesAsync();
+                await _uow.GetDbContext().ProjectIndicators.AddAsync(indicator);
+                await _uow.GetDbContext().SaveChangesAsync();
 
-                    indicator.IndicatorCode = ProjectUtility.GenerateCode(indicator.ProjectIndicatorId);
+                indicator.IndicatorCode = ProjectUtility.GenerateCode(indicator.ProjectIndicatorId);
 
-                    _uow.GetDbContext().ProjectIndicators.Update(indicator);
-                    await _uow.GetDbContext().SaveChangesAsync();
+                _uow.GetDbContext().ProjectIndicators.Update(indicator);
+                await _uow.GetDbContext().SaveChangesAsync();
 
-                    int count=  await _uow.GetDbContext().ProjectIndicators.Where(x => x.IsDeleted == false).CountAsync();
+                int count = await _uow.GetDbContext().ProjectIndicators.Where(x => x.IsDeleted == false).CountAsync();
 
-                    response.data.ProjectIndicator = new ProjectIndicatorViewModel();
-                    response.data.TotalCount = count;
-                    response.data.ProjectIndicator.ProjectIndicatorId = indicator.ProjectIndicatorId;
-                    response.data.ProjectIndicator.IndicatorCode = indicator.IndicatorCode;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = StaticResource.SuccessText;
+                response.data.ProjectIndicator = new ProjectIndicatorViewModel();
+                response.data.TotalCount = count;
+                response.data.ProjectIndicator.ProjectIndicatorId = indicator.ProjectIndicatorId;
+                response.data.ProjectIndicator.IndicatorCode = indicator.IndicatorCode;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
             }
             catch (Exception exception)
             {
@@ -5806,7 +5826,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 if (model != null)
                 {
-                    ProjectIndicators indicator = await _uow.GetDbContext().ProjectIndicators.FirstOrDefaultAsync(x=> x.IsDeleted== false && x.ProjectIndicatorId== model.IndicatorId);
+                    ProjectIndicators indicator = await _uow.GetDbContext().ProjectIndicators.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ProjectIndicatorId == model.IndicatorId);
 
                     if (indicator != null)
                     {
@@ -5844,7 +5864,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     projectIndicatorQuestions.Add(question);
                                 }
 
-                               await _uow.GetDbContext().ProjectIndicatorQuestions.AddRangeAsync(projectIndicatorQuestions);
+                                await _uow.GetDbContext().ProjectIndicatorQuestions.AddRangeAsync(projectIndicatorQuestions);
                                 await _uow.GetDbContext().SaveChangesAsync();
                             }
 
@@ -5893,9 +5913,10 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 List<IndicatorQuestions> projectIndicatorQuestions = await _uow.GetDbContext().ProjectIndicatorQuestions
                                                                                .Where(x => x.IsDeleted == false && x.ProjectIndicatorId == id)
-                                                                               .Select(x=> new IndicatorQuestions {
-                                                                                   QuestionId= x.IndicatorQuestionId,
-                                                                                   QuestionText= x.IndicatorQuestion
+                                                                               .Select(x => new IndicatorQuestions
+                                                                               {
+                                                                                   QuestionId = x.IndicatorQuestionId,
+                                                                                   QuestionText = x.IndicatorQuestion
                                                                                })
                                                                                .ToListAsync();
                 response.data.Questions = projectIndicatorQuestions;
