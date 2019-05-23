@@ -91,5 +91,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetVoucherTransactionList([FromBody] TransactionFilterModel model)
+    {
+      APIResponse response = await _iaccountRecords.GetVoucherTransactionList(model);
+      return response;
+    }
+
   }
 }

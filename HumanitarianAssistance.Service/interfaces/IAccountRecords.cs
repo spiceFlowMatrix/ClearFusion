@@ -12,5 +12,6 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> GetBalanceSheet();
         Task<APIResponse> GetVoucherSummaryList(VoucherSummaryFilterModel voucherSummaryFilter);
+        Task<APIResponse> GetVoucherTransactionList(TransactionFilterModel model);
     }
 }

@@ -432,8 +432,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
         public Dictionary<string, List<string>> Permissions { get; set; }
         public ProjectMonitoringViewModel ProjectMonitoringModel { get; set; }
-
-
+        public List<SPVoucherSummaryReportModel> VoucherSummaryList { get; set; }
+        public List<VoucherSummaryTransactionModel> VoucherSummaryTransactionList{ get; set; }
 
         #region "Accounting New"
         public List<ChartOfAccountNew> AllAccountList { get; set; }

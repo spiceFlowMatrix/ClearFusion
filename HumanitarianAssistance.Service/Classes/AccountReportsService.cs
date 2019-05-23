@@ -95,29 +95,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             try
             {
-                //var voucherDetails = _uow.GetDbContext()
-                //                                              .VoucherDetail
-                //                                              .Include(x => x.VoucherTransactionDetails)
-                //                                              .Where(x => x.IsDeleted == false &&
-                //                                              x.VoucherTransactionDetails.Select(z => z.ChartOfAccountNewId).Intersect(voucherSummaryFilter.Accounts).Any() &&
-                //                                              x.VoucherTransactionDetails.Select(z => z.BudgetLineId).Intersect(voucherSummaryFilter.BudgetLines).Any() &&
-                //                                              x.CurrencyId == voucherSummaryFilter.Currency && voucherSummaryFilter.Journals.Contains(x.JournalCode) &&
-                //                                              voucherSummaryFilter.Offices.Contains(x.OfficeId) &&
-                //                                              x.VoucherTransactionDetails.Select(z => z.JobId).Intersect(voucherSummaryFilter.ProjectJobs).Any() &&
-                //                                              x.VoucherTransactionDetails.Select(z => z.ProjectId).Intersect(voucherSummaryFilter.Projects).Any());
-
-                //if (voucherSummaryFilter.TransactionType == (int)RECORDTYPE.Credit)
-                //{
-                //    voucherDetails = voucherDetails.Where(x => x.VoucherTransactionDetails.Where(z => z.Credit != 0).Any());
-                //}
-                //else
-                //{
-                //    voucherDetails = voucherDetails.Where(x => x.VoucherTransactionDetails.Where(z => z.Debit != 0).Any());
-                //}
-
-                // var result = await voucherDetails.ToListAsync();
-
-                var spVoucherSummaryList = await _uow.GetDbContext().LoadStoredProc("get_vouchersummaryreport")
+                var spVoucherSummaryList = await _uow.GetDbContext().LoadStoredProc("get_vouchersummaryreportvouchersbyfilter")
                                       .WithSqlParam("accounts", voucherSummaryFilter.Accounts)
                                       .WithSqlParam("budgetlines", voucherSummaryFilter.BudgetLines)
                                       .WithSqlParam("currencyid", voucherSummaryFilter.Currency)
@@ -127,6 +105,14 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("projects", voucherSummaryFilter.Projects)
                                       .WithSqlParam("recordtype", voucherSummaryFilter.RecordType)
                                       .ExecuteStoredProc<SPVoucherSummaryReportModel>();
+
+                response.data.TotalCount = spVoucherSummaryList.Count;
+
+                var summaryList = spVoucherSummaryList.Skip(voucherSummaryFilter.PageIndex * voucherSummaryFilter.PageSize).Take(voucherSummaryFilter.PageSize).ToList();
+
+                response.data.VoucherSummaryList = summaryList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch (Exception exception)
             {
@@ -135,7 +121,104 @@ namespace HumanitarianAssistance.Service.Classes
             }
 
             return response;
+        }
 
+        public async Task<APIResponse> GetVoucherTransactionList(TransactionFilterModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var data = await _uow.GetDbContext().VoucherDetail
+                                                    .Include(x => x.VoucherTransactionDetails)
+                                                    .ThenInclude(y=> y.ChartOfAccountDetail)
+                                                    .Include(x => x.CurrencyDetail)
+                                                    .FirstOrDefaultAsync(x => x.IsDeleted == false && x.VoucherNo == model.VoucherNo);
+
+                if (data != null)
+                {
+                    if (data.VoucherTransactionDetails.Any())
+                    {
+
+                        if (model.RecordType == (int)RECORDTYPE.SINGLE)
+                        {
+                            response.data.VoucherSummaryTransactionList = data.VoucherTransactionDetails.Select(x => new VoucherSummaryTransactionModel
+                            {
+                                AccountCode = x.ChartOfAccountDetail.ChartOfAccountNewCode,
+                                AccountName = x.ChartOfAccountDetail.AccountName,
+                                CurrencyName = data.CurrencyDetail.CurrencyName,
+                                TransactionDescription = x.Description,
+                                Amount = x.Debit == 0 ? x.Credit : x.Debit,
+                                TransactionType = x.Debit == 0 ? "Credit" : "Debit"
+                            }).ToList();
+                        }
+                        else //consolidated
+                        {
+                            response.data.VoucherSummaryTransactionList = new List<VoucherSummaryTransactionModel>();
+                            ExchangeRateDetail exchangeRateDetail = new ExchangeRateDetail();
+
+                            foreach (var item in data.VoucherTransactionDetails)
+                            {
+                                VoucherSummaryTransactionModel voucherSummaryTransactionModel = new VoucherSummaryTransactionModel();
+
+                                if (item.CurrencyId != model.CurrencyId)
+                                {
+                                    exchangeRateDetail = await _uow.GetDbContext().ExchangeRateDetail
+                                                                                  .OrderByDescending(x => x.Date)
+                                                                                  .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                   x.Date <= data.VoucherDate.Date && x.FromCurrency == data.CurrencyId &&
+                                                                                   x.ToCurrency == model.CurrencyId);
+
+                                    if (exchangeRateDetail == null)
+                                    {
+                                        throw new Exception("Exchange Rate Not Defined");
+                                    }
+
+                                    if (item.Debit == 0)
+                                    {
+                                        voucherSummaryTransactionModel.Amount = item.Credit * (double)exchangeRateDetail.Rate;
+                                        voucherSummaryTransactionModel.TransactionType = "Credit";
+                                    }
+                                    else
+                                    {
+                                        voucherSummaryTransactionModel.Amount = item.Debit * (double)exchangeRateDetail.Rate;
+                                        voucherSummaryTransactionModel.TransactionType = "Debit";
+                                    }
+                                }
+                                else
+                                {
+                                    if (item.Debit == 0)
+                                    {
+                                        voucherSummaryTransactionModel.Amount = item.Credit;
+                                        voucherSummaryTransactionModel.TransactionType = "Credit";
+                                    }
+                                    else
+                                    {
+                                        voucherSummaryTransactionModel.Amount = item.Debit;
+                                        voucherSummaryTransactionModel.TransactionType = "Debit";
+                                    }
+                                }
+                                
+                                voucherSummaryTransactionModel.AccountCode = item.ChartOfAccountDetail.ChartOfAccountNewCode;
+                                voucherSummaryTransactionModel.AccountName = item.ChartOfAccountDetail.AccountName;
+                                voucherSummaryTransactionModel.CurrencyName = data.CurrencyDetail.CurrencyName;
+                                voucherSummaryTransactionModel.TransactionDescription = item.Description;
+
+                                response.data.VoucherSummaryTransactionList.Add(voucherSummaryTransactionModel);
+                            }
+                        }
+                    }
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception exception)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + exception.Message;
+            }
+
+            return response;
         }
     }
 }

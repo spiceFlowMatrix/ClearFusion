@@ -4828,6 +4828,27 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+        public async Task<APIResponse> GetProjectJobsByMultipleProjectIds(List<long> projectIds)
+        {
+            APIResponse response = new APIResponse();
+            try
+            { 
+                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => !x.IsDeleted.Value && projectIds.Contains(x.ProjectId))
+                                                                     .OrderByDescending(x => x.ProjectJobName)
+                                                                     .ToListAsync();
+                response.data.ProjectJobDetail = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+
+        }
+
         #endregion
 
         #region ProjectBudgetLineDetail
@@ -5224,6 +5245,36 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
 
+
+        }
+
+        public async Task<APIResponse> GetBudgetLinesByMultipleProjectJobIds(List<long?> projectJobIds)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var list = await _uow.GetDbContext().ProjectBudgetLineDetail.Where(x => !x.IsDeleted.Value && projectJobIds.Contains(x.ProjectJobId))
+                                                                      .Select(x=> new ProjectBudgetLineDetailModel {
+                                                                      BudgetCode= x.BudgetCode,
+                                                                      BudgetCodeName= x.BudgetCode+"-"+x.BudgetName,
+                                                                      BudgetLineId= x.BudgetLineId,
+                                                                      BudgetName= x.BudgetName,
+                                                                      CurrencyId= x.CurrencyId,
+                                                                      InitialBudget= x.InitialBudget,
+                                                                      ProjectId= x.ProjectId,
+                                                                      ProjectJobId= x.ProjectJobId,
+                                                                      }).ToListAsync();
+                response.data.ProjectBudgetLineDetailList = list;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
 
         }
 
