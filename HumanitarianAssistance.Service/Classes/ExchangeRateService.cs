@@ -644,7 +644,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 var recordList = _uow.GetDbContext().ExchangeRateVerifications.Where(x => x.IsDeleted == false);
 
-                var ExchangeRateVerificationList = _uow.GetDbContext().ExchangeRateVerifications.Where(x => x.IsDeleted == false).OrderByDescending(x=> x.Date).Skip(skipPages).Take(filter.PageSize);
+                var ExchangeRateVerificationList = _uow.GetDbContext().ExchangeRateVerifications.Where(x => x.IsDeleted == false);
 
                 if (filter.FromDate != null)
                 {
@@ -665,7 +665,7 @@ namespace HumanitarianAssistance.Service.Classes
                 if (ExchangeRateVerificationList.Any())
                     {
 
-                      ExchangeRateVerificationList = ExchangeRateVerificationList.OrderByDescending(x => x.Date);
+                      ExchangeRateVerificationList = ExchangeRateVerificationList.OrderByDescending(x => x.Date).Skip(skipPages).Take(filter.PageSize); ;
 
                         foreach (ExchangeRateVerification item in ExchangeRateVerificationList)
                         {
