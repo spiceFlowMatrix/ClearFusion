@@ -155,7 +155,12 @@ namespace HumanitarianAssistance.Service.Classes
                         else //consolidated
                         {
                             response.data.VoucherSummaryTransactionList = new List<VoucherSummaryTransactionModel>();
-                            ExchangeRateDetail exchangeRateDetail = new ExchangeRateDetail();
+
+                            ExchangeRateDetail exchangeRateDetail = exchangeRateDetail = await _uow.GetDbContext().ExchangeRateDetail
+                                                                                  .OrderByDescending(x => x.Date)
+                                                                                  .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                   x.Date <= data.VoucherDate.Date && x.FromCurrency == data.CurrencyId &&
+                                                                                   x.ToCurrency == model.CurrencyId);
 
                             foreach (var item in data.VoucherTransactionDetails)
                             {
@@ -163,12 +168,6 @@ namespace HumanitarianAssistance.Service.Classes
 
                                 if (item.CurrencyId != model.CurrencyId)
                                 {
-                                    exchangeRateDetail = await _uow.GetDbContext().ExchangeRateDetail
-                                                                                  .OrderByDescending(x => x.Date)
-                                                                                  .FirstOrDefaultAsync(x => x.IsDeleted == false &&
-                                                                                   x.Date <= data.VoucherDate.Date && x.FromCurrency == data.CurrencyId &&
-                                                                                   x.ToCurrency == model.CurrencyId);
-
                                     if (exchangeRateDetail == null)
                                     {
                                         throw new Exception("Exchange Rate Not Defined");
@@ -176,12 +175,12 @@ namespace HumanitarianAssistance.Service.Classes
 
                                     if (item.Debit == 0)
                                     {
-                                        voucherSummaryTransactionModel.Amount = item.Credit * (double)exchangeRateDetail.Rate;
+                                        voucherSummaryTransactionModel.Amount = Math.Round((double)(item.Credit * (double)exchangeRateDetail.Rate), 2);
                                         voucherSummaryTransactionModel.TransactionType = "Credit";
                                     }
                                     else
                                     {
-                                        voucherSummaryTransactionModel.Amount = item.Debit * (double)exchangeRateDetail.Rate;
+                                        voucherSummaryTransactionModel.Amount = Math.Round((double)(item.Debit * (double)exchangeRateDetail.Rate),2);
                                         voucherSummaryTransactionModel.TransactionType = "Debit";
                                     }
                                 }
