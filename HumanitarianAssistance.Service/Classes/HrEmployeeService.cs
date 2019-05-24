@@ -1031,7 +1031,7 @@ namespace HumanitarianAssistance.Service.Classes
                 EmployeeDocumentDetail obj = new EmployeeDocumentDetail();
                 obj.DocumentGUID = guidname;
                 //Doctype 1 for voucher document
-                //obj.DocumentType = 1;
+                obj.DocumentType = model.DocumentType;
                 obj.Extension = "." + ex;
                 //obj.FilePath = filepathBase64;
                 obj.DocumentName = model.DocumentName;
@@ -1049,7 +1049,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             catch (Exception ex)
             {
-                response.StatusCode = StaticResource.failStatusCode;
+                    response.StatusCode = StaticResource.failStatusCode;
                 response.Message = ex.Message;
             }
             return response;
