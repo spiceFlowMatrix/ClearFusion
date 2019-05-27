@@ -255,6 +255,12 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectActivityExtensions> ProjectActivityExtensions { get; set; }
         public DbSet<PensionDebitAccountMaster> PensionDebitAccountMaster { get; set; }
 
+        public DbSet<ProjectOpportunityControl> ProjectOpportunityControl { get; set; }
+        public DbSet<ProjectLogisticsControl> ProjectLogisticsControl { get; set; }
+        public DbSet<ProjectActivitiesControl> ProjectActivitiesControl { get; set; }
+        public DbSet<ProjectHiringControl> ProjectHiringControl { get; set; }
+
+
         #endregion
 
         #region Marketing

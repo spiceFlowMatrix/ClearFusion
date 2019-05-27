@@ -237,7 +237,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         Task<CurrencyDetails> currencyDetailTask = _uow.GetDbContext().CurrencyDetails.FirstOrDefaultAsync(o => o.CurrencyId == model.CurrencyId);
                         // NOTE: Dont remove this as we will need journal details in response
                         Task<JournalDetail> journaldetailTask = _uow.GetDbContext().JournalDetail.FirstOrDefaultAsync(o => o.JournalCode == model.JournalCode);
-                        int voucherCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == model.VoucherDate.Month && x.VoucherDate.Year== filterVoucherDate.Year && x.OfficeId== model.OfficeId).CountAsync();
+                        int voucherCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == model.VoucherDate.Month && x.VoucherDate.Year== filterVoucherDate.Year && x.OfficeId== model.OfficeId && x.CurrencyId== model.CurrencyId).CountAsync();
 
                         FinancialYearDetail fincancialYear = await fincancialYearTask;
 
@@ -264,18 +264,6 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                                 if (!string.IsNullOrEmpty(referenceNo))
                                 {
-                                    //int sameVoucherReferenceNoCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == obj.ReferenceNo).CountAsync();
-
-                                    //if (sameVoucherReferenceNoCount != 0)
-                                    //{
-
-                                    //    VoucherDetail voucherDetail = _uow.GetDbContext().VoucherDetail.OrderByDescending(x=> x.VoucherDate).FirstOrDefault(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId== model.OfficeId && x.VoucherDate.Year== model.VoucherDate.Year);
-                                    //    var refNo = voucherDetail.ReferenceNo.Split('-');
-                                    //    int count = Convert.ToInt32(refNo[3]);
-                                    //    string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(model.VoucherDate, count, currencyCode, officeDetail.OfficeCode);
-                                    //    obj.ReferenceNo = referenceNo;
-                                    //}
-
                                     do
                                     {
                                         sameVoucherReferenceNoCount = await _uow.GetDbContext().VoucherDetail.Where(x => x.ReferenceNo == referenceNo).CountAsync();
@@ -375,7 +363,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     {
                         OfficeDetail officeDetail = await officeDetailTask;
 
-                        if (model.VoucherDate.Date != voucherdetailInfo.VoucherDate.Date || model.OfficeId != voucherdetailInfo.OfficeId)
+                        if (model.VoucherDate.Date != voucherdetailInfo.VoucherDate.Date || model.OfficeId != voucherdetailInfo.OfficeId || voucherdetailInfo.CurrencyCode != model.CurrencyCode)
                         {
                             string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(filterVoucherDate, voucherCount, currencyCode, officeDetail.OfficeCode);
 
@@ -1435,7 +1423,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         AccountNo = EmployeePensionPayment.CreditAccount,
                         Debit = 0,
                         Credit = Convert.ToDouble(EmployeePensionPayment.PensionAmount),
-                        Description = StaticResource.PurchaseVoucherCreated,
+                        Description = StaticResource.PensionPayment,
                         IsDeleted = false
                     });
 
@@ -1447,7 +1435,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         AccountNo = pensionDebitAccountMaster.ChartOfAccountNewId,
                         Debit = Convert.ToDouble(EmployeePensionPayment.PensionAmount),
                         Credit = 0,
-                        Description = StaticResource.PurchaseVoucherCreated,
+                        Description = StaticResource.PensionPayment,
                         IsDeleted = false
                     });
 

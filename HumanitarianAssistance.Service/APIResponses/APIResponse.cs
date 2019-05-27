@@ -432,8 +432,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
         public Dictionary<string, List<string>> Permissions { get; set; }
         public ProjectMonitoringViewModel ProjectMonitoringModel { get; set; }
-
-
+        public List<SPVoucherSummaryReportModel> VoucherSummaryList { get; set; }
+        public List<VoucherSummaryTransactionModel> VoucherSummaryTransactionList{ get; set; }
 
         #region "Accounting New"
         public List<ChartOfAccountNew> AllAccountList { get; set; }
@@ -490,6 +490,13 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectIndicatorModel ProjectIndicatorList { get; set; }
 
         public ICollection<ProjectActivityExtensions> ProjectActivityExtensionsList { get; set; }
+
+        public List<OpportunityControlViewModel> OpportunityControlList { get; set; }
+        public List<LogisticsControlViewModel> LogisticsControlList { get; set; }
+        public List<ActivitiesControlViewModel> ActivitiesControlList { get; set; }
+        public List<HiringControlViewModel> HiringControlList { get; set; }
+
+
     }
 
 

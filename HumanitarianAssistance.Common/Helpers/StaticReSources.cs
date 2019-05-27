@@ -356,7 +356,7 @@ namespace HumanitarianAssistance.Common.Helpers
 
         //HR
         public const string PensionPaymentCreated = "Pension Payment Done On {0} for {1}";
-
+        public const string PensionPayment = "Pension Payment";
         // Marketing
         public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
 
@@ -407,5 +407,6 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string UnableToGenerateSignedUrl = "Unable to generate signed Url. Try Again!";
         public const string BucketNameNotFound = "Bucket name not found.";
         public const string UnableToDeleteBucketObject = "Unable to delete file. Try Again!";
+        public const string OpportunityControlNotfound = "Opportunity Control not found";
     }
 }

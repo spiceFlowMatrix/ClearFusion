@@ -201,6 +201,12 @@ namespace DataAccess
 
         IGenericRepository<ProjectActivityExtensions> ProjectActivityExtensionsRepository { get; }
 
+
+        IGenericRepository<ProjectOpportunityControl> ProjectOpportunityControlRepository { get; }
+        IGenericRepository<ProjectLogisticsControl> ProjectLogisticsControlRepository { get; }
+        IGenericRepository<ProjectActivitiesControl> ProjectActivitiesControlRepository { get; }
+        IGenericRepository<ProjectHiringControl> ProjectHiringControlRepository { get; }
+
         #endregion
 
         #region Marketing

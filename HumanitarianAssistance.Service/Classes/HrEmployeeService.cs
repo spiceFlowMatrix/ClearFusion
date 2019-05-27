@@ -758,13 +758,25 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> AddEmployeeSalaryDetail(List<EmployeePayrollModel> model, string userid)
         {
             APIResponse response = new APIResponse();
+
             try
             {
+                List<EmployeePayroll> employeeSalaryHeadList = await _uow.GetDbContext().EmployeePayroll.Where(x => x.IsDeleted == false && x.EmployeeID == model.FirstOrDefault().EmployeeId).ToListAsync();
+
+                if (employeeSalaryHeadList.Any())
+                {
+                    employeeSalaryHeadList.ForEach(x => x.IsDeleted = true);
+
+                    _uow.GetDbContext().EmployeePayroll.UpdateRange(employeeSalaryHeadList);
+                    await _uow.SaveAsync();
+                }
 
                 List<EmployeePayroll> employeepayrolllist = new List<EmployeePayroll>();
                 foreach (var list in model)
                 {
                     EmployeePayroll obj = new EmployeePayroll();
+                    obj.CreatedById = userid;
+                    obj.CreatedDate = DateTime.UtcNow;
                     obj.EmployeeID = list.EmployeeId;
                     obj.CurrencyId = list.CurrencyId;
                     obj.SalaryHeadId = list.SalaryHeadId;
@@ -1300,50 +1312,55 @@ namespace HumanitarianAssistance.Service.Classes
                     //when employee is active
                     if (model.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
                     {
-                        //Get Default payrollaccountheads and save it to the newly created employee
-                        List<SalaryHeadDetails> salaryHeadDetails = await _uow.GetDbContext().SalaryHeadDetails.Where(x => x.IsDeleted == false).ToListAsync();
+                        bool employeeSalaryHeadAlreadyExists = _uow.GetDbContext().EmployeePayroll.Any(x => x.IsDeleted == false && x.EmployeeID== model.EmployeeId);
 
-                        List<EmployeePayroll> EmployeePayrollList = new List<EmployeePayroll>();
-
-                        foreach (SalaryHeadDetails salaryHead in salaryHeadDetails)
+                        // add salary head and payroll heads only if it does not already exists for an employee
+                        if (!employeeSalaryHeadAlreadyExists)
                         {
-                            EmployeePayroll employeePayroll = new EmployeePayroll();
-                            employeePayroll.AccountNo = salaryHead.AccountNo;
-                            employeePayroll.HeadTypeId = salaryHead.HeadTypeId;
-                            employeePayroll.SalaryHeadId = salaryHead.SalaryHeadId;
-                            employeePayroll.IsDeleted = false;
-                            employeePayroll.TransactionTypeId = salaryHead.TransactionTypeId;
-                            employeePayroll.EmployeeID = model.EmployeeId.Value;
-                            EmployeePayrollList.Add(employeePayroll);
+                            //Get Default payrollaccountheads and save it to the newly created employee
+                            List<SalaryHeadDetails> salaryHeadDetails = await _uow.GetDbContext().SalaryHeadDetails.Where(x => x.IsDeleted == false).ToListAsync();
+                            List<EmployeePayroll> EmployeePayrollList = new List<EmployeePayroll>();
+
+                            foreach (SalaryHeadDetails salaryHead in salaryHeadDetails)
+                            {
+                                EmployeePayroll employeePayroll = new EmployeePayroll();
+                                employeePayroll.AccountNo = salaryHead.AccountNo;
+                                employeePayroll.HeadTypeId = salaryHead.HeadTypeId;
+                                employeePayroll.SalaryHeadId = salaryHead.SalaryHeadId;
+                                employeePayroll.IsDeleted = false;
+                                employeePayroll.TransactionTypeId = salaryHead.TransactionTypeId;
+                                employeePayroll.EmployeeID = model.EmployeeId.Value;
+                                EmployeePayrollList.Add(employeePayroll);
+                            }
+
+                            await _uow.GetDbContext().EmployeePayroll.AddRangeAsync(EmployeePayrollList);
+                            await _uow.GetDbContext().SaveChangesAsync();
+
+
+                            //Get Default payrollaccountheads and save it to the newly created employee
+                            List<PayrollAccountHead> payrollAccountHeads = await _uow.GetDbContext().PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
+
+                            List<EmployeePayrollAccountHead> employeePayrollAccountHeads = new List<EmployeePayrollAccountHead>();
+
+                            foreach (var employeePayrollAccount in payrollAccountHeads)
+                            {
+                                EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
+
+                                employeePayrollAccountHead.IsDeleted = false;
+                                employeePayrollAccountHead.AccountNo = employeePayrollAccount.AccountNo;
+                                employeePayrollAccountHead.Description = employeePayrollAccount.Description;
+                                employeePayrollAccountHead.EmployeeId = model.EmployeeId.Value;
+                                employeePayrollAccountHead.PayrollHeadId = employeePayrollAccount.PayrollHeadId;
+                                employeePayrollAccountHead.PayrollHeadName = employeePayrollAccount.PayrollHeadName;
+                                employeePayrollAccountHead.PayrollHeadTypeId = employeePayrollAccount.PayrollHeadTypeId;
+                                employeePayrollAccountHead.TransactionTypeId = employeePayrollAccount.TransactionTypeId;
+
+                                employeePayrollAccountHeads.Add(employeePayrollAccountHead);
+                            }
+
+                            await _uow.GetDbContext().EmployeePayrollAccountHead.AddRangeAsync(employeePayrollAccountHeads);
+                            await _uow.GetDbContext().SaveChangesAsync();
                         }
-
-                        await _uow.GetDbContext().EmployeePayroll.AddRangeAsync(EmployeePayrollList);
-                        await _uow.GetDbContext().SaveChangesAsync();
-
-
-                        //Get Default payrollaccountheads and save it to the newly created employee
-                        List<PayrollAccountHead> payrollAccountHeads = await _uow.GetDbContext().PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
-
-                        List<EmployeePayrollAccountHead> employeePayrollAccountHeads = new List<EmployeePayrollAccountHead>();
-
-                        foreach (var employeePayrollAccount in payrollAccountHeads)
-                        {
-                            EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
-
-                            employeePayrollAccountHead.IsDeleted = false;
-                            employeePayrollAccountHead.AccountNo = employeePayrollAccount.AccountNo;
-                            employeePayrollAccountHead.Description = employeePayrollAccount.Description;
-                            employeePayrollAccountHead.EmployeeId = model.EmployeeId.Value;
-                            employeePayrollAccountHead.PayrollHeadId = employeePayrollAccount.PayrollHeadId;
-                            employeePayrollAccountHead.PayrollHeadName = employeePayrollAccount.PayrollHeadName;
-                            employeePayrollAccountHead.PayrollHeadTypeId = employeePayrollAccount.PayrollHeadTypeId;
-                            employeePayrollAccountHead.TransactionTypeId = employeePayrollAccount.TransactionTypeId;
-
-                            employeePayrollAccountHeads.Add(employeePayrollAccountHead);
-                        }
-
-                        await _uow.GetDbContext().EmployeePayrollAccountHead.AddRangeAsync(employeePayrollAccountHeads);
-                        await _uow.GetDbContext().SaveChangesAsync();
                     }
 
                     response.StatusCode = StaticResource.successStatusCode;
