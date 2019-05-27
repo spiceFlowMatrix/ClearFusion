@@ -5137,7 +5137,7 @@ namespace HumanitarianAssistance.Service.Classes
                         //var currency = await currencyCodeTask;
                         //currencyCodeTask.Dispose();
 
-                        int voucherCount = _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == DateTime.UtcNow.Month && x.OfficeId == EmployeeSalaryVoucher.OfficeId && x.VoucherDate.Year == DateTime.UtcNow.Year).Count();
+                        int voucherCount = _uow.GetDbContext().VoucherDetail.Where(x => x.VoucherDate.Month == DateTime.UtcNow.Month && x.OfficeId == EmployeeSalaryVoucher.OfficeId && x.VoucherDate.Year == DateTime.UtcNow.Year && x.CurrencyId== EmployeeSalaryVoucher.CurrencyId).Count();
 
                         // Pattern: Office Code - Currency Code - Month Number - voucher count on selected month - Year
                         string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(DateTime.UtcNow, voucherCount, currency.CurrencyCode, office.OfficeCode);
@@ -5160,18 +5160,20 @@ namespace HumanitarianAssistance.Service.Classes
                             //ReferenceNo= AccountingUtility.GenerateVoucherReferenceCode(DateTime.Now, voucherCount, currency.CurrencyCode, office.OfficeCode)
                         };
 
-                        
+                          
 
                         foreach (SalaryHeadModel salaryhead in EmployeeSalaryVoucher.EmployeePayrollLists)
                         {
-                            VoucherTransactions xVoucherTransactions = new VoucherTransactions();
+                            VoucherTransactions xVoucherTransactions = new VoucherTransactions
+                            {
 
-                            //Creating Voucher Transaction for Credit
-                            xVoucherTransactions.IsDeleted = false;
-                            xVoucherTransactions.VoucherNo = obj.VoucherNo;
-                            xVoucherTransactions.FinancialYearId = financialYear.FinancialYearId;
-                            xVoucherTransactions.CurrencyId = EmployeeSalaryVoucher.CurrencyId;
-                            xVoucherTransactions.OfficeId = EmployeeSalaryVoucher.OfficeId;
+                                //Creating Voucher Transaction for Credit
+                                IsDeleted = false,
+                                VoucherNo = obj.VoucherNo,
+                                FinancialYearId = financialYear.FinancialYearId,
+                                CurrencyId = EmployeeSalaryVoucher.CurrencyId,
+                                OfficeId = EmployeeSalaryVoucher.OfficeId
+                            };
 
                             try
                             {

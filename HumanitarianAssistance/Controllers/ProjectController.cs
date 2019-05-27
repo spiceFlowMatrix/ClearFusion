@@ -17,6 +17,7 @@ using System.IO;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.Common;
+using System.Collections.Generic;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
@@ -2158,7 +2159,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-
     public async Task<APIResponse> GetProjectActivityDetailByActivityId([FromBody]long activityId)
     {
       APIResponse apiresponse = new APIResponse();
@@ -2178,6 +2178,22 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         string id = user.Id;
         apiresponse = await _iActivity.EditProjectMonitoringByMonitoringId(model, id);
       }
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectJobsByProjectIds([FromBody] List<long> projectIds)
+    {
+      APIResponse apiresponse = new APIResponse();
+      apiresponse = await _iProject.GetProjectJobsByMultipleProjectIds(projectIds);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectBudgetLinesByProjectJobIds([FromBody] List<long?> projectJobIds)
+    {
+      APIResponse apiresponse = new APIResponse();
+      apiresponse = await _iProject.GetBudgetLinesByMultipleProjectJobIds(projectJobIds);
       return apiresponse;
     }
 

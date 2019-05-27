@@ -96,6 +96,8 @@ namespace HumanitarianAssistance.Service.interfaces
         #endregion
 
         Task<APIResponse> GetAllProjectDetails();
+        Task<APIResponse> GetProjectJobsByMultipleProjectIds(List<long> projectIds);
+        Task<APIResponse> GetBudgetLinesByMultipleProjectJobIds(List<long?> projectJobIds);
         #region GetAllProvinceDetails
         APIResponse GetAllProvinceDetails();
         APIResponse GetAllStrengthConsiderationDetails();
