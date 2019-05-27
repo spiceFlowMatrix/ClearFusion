@@ -62,6 +62,18 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> DeleteOpportunityControl([FromBody] long id)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iProjectPeopleService.DeleteOpportunityControl(id, user.Id);
+      }
+      return response;
+    }
+
 
 
 
@@ -96,6 +108,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> DeleteLogisticsControl([FromBody] long id)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iProjectPeopleService.DeleteLogisticsControl(id, user.Id);
+      }
+      return response;
+    }
 
 
 
@@ -126,6 +149,18 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
       if (user != null)
       {
         response = await _iProjectPeopleService.EditActivitiesControl(model, user.Id);
+      }
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteActivitiesControl([FromBody] long id)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iProjectPeopleService.DeleteActivitiesControl(id, user.Id);
       }
       return response;
     }
@@ -163,5 +198,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> DeleteHiringControl([FromBody] long id)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iProjectPeopleService.DeleteHiringControl(id, user.Id);
+      }
+      return response;
+    }
+ 
   }
 }

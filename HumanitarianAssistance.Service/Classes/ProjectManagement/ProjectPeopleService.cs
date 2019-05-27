@@ -78,6 +78,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     RoleId = model.UserId,
                     CreatedDate = DateTime.UtcNow,
                     CreatedById = userId,
+                    IsDeleted = false
                 };
 
                 await _uow.ProjectOpportunityControlRepository.AddAsyn(obj);
@@ -101,23 +102,22 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
 
             try
             {
-                var opportunityDetail = await _uow.GetDbContext().ProjectOpportunityControl
-                                                                   .FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == model.Id);
+                var opportunityDetail = await _uow.ProjectOpportunityControlRepository
+                                                  .FindAsync(x => x.IsDeleted == false && x.Id == model.Id);
 
                 if (opportunityDetail == null)
                 {
                     throw new Exception(StaticResource.OpportunityControlNotfound);
                 }
 
-                ProjectOpportunityControl obj = new ProjectOpportunityControl
-                {
-                    UserID = model.UserId,
-                    RoleId = model.UserId,
-                    ModifiedDate = DateTime.UtcNow,
-                    ModifiedById = userId,
-                };
+                opportunityDetail.UserID = model.UserId;
+                opportunityDetail.RoleId = model.RoleId;
 
-                await _uow.ProjectOpportunityControlRepository.UpdateAsyn(obj);
+                opportunityDetail.ModifiedDate = DateTime.UtcNow;
+                opportunityDetail.ModifiedById = userId;
+                opportunityDetail.IsDeleted = false;
+
+                await _uow.ProjectOpportunityControlRepository.UpdateAsyn(opportunityDetail);
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
@@ -130,6 +130,39 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
 
             return response;
         }
+
+        public async Task<APIResponse> DeleteOpportunityControl(long opportunityControlId, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var opportunityDetail = await _uow.ProjectOpportunityControlRepository
+                                                  .FindAsync(x => x.IsDeleted == false && x.Id == opportunityControlId);
+
+                if (opportunityDetail == null)
+                {
+                    throw new Exception(StaticResource.OpportunityControlNotfound);
+                }
+
+                opportunityDetail.ModifiedDate = DateTime.UtcNow;
+                opportunityDetail.ModifiedById = userId;
+                opportunityDetail.IsDeleted = true;
+
+                await _uow.ProjectOpportunityControlRepository.UpdateAsyn(opportunityDetail);
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
 
 
 
@@ -201,23 +234,56 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
 
             try
             {
-                var opportunityDetail = await _uow.GetDbContext().ProjectLogisticsControl
-                                                                   .FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == model.Id);
+                var logisticsDetail = await _uow.ProjectLogisticsControlRepository
+                                                .FindAsync(x => x.IsDeleted == false && x.Id == model.Id);
 
-                if (opportunityDetail == null)
+                if (logisticsDetail == null)
                 {
-                    throw new Exception(StaticResource.OpportunityControlNotfound);
+                    throw new Exception(StaticResource.LogisticsControlNotfound);
                 }
 
-                ProjectLogisticsControl obj = new ProjectLogisticsControl
-                {
-                    UserID = model.UserId,
-                    RoleId = model.UserId,
-                    ModifiedDate = DateTime.UtcNow,
-                    ModifiedById = userId,
-                };
 
-                await _uow.ProjectLogisticsControlRepository.UpdateAsyn(obj);
+                logisticsDetail.UserID = model.UserId;
+                logisticsDetail.RoleId = model.RoleId;
+
+                logisticsDetail.ModifiedDate = DateTime.UtcNow;
+                logisticsDetail.ModifiedById = userId;
+                logisticsDetail.IsDeleted = false;
+        
+                await _uow.ProjectLogisticsControlRepository.UpdateAsyn(logisticsDetail);
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteLogisticsControl(long logisticsControlId, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var logisticsDetail = await _uow.ProjectLogisticsControlRepository
+                                                .FindAsync(x => x.IsDeleted == false && x.Id == logisticsControlId);
+
+                if (logisticsDetail == null)
+                {
+                    throw new Exception(StaticResource.LogisticsControlNotfound);
+                }
+
+
+                logisticsDetail.ModifiedDate = DateTime.UtcNow;
+                logisticsDetail.ModifiedById = userId;
+                logisticsDetail.IsDeleted = true;
+
+                await _uow.ProjectLogisticsControlRepository.UpdateAsyn(logisticsDetail);
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
@@ -301,23 +367,57 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
 
             try
             {
-                var opportunityDetail = await _uow.GetDbContext().ProjectActivitiesControl
-                                                                   .FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == model.Id);
+                var activitiesDetail = await _uow.ProjectActivitiesControlRepository
+                                                 .FindAsync(x => x.IsDeleted == false && x.Id == model.Id);
 
-                if (opportunityDetail == null)
+                if (activitiesDetail == null)
                 {
-                    throw new Exception(StaticResource.OpportunityControlNotfound);
+                    throw new Exception(StaticResource.ActivitiesControlNotfound);
                 }
 
-                ProjectActivitiesControl obj = new ProjectActivitiesControl
-                {
-                    UserID = model.UserId,
-                    RoleId = model.UserId,
-                    ModifiedDate = DateTime.UtcNow,
-                    ModifiedById = userId,
-                };
 
-                await _uow.ProjectActivitiesControlRepository.UpdateAsyn(obj);
+                activitiesDetail.UserID = model.UserId;
+                activitiesDetail.RoleId = model.RoleId;
+
+                activitiesDetail.ModifiedDate = DateTime.UtcNow;
+                activitiesDetail.ModifiedById = userId;
+                activitiesDetail.IsDeleted = false;
+
+
+                await _uow.ProjectActivitiesControlRepository.UpdateAsyn(activitiesDetail);
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<APIResponse> DeleteActivitiesControl(long activitiesControlId, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var activitiesDetail = await _uow.ProjectActivitiesControlRepository
+                                                 .FindAsync(x => x.IsDeleted == false && x.Id == activitiesControlId);
+
+                if (activitiesDetail == null)
+                {
+                    throw new Exception(StaticResource.ActivitiesControlNotfound);
+                }
+
+
+                activitiesDetail.ModifiedDate = DateTime.UtcNow;
+                activitiesDetail.ModifiedById = userId;
+                activitiesDetail.IsDeleted = true;
+
+                await _uow.ProjectActivitiesControlRepository.UpdateAsyn(activitiesDetail);
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
@@ -400,23 +500,23 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
 
             try
             {
-                var opportunityDetail = await _uow.GetDbContext().ProjectHiringControl
-                                                                 .FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == model.Id);
+                var hiringDetail = await _uow.ProjectHiringControlRepository
+                                             .FindAsync(x => x.IsDeleted == false && x.Id == model.Id);
 
-                if (opportunityDetail == null)
+                if (hiringDetail == null)
                 {
-                    throw new Exception(StaticResource.OpportunityControlNotfound);
+                    throw new Exception(StaticResource.HiringControlNotfound);
                 }
 
-                ProjectHiringControl obj = new ProjectHiringControl
-                {
-                    UserID = model.UserId,
-                    RoleId = model.UserId,
-                    ModifiedDate = DateTime.UtcNow,
-                    ModifiedById = userId,
-                };
+  
+                hiringDetail.UserID = model.UserId;
+                hiringDetail.RoleId = model.RoleId;
 
-                await _uow.ProjectHiringControlRepository.UpdateAsyn(obj);
+                hiringDetail.ModifiedDate = DateTime.UtcNow;
+                hiringDetail.ModifiedById = userId;
+                hiringDetail.IsDeleted = false;
+
+                await _uow.ProjectHiringControlRepository.UpdateAsyn(hiringDetail);
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
@@ -430,6 +530,38 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             return response;
         }
 
+        public async Task<APIResponse> DeleteHiringControl(long hiringControlId, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var hiringDetail = await _uow.GetDbContext().ProjectHiringControl
+                                                                   .FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == hiringControlId);
+
+                if (hiringDetail == null)
+                {
+                    throw new Exception(StaticResource.HiringControlNotfound);
+                }
+
+
+                hiringDetail.ModifiedDate = DateTime.UtcNow;
+                hiringDetail.ModifiedById = userId;
+                hiringDetail.IsDeleted = true;
+
+                await _uow.ProjectHiringControlRepository.UpdateAsyn(hiringDetail);
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
 
 
 
