@@ -21,7 +21,8 @@ namespace HumanitarianAssistance.Service.interfaces.ProjectManagement
         Task<APIResponse> AddActivitiesControl(ActivitiesControlAddModel model, string userId);
         Task<APIResponse> EditActivitiesControl(ActivitiesControlEditModel model, string userId);
         Task<APIResponse> DeleteActivitiesControl(long activitiesControlId, string userId);
-
+        Task<APIResponse> GetActivitiesControlPermission(long projectId, string userId);
+        
 
         Task<APIResponse> GetHiringControlList(long projectId);
         Task<APIResponse> AddHiringControl(HiringControlAddModel model, string userId);

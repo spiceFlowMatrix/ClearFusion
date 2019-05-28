@@ -65,6 +65,22 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             return response;
         }
 
+        public async Task<bool> ValidateOpportunityControl(long? opportunityControlId, long projectId, int userId, int roleId)
+        {
+            bool validateOpportunity = await _uow.ProjectOpportunityControlRepository
+                                                           .AnyAsync(x => x.IsDeleted == false &&
+                                                                          x.ProjectId == projectId &&
+                                                                          (opportunityControlId != null ? x.Id != opportunityControlId : true) &&
+                                                                          x.UserID == userId &&
+                                                                          x.RoleId == roleId);
+            if (validateOpportunity)
+            {
+                throw new Exception(StaticResource.sameRoleAlreadyExistForTheUser);
+            }
+
+            return true;
+        }
+
         public async Task<APIResponse> AddOpportunityControl(OpportunityControlAddModel model, string userId)
         {
             APIResponse response = new APIResponse();
@@ -80,6 +96,9 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     CreatedById = userId,
                     IsDeleted = false
                 };
+
+                // validation
+                await ValidateOpportunityControl(null, model.ProjectId, model.UserId, model.RoleId);
 
                 await _uow.ProjectOpportunityControlRepository.AddAsyn(obj);
 
@@ -109,6 +128,10 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                 {
                     throw new Exception(StaticResource.OpportunityControlNotfound);
                 }
+
+                // validation
+                await ValidateOpportunityControl(opportunityDetail.Id, model.ProjectId, model.UserId, model.RoleId);
+
 
                 opportunityDetail.UserID = model.UserId;
                 opportunityDetail.RoleId = model.RoleId;
@@ -198,6 +221,21 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             return response;
         }
 
+        public async Task<bool> ValidateLogisticsControl(long projectId, int userId, int roleId)
+        {
+            bool validateLogistics = await _uow.ProjectLogisticsControlRepository
+                                                           .AnyAsync(x => x.IsDeleted == false &&
+                                                                          x.ProjectId == projectId &&
+                                                                          x.UserID == userId &&
+                                                                          x.RoleId == roleId);
+            if (validateLogistics)
+            {
+                throw new Exception(StaticResource.sameRoleAlreadyExistForTheUser);
+            }
+
+            return true;
+        }
+
         public async Task<APIResponse> AddLogisticsControl(LogisticsControlAddModel model, string userId)
         {
             APIResponse response = new APIResponse();
@@ -212,6 +250,9 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     CreatedDate = DateTime.UtcNow,
                     CreatedById = userId,
                 };
+
+                // validation
+                await ValidateLogisticsControl(model.ProjectId, model.UserId, model.RoleId);
 
                 await _uow.ProjectLogisticsControlRepository.AddAsyn(obj);
 
@@ -249,7 +290,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                 logisticsDetail.ModifiedDate = DateTime.UtcNow;
                 logisticsDetail.ModifiedById = userId;
                 logisticsDetail.IsDeleted = false;
-        
+
                 await _uow.ProjectLogisticsControlRepository.UpdateAsyn(logisticsDetail);
 
                 response.StatusCode = StaticResource.successStatusCode;
@@ -331,6 +372,21 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             return response;
         }
 
+        public async Task<bool> ValidateActivitiesControl(long projectId, int userId, int roleId)
+        {
+            bool validateActivities = await _uow.ProjectActivitiesControlRepository
+                                                           .AnyAsync(x => x.IsDeleted == false &&
+                                                                          x.ProjectId == projectId &&
+                                                                          x.UserID == userId &&
+                                                                          x.RoleId == roleId);
+            if (validateActivities)
+            {
+                throw new Exception(StaticResource.sameRoleAlreadyExistForTheUser);
+            }
+
+            return true;
+        }
+
         public async Task<APIResponse> AddActivitiesControl(ActivitiesControlAddModel model, string userId)
         {
             APIResponse response = new APIResponse();
@@ -345,6 +401,9 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     CreatedDate = DateTime.UtcNow,
                     CreatedById = userId,
                 };
+
+                // validation
+                await ValidateActivitiesControl(model.ProjectId, model.UserId, model.RoleId);
 
                 await _uow.ProjectActivitiesControlRepository.AddAsyn(obj);
 
@@ -431,6 +490,46 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             return response;
         }
 
+        public async Task<APIResponse> GetActivitiesControlPermission(long projectId, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                var userDetail = await _uow.UserDetailsRepository
+                                           .FindAsync(x => x.AspNetUserId == userId && x.IsDeleted == false);
+
+                if (userDetail == null) {
+                    throw new Exception(StaticResource.UserNotExist);
+                }
+
+                ICollection<ProjectActivitiesControl> permissions = await _uow.ProjectActivitiesControlRepository
+                                                                                .FindAllAsync(x => x.ProjectId == projectId && 
+                                                                                                   x.UserID == userDetail.UserID &&
+                                                                                                   x.IsDeleted == false);
+
+                List<ProjectActivityPermissionModel> permissionList = permissions.Select(x => new ProjectActivityPermissionModel {
+                                                                                                Id = x.Id,
+                                                                                                ProjectId = x.ProjectId,
+                                                                                                RoleId = x.RoleId,
+                                                                                                UserId = x.UserID,
+                                                                                                DateAdded = x.CreatedDate
+                                                                                        }).ToList();
+
+
+                response.data.ProjectActivityPermissionList = permissionList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
 
 
         public async Task<APIResponse> GetHiringControlList(long projectId)
@@ -464,6 +563,21 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             return response;
         }
 
+        public async Task<bool> ValidateHiringControl(long projectId, int userId, int roleId)
+        {
+            bool validateHiring = await _uow.ProjectHiringControlRepository
+                                                           .AnyAsync(x => x.IsDeleted == false &&
+                                                                          x.ProjectId == projectId &&
+                                                                          x.UserID == userId &&
+                                                                          x.RoleId == roleId);
+            if (validateHiring)
+            {
+                throw new Exception(StaticResource.sameRoleAlreadyExistForTheUser);
+            }
+
+            return true;
+        }
+
         public async Task<APIResponse> AddHiringControl(HiringControlAddModel model, string userId)
         {
             APIResponse response = new APIResponse();
@@ -478,6 +592,9 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     CreatedDate = DateTime.UtcNow,
                     CreatedById = userId,
                 };
+
+                // validation
+                await ValidateHiringControl(model.ProjectId, model.UserId, model.RoleId);
 
                 await _uow.ProjectHiringControlRepository.AddAsyn(obj);
 
@@ -508,7 +625,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     throw new Exception(StaticResource.HiringControlNotfound);
                 }
 
-  
+
                 hiringDetail.UserID = model.UserId;
                 hiringDetail.RoleId = model.RoleId;
 

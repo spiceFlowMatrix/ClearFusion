@@ -165,6 +165,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetActivitiesControlPermission([FromBody] long projectId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iProjectPeopleService.GetActivitiesControlPermission(projectId, user.Id);
+      }
+      return response;
+    }
+
+
+
+    
 
 
     [HttpPost]
