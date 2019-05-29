@@ -242,6 +242,11 @@ namespace DataAccess
         private IGenericRepository<Errorlog> _errorlogRepository { get; set; }
         private IGenericRepository<ProjectActivityProvinceDetail> _projectActivityProvinceDetailRepository;
 
+        private IGenericRepository<ProjectOpportunityControl> _projectOpportunityControlRepository;
+        private IGenericRepository<ProjectLogisticsControl> _projectLogisticsControlRepository;
+        private IGenericRepository<ProjectActivitiesControl> _projectActivitiesControlRepository;
+        private IGenericRepository<ProjectHiringControl> _projectHiringControlRepository;
+
 
         public UnitOfWork(ApplicationDbContext mschaContext)
         {
@@ -265,6 +270,43 @@ namespace DataAccess
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+
+        public IGenericRepository<ProjectOpportunityControl> ProjectOpportunityControlRepository
+        {
+            get
+            {
+                return _projectOpportunityControlRepository =
+                    _projectOpportunityControlRepository ?? new GenericRepository<ProjectOpportunityControl>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectLogisticsControl> ProjectLogisticsControlRepository
+        {
+            get
+            {
+                return _projectLogisticsControlRepository =
+                    _projectLogisticsControlRepository ?? new GenericRepository<ProjectLogisticsControl>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectActivitiesControl> ProjectActivitiesControlRepository
+        {
+            get
+            {
+                return _projectActivitiesControlRepository =
+                    _projectActivitiesControlRepository ?? new GenericRepository<ProjectActivitiesControl>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectHiringControl> ProjectHiringControlRepository
+        {
+            get
+            {
+                return _projectHiringControlRepository =
+                    _projectHiringControlRepository ?? new GenericRepository<ProjectHiringControl>(_mschaContext);
+            }
         }
 
 

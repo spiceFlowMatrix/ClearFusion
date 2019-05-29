@@ -255,6 +255,12 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectActivityExtensions> ProjectActivityExtensions { get; set; }
         public DbSet<PensionDebitAccountMaster> PensionDebitAccountMaster { get; set; }
 
+        public DbSet<ProjectOpportunityControl> ProjectOpportunityControl { get; set; }
+        public DbSet<ProjectLogisticsControl> ProjectLogisticsControl { get; set; }
+        public DbSet<ProjectActivitiesControl> ProjectActivitiesControl { get; set; }
+        public DbSet<ProjectHiringControl> ProjectHiringControl { get; set; }
+
+
         #endregion
 
         #region Marketing
@@ -688,7 +694,9 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 79, PageName = "ProjectCashFlow", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 80, PageName = "ProjectBudgetLine", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 81, PageName = "BroadCastPolicy", ModuleId = 8, ModuleName = "Projects" },
-                new ApplicationPages { IsDeleted = false, PageId = 82, PageName = "ProposalReport", ModuleId = 8, ModuleName = "Projects" }
+                new ApplicationPages { IsDeleted = false, PageId = 82, PageName = "ProposalReport", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 83, PageName = "ProjectIndicators", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 84, PageName = "ProjectPeople", ModuleId = 8, ModuleName = "Projects" }
 
             );
 

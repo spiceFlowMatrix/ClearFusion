@@ -37,6 +37,8 @@ using Microsoft.Extensions.Logging;
 using HumanitarianAssistance.WebAPI.Filter;
 using Newtonsoft.Json;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Service.interfaces.ProjectManagement;
+using HumanitarianAssistance.Service.Classes.ProjectManagement;
 
 namespace HumanitarianAssistance
 {
@@ -166,6 +168,7 @@ namespace HumanitarianAssistance
       services.AddTransient<IAccountBalance, AccountBalanceService>();
       services.AddTransient<IProjectActivityService, ProjectActivityService>();
       services.AddTransient<IDashboardService, DashboardService>();
+      services.AddTransient<IProjectPeopleService, ProjectPeopleService>();
 
       //services.AddTransient<UserManager<AppUser>>();
 

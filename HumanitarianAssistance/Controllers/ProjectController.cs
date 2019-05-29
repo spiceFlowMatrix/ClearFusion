@@ -17,6 +17,7 @@ using System.IO;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.Common;
+using System.Collections.Generic;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
@@ -2216,9 +2217,23 @@ namespace HumanitarianAssistance.WebAPI.Controllers
           }
         }
       }
-    
-        return apiRespone;
+      return apiresponse;
+    }
 
+    [HttpPost]
+    public async Task<APIResponse> GetProjectJobsByProjectIds([FromBody] List<long> projectIds)
+    {
+      APIResponse apiresponse = new APIResponse();
+      apiresponse = await _iProject.GetProjectJobsByMultipleProjectIds(projectIds);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectBudgetLinesByProjectJobIds([FromBody] List<long?> projectJobIds)
+    {
+      APIResponse apiresponse = new APIResponse();
+      apiresponse = await _iProject.GetBudgetLinesByMultipleProjectJobIds(projectJobIds);
+      return apiresponse;
     }
 
     #endregion

@@ -23,6 +23,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using DataAccess;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
@@ -83,6 +84,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
+    [HttpPost]
+    public async Task<APIResponse> GetVoucherSummaryReportList([FromBody] VoucherSummaryFilterModel voucherSummaryFilter)
+    {
+      APIResponse response = await _iaccountRecords.GetVoucherSummaryList(voucherSummaryFilter);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetVoucherTransactionList([FromBody] TransactionFilterModel model)
+    {
+      APIResponse response = await _iaccountRecords.GetVoucherTransactionList(model);
+      return response;
+    }
 
   }
 }
