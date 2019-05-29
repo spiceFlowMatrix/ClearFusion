@@ -5158,7 +5158,7 @@ namespace HumanitarianAssistance.Service.Classes
                     }
 
                 }
-                response.data.ProjectBudgetLineList = budgetLineList;
+                response.data.ProjectBudgetLineList = budgetLineList.OrderByDescending(x=>x.DebitPercentage).ToList();
                 response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -5954,7 +5954,7 @@ namespace HumanitarianAssistance.Service.Classes
                         ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
                         int totalRows = workSheet.Dimension.Rows;
 
-                        var DataList = new List<ProjectBudgetLineDetailModel>();
+                        List<ProjectBudgetLineDetailModel> DataList = new List<ProjectBudgetLineDetailModel>();
 
                         for (int i = 2; i <= totalRows; i++)
                         {
@@ -5980,8 +5980,10 @@ namespace HumanitarianAssistance.Service.Classes
                             });
                             //Console.WriteLine("code", code);
                         }
+
                         //Note: GetBudgetLine List by project Id 
-                        var projectListdata = await GetBudgetLineByProjectId(DataList, projectId);
+                        List<ProjectBudgetLineDetailModel> projectListdata = GetBudgetLineByProjectId(DataList, projectId);
+
                         if (projectListdata.Count > 0)
                         {
                           //  ProjectBudgetLineDetail budgetLineDetailExist;
@@ -6013,7 +6015,7 @@ namespace HumanitarianAssistance.Service.Classes
                                         if (item.BudgetCode == null && item.ProjectJobCode != null)
                                         {
 
-                                            var ifExistbudgetDetail = IfexistBudgetLine(item.BudgetName);
+                                            ProjectBudgetLineDetail ifExistbudgetDetail = await IfexistBudgetLine(item.BudgetName);
 
                                             if (ifExistbudgetDetail == null)
                                             {
@@ -6057,7 +6059,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                                                 if (ifBudgetExist == null)
                                                 {
-                                                    var budgetLineObj = AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
+                                                    ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
                                                 }
                                                 else
                                                 {
@@ -6071,7 +6073,7 @@ namespace HumanitarianAssistance.Service.Classes
                                             else
                                             {
                                                 //Note : if project job is already exist and we created a new budgetLine then update budgetLine
-                                                var budgetLineObj = AddEditProjectBudgetLine(item, ifJobExist.ProjectJobId, userId);
+                                                ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, ifJobExist.ProjectJobId, userId);
                                             }
                                         }
                                         // Case 3::
@@ -6083,9 +6085,9 @@ namespace HumanitarianAssistance.Service.Classes
                                             {
                                                 //add new job here
                                                 var projectJobObj = await AddProjectJob(item.ProjectId.Value, item.ProjectJobName, userId);
-                                                
+
                                                 //Note: add the newly created project job with new budget line
-                                                var budgetLineObj = AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
+                                                ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
                                             }
                                             else
                                             {
@@ -6095,7 +6097,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                 // Note: if new budget line then update the newly created project job with new budget line
                                                 if (ifBudgetExist == null)
                                                 {
-                                                    var budgetLineObj = AddEditProjectBudgetLine(item, ifJobDetailExist.ProjectJobId, userId);
+                                                    ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, ifJobDetailExist.ProjectJobId, userId);
                                                 }
                                             }
 
@@ -6122,7 +6124,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                                                                 x.IsDeleted == false);
                                                     if (ifExistBudgetCode == null)
                                                     {
-                                                        var budgetLineObj = await AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
+                                                        ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
                                                     }
                                                     //update the project budget
                                                     else
@@ -6139,7 +6141,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                                                                 x.IsDeleted == false);
                                                     if (ifExistBudgetCode == null)
                                                     {
-                                                        var budgetLineObj = await AddEditProjectBudgetLine(item, ifjobExist.ProjectJobId, userId);
+                                                        ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, ifjobExist.ProjectJobId, userId);
                                                     }
                                                     //update the project budget
                                                     else
@@ -6182,7 +6184,7 @@ namespace HumanitarianAssistance.Service.Classes
                                             if (ifBudgetExist == null)
                                             {
 
-                                                var budgetLineObj = AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
+                                                ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
 
                                             }
                                             else
@@ -6198,7 +6200,7 @@ namespace HumanitarianAssistance.Service.Classes
                                         {
                                             if (ifBudgetExist == null)
                                             {
-                                                var budgetLineObj = AddEditProjectBudgetLine(item, ifJobExist.ProjectJobId, userId);
+                                                ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, ifJobExist.ProjectJobId, userId);
                                             }
                                             else
                                             {
@@ -6211,7 +6213,10 @@ namespace HumanitarianAssistance.Service.Classes
                                 }
                             }
                         }
-                    
+
+                       else {
+                            response.StatusCode = StaticResource.notFoundCode;
+                        }
                     }
                   
 
@@ -6230,7 +6235,7 @@ namespace HumanitarianAssistance.Service.Classes
 
         #region "getBudgetLineByProjectId for excel"
 
-        public async Task<List<ProjectBudgetLineDetailModel>> GetBudgetLineByProjectId(List<ProjectBudgetLineDetailModel> data, long projectId)
+        public  List<ProjectBudgetLineDetailModel> GetBudgetLineByProjectId(List<ProjectBudgetLineDetailModel> data, long projectId)
         {
 
             List<ProjectBudgetLineDetailModel> newobj = new List<ProjectBudgetLineDetailModel>();
@@ -6328,8 +6333,11 @@ namespace HumanitarianAssistance.Service.Classes
                 CreatedDate = DateTime.UtcNow,
                 IsDeleted = false,
                 CreatedById = userId,
+                BudgetCode=item.BudgetCode
             };
            var objdetail = await _uow.ProjectBudgetLineDetailRepository.AddAsyn(budgetLineObj);
+            await _uow.GetDbContext().SaveChangesAsync();
+
 
             if (objdetail.BudgetLineId != 0)
             {
