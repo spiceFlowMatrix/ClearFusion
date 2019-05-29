@@ -227,5 +227,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditProjectIndicator(EditIndicatorModel model, string userId);
         Task<APIResponse> GetProjectIndicatorDetailById(long IndicatorId);
         Task<APIResponse> GetProjectIndicatorQuestionsById(long id);
+        Task<APIResponse> GetSignedURL();
     }
 }
