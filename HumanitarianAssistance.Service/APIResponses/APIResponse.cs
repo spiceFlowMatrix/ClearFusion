@@ -490,6 +490,17 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectIndicatorModel ProjectIndicatorList { get; set; }
 
         public ICollection<ProjectActivityExtensions> ProjectActivityExtensionsList { get; set; }
+
+        public List<OpportunityControlViewModel> OpportunityControlList { get; set; }
+        public List<LogisticsControlViewModel> LogisticsControlList { get; set; }
+        public List<ActivitiesControlViewModel> ActivitiesControlList { get; set; }
+        public List<HiringControlViewModel> HiringControlList { get; set; }
+        public List<ProjectActivityPermissionModel> ProjectActivityPermissionList { get; set; }
+
+
+
+        
+
     }
 
 
