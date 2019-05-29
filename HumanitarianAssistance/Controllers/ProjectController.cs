@@ -2217,8 +2217,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
           }
         }
       }
-      return apiresponse;
+      return apiRespone;
     }
+    #endregion
 
     [HttpPost]
     public async Task<APIResponse> GetProjectJobsByProjectIds([FromBody] List<long> projectIds)
@@ -2236,6 +2237,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
-    #endregion
+    
   }
 }
