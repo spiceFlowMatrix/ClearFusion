@@ -6213,8 +6213,7 @@ namespace HumanitarianAssistance.Service.Classes
                                         }
 
                                         //  response.data.TransactionBudgetModelList = budgetLineDetailExist;
-                                        response.StatusCode = StaticResource.successStatusCode;
-                                        response.Message = "Success";
+                                        
                                     }
                                 }
                                 //Note : if budget code and job code are empty check for new budget line on the bases of name
@@ -6261,7 +6260,11 @@ namespace HumanitarianAssistance.Service.Classes
                                             }
                                         }
                                     }
+
                                 }
+
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Success";
                             }
                         }
 
