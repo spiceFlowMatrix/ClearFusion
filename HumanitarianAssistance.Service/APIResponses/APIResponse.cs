@@ -495,7 +495,11 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<LogisticsControlViewModel> LogisticsControlList { get; set; }
         public List<ActivitiesControlViewModel> ActivitiesControlList { get; set; }
         public List<HiringControlViewModel> HiringControlList { get; set; }
+        public List<ProjectActivityPermissionModel> ProjectActivityPermissionList { get; set; }
 
+
+
+        
 
     }
 

@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 {
    public class ProjectBudgetLineDetailModel
     {
-        public long BudgetLineId { get; set; }
+        public long? BudgetLineId { get; set; }
         public string BudgetCode { get; set; }
         public string BudgetName { get; set; }
         public double? InitialBudget { get; set; }

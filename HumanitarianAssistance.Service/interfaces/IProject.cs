@@ -8,6 +8,7 @@ using HumanitarianAssistance.ViewModels.Models.Project;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -227,5 +228,9 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditProjectIndicator(EditIndicatorModel model, string userId);
         Task<APIResponse> GetProjectIndicatorDetailById(long IndicatorId);
         Task<APIResponse> GetProjectIndicatorQuestionsById(long id);
+        //void GetExcelFile(IFormFile fileKey, string UserId);
+        Task<APIResponse> GetExcelFile(Stream file, string UserId,long projectId);
+
+
     }
 }

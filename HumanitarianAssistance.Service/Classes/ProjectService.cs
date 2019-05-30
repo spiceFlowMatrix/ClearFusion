@@ -1,29 +1,31 @@
 ﻿using AutoMapper;
 using DataAccess;
 using DataAccess.DbEntities;
-using HumanitarianAssistance.Common.Helpers;
-using HumanitarianAssistance.Service.APIResponses;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using HumanitarianAssistance.Service.interfaces;
-using HumanitarianAssistance.ViewModels.Models.Project;
+using DataAccess.DbEntities.ErrorLog;
 using DataAccess.DbEntities.Project;
 using HumanitarianAssistance.Common.Enums;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using Microsoft.EntityFrameworkCore.Storage;
-using HumanitarianAssistance.ViewModels.Models;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
-using DataAccess.DbEntities.ErrorLog;
-using HumanitarianAssistance.ViewModels.SPModels;
+using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.Classes.AccountingNew;
-using HumanitarianAssistance.Service.CommonUtility;
 using HumanitarianAssistance.Service.Classes.ProjectManagement;
+using HumanitarianAssistance.Service.CommonUtility;
+using HumanitarianAssistance.Service.interfaces;
+using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.Common;
+using HumanitarianAssistance.ViewModels.Models.Project;
+using HumanitarianAssistance.ViewModels.SPModels;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -4855,8 +4857,12 @@ namespace HumanitarianAssistance.Service.Classes
 
         public async Task<string> GetProjectBudgetLineCode(ProjectBudgetLineDetail model)
         {
-            ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId);
-            long projectjobCount = await _uow.GetDbContext().ProjectBudgetLineDetail.LongCountAsync(x => x.ProjectId == model.ProjectId);
+            ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail
+                                                                   .FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
+                                                                                             x.IsDeleted == false);
+            long projectjobCount = await _uow.GetDbContext().ProjectBudgetLineDetail
+                                                            .LongCountAsync(x => x.ProjectId == model.ProjectId &&
+                                                                                 x.IsDeleted == false);
 
             return ProjectUtility.GenerateProjectBudgetLineCode(projectDetail.ProjectCode, projectjobCount++);
         }
@@ -5173,7 +5179,7 @@ namespace HumanitarianAssistance.Service.Classes
                     }
 
                 }
-                response.data.ProjectBudgetLineList = budgetLineList;
+                response.data.ProjectBudgetLineList = budgetLineList.OrderByDescending(x=>x.DebitPercentage).ToList();
                 response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -5981,6 +5987,458 @@ namespace HumanitarianAssistance.Service.Classes
             }
 
             return response;
+        }
+        #endregion
+
+
+        public async Task<APIResponse> GetExcelFile(Stream file, string userId, long projectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+
+                if (projectId != 0)
+                {
+                    using (ExcelPackage package = new ExcelPackage(file))
+                    {
+                        ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+                        int totalRows = workSheet.Dimension.Rows;
+
+                        List<ProjectBudgetLineDetailModel> DataList = new List<ProjectBudgetLineDetailModel>();
+
+                        for (int i = 2; i <= totalRows; i++)
+                        {
+                            //var t = workSheet.Cells[i, 2].Value;
+                            //long ProjectJobId = Convert.ToInt64(workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString());
+
+
+                            //Console.WriteLine("the value t",ProjectJobId);
+                            //string code = workSheet.Cells[i, 3].Value == null ? null : workSheet.Cells[i, 3].Value.ToString();
+                            DataList.Add(new ProjectBudgetLineDetailModel
+                            {
+                                ProjectId = Convert.ToInt64(workSheet.Cells[i, 1].Value == null ? null : workSheet.Cells[i, 1].Value.ToString()),
+                                ProjectJobId = Convert.ToInt64(workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString()),
+                                ProjectJobCode = workSheet.Cells[i, 3].Value == null ? null : workSheet.Cells[i, 3].Value.ToString(),
+                                ProjectJobName = workSheet.Cells[i, 4].Value == null ? null : workSheet.Cells[i, 4].Value.ToString(),
+                                BudgetLineId = Convert.ToInt64(workSheet.Cells[i, 5].Value == null ? null : workSheet.Cells[i, 5].Value.ToString()),
+                                BudgetCode = workSheet.Cells[i, 6].Value == null ? null : workSheet.Cells[i, 6].Value.ToString(),
+                                BudgetName = workSheet.Cells[i, 7].Value == null ? null : workSheet.Cells[i, 7].Value.ToString(),
+                                InitialBudget = Convert.ToInt64(workSheet.Cells[i, 8].Value == null ? null : workSheet.Cells[i, 8].Value.ToString()),
+                                CurrencyId = Convert.ToInt32(workSheet.Cells[i, 9].Value == null ? null : workSheet.Cells[i, 9].Value.ToString()),
+                                CurrencyName = workSheet.Cells[i, 10].Value == null ? null : workSheet.Cells[i, 10].Value.ToString(),
+                                CreatedDate = Convert.ToDateTime(workSheet.Cells[i, 11].Value == null ? null : workSheet.Cells[i, 11].Value.ToString()),
+                            });
+                            //Console.WriteLine("code", code);
+                        }
+
+                        //Note: GetBudgetLine List by project Id 
+                        List<ProjectBudgetLineDetailModel> projectListdata = GetBudgetLineByProjectId(DataList, projectId);
+
+                        if (projectListdata.Count > 0)
+                        {
+                          //  ProjectBudgetLineDetail budgetLineDetailExist;
+
+                            foreach (var item in projectListdata)
+                            {
+                                ProjectBudgetLineDetail budgetLineDetailExist = new ProjectBudgetLineDetail();
+
+
+                                if (!string.IsNullOrEmpty(item.BudgetCode) && !string.IsNullOrEmpty(item.ProjectJobCode))
+                                {
+
+                                    //Note : check fro existing Record budget and job
+                                    budgetLineDetailExist = await _uow.GetDbContext()
+                                                                      .ProjectBudgetLineDetail
+                                                                      .Include(x => x.ProjectJobDetail)
+                                                                      .FirstOrDefaultAsync(x =>
+                                                                                           x.ProjectId == item.ProjectId &&
+                                                                                           x.BudgetCode == item.BudgetCode &&
+                                                                                           x.ProjectJobDetail.ProjectJobCode == item.ProjectJobCode &&
+                                                                                           x.IsDeleted == false);
+
+
+                                    if (budgetLineDetailExist == null)
+                                    {
+                                        ProjectBudgetLineDetail obj = _mapper.Map<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>(item);
+
+                                        // CASE 1 :: Note: check for creating a new budgetLine having existing Project Job
+                                        if (item.BudgetCode == null && item.ProjectJobCode != null)
+                                        {
+
+                                            ProjectBudgetLineDetail ifExistbudgetDetail = await IfexistBudgetLine(item.BudgetName);
+
+                                            if (ifExistbudgetDetail == null)
+                                            {
+                                                obj.CreatedDate = DateTime.UtcNow;
+                                                obj.IsDeleted = false;
+                                                obj.CreatedById = userId;
+
+                                                await _uow.ProjectBudgetLineDetailRepository.AddAsyn(obj);
+
+                                                if (obj.BudgetLineId != 0)
+                                                {
+                                                    obj.BudgetCode = await GetProjectBudgetLineCode(obj);
+
+                                                    await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(obj);
+
+                                                }
+                                            }
+                                            // note : update  budgetline with new
+                                            else
+                                            {
+                                                obj.ModifiedDate = DateTime.UtcNow;
+                                                obj.IsDeleted = false;
+                                                obj.ModifiedById = userId;
+                                                await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(obj);
+                                            }
+
+                                        }
+                                        // CASE 2 ::  Note: create a new project job first then add new budgetLine 
+                                        else if (item.BudgetCode == null && item.ProjectJobCode == null)
+                                        {
+                                            // Note: call method to check job exsit or not
+                                            var ifJobExist = await IfExistProjectJob(item.ProjectJobName);
+                                            //call add ProjectJob when job is new 
+                                            if (ifJobExist == null)
+                                            {
+                                                var projectJobObj = await AddProjectJob(item.ProjectId.Value, item.ProjectJobName, userId);
+
+                                                //Note : check for budget exists
+
+                                                var ifBudgetExist = await IfexistBudgetLine(item.BudgetName);
+
+                                                if (ifBudgetExist == null)
+                                                {
+                                                    ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
+                                                }
+                                                else
+                                                {
+                                                    //Note : if budgetLine exist already then update the newly created job with previous one
+                                                    ifBudgetExist.ProjectJobId = projectJobObj.ProjectJobId;
+                                                    await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(ifBudgetExist);
+                                                }
+                                                //Note: add the newly created project job with new budget line
+                                            }
+
+                                            else
+                                            {
+                                                //Note : if project job is already exist and we created a new budgetLine then update budgetLine
+                                                ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, ifJobExist.ProjectJobId, userId);
+                                            }
+                                        }
+                                        // Case 3::
+                                        else if (item.BudgetCode != null && item.ProjectJobCode == null)
+                                        {
+                                            //check for is the project job name is already exist 
+                                            var ifJobDetailExist = await IfExistProjectJob(item.ProjectJobName);
+                                            if (ifJobDetailExist == null)
+                                            {
+                                                //add new job here
+                                                var projectJobObj = await AddProjectJob(item.ProjectId.Value, item.ProjectJobName, userId);
+
+                                                //Note: add the newly created project job with new budget line
+                                                ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
+                                            }
+                                            else
+                                            {
+                                                //Note : if project job exist and budgetLine already exist then do nothing else update the 
+                                                var ifBudgetExist = await IfexistBudgetLine(item.BudgetName);
+
+                                                // Note: if new budget line then update the newly created project job with new budget line
+                                                if (ifBudgetExist == null)
+                                                {
+                                                    ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, ifJobDetailExist.ProjectJobId, userId);
+                                                }
+                                            }
+
+                                        }
+                                        //CASE 4::
+                                        else if (item.BudgetCode != null && item.ProjectJobCode != null)
+                                        {
+                                            //Note: check string format for budget code and project code
+                                            var ifBudgetCodeFormtCorrect = await CheckBudgetCodeFormat(item.BudgetCode);
+                                            // Note: check for project job code status
+                                            var ifProjectCodeFormatCorrect = await CheckProjectCodeFormat(item.ProjectJobCode);
+                                            if (ifBudgetCodeFormtCorrect == true && ifProjectCodeFormatCorrect == true)
+                                            {
+                                                //var ifJobExist = await IfExistProjectJob(item.ProjectJobName);
+                                                var ifjobExist = await _uow.GetDbContext().ProjectJobDetail
+                                                                                          .FirstOrDefaultAsync(x => x.ProjectJobCode == item.ProjectJobCode &&
+                                                                                                                    x.IsDeleted == false);
+                                                if (ifjobExist == null)
+                                                {
+                                                    var projectJobObj = await AddProjectJob(item.ProjectId.Value, item.ProjectJobName, userId);
+
+                                                    var ifExistBudgetCode = await _uow.GetDbContext().ProjectBudgetLineDetail
+                                                                                                     .FirstOrDefaultAsync(x => x.BudgetCode == item.BudgetCode &&
+                                                                                                                                x.IsDeleted == false);
+                                                    if (ifExistBudgetCode == null)
+                                                    {
+                                                        ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
+                                                    }
+                                                    //update the project budget
+                                                    else
+                                                    {
+                                                        ifExistBudgetCode.ProjectJobId = projectJobObj.ProjectJobId;
+                                                        await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(ifExistBudgetCode);
+                                                    }
+
+                                                }
+                                                else
+                                                {
+                                                    var ifExistBudgetCode = await _uow.GetDbContext().ProjectBudgetLineDetail
+                                                                                                     .FirstOrDefaultAsync(x => x.BudgetCode == item.BudgetCode &&
+                                                                                                                                x.IsDeleted == false);
+                                                    if (ifExistBudgetCode == null)
+                                                    {
+                                                        ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, ifjobExist.ProjectJobId, userId);
+                                                    }
+                                                    //update the project budget
+                                                    else
+                                                    {
+                                                        ifExistBudgetCode.ProjectJobId = ifjobExist.ProjectJobId;
+                                                        ifExistBudgetCode.ModifiedDate = DateTime.UtcNow;
+                                                        ifExistBudgetCode.ModifiedById = userId;
+                                                        await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(ifExistBudgetCode);
+                                                    }
+
+                                                }
+                                            }
+
+                                            else
+                                            {
+                                                throw new Exception("Please provide correct format");
+                                            }
+                                        }
+
+                                        //  response.data.TransactionBudgetModelList = budgetLineDetailExist;
+                                        response.StatusCode = StaticResource.successStatusCode;
+                                        response.Message = "Success";
+                                    }
+                                }
+                                //Note : if budget code and job code are empty check for new budget line on the bases of name
+                                else
+                                {
+                                    if (!string.IsNullOrEmpty(item.BudgetName) && !string.IsNullOrEmpty(item.ProjectJobName))
+                                    {
+                                        ProjectBudgetLineDetail obj = _mapper.Map<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>(item);
+                                        // Note: call method to check job exsit or not
+                                        var ifJobExist = await IfExistProjectJob(item.ProjectJobName);
+                                        var ifBudgetExist = await IfexistBudgetLine(item.BudgetName);
+
+                                        //call add ProjectJob when job is new 
+                                        if (ifJobExist == null)
+                                        {
+                                            var projectJobObj = await AddProjectJob(item.ProjectId.Value, item.ProjectJobName, userId);
+
+                                            if (ifBudgetExist == null)
+                                            {
+
+                                                ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, userId);
+
+                                            }
+                                            else
+                                            {
+                                                //Note : if budgetLine exist already then update the newly created job with previous one
+                                                ifBudgetExist.ProjectJobId = projectJobObj.ProjectJobId;
+                                                await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(ifBudgetExist);
+                                                await _uow.GetDbContext().SaveChangesAsync();
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (ifBudgetExist == null)
+                                            {
+                                                ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, ifJobExist.ProjectJobId, userId);
+                                            }
+                                            else
+                                            {
+                                                //Note : if budgetLine exist already then update the newly created job with previous one
+                                                ifBudgetExist.ProjectJobId = ifJobExist.ProjectJobId;
+                                                await _uow.ProjectBudgetLineDetailRepository.UpdateAsyn(ifBudgetExist);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                       else {
+                            response.StatusCode = StaticResource.notFoundCode;
+                        }
+                    }
+                  
+
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex;
+            }
+            return response;
+           
+
+        }
+
+
+        #region "getBudgetLineByProjectId for excel"
+
+        public  List<ProjectBudgetLineDetailModel> GetBudgetLineByProjectId(List<ProjectBudgetLineDetailModel> data, long projectId)
+        {
+
+            List<ProjectBudgetLineDetailModel> newobj = new List<ProjectBudgetLineDetailModel>();
+            var selectedProjectData = data.Where(x => x.ProjectId == projectId).Select(x => new ProjectBudgetLineDetailModel
+            {
+                ProjectId = x.ProjectId,
+                ProjectJobId = x.ProjectJobId,
+                ProjectJobCode = x.ProjectJobCode,
+                ProjectJobName = x.ProjectJobName,
+                BudgetLineId = x.BudgetLineId,
+                BudgetCode = x.BudgetCode,
+                BudgetName = x.BudgetName,
+                InitialBudget = x.InitialBudget,
+                CurrencyId = x.CurrencyId,
+                CurrencyName = x.CurrencyName,
+                CreatedDate = x.CreatedDate,
+            }).ToList();
+
+            return selectedProjectData;
+
+        }
+
+        #endregion
+
+
+        #region "ifexistBudgetLine fro excel"
+        public async Task<ProjectBudgetLineDetail> IfexistBudgetLine(string item)
+        {
+            ProjectBudgetLineDetail ifExistbudgetDetail = await _uow.GetDbContext().ProjectBudgetLineDetail
+                                                                                                    .FirstOrDefaultAsync(x =>
+                                                                                                    x.BudgetName == item &&
+                                                                                                    x.IsDeleted == false);
+            return ifExistbudgetDetail;
+        }
+
+        #endregion
+
+        #region "IfExistProjectJob for excel"
+        public async Task<ProjectJobDetail> IfExistProjectJob(string item)
+        {
+            ProjectJobDetail ifJobExist = await _uow.GetDbContext().ProjectJobDetail
+                                                                  .FirstOrDefaultAsync(x =>
+                                                                                       x.ProjectJobName == item &&
+                                                                                       x.IsDeleted == false);
+            return ifJobExist;
+
+        }
+        #endregion
+
+
+        #region "add project job for excel"
+        public async Task<ProjectJobDetail> AddProjectJob(long projectId, string projectJobName, string userId)
+        {
+            ProjectJobDetail projectJobObj = new ProjectJobDetail()
+            {
+                ProjectId = projectId,
+                ProjectJobName = projectJobName,
+                CreatedDate = DateTime.UtcNow,
+                IsDeleted = false,
+                CreatedById = userId
+            };
+
+            await _uow.ProjectJobDetailRepository.AddAsyn(projectJobObj);
+
+            if (projectJobObj.ProjectJobId != 0)
+            {
+                // update project job code
+                projectJobObj.ProjectJobCode = await GetProjectJobCode(projectJobObj);
+
+                await _uow.ProjectJobDetailRepository.UpdateAsyn(projectJobObj);
+            }
+            else
+            {
+                throw new Exception("Project Job can not be created");
+            }
+
+            return projectJobObj;
+        }
+
+
+        #endregion
+
+
+        #region "Add edit project budget line for excel sheet"
+        public async Task<ProjectBudgetLineDetail> AddEditProjectBudgetLine(ProjectBudgetLineDetailModel item, long projectJobId, string userId)
+        {
+
+            ProjectBudgetLineDetail budgetLineObj = new ProjectBudgetLineDetail()
+            {
+                ProjectJobId = projectJobId,
+                ProjectId = item.ProjectId,
+                InitialBudget = item.InitialBudget,
+                CurrencyId = item.CurrencyId,
+                BudgetName = item.BudgetName,
+                CreatedDate = DateTime.UtcNow,
+                IsDeleted = false,
+                CreatedById = userId,
+                BudgetCode=item.BudgetCode
+            };
+           var objdetail = await _uow.ProjectBudgetLineDetailRepository.AddAsyn(budgetLineObj);
+            await _uow.GetDbContext().SaveChangesAsync();
+
+
+            if (objdetail.BudgetLineId != 0)
+            {
+                objdetail.BudgetCode = await GetProjectBudgetLineCode(objdetail);
+                //Note : update using repository not working thats why update using entity. 
+                 _uow.GetDbContext().ProjectBudgetLineDetail.Update(objdetail);
+                await _uow.GetDbContext().SaveChangesAsync();
+
+
+            }
+
+            else
+            {
+                throw new Exception("Budget line can not be created");
+            }
+            return budgetLineObj;
+        }
+
+        #endregion
+
+        #region check string format
+        public async Task<bool> CheckBudgetCodeFormat(string budgetCode)
+        {
+            if (!string.IsNullOrEmpty(budgetCode))
+            {
+                string budgetFirstIndex = budgetCode.Substring(0, 1);
+                if (budgetFirstIndex == "P")
+                {
+                    var stringnew = budgetCode.Split('-')[1].Contains('B');
+
+                }
+            }
+            return true;
+        }
+        #endregion
+
+        #region"CheckProjectCodeFormat"
+        public async Task<bool> CheckProjectCodeFormat(string jobCode)
+        {
+            if (!string.IsNullOrEmpty(jobCode))
+            {
+                string jobCodeFirstIndex = jobCode.Substring(0, 1);
+
+                if (jobCodeFirstIndex == "P")
+                {
+                    var stringnew = jobCode.Split('-')[1].Contains('J');
+
+                }
+            }
+            return true;
         }
         #endregion
     }
