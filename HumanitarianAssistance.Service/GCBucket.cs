@@ -725,18 +725,18 @@ namespace HumanitarianAssistance.Service
             {
                 var scopes = new string[] { "https://www.googleapis.com/auth/devstorage.read_write" };
 
-                string cred= Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+                //string cred= Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
 
-                //ServiceAccountCredential cred;
+                ServiceAccountCredential cred;
 
-                //using (var stream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
-                //{
-                //    cred = GoogleCredential.FromStream(stream)
-                //                           .CreateScoped(scopes)
-                //                           .UnderlyingCredential as ServiceAccountCredential;
-                //}
+                using (var stream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
+                {
+                    cred = GoogleCredential.FromStream(stream)
+                                           .CreateScoped(scopes)
+                                           .UnderlyingCredential as ServiceAccountCredential;
+                }
 
-                var urlSigner = UrlSigner.FromServiceAccountPath(cred);
+                var urlSigner = UrlSigner.FromServiceAccountCredential(cred);
 
                 return await urlSigner.SignAsync(bucketName, objectName, TimeSpan.FromMinutes(10), HttpMethod.Get);
             }

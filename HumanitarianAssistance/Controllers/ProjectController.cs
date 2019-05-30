@@ -2196,21 +2196,5 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       apiresponse = await _iProject.GetBudgetLinesByMultipleProjectJobIds(projectJobIds);
       return apiresponse;
     }
-
-
-
-    // =======================================
-    // Demo for Signed URL
-    // =======================================
-
-    [HttpGet]
-    [AllowAnonymous]
-    public async Task<APIResponse> GetSignedURL()
-    {
-      APIResponse apiresponse = new APIResponse();
-      apiresponse = await _iProject.GetSignedURL();
-      return apiresponse;
-    }
-
   }
 }

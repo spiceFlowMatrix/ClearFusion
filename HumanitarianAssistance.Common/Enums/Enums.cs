@@ -169,13 +169,6 @@ namespace HumanitarianAssistance.Common.Enums
         SubLevel = 999,
         InputLevel = 999999
     }
-    public enum MimeType
-    {
-        MainLevel = 9,
-        ControlLevel = 99,
-        SubLevel = 999,
-        InputLevel = 999999
-    }
     public enum ProposalDocumentType
     {
         [Description("EOI")]
@@ -201,5 +194,18 @@ namespace HumanitarianAssistance.Common.Enums
         public const string Friday = "Friday";
         public const string Saturday = "Saturday";
         public const string Sunday = "Sunday";
+    }
+
+    public enum FileSourceEntityTypes
+    {
+        Voucher = 1,
+        Account = 2,
+        ProjectDetail = 3,
+        ProjectProposal = 4,
+        ProjectProposalSupportingDoc = 5,
+        ProjectActivityImplementation = 6,
+        ProjectActivityMonitoring = 7,
+        ProjectActivityPlanning = 8,
+        DonorDetail = 9,
     }
 }

@@ -30,9 +30,9 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddVoucherTransactionDetail(List<VoucherTransactionModel> model, string UserId);
 
         Task<APIResponse> EditVoucherTransactionDetail(VoucherTransactionModel model);
-        Task<APIResponse> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo);
-        Task<APIResponse> AddVoucherDocumentDetail(VoucherDocumentDetailModel model);
-        Task<APIResponse> DeleteVoucherDocumentDetail(int DocumentId, string ModifiedById);	
+        //Task<APIResponse> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo);
+        // Task<APIResponse> AddVoucherDocumentDetail(VoucherDocumentDetailModel model);
+        //Task<APIResponse> DeleteVoucherDocumentDetail(int DocumentId, string ModifiedById);	
         Task<APIResponse> GetTrailBlanceDetailsByCondition(LedgerModels model);
         //Task<APIResponse> GetTrailBlanceDetailsByCondition(int? OfficeId = null, DateTime? Fromdate = null, DateTime? Todate = null, int? CurrencyId = null, int? RecordType = null);
         Task<APIResponse> GetAllLedgerDetailsByCondition(LedgerModels model);
