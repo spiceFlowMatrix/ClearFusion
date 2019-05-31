@@ -51,7 +51,23 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     public async Task<APIResponse> GetSignedURL([FromBody] DownloadObjectGCBucketModel model)
     {
       APIResponse apiresponse = new APIResponse();
-      apiresponse = await _iFileManagement.GetSignedURL(model);
+      apiresponse = _iFileManagement.GetSignedURL(model);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetDocumentFiles([FromBody] FileModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      apiresponse = await _iFileManagement.GetDocumentFiles(model);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteDocumentFiles([FromBody] FileModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      apiresponse = await _iFileManagement.DeleteDocumentFile(model);
       return apiresponse;
     }
 

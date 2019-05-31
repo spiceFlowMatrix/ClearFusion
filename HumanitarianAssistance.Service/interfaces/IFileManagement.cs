@@ -10,7 +10,9 @@ namespace HumanitarianAssistance.Service.interfaces
 {
     public interface IFileManagement
     {
-        Task<APIResponse> GetSignedURL(DownloadObjectGCBucketModel model);
+        APIResponse GetSignedURL(DownloadObjectGCBucketModel model);
         Task<APIResponse> SaveUploadedFileInfo(FileManagementModel model);
+        Task<APIResponse> GetDocumentFiles(FileModel model);
+        Task<APIResponse> DeleteDocumentFile(FileModel model);
     }
 }
