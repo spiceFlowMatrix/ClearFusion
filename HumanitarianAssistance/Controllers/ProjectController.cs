@@ -31,6 +31,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     private IHostingEnvironment _hostingEnvironment;
     private IProject _iProject;
     private IProjectActivityService _iActivity;
+    #region "Constructor"
     public ProjectController(
        UserManager<AppUser> userManager,
       IProject iProject,
@@ -49,6 +50,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         NullValueHandling = NullValueHandling.Ignore
       };
     }
+
+    #endregion
+
     #region Donor information
     [HttpPost]
 
@@ -212,7 +216,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     #endregion
-
 
     #region Area Information
 
@@ -703,7 +706,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     #endregion
-
 
     #region projectApproval
     [HttpPost]
@@ -1704,7 +1706,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #endregion
 
-
     #region demo upload file 
 
     [HttpPost, DisableRequestSizeLimit]
@@ -1869,7 +1870,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #endregion
 
-
     #region "DownloadFileFromBucket"
     [HttpPost]
     public async Task<APIResponse> DownloadFileFromBucket([FromBody]DownloadObjectGCBucketModel model)
@@ -1894,8 +1894,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
     #endregion
-
-
 
     #region "GetProjectProposalReport"
     [HttpPost]
@@ -1959,13 +1957,15 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #endregion
 
+    #region "GetProjectProposalAmountSummary"
+
     [HttpPost]
     public async Task<APIResponse> GetProjectProposalAmountSummary([FromBody]ProjectProposalReportFilterModel model)
     {
       APIResponse apiresponse = await _iProject.GetProjectProposalAmountSummary(model);
       return apiresponse;
     }
-
+    #endregion
 
     #region "upload file using signed url"
     [HttpPost]
@@ -1975,7 +1975,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
     #endregion
-
 
     #region "project activity monitoring"
     [HttpPost]
@@ -2005,9 +2004,33 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       APIResponse apiresponse = await _iActivity.GetProjectMonitoringList(activityId);
       return apiresponse;
     }
+
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectMonitoringByMonitoringId([FromBody]int Id)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectMonitoringByMonitoringId(Id);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectMonitoringByMonitoringId([FromBody]ProjectMonitoringViewModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.EditProjectMonitoringByMonitoringId(model, id);
+      }
+      return apiresponse;
+    }
+
     #endregion
 
-    #region" project activity extension"
+    #region"project activity extension"
 
     [HttpPost]
     public async Task<APIResponse> GetProjectActivityExtension([FromBody]long activityId)
@@ -2066,6 +2089,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     #endregion
+
+    #region "Project sub activity"
 
     [HttpPost]
     public async Task<APIResponse> GetProjectSubActivityDetail([FromBody]int projectId)
@@ -2150,13 +2175,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiresponse;
     }
-    [HttpPost]
-    public async Task<APIResponse> GetProjectMonitoringByMonitoringId([FromBody]int Id)
-    {
-      APIResponse apiresponse = await _iActivity.GetProjectMonitoringByMonitoringId(Id);
-      return apiresponse;
-    }
-
+   
 
     [HttpPost]
     public async Task<APIResponse> GetProjectActivityDetailByActivityId([FromBody]long activityId)
@@ -2166,20 +2185,41 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
-    [HttpPost]
-    public async Task<APIResponse> EditProjectMonitoringByMonitoringId([FromBody]ProjectMonitoringViewModel model)
+    #endregion
+
+    #region "BudgetLineExcelImport"
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> ExcelImportOfBudgetLine([FromForm] IFormFile fileKey ,string projectId)
     {
-      APIResponse apiresponse = new APIResponse();
-
+      APIResponse apiRespone = new APIResponse();
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
       if (user != null)
       {
-        string id = user.Id;
-        apiresponse = await _iActivity.EditProjectMonitoringByMonitoringId(model, id);
+        if (fileKey != null)
+        {
+          string fileExtension = Path.GetExtension(fileKey.FileName);
+          if (fileExtension == ".xls" || fileExtension == ".xlsx")
+          {
+            var stream = fileKey.OpenReadStream();
+            StreamReader reader = new StreamReader(stream);
+
+            string result = reader.ReadToEnd();
+
+            var id = user.Id;
+            var userName = user.UserName;
+            long projectID = Convert.ToInt64(projectId);
+            apiRespone = await _iProject.GetExcelFile(stream, id, projectID);
+          }
+          else
+          {
+            apiRespone.StatusCode = StaticResource.FileNotSupported;
+            apiRespone.Message = StaticResource.FileText;
+          }
+        }
       }
-      return apiresponse;
+      return apiRespone;
     }
+    #endregion
 
     [HttpPost]
     public async Task<APIResponse> GetProjectJobsByProjectIds([FromBody] List<long> projectIds)
