@@ -912,7 +912,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
                 var employeeAccountHeadPayroll = (from payrollHead in await _uow.GetDbContext().PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync()
-                                                  join payrollChild in await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x => x.EmployeeId == EmployeeId).ToListAsync() on payrollHead.PayrollHeadId equals payrollChild.PayrollHeadId
+                                                  join payrollChild in await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x => x.EmployeeId == EmployeeId && x.IsDeleted == false).ToListAsync() on payrollHead.PayrollHeadId equals payrollChild.PayrollHeadId
                                                   into employeepayrollinfo
                                                   from employeepayrolls in employeepayrollinfo.DefaultIfEmpty()
                                                   select new EmployeePayrollAccountModel

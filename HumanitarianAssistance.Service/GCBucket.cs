@@ -724,6 +724,9 @@ namespace HumanitarianAssistance.Service
             try
             {
                 var scopes = new string[] { "https://www.googleapis.com/auth/devstorage.read_write" };
+
+                //string cred= Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+
                 ServiceAccountCredential cred;
 
                 using (var stream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))

@@ -731,13 +731,13 @@ namespace HumanitarianAssistance.Controllers
 
     }
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<object> GetAllVoucherDetails()
-    {
-      APIResponse response = await _ivoucherDetail.GetAllVoucherDetails();
-      return response;
-    }
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<object> GetAllVoucherDetails()
+    //{
+    //  APIResponse response = await _ivoucherDetail.GetAllVoucherDetails();
+    //  return response;
+    //}
 
 
     [HttpGet]
@@ -924,45 +924,45 @@ namespace HumanitarianAssistance.Controllers
     }
 
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<object> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo)
-    {
-      APIResponse response = await _ivoucherDetail.GetAllVoucherDocumentDetailByVoucherNo(VoucherNo);
-      return response;
-    }
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<object> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo)
+    //{
+    //  APIResponse response = await _ivoucherDetail.GetAllVoucherDocumentDetailByVoucherNo(VoucherNo);
+    //  return response;
+    //}
 
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<object> AddVoucherDocumentDetail([FromBody] VoucherDocumentDetailModel model)
-    {
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      var s = model.FilePath.Split(",");
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<object> AddVoucherDocumentDetail([FromBody] VoucherDocumentDetailModel model)
+    //{
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  var s = model.FilePath.Split(",");
 
-      if (user != null)
-      {
-        var id = user.Id;
-        model.CreatedById = id;
-        model.IsDeleted = false;
-        model.CreatedDate = DateTime.UtcNow;
-      }
-      APIResponse response = await _ivoucherDetail.AddVoucherDocumentDetail(model);
-      return response;
-    }
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    model.CreatedById = id;
+    //    model.IsDeleted = false;
+    //    model.CreatedDate = DateTime.UtcNow;
+    //  }
+    //  APIResponse response = await _ivoucherDetail.AddVoucherDocumentDetail(model);
+    //  return response;
+    //}
 
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<object> DeleteVoucherDocumentDetail(int DocumentId)
-    {
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      string ModifiedById = "";
-      if (user != null)
-      {
-        ModifiedById = user.Id;
-      }
-      APIResponse response = await _ivoucherDetail.DeleteVoucherDocumentDetail(DocumentId, ModifiedById);
-      return response;
-    }
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<object> DeleteVoucherDocumentDetail(int DocumentId)
+    //{
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  string ModifiedById = "";
+    //  if (user != null)
+    //  {
+    //    ModifiedById = user.Id;
+    //  }
+    //  APIResponse response = await _ivoucherDetail.DeleteVoucherDocumentDetail(DocumentId, ModifiedById);
+    //  return response;
+    //}
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

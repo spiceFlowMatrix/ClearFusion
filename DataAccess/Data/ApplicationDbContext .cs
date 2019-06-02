@@ -196,6 +196,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<HRJobInterviewers> HRJobInterviewers { get; set; }
         public DbSet<ExchangeRateVerification> ExchangeRateVerifications { get; set; }
         public DbSet<Errorlog> errorlog { get; set; }
+        public DbSet<DocumentFileDetail> DocumentFileDetail { get; set; }
 
 
         #region Project

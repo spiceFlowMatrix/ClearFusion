@@ -15,6 +15,7 @@ using DataAccess.DbEntities.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using HumanitarianAssistance.Entities.Models;
 using HumanitarianAssistance.ViewModels.SPModels;
+using HumanitarianAssistance.ViewModels.Models.Common;
 
 namespace HumanitarianAssistance.Service.APIResponses
 {
@@ -496,11 +497,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ActivitiesControlViewModel> ActivitiesControlList { get; set; }
         public List<HiringControlViewModel> HiringControlList { get; set; }
         public List<ProjectActivityPermissionModel> ProjectActivityPermissionList { get; set; }
-
-
-
-        
-
+        public List<FileListModel> DocumentFileList { get; set; }
     }
 
 

@@ -2236,7 +2236,5 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       apiresponse = await _iProject.GetBudgetLinesByMultipleProjectJobIds(projectJobIds);
       return apiresponse;
     }
-
-    
   }
 }

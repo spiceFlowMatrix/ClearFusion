@@ -363,106 +363,106 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var queryResult = EF.CompileAsyncQuery(
-                (ApplicationDbContext ctx) => ctx.VoucherDocumentDetail.Where(x => x.VoucherNo == VoucherNo));
-                var list = await Task.Run(() =>
-                    queryResult(_uow.GetDbContext()).ToListAsync().Result
-                );
+        //public async Task<APIResponse> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        var queryResult = EF.CompileAsyncQuery(
+        //        (ApplicationDbContext ctx) => ctx.VoucherDocumentDetail.Where(x => x.VoucherNo == VoucherNo));
+        //        var list = await Task.Run(() =>
+        //            queryResult(_uow.GetDbContext()).ToListAsync().Result
+        //        );
 
-                var documentlist = list.Select(x => new VoucherDocumentDetailModel
-                {
-                    DocumentGUID = x.DocumentGUID + x.Extension,
-                    DocumentName = x.DocumentName,
-                }).ToList();
+        //        var documentlist = list.Select(x => new VoucherDocumentDetailModel
+        //        {
+        //            DocumentGUID = x.DocumentGUID + x.Extension,
+        //            DocumentName = x.DocumentName,
+        //        }).ToList();
 
-                response.data.VoucherDocumentDetailList = documentlist;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
+        //        response.data.VoucherDocumentDetailList = documentlist;
+        //        response.StatusCode = StaticResource.successStatusCode;
+        //        response.Message = "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //    }
+        //    return response;
+        //}
 
-        public async Task<APIResponse> AddVoucherDocumentDetail(VoucherDocumentDetailModel model)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                byte[] filepathBase64 = Encoding.UTF8.GetBytes(model.FilePath);
-                string[] str = model.FilePath.Split(",");
-                byte[] filepath = Convert.FromBase64String(str[1]);
+        //public async Task<APIResponse> AddVoucherDocumentDetail(VoucherDocumentDetailModel model)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        byte[] filepathBase64 = Encoding.UTF8.GetBytes(model.FilePath);
+        //        string[] str = model.FilePath.Split(",");
+        //        byte[] filepath = Convert.FromBase64String(str[1]);
 
-                string ex = str[0].Split("/")[1].Split(";")[0];
+        //        string ex = str[0].Split("/")[1].Split(";")[0];
 
-                string guidname = Guid.NewGuid().ToString();
-                //byte[] filepath = Encoding.UTF8.GetBytes(str[1]);
-                string filename = guidname + "." + ex;
+        //        string guidname = Guid.NewGuid().ToString();
+        //        //byte[] filepath = Encoding.UTF8.GetBytes(str[1]);
+        //        string filename = guidname + "." + ex;
 
-                File.WriteAllBytes(@"Documents/" + filename, filepath);
+        //        File.WriteAllBytes(@"Documents/" + filename, filepath);
 
-                //VoucherDocumentDetail obj = _mapper.Map<VoucherDocumentDetail>(model);
-                VoucherDocumentDetail obj = new VoucherDocumentDetail();
-                obj.DocumentGUID = guidname;
-                //Doctype 1 for voucher document
-                obj.DocumentType = 1;
-                obj.Extension = "." + ex;
-                obj.FilePath = null;
-                obj.DocumentName = model.DocumentName;
-                obj.DocumentDate = model.DocumentDate;
-                obj.VoucherNo = model.VoucherNo;
-                obj.CreatedById = model.CreatedById;
-                obj.CreatedDate = DateTime.UtcNow;
-                obj.IsDeleted = false;
-                await _uow.VoucherDocumentDetailRepository.AddAsyn(obj);
-                await _uow.SaveAsync();
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
+        //        //VoucherDocumentDetail obj = _mapper.Map<VoucherDocumentDetail>(model);
+        //        VoucherDocumentDetail obj = new VoucherDocumentDetail();
+        //        obj.DocumentGUID = guidname;
+        //        //Doctype 1 for voucher document
+        //        obj.DocumentType = 1;
+        //        obj.Extension = "." + ex;
+        //        obj.FilePath = null;
+        //        obj.DocumentName = model.DocumentName;
+        //        obj.DocumentDate = model.DocumentDate;
+        //        obj.VoucherNo = model.VoucherNo;
+        //        obj.CreatedById = model.CreatedById;
+        //        obj.CreatedDate = DateTime.UtcNow;
+        //        obj.IsDeleted = false;
+        //        await _uow.VoucherDocumentDetailRepository.AddAsyn(obj);
+        //        await _uow.SaveAsync();
+        //        response.StatusCode = StaticResource.successStatusCode;
+        //        response.Message = "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //    }
+        //    return response;
+        //}
 
-        public async Task<APIResponse> DeleteVoucherDocumentDetail(int DocumentId, string ModifiedById)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var documentInfo = await _uow.VoucherDocumentDetailRepository.FindAsync(d => d.DocumentID == DocumentId);
-                if (documentInfo != null)
-                {
-                    documentInfo.ModifiedById = ModifiedById;
-                    documentInfo.ModifiedDate = DateTime.UtcNow;
-                    documentInfo.IsDeleted = true;
-                    await _uow.VoucherDocumentDetailRepository.UpdateAsyn(documentInfo);
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-                }
-                else
-                {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.SomethingWrong;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
+        //public async Task<APIResponse> DeleteVoucherDocumentDetail(int DocumentId, string ModifiedById)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        var documentInfo = await _uow.VoucherDocumentDetailRepository.FindAsync(d => d.DocumentID == DocumentId);
+        //        if (documentInfo != null)
+        //        {
+        //            documentInfo.ModifiedById = ModifiedById;
+        //            documentInfo.ModifiedDate = DateTime.UtcNow;
+        //            documentInfo.IsDeleted = true;
+        //            await _uow.VoucherDocumentDetailRepository.UpdateAsyn(documentInfo);
+        //            response.StatusCode = StaticResource.successStatusCode;
+        //            response.Message = "Success";
+        //        }
+        //        else
+        //        {
+        //            response.StatusCode = StaticResource.failStatusCode;
+        //            response.Message = StaticResource.SomethingWrong;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = StaticResource.SomethingWrong + ex.Message;
+        //    }
+        //    return response;
+        //}
 
         public async Task<APIResponse> GetJouranlVoucherDetails()
         {

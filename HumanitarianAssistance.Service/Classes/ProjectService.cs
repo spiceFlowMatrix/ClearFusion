@@ -23,9 +23,16 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using DataAccess.DbEntities.ErrorLog;
+using HumanitarianAssistance.ViewModels.SPModels;
+using HumanitarianAssistance.Service.Classes.AccountingNew;
+using HumanitarianAssistance.Service.CommonUtility;
+using HumanitarianAssistance.Service.Classes.ProjectManagement;
+using HumanitarianAssistance.ViewModels.Models.Common;
+using Google.Cloud.Storage.V1;
+using System.Net.Http;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -6213,8 +6220,7 @@ namespace HumanitarianAssistance.Service.Classes
                                         }
 
                                         //  response.data.TransactionBudgetModelList = budgetLineDetailExist;
-                                        response.StatusCode = StaticResource.successStatusCode;
-                                        response.Message = "Success";
+                                        
                                     }
                                 }
                                 //Note : if budget code and job code are empty check for new budget line on the bases of name
@@ -6261,7 +6267,11 @@ namespace HumanitarianAssistance.Service.Classes
                                             }
                                         }
                                     }
+
                                 }
+
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Success";
                             }
                         }
 
