@@ -23,16 +23,8 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
-using DataAccess.DbEntities.ErrorLog;
-using HumanitarianAssistance.ViewModels.SPModels;
-using HumanitarianAssistance.Service.Classes.AccountingNew;
-using HumanitarianAssistance.Service.CommonUtility;
-using HumanitarianAssistance.Service.Classes.ProjectManagement;
-using HumanitarianAssistance.ViewModels.Models.Common;
-using Google.Cloud.Storage.V1;
-using System.Net.Http;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HumanitarianAssistance.Service.Classes
 {
