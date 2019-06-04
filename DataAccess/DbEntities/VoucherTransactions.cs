@@ -64,5 +64,7 @@ namespace DataAccess.DbEntities
         public virtual ProjectBudgetLineDetail ProjectBudgetLineDetail { get; set; }
 
         public long? JobId { get; set; }
+        [ForeignKey("JobId")]
+        public ProjectJobDetail ProjectJobDetail { get; set; }
     }
 }
