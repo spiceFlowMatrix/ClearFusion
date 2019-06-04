@@ -25,8 +25,8 @@ namespace DataAccess.DbEntities.Project
         public DateTime? EndDate { get; set; }
         public int? CurrencyId { get; set; }
         public string budget { get; set; }
-        public string beneficiaryMale { get; set; }
-        public string beneficiaryFemale { get; set; }
+        public int? beneficiaryMale { get; set; }
+        public int? beneficiaryFemale { get; set; }
         public string projectGoal { get; set; }
         public string projectObjective { get; set; }
         public string mainActivities { get; set; }
@@ -39,6 +39,10 @@ namespace DataAccess.DbEntities.Project
         public long? SecurityId { get; set; }
         public string SecurityConsiderationId { get; set; }
         public string SecurityRemarks { get; set; }
+        public int? InDirectBeneficiaryFemale { get; set; }
+        public int? InDirectBeneficiaryMale { get; set; }
+        public int? OpportunityType { get; set; }
+
 
     }
 }

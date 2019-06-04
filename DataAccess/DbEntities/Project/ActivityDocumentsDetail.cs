@@ -21,6 +21,7 @@ namespace DataAccess.DbEntities.Project
         [ForeignKey("ActivityId")]
         public ProjectActivityDetail ProjectActivityDetail { get; set; }
 
+        public long? MonitoringId { get; set; }
 
     }
 }

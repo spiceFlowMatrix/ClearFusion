@@ -19,8 +19,6 @@ using Newtonsoft.Json;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
-using System.IO;
 using DataAccess;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
@@ -44,6 +42,7 @@ namespace HumanitarianAssistance.Controllers
     private IUserDetails _iuserDetails;
     private IPermissionsInRoles _ipermissionsInRoles;
     private IVoucherDetail _ivoucherDetail;
+    private IVoucherNewService _iVoucherNewService;
     private IExchangeRate _iExchangeRate;
     private IChartOfAccountNewService _iChartOfAccountNewService;
     private IPermissionsInRoles _iPermissionsInRolesService;
@@ -62,7 +61,8 @@ namespace HumanitarianAssistance.Controllers
             IVoucherDetail ivoucherDetail,
             IExchangeRate iExchangeRate,
             IChartOfAccountNewService iChartOfAccountNew,
-            IUnitOfWork uow
+            IUnitOfWork uow,
+            IVoucherNewService iVoucherNewService
             )
     {
       _userManager = userManager;
@@ -76,6 +76,7 @@ namespace HumanitarianAssistance.Controllers
       _iExchangeRate = iExchangeRate;
       _iChartOfAccountNewService = iChartOfAccountNew;
       _uow = uow;
+      _iVoucherNewService = iVoucherNewService;
       _serializerSettings = new JsonSerializerSettings
       {
         Formatting = Formatting.Indented,
@@ -730,13 +731,13 @@ namespace HumanitarianAssistance.Controllers
 
     }
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<object> GetAllVoucherDetails()
-    {
-      APIResponse response = await _ivoucherDetail.GetAllVoucherDetails();
-      return response;
-    }
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<object> GetAllVoucherDetails()
+    //{
+    //  APIResponse response = await _ivoucherDetail.GetAllVoucherDetails();
+    //  return response;
+    //}
 
 
     [HttpGet]
@@ -923,45 +924,45 @@ namespace HumanitarianAssistance.Controllers
     }
 
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<object> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo)
-    {
-      APIResponse response = await _ivoucherDetail.GetAllVoucherDocumentDetailByVoucherNo(VoucherNo);
-      return response;
-    }
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<object> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo)
+    //{
+    //  APIResponse response = await _ivoucherDetail.GetAllVoucherDocumentDetailByVoucherNo(VoucherNo);
+    //  return response;
+    //}
 
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<object> AddVoucherDocumentDetail([FromBody] VoucherDocumentDetailModel model)
-    {
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      var s = model.FilePath.Split(",");
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<object> AddVoucherDocumentDetail([FromBody] VoucherDocumentDetailModel model)
+    //{
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  var s = model.FilePath.Split(",");
 
-      if (user != null)
-      {
-        var id = user.Id;
-        model.CreatedById = id;
-        model.IsDeleted = false;
-        model.CreatedDate = DateTime.UtcNow;
-      }
-      APIResponse response = await _ivoucherDetail.AddVoucherDocumentDetail(model);
-      return response;
-    }
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    model.CreatedById = id;
+    //    model.IsDeleted = false;
+    //    model.CreatedDate = DateTime.UtcNow;
+    //  }
+    //  APIResponse response = await _ivoucherDetail.AddVoucherDocumentDetail(model);
+    //  return response;
+    //}
 
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<object> DeleteVoucherDocumentDetail(int DocumentId)
-    {
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      string ModifiedById = "";
-      if (user != null)
-      {
-        ModifiedById = user.Id;
-      }
-      APIResponse response = await _ivoucherDetail.DeleteVoucherDocumentDetail(DocumentId, ModifiedById);
-      return response;
-    }
+    //[HttpPost]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<object> DeleteVoucherDocumentDetail(int DocumentId)
+    //{
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  string ModifiedById = "";
+    //  if (user != null)
+    //  {
+    //    ModifiedById = user.Id;
+    //  }
+    //  APIResponse response = await _ivoucherDetail.DeleteVoucherDocumentDetail(DocumentId, ModifiedById);
+    //  return response;
+    //}
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -1049,13 +1050,13 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
-    {
-      APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData(financialyearid, currencyid);
-      return response;
-    }
+    //[HttpGet]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //public async Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid)
+    //{
+    //  APIResponse response = await _ivoucherDetail.GetDetailsOfNotesReportData(financialyearid, currencyid);
+    //  return response;
+    //}
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -1195,7 +1196,7 @@ namespace HumanitarianAssistance.Controllers
       if (user != null)
       {
         model.CreatedById = user.Id;
-        response = await _ivoucherDetail.AddEmployeePensionPayment(model);
+        response = await _iVoucherNewService.AddEmployeePensionPayment(model);
       }
       return response;
     }
@@ -1322,7 +1323,21 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<APIResponse> DeleteChartOfAccount([FromBody]long accountId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        response = await _iChartOfAccountNewService.DeleteChartOfAccount(accountId, user.Id);
+      }
+      return response;
+    }
+    
+
+   [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<APIResponse> GetAllApplicationPages()
     {

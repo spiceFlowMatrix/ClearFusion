@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using SelectPdf;
 
 namespace HumanitarianAssistance.Service.Classes.Marketing
 {
@@ -310,8 +312,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    ClientId = cd.ClientId,
                                    ClientName = cd.ClientName,
                                    JobPriceId = jp.JobPriceId,
-                                   CurrencyCode = cur.CurrencyCode                                 
-                                  
+                                   CurrencyCode = cur.CurrencyCode
+
                                })).FirstOrDefault();
                 response.data.JobPriceDetail = JobList;
                 response.StatusCode = 200;
@@ -683,6 +685,452 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.data.JobDetailsModel = JobList;
                 response.StatusCode = 200;
                 response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        [BindProperty]
+        public string TxtHtmlCode { get; set; }
+
+        [BindProperty]
+        public string DdlPageSize { get; set; }
+
+        [BindProperty]
+        public string DdlPageOrientation { get; set; }
+        public List<SelectListItem> PageOrientations { get; } = new List<SelectListItem>
+        {
+            new SelectListItem { Value = "Portrait", Text = "Portrait" },
+            new SelectListItem { Value = "Landscape", Text = "Landscape" },
+        };
+
+        [BindProperty]
+        public string TxtWidth { get; set; }
+
+        [BindProperty]
+        public string TxtHeight { get; set; }
+
+        // GET: api/<controller>
+        [HttpGet]
+        public IEnumerable<string> Get(string html)
+        {
+
+            return new string[] { "value1", "value2" };
+        }
+        public async Task<APIResponse> CreatePDF(int JobId)
+        {
+            byte[] pdf = null;
+            APIResponse response = new APIResponse();
+            try
+            {
+                JobPriceModel JobDetails = (from j in _uow.GetDbContext().JobDetails
+                                            join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
+                                            join cd in _uow.GetDbContext().ContractDetails on j.ContractId equals cd.ContractId
+                                            join cur in _uow.GetDbContext().CurrencyDetails on cd.CurrencyId equals cur.CurrencyId
+                                            where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.JobId == JobId
+                                            select (new JobPriceModel
+                                            {
+                                                JobName = j.JobName,
+                                                JobCode = j.JobCode,
+                                                UnitRate = jp.UnitRate,
+                                                EndDate = j.EndDate,
+                                                StartDate = cd.StartDate,
+                                                IsApproved = j.IsApproved,
+                                                ClientName = cd.ClientName
+                                            })).FirstOrDefault();
+
+                //var imagepath = Path.Combine(_hostingEnvironment.WebRootPath, "agreement-logo.png");
+                //< img width = '100' height = '100' src = " + imagepath + @" >
+                DdlPageSize = "A4";
+                PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
+                    DdlPageSize, true);
+                DdlPageOrientation = "Portrait";
+                PdfPageOrientation pdfOrientation =
+                    (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
+                    DdlPageOrientation, true);
+
+                int webPageWidth = 1024;
+
+                webPageWidth = Convert.ToInt32(TxtWidth);
+
+
+                int webPageHeight = 0;
+
+                webPageHeight = Convert.ToInt32(TxtHeight);
+
+
+                // instantiate a html to pdf converter object
+                HtmlToPdf converter = new HtmlToPdf();
+
+                // set converter options
+                converter.Options.PdfPageSize = pageSize;
+                converter.Options.PdfPageOrientation = pdfOrientation;
+                converter.Options.WebPageWidth = webPageWidth;
+                converter.Options.WebPageHeight = webPageHeight;
+                TxtHtmlCode = @"<div style='padding-left:40px !important' id='jobReportPdf' align='center'>
+                        <div class='container-fluid'>
+                        <div class='col-md-12'>
+                            <table align = 'center' width='700px;' style='margin:0 auto; vertical-align: middle; font-family: Arial, Helvetica, sans-serif;'>
+                               <tbody>
+                                  <tr>
+                                      <td colspan = '2'>
+                                         <table width='100%' cellpadding='0' cellspacing='0'>
+                                            <tbody>
+                                               <tr>
+                                                  <td width = '85%' style='font-size:16px; font-weight:700; vertical-align:top; text-align: center;'>NAWA RADIO<br>
+                                                      <p style = 'margin:5px 0;'> Marketing Department</p>
+                                                      Broadcasting Agreement Paper
+                                                  </td>
+                                                  <td width = '15%' style= 'text-align:right;'>  
+                                                    
+                                                  </td>
+                                              </tr>
+                                          </tbody>
+                                       </table>
+                                    </td>
+                                   <td></td>
+                               </tr>
+                               <tr>
+                                  <td colspan= '2'>
+                                      <table width= '100%' style= 'border: 1px solid; padding: 5px;'>
+                                          <tbody>
+                                              <tr>
+                                                 <td colspan= '2' style= 'font-size:14px; text-align:center;'>
+                                                    Add: Khushhal Khan Meena in front of Dawat University<br>
+                                                    Kabul, Afghanistan<br>
+                                                    Email: Marketing @sabacent.org<br>
+                                                    Phone # 0703141414<br>
+                                                 </td>
+                                             </tr>
+                                         </tbody>
+                                     </table>
+                                  </td>
+                               </tr>
+                               <tr>
+                                  <td colspan = '2'>
+                                     <table width= '100%' cellpadding= '0' cellspacing= '0'>
+                                        <tbody>
+                                           <tr>
+                                              <td colspan= '2' style= 'font-size:13px;' ><b> Contractor:</b><br>
+                                                 <b>Subject of Contract:</b> Broadcasting of Spots<br>
+                                                 This contract is between NAWA RADIO 103.1FM as vender and (
+                                                 <b>" + JobDetails.ClientName + @"</b> ) as a client.<br>
+                                                 The contract is based on: <b>" + JobDetails.StartDate.ToShortDateString() + @"</b> up
+                                                 to <b>" + JobDetails.EndDate.ToShortDateString() + @"</b><br>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                             <td colspan = '2' style='font-size:15px;font-weight: 700; color:#000;'>
+                                                <p style = 'padding:10px  0;' > Both parties' responsibilities are as follow:</p>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                              <td colspan = '2' style='font-size:13px; color:#000;padding-left:20px;'>
+                                                  <p>1. Broadcasting of(Spots) in NAWA Radio.</p>
+                                                  <p>2. Radio airtimes should be in Flat time.</p>
+                                                  <p>3. Programs status : ( Active )</p>
+                                                  <p>4. The broadcasting will be provided by</p>
+                                                  <p>The broadcasting cost of one month will be (
+                                                  <b>" + JobDetails.UnitRate + @"</b> )</p>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                             <td colspan = '2' style='font-size:15px;font-weight: 700; color:#000;'>
+                                                 <p style = 'padding:10px  0;'> Both parties' responsibilities are as follow:</p>
+                                             </td>
+                                          </tr>
+                                          <tr>
+                                             <td colspan = '2' style='font-size:13px; color:#000;padding-left:20px;'>
+                                                <p style = 'font-weight:700;' > 1 - Customer:</p>
+                                                <p>- Payment of amount.before the starting of broadcasting.<br>
+                                                   - If client once approve the program format it will be his/her
+                                                   responsibility even if any mistakes were there.<br>
+                                                   - Provision of the schedule.<br>
+                                                   - The programs should not be against National benefits and Radio
+                                                   Nawa policies.
+                                                </p>
+                                                <p style = 'font-weight:700;' > 2 - NAWA RADIO</p>
+                                                <p>  - Broadcasting of (Spots) Audio programs in Flat times as per
+                                                     the approved schedule.<br>
+                                                </p>
+                                            </td>
+                                         </tr>
+                                         <tr>
+                                           <td colspan = '2' style= 'font-size:15px;padding-top:10px;'>
+                                             <b> Note:</b>  NAWA RADIO has no legal responsibility for the subjects and
+                                             contents of the programs and advertisements.
+                                           </td>
+                                         </tr>
+                                      </tbody>
+                                   </table>
+                                 </td>
+                               </tr>
+                               <tr>
+                                 <td colspan = '2'><hr></td>
+                               </tr>
+                               <tr>
+                                 <td colspan= '2'>
+                                    <p style= 'font-size:13px;' > Both parties are agreed to terms and conditions in the contract stated above.</p>
+                                 </td>
+                               </tr>
+                               <tr>
+                                  <td style = 'font-size: 15px;padding-top:10px;'>
+                                     <p><b> NAWA RADIO</b></p>
+                                     <p><b>Representative Name:</b></p>
+                                     <p><b>Signature:</b></p>
+                                     <p><b>Date:</b>" + DateTime.UtcNow.ToShortDateString() + @"</p>
+                                  </td>
+                                  <td>
+                                     <p><b>Customer's Name: </b>" + JobDetails.ClientName + @"</p>
+                                     <p><b>Signature:</b></p>
+                                  </td>
+                               </tr>
+                            </tbody>
+                        </table>
+                     </div>
+                     </div>
+                 </div>";
+
+                PdfDocument doc = converter.ConvertHtmlString(TxtHtmlCode);
+                pdf = doc.Save();
+                Console.WriteLine(doc);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+                response.data.pdf = pdf;
+                doc.Close();
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+
+        }
+
+        public async Task<APIResponse> FetchInvoice(int jobId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                InvoiceModel model = new InvoiceModel();
+                var invoiceDetails = _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).OrderByDescending(x => x.InvoiceId).FirstOrDefault();
+                var invoiceApproval = await _uow.InvoiceApprovalRepository.FindAsync(x => x.JobId == jobId && x.IsDeleted == false);
+                //var isScheduleExists = _uow.ScheduleDetailsRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).FirstOrDefault();
+                APIResponse response1 = await GetJobDetailsById(jobId, userId);
+                if (invoiceDetails != null)
+                {
+                    var jobDetails = await _uow.JobDetailsRepository.FindAsync(x => x.JobId == jobId & x.IsDeleted == false);
+                    model.JobName = jobDetails.JobName;
+                    model.JobId = jobId;
+                    model.ClientName = response1.data.JobPriceDetail.ClientName;
+                    model.CurrencyCode = response1.data.JobPriceDetail.CurrencyCode;
+                    model.EndDate = response1.data.JobPriceDetail.EndDate;
+                    model.FinalPrice = invoiceDetails.TotalPrice;
+                    model.InvoiceId = invoiceDetails.InvoiceId;
+                    model.JobRate = Convert.ToInt32(invoiceDetails.JobPrice);
+                    model.TotalRunningMinutes = invoiceDetails.PlayoutMinutes;
+                    model.TotalMinutes = invoiceDetails.TotalMinutes;
+                    //if (isScheduleExists != null)
+                    //{
+                    //    model.IsScheduleExist = true;
+                    //}
+                    //else
+                    //{
+                    //    model.IsScheduleExist = false;
+                    ////}
+                    //if(invoiceApproval.IsInvoiceApproved == true)
+                    //{
+                    //    model.IsApproved = true;
+                    //}
+                    //else
+                    //{
+                    //    model.IsApproved = false;
+                    //}
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.data.invoiceDetails = model;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.notFoundCode;
+                    response.Message = "Data not found";
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GenerateInvoice(int jobId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var scheduleList = await _uow.ScheduleDetailsRepository.FindAllAsync(x => x.JobId == jobId && x.IsDeleted == false);
+                var playout = _uow.PlayoutMinutesRepository.FindAll(x => scheduleList.Any(s => s.ScheduleId == x.ScheduleId)).ToList();
+                APIResponse response1 = await GetJobDetailsById(jobId, userId);
+                InvoiceModel invoiceDetails = new InvoiceModel();
+
+                if (scheduleList.Count > 0)
+                {
+                    if (playout.Count > 0)
+                    {
+                        var TotalMinutes = (from n in playout
+                                            group n by 1 into og
+                                            select new
+                                            {
+                                                TotalTransacted = og.Sum(item => item.TotalMinutes),
+                                            }).FirstOrDefault().TotalTransacted;
+
+                        //var currency = _uow.CurrencyDetailsRepository.GetAll().AsQueryable().Where(x => x.CurrencyCode == response1.data.JobPriceDetail.CurrencyCode).FirstOrDefault();
+                        //response.data.JobPriceDetail = response1.data.JobPriceDetail;
+
+
+                        invoiceDetails.TotalRunningMinutes = TotalMinutes;
+                    }
+                    else
+                    {
+                        var minutes = from n in scheduleList
+                                      select new
+                                      {
+                                          TotalTransacted = ((n.EndTime - n.StartTime).TotalHours) * 60,
+                                      };
+                        var TotalMinutes = (from n in minutes
+                                            group n by 1 into og
+                                            select new
+                                            {
+                                                TotalTransacted = og.Sum(item => item.TotalTransacted),
+                                            }).FirstOrDefault().TotalTransacted;
+                        invoiceDetails.TotalRunningMinutes = Convert.ToInt32(TotalMinutes);
+                    }
+                    invoiceDetails.JobId = jobId;
+                    //response1.data.JobPriceDetail.CurrencyCode;
+                    invoiceDetails.EndDate = response1.data.JobPriceDetail.EndDate;
+                    invoiceDetails.JobRate = response1.data.JobPriceDetail.TotalPrice;
+                    invoiceDetails.CurrencyCode = response1.data.JobPriceDetail.CurrencyCode;
+                    invoiceDetails.TotalMinutes = response1.data.JobPriceDetail.Minutes;
+                    invoiceDetails.JobName = response1.data.JobPriceDetail.JobName;
+                    invoiceDetails.ClientName = response1.data.JobPriceDetail.ClientName;
+                    invoiceDetails.FinalPrice = (invoiceDetails.JobRate / invoiceDetails.TotalMinutes) * invoiceDetails.TotalRunningMinutes;
+                    //var existRecord = await _uow.InvoiceGenerationRepository.FindAsync(x => x.IsDeleted == false && x.JobId == jobId);
+                    var currencyDetails = _uow.CurrencyDetailsRepository.GetAll().AsQueryable().Where(x => x.CurrencyCode == invoiceDetails.CurrencyCode).FirstOrDefault();
+                    long? invoiceId = 0;
+                    //if (existRecord == null)
+                    {
+                        InvoiceGeneration obj = new InvoiceGeneration();
+                        obj.IsDeleted = false;
+                        obj.CurrencyId = currencyDetails.CurrencyId;
+                        obj.JobPrice = Convert.ToInt32(invoiceDetails.JobRate);
+                        obj.PlayoutMinutes = invoiceDetails.TotalRunningMinutes;
+                        obj.TotalMinutes = invoiceDetails.TotalMinutes;
+                        obj.TotalPrice = invoiceDetails.FinalPrice;
+                        obj.JobId = jobId;
+                        obj.CreatedById = userId;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.ModifiedById = userId;
+                        obj.ModifiedDate = DateTime.Now;
+                        await _uow.InvoiceGenerationRepository.AddAsyn(obj);
+                        invoiceId = obj.InvoiceId;
+                    }
+                    //else
+                    //{                        
+                    //    if (existRecord != null)
+                    //    {
+                    //        existRecord.CurrencyId = currencyDetails.CurrencyId;
+                    //        existRecord.JobPrice = Convert.ToInt32(invoiceDetails.JobRate);
+                    //        existRecord.PlayoutMinutes = invoiceDetails.TotalRunningMinutes;
+                    //        existRecord.TotalMinutes = invoiceDetails.TotalMinutes;
+                    //        existRecord.TotalPrice = invoiceDetails.FinalPrice;
+                    //        existRecord.JobId = jobId;
+                    //        existRecord.IsDeleted = false;
+                    //        existRecord.ModifiedById = userId;
+                    //        existRecord.ModifiedDate = DateTime.Now;
+                    //        await _uow.InvoiceGenerationRepository.UpdateAsyn(existRecord);
+                    //    }
+                    //}
+                    invoiceDetails = new InvoiceModel
+                    {
+                        InvoiceId = invoiceId,
+                        ClientName = invoiceDetails.ClientName,
+                        CurrencyCode = currencyDetails.CurrencyCode,
+                        EndDate = invoiceDetails.EndDate,
+                        FinalPrice = invoiceDetails.FinalPrice,
+                        JobId = jobId,
+                        JobName = invoiceDetails.JobName,
+                        JobRate = invoiceDetails.JobRate,
+                        TotalMinutes = invoiceDetails.TotalMinutes,
+                        TotalRunningMinutes = invoiceDetails.TotalRunningMinutes
+                    };
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.data.invoiceDetails = invoiceDetails;
+                    response.Message = "Success";
+                }
+
+                else
+                {
+                    response.Message = "Schedule does not exist";
+                    response.StatusCode = StaticResource.notFoundCode;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> ApproveInvoice(int jobId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var invoiceGeneration = _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).FirstOrDefault();
+                if(invoiceGeneration != null)
+                {
+                    var invoiceDetails = _uow.InvoiceApprovalRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId).FirstOrDefault();
+                    if (invoiceDetails == null)
+                    {
+                        InvoiceApproval obj = new InvoiceApproval();
+                        obj.IsDeleted = false;
+                        obj.JobId = jobId;
+                        obj.IsInvoiceApproved = true;
+                        obj.CreatedById = userId;
+                        obj.CreatedDate = DateTime.Now;
+                        await _uow.InvoiceApprovalRepository.AddAsyn(obj);
+                    }
+                    else
+                    {
+                        var existRecord = await _uow.InvoiceApprovalRepository.FindAsync(x => x.IsDeleted == false && x.JobId == jobId);
+                        if (existRecord != null)
+                        {
+                            existRecord.IsInvoiceApproved = true;
+                            existRecord.IsDeleted = false;
+                            existRecord.ModifiedById = userId;
+                            existRecord.ModifiedDate = DateTime.Now;
+                            await _uow.InvoiceApprovalRepository.UpdateAsyn(existRecord);
+                        }
+                    }
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Invoice Approved successfully";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.notFoundCode;
+                    response.Message = "Invoice Not yet generated";
+                }
+                
             }
             catch (Exception ex)
             {

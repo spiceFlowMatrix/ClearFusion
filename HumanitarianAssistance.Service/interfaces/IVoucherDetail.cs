@@ -30,9 +30,9 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddVoucherTransactionDetail(List<VoucherTransactionModel> model, string UserId);
 
         Task<APIResponse> EditVoucherTransactionDetail(VoucherTransactionModel model);
-        Task<APIResponse> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo);
-        Task<APIResponse> AddVoucherDocumentDetail(VoucherDocumentDetailModel model);
-        Task<APIResponse> DeleteVoucherDocumentDetail(int DocumentId, string ModifiedById);	
+        //Task<APIResponse> GetAllVoucherDocumentDetailByVoucherNo(int VoucherNo);
+        // Task<APIResponse> AddVoucherDocumentDetail(VoucherDocumentDetailModel model);
+        //Task<APIResponse> DeleteVoucherDocumentDetail(int DocumentId, string ModifiedById);	
         Task<APIResponse> GetTrailBlanceDetailsByCondition(LedgerModels model);
         //Task<APIResponse> GetTrailBlanceDetailsByCondition(int? OfficeId = null, DateTime? Fromdate = null, DateTime? Todate = null, int? CurrencyId = null, int? RecordType = null);
         Task<APIResponse> GetAllLedgerDetailsByCondition(LedgerModels model);
@@ -48,7 +48,7 @@ namespace HumanitarianAssistance.Service.interfaces
 		Task<APIResponse> GetBlanceSheetDetails(FinancialReportModel model);
 		//Task<APIResponse> GetDetailsOfNotes(int? GetDetailsOfNotes, int? financialyearid, int? currencyid);
 
-		Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid);
+		//Task<APIResponse> GetDetailsOfNotesReportData(int? financialyearid, int? currencyid);
 
         Task<APIResponse> DeleteVoucherTransactionDetail(int transactionId, string modifiedById);
         Task<APIResponse> GetAllUserNotifications(string userid);
@@ -65,8 +65,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddExchangeGainLossVoucher(ExchangeGainLossVoucher model);
         Task<APIResponse> GetExchangeGainLossVoucherList(int OfficeId);
         Task<APIResponse> DeleteExchangeGainLossVoucher(long VoucherNo, string UserId);
-        //Task<APIResponse> GetAllAccountCodeByVoucherNo(ExchangeGainOrLossFilterModel ExchangeGainOrLossFilter);
-        Task<APIResponse> AddEmployeePensionPayment(EmployeePensionPaymentModel EmployeePensionPayment);
+        //Task<APIResponse> GetAllAccountCodeByVoucherNo(ExchangeGainOrLossFilterModel ExchangeGainOrLossFilter);    
         Task<APIResponse> GetAllInputLevelAccountCode();
         Task<APIResponse> GenerateSalaryVoucher(EmployeeSalaryVoucherModel EmployeeSalaryVoucher);
         Task<APIResponse> GetEmployeeSalaryVoucher(int EmployeeId, int Month, int Year);

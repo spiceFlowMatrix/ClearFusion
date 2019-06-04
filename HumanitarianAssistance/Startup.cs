@@ -37,6 +37,8 @@ using Microsoft.Extensions.Logging;
 using HumanitarianAssistance.WebAPI.Filter;
 using Newtonsoft.Json;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Service.interfaces.ProjectManagement;
+using HumanitarianAssistance.Service.Classes.ProjectManagement;
 
 namespace HumanitarianAssistance
 {
@@ -46,7 +48,6 @@ namespace HumanitarianAssistance
     private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
     private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
     public static IHostingEnvironment _Env;
-    string value;
 
     public Startup(IConfiguration configuration, IHostingEnvironment env)
     {
@@ -59,16 +60,6 @@ namespace HumanitarianAssistance
       string sAppPath = env.ContentRootPath; //Application Base Path
       string swwwRootPath = env.WebRootPath;  //wwwroot folder path
       Configuration = builder.Build();
-      //get and set environment variable at run time
-      value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-
-      if (value == null)
-      {
-        Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", env.ContentRootPath + "\\GoogleCredentials\\credentials.json", EnvironmentVariableTarget.Machine);
-        var  vdsfdsfalue = Environment.GetEnvironmentVariable("PATH");
-        value = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-      }
-      Console.WriteLine("GOOGLE_APPLICATION_CREDENTIALS: {0}\n", value);
     }
 
     public IConfiguration Configuration { get; }
@@ -76,14 +67,24 @@ namespace HumanitarianAssistance
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      DefaultCorsPolicyName = Configuration["DefaultCorsPolicyName:PolicyName"];
-      string DefaultCorsPolicyUrl = Configuration["DefaultCorsPolicyName:PolicyUrl"];
-      string connectionString = Configuration.GetConnectionString("linuxdb");
+      //DefaultCorsPolicyName = Configuration["DefaultCorsPolicyName:PolicyName"];
+     // string DefaultCorsPolicyUrl = Configuration["DefaultCorsPolicyName:PolicyUrl"];
+     // string connectionString = Configuration.GetConnectionString("linuxdb");
 
       //get and set environment variable at run time
-      //string connectionString = Environment.GetEnvironmentVariable("linuxdb");
+      string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
+
+      string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
+      DefaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
+
+      string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
+      string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
+      string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
 
       Console.WriteLine("Connection string: {0}\n", connectionString);
+      //Console.WriteLine("DefaultCorsPolicyName string: {0}\n", DefaultCorsPolicyName);
+      //Console.WriteLine("DefaultCorsPolicyUrl string: {0}\n", DefaultCorsPolicyUrl);
+      //Console.WriteLine("WebSiteUrl string: {0}\n", WebSiteUrl);
 
 
       services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
@@ -128,7 +129,7 @@ namespace HumanitarianAssistance
                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
       services.AddSingleton<IRole, RoleService>();
       services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
-      services.Configure<WebSiteUrl>(Configuration.GetSection("WebSiteUrl"));
+      services.Configure<WebSiteUrl>(Configuration.GetSection("WEB_SITE_URL"));
       services.Configure<SwaggerEndPoint>(Configuration.GetSection("SwaggerEndPoint"));
       services.AddSingleton<IJwtFactory, JwtFactory>();
       services.AddTransient<IPermissions, PermissionService>();
@@ -163,10 +164,12 @@ namespace HumanitarianAssistance
       services.AddTransient<IPolicyService, PolicyService>();
       services.AddTransient<IClientDetails, ClientDetailsService>();
       services.AddTransient<IVoucherNewService, VoucherNewService>();
-
+      services.AddTransient<ISchedulerService, SchedulerService>();
       services.AddTransient<IAccountBalance, AccountBalanceService>();
       services.AddTransient<IProjectActivityService, ProjectActivityService>();
-
+      services.AddTransient<IDashboardService, DashboardService>();
+      services.AddTransient<IProjectPeopleService, ProjectPeopleService>();
+      services.AddTransient<IFileManagement, FileManagementService>();
       //services.AddTransient<UserManager<AppUser>>();
 
       var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
@@ -283,7 +286,7 @@ namespace HumanitarianAssistance
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbcontext, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
     {
 
-      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+      UpdateDatabase(app, _userManager, _roleManager, logger).Wait();   
 
       if (env.IsDevelopment())
       {
@@ -315,7 +318,7 @@ namespace HumanitarianAssistance
         app.UseHsts();
       }
 
-      app.UseHttpsRedirection();
+      // app.UseHttpsRedirection();
       app.UseCookiePolicy();
 
       app.UseCors(DefaultCorsPolicyName);

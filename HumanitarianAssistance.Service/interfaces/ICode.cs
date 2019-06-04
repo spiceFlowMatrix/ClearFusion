@@ -44,7 +44,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditPensionRate(EmployeePensionRateModel model, string UserId);
         Task<APIResponse> AddAppraisalQuestion(AppraisalQuestionModel model, string UserId);
         Task<APIResponse> EditAppraisalQuestion(AppraisalQuestionModel model, string UserId);
-        Task<APIResponse> GetAppraisalQuestions(int OfficeId);
+        Task<APIResponse> GetAppraisalQuestions();
         Task<APIResponse> AddEmployeeAppraisalDetails(EmployeeAppraisalDetailsModel model, string UserId);
         Task<APIResponse> EditEmployeeAppraisalDetails(EmployeeAppraisalDetailsModel model, string UserId);
         Task<APIResponse> GetAllEmployeeAppraisalDetails(int OfficeId);
@@ -81,6 +81,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllDistrictDetailByProvinceId(List<int?> ProvinceId);
         Task<APIResponse> UpdatePayrollAccountHeadAllEmployees(List<PayrollHeadModel> model, string UserId);
         Task<APIResponse> GetApplicationPages();
+        Task<APIResponse> AddEditPensionDebitAccount(long accountId, string userId);
+        Task<APIResponse> GetPensionDebitAccount();
 
         #region Language
         Task<APIResponse> EditLanguage(LanguageModel model, string UserId);

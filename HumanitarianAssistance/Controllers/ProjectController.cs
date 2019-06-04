@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Service.APIResponses;
@@ -15,8 +14,10 @@ using DataAccess.DbEntities.Project;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using System.Net.Http.Headers;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Common;
+using System.Collections.Generic;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
@@ -30,6 +31,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     private IHostingEnvironment _hostingEnvironment;
     private IProject _iProject;
     private IProjectActivityService _iActivity;
+    #region "Constructor"
     public ProjectController(
        UserManager<AppUser> userManager,
       IProject iProject,
@@ -42,11 +44,15 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       _iActivity = iActivity;
       _hostingEnvironment = hostingEnvironment;
       _serializerSettings = new JsonSerializerSettings
+
       {
         Formatting = Formatting.Indented,
         NullValueHandling = NullValueHandling.Ignore
       };
     }
+
+    #endregion
+
     #region Donor information
     [HttpPost]
 
@@ -210,7 +216,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     #endregion
-
 
     #region Area Information
 
@@ -540,6 +545,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #endregion
 
+    #region "GetProjectWinLossStatus"
+    public async Task<APIResponse> GetProjectWinLossStatus([FromBody]long ProjectId)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectWinLossStatus(ProjectId);
+      return apiresponse;
+    }
+    #endregion
 
     #region Project Communication
     [HttpPost]
@@ -644,14 +656,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<APIResponse> AddEditProjectotherDetail([FromBody]ProjectOtherDetail OtherDetail)
+    public async Task<APIResponse> AddEditProjectotherDetail([FromBody]ProjectOtherDetailModel OtherDetail)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-
         apiRespone = _iProject.AddEditProjectotherDetail(OtherDetail, id);
       }
       return apiRespone;
@@ -696,7 +707,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #endregion
 
-
     #region projectApproval
     [HttpPost]
     public async Task<APIResponse> AddApprovalProjectDetail([FromBody]ApproveProjectDetailModel model)
@@ -740,6 +750,27 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
     #region proposals
+    //original addedit Project Proposal with google credential using read drirectory path  and  by environment variable comment.poonam 25/03/2019.
+    //[HttpPost]
+    //public async Task<APIResponse> AddEditProjectproposals([FromBody]long ProjectId)
+    //{
+    //  APIResponse apiRespone = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    string logginUserEmailId = user.Email;
+    //    var id = user.Id;
+    //    apiRespone = await _iProject.AddEditProjectproposals(ProjectId, id, logginUserEmailId);
+    //  }
+    //  return apiRespone;
+    //}
+
+
+    /// <summary>
+    /// start proposal on click 26/03/2019 pk 
+    /// </summary>
+    /// <param name="ProjectId"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<APIResponse> AddEditProjectproposals([FromBody]long ProjectId)
     {
@@ -749,10 +780,11 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         string logginUserEmailId = user.Email;
         var id = user.Id;
-        apiRespone = _iProject.AddEditProjectproposals(ProjectId, id, logginUserEmailId);
+        apiRespone = await _iProject.StartProposal(ProjectId, id, logginUserEmailId);
       }
       return apiRespone;
     }
+
 
     [HttpPost]
     public APIResponse GetProjectproposalsById([FromBody]long ProjectId)
@@ -761,49 +793,15 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       apiRespone = _iProject.GetProjectproposalsById(ProjectId);
       return apiRespone;
     }
-    //[HttpPost]
-    //public async Task<APIResponse> UploadEDIProposalFile()
-    //{
-    //  APIResponse apiRespone = new APIResponse();
 
-    //  try
-    //  {
-    //    var file = Request.Form.Files[0];
 
-    //      //}
-    //      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-    //      if (user != null)
-    //      {
-    //        string logginUserEmailId = user.Email;
-    //        var id = user.Id;
-    //        apiRespone = _iProject.UploadOtherProposalFile(file, id);
-    //        //if (apiRespone.StatusCode == StaticResource.successStatusCode)
-    //        //{
-    //        //  DirectoryInfo di = new DirectoryInfo(folderName);
-    //        //  FileInfo[] fi = di.GetFiles();
-    //        //  FileInfo f = fi.Where(p => p.Name == fileName).FirstOrDefault();
-    //        //  f.Delete();
-    //        //}
 
-    //    }
-    //    else
-    //    {
-    //      apiRespone.StatusCode = StaticResource.FileNotSupported;
-    //      apiRespone.Message = StaticResource.FileText;
-    //    }
 
-    //  }
-    //  catch (System.Exception ex)
-    //  {
-    //    throw ex;
-    //    //return Json("Upload Failed: " + ex.Message);
-    //  }
-    //  return apiRespone;
-    //}
-
-    //upload files bucket
-    [HttpPost]
-    public async Task<APIResponse> UploadEDIProposalFile()
+    /// <summary>
+    /// upload other proposal document using service account credentails new 26/03/2019 poonam
+    /// </summary>
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> UploadEDIProposalFile([FromForm] IFormFile filesData, string projectId, string data)
     {
       APIResponse apiRespone = new APIResponse();
       string localFolderfullPath = string.Empty;
@@ -811,33 +809,19 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
 
         var file = Request.Form.Files[0];
-        long count = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@').Length;
-        string ProjectId = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 2];
-        string ProposalType = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[count - 1];
-        string fileNames = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Split('@')[0];
+        long ProjectId = Convert.ToInt64(projectId);
+        string ProposalType = data;
+        string fileName = Request.Form.Files[0].FileName;
 
-        string fileName = "";
-
-        if (fileNames.Contains('_'))
+        string ext = Path.GetExtension(fileName).ToLower();
+        if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
         {
-          fileName = fileNames.Split('_')[2];
-        }
-        else
-        {
-          fileName = fileNames;
-        }
-
-        string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext != ".jpeg" && ext != ".png")
-        {
-
-
-          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
           if (user != null)
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = _iProject.UploadOtherProposalFile(file, id, ProjectId, localFolderfullPath, fileName, logginUserEmailId, ProposalType, ext);
+            apiRespone = await _iProject.UploadOtherDocuments(file, id, ProjectId, fileName, logginUserEmailId, ProposalType, ext);
 
           }
         }
@@ -856,6 +840,8 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       }
       return apiRespone;
     }
+
+    //proposal other detail due date ,assign to ,budget
     [HttpPost]
     public async Task<APIResponse> AddEditProjectProposalDetail([FromBody]ProposalDocModel model)
     {
@@ -1384,13 +1370,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<APIResponse> GetAllProjectJobFilterList([FromBody]ProjectJobFilterModel projectJobFilterModel)
+    public async Task<APIResponse> GetProjectJobDetailByProjectId([FromBody]long projectId)
     {
-      APIResponse apiresponse = await _iProject.GetAllProjectJobsFilterList(projectJobFilterModel);
-      return apiresponse;
-
-
+      APIResponse response = await _iProject.GetAllProjectJobDetail(projectId);
+      return response;
     }
+
     [HttpPost]
     public async Task<APIResponse> AddProjectJobDetail([FromBody]ProjectJobDetailModel Model)
 
@@ -1411,20 +1396,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<APIResponse> DeleteProjectJob([FromBody]int model)
+    public async Task<APIResponse> DeleteProjectJob([FromBody]long jobId)
     {
       APIResponse apiRespone = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = await _iProject.DeleteProjectJob(model, id);
+        apiRespone = await _iProject.DeleteProjectJob(jobId, id);
       }
       return apiRespone;
     }
 
     [HttpPost]
-    public async Task<APIResponse> GetProjectJobDetailByProjectJobId([FromBody] int projectJobId)
+    public async Task<APIResponse> GetProjectJobDetailByProjectJobId([FromBody]long projectJobId)
     {
       APIResponse response = await _iProject.GetAllProjectJobByProjectId(projectJobId);
       return response;
@@ -1435,6 +1420,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     {
       APIResponse apiresponse = await _iProject.GetAllProjectJobsFilterList(projectJobFilterModel);
       return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectJobDetailByBudgetLineId([FromBody]long budgetLineId)
+    {
+      APIResponse response = await _iProject.GetProjectJobDetailByBudgetLineId(budgetLineId);
+      return response;
     }
 
 
@@ -1571,61 +1563,61 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpPost]
-    public async Task<APIResponse> StartProjectActivity([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.StartProjectActivity(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> StartProjectActivity([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.StartProjectActivity(activityId, id);
+    //  }
+    //  return response;
+    //}
 
-    [HttpPost]
-    public async Task<APIResponse> EndProjectActivity([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.EndProjectActivity(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> EndProjectActivity([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.EndProjectActivity(activityId, id);
+    //  }
+    //  return response;
+    //}
 
-    [HttpPost]
-    public async Task<APIResponse> MarkImplementationAsCompleted([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.MarkImplementationAsCompleted(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> MarkImplementationAsCompleted([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.MarkImplementationAsCompleted(activityId, id);
+    //  }
+    //  return response;
+    //}
 
-    [HttpPost]
-    public async Task<APIResponse> MarkMonitoringAsCompleted([FromBody]long activityId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        var userName = user.UserName;
-        response = await _iActivity.MarkMonitoringAsCompleted(activityId, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<APIResponse> MarkMonitoringAsCompleted([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    var userName = user.UserName;
+    //    response = await _iActivity.MarkMonitoringAsCompleted(activityId, id);
+    //  }
+    //  return response;
+    //}
 
 
     [HttpPost]
@@ -1637,9 +1629,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #endregion
 
-    #region upload files
+    #region upload files for activity documents 28/03/2019
     [HttpPost, DisableRequestSizeLimit]
-    public async Task<APIResponse> UploadProjectDocumnentFile([FromForm] IFormFile filesData, string activityId, string statusId)
+    public async Task<APIResponse> UploadProjectDocumnentFile([FromForm] IFormFile filesData, string activityId, string statusId, string monitoringId)
     {
       APIResponse apiRespone = new APIResponse();
       string localFolderfullPath1 = string.Empty;
@@ -1647,21 +1639,115 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         //var filrec = Request.Form.Files;
 
+        long monitoringID = monitoringId != null ? Convert.ToInt64(monitoringId) : 0;
         var file = Request.Form.Files[0];
         long activityID = Convert.ToInt64(activityId);
         int statusID = Convert.ToInt32(statusId);
         string fileName = Request.Form.Files[0].FileName;
         string ext = System.IO.Path.GetExtension(fileName).ToLower();
-        if (ext != ".jpeg" && ext != ".png")
+        if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
         {
-
-
           var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
           if (user != null)
           {
             string logginUserEmailId = user.Email;
             var id = user.Id;
-            apiRespone = await _iActivity.UploadDocumentFile(file, id, activityID, fileName, logginUserEmailId, ext, statusID);
+            apiRespone = await _iActivity.UploadProjectActivityDocumentFile(file, id, activityID, fileName, logginUserEmailId, ext, statusID, monitoringID);
+          }
+        }
+        else
+        {
+          apiRespone.StatusCode = StaticResource.FileNotSupported;
+          apiRespone.Message = StaticResource.FileText;
+        }
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+        //return Json("Upload Failed: " + ex.Message);
+      }
+      return apiRespone;
+    }
+
+
+    //[HttpPost]
+    //public async Task<APIResponse> GetActivityDocumentDetail([FromBody]long activityId)
+    //{
+    //  APIResponse response = new APIResponse();
+    //  response = await _iActivity.GetUploadedDocument(activityId);
+    //  return response;
+    //}
+
+    [HttpPost]
+    public async Task<APIResponse> GetActivityDocumentDetails([FromBody]ProjectActivityDocumentViewModel model)
+    {
+      APIResponse response = new APIResponse();
+      response = await _iActivity.GetUploadedDocuments(model);
+      return response;
+    }
+
+    #endregion
+
+    #region "FilterProjectCashFlow"
+    [HttpPost]
+    public async Task<APIResponse> FilterProjectCashFlow([FromBody]ProjectCashFlowFilterModel model)
+    {
+      APIResponse apiresponse = await _iProject.FilterProjectCashFlow(model);
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> FilterBudgetLineBreakdown([FromBody]BudgetLineBreakdownFilterModel model)
+    {
+      APIResponse apiResponse = new APIResponse();
+      apiResponse = await _iProject.FilterBudgetLineBreakdown(model);
+      return apiResponse;
+    }
+    #endregion
+
+    #region demo upload file 
+
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> UploadFileDemo([FromForm] IFormFile fileData, string activityId, string statusId)
+    {
+
+      APIResponse apiResponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        string logginUserEmailId = user.Email;
+        var userId = user.Id;
+        apiResponse = await _iActivity.UploadFileDemo(fileData, userId, logginUserEmailId);
+      }
+      return apiResponse;
+    }
+    #endregion
+
+    #region start proposal drag and drop pk 26/03/2019 
+
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> StartProposalDragAndDropFile([FromForm] IFormFile filesData, string projectId, string data)
+    {
+      APIResponse apiRespone = new APIResponse();
+      string localFolderfullPath = string.Empty;
+      try
+      {
+
+        var file = Request.Form.Files[0];
+        long ProjectId = Convert.ToInt64(projectId);
+        string ProposalType = data;
+        string fileName = Request.Form.Files[0].FileName;
+
+        string ext = System.IO.Path.GetExtension(fileName).ToLower();
+        if (ext == ".doc" || ext == ".docx")
+        {
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+          if (user != null)
+          {
+            string logginUserEmailId = user.Email;
+            var id = user.Id;
+            apiRespone = await _iProject.StartProposalDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ProposalType, ext);
 
           }
         }
@@ -1673,25 +1759,482 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
         //}
       }
-      catch (System.Exception ex)
+      catch (Exception ex)
       {
         throw ex;
-        //return Json("Upload Failed: " + ex.Message);
       }
       return apiRespone;
     }
 
 
-    [HttpPost]
-    public async Task<APIResponse> GetActivityDocumentDetail([FromBody]long activityId)
+    #endregion
+
+    #region"UploadReviewFile"
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> UploadReviewFile([FromForm] IFormFile filesData, ApproveProjectDetailModel model)
     {
-      APIResponse response = new APIResponse();
-      response = await _iActivity.GetUploadedDocument(activityId);
-      return response;
+      APIResponse apiRespone = new APIResponse();
+      string localFolderfullPath = string.Empty;
+      try
+      {
+        if (filesData == null)
+        {
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+          if (user != null)
+          {
+            string logginUserEmailId = user.Email;
+            var id = user.Id;
+            apiRespone = await _iProject.AddApprovalDetail(model, id);
+
+          }
+          else
+          {
+            apiRespone.StatusCode = StaticResource.FileNotSupported;
+            apiRespone.Message = StaticResource.FileText;
+          }
+        }
+        else
+        {
+          var file = Request.Form.Files[0];
+          long ProjectId = Convert.ToInt64(model.ProjectId);
+          string fileName = Request.Form.Files[0].FileName;
+
+          string ext = System.IO.Path.GetExtension(fileName).ToLower();
+          if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
+          {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (user != null)
+            {
+              string logginUserEmailId = user.Email;
+              var id = user.Id;
+              apiRespone = await _iProject.UploadReviewDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ext, model);
+
+            }
+          }
+
+          else
+          {
+            apiRespone.StatusCode = StaticResource.FileNotSupported;
+            apiRespone.Message = StaticResource.FileText;
+          }
+
+        }   //}
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      return apiRespone;
     }
 
     #endregion
 
+    #region"UploadFinalizeFile"
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> UploadFinalizeFile([FromForm] IFormFile filesData, WinApprovalProjectModel model)
+    {
+      APIResponse apiRespone = new APIResponse();
+      string localFolderfullPath = string.Empty;
+      try
+      {
 
+        var file = Request.Form.Files[0];
+        long ProjectId = Convert.ToInt64(model.ProjectId);
+        string fileName = Request.Form.Files[0].FileName;
+
+        string ext = System.IO.Path.GetExtension(fileName).ToLower();
+        if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
+        {
+          var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+          if (user != null)
+          {
+            string logginUserEmailId = user.Email;
+            var id = user.Id;
+            apiRespone = await _iProject.UploadFinalizeDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ext, model);
+
+          }
+        }
+        else
+        {
+          apiRespone.StatusCode = StaticResource.FileNotSupported;
+          apiRespone.Message = StaticResource.FileText;
+        }
+
+        //}
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      return apiRespone;
+    }
+    #endregion
+
+    #region "DownloadFileFromBucket"
+    [HttpPost]
+    public async Task<APIResponse> DownloadFileFromBucket([FromBody]DownloadObjectGCBucketModel model)
+    {
+      APIResponse apiresponse = await _iProject.DownloadFileFromBucket(model);
+      return apiresponse;
+    }
+    #endregion
+
+    #region "DeleteActivityDocument"
+    [HttpPost]
+    public async Task<APIResponse> DeleteActivityDocument([FromBody]long activityDocumentId)
+    {
+      APIResponse response = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        response = await _iActivity.DeleteActivityDocument(activityDocumentId, id);
+      }
+      return response;
+    }
+    #endregion
+
+    #region "GetProjectProposalReport"
+    [HttpPost]
+    public async Task<APIResponse> GetProjectProposalReport([FromBody]ProjectProposalReportFilterModel model)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectProposalReport(model);
+      return apiresponse;
+    }
+    #endregion
+
+    #region "ProjectIndicators"
+    [HttpPost]
+    public async Task<APIResponse> GetAllProjectIndicators([FromBody]PagingModel paging)
+    {
+      APIResponse apiresponse = await _iProject.GetAllProjectIndicators(paging);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectIndicatorDetailById([FromBody]long indicatorId)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectIndicatorDetailById(indicatorId);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddProjectIndicator()
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iProject.AddProjectIndicator(id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectIndicator([FromBody]EditIndicatorModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iProject.EditProjectIndicator(model, id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectIndicatorQuestionsById([FromBody]long indicatorId)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectIndicatorQuestionsById(indicatorId);
+      return apiresponse;
+    }
+    #endregion
+
+    #region "GetProjectProposalAmountSummary"
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectProposalAmountSummary([FromBody]ProjectProposalReportFilterModel model)
+    {
+      APIResponse apiresponse = await _iProject.GetProjectProposalAmountSummary(model);
+      return apiresponse;
+    }
+    #endregion
+
+    #region "upload file using signed url"
+    [HttpPost]
+    public async Task<APIResponse> UploadDemoUsingBSignedUrlBucket([FromBody]DownloadObjectGCBucketModel model)
+    {
+      APIResponse apiresponse = await _iProject.DownloadFileFromBucket(model);
+      return apiresponse;
+    }
+    #endregion
+
+    #region "project activity monitoring"
+    [HttpPost]
+    public async Task<APIResponse> AddProjectMonitoringReview([FromBody]ProjectMonitoringViewModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.AddProjectMonitoringReview(model, id);
+      }
+
+      return apiresponse;
+    }
+    [HttpPost]
+    public async Task<APIResponse> GetProjectActivityAdvanceFilterList([FromBody]ActivityAdvanceFilterModel model)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectActivityAdvanceFilterList(model);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectMonitoringList([FromBody] long activityId)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectMonitoringList(activityId);
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectMonitoringByMonitoringId([FromBody]int Id)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectMonitoringByMonitoringId(Id);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectMonitoringByMonitoringId([FromBody]ProjectMonitoringViewModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.EditProjectMonitoringByMonitoringId(model, id);
+      }
+      return apiresponse;
+    }
+
+    #endregion
+
+    #region"project activity extension"
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectActivityExtension([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+
+      apiresponse = await _iActivity.GetProjectActivityExtension(activityId);
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddProjectActivityExtension([FromBody]ProjectExtensionModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.AddProjectActivityExtension(model, id);
+      }
+
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectActivityExtension([FromBody]ProjectExtensionModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.EditProjectActivityExtension(model, id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> DeleteProjectActivityExtension([FromBody]long extensionId)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        apiresponse = await _iActivity.DeleteProjectActivityExtension(extensionId, user.Id);
+      }
+
+      return apiresponse;
+
+    }
+
+
+    #endregion
+
+    #region "Project sub activity"
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectSubActivityDetail([FromBody]int projectId)
+    {
+      APIResponse apiresponse = await _iActivity.GetProjectSubActivityDetails(projectId);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddProjectSubActivityDetail([FromBody]ProjectActivityModel model)
+    {
+      APIResponse apiRespone = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        var userName = user.UserName;
+        apiRespone = await _iActivity.AddProjectSubActivityDetail(model, id);
+      }
+
+      return apiRespone;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> EditProjectSubActivity([FromBody]ProjectSubActivityListModel model)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.EditProjectSubActivityDetail(model, id);
+      }
+
+      return apiresponse;
+    }
+
+
+    [HttpPost]
+    public async Task<APIResponse> ProjectSubActivityIscomplete([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.ProjectSubActivityIscomplete(activityId, id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> StartProjectSubActivity([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.StartProjectSubActivity(activityId, id);
+      }
+
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EndProjectSubActivity([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      if (user != null)
+      {
+        string id = user.Id;
+        apiresponse = await _iActivity.EndProjectSubActivity(activityId, id);
+      }
+
+      return apiresponse;
+    }
+   
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectActivityDetailByActivityId([FromBody]long activityId)
+    {
+      APIResponse apiresponse = new APIResponse();
+        apiresponse = await _iActivity.GetProjectActivityByActivityId(activityId);
+      return apiresponse;
+    }
+
+    #endregion
+
+    #region "BudgetLineExcelImport"
+    [HttpPost, DisableRequestSizeLimit]
+    public async Task<APIResponse> ExcelImportOfBudgetLine([FromForm] IFormFile fileKey ,string projectId)
+    {
+      APIResponse apiRespone = new APIResponse();
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        if (fileKey != null)
+        {
+          string fileExtension = Path.GetExtension(fileKey.FileName);
+          if (fileExtension == ".xls" || fileExtension == ".xlsx")
+          {
+            var stream = fileKey.OpenReadStream();
+            StreamReader reader = new StreamReader(stream);
+
+            string result = reader.ReadToEnd();
+
+            var id = user.Id;
+            var userName = user.UserName;
+            long projectID = Convert.ToInt64(projectId);
+            apiRespone = await _iProject.GetExcelFile(stream, id, projectID);
+          }
+          else
+          {
+            apiRespone.StatusCode = StaticResource.FileNotSupported;
+            apiRespone.Message = StaticResource.FileText;
+          }
+        }
+      }
+      return apiRespone;
+    }
+    #endregion
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectJobsByProjectIds([FromBody] List<long> projectIds)
+    {
+      APIResponse apiresponse = new APIResponse();
+      apiresponse = await _iProject.GetProjectJobsByMultipleProjectIds(projectIds);
+      return apiresponse;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> GetProjectBudgetLinesByProjectJobIds([FromBody] List<long?> projectJobIds)
+    {
+      APIResponse apiresponse = new APIResponse();
+      apiresponse = await _iProject.GetBudgetLinesByMultipleProjectJobIds(projectJobIds);
+      return apiresponse;
+    }
   }
 }

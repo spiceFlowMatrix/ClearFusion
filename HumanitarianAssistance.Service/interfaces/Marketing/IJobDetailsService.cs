@@ -21,5 +21,9 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> GetJobsPaginatedList(JobPaginationModel model, string UserId);
         Task<APIResponse> ApproveJob(int model, string UserId);
         Task<APIResponse> AcceptAgreement(int model, string UserId);
+        Task<APIResponse> CreatePDF(int JobId);
+        Task<APIResponse> GenerateInvoice(int jobId, string userId);
+        Task<APIResponse> FetchInvoice(int jobId, string userId);
+        Task<APIResponse> ApproveInvoice(int jobId, string userId);
     }
 }

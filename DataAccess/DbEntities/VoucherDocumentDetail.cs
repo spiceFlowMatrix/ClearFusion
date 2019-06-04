@@ -6,24 +6,17 @@ using System.Text;
 
 namespace DataAccess.DbEntities
 {
-    public partial class VoucherDocumentDetail : BaseEntityWithoutId
+    public class VoucherDocumentDetail : BaseEntityWithoutId
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 1, TypeName = "serial")]
-        public int DocumentID { get; set; }
-        [StringLength(100)]
-        public string DocumentName { get; set; }
-        //[StringLength(200)]
-        //public byte[] DocumentFilePath { get; set; }
-        public byte[] FilePath { get; set; }
-        public DateTime? DocumentDate { get; set; }
+        [Column(Order = 1)]
+        public long VoucherDocumentId { get; set; }
+        [ForeignKey("VoucherNo")]
 		public VoucherDetail VoucherDetails { get; set; }
 		public long VoucherNo { get; set; }
-        public string Extension { get; set; }
-        public string DocumentGUID { get; set; }
-        public int? DocumentType { get; set; }
-
-        public string DocumentFilePath { get; set; }
+        public long DocumentFileId { get; set; }
+        [ForeignKey("DocumentFileId")]
+        public DocumentFileDetail DocumentFileDetail { get; set; }
     }
 }

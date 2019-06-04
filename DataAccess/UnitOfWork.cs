@@ -193,6 +193,7 @@ namespace DataAccess
         private IGenericRepository<SecurityConsiderationMultiSelect> _securityConsiderationMultiSelectRepository;
         private IGenericRepository<HRJobInterviewers> _hRJobInterviewers;
         private IGenericRepository<ActivityDocumentsDetail> _activityDocumentsDetailRepository;
+        private IGenericRepository<ProjectActivityExtensions> _projectActivityExtensionRepository;
 
         
 
@@ -204,6 +205,7 @@ namespace DataAccess
         private IGenericRepository<ActivityType> _activityTypeRepository;
         private IGenericRepository<ContractDetails> _contractDetailsRepository;
         private IGenericRepository<JobDetails> _jobDetailsRepository;
+        private IGenericRepository<PlayoutMinutes> _playoutMinutesRepository;
         private IGenericRepository<JobPhase> _jobPhaseRepository;
         private IGenericRepository<Producer> _producerRepository;
         private IGenericRepository<JobPriceDetails> _jobPriceDetailsRepository;
@@ -215,6 +217,9 @@ namespace DataAccess
         private IGenericRepository<TimeCategory> _timeCategoryRepository;
         private IGenericRepository<ClientDetails> _ClientDetailsRepository;
         private IGenericRepository<UnitRate> _unitRateRepository;
+        private IGenericRepository<InvoiceApproval> _invoiceApprovalRepository;
+        private IGenericRepository<InvoiceGeneration> _invoiceGenerationRepository;        
+        private IGenericRepository<Channel> _channelRepository;
         private IGenericRepository<PolicyOrderSchedule> _policyOrderScheduleRepository;
         private IGenericRepository<PolicyTimeSchedule> _policyTimeScheduleRepository;
         private IGenericRepository<PolicyDaySchedule> _policyDayScheduleRepository;
@@ -225,7 +230,7 @@ namespace DataAccess
         private IGenericRepository<ProjectBudgetLineDetail> _budgetLineDetailRepository;
         private IGenericRepository<ProjectJobDetail> _projectJobDetailRepository;
         private IGenericRepository<ProjectActivityDetail> _projectActivityDetailRepository;
-
+        private IGenericRepository<ScheduleDetails> _scheduleDetailsRepository;
         #region "new Accounting"
         private IGenericRepository<AccountFilterType> _accountFilterTypeRepository;
         private IGenericRepository<ChartOfAccountNew> _chartOfAccountNewRepository;
@@ -235,6 +240,12 @@ namespace DataAccess
 
 
         private IGenericRepository<Errorlog> _errorlogRepository { get; set; }
+        private IGenericRepository<ProjectActivityProvinceDetail> _projectActivityProvinceDetailRepository;
+
+        private IGenericRepository<ProjectOpportunityControl> _projectOpportunityControlRepository;
+        private IGenericRepository<ProjectLogisticsControl> _projectLogisticsControlRepository;
+        private IGenericRepository<ProjectActivitiesControl> _projectActivitiesControlRepository;
+        private IGenericRepository<ProjectHiringControl> _projectHiringControlRepository;
 
 
         public UnitOfWork(ApplicationDbContext mschaContext)
@@ -261,6 +272,52 @@ namespace DataAccess
             GC.SuppressFinalize(this);
         }
 
+
+        public IGenericRepository<ProjectOpportunityControl> ProjectOpportunityControlRepository
+        {
+            get
+            {
+                return _projectOpportunityControlRepository =
+                    _projectOpportunityControlRepository ?? new GenericRepository<ProjectOpportunityControl>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectLogisticsControl> ProjectLogisticsControlRepository
+        {
+            get
+            {
+                return _projectLogisticsControlRepository =
+                    _projectLogisticsControlRepository ?? new GenericRepository<ProjectLogisticsControl>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectActivitiesControl> ProjectActivitiesControlRepository
+        {
+            get
+            {
+                return _projectActivitiesControlRepository =
+                    _projectActivitiesControlRepository ?? new GenericRepository<ProjectActivitiesControl>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectHiringControl> ProjectHiringControlRepository
+        {
+            get
+            {
+                return _projectHiringControlRepository =
+                    _projectHiringControlRepository ?? new GenericRepository<ProjectHiringControl>(_mschaContext);
+            }
+        }
+
+
+        public IGenericRepository<ProjectActivityProvinceDetail> ProjectActivityProvinceDetailRepository
+        {
+            get
+            {
+                return _projectActivityProvinceDetailRepository =
+                    _projectActivityProvinceDetailRepository ?? new GenericRepository<ProjectActivityProvinceDetail>(_mschaContext);
+            }
+        }
 
         public IGenericRepository<GainLossSelectedAccounts> GainLossSelectedAccountsRepository
         {
@@ -1457,6 +1514,14 @@ namespace DataAccess
             }
         }
 
+        public IGenericRepository<PlayoutMinutes> PlayoutMinutesRepository
+        {
+            get
+            {
+                return _playoutMinutesRepository = _playoutMinutesRepository ?? new GenericRepository<PlayoutMinutes>(_mschaContext);
+            }
+        }
+
         public IGenericRepository<JobPhase> JobPhaseRepository
         {
             get
@@ -1518,6 +1583,39 @@ namespace DataAccess
             get
             {
                 return _unitRateRepository = _unitRateRepository ?? new GenericRepository<UnitRate>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<InvoiceApproval> InvoiceApprovalRepository
+        {
+            get
+            {
+                return _invoiceApprovalRepository = _invoiceApprovalRepository ?? new GenericRepository<InvoiceApproval>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<InvoiceGeneration> InvoiceGenerationRepository
+        {
+            get
+            {
+                return _invoiceGenerationRepository = _invoiceGenerationRepository ?? new GenericRepository<InvoiceGeneration>(_mschaContext);
+            }
+        }
+
+
+        public IGenericRepository<ScheduleDetails> ScheduleDetailsRepository
+        {
+            get
+            {
+                return _scheduleDetailsRepository = _scheduleDetailsRepository ?? new GenericRepository<ScheduleDetails>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<Channel> ChannelRepository
+        {
+            get
+            {
+                return _channelRepository = _channelRepository ?? new GenericRepository<Channel>(_mschaContext);
             }
         }
 
@@ -1841,6 +1939,14 @@ namespace DataAccess
             get
             {
                 return _activityDocumentsDetailRepository = _activityDocumentsDetailRepository ?? new GenericRepository<ActivityDocumentsDetail>(_mschaContext);
+            }
+        }
+
+        public IGenericRepository<ProjectActivityExtensions> ProjectActivityExtensionsRepository
+        {
+            get
+            {
+                return _projectActivityExtensionRepository = _projectActivityExtensionRepository ?? new GenericRepository<ProjectActivityExtensions>(_mschaContext);
             }
         }
         public void Save()

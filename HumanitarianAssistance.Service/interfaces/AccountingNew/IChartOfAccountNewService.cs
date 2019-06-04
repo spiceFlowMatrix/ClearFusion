@@ -15,6 +15,7 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
         Task<APIResponse> AddChartOfAccount(ChartOfAccountNewModel model);
         Task<APIResponse> GetAllAccountFilter();
         Task<APIResponse> EditChartOfAccount(ChartOfAccountNewModel model);
+        Task<APIResponse> DeleteChartOfAccount(long accountId,string userId);
 
 
 

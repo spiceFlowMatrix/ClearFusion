@@ -6,13 +6,13 @@ using System.Text;
 
 namespace DataAccess.DbEntities
 {
-   public class BaseEntityWithoutId
+    public class BaseEntityWithoutId
     {
         public BaseEntityWithoutId()
         {
-        
+            IsDeleted = false;
         }
-        
+
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string CreatedById { get; set; }

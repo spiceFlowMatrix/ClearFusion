@@ -1,6 +1,7 @@
 ﻿using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
+using HumanitarianAssistance.ViewModels.Models.Store;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,5 +24,8 @@ namespace HumanitarianAssistance.Service.interfaces.AccountingNew
         Task<APIResponse> CreateGainLossTransaction(ExchangeGainLossVoucherDetails model, string userId);
         Task<APIResponse> DeleteGainLossVoucherTransaction(long voucherId, string userId);
         Task<APIResponse> GetExchangeGainLossVoucherList();
+        Task<APIResponse> VerifyPurchase(ItemPurchaseModel model);
+        Task<APIResponse> UnverifyPurchase(ItemPurchaseModel model);
+        Task<APIResponse> AddEmployeePensionPayment(EmployeePensionPaymentModel EmployeePensionPayment);
     }
 }

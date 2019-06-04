@@ -23,8 +23,8 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? FinancialYearId { get; set; }
         public string FinancialYearName { get; set; }
         public bool? IsVoucherVerified { get; set; }
+        public int? TimezoneOffset { get; set; }
         public bool IsExchangeGainLossVoucher { get; set; } = false;
-
     }
 
     public class VoucherTypeModel
@@ -79,8 +79,8 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public double? EURAmount { get; set; }
 		public double? USDAmount { get; set; }
 		public double? PKRAmount { get; set; }
-        public int? ProjectId { get; set; }
-        public int? BudgetLineId { get; set; }
+        public long? ProjectId { get; set; }
+        public long? BudgetLineId { get; set; }
 
     }
 

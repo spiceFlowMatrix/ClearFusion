@@ -11,20 +11,14 @@ using HumanitarianAssistance.ViewModels.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NPOI.HSSF.UserModel;
-using NPOI.HPSF;
-using NPOI.POIFS.FileSystem;
-using NPOI.SS.UserModel;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -764,13 +758,25 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> AddEmployeeSalaryDetail(List<EmployeePayrollModel> model, string userid)
         {
             APIResponse response = new APIResponse();
+
             try
             {
+                List<EmployeePayroll> employeeSalaryHeadList = await _uow.GetDbContext().EmployeePayroll.Where(x => x.IsDeleted == false && x.EmployeeID == model.FirstOrDefault().EmployeeId).ToListAsync();
+
+                if (employeeSalaryHeadList.Any())
+                {
+                    employeeSalaryHeadList.ForEach(x => x.IsDeleted = true);
+
+                    _uow.GetDbContext().EmployeePayroll.UpdateRange(employeeSalaryHeadList);
+                    await _uow.SaveAsync();
+                }
 
                 List<EmployeePayroll> employeepayrolllist = new List<EmployeePayroll>();
                 foreach (var list in model)
                 {
                     EmployeePayroll obj = new EmployeePayroll();
+                    obj.CreatedById = userid;
+                    obj.CreatedDate = DateTime.UtcNow;
                     obj.EmployeeID = list.EmployeeId;
                     obj.CurrencyId = list.CurrencyId;
                     obj.SalaryHeadId = list.SalaryHeadId;
@@ -906,7 +912,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
                 var employeeAccountHeadPayroll = (from payrollHead in await _uow.GetDbContext().PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync()
-                                                  join payrollChild in await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x => x.EmployeeId == EmployeeId).ToListAsync() on payrollHead.PayrollHeadId equals payrollChild.PayrollHeadId
+                                                  join payrollChild in await _uow.GetDbContext().EmployeePayrollAccountHead.Where(x => x.EmployeeId == EmployeeId && x.IsDeleted == false).ToListAsync() on payrollHead.PayrollHeadId equals payrollChild.PayrollHeadId
                                                   into employeepayrollinfo
                                                   from employeepayrolls in employeepayrollinfo.DefaultIfEmpty()
                                                   select new EmployeePayrollAccountModel
@@ -1025,7 +1031,7 @@ namespace HumanitarianAssistance.Service.Classes
                 EmployeeDocumentDetail obj = new EmployeeDocumentDetail();
                 obj.DocumentGUID = guidname;
                 //Doctype 1 for voucher document
-                //obj.DocumentType = 1;
+                obj.DocumentType = model.DocumentType;
                 obj.Extension = "." + ex;
                 //obj.FilePath = filepathBase64;
                 obj.DocumentName = model.DocumentName;
@@ -1043,7 +1049,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             catch (Exception ex)
             {
-                response.StatusCode = StaticResource.failStatusCode;
+                    response.StatusCode = StaticResource.failStatusCode;
                 response.Message = ex.Message;
             }
             return response;
@@ -1306,49 +1312,55 @@ namespace HumanitarianAssistance.Service.Classes
                     //when employee is active
                     if (model.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
                     {
-                        //Get Default payrollaccountheads and save it to the newly created employee
-                        List<SalaryHeadDetails> salaryHeadDetails = await _uow.GetDbContext().SalaryHeadDetails.Where(x => x.IsDeleted == false).ToListAsync();
+                        bool employeeSalaryHeadAlreadyExists = _uow.GetDbContext().EmployeePayroll.Any(x => x.IsDeleted == false && x.EmployeeID== model.EmployeeId);
 
-                        List<EmployeePayroll> EmployeePayrollList = new List<EmployeePayroll>();
-
-                        foreach (SalaryHeadDetails salaryHead in salaryHeadDetails)
+                        // add salary head and payroll heads only if it does not already exists for an employee
+                        if (!employeeSalaryHeadAlreadyExists)
                         {
-                            EmployeePayroll employeePayroll = new EmployeePayroll();
-                            employeePayroll.AccountNo = salaryHead.AccountNo;
-                            employeePayroll.HeadTypeId = salaryHead.HeadTypeId;
-                            employeePayroll.IsDeleted = false;
-                            employeePayroll.TransactionTypeId = salaryHead.TransactionTypeId;
-                            employeePayroll.EmployeeID = model.EmployeeId.Value;
-                            EmployeePayrollList.Add(employeePayroll);
+                            //Get Default payrollaccountheads and save it to the newly created employee
+                            List<SalaryHeadDetails> salaryHeadDetails = await _uow.GetDbContext().SalaryHeadDetails.Where(x => x.IsDeleted == false).ToListAsync();
+                            List<EmployeePayroll> EmployeePayrollList = new List<EmployeePayroll>();
+
+                            foreach (SalaryHeadDetails salaryHead in salaryHeadDetails)
+                            {
+                                EmployeePayroll employeePayroll = new EmployeePayroll();
+                                employeePayroll.AccountNo = salaryHead.AccountNo;
+                                employeePayroll.HeadTypeId = salaryHead.HeadTypeId;
+                                employeePayroll.SalaryHeadId = salaryHead.SalaryHeadId;
+                                employeePayroll.IsDeleted = false;
+                                employeePayroll.TransactionTypeId = salaryHead.TransactionTypeId;
+                                employeePayroll.EmployeeID = model.EmployeeId.Value;
+                                EmployeePayrollList.Add(employeePayroll);
+                            }
+
+                            await _uow.GetDbContext().EmployeePayroll.AddRangeAsync(EmployeePayrollList);
+                            await _uow.GetDbContext().SaveChangesAsync();
+
+
+                            //Get Default payrollaccountheads and save it to the newly created employee
+                            List<PayrollAccountHead> payrollAccountHeads = await _uow.GetDbContext().PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
+
+                            List<EmployeePayrollAccountHead> employeePayrollAccountHeads = new List<EmployeePayrollAccountHead>();
+
+                            foreach (var employeePayrollAccount in payrollAccountHeads)
+                            {
+                                EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
+
+                                employeePayrollAccountHead.IsDeleted = false;
+                                employeePayrollAccountHead.AccountNo = employeePayrollAccount.AccountNo;
+                                employeePayrollAccountHead.Description = employeePayrollAccount.Description;
+                                employeePayrollAccountHead.EmployeeId = model.EmployeeId.Value;
+                                employeePayrollAccountHead.PayrollHeadId = employeePayrollAccount.PayrollHeadId;
+                                employeePayrollAccountHead.PayrollHeadName = employeePayrollAccount.PayrollHeadName;
+                                employeePayrollAccountHead.PayrollHeadTypeId = employeePayrollAccount.PayrollHeadTypeId;
+                                employeePayrollAccountHead.TransactionTypeId = employeePayrollAccount.TransactionTypeId;
+
+                                employeePayrollAccountHeads.Add(employeePayrollAccountHead);
+                            }
+
+                            await _uow.GetDbContext().EmployeePayrollAccountHead.AddRangeAsync(employeePayrollAccountHeads);
+                            await _uow.GetDbContext().SaveChangesAsync();
                         }
-
-                        await _uow.GetDbContext().EmployeePayroll.AddRangeAsync(EmployeePayrollList);
-                        await _uow.GetDbContext().SaveChangesAsync();
-
-
-                        //Get Default payrollaccountheads and save it to the newly created employee
-                        List<PayrollAccountHead> payrollAccountHeads = await _uow.GetDbContext().PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
-
-                        List<EmployeePayrollAccountHead> employeePayrollAccountHeads = new List<EmployeePayrollAccountHead>();
-
-                        foreach (var employeePayrollAccount in payrollAccountHeads)
-                        {
-                            EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
-
-                            employeePayrollAccountHead.IsDeleted = false;
-                            employeePayrollAccountHead.AccountNo = employeePayrollAccount.AccountNo;
-                            employeePayrollAccountHead.Description = employeePayrollAccount.Description;
-                            employeePayrollAccountHead.EmployeeId = model.EmployeeId.Value;
-                            employeePayrollAccountHead.PayrollHeadId = employeePayrollAccount.PayrollHeadId;
-                            employeePayrollAccountHead.PayrollHeadName = employeePayrollAccount.PayrollHeadName;
-                            employeePayrollAccountHead.PayrollHeadTypeId = employeePayrollAccount.PayrollHeadTypeId;
-                            employeePayrollAccountHead.TransactionTypeId = employeePayrollAccount.TransactionTypeId;
-
-                            employeePayrollAccountHeads.Add(employeePayrollAccountHead);
-                        }
-
-                        await _uow.GetDbContext().EmployeePayrollAccountHead.AddRangeAsync(employeePayrollAccountHeads);
-                        await _uow.GetDbContext().SaveChangesAsync();
                     }
 
                     response.StatusCode = StaticResource.successStatusCode;
@@ -4987,103 +4999,60 @@ namespace HumanitarianAssistance.Service.Classes
 
                     ICollection<ContractTypeContent> contractTypeDariModel = await _uow.ContractTypeContentRepository.FindAllAsync(x => x.IsDeleted == false);
 
-
-
-                    //List<EmployeeContractModel> dataModel = (from cont in _uow.GetDbContext().EmployeeContract
-                    //                                         join empd in _uow.GetDbContext().EmployeeDetail on cont.EmployeeId equals empd.EmployeeID
-                    //                                         join prof in _uow.GetDbContext().EmployeeProfessionalDetail on empd.EmployeeID equals prof.EmployeeId
-                    //                                         join offi in _uow.GetDbContext().OfficeDetail on prof.OfficeId equals offi.OfficeId
-                    //                                         join coun in _uow.GetDbContext().CountryDetails on cont.Country equals coun.CountryId
-                    //                                         join prov in _uow.GetDbContext().ProvinceDetails on cont.Province equals prov.ProvinceId
-                    //                                         join desi in _uow.GetDbContext().DesignationDetail on cont.Designation equals desi.DesignationId
-                    //                                         join cType in _uow.GetDbContext().ContractTypeContent on prof.EmployeeContractTypeId equals cType.EmployeeContractTypeId
-                    //                                         where cont.EmployeeId == EmployeeId && cont.IsDeleted == false
-                    //                                         select new EmployeeContractModel
-                    //                                         {
-
-                    //                                             EmployeeId = cont.EmployeeId,
-                    //                                             EmployeeName = empd.EmployeeName,
-                    //                                             FatherName = empd.FatherName,
-                    //                                             EmployeeCode = empd.EmployeeCode,
-                    //                                             DesignationId = cont.Designation,
-                    //                                             Designation = desi.Designation,
-                    //                                             ContractStartDate = cont.ContractStartDate,
-                    //                                             ContractEndDate = cont.ContractEndDate,
-                    //                                             DurationOfContract = cont.DurationOfContract,
-                    //                                             Salary = cont.Salary,
-                    //                                             Grade = cont.Grade,
-                    //                                             //EmployeeContractModel.ProjectName = dataModel.ProjectBudgetLine.ProjectDetails.ProjectName;
-                    //                                             //EmployeeContractModel.ProjectCode = dataModel.ProjectBudgetLine.ProjectDetails.ProjectId;
-                    //                                             DutyStationId = cont.DutyStation,
-                    //                                             DutyStation = offi.OfficeName,
-                    //                                             ProvinceId = cont.Province,
-                    //                                             Province = prov.ProvinceName,
-                    //                                             CountryId = cont.Country,
-                    //                                             Country = coun.CountryName,
-                    //                                             //EmployeeContractModel.BudgetLine = dataModel.ProjectBudgetLine.Description;
-                    //                                             //JobId = null,
-                    //                                             JobName = "nil",
-                    //                                             WorkTime = cont.WorkTime,
-                    //                                             WorkDayHours = cont.WorkDayHours,
-                    //                                             ContentEnglish = cType.ContentEnglish,
-                    //                                             ContentDari = cType.ContentDari,
-                    //                                             //EmployeeContractModel.EmployeeImage = dataModel.EmployeeDetail.EmployeePhoto;
-                    //                                             EmployeeImage = empd.DocumentGUID + empd.Extension
-                    //                                         }).ToList();
-
-
-
-
-
-
-                    List<EmployeeContractModel> dataModel = await _uow.GetDbContext().EmployeeContract
-                                 .Include(x => x.Employee)
-                                 .Include(x => x.Employee.ProvinceDetails)
-                                 .Include(x => x.Employee.EmployeeProfessionalDetail)
-                                 .Include(x => x.Employee.EmployeeProfessionalDetail.DesignationDetails)
-                                 .Include(x => x.Employee.EmployeeProfessionalDetail.OfficeDetail)
-                                 .Include(x => x.Employee.EmployeeProfessionalDetail.EmployeeContractType)
-                                 .Include(x=> x.JobGrade)
-                                 .Where(x => x.EmployeeId == EmployeeId && x.IsDeleted == false)
-                                 .OrderByDescending(x => x.CreatedDate)
-                                 .Select(x => new EmployeeContractModel
-                                 {
-                                     EmployeeContractId = x.EmployeeContractId,
-                                     EmployeeId = x.EmployeeId,
-                                     EmployeeName = x.Employee.EmployeeName,
-                                     FatherName = x.Employee.FatherName,
-                                     EmployeeCode = x.Employee.EmployeeCode,
-                                     DesignationId = x.Designation,
-                                     Designation = _uow.GetDbContext().DesignationDetail.FirstOrDefault(c => c.DesignationId == x.Designation).Designation,
-                                     ContractStartDate = x.ContractStartDate,
-                                     ContractEndDate = x.ContractEndDate,
-                                     DurationOfContract = x.DurationOfContract,
-                                     Salary = x.Salary,
-                                     Grade = x.Grade,
-                                     DutyStationId = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeId,
-                                     DutyStation = x.Employee.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
-                                     ProvinceId = x.Employee.ProvinceDetails.ProvinceId,
-                                     Province = x.Employee.ProvinceDetails.ProvinceName,
-                                     CountryId = x.Country,
-                                     Country = _uow.GetDbContext().CountryDetails.FirstOrDefault(c => c.CountryId == x.Country).CountryName,
-                                     JobId = null,
-                                     Job = x.Job,
-                                     WorkTime = x.WorkTime,
-                                     WorkDayHours = x.WorkDayHours,
-                                     ContentEnglish = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == x.Employee.EmployeeProfessionalDetail.EmployeeContractTypeId).ContentEnglish,
-                                     ContentDari = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == x.Employee.EmployeeProfessionalDetail.EmployeeContractTypeId).ContentDari,
-                                     EmployeeImage = x.Employee.DocumentGUID + x.Employee.Extension,
-                                     CountryDari= x.CountryDari,
-                                     DesignationDari= x.DesignationDari,
-                                     DutyStationDari= x.DutyStationDari,
-                                     GradeDari= x.GradeDari,
-                                     FatherNameDari= x.FatherNameDari,
-                                     JobDari= x.JobDari,
-                                     ProvinceDari= x.ProvinceDari,
-                                     EmployeeNameDari= x.EmployeeNameDari,
-                                     GradeName= x.JobGrade.GradeName,
-                                     ProjectNameDari= x.ProvinceDari
-                                 }).ToListAsync();
+                    List<EmployeeContractModel> dataModel = (from ec in _uow.GetDbContext().EmployeeContract
+                                join e in _uow.GetDbContext().EmployeeDetail on ec.EmployeeId equals e.EmployeeID
+                                join pd in _uow.GetDbContext().ProvinceDetails on e.ProvinceId equals pd.ProvinceId
+                                join epd in _uow.GetDbContext().EmployeeProfessionalDetail on e.EmployeeID equals epd.EmployeeId
+                                join dd in _uow.GetDbContext().DesignationDetail on epd.DesignationId equals dd.DesignationId
+                                join od in _uow.GetDbContext().OfficeDetail on epd.OfficeId equals od.OfficeId
+                                join ect in _uow.GetDbContext().EmployeeContractType on epd.EmployeeContractTypeId equals ect.EmployeeContractTypeId
+                                join jg in _uow.GetDbContext().JobGrade on ec.Grade equals jg.GradeId
+                                join cd in _uow.GetDbContext().CountryDetails on ec.Country equals cd.CountryId
+                                join bld in _uow.GetDbContext().ProjectBudgetLineDetail on ec.BudgetLine equals bld.BudgetLineId
+                                join p in _uow.GetDbContext().ProjectDetail on ec.Project equals Convert.ToInt32(p.ProjectId)
+                                where ec.IsDeleted== false && ec.EmployeeId == EmployeeId
+                                select new EmployeeContractModel
+                                {
+                                    EmployeeContractId = ec.EmployeeContractId,
+                                    EmployeeId = ec.EmployeeId,
+                                    EmployeeName = ec.Employee.EmployeeName,
+                                    FatherName = ec.Employee.FatherName,
+                                    EmployeeCode = ec.Employee.EmployeeCode,
+                                    DesignationId = ec.Designation,
+                                    Designation = dd.Designation,
+                                    ContractStartDate = ec.ContractStartDate,
+                                    ContractEndDate = ec.ContractEndDate,
+                                    DurationOfContract = ec.DurationOfContract,
+                                    Salary = ec.Salary,
+                                    Grade = ec.Grade,
+                                    DutyStationId = od.OfficeId,
+                                    DutyStation = od.OfficeName,
+                                    ProvinceId = pd.ProvinceId,
+                                    Province = pd.ProvinceName,
+                                    CountryId = ec.Country,
+                                    Country = cd.CountryName,
+                                    JobId = null,
+                                    Job = ec.Job,
+                                    WorkTime = ec.WorkTime,
+                                    WorkDayHours = ec.WorkDayHours,
+                                    ContentEnglish = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == epd.EmployeeContractTypeId).ContentEnglish,
+                                    ContentDari = contractTypeDariModel.FirstOrDefault(c => c.EmployeeContractTypeId == epd.EmployeeContractTypeId).ContentDari,
+                                    EmployeeImage = e.DocumentGUID + e.Extension,
+                                    CountryDari = ec.CountryDari,
+                                    DesignationDari = ec.DesignationDari,
+                                    DutyStationDari = ec.DutyStationDari,
+                                    GradeDari = ec.GradeDari,
+                                    FatherNameDari = ec.FatherNameDari,
+                                    JobDari = ec.JobDari,
+                                    ProvinceDari = ec.ProvinceDari,
+                                    EmployeeNameDari = ec.EmployeeNameDari,
+                                    GradeName = jg.GradeName,
+                                    ProjectNameDari = ec.ProjectNameDari,
+                                    ProjectName = p.ProjectName,
+                                    BudgetLine = bld.BudgetName,
+                                    BudgetLineDari = ec.BudgetLineDari,
+                                    ProjectCode = p.ProjectCode
+                                }).ToList();
 
                     response.data.EmployeeContractDetails = dataModel;
                     response.StatusCode = StaticResource.successStatusCode;
@@ -5800,78 +5769,110 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 List<InterviewDetailModel> lst = new List<InterviewDetailModel>();
-                var recordLst = await _uow.InterviewDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
+                var recordLst = await _uow.GetDbContext().InterviewDetails
+                                                         .Include(x=> x.EmployeeDetail)
+                                                         .Include(x=> x.RatingBasedCriteriaList)
+                                                         .Include(x=> x.InterviewLanguagesList)
+                                                         .Include(x=> x.InterviewTrainingsList)
+                                                         .Include(x=> x.HRJobInterviewersList)
+                                                         .Where(x => x.IsDeleted == false)
+                                                         .ToListAsync();
                 foreach (var model in recordLst)
                 {
-                    var ratingCriteriaRecord = await _uow.RatingBasedCriteriaRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
-                    var languageRecords = await _uow.InterviewLanguagesRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
-                    var trainingRecords = await _uow.InterviewTrainingsRepository.FindAllAsync(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId);
-                    var technicalRecords = await _uow.GetDbContext().InterviewTechnicalQuestion.Where(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId).ToListAsync();
-                    var interviewers = await _uow.GetDbContext().HRJobInterviewers.Where(x => x.IsDeleted == false && x.InterviewDetailsId == model.InterviewDetailsId).ToListAsync();
-
+                    
                     InterviewDetailModel obj = new InterviewDetailModel();
-                    obj.Interviewers = new List<Interviewers>();
-                    List<RatingBasedCriteriaModel> ratingCriteriaRecordList = new List<RatingBasedCriteriaModel>();
-                    List<InterviewLanguageModel> languageList = new List<InterviewLanguageModel>();
-                    List<InterviewTechQuesModel> technicalList = new List<InterviewTechQuesModel>();
-                    List<InterviewTrainingModel> trainingList = new List<InterviewTrainingModel>();
-
-                    //ratingCriteriaRecordList = _mapper.Map<List<RatingBasedCriteriaModel>, RatingBasedCriteria>(
 
                     //rating based criteria
-                    foreach (var item in ratingCriteriaRecord)
+
+                    if (model.RatingBasedCriteriaList !=null && model.RatingBasedCriteriaList.Any())
                     {
-                        RatingBasedCriteriaModel criteriaModel = new RatingBasedCriteriaModel();
-                        //technicalModel.TechnicalQuestionId = item.TechnicalQuestionId;
-                        criteriaModel.CriteriaQuestion = item.CriteriaQuestion;
-                        criteriaModel.Rating = item.Rating;
-                        ratingCriteriaRecordList.Add(criteriaModel);
+                        obj.RatingBasedCriteriaList = new List<RatingBasedCriteriaModel>();
+
+                        foreach (var item in model.RatingBasedCriteriaList)
+                        {
+                            RatingBasedCriteriaModel criteriaModel = new RatingBasedCriteriaModel()
+                            {
+                                CriteriaQuestion = item.CriteriaQuestion,
+                                Rating = item.Rating
+                            };
+
+                            obj.RatingBasedCriteriaList.Add(criteriaModel);
+                        }
                     }
 
-                    foreach (var item in technicalRecords)
+                    if (model.InterviewTechnicalQuestionList != null && model.InterviewTechnicalQuestionList.Any())
                     {
-                        InterviewTechQuesModel technicalModel = new InterviewTechQuesModel();
-                        //technicalModel.TechnicalQuestionId = item.TechnicalQuestionId;
-                        technicalModel.Question = item.Question;
-                        technicalModel.Answer = item.Answer;
-                        technicalList.Add(technicalModel);
+                        obj.InterviewTechQuesModelList = new List<InterviewTechQuesModel>();
+
+                        foreach (var item in model.InterviewTechnicalQuestionList)
+                        {
+                            InterviewTechQuesModel technicalModel = new InterviewTechQuesModel()
+                            {
+                               Question = item.Question,
+                               Answer = item.Answer
+                            };
+
+                            obj.InterviewTechQuesModelList.Add(technicalModel);
+                        }
                     }
 
-                    foreach (var item in languageRecords)
-                    {
-                        InterviewLanguageModel languageModel = new InterviewLanguageModel();
-                        languageModel.LanguageName = item.LanguageName;
-                        languageModel.LanguageId = item.LanguageId;
-                        languageModel.Reading = item.Reading;
-                        languageModel.Writing = item.Writing;
-                        languageModel.Listening = item.Listening;
-                        languageModel.Speaking = item.Speaking;
-                        languageList.Add(languageModel);
+                    if (model.InterviewLanguagesList != null && model.InterviewLanguagesList.Any())
+                    { 
+                        obj.InterviewLanguageModelList = new List<InterviewLanguageModel>();
+
+                        foreach (var item in model.InterviewLanguagesList)
+                        {
+                            InterviewLanguageModel languageModel = new InterviewLanguageModel()
+                            {
+                                LanguageName = item.LanguageName,
+                                LanguageId = item.LanguageId,
+                                Reading = item.Reading,
+                                Writing = item.Writing,
+                                Listening = item.Listening,
+                                Speaking = item.Speaking,
+                            };
+
+                            obj.InterviewLanguageModelList.Add(languageModel);
+                        }
                     }
 
-                    foreach (var item in trainingRecords)
+                    if (model.InterviewTrainingsList != null && model.InterviewTrainingsList.Any())
                     {
-                        InterviewTrainingModel trainingModel = new InterviewTrainingModel();
-                        trainingModel.TraininigType = item.TraininigType;
-                        trainingModel.TrainingName = item.TrainingName;
-                        trainingModel.StudyingCountry = item.StudyingCountry;
-                        trainingModel.StartDate = item.StartDate;
-                        trainingModel.EndDate = item.EndDate;
-                        trainingList.Add(trainingModel);
+
+                    obj.InterviewTrainingModelList = new List<InterviewTrainingModel>();
+
+                    foreach (var item in model.InterviewTrainingsList)
+                        {
+                            InterviewTrainingModel trainingModel = new InterviewTrainingModel()
+                            {
+                               TraininigType = item.TraininigType,
+                               TrainingName = item.TrainingName,
+                               StudyingCountry = item.StudyingCountry,
+                               StartDate = item.StartDate,
+                               EndDate = item.EndDate
+                            };
+
+                            obj.InterviewTrainingModelList.Add(trainingModel);
+                        }
                     }
 
-                    foreach (var item in interviewers)
+                    if (model.HRJobInterviewersList != null && model.HRJobInterviewersList.Any())
                     {
-                        Interviewers xInterviewer = new Interviewers();
-                        xInterviewer.Interviewer = item.EmployeeId;
+                        obj.Interviewers = new List<Interviewers>();
 
-                        obj.Interviewers.Add(xInterviewer);
+                        foreach (var item in model.HRJobInterviewersList)
+                        {
+                            Interviewers xInterviewer = new Interviewers()
+                            {
+                               Interviewer = item.EmployeeId
+                            };
+                            
+                            obj.Interviewers.Add(xInterviewer);
+                        }
                     }
 
                     var empDetail = await _uow.EmployeeDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeID == model.EmployeeID);
                     var jobDetail = await _uow.GetDbContext().JobHiringDetails.Include(x => x.OfficeDetails).FirstOrDefaultAsync(x => x.IsDeleted == false && x.JobId == model.JobId);
-                    //var jobDetail = await _uow.JobHiringDetailsRepository.FindAsync(x => x.IsDeleted == false && x.JobId == model.JobId);
-
 
                     obj.EmployeeID = model.EmployeeID;
                     obj.CandidateName = empDetail.EmployeeName;
@@ -5879,16 +5880,9 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.JobId = model.JobId;
                     obj.DutyStation = jobDetail.OfficeDetails?.OfficeName;
 
-
                     obj.InterviewDetailsId = model.InterviewDetailsId;
-                    //obj.CandidatePosition = model.CandidatePosition;
-                    //obj.ResidingProvince = model.ResidingProvince;
-                    //obj.DutyStation = model.DutyStation;
-                    //obj.Gender = model.Gender;
                     obj.PassportNo = model.PassportNo;
-                    //obj.Qualification = model.Qualification;
                     obj.University = model.University;
-                    //obj.DateOfBirth = model.DateOfBirth;
                     obj.PlaceOfBirth = model.PlaceOfBirth;
                     obj.TazkiraIssuePlace = model.TazkiraIssuePlace;
                     obj.MaritalStatus = model.MaritalStatus;
@@ -5914,16 +5908,6 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.TotalMarksObtained = model.TotalMarksObtained;
                     obj.Status = model.Status;
                     obj.InterviewStatus = model.InterviewStatus;
-                    //obj.Interviewer1 = model.Interviewer1;
-                    //obj.Interviewer2 = model.Interviewer2;
-                    //obj.Interviewer3 = model.Interviewer3;
-                    //obj.Interviewer4 = model.Interviewer4;
-
-                    obj.RatingBasedCriteriaList = ratingCriteriaRecordList;
-
-                    obj.InterviewLanguageModelList = languageList;
-                    obj.InterviewTrainingModelList = trainingList;
-                    obj.InterviewTechQuesModelList = technicalList;
 
                     lst.Add(obj);
                 }

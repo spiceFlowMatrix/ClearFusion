@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.Common.Helpers
 
         //appsetting joson file 
         public const string appsettingJsonFile = "appsettings.json";
-        public const string googleCredential = "GoogleCredentials\\";
+        public const string googleCredential = "GoogleCredentials/";
         //public const string googleCredential = "GoogleCredentials/";
 
 
@@ -23,9 +23,17 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string StoreFolderName = "Store";
         public const string ProjectActivityFolderName = "Activity";
         public const string uploadUrl = "https://storage.cloud.google.com/";
+        public const string TrainingDocUrl = "https://drive.google.com/3r234?fa4r";
 
 
         public const string credentialsJsonFile = "credentials.json";
+
+        public const int projectNotFound = 404;
+        public const string projectNotFoundText = "Project not found";
+
+        public const string invalidDate = "Actual date must be greater than or equal to start date";
+        public const string validData = "Please enter valid data";
+        public const int notValid = 501;
 
 
         public const int notFoundCode = 120;
@@ -134,7 +142,7 @@ namespace HumanitarianAssistance.Common.Helpers
         //ListName Resourse
         public const string ListNameAdded = "ListName has added";
         public const string ListNameNotAdded = "ListName has not added";
-        public const string ListNameAlreadyExist = "ListName already exist";
+        public const string ListNameAlreadyExist = "Name already exist";
         public const string InvalidListNameId = "Invalid ListName Id";
         public const string ListNameDeleted = "ListName has deleted";
         public const string ListNameNotDeleted = "ListName has not deleted";
@@ -348,7 +356,7 @@ namespace HumanitarianAssistance.Common.Helpers
 
         //HR
         public const string PensionPaymentCreated = "Pension Payment Done On {0} for {1}";
-
+        public const string PensionPayment = "Pension Payment";
         // Marketing
         public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
 
@@ -366,8 +374,10 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string FileText = "File Not Supported";
         public const int FileNotSupported = 4440;
 
-        #region "Project Activity"
+        #region "Project"
         public const string ActivityNotFound = "Activity Not Found";
+        public const string ProjectIndicatorNotFound = "Project Indicator Record Not Found";
+        public const string IndicatorNameEmpty = "Project Indicator Name Can Not Be Empty";
         #endregion
 
         #region "Accounting New"
@@ -381,13 +391,30 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string defaultFinancialYearIsNotSet = "Default Financial year is not set";
         public const string officeCodeNotFound = "Office Code Not Found";
         public const string TransactionNotFound = "Transaction Not Found";
+        public const string AccountNotFound = "Account Not Found";
+        public const string DeleteAllTransactions = "Transactions Exist";
+        public const string DeleteAllChildAccount = "Child Account Exist";
 
 
         #endregion
 
         #region "Exception Throw Error Text"
         public const string UnableToUploadFile = "Unable To Upload File";
+        public const string ActivityExtensionNotFound = "Activity extension not found";
 
         #endregion
+
+        public const string UnableToGenerateSignedUrl = "Unable to generate signed Url. Try Again!";
+        public const string BucketNameNotFound = "Bucket name not found.";
+        public const string UnableToDeleteBucketObject = "Unable to delete file. Try Again!";
+
+
+        public const string OpportunityControlNotfound = "Opportunity Control not found";
+        public const string LogisticsControlNotfound = "Logistics Control not found";
+        public const string ActivitiesControlNotfound = "Activities Control not found";
+        public const string HiringControlNotfound = "Hiring Control not found";
+
+        public const string sameRoleAlreadyExistForTheUser= "Same Role already exist for this user";
+
     }
 }

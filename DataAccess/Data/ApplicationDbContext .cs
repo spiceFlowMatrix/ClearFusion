@@ -196,6 +196,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<HRJobInterviewers> HRJobInterviewers { get; set; }
         public DbSet<ExchangeRateVerification> ExchangeRateVerifications { get; set; }
         public DbSet<Errorlog> errorlog { get; set; }
+        public DbSet<DocumentFileDetail> DocumentFileDetail { get; set; }
 
 
         #region Project
@@ -246,13 +247,28 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectActivityDetail> ProjectActivityDetail { get; set; }
         public DbSet<ActivityDocumentsDetail> ActivityDocumentsDetail { get; set; }
 
+        public DbSet<ProjectIndicatorQuestions> ProjectIndicatorQuestions { get; set; }
+        public DbSet<ProjectIndicators> ProjectIndicators { get; set; }
+        public DbSet<ProjectMonitoringReviewDetail> ProjectMonitoringReviewDetail { get; set; }
+        public DbSet<ProjectMonitoringIndicatorQuestions> ProjectMonitoringIndicatorQuestions { get; set; }
+        public DbSet<ProjectMonitoringIndicatorDetail> ProjectMonitoringIndicatorDetail { get; set; }
+        public DbSet<ProjectActivityProvinceDetail> ProjectActivityProvinceDetail { get; set; }
+        public DbSet<ProjectActivityExtensions> ProjectActivityExtensions { get; set; }
+        public DbSet<PensionDebitAccountMaster> PensionDebitAccountMaster { get; set; }
 
-
+        public DbSet<ProjectOpportunityControl> ProjectOpportunityControl { get; set; }
+        public DbSet<ProjectLogisticsControl> ProjectLogisticsControl { get; set; }
+        public DbSet<ProjectActivitiesControl> ProjectActivitiesControl { get; set; }
+        public DbSet<ProjectHiringControl> ProjectHiringControl { get; set; }
 
 
         #endregion
 
         #region Marketing
+        public DbSet<InvoiceGeneration> InvoiceGeneration { get; set; }
+        public DbSet<InvoiceApproval> InvoiceApproval { get; set; }
+        public DbSet<PlayoutMinutes> PlayoutMinutes { get; set; }
+        public DbSet<ScheduleDetails> ScheduleDetails { get; set; }
         public DbSet<PolicyTimeSchedule> PolicyTimeSchedules { get; set; }
         public DbSet<PolicyDaySchedule> PolicyDaySchedules { get; set; }
         public DbSet<PolicySchedule> PolicySchedules { get; set; }
@@ -268,6 +284,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<Language> Languages { get; set; }
         public DbSet<MediaCategory> MediaCategories { get; set; }
         public DbSet<Medium> Mediums { get; set; }
+        public DbSet<Channel> Channel { get; set; }
         public DbSet<Nature> Natures { get; set; }
         public DbSet<TimeCategory> TimeCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -288,15 +305,11 @@ namespace HumanitarianAssistance.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PermissionsInRoles>().HasKey(s => new { s.RoleId, s.PermissionId });
-            // modelBuilder.Entity<RolePermissions>().HasKey(s => new { s.RoleId});
 
             modelBuilder.Entity<VoucherTransactions>().HasOne(x => x.ChartOfAccountDetail).WithMany(b => b.VoucherTransactionsList);
             modelBuilder.Entity<VoucherTransactions>().HasOne(p => p.VoucherDetails).WithMany(b => b.VoucherTransactionDetails);
 
-            //modelBuilder.Entity<ChartOfAccountNew>().HasMany(x => x.CreditAccountlist);
-            //modelBuilder.Entity<ChartOfAccountNew>().HasMany(x => x.DebitAccountlist);
-
-
+            modelBuilder.Entity<ProjectActivityDetail>().HasMany(g => g.ProjectActivityProvinceDetail);
 
 
             //Global filter on table
@@ -675,7 +688,17 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 72, PageName = "Producer", ModuleId = 6, ModuleName = "Marketing" },
                 new ApplicationPages { IsDeleted = false, PageId = 73, PageName = "Policy", ModuleId = 6, ModuleName = "Marketing" },
                 new ApplicationPages { IsDeleted = false, PageId = 74, PageName = "ProjectJobs", ModuleId = 8, ModuleName = "Projects" },
-                new ApplicationPages { IsDeleted = false, PageId = 75, PageName = "ProjectActivities", ModuleId = 8, ModuleName = "Projects" }
+                new ApplicationPages { IsDeleted = false, PageId = 75, PageName = "ProjectActivities", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 76, PageName = "Channel", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 77, PageName = "Scheduler", ModuleId = 6, ModuleName = "Marketing" },
+                new ApplicationPages { IsDeleted = false, PageId = 78, PageName = "ProjectDashboard", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 79, PageName = "ProjectCashFlow", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 80, PageName = "ProjectBudgetLine", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 81, PageName = "BroadCastPolicy", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 82, PageName = "ProposalReport", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 83, PageName = "ProjectIndicators", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 84, PageName = "ProjectPeople", ModuleId = 8, ModuleName = "Projects" }
+
             );
 
             modelBuilder.Entity<FinancialYearDetail>().HasData(

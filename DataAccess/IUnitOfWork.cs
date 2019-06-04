@@ -146,6 +146,7 @@ namespace DataAccess
         IGenericRepository<ExchangeRateDetail> ExchangeRateDetailRepository { get; }
         IGenericRepository<PaymentTypes> PaymentTypesRepository { get; }
         IGenericRepository<HRJobInterviewers> HRJobInterviewersRepository { get; }
+        IGenericRepository<ProjectActivityProvinceDetail> ProjectActivityProvinceDetailRepository { get; }
 
         #region Project
         IGenericRepository<DonorDetail> DonorDetailRepository { get; }
@@ -198,10 +199,21 @@ namespace DataAccess
 
         IGenericRepository<ActivityDocumentsDetail> ActivityDocumentsDetailRepository { get; }
 
+        IGenericRepository<ProjectActivityExtensions> ProjectActivityExtensionsRepository { get; }
+
+
+        IGenericRepository<ProjectOpportunityControl> ProjectOpportunityControlRepository { get; }
+        IGenericRepository<ProjectLogisticsControl> ProjectLogisticsControlRepository { get; }
+        IGenericRepository<ProjectActivitiesControl> ProjectActivitiesControlRepository { get; }
+        IGenericRepository<ProjectHiringControl> ProjectHiringControlRepository { get; }
 
         #endregion
 
         #region Marketing
+        IGenericRepository<InvoiceGeneration> InvoiceGenerationRepository { get; }
+        IGenericRepository<InvoiceApproval> InvoiceApprovalRepository { get; }
+        IGenericRepository<ScheduleDetails> ScheduleDetailsRepository { get; }
+        IGenericRepository<Channel> ChannelRepository { get; }
         IGenericRepository<UnitRate> UnitRateRepository { get; }
         IGenericRepository<PolicyDetail> PolicyRepository { get; }
         IGenericRepository<PolicyTimeSchedule> PolicyTimeScheduleRepository { get; }
@@ -211,6 +223,7 @@ namespace DataAccess
         IGenericRepository<ActivityType> ActivityTypeRepository { get; }
         IGenericRepository<ContractDetails> ContractDetailsRepository { get; }
         IGenericRepository<JobDetails> JobDetailsRepository { get; }
+        IGenericRepository<PlayoutMinutes> PlayoutMinutesRepository { get; }
         IGenericRepository<JobPhase> JobPhaseRepository { get; }
         IGenericRepository<Producer> ProducerRepository { get; }
         IGenericRepository<JobPriceDetails> JobPriceDetailsRepository { get; }

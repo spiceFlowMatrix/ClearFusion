@@ -32,6 +32,8 @@ namespace DataAccess
         T Update(T t, object key);
         Task<T> UpdateAsyn(T t, params object[] key);
         Task<T> Get(long id);
-
+        bool Any(Expression<Func<T, bool>> match);
+        Task<bool> AnyAsync(Expression<Func<T, bool>> match);
+        
     }
 }

@@ -2,10 +2,13 @@
 using DataAccess.DbEntities.ErrorLog;
 using DataAccess.DbEntities.Project;
 using HumanitarianAssistance.Service.APIResponses;
+using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Common;
 using HumanitarianAssistance.ViewModels.Models.Project;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -81,10 +84,13 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteProjectArea(ProjectArea model, string UserId);
         Task<APIResponse> AddApprovalDetail(ApproveProjectDetailModel model, string UserId);
         Task<APIResponse> WinApprovalDetail(WinApprovalProjectModel model, string UserId);
+        Task<APIResponse> GetProjectJobDetailByBudgetLineId(long budgetLineId);
 
         Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
 
         #endregion
+
+        Task<APIResponse> GetProjectWinLossStatus(long ProjectId);
 
         #region Project Communication
         Task<APIResponse> GetChatByProjectId(long ProjectId);
@@ -93,6 +99,8 @@ namespace HumanitarianAssistance.Service.interfaces
         #endregion
 
         Task<APIResponse> GetAllProjectDetails();
+        Task<APIResponse> GetProjectJobsByMultipleProjectIds(List<long> projectIds);
+        Task<APIResponse> GetBudgetLinesByMultipleProjectJobIds(List<long?> projectJobIds);
         #region GetAllProvinceDetails
         APIResponse GetAllProvinceDetails();
         APIResponse GetAllStrengthConsiderationDetails();
@@ -101,13 +109,12 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetAllSecurityConsiderationDetails();
         APIResponse GetAllDistrictvalueByProvinceId(int[] provinceId);
 
-        APIResponse AddEditProjectproposals(long projectId, string UserId,string logginUserEmailId);
+        //Task<APIResponse> AddEditProjectproposals(long projectId, string UserId,string logginUserEmailId);
         APIResponse GetProjectproposalsById(long projectId);
 
-        APIResponse AddEditProjectotherDetail(ProjectOtherDetail otherDetail, string UserId);
+        APIResponse AddEditProjectotherDetail(ProjectOtherDetailModel otherDetail, string UserId);
         //APIResponse UploadOtherProposalFile(IFormFile file, string UserId);
-        APIResponse UploadOtherProposalFile(IFormFile file, string UserId, string Projectid, string fullPath, string fileName, string logginUserEmailId,string ProposalType,string ext);
-
+        Task<APIResponse> UploadOtherDocuments(IFormFile file, string UserId, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
         APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId);
         APIResponse GetOtherProjectListById(long ProjectId);
         APIResponse AddEditDonorCriteria(DonorCriteriaModel model, string UserId);
@@ -183,6 +190,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse>AddEditProjectJobDetail(ProjectJobDetailModel model, string UserId);
 
         Task<APIResponse> GetAllProjectJobDetail();
+        Task<APIResponse> GetAllProjectJobDetail(long prejectId);
+
         Task<APIResponse> GetAllProjectJobByProjectId(long ProjectId);
         Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
         Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId);
@@ -196,8 +205,34 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetTransactionListByProjectId(long projectId,string userName);
         Task<APIResponse> GetTransactionList(string username, int currencyId, long budgetLineId);
 
-        Task<APIResponse> DeleteProjectJob(int model, string UserId);
+        Task<APIResponse> DeleteProjectJob(long jobId, string UserId);
+        Task<APIResponse> GetAllProjectIndicators(PagingModel paging);
 
         #endregion
+        #region "cashflow"
+        Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowFilterModel model);
+        Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineBreakdownFilterModel model);        
+        #endregion
+
+        #region start proposal 25/03/219
+        Task<APIResponse> StartProposal(long Projectid, string userid, string logginUserEmailId);
+        Task<APIResponse> StartProposalDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
+        //Task<APIResponse> UploadOtherDocuments(IFormFile file, string UserId, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
+        Task<APIResponse> UploadReviewDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, ApproveProjectDetailModel model);
+        Task<APIResponse> UploadFinalizeDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, WinApprovalProjectModel model);
+
+        #endregion
+
+        Task<APIResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model);
+        Task<APIResponse> GetProjectProposalReport(ProjectProposalReportFilterModel model);
+        Task<APIResponse> GetProjectProposalAmountSummary(ProjectProposalReportFilterModel model);
+        Task<APIResponse> AddProjectIndicator(string userId);
+        Task<APIResponse> EditProjectIndicator(EditIndicatorModel model, string userId);
+        Task<APIResponse> GetProjectIndicatorDetailById(long IndicatorId);
+        Task<APIResponse> GetProjectIndicatorQuestionsById(long id);
+        //void GetExcelFile(IFormFile fileKey, string UserId);
+        Task<APIResponse> GetExcelFile(Stream file, string UserId,long projectId);
+
+
     }
 }

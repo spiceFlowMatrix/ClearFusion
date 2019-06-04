@@ -14,6 +14,8 @@ using System.Text;
 using DataAccess.DbEntities.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using HumanitarianAssistance.Entities.Models;
+using HumanitarianAssistance.ViewModels.SPModels;
+using HumanitarianAssistance.ViewModels.Models.Common;
 
 namespace HumanitarianAssistance.Service.APIResponses
 {
@@ -60,6 +62,8 @@ namespace HumanitarianAssistance.Service.APIResponses
 
     public class data
     {
+        public List<string> RepeatDays { get; set; }
+        public byte[] pdf { get; set; }
         public string AspNetUserId { get; set; }
         public RoleViewModel RoleData { get; set; }
         public string Token { get; set; }
@@ -71,7 +75,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public double TotalRecivable { get; set; }
         public double TotalPayable { get; set; }
         public double Balance { get; set; }
-
+        public long TotalExchangeRateCount { get; set; }
 
         public double TotalIncome { get; set; }
         public int TotalPresentDays { get; set; }
@@ -94,6 +98,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public bool isPayrollHeadSaved { get; set; }
         public string ItemGroupCode { get; set; }
         public string JobCode { get; set; }
+        public long? PensionDebitAccountId { get; set; }
         public VoucherTransactionModel VoucherTransactionModel { get; set; }
         public List<VoucherTransactionModel> VoucherTransactionModelList { get; set; }
         public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
@@ -224,7 +229,6 @@ namespace HumanitarianAssistance.Service.APIResponses
         public BalanceSheet BalanceSheet { get; set; }
         public IList<CurrentFinancialYear> CurrentFinancialYearList { get; set; }
 
-        public List<DetailsOfNotesModel> DetailsOfNotesList { get; set; }
         public List<DetailsOfNotesFinalModel> DetailsOfNotesFinalList { get; set; }
 
         public IList<ScheduleCandidateModel> ScheduledProspectiveEmployee { get; set; }
@@ -296,28 +300,36 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<ProjectDetailNewModel> ProjectDetailModel { get; set; }
         public ProjectDetailNewModel ProjectDetailModel1 { get; set; }
         public ProjectDetail ProjectDetail { get; set; }
+        public bool ProjectWinLoss { get; set; }
         public DonorDetail DonorDetailById { get; set; }
         public ProjectOtherDetail OtherProjectDetailById { get; set; }
         public SecurityConsiderationMultiSelect MultiSecurityConsiderationById { get; set; }
         public List<long> SecurityConsiderationMultiSelectById { get; set; }
         public List<int> ProvinceMultiSelectById { get; set; }
         public List<long> DistrictMultiSelectById { get; set; }
+        public EditIndicatorModel IndicatorModel { get; set; }
 
-        
+
         public List<ProjectCommunicationModel> ProjectCommunicationModel { get; set; }
         public ProjectProgram projectProgram { get; set; }
         public ProjectArea projectArea { get; set; }
         public ProjectSector projectSector { get; set; }
+        public ProjectSectorModel ProjectSectorModel { get; set; }
+        public SectorDetails SectorDetails { get; set; }
+
 
         public ProjectProposalModel ProjectProposalModel { get; set; }
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
+        public ApproveProjectDetails ApproveProjectDetails { get; set; }
+        public WinProjectDetails WinProjectDetails { get; set; }
+
         public EligibilityCriteriaDetail eligibilityCriteriaDetail { get; set; }
         public CriteriaEveluationModel CriteriaEveluationModel { get; set; }
         public List<ApplicationPages> ApplicationPagesList { get; set; }
         public List<UserRolePermissionsModel> UserRolePermissions { get; set; }
         public List<RolePermissionModel> RolePermissionModelList { get; set; }
 
-       
+
         public ICollection<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public ICollection<CEFeasibilityExpertOtherDetail> FeasibilityExpertOtherDetail { get; set; }
         public ICollection<CEAgeGroupDetail> CEAgeGroupDetail { get; set; }
@@ -328,23 +340,29 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
 
         public ICollection<ProjectJobDetail> ProjectJobDetail { get; set; }
+        public ProjectJobDetailModel ProjectJobModel { get; set; }
         public List<ProjectJobDetailModel> ProjectJobDetailModel { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailList { get; set; }
         public IList<ProjectBudgetLineDetailModel> ProjectBudgetLineDetailByBudgetId { get; set; }
         public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
+        public ProjectActivityDetail ProjectActivityLst { get; set; }
 
-        public IList<ProjectActivityModel> ProjectActivityList { get; set; }
-
+        public ICollection<ProjectActivityModel> ProjectActivityList { get; set; }
+        public ProjectActivityModel ProjectActivityDetails { get; set; }
+        public ICollection<ProjectSubActivityListModel> ProjectSubActivityListModel { get; set; }
+        public  ProjectSubActivityListModel ProjectSubActivityList { get; set; }
         public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
         public List<ExchangeRateVerificationViewModel> ExchangeRateVerificationList { get; set; }
         public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
-        public ActivityDocumentsDetail activityDocumnentDetail { get; set; }
+        public ActivityDocumentsDetailModel activityDocumnentDetail { get; set; }
         public List<ActivityDocumentDetailModel> ActivityDocumentDetailModel { get; set; }
 
 
-
-
-
+        public ProjectCashFlowModel ProjectCashFlowModel { get; set; }
+        public List<BudgetLineBreakdownListModel> BudgetLineBreakdownList { get; set; }
+        public BudgetLineBreakdownModel BudgetLineBreakdownModel { get; set; }
+        public ProjectIndicatorViewModel ProjectIndicator { get; set; }
+        public List<IndicatorQuestions> Questions { get; set; }
 
         #region Marketing    
         public PolicyTimeSchedule policyTimeScheduleDetails { get; set; }
@@ -363,6 +381,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<Nature> Natures { get; set; }
         public ICollection<JobPhase> JobPhases { get; set; }
         public ICollection<Producer> Producers { get; set; }
+        public ICollection<Channel> Channels { get; set; }
+        public ICollection<ChannelModel> ChannelList { get; set; }
         public ICollection<UnitRate> UnitRates { get; set; }
         public UnitRate UnitRateByActivityId { get; set; }
         public ICollection<JobPriceDetails> JobPriceDetails { get; set; }
@@ -371,6 +391,12 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ICollection<TimeCategory> TimeCategories { get; set; }
         public List<JobDetailsModel> JobDetailsModel { get; set; }
         public List<PolicyModel> policyList { get; set; }
+        public List<ScheduleTimeModel> scheduleTimeList { get; set; }
+        public ScheduleDetails scheduleDetails { get; set; }
+        public PlayoutMinutes playoutMinutesDetails { get; set; }
+        public SchedulerModel scheduleDetailsModel { get; set; }
+        public List<ScheduleDetails> scheduleDetailsLists { get; set; }
+        public List<ScheduleDetailModel> scheduleDetailsList { get; set; }
         public int jobListTotalCount { get; set; }
         public List<UnitRateDetailsModel> UnitRateDetails { get; set; }
         public List<ContractByClient> ContractByClientList { get; set; }
@@ -391,8 +417,10 @@ namespace HumanitarianAssistance.Service.APIResponses
         public Quality qualityById { get; set; }
         public JobPhase phaseById { get; set; }
         public Producer producerById { get; set; }
+        public Channel channelById { get; set; }
         public ActivityType activityById { get; set; }
         public PolicyDetail policyDetails { get; set; }
+        public ScheduleDetails schedulerDetails { get; set; }
         public List<PolicyModel> policyFilterList { get; set; }
         public PolicyModel policyDetailsById { get; set; }
         public PolicyTimeScheduleModel policyTimeDetailsById { get; set; }
@@ -403,9 +431,10 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<CodeType> SourceCodeTypelist { get; set; }
         public List<StoreSourceCodeDetailModel> SourceCodeDatalist { get; set; }
         public ICollection<PaymentTypes> PaymentTypesList { get; set; }
-        public Dictionary<string,List<string>> Permissions { get; set; }
-
-
+        public Dictionary<string, List<string>> Permissions { get; set; }
+        public ProjectMonitoringViewModel ProjectMonitoringModel { get; set; }
+        public List<SPVoucherSummaryReportModel> VoucherSummaryList { get; set; }
+        public List<VoucherSummaryTransactionModel> VoucherSummaryTransactionList{ get; set; }
 
         #region "Accounting New"
         public List<ChartOfAccountNew> AllAccountList { get; set; }
@@ -418,17 +447,21 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ChartOfAccountNew ChartOfAccountNewDetail { get; set; }
         public List<VoucherTransactionsModel> VoucherTransactions { get; set; }
         public List<AccountBalance> AccountBalanceList { get; internal set; }
-
+        public InvoiceModel invoiceDetails { get; set; }
+        public List<SchedulerModel> SchedulerList { get; internal set; }
 
         public List<AccountBalance> AccountBalances { get; set; }
         public List<NoteAccountBalances> NoteAccountBalances { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
         public bool IsVoucherVerified { get; set; }
+        public bool IsExchangeRateVerified { get; set; }
 
         public VoucherDetailEntityModel VoucherDetailEntity { get; set; }
         public List<GainLossVoucherList> GainLossVoucherList { get; set; }
         public GainLossVoucherList GainLossVoucherDetail { get; set; }
-
+        public List<ProjectMonitoringViewModel> ProjectMonitoring { get; set; }
+        public ProjectActivityDetail ProjectActivityDetail { get; set; }
+        public ProjectActivityModel ProjectActivityModel { get; set; }
 
         #endregion
 
@@ -451,7 +484,20 @@ namespace HumanitarianAssistance.Service.APIResponses
         public DateTime DateTime { get; set; }
         public bool ImplementationStatus { get; set; }
         public bool MonitoringStatus { get; set; }
+        public string SignedUrl { get; set; }
+        public string TrainingLink { get; set; }
+        public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
+        public List<ProjectProposalAmountSummary> ProjectProposalAmountSummary { get; set; }
+        public ProjectIndicatorModel ProjectIndicatorList { get; set; }
 
+        public ICollection<ProjectActivityExtensions> ProjectActivityExtensionsList { get; set; }
+
+        public List<OpportunityControlViewModel> OpportunityControlList { get; set; }
+        public List<LogisticsControlViewModel> LogisticsControlList { get; set; }
+        public List<ActivitiesControlViewModel> ActivitiesControlList { get; set; }
+        public List<HiringControlViewModel> HiringControlList { get; set; }
+        public List<ProjectActivityPermissionModel> ProjectActivityPermissionList { get; set; }
+        public List<FileListModel> DocumentFileList { get; set; }
     }
 
 
