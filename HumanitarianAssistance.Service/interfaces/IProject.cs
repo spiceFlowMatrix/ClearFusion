@@ -193,7 +193,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllProjectJobDetail(long prejectId);
 
         Task<APIResponse> GetAllProjectJobByProjectId(long ProjectId);
-        Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
+        //Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
         Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId);
         Task<APIResponse> GetallBudgetLineDetail();
         Task<APIResponse> GetallBudgetLineDetail(long projectId);
