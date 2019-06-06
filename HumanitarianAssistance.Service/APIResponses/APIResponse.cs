@@ -148,6 +148,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<OfficeDetailModel> OfficeDetailsList { get; set; }
         public IList<DepartmentModel> Departments { get; set; }
         public IList<UserDetailsModel> UserDetailsList { get; set; }
+        public ICollection<UserDetails> UserDetailList { get; set; }
         public UserDetailsModel UserDetails { get; set; }
         public IList<PermissionsInRolesModel> PermissionsInRolesList { get; set; }
         public IList<PermissionsModel> PermissionsList { get; set; }

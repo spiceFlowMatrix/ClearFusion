@@ -649,6 +649,14 @@ namespace HumanitarianAssistance.Controllers
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<object> GetAllUserList()
+    {
+      APIResponse response = await _iuserDetails.GetAllUserList();
+      return response;
+    }
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<object> GetUserDetailsByUserId(string UserId)
     {
       APIResponse response = await _iuserDetails.GetUserDetailsByUserId(UserId);
