@@ -5640,7 +5640,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("islate", model.IsLate)
                                       .ExecuteStoredProc<SPProjectProposalReportModel>();
 
-                var total = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).CountAsync();
+                var total = spProposalReport.Count();
 
                 response.data.TotalCount = total;
                 response.data.ProjectProposalReportList = spProposalReport.Skip(model.PageIndex.Value * model.PageSize.Value).Take(model.PageSize.Value).ToList();
