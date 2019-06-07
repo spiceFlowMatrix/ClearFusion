@@ -25,6 +25,7 @@ namespace DataAccess.DbEntities.Project
         public int? CurrencyId { get; set; }
         [ForeignKey("CurrencyId")]
         public CurrencyDetails CurrencyDetails { get; set; }
+        public List<VoucherTransactions> VoucherTransactions { get; set; }
 
     }
 }

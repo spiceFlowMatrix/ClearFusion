@@ -239,8 +239,26 @@ namespace HumanitarianAssistance.Service.Classes
 			}
 			return response;
 		}
+        public async Task<APIResponse> GetAllUserList()
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var userdetailslist = await _uow.UserDetailsRepository.FindAllAsync(x => x.IsDeleted == false);
 
-		public async Task<APIResponse> GetUserDetailsByUserId(string UserId)
+                response.data.UserDetailList = userdetailslist;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetUserDetailsByUserId(string UserId)
 		{
 			APIResponse response = new APIResponse();
 			try

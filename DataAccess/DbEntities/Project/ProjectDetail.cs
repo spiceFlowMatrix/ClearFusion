@@ -26,5 +26,6 @@ namespace DataAccess.DbEntities.Project
 
         public int? ReviewerId { get; set; }
         public int? DirectorId { get; set; }
+        public List<ProjectBudgetLineDetail> ProjectBudgetLineDetails { get; set; }
     }
 }
