@@ -697,7 +697,8 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 81, PageName = "BroadCastPolicy", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 82, PageName = "ProposalReport", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 83, PageName = "ProjectIndicators", ModuleId = 8, ModuleName = "Projects" },
-                new ApplicationPages { IsDeleted = false, PageId = 84, PageName = "ProjectPeople", ModuleId = 8, ModuleName = "Projects" }
+                new ApplicationPages { IsDeleted = false, PageId = 84, PageName = "ProjectPeople", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 85, PageName = "VoucherSummaryReport", ModuleId = 7, ModuleName = "AccountingNew" }
 
             );
 

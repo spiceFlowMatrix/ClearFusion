@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190603121623_addForeignKeyInTableProjectDetailandVoucherTransactions")]
+    partial class addForeignKeyInTableProjectDetailandVoucherTransactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -547,8 +549,7 @@ namespace DataAccess.Migrations
                         new { PageId = 81, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "BroadCastPolicy" },
                         new { PageId = 82, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProposalReport" },
                         new { PageId = 83, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectIndicators" },
-                        new { PageId = 84, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectPeople" },
-                        new { PageId = 85, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "VoucherSummaryReport" }
+                        new { PageId = 84, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectPeople" }
                     );
                 });
 

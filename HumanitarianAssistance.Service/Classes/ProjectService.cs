@@ -5113,17 +5113,20 @@ namespace HumanitarianAssistance.Service.Classes
                                       .CountAsync();
 
                 var budgetLineList = await _uow.GetDbContext().ProjectBudgetLineDetail
-                                      .Where(v => v.ProjectId == budgeLineFilterModel.ProjectId && v.IsDeleted == false &&
-                                                !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
-                                                  v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
-                                                  v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
-                                                  v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
-                                                  v.ProjectJobId.ToString().Contains(projectJobIdValue) ||
-                                                  v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
-                                                  v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
-                                                  v.CreatedDate.ToString().Trim().ToLower().Contains(dateValue)
-                                                  ) : v.ProjectId == budgeLineFilterModel.ProjectId
-                                       )
+                                              .Include(x=> x.VoucherTransactions)
+                                              .ThenInclude(x=> x.VoucherDetails)
+                                              .ThenInclude(x=> x.CurrencyDetail)
+                                              .Where(v => v.ProjectId == budgeLineFilterModel.ProjectId && v.IsDeleted == false && 
+                                                        !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
+                                                          v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
+                                                          v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
+                                                          v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
+                                                          v.ProjectJobId.ToString().Contains(projectJobIdValue) ||
+                                                          v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
+                                                          v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
+                                                          v.CreatedDate.ToString().Trim().ToLower().Contains(dateValue)
+                                                          ) : v.ProjectId == budgeLineFilterModel.ProjectId
+                                               )
                                       .OrderByDescending(x => x.CreatedDate)
                                       .Select(x => new ProjectBudgetLineDetailModel
                                       {
@@ -5138,28 +5141,30 @@ namespace HumanitarianAssistance.Service.Classes
                                           ProjectJobId = x.ProjectJobId,
                                           ProjectJobName = x.ProjectJobDetail.ProjectJobName,
                                           CreatedDate = x.CreatedDate,
+                                          DebitPercentage= ((x.VoucherTransactions.Where(y => y.IsDeleted == false &&
+                                                                             y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s=> s.Debit)) / x.InitialBudget) * 100
                                       })
                                       .Skip(budgeLineFilterModel.pageSize.Value * budgeLineFilterModel.pageIndex.Value)
                                       .Take(budgeLineFilterModel.pageSize.Value)
                                       .ToListAsync();
-                if (budgetLineList.Count > 0)
-                {
-                    foreach (var item in budgetLineList)
-                    {
-                        var TransList = await _uow.GetDbContext().VoucherTransactions
-                                                                 .Include(c => c.CurrencyDetails)
-                                                                 .Where(x => x.IsDeleted == false &&
-                                                                             x.VoucherDetails.CurrencyId == item.CurrencyId &&
-                                                                             x.BudgetLineId == item.BudgetLineId)
-                                                                 .OrderByDescending(x => x.Debit)
-                                                                 .ToListAsync();
+                //if (budgetLineList.Count > 0)
+                //{
+                //    foreach (var item in budgetLineList)
+                //    {
+                //        var TransList = await _uow.GetDbContext().VoucherTransactions
+                //                                                 .Include(c => c.CurrencyDetails)
+                //                                                 .Where(x => x.IsDeleted == false &&
+                //                                                             x.VoucherDetails.CurrencyId == item.CurrencyId &&
+                //                                                             x.BudgetLineId == item.BudgetLineId)
+                //                                                 .OrderByDescending(x => x.Debit)
+                //                                                 .ToListAsync();
 
-                        var debitSum = TransList.Sum(x => x.Debit);
-                        var debitPercentage = (debitSum / item.InitialBudget) * 100;
-                        item.DebitPercentage = debitPercentage;
-                    }
+                //        var debitSum = TransList.Sum(x => x.Debit);
+                //        var debitPercentage = (debitSum / item.InitialBudget) * 100;
+                //        item.DebitPercentage = debitPercentage;
+                //    }
 
-                }
+                //}
                 response.data.ProjectBudgetLineList = budgetLineList.OrderByDescending(x=>x.DebitPercentage).ToList();
                 response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5622,7 +5627,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("islate", model.IsLate)
                                       .ExecuteStoredProc<SPProjectProposalReportModel>();
 
-                var total = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).CountAsync();
+                var total = spProposalReport.Count();
 
                 response.data.TotalCount = total;
                 response.data.ProjectProposalReportList = spProposalReport.Skip(model.PageIndex.Value * model.PageSize.Value).Take(model.PageSize.Value).ToList();
