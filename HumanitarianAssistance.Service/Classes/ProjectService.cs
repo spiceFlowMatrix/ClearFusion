@@ -2965,29 +2965,14 @@ namespace HumanitarianAssistance.Service.Classes
             ProjectProposalDetail details = new ProjectProposalDetail();
             try
             {
-                //var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
                 details = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-                //var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
-                //GoogleCredential Credential = new GoogleCredential();
-
-                //using (StreamReader files = File.OpenText(GoogleCredentialsFile))
-                //using (JsonTextReader reader = new JsonTextReader(files))
-                //{
-                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
-
-                //    Credential = o2["GoogleCredential"].ToObject<GoogleCredential>();
-                //}
 
                 if (details == null)
                 {
                     details = new ProjectProposalDetail();
-                    //details.ProposalStartDate = DateTime.UtcNow;
-
-                    //details.ProposalBudget = model.ProposalBudget;
                     details.ProposalDueDate = model.ProposalDueDate;
                     details.ProjectAssignTo = model.UserId;
                     details.IsProposalAccept = model.IsProposalAccept;
-
                     details.ProjectId = model.ProjectId.Value;
                     details.CurrencyId = model.CurrencyId;
                     details.UserId = model.UserId;
@@ -2995,12 +2980,9 @@ namespace HumanitarianAssistance.Service.Classes
                     details.CreatedById = UserId;
                     details.CreatedDate = DateTime.UtcNow;
                     _uow.ProjectProposalDetailRepository.Add(details);
-
-
                 }
                 else
                 {
-                    //details.ProposalStartDate = DateTime.UtcNow;
                     details.ProposalBudget = model.ProposalBudget;
                     details.ProposalDueDate = model.ProposalDueDate;
                     details.ProjectAssignTo = model.UserId;

@@ -18,6 +18,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> ChangePassword(ChangePasswordModel model);
         Task<APIResponse> ResetPassword(ResetPassword model);
         Task<APIResponse> GetUserRolesByUserId(string userid);
+        Task<APIResponse> GetAllUserList();
+
 
     }
 }
