@@ -5999,16 +5999,16 @@ namespace HumanitarianAssistance.Service.Classes
                             DataList.Add(new ProjectBudgetLineDetailModel
                             {
                                 ProjectId = Convert.ToInt64(workSheet.Cells[i, 1].Value == null ? null : workSheet.Cells[i, 1].Value.ToString()),
-                                ProjectJobId = Convert.ToInt64(workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString()),
-                                ProjectJobCode = workSheet.Cells[i, 3].Value == null ? null : workSheet.Cells[i, 3].Value.ToString(),
-                                ProjectJobName = workSheet.Cells[i, 4].Value == null ? null : workSheet.Cells[i, 4].Value.ToString(),
-                                BudgetLineId = Convert.ToInt64(workSheet.Cells[i, 5].Value == null ? null : workSheet.Cells[i, 5].Value.ToString()),
-                                BudgetCode = workSheet.Cells[i, 6].Value == null ? null : workSheet.Cells[i, 6].Value.ToString(),
-                                BudgetName = workSheet.Cells[i, 7].Value == null ? null : workSheet.Cells[i, 7].Value.ToString(),
-                                InitialBudget = Convert.ToInt64(workSheet.Cells[i, 8].Value == null ? null : workSheet.Cells[i, 8].Value.ToString()),
-                                CurrencyId = Convert.ToInt32(workSheet.Cells[i, 9].Value == null ? null : workSheet.Cells[i, 9].Value.ToString()),
-                                CurrencyName = workSheet.Cells[i, 10].Value == null ? null : workSheet.Cells[i, 10].Value.ToString(),
-                                CreatedDate = Convert.ToDateTime(workSheet.Cells[i, 11].Value == null ? null : workSheet.Cells[i, 11].Value.ToString()),
+                                //ProjectJobId = Convert.ToInt64(workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString()),
+                                ProjectJobCode = workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString(),
+                                ProjectJobName = workSheet.Cells[i, 3].Value == null ? null : workSheet.Cells[i, 3].Value.ToString(),
+                                //BudgetLineId = Convert.ToInt64(workSheet.Cells[i, 5].Value == null ? null : workSheet.Cells[i, 5].Value.ToString()),
+                                BudgetCode = workSheet.Cells[i, 4].Value == null ? null : workSheet.Cells[i, 4].Value.ToString(),
+                                BudgetName = workSheet.Cells[i, 5].Value == null ? null : workSheet.Cells[i, 5].Value.ToString(),
+                                InitialBudget = Convert.ToInt64(workSheet.Cells[i, 6].Value == null ? null : workSheet.Cells[i, 6].Value.ToString()),
+                                CurrencyId = Convert.ToInt32(workSheet.Cells[i, 7].Value == null ? null : workSheet.Cells[i, 7].Value.ToString()),
+                                CurrencyName = workSheet.Cells[i, 8].Value == null ? null : workSheet.Cells[i, 8].Value.ToString(),
+                                //CreatedDate = Convert.ToDateTime(workSheet.Cells[i, 11].Value == null ? null : workSheet.Cells[i, 11].Value.ToString()),
                             });
                             //Console.WriteLine("code", code);
                         }
