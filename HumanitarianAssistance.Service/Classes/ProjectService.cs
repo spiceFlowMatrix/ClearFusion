@@ -43,6 +43,8 @@ namespace HumanitarianAssistance.Service.Classes
             _hostingEnvironment = hostingEnvironment;
         }
 
+        
+
         #region Donor Details
         public async Task<APIResponse> GetAllDonorFilterList(DonorFilterModel donorFilterModel)
         {
@@ -2965,29 +2967,14 @@ namespace HumanitarianAssistance.Service.Classes
             ProjectProposalDetail details = new ProjectProposalDetail();
             try
             {
-                //var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
                 details = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-                //var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
-                //GoogleCredential Credential = new GoogleCredential();
-
-                //using (StreamReader files = File.OpenText(GoogleCredentialsFile))
-                //using (JsonTextReader reader = new JsonTextReader(files))
-                //{
-                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
-
-                //    Credential = o2["GoogleCredential"].ToObject<GoogleCredential>();
-                //}
 
                 if (details == null)
                 {
                     details = new ProjectProposalDetail();
-                    //details.ProposalStartDate = DateTime.UtcNow;
-
-                    //details.ProposalBudget = model.ProposalBudget;
                     details.ProposalDueDate = model.ProposalDueDate;
                     details.ProjectAssignTo = model.UserId;
                     details.IsProposalAccept = model.IsProposalAccept;
-
                     details.ProjectId = model.ProjectId.Value;
                     details.CurrencyId = model.CurrencyId;
                     details.UserId = model.UserId;
@@ -2995,12 +2982,9 @@ namespace HumanitarianAssistance.Service.Classes
                     details.CreatedById = UserId;
                     details.CreatedDate = DateTime.UtcNow;
                     _uow.ProjectProposalDetailRepository.Add(details);
-
-
                 }
                 else
                 {
-                    //details.ProposalStartDate = DateTime.UtcNow;
                     details.ProposalBudget = model.ProposalBudget;
                     details.ProposalDueDate = model.ProposalDueDate;
                     details.ProjectAssignTo = model.UserId;
@@ -5131,17 +5115,20 @@ namespace HumanitarianAssistance.Service.Classes
                                       .CountAsync();
 
                 var budgetLineList = await _uow.GetDbContext().ProjectBudgetLineDetail
-                                      .Where(v => v.ProjectId == budgeLineFilterModel.ProjectId && v.IsDeleted == false &&
-                                                !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
-                                                  v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
-                                                  v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
-                                                  v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
-                                                  v.ProjectJobId.ToString().Contains(projectJobIdValue) ||
-                                                  v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
-                                                  v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
-                                                  v.CreatedDate.ToString().Trim().ToLower().Contains(dateValue)
-                                                  ) : v.ProjectId == budgeLineFilterModel.ProjectId
-                                       )
+                                              .Include(x=> x.VoucherTransactions)
+                                              .ThenInclude(x=> x.VoucherDetails)
+                                              .ThenInclude(x=> x.CurrencyDetail)
+                                              .Where(v => v.ProjectId == budgeLineFilterModel.ProjectId && v.IsDeleted == false && 
+                                                        !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
+                                                          v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
+                                                          v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
+                                                          v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
+                                                          v.ProjectJobId.ToString().Contains(projectJobIdValue) ||
+                                                          v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
+                                                          v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
+                                                          v.CreatedDate.ToString().Trim().ToLower().Contains(dateValue)
+                                                          ) : v.ProjectId == budgeLineFilterModel.ProjectId
+                                               )
                                       .OrderByDescending(x => x.CreatedDate)
                                       .Select(x => new ProjectBudgetLineDetailModel
                                       {
@@ -5156,28 +5143,30 @@ namespace HumanitarianAssistance.Service.Classes
                                           ProjectJobId = x.ProjectJobId,
                                           ProjectJobName = x.ProjectJobDetail.ProjectJobName,
                                           CreatedDate = x.CreatedDate,
+                                          DebitPercentage= ((x.VoucherTransactions.Where(y => y.IsDeleted == false &&
+                                                                             y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s=> s.Debit)) / x.InitialBudget) * 100
                                       })
                                       .Skip(budgeLineFilterModel.pageSize.Value * budgeLineFilterModel.pageIndex.Value)
                                       .Take(budgeLineFilterModel.pageSize.Value)
                                       .ToListAsync();
-                if (budgetLineList.Count > 0)
-                {
-                    foreach (var item in budgetLineList)
-                    {
-                        var TransList = await _uow.GetDbContext().VoucherTransactions
-                                                                 .Include(c => c.CurrencyDetails)
-                                                                 .Where(x => x.IsDeleted == false &&
-                                                                             x.VoucherDetails.CurrencyId == item.CurrencyId &&
-                                                                             x.BudgetLineId == item.BudgetLineId)
-                                                                 .OrderByDescending(x => x.Debit)
-                                                                 .ToListAsync();
+                //if (budgetLineList.Count > 0)
+                //{
+                //    foreach (var item in budgetLineList)
+                //    {
+                //        var TransList = await _uow.GetDbContext().VoucherTransactions
+                //                                                 .Include(c => c.CurrencyDetails)
+                //                                                 .Where(x => x.IsDeleted == false &&
+                //                                                             x.VoucherDetails.CurrencyId == item.CurrencyId &&
+                //                                                             x.BudgetLineId == item.BudgetLineId)
+                //                                                 .OrderByDescending(x => x.Debit)
+                //                                                 .ToListAsync();
 
-                        var debitSum = TransList.Sum(x => x.Debit);
-                        var debitPercentage = (debitSum / item.InitialBudget) * 100;
-                        item.DebitPercentage = debitPercentage;
-                    }
+                //        var debitSum = TransList.Sum(x => x.Debit);
+                //        var debitPercentage = (debitSum / item.InitialBudget) * 100;
+                //        item.DebitPercentage = debitPercentage;
+                //    }
 
-                }
+                //}
                 response.data.ProjectBudgetLineList = budgetLineList.OrderByDescending(x=>x.DebitPercentage).ToList();
                 response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5640,7 +5629,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("islate", model.IsLate)
                                       .ExecuteStoredProc<SPProjectProposalReportModel>();
 
-                var total = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).CountAsync();
+                var total = spProposalReport.Count();
 
                 response.data.TotalCount = total;
                 response.data.ProjectProposalReportList = spProposalReport.Skip(model.PageIndex.Value * model.PageSize.Value).Take(model.PageSize.Value).ToList();
@@ -6017,16 +6006,16 @@ namespace HumanitarianAssistance.Service.Classes
                             DataList.Add(new ProjectBudgetLineDetailModel
                             {
                                 ProjectId = Convert.ToInt64(workSheet.Cells[i, 1].Value == null ? null : workSheet.Cells[i, 1].Value.ToString()),
-                                ProjectJobId = Convert.ToInt64(workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString()),
-                                ProjectJobCode = workSheet.Cells[i, 3].Value == null ? null : workSheet.Cells[i, 3].Value.ToString(),
-                                ProjectJobName = workSheet.Cells[i, 4].Value == null ? null : workSheet.Cells[i, 4].Value.ToString(),
-                                BudgetLineId = Convert.ToInt64(workSheet.Cells[i, 5].Value == null ? null : workSheet.Cells[i, 5].Value.ToString()),
-                                BudgetCode = workSheet.Cells[i, 6].Value == null ? null : workSheet.Cells[i, 6].Value.ToString(),
-                                BudgetName = workSheet.Cells[i, 7].Value == null ? null : workSheet.Cells[i, 7].Value.ToString(),
-                                InitialBudget = Convert.ToInt64(workSheet.Cells[i, 8].Value == null ? null : workSheet.Cells[i, 8].Value.ToString()),
-                                CurrencyId = Convert.ToInt32(workSheet.Cells[i, 9].Value == null ? null : workSheet.Cells[i, 9].Value.ToString()),
-                                CurrencyName = workSheet.Cells[i, 10].Value == null ? null : workSheet.Cells[i, 10].Value.ToString(),
-                                CreatedDate = Convert.ToDateTime(workSheet.Cells[i, 11].Value == null ? null : workSheet.Cells[i, 11].Value.ToString()),
+                                //ProjectJobId = Convert.ToInt64(workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString()),
+                                ProjectJobCode = workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString(),
+                                ProjectJobName = workSheet.Cells[i, 3].Value == null ? null : workSheet.Cells[i, 3].Value.ToString(),
+                                //BudgetLineId = Convert.ToInt64(workSheet.Cells[i, 5].Value == null ? null : workSheet.Cells[i, 5].Value.ToString()),
+                                BudgetCode = workSheet.Cells[i, 4].Value == null ? null : workSheet.Cells[i, 4].Value.ToString(),
+                                BudgetName = workSheet.Cells[i, 5].Value == null ? null : workSheet.Cells[i, 5].Value.ToString(),
+                                InitialBudget = Convert.ToInt64(workSheet.Cells[i, 6].Value == null ? null : workSheet.Cells[i, 6].Value.ToString()),
+                                CurrencyId = Convert.ToInt32(workSheet.Cells[i, 7].Value == null ? null : workSheet.Cells[i, 7].Value.ToString()),
+                                CurrencyName = workSheet.Cells[i, 8].Value == null ? null : workSheet.Cells[i, 8].Value.ToString(),
+                                //CreatedDate = Convert.ToDateTime(workSheet.Cells[i, 11].Value == null ? null : workSheet.Cells[i, 11].Value.ToString()),
                             });
                             //Console.WriteLine("code", code);
                         }

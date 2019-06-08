@@ -44,8 +44,8 @@ namespace HumanitarianAssistance.Service.Classes
                 //               select (new ClientDetailModel
                 //               {
                 //               })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
-
-                response.data.ClientDetails = list;
+                //updated list order By AS 07/06/2019
+                response.data.ClientDetails = list.OrderByDescending(x=>x.ClientId).ToList();
                 response.StatusCode = 200;
                 response.Message = "Success";
                 response.data.TotalCount = await _uow.GetDbContext().ClientDetails.CountAsync(x => x.IsDeleted == false);
@@ -69,27 +69,28 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var clientDetails = (from ur in _uow.GetDbContext().ClientDetails
-                                     join at in _uow.GetDbContext().Categories on ur.CategoryId equals at.CategoryId
-                                     into jou
-                                     from dev_skill in jou.DefaultIfEmpty()
-                                     from a in _uow.GetDbContext().ClientDetails
-                                     where !ur.IsDeleted.Value && !a.IsDeleted.Value && ur.ClientId == ClientId
-                                     select (new ClientDetailModel
-                                     {
-                                         CategoryId = ur.CategoryId,
-                                         CategoryName = dev_skill.CategoryName ?? String.Empty,
-                                         ClientBackground = ur.ClientBackground,
-                                         ClientCode = ur.ClientCode,
-                                         ClientId = ur.ClientId,
-                                         ClientName = ur.ClientName,
-                                         Email = ur.Email,
-                                         FocalPoint = ur.FocalPoint,
-                                         History = ur.History,
-                                         Phone = ur.Phone,
-                                         PhysicialAddress = ur.PhysicialAddress,
-                                         Position = ur.Position
-                                     })).FirstOrDefault();
+                //add await by AS 07/06/2019
+                var clientDetails = await (from ur in _uow.GetDbContext().ClientDetails
+                                           join at in _uow.GetDbContext().Categories on ur.CategoryId equals at.CategoryId
+                                           into jou
+                                           from dev_skill in jou.DefaultIfEmpty()
+                                           from a in _uow.GetDbContext().ClientDetails
+                                           where !ur.IsDeleted.Value && !a.IsDeleted.Value && ur.ClientId == ClientId
+                                           select (new ClientDetailModel
+                                           {
+                                               CategoryId = ur.CategoryId,
+                                               CategoryName = dev_skill.CategoryName ?? String.Empty,
+                                               ClientBackground = ur.ClientBackground,
+                                               ClientCode = ur.ClientCode,
+                                               ClientId = ur.ClientId,
+                                               ClientName = ur.ClientName,
+                                               Email = ur.Email,
+                                               FocalPoint = ur.FocalPoint,
+                                               History = ur.History,
+                                               Phone = ur.Phone,
+                                               PhysicialAddress = ur.PhysicialAddress,
+                                               Position = ur.Position
+                                           })).FirstOrDefaultAsync();
 
                 response.data.clientDetailsById = clientDetails;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -264,7 +265,8 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var list = await _uow.ClientDetailsRepository.FindAllAsync(x => !x.IsDeleted.Value);
-                response.data.ClientDetails = list;
+                //updated list order By AS 07/06/2019 
+                response.data.ClientDetails = list.OrderByDescending(x => x.ClientId).ToList();
                 response.StatusCode = 200;
                 response.data.jobListTotalCount = await _uow.GetDbContext().ClientDetails.CountAsync(x => x.IsDeleted == false);
                 response.Message = "Success";
@@ -310,7 +312,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var contractList = _uow.GetDbContext().ClientDetails.Where(x => x.IsDeleted == false).ToList();
+                var contractList = await _uow.GetDbContext().ClientDetails.Where(x => x.IsDeleted == false).ToListAsync();
 
                 List<ClientDetails> filteredList = new List<ClientDetails>();
 

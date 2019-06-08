@@ -86,6 +86,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> WinApprovalDetail(WinApprovalProjectModel model, string UserId);
         Task<APIResponse> GetProjectJobDetailByBudgetLineId(long budgetLineId);
 
+        Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
+
         #endregion
 
         Task<APIResponse> GetProjectWinLossStatus(long ProjectId);
@@ -191,7 +193,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllProjectJobDetail(long prejectId);
 
         Task<APIResponse> GetAllProjectJobByProjectId(long ProjectId);
-        Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
+        //Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
         Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId);
         Task<APIResponse> GetallBudgetLineDetail();
         Task<APIResponse> GetallBudgetLineDetail(long projectId);
@@ -230,7 +232,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetProjectIndicatorQuestionsById(long id);
         //void GetExcelFile(IFormFile fileKey, string UserId);
         Task<APIResponse> GetExcelFile(Stream file, string UserId,long projectId);
-
 
     }
 }
