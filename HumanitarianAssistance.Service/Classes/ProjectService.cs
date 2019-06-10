@@ -4891,7 +4891,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 ProjectBudgetLineDetail obj = _mapper.Map<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>(model);
 
-                if (model.BudgetLineId == 0)
+                if (model.BudgetLineId == null)
                 {
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
