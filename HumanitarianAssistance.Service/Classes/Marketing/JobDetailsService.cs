@@ -135,7 +135,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                          TotalPrice = jp.TotalPrice,
                                          CreatedDate = j.CreatedDate,
                                          IsInvoiceApproved = jp.IsInvoiceApproved
-                                     })).Take(10).Skip(0).OrderByDescending(x => x.CreatedDate).ToListAsync();
+                                     })).OrderByDescending(x => x.JobId).Take(10).Skip(0).ToListAsync();
 
 
 
@@ -286,7 +286,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
 
 
-                var JobList = (from j in _uow.GetDbContext().JobDetails
+                var JobList = await (from j in _uow.GetDbContext().JobDetails
                                join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
                                join cd in _uow.GetDbContext().ContractDetails on j.ContractId equals cd.ContractId
                                join cur in _uow.GetDbContext().CurrencyDetails on cd.CurrencyId equals cur.CurrencyId
@@ -314,7 +314,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    JobPriceId = jp.JobPriceId,
                                    CurrencyCode = cur.CurrencyCode
 
-                               })).FirstOrDefault();
+                               })).FirstOrDefaultAsync();
                 response.data.JobPriceDetail = JobList;
                 response.StatusCode = 200;
                 response.Message = "Success";
@@ -475,7 +475,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var JobList1 = (from j in _uow.GetDbContext().JobDetails
+                var JobList1 = await (from j in _uow.GetDbContext().JobDetails
                                 join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
                                 where !j.IsDeleted.Value && !jp.IsDeleted.Value
                                 select (new JobDetailsModel
@@ -496,7 +496,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                     Discount = jp.Discount,
                                     DiscountPercent = jp.DiscountPercent,
                                     Minutes = jp.Minutes
-                                })).ToList();
+                                })).ToListAsync();
 
                 if (model != null)
                 {
@@ -680,7 +680,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    FinalPrice = jp.FinalPrice,
                                    TotalPrice = jp.TotalPrice,
                                    IsInvoiceApproved = jp.IsInvoiceApproved
-                               })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).OrderByDescending(x => x.CreatedDate).ToList();
+                               })).OrderByDescending(x => x.CreatedDate).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
                 response.data.TotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
                 response.data.JobDetailsModel = JobList;
                 response.StatusCode = 200;
@@ -727,7 +727,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                JobPriceModel JobDetails = (from j in _uow.GetDbContext().JobDetails
+                JobPriceModel JobDetails = await (from j in _uow.GetDbContext().JobDetails
                                             join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
                                             join cd in _uow.GetDbContext().ContractDetails on j.ContractId equals cd.ContractId
                                             join cur in _uow.GetDbContext().CurrencyDetails on cd.CurrencyId equals cur.CurrencyId
@@ -741,7 +741,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                                 StartDate = cd.StartDate,
                                                 IsApproved = j.IsApproved,
                                                 ClientName = cd.ClientName
-                                            })).FirstOrDefault();
+                                            })).FirstOrDefaultAsync();
 
                 //var imagepath = Path.Combine(_hostingEnvironment.WebRootPath, "agreement-logo.png");
                 //< img width = '100' height = '100' src = " + imagepath + @" >
