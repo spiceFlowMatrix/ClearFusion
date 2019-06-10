@@ -18,6 +18,7 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.Common;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
 {
@@ -2175,13 +2176,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiresponse;
     }
-   
+
 
     [HttpPost]
     public async Task<APIResponse> GetProjectActivityDetailByActivityId([FromBody]long activityId)
     {
       APIResponse apiresponse = new APIResponse();
-        apiresponse = await _iActivity.GetProjectActivityByActivityId(activityId);
+      apiresponse = await _iActivity.GetProjectActivityByActivityId(activityId);
       return apiresponse;
     }
 
@@ -2189,7 +2190,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
     #region "BudgetLineExcelImport"
     [HttpPost, DisableRequestSizeLimit]
-    public async Task<APIResponse> ExcelImportOfBudgetLine([FromForm] IFormFile fileKey ,string projectId)
+    public async Task<APIResponse> ExcelImportOfBudgetLine([FromForm] IFormFile fileKey, string projectId)
     {
       APIResponse apiRespone = new APIResponse();
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -2221,6 +2222,59 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
     #endregion
 
+    #region "Create and Download Excel format"
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult CreateAndDownloadExcelFormat()
+    {
+      APIResponse apiRespone = new APIResponse();
+      string fileName;
+      fileName = "ExcellData.xlsx";
+      var file = new FileInfo(fileName);
+      using (var package = new OfficeOpenXml.ExcelPackage(file))
+      {
+        var worksheet = package.Workbook.Worksheets.FirstOrDefault(x => x.Name == "Attempts");
+        worksheet = package.Workbook.Worksheets.Add("Assessment Attempts");
+        worksheet.Row(1).Height = 15;
+        
+        //worksheet.TabColor = Color.Gold;
+        worksheet.DefaultRowHeight = 15;
+        worksheet.Row(1).Height = 15;
+
+        worksheet.Cells[1, 1].Value = "ProjectId";
+        worksheet.Cells[1, 2].Value = "ProjectJobCode";
+        worksheet.Cells[1, 3].Value = "ProjectJobName";
+        worksheet.Cells[1, 4].Value = "BudgetCode";
+        worksheet.Cells[1, 5].Value = "BudgetName";
+        worksheet.Cells[1, 6].Value = "InitialBudget";
+        worksheet.Cells[1, 7].Value = "CurrencyId";
+        worksheet.Cells[1, 8].Value = "CurrencyName"; 
+
+        var cells = worksheet.Cells["A1:J1"];
+       
+        worksheet.Column(1).AutoFit();
+        worksheet.Column(2).AutoFit();
+        worksheet.Column(3).AutoFit();
+        worksheet.Column(4).AutoFit();
+        worksheet.Column(5).AutoFit();
+        worksheet.Column(6).AutoFit();
+        worksheet.Column(7).AutoFit();
+        worksheet.Column(8).AutoFit();
+
+
+        package.Workbook.Properties.Title = "Attempts";
+        var FileBytesArray = package.GetAsByteArray();
+        return File(
+           fileContents: FileBytesArray,
+           contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+           fileDownloadName: "Budget-Line-Excel-Import-Sample.xlsx"
+       );
+      }
+      }
+
+    #endregion
+
+    #region "Voucher summary reports"
     [HttpPost]
     public async Task<APIResponse> GetProjectJobsByProjectIds([FromBody] List<long> projectIds)
     {
@@ -2236,5 +2290,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       apiresponse = await _iProject.GetBudgetLinesByMultipleProjectJobIds(projectJobIds);
       return apiresponse;
     }
+    #endregion
+
   }
 }

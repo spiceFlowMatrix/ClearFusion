@@ -12,6 +12,10 @@ namespace HumanitarianAssistance.WebAPI.ChaHub
     {
       await Clients.All.SendAsync("Send", message);
     }
+    public async Task ActivityPermissionChanged(string message)
+    {
+      await Clients.All.SendAsync("activityPermissionChanged", message);
+    }
   }
 
 
