@@ -779,7 +779,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                 transaction.VoucherNo = item.VoucherNo;
                                 transaction.CurrencyId = voucherDetail.CurrencyId;
                                 transaction.TransactionDate = voucherDetail.VoucherDate;
-                                transaction.JobId = item.JobId;
+                                transaction.JobId = item.JobId == 0 ? null : item.JobId;
 
                                 transactionsListAdd.Add(transaction);
                             }
@@ -805,7 +805,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                                     transaction.Description = item.Description;
                                     transaction.BudgetLineId = item.BudgetLineId;
                                     transaction.ProjectId = item.ProjectId;
-                                    transaction.JobId = item.JobId;
+                                    transaction.JobId = item.JobId== 0? null : item.JobId;
                                     transaction.CurrencyId = voucherDetail.CurrencyId;
                                     transaction.TransactionDate = voucherDetail.VoucherDate;
                                     transaction.ModifiedById = userId;
