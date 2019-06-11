@@ -260,7 +260,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectLogisticsControl> ProjectLogisticsControl { get; set; }
         public DbSet<ProjectActivitiesControl> ProjectActivitiesControl { get; set; }
         public DbSet<ProjectHiringControl> ProjectHiringControl { get; set; }
-
+        public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
 
         #endregion
 

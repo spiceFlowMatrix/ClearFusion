@@ -2397,5 +2397,134 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+        #region Attendance Groups
+
+        /// <summary>
+        /// Get Attendance Group List
+        /// </summary>
+        /// <returns>APIResponse</returns>
+        public async Task<APIResponse> GetAttendanceGroups()
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                response.data.AttendanceGroupMasterList = await _uow.GetDbContext().AttendanceGroupMaster
+                                                                    .Where(x => x.IsDeleted == false)
+                                                                    .OrderByDescending(x=> x.CreatedDate)
+                                                                    .Select(x=> new AttendanceGroupMasterModel
+                                                                    {
+                                                                       Description = x.Description,
+                                                                       Id= x.AttendanceGroupId,
+                                                                       Name= x.Name.ToLower().Trim()
+                                                                    }).ToListAsync();
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Add Attendance Group Item
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <returns>APIResponse</returns>
+        public async Task<APIResponse> AddAttendanceGroups(AttendanceGroupMasterModel model, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (model != null)
+                {
+
+                    AttendanceGroupMaster recordExists = await _uow.GetDbContext().AttendanceGroupMaster.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Name == model.Name.ToLower().Trim());
+
+                    if (recordExists != null)
+                    {
+                        throw new Exception($"Attendance Group with Name '{model.Name}' already exists ");
+                    }
+
+                    AttendanceGroupMaster attendanceGroupMaster = new AttendanceGroupMaster
+                    {
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedById= userId,
+                        Description= model.Description,
+                        IsDeleted= false,
+                        Name= model.Name
+                    };
+
+                    await _uow.GetDbContext().AttendanceGroupMaster.AddAsync(attendanceGroupMaster);
+                    await _uow.GetDbContext().SaveChangesAsync();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Edit Attendance Group Item
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <returns>APIResponse</returns>
+        public async Task<APIResponse> EditAttendanceGroups(AttendanceGroupMasterModel model, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (model != null)
+                {
+                    List<AttendanceGroupMaster> attendanceGroupMasterList = await _uow.GetDbContext().AttendanceGroupMaster.Where(x => x.IsDeleted == false && x.Name == model.Name.ToLower().Trim()).ToListAsync();
+
+                    bool isRecordWithSameNameExists = attendanceGroupMasterList.Any(x => x.AttendanceGroupId != model.Id);
+
+                    if (isRecordWithSameNameExists)
+                    {
+                        throw new Exception($"Attendance Group with Name '{model.Name}' already exists");
+                    }
+
+                    AttendanceGroupMaster attendanceGroupMaster = attendanceGroupMasterList.FirstOrDefault(x => x.IsDeleted == false && x.AttendanceGroupId == model.Id);
+
+                    if (attendanceGroupMaster != null)
+                    {
+                        attendanceGroupMaster.Description = model.Description;
+                        attendanceGroupMaster.Name = model.Name;
+                        attendanceGroupMaster.ModifiedById = userId;
+                        attendanceGroupMaster.ModifiedDate = DateTime.UtcNow;
+
+                        _uow.GetDbContext().AttendanceGroupMaster.Update(attendanceGroupMaster);
+                        await _uow.GetDbContext().SaveChangesAsync();
+                    }
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
     }
 }
