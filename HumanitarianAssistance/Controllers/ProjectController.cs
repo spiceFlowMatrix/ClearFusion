@@ -18,7 +18,6 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.ViewModels.Models;
 using HumanitarianAssistance.ViewModels.Models.Common;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace HumanitarianAssistance.WebAPI.Controllers
@@ -2238,16 +2237,16 @@ namespace HumanitarianAssistance.WebAPI.Controllers
         worksheet = package.Workbook.Worksheets.Add("Assessment Attempts");
         worksheet.Row(1).Height = 15;
         
-        worksheet.TabColor = Color.Gold;
+        //worksheet.TabColor = Color.Gold;
         worksheet.DefaultRowHeight = 15;
         worksheet.Row(1).Height = 15;
 
         worksheet.Cells[1, 1].Value = "ProjectId";
         worksheet.Cells[1, 2].Value = "ProjectJobCode";
         worksheet.Cells[1, 3].Value = "ProjectJobName";
-        worksheet.Cells[1, 4].Value ="BudgetCode";
-        worksheet.Cells[1, 5].Value ="BudgetName";
-        worksheet.Cells[1, 6].Value ="InitialBudget";
+        worksheet.Cells[1, 4].Value = "BudgetCode";
+        worksheet.Cells[1, 5].Value = "BudgetName";
+        worksheet.Cells[1, 6].Value = "InitialBudget";
         worksheet.Cells[1, 7].Value = "CurrencyId";
         worksheet.Cells[1, 8].Value = "CurrencyName"; 
 
@@ -2255,6 +2254,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
        
         worksheet.Column(1).AutoFit();
         worksheet.Column(2).AutoFit();
+        worksheet.Column(3).AutoFit();
+        worksheet.Column(4).AutoFit();
+        worksheet.Column(5).AutoFit();
+        worksheet.Column(6).AutoFit();
+        worksheet.Column(7).AutoFit();
+        worksheet.Column(8).AutoFit();
+
 
         package.Workbook.Properties.Title = "Attempts";
         var FileBytesArray = package.GetAsByteArray();

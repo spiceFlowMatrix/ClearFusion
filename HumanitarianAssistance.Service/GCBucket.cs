@@ -511,7 +511,7 @@ namespace HumanitarianAssistance.Service
             return model;
 
         }
-        private static string GetMimeType(string extension)
+        public static string GetMimeType(string extension)
         {
             string mimeType = "application/unknown";
             string ext = (extension).ToLower();

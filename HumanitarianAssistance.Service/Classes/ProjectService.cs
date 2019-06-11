@@ -4891,7 +4891,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 ProjectBudgetLineDetail obj = _mapper.Map<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>(model);
 
-                if (model.BudgetLineId == 0)
+                if (model.BudgetLineId == null)
                 {
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
@@ -5997,12 +5997,6 @@ namespace HumanitarianAssistance.Service.Classes
 
                         for (int i = 2; i <= totalRows; i++)
                         {
-                            //var t = workSheet.Cells[i, 2].Value;
-                            //long ProjectJobId = Convert.ToInt64(workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString());
-
-
-                            //Console.WriteLine("the value t",ProjectJobId);
-                            //string code = workSheet.Cells[i, 3].Value == null ? null : workSheet.Cells[i, 3].Value.ToString();
                             DataList.Add(new ProjectBudgetLineDetailModel
                             {
                                 ProjectId = Convert.ToInt64(workSheet.Cells[i, 1].Value == null ? null : workSheet.Cells[i, 1].Value.ToString()),
