@@ -16,5 +16,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public DateTime? InTime { get; set; }
 		public DateTime? OutTime { get; set; }
 		public bool SaveForAllOffice { get; set; }
+        public long? AttendanceGroupId { get; set; }
     }
 }

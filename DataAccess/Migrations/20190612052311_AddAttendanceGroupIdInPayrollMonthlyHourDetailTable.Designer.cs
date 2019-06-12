@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190612052311_AddAttendanceGroupIdInPayrollMonthlyHourDetailTable")]
+    partial class AddAttendanceGroupIdInPayrollMonthlyHourDetailTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3101,8 +3103,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<long?>("AttendanceGroupId");
-
                     b.Property<string>("ContractStatus");
 
                     b.Property<string>("CreatedById");
@@ -3163,8 +3163,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("WorkType");
 
                     b.HasKey("EmployeeProfessionalId");
-
-                    b.HasIndex("AttendanceGroupId");
 
                     b.HasIndex("CreatedById");
 
@@ -10923,10 +10921,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeProfessionalDetail", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.AttendanceGroupMaster", "AttendanceGroupMaster")
-                        .WithMany()
-                        .HasForeignKey("AttendanceGroupId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");

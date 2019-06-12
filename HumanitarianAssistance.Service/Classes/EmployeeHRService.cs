@@ -1060,7 +1060,8 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model != null)
                 {
                     List<PayrollMonthlyHourDetailModel> payrollHours = await _uow.GetDbContext().PayrollMonthlyHourDetail
-                                                                            .Where(x => x.PayrollYear == model.Year && x.OfficeId == model.OfficeId && x.IsDeleted == false)
+                                                                            .Where(x => x.PayrollYear == model.Year && x.OfficeId == model.OfficeId && x.IsDeleted == false
+                                                                                    && x.AttendanceGroupId == model.AttendanceGroupId)
                                                                             .Select(x => new PayrollMonthlyHourDetailModel
                                                                             {
                                                                                 PayrollMonthlyHourID = x.PayrollMonthlyHourID,
@@ -1071,7 +1072,8 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                 Hours = x.Hours,  //total working hours a Day
                                                                                 WorkingTime = x.WorkingTime,   //total working hours for Month
                                                                                 InTime = x.InTime,
-                                                                                OutTime = x.OutTime
+                                                                                OutTime = x.OutTime,
+                                                                                AttendanceGroupId= x.AttendanceGroupId
                                                                             }).ToListAsync();
 
                     response.data.PayrollMonthlyHourList = payrollHours;
@@ -1090,15 +1092,12 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> AddPayrollMonthlyHourDetail(PayrollMonthlyHourDetailModel model)
         {
             APIResponse response = new APIResponse();
+
             try
             {
-
-
                 TimeSpan hours;
                 hours = Convert.ToDateTime(model.OutTime) - Convert.ToDateTime(model.InTime);
                 model.Hours = Convert.ToInt32(hours.ToString().Substring(0, 2));
-
-                
 
                 if (model.SaveForAllOffice)
                 {
@@ -1113,8 +1112,8 @@ namespace HumanitarianAssistance.Service.Classes
                                     .FindAsync(x => x.IsDeleted == false &&
                                                     x.OfficeId == officeId &&
                                                     x.PayrollMonth == model.PayrollMonth &&
-                                                    x.PayrollYear == model.PayrollYear
-                                               );
+                                                    x.PayrollYear == model.PayrollYear &&
+                                                    x.AttendanceGroupId== model.AttendanceGroupId);
 
                         if (payrollinfo == null)
                         {
@@ -1129,6 +1128,7 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.PayrollYear = model.PayrollYear;
                             obj.IsDeleted = false;
                             obj.OfficeId = officeId;
+                            obj.AttendanceGroupId = model.AttendanceGroupId;
                             payrollMonthlyHourDetailsAdd.Add(obj);
                         }
                         else
@@ -1141,7 +1141,7 @@ namespace HumanitarianAssistance.Service.Classes
                             payrollinfo.PayrollMonth = model.PayrollMonth;
                             payrollinfo.PayrollYear = model.PayrollYear;
                             payrollinfo.OfficeId = officeId;
-
+                            payrollinfo.AttendanceGroupId = model.AttendanceGroupId;
                             payrollMonthlyHourDetailsUpdate.Add(payrollinfo);
                         }
                     }
@@ -1164,7 +1164,8 @@ namespace HumanitarianAssistance.Service.Classes
                                     .FindAsync(x => x.IsDeleted == false &&
                                                     x.OfficeId == model.OfficeId &&
                                                     x.PayrollMonth == model.PayrollMonth &&
-                                                    x.PayrollYear == model.PayrollYear
+                                                    x.PayrollYear == model.PayrollYear &&
+                                                    x.AttendanceGroupId == model.AttendanceGroupId
                                                );
 
                     if (payrollinfo == null)
@@ -1180,6 +1181,7 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.PayrollYear = model.PayrollYear;
                         obj.IsDeleted = false;
                         obj.OfficeId = model.OfficeId;
+                        obj.AttendanceGroupId = model.AttendanceGroupId;
                         await _uow.PayrollMonthlyHourDetailRepository.AddAsyn(obj);
                         await _uow.SaveAsync();
                     }
@@ -1212,7 +1214,8 @@ namespace HumanitarianAssistance.Service.Classes
                                      .FindAsync(x => x.IsDeleted == false &&
                                                      x.OfficeId == model.OfficeId &&
                                                      x.PayrollMonth == model.PayrollMonth &&
-                                                     x.PayrollYear == model.PayrollYear
+                                                     x.PayrollYear == model.PayrollYear &&
+                                                     x.AttendanceGroupId== model.AttendanceGroupId
                                                 );
                 if (payrollmonthlyinfo != null)
                 {

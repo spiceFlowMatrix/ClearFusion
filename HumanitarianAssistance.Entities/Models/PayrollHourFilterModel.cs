@@ -8,5 +8,6 @@ namespace HumanitarianAssistance.ViewModels.Models
     {
         public int Year { get; set; }
         public int OfficeId { get; set; }
+        public long AttendanceGroupId { get; set; }
     }
 }
