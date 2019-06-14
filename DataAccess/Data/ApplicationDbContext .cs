@@ -197,6 +197,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ExchangeRateVerification> ExchangeRateVerifications { get; set; }
         public DbSet<Errorlog> errorlog { get; set; }
         public DbSet<DocumentFileDetail> DocumentFileDetail { get; set; }
+        public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
 
 
         #region Project
@@ -260,7 +261,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectLogisticsControl> ProjectLogisticsControl { get; set; }
         public DbSet<ProjectActivitiesControl> ProjectActivitiesControl { get; set; }
         public DbSet<ProjectHiringControl> ProjectHiringControl { get; set; }
-        public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
+       
+        public DbSet<ProjectHiringRequestDetail> ProjectHiringRequestDetail { get; set; }
 
         #endregion
 

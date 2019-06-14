@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190613122457_droptableHiringRequest130619")]
+    partial class droptableHiringRequest130619
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7236,70 +7238,6 @@ namespace DataAccess.Migrations
                     b.ToTable("ProjectHiringControl");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectHiringRequestDetail", b =>
-                {
-                    b.Property<long>("HiringRequestId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<double?>("BasicPay");
-
-                    b.Property<long?>("BudgetLineId");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int?>("CurrencyId");
-
-                    b.Property<string>("Description");
-
-                    b.Property<int?>("EmployeeID");
-
-                    b.Property<int?>("FilledVacancies");
-
-                    b.Property<int?>("GradeId");
-
-                    b.Property<string>("HiringRequestCode");
-
-                    b.Property<bool>("IsCompleted");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int?>("OfficeId");
-
-                    b.Property<string>("Position");
-
-                    b.Property<string>("Profession");
-
-                    b.Property<long?>("ProjectId");
-
-                    b.Property<int?>("TotalVacancies");
-
-                    b.HasKey("HiringRequestId");
-
-                    b.HasIndex("BudgetLineId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("CurrencyId");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.HasIndex("GradeId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("OfficeId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ProjectHiringRequestDetail");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectIndicatorQuestions", b =>
                 {
                     b.Property<long>("IndicatorQuestionId")
@@ -12609,41 +12547,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectHiringRequestDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectBudgetLineDetail", "ProjectBudgetLineDetail")
-                        .WithMany()
-                        .HasForeignKey("BudgetLineId");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.CurrencyDetails", "CurrencyDetails")
-                        .WithMany()
-                        .HasForeignKey("CurrencyId");
-
-                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID");
-
-                    b.HasOne("DataAccess.DbEntities.JobGrade", "JobGrade")
-                        .WithMany()
-                        .HasForeignKey("GradeId");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetails")
-                        .WithMany()
-                        .HasForeignKey("OfficeId");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectIndicatorQuestions", b =>

@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190612092532_ProjectHiringRequestDetail12062019")]
+    partial class ProjectHiringRequestDetail12062019
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7238,7 +7240,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectHiringRequestDetail", b =>
                 {
-                    b.Property<long>("HiringRequestId")
+                    b.Property<long>("HiringReuestId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<double?>("BasicPay");
@@ -7279,7 +7281,7 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("TotalVacancies");
 
-                    b.HasKey("HiringRequestId");
+                    b.HasKey("HiringReuestId");
 
                     b.HasIndex("BudgetLineId");
 

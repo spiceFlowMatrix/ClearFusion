@@ -41,6 +41,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public DateTime? ActualEndDate { get; set; }
         public double? Progress { get; set; }
         public double? Slippage { get; set; }
+        public string SubActivityTitle { get; set; }
+
 
     }
 }
