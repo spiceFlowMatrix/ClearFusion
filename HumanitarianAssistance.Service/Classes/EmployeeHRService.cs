@@ -15,6 +15,7 @@ using HumanitarianAssistance.ViewModels.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using HumanitarianAssistance.Service.CommonUtility;
 
 namespace HumanitarianAssistance.Service.Classes
 {
@@ -52,7 +53,11 @@ namespace HumanitarianAssistance.Service.Classes
                 );
 
                 //gets the total working hours in a day for an office
-                PayrollMonthlyHourDetail payrollMonthlyHourDetail = _uow.PayrollMonthlyHourDetailRepository.FindAll(x => x.OfficeId == modellist.FirstOrDefault().OfficeId && x.PayrollYear == modellist.FirstOrDefault().Date.Year && x.PayrollMonth == modellist.FirstOrDefault().Date.Month).FirstOrDefault();
+                PayrollMonthlyHourDetail payrollMonthlyHourDetail = await _uow.GetDbContext().PayrollMonthlyHourDetail
+                                                                              .FirstOrDefaultAsync(x => x.OfficeId == modellist.FirstOrDefault().OfficeId
+                                                                              && x.PayrollYear == modellist.FirstOrDefault().Date.Year 
+                                                                              && x.PayrollMonth == modellist.FirstOrDefault().Date.Month
+                                                                              && x.AttendanceGroupId== modellist.FirstOrDefault().AttendanceGroupId);
                 int? officeDailyHour = payrollMonthlyHourDetail.Hours;
                 int? officeMonthlyHour = payrollMonthlyHourDetail.WorkingTime;
 
@@ -60,20 +65,13 @@ namespace HumanitarianAssistance.Service.Classes
                 if (officeDailyHour != null && officeMonthlyHour != null)
                 {
 
-                    //int? defaulthours = 0;
-
-                    //uncomment when we have all offices hour detail
-                    //var DefaultHourDetail = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false && x.OfficeId == modellist[0].OfficeId);
-
-                    //var DefaultHourDetail = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false);
-
                     var financiallist = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDefault == true);
 
                     foreach (var list in modellist)
                     {
                         TimeSpan? totalworkhour;
                         TimeSpan? totalovertime;
-                        int? overtime = 0, workingHours = 0;
+                        int? overtime = 0, workingHours = 0, workingMinutes = 0, overtimeMinutes = 0; 
 
                         var isemprecord = existrecord.Where(x => x.EmployeeId == list.EmployeeId && x.Date.Date == list.Date.Date).ToList();
                         totalworkhour = list.OutTime - list.InTime;
@@ -96,21 +94,27 @@ namespace HumanitarianAssistance.Service.Classes
                             {
                                 totalovertime = OfficeInTime - list.InTime;
                                 overtime += totalovertime.Value.Hours;
+                                overtimeMinutes += totalovertime.Value.Minutes;
                                 if (list.OutTime <= OfficeOutTime)
                                 {
                                     totalworkhour = list.OutTime - OfficeInTime;
                                     workingHours += totalworkhour.Value.Hours;
+                                    workingMinutes += totalworkhour.Value.Minutes;
                                 }
                                 if (list.OutTime > OfficeOutTime)
                                 {
                                     totalovertime = list.OutTime - OfficeOutTime;
                                     overtime += totalovertime.Value.Hours;
+                                    overtimeMinutes += totalovertime.Value.Minutes;
                                     totalworkhour = OfficeOutTime - OfficeInTime;
                                     workingHours += totalworkhour.Value.Hours;
+                                    workingMinutes += totalworkhour.Value.Minutes;
                                 }
 
                                 list.TotalWorkTime = workingHours.ToString();
+                                list.WorkTimeMinutes = workingMinutes;
                                 list.HoverTimeHours = overtime;
+                                list.OvertimeMinutes = overtimeMinutes;
                             }
 
                             else if (list.InTime >= OfficeInTime)
@@ -119,18 +123,22 @@ namespace HumanitarianAssistance.Service.Classes
                                 {
                                     totalworkhour = list.OutTime - list.InTime;
                                     workingHours += totalworkhour.Value.Hours;
+                                    workingMinutes += totalworkhour.Value.Minutes;
                                 }
                                 if (list.OutTime > OfficeOutTime)
                                 {
                                     totalovertime = list.OutTime - OfficeOutTime;
                                     overtime += totalovertime.Value.Hours;
+                                    overtimeMinutes += totalovertime.Value.Minutes;
                                     totalworkhour = OfficeOutTime - list.InTime;
                                     workingHours += totalworkhour.Value.Hours;
+                                    workingMinutes += totalworkhour.Value.Minutes;
                                 }
 
                                 list.TotalWorkTime = workingHours.ToString();
+                                list.WorkTimeMinutes = workingMinutes;
                                 list.HoverTimeHours = overtime;
-
+                                list.OvertimeMinutes = overtimeMinutes;
                             }
                             else
                             {
@@ -166,6 +174,8 @@ namespace HumanitarianAssistance.Service.Classes
                             if (workingHours != 0 && overtime == 0)
                             {
                                 xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
+                                xEmployeeMonthlyAttendanceRecord.AttendanceMinutes += workingMinutes.Value;
+                                xEmployeeMonthlyAttendanceRecord.OverTimeMinutes += overtimeMinutes.Value;
 
                             }
                             //update total attendance hours and also add overtime hours
@@ -174,6 +184,8 @@ namespace HumanitarianAssistance.Service.Classes
                                 xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
                                 xEmployeeMonthlyAttendanceRecord.OvertimeHours = xEmployeeMonthlyAttendanceRecord.OvertimeHours ?? 0;
                                 xEmployeeMonthlyAttendanceRecord.OvertimeHours += overtime;
+                                xEmployeeMonthlyAttendanceRecord.AttendanceMinutes += workingMinutes.Value;
+                                xEmployeeMonthlyAttendanceRecord.OverTimeMinutes += overtimeMinutes.Value;
                             }
 
                             //updating employee monthly attendance record
@@ -207,6 +219,8 @@ namespace HumanitarianAssistance.Service.Classes
                                 xEmployeeMonthlyAttendance.OvertimeHours = overtime;
                                 xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
                                 xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
+                                xEmployeeMonthlyAttendance.AttendanceMinutes = list.WorkTimeMinutes.Value;
+                                xEmployeeMonthlyAttendance.OverTimeMinutes = list.OvertimeMinutes.Value;
                             }
 
                             Advances xAdvances = await _uow.GetDbContext().Advances.Where(x => x.IsDeleted == false && x.IsApproved == true
@@ -390,16 +404,14 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.PaymentType = 2;
                             obj.AbsentDays = payrollAttendance.AbsentHours == null ? 0 : payrollAttendance.AbsentHours.Value;
                             obj.LeaveDays = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
-                            obj.PresentDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
+                            obj.PresentDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value + Convert.ToInt32(Math.Floor((float)payrollAttendance.AttendanceMinutes / 60f));
                             obj.LeaveHours = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
-                            obj.WorkingDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
+                            obj.WorkingDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value + Convert.ToInt32(Math.Floor((float)payrollAttendance.AttendanceMinutes / 60f));
                             obj.TotalWorkHours = payrollAttendance.TotalDuration == null ? 0 : payrollAttendance.TotalDuration.Value;
-                            obj.OverTimeHours = payrollAttendance.OvertimeHours == null ? 0 : payrollAttendance.OvertimeHours.Value;
+                            obj.OverTimeHours = payrollAttendance.OvertimeHours == null ? 0 : payrollAttendance.OvertimeHours.Value + Math.Floor(((float)payrollAttendance.OverTimeMinutes / 60f));
                             obj.IsAdvanceRecovery = payrollAttendance.IsAdvanceRecovery;
                             obj.AdvanceAmount = payrollAttendance.AdvanceAmount;
-
                             obj.CurrencyId = payrollDetail.FirstOrDefault().CurrencyId;
-                            obj.OverTimeHours = payrollAttendance.OvertimeHours;
                             obj.TotalAllowance = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.ALLOWANCE).Sum(s => s.MonthlyAmount);
                             obj.TotalDeduction = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.DEDUCTION).Sum(s => s.MonthlyAmount);
                             obj.TotalGeneralAmount = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).Sum(s => s.MonthlyAmount);
@@ -409,8 +421,14 @@ namespace HumanitarianAssistance.Service.Classes
                                 throw new Exception($"Basic Pay not defined for Employee Code-{payrollAttendance.EmployeeDetails.EmployeeCode}");
                             }
 
-                            obj.GrossSalary = obj.TotalGeneralAmount * (obj.PresentDays + obj.LeaveHours + obj.OverTimeHours) + obj.TotalAllowance;
+                            double convertMinutesToHours = Math.Round(((double)(payrollAttendance.OverTimeMinutes + payrollAttendance.AttendanceMinutes) / 60d),2);
+                            obj.GrossSalary = Math.Round((double)(obj.TotalGeneralAmount * (obj.PresentDays + obj.LeaveHours + obj.OverTimeHours + convertMinutesToHours) + obj.TotalAllowance),2);
                             obj.PensionAmount = Math.Round(((double)(obj.GrossSalary * payrollDetail.FirstOrDefault().PensionRate) / 100),2); // i.e. 4.5 % => 0.045
+
+                            // eliminate hours and only show minutes if minutes is 60 we already added them to overtime hours so minutes = 0
+                            obj.OvertimeMinutes = payrollAttendance.OverTimeMinutes==60 ? 0 : Convert.ToInt32(Math.Truncate(Math.Round((decimal)((float)payrollAttendance.OverTimeMinutes / 60f), 2) * 60));
+                            // eliminate hours and only show minutes if minutes is 60 we already added them to AttendanceHours so minutes = 0
+                            obj.WorkingMinutes= payrollAttendance.AttendanceMinutes== 60? 0: Convert.ToInt32(Math.Truncate(Math.Round((decimal)((float)payrollAttendance.AttendanceMinutes / 60f), 2) * 60)); 
 
                             if (obj.GrossSalary > 5000)
                             {
@@ -457,14 +475,14 @@ namespace HumanitarianAssistance.Service.Classes
                                         xAdvances.NumberOfInstallments = 1;
                                     }
 
-                                    obj.AdvanceRecoveryAmount = Convert.ToInt64(xAdvances.AdvanceAmount / xAdvances.NumberOfInstallments ?? 1);
+                                    obj.AdvanceRecoveryAmount = Math.Round((Convert.ToDouble(xAdvances.AdvanceAmount / xAdvances.NumberOfInstallments ?? 1)), 2);
                                     obj.AdvanceAmount = xAdvances.AdvanceAmount;
                                     obj.IsAdvanceApproved = xAdvances.IsApproved;
                                 }
                                 else
                                 {
                                     Double iBalanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
-                                    obj.AdvanceRecoveryAmount = Convert.ToInt64(iBalanceAmount / xAdvances.NumberOfInstallments);
+                                    obj.AdvanceRecoveryAmount = Math.Round((Convert.ToDouble(iBalanceAmount / xAdvances.NumberOfInstallments)),2);
                                     obj.IsAdvanceApproved = xAdvances.IsApproved;
                                     obj.AdvanceAmount = iBalanceAmount;
                                 }
@@ -502,6 +520,8 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.TotalGeneralAmount = payrollAttendance.TotalGeneralAmount == null ? 0 : payrollAttendance.TotalGeneralAmount.Value;
                             obj.WorkingDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
                             obj.TotalWorkHours = payrollAttendance.TotalDuration == null ? 0 : payrollAttendance.TotalDuration.Value;
+                            obj.OvertimeMinutes= payrollAttendance.OverTimeMinutes; // eliminate hours and only show minutes
+                            obj.WorkingMinutes= payrollAttendance.AttendanceMinutes; // eliminate hours and only show minutes
 
                             obj.employeepayrolllist.AddRange(payrollDetail.Where(x => x.EmployeeId == obj.EmployeeId));
                             payrollFinal.Add(obj);
@@ -1060,7 +1080,8 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model != null)
                 {
                     List<PayrollMonthlyHourDetailModel> payrollHours = await _uow.GetDbContext().PayrollMonthlyHourDetail
-                                                                            .Where(x => x.PayrollYear == model.Year && x.OfficeId == model.OfficeId && x.IsDeleted == false)
+                                                                            .Where(x => x.PayrollYear == model.Year && x.OfficeId == model.OfficeId && x.IsDeleted == false
+                                                                                    && x.AttendanceGroupId == model.AttendanceGroupId)
                                                                             .Select(x => new PayrollMonthlyHourDetailModel
                                                                             {
                                                                                 PayrollMonthlyHourID = x.PayrollMonthlyHourID,
@@ -1071,7 +1092,8 @@ namespace HumanitarianAssistance.Service.Classes
                                                                                 Hours = x.Hours,  //total working hours a Day
                                                                                 WorkingTime = x.WorkingTime,   //total working hours for Month
                                                                                 InTime = x.InTime,
-                                                                                OutTime = x.OutTime
+                                                                                OutTime = x.OutTime,
+                                                                                AttendanceGroupId= x.AttendanceGroupId
                                                                             }).ToListAsync();
 
                     response.data.PayrollMonthlyHourList = payrollHours;
@@ -1090,15 +1112,12 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> AddPayrollMonthlyHourDetail(PayrollMonthlyHourDetailModel model)
         {
             APIResponse response = new APIResponse();
+
             try
             {
-
-
                 TimeSpan hours;
                 hours = Convert.ToDateTime(model.OutTime) - Convert.ToDateTime(model.InTime);
                 model.Hours = Convert.ToInt32(hours.ToString().Substring(0, 2));
-
-                
 
                 if (model.SaveForAllOffice)
                 {
@@ -1113,8 +1132,8 @@ namespace HumanitarianAssistance.Service.Classes
                                     .FindAsync(x => x.IsDeleted == false &&
                                                     x.OfficeId == officeId &&
                                                     x.PayrollMonth == model.PayrollMonth &&
-                                                    x.PayrollYear == model.PayrollYear
-                                               );
+                                                    x.PayrollYear == model.PayrollYear &&
+                                                    x.AttendanceGroupId== model.AttendanceGroupId);
 
                         if (payrollinfo == null)
                         {
@@ -1129,6 +1148,7 @@ namespace HumanitarianAssistance.Service.Classes
                             obj.PayrollYear = model.PayrollYear;
                             obj.IsDeleted = false;
                             obj.OfficeId = officeId;
+                            obj.AttendanceGroupId = model.AttendanceGroupId;
                             payrollMonthlyHourDetailsAdd.Add(obj);
                         }
                         else
@@ -1141,7 +1161,7 @@ namespace HumanitarianAssistance.Service.Classes
                             payrollinfo.PayrollMonth = model.PayrollMonth;
                             payrollinfo.PayrollYear = model.PayrollYear;
                             payrollinfo.OfficeId = officeId;
-
+                            payrollinfo.AttendanceGroupId = model.AttendanceGroupId;
                             payrollMonthlyHourDetailsUpdate.Add(payrollinfo);
                         }
                     }
@@ -1164,7 +1184,8 @@ namespace HumanitarianAssistance.Service.Classes
                                     .FindAsync(x => x.IsDeleted == false &&
                                                     x.OfficeId == model.OfficeId &&
                                                     x.PayrollMonth == model.PayrollMonth &&
-                                                    x.PayrollYear == model.PayrollYear
+                                                    x.PayrollYear == model.PayrollYear &&
+                                                    x.AttendanceGroupId == model.AttendanceGroupId
                                                );
 
                     if (payrollinfo == null)
@@ -1180,6 +1201,7 @@ namespace HumanitarianAssistance.Service.Classes
                         obj.PayrollYear = model.PayrollYear;
                         obj.IsDeleted = false;
                         obj.OfficeId = model.OfficeId;
+                        obj.AttendanceGroupId = model.AttendanceGroupId;
                         await _uow.PayrollMonthlyHourDetailRepository.AddAsyn(obj);
                         await _uow.SaveAsync();
                     }
@@ -1212,7 +1234,8 @@ namespace HumanitarianAssistance.Service.Classes
                                      .FindAsync(x => x.IsDeleted == false &&
                                                      x.OfficeId == model.OfficeId &&
                                                      x.PayrollMonth == model.PayrollMonth &&
-                                                     x.PayrollYear == model.PayrollYear
+                                                     x.PayrollYear == model.PayrollYear &&
+                                                     x.AttendanceGroupId== model.AttendanceGroupId
                                                 );
                 if (payrollmonthlyinfo != null)
                 {

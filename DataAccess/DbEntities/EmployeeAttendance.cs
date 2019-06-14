@@ -24,6 +24,8 @@ namespace DataAccess.DbEntities
         public DateTime Date { get; set; }
         public string Remarks { get; set; }
         public long? HolidayId { get; set; }
+        public int WorkTimeMinutes { get; set; }
+        public int OverTimeMinutes { get; set; }
         public HolidayDetails HolidayDetails { get; set; }
 
         public int? FinancialYearId { get; set; }

@@ -48,6 +48,9 @@ namespace DataAccess.DbEntities
         public string ContractStatus { get; set; }
         public string TinNumber { get; set; }
         public int? ProfessionId { get; set; }
+        public long? AttendanceGroupId { get; set; }
+        [ForeignKey("AttendanceGroupId")]
+        public AttendanceGroupMaster AttendanceGroupMaster { get; set; }
         [ForeignKey("ProfessionId")]
         public ProfessionDetails professionDetails { get; set; }
     }

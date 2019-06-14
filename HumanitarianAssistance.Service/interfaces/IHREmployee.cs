@@ -51,7 +51,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllEmployeeHealthDetailByEmployeeId(int employeeid);
         Task<APIResponse> ChangeEmployeeImage(ChangeEmployeeImage model);
         //Task<APIResponse> GetAllActiveEmployeeForAttendance();
-        Task<APIResponse> GetAllEmployeesAttendanceByDate(string SelectedDate, int officeid, bool attendancestatus);
+        Task<APIResponse> GetAllEmployeesAttendanceByDate(EmployeeAttendanceFilterViewModel model);
         Task<APIResponse> EditEmployeeAttendanceByDate(EmployeeAttendanceModel model, string userid);
 
         //Alpit

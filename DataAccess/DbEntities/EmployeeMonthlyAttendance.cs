@@ -41,9 +41,10 @@ namespace DataAccess.DbEntities
         public double AdvanceRecoveryAmount { get; set; }
         public bool IsApproved { get; set; }
         public int? AdvanceId { get; set; }
+        public int AttendanceMinutes { get; set; }
+        public int OverTimeMinutes { get; set; }
         [ForeignKey("AdvanceId")]
         public Advances Advance { get; set; }
-
         [ForeignKey("EmployeeId")]
         public EmployeeDetail EmployeeDetails { get; set; }
 

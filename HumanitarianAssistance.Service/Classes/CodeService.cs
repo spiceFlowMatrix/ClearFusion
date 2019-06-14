@@ -2417,7 +2417,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                     {
                                                                        Description = x.Description,
                                                                        Id= x.AttendanceGroupId,
-                                                                       Name= x.Name.ToLower().Trim()
+                                                                       Name= x.Name
                                                                     }).ToListAsync();
 
                 response.StatusCode = StaticResource.successStatusCode;
@@ -2446,7 +2446,7 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model != null)
                 {
 
-                    AttendanceGroupMaster recordExists = await _uow.GetDbContext().AttendanceGroupMaster.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Name == model.Name.ToLower().Trim());
+                    AttendanceGroupMaster recordExists = await _uow.GetDbContext().AttendanceGroupMaster.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Name.ToLower().Trim() == model.Name.ToLower().Trim());
 
                     if (recordExists != null)
                     {
@@ -2491,7 +2491,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 if (model != null)
                 {
-                    List<AttendanceGroupMaster> attendanceGroupMasterList = await _uow.GetDbContext().AttendanceGroupMaster.Where(x => x.IsDeleted == false && x.Name == model.Name.ToLower().Trim()).ToListAsync();
+                    List<AttendanceGroupMaster> attendanceGroupMasterList = await _uow.GetDbContext().AttendanceGroupMaster.Where(x => x.IsDeleted == false && x.Name.ToLower().Trim() == model.Name.ToLower().Trim()).ToListAsync();
 
                     bool isRecordWithSameNameExists = attendanceGroupMasterList.Any(x => x.AttendanceGroupId != model.Id);
 
