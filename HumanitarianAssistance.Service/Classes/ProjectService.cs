@@ -43,8 +43,6 @@ namespace HumanitarianAssistance.Service.Classes
             _hostingEnvironment = hostingEnvironment;
         }
 
-        
-
         #region Donor Details
         public async Task<APIResponse> GetAllDonorFilterList(DonorFilterModel donorFilterModel)
         {
@@ -1485,7 +1483,6 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
-
 
         #region Master Page
         /// <summary>
@@ -3025,7 +3022,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
-        #region Criteria
+        #region Criteria evaluation form
         public APIResponse AddEditDonorCriteria(DonorCriteriaModel model, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -4613,7 +4610,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
-
         #region ProjectJobDetail
 
         public async Task<string> GetProjectJobCode(ProjectJobDetail model)
@@ -5602,7 +5598,6 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
-
         #region "Project Proposal report"
         public async Task<APIResponse> GetProjectProposalReport(ProjectProposalReportFilterModel model)
         {
@@ -5645,6 +5640,9 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
         #endregion
+       
+        #region "GetProgress"
+
         public float GetProgress(DateTime? dueDate, DateTime? startDate)
         {
             float percentage = 0;
@@ -5659,7 +5657,9 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return percentage;
         }
+        #endregion
 
+        #region "GetProjectProposalAmountSummary"
         public async Task<APIResponse> GetProjectProposalAmountSummary(ProjectProposalReportFilterModel model)
         {
             APIResponse response = new APIResponse();
@@ -5728,6 +5728,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
+        #endregion
 
         #region "ProjectIndicators"
         public async Task<APIResponse> GetAllProjectIndicators(PagingModel paging)
@@ -5978,7 +5979,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
-
+        #region "GetExcelFile"
         public async Task<APIResponse> GetExcelFile(Stream file, string userId, long projectId)
         {
             APIResponse response = new APIResponse();
@@ -6267,11 +6268,11 @@ namespace HumanitarianAssistance.Service.Classes
            
 
         }
-
+        #endregion
 
         #region "getBudgetLineByProjectId for excel"
 
-        public  List<ProjectBudgetLineDetailModel> GetBudgetLineByProjectId(List<ProjectBudgetLineDetailModel> data, long projectId)
+        public List<ProjectBudgetLineDetailModel> GetBudgetLineByProjectId(List<ProjectBudgetLineDetailModel> data, long projectId)
         {
 
             List<ProjectBudgetLineDetailModel> newobj = new List<ProjectBudgetLineDetailModel>();
@@ -6296,7 +6297,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
-
         #region "ifexistBudgetLine fro excel"
         public async Task<ProjectBudgetLineDetail> IfexistBudgetLine(string item)
         {
@@ -6320,7 +6320,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
         #endregion
-
 
         #region "add project job for excel"
         public async Task<ProjectJobDetail> AddProjectJob(long projectId, string projectJobName, string userId)
@@ -6353,7 +6352,6 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
-
 
         #region "Add edit project budget line for excel sheet"
         public async Task<ProjectBudgetLineDetail> AddEditProjectBudgetLine(ProjectBudgetLineDetailModel item, long projectJobId, string userId)

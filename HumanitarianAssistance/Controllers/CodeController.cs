@@ -1503,5 +1503,50 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
+    #region Attendance Groups
+
+    [HttpGet]
+    public async Task<APIResponse> GetAttendanceGroups()
+    {
+      APIResponse response = new APIResponse();
+      response = await _icode.GetAttendanceGroups();
+
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> AddAttendanceGroups([FromBody] AttendanceGroupMasterModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      string Id = string.Empty;
+
+      if (user != null)
+      {
+        Id = user.Id;
+      }
+
+      APIResponse response = await _icode.AddAttendanceGroups(model, Id);
+      return response;
+    }
+
+    [HttpPost]
+    public async Task<APIResponse> EditAttendanceGroups([FromBody] AttendanceGroupMasterModel model)
+    {
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+      string Id = string.Empty;
+
+      if (user != null)
+      {
+        Id = user.Id;
+      }
+
+      APIResponse response = await _icode.EditAttendanceGroups(model, Id);
+      return response;
+    }
+
+    #endregion
+
   }
 }

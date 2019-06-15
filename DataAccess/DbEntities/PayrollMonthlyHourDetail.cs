@@ -22,5 +22,8 @@ namespace DataAccess.DbEntities
 		public DateTime? OutTime { get; set; }
         public int? WorkingTime { get; set; }
         public int? WorkingDay { get; set; }
+        public long? AttendanceGroupId { get; set; }
+        [ForeignKey("AttendanceGroupId")]
+        public AttendanceGroupMaster AttendanceGroupMaster { get; set; }
     }
 }

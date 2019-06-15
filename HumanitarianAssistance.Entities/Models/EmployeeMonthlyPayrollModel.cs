@@ -55,6 +55,8 @@ namespace HumanitarianAssistance.ViewModels.Models
 		public bool IsAdvanceApproved { get; set; }
 		public bool IsAdvanceRecovery { get; set; }
 		public double? AdvanceRecoveryAmount { get; set; }
+        public int WorkingMinutes { get; set; }
+        public int OvertimeMinutes { get; set; }
 		public List<EmployeePayrollModel> employeepayrolllist { get; set; }
         
     }

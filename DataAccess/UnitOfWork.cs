@@ -247,7 +247,7 @@ namespace DataAccess
         private IGenericRepository<ProjectActivitiesControl> _projectActivitiesControlRepository;
         private IGenericRepository<ProjectHiringControl> _projectHiringControlRepository;
 
-
+        private IGenericRepository<ProjectHiringRequestDetail> _projectHiringRequestRepository;
         public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
@@ -1949,6 +1949,17 @@ namespace DataAccess
                 return _projectActivityExtensionRepository = _projectActivityExtensionRepository ?? new GenericRepository<ProjectActivityExtensions>(_mschaContext);
             }
         }
+
+
+        public IGenericRepository<ProjectHiringRequestDetail> ProjectHiringRequestRepository
+        {
+            get
+            {
+                return _projectHiringRequestRepository =
+                    _projectHiringRequestRepository ?? new GenericRepository<ProjectHiringRequestDetail>(_mschaContext);
+            }
+        }
+
         public void Save()
         {
             _mschaContext.SaveChanges();
