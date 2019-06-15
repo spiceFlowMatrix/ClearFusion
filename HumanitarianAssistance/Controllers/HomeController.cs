@@ -18,23 +18,13 @@ namespace HumanitarianAssistance.Controllers
   [Route("api/[controller]")]
   public class HomeController : Controller
   {
-    private IAccountNoteDetails iaccountNote;
-    public HomeController(IAccountNoteDetails _iaccountNote)
-    {
-      iaccountNote = _iaccountNote;
-    }
-
+   
 
     [HttpGet("~/ilovewebapi")]
     public async Task<string> GetIdByUser()
     {
       return "Hello";
     }
-    [HttpPost]
-    public async Task<string> AddAccountNote([FromBody]AccountNoteDetail obj)
-    {
-       await iaccountNote.AddNoteDetails(obj);
-      return "Success";
-    }
+
   }
 }
