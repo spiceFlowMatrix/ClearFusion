@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using HumanitarianAssistance.Entities.Models;
 using HumanitarianAssistance.Entities;
 using DataAccess.DbEntities;
 using System.Threading.Tasks;
@@ -16,7 +15,6 @@ namespace DataAccess
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _mschaContext;
-        private IGenericRepository<AccountNoteDetail> _accountNoteDetail;
         private IGenericRepository<Permissions> _permissinsRepository;
         private IGenericRepository<OfficeDetail> _officedetailsRepository;
         private IGenericRepository<UserDetails> _userdetailsRepository;
@@ -247,7 +245,7 @@ namespace DataAccess
         private IGenericRepository<ProjectActivitiesControl> _projectActivitiesControlRepository;
         private IGenericRepository<ProjectHiringControl> _projectHiringControlRepository;
 
-
+        private IGenericRepository<ProjectHiringRequestDetail> _projectHiringRequestRepository;
         public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
@@ -869,13 +867,7 @@ namespace DataAccess
                 return _permissinsRepository = _permissinsRepository ?? new GenericRepository<Permissions>(_mschaContext);
             }
         }
-        public IGenericRepository<AccountNoteDetail> AccountNoteDetailRepository
-        {
-            get
-            {
-                return _accountNoteDetail = _accountNoteDetail ?? new GenericRepository<AccountNoteDetail>(_mschaContext);
-            }
-        }
+      
         public IGenericRepository<PolicyDetail> PolicyRepository
         {
             get
@@ -1949,6 +1941,17 @@ namespace DataAccess
                 return _projectActivityExtensionRepository = _projectActivityExtensionRepository ?? new GenericRepository<ProjectActivityExtensions>(_mschaContext);
             }
         }
+
+
+        public IGenericRepository<ProjectHiringRequestDetail> ProjectHiringRequestRepository
+        {
+            get
+            {
+                return _projectHiringRequestRepository =
+                    _projectHiringRequestRepository ?? new GenericRepository<ProjectHiringRequestDetail>(_mschaContext);
+            }
+        }
+
         public void Save()
         {
             _mschaContext.SaveChanges();

@@ -5,7 +5,6 @@ using DataAccess.DbEntities.Marketing;
 using DataAccess.DbEntities.OnlyForDT;
 using DataAccess.DbEntities.Project;
 using DataAccess.DbEntities.Store;
-using HumanitarianAssistance.Entities.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,7 +27,6 @@ namespace HumanitarianAssistance.Entities
 
 
 
-        public DbSet<AccountNoteDetail> AccountNoteDetail { get; set; }
 
         public DbSet<Permissions> Permissions { get; set; }
 
@@ -197,6 +195,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ExchangeRateVerification> ExchangeRateVerifications { get; set; }
         public DbSet<Errorlog> errorlog { get; set; }
         public DbSet<DocumentFileDetail> DocumentFileDetail { get; set; }
+        public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
 
 
         #region Project
@@ -260,7 +259,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectLogisticsControl> ProjectLogisticsControl { get; set; }
         public DbSet<ProjectActivitiesControl> ProjectActivitiesControl { get; set; }
         public DbSet<ProjectHiringControl> ProjectHiringControl { get; set; }
-        public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
+       
+        public DbSet<ProjectHiringRequestDetail> ProjectHiringRequestDetail { get; set; }
 
         #endregion
 

@@ -2868,13 +2868,9 @@ namespace HumanitarianAssistance.Service.Classes
                 //    _uow.JobGradeRepository.FindAllAsync(x=> x.IsDeleted == false).Result.ToList()
                 //);
 
-                var queryResult = EF.CompileAsyncQuery(
-                (ApplicationDbContext ctx) => ctx.JobGrade.Where(x => x.IsDeleted == false));
-                var jobGradelist = await Task.Run(() =>
-                    queryResult(_uow.GetDbContext()).ToListAsync().Result
-                );
+                var queryResult = await _uow.GetDbContext().JobGrade.Where(x => x.IsDeleted == false).ToListAsync();
 
-                var jobGradeDetailsList = jobGradelist.Select(x => new JobGradeModel
+                List<JobGradeModel> jobGradeDetailsList = queryResult.Select(x => new JobGradeModel
                 {
                     GradeId = x.GradeId,
                     GradeName = x.GradeName,
