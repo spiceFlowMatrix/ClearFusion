@@ -56,25 +56,6 @@ jobs:
             kubectl patch deployment ${KUBDEPLOYMENT_EDGSTAGINGAPI_STAGING} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
             kubectl rollout status deployment/${KUBDEPLOYMENT_EDGSTAGINGAPI_STAGING}
             kubectl get pods
-  deploy-staging:
-    docker:
-      - image: google/cloud-sdk
-    steps:
-      - run:
-          name: Set up Google cloud SDK. Important to set up cluster based on deployment
-          command: |
-            echo $GCLOUD_SERVICE_KEY > gcloud-service-key.json
-            gcloud auth activate-service-account --key-file gcloud-service-key.json
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-            gcloud --quiet container clusters get-credentials ${GOOGLE_STAGING_CLUSTER_NAME}
-      - setup_remote_docker
-      - run:
-          name: Patch K8 deployment with new container
-          command: |
-            kubectl patch deployment ${KUBDEPLOYMENT_API_STAGING} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
-            kubectl rollout status deployment/${KUBDEPLOYMENT_API_STAGING}
-            kubectl get pods
   deploy-bmount-prod:
     docker:
       - image: google/cloud-sdk
@@ -181,12 +162,6 @@ workflows:
       - deploy-staging-edg:
           requires:
           - push-container
-      - deploy-staging:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
       - deploy-bmount-prod:
           filters:
             tags:
