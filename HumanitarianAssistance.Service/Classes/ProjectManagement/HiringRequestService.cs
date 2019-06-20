@@ -66,6 +66,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     IsCompleted = x.IsCompleted,
                     OfficeName = x.OfficeDetails?.OfficeName ?? null,
                     Position = x.Position,
+                    ProjectId = x.ProjectId,
                     ProfessionId = x.ProfessionId,
                     ProfessionName = x.ProfessionDetails.ProfessionName,
                     TotalVacancies = x.TotalVacancies,
@@ -389,7 +390,8 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                                                                                 x.EmployeeDetail.SexId == (int)Gender.OTHER ? "Other" : null,
                                                                       IsInterViewed= x.EmployeeDetail.InterviewDetails.Any(y=>y.EmployeeID==x.EmployeeID && y.IsDeleted==false),
                                                                       IsShortListed = x.IsShortListed,
-                                                                      IsSelected = x.IsSelected
+                                                                      IsSelected = x.IsSelected,
+                                                                      
 
 
                                                                   }
