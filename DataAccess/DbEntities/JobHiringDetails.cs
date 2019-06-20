@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess.DbEntities.Project;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,5 +25,9 @@ namespace DataAccess.DbEntities
         public int? GradeId { get; set; }
         [ForeignKey("GradeId")]
         public JobGrade JobGrade { get; set; }
+
+        [ForeignKey("HiringRequestId")]
+        public long? HiringRequestId { get; set; }
+        public ProjectHiringRequestDetail ProjectHiringRequestDetail { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190618073148_addRelationToJobHiringRequestDetail180619")]
+    partial class addRelationToJobHiringRequestDetail180619
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -548,10 +550,7 @@ namespace DataAccess.Migrations
                         new { PageId = 82, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProposalReport" },
                         new { PageId = 83, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectIndicators" },
                         new { PageId = 84, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectPeople" },
-                        new { PageId = 85, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "VoucherSummaryReport" },
-                        new { PageId = 86, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "HiringRequests" },
-                        new { PageId = 87, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "PensionDebitAccount" },
-                        new { PageId = 88, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "AttendanceGroupMaster" }
+                        new { PageId = 85, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "VoucherSummaryReport" }
                     );
                 });
 
@@ -6723,10 +6722,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<bool>("IsSelected");
-
-                    b.Property<bool>("IsShortListed");
-
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
@@ -7333,7 +7328,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Position");
 
-                    b.Property<int?>("ProfessionId");
+                    b.Property<string>("Profession");
 
                     b.Property<long?>("ProjectId");
 
@@ -7354,8 +7349,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("OfficeId");
-
-                    b.HasIndex("ProfessionId");
 
                     b.HasIndex("ProjectId");
 
@@ -9956,6 +9949,22 @@ namespace DataAccess.Migrations
                         new { VoucherTypeId = 1, VoucherTypeName = "Adjustment" },
                         new { VoucherTypeId = 2, VoucherTypeName = "Journal" }
                     );
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Entities.Models.AccountNoteDetail", b =>
+                {
+                    b.Property<long>("AccountCode")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long?>("AccountNote");
+
+                    b.Property<string>("BalanceType");
+
+                    b.Property<string>("Narration");
+
+                    b.HasKey("AccountCode");
+
+                    b.ToTable("AccountNoteDetail");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -12718,10 +12727,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetails")
                         .WithMany()
                         .HasForeignKey("OfficeId");
-
-                    b.HasOne("DataAccess.DbEntities.ProfessionDetails", "ProfessionDetails")
-                        .WithMany()
-                        .HasForeignKey("ProfessionId");
 
                     b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
                         .WithMany()

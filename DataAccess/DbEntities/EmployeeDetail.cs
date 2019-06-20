@@ -86,5 +86,6 @@ namespace DataAccess.DbEntities
         public ProvinceDetails ProvinceDetails { get; set; }
         public string Resume { get; set; }
         public int? MaritalStatusId { get; set; }
+        public  virtual ICollection<InterviewDetails> InterviewDetails { get; set; }
     }
 }
