@@ -170,6 +170,7 @@ namespace HumanitarianAssistance
       services.AddTransient<IDashboardService, DashboardService>();
       services.AddTransient<IProjectPeopleService, ProjectPeopleService>();
       services.AddTransient<IFileManagement, FileManagementService>();
+      services.AddTransient<IHiringRequestService, HiringRequestService>();
       //services.AddTransient<UserManager<AppUser>>();
 
       var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));

@@ -5,7 +5,6 @@ using DataAccess.DbEntities.Marketing;
 using DataAccess.DbEntities.Project;
 using DataAccess.DbEntities.Store;
 using HumanitarianAssistance.Entities;
-using HumanitarianAssistance.Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +14,6 @@ namespace DataAccess
 {
     public interface IUnitOfWork : IDisposable
     {
-        IGenericRepository<AccountNoteDetail> AccountNoteDetailRepository { get; }
         IGenericRepository<Permissions> PermissionRepository { get; }
         IGenericRepository<OfficeDetail> OfficeDetailRepository { get; }
         IGenericRepository<UserDetails> UserDetailsRepository { get; }
@@ -206,6 +204,9 @@ namespace DataAccess
         IGenericRepository<ProjectLogisticsControl> ProjectLogisticsControlRepository { get; }
         IGenericRepository<ProjectActivitiesControl> ProjectActivitiesControlRepository { get; }
         IGenericRepository<ProjectHiringControl> ProjectHiringControlRepository { get; }
+        IGenericRepository<ProjectHiringRequestDetail> ProjectHiringRequestRepository { get; }
+        IGenericRepository<HiringRequestCandidates> HiringRequestCandidatesRepository { get; }
+
 
         #endregion
 

@@ -596,7 +596,7 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         ActivityDocumentsDetail docObj = new ActivityDocumentsDetail();
 
-                        string folderWithProposalFile = StaticResource.ProjectsFolderName +  "/" + folderName  + "/" + StaticResource.ProjectActivityFolderName + "/" + fileName;
+                        string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + StaticResource.ProjectActivityFolderName + "/" + fileName;
                         string uploadedFileResponse = await GCBucket.UploadOtherProposalDocuments(bucketName, folderWithProposalFile, file, fileName, ext);
                         if (!string.IsNullOrEmpty(uploadedFileResponse))
                         {
@@ -673,20 +673,20 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var listobj = _uow.GetDbContext().ActivityDocumentsDetail.Where(x => x.ActivityId == model.ActivityId && x.IsDeleted == false).AsQueryable();
-                    if (model.MonitoringId != null)
-                    {
+                if (model.MonitoringId != null)
+                {
                     listobj = listobj.Where(x => x.MonitoringId == model.MonitoringId);
-                    }
+                }
 
-                     var obj= await listobj.Select(x => new ActivityDocumentDetailModel()
-                            {
-                            ActivityId = x.ActivityId,
-                            StatusId = x.StatusId,
-                            ActivityDocumentsFilePath = x.ActivityDocumentsFilePath,
-                            ActivityDocumentsFileName = x.ActivityDocumentsFilePath.Substring(x.ActivityDocumentsFilePath.LastIndexOf('/') + 1),
-                            ActtivityDocumentId = x.ActtivityDocumentId
+                var obj = await listobj.Select(x => new ActivityDocumentDetailModel()
+                {
+                    ActivityId = x.ActivityId,
+                    StatusId = x.StatusId,
+                    ActivityDocumentsFilePath = x.ActivityDocumentsFilePath,
+                    ActivityDocumentsFileName = x.ActivityDocumentsFilePath.Substring(x.ActivityDocumentsFilePath.LastIndexOf('/') + 1),
+                    ActtivityDocumentId = x.ActtivityDocumentId
 
-                     }).ToListAsync();
+                }).ToListAsync();
 
                 apiResponse.data.ActivityDocumentDetailModel = obj;
                 apiResponse.StatusCode = StaticResource.successStatusCode;
@@ -861,7 +861,7 @@ namespace HumanitarianAssistance.Service.Classes
                     RecurringCount = x.RecurringCount,
                     RecurrinTypeId = x.RecurrinTypeId,
                     Progress = Math.Round(x.Progress, 2),
-                    Slippage= x.Sleepage
+                    Slippage = x.Sleepage
                 }).ToList();
 
                 response.data.ProjectActivityList = activityList;
@@ -981,8 +981,9 @@ namespace HumanitarianAssistance.Service.Classes
                                                                 .ThenInclude(z => z.ProjectMonitoringIndicatorQuestions)
                                                                 .ThenInclude(x => x.ProjectIndicatorQuestions)
                                                                 .Where(x => x.IsDeleted == false && x.ActivityId == activityId)
-                                                                .OrderByDescending(x=> x.CreatedDate)
-                                                                .Select(x => new ProjectMonitoringViewModel {
+                                                                .OrderByDescending(x => x.CreatedDate)
+                                                                .Select(x => new ProjectMonitoringViewModel
+                                                                {
                                                                     ActivityId = x.ActivityId,
                                                                     NegativePoints = x.NegativePoints,
                                                                     PositivePoints = x.PostivePoints,
@@ -1423,6 +1424,7 @@ namespace HumanitarianAssistance.Service.Classes
                     ActualStartDate = b.ActualStartDate,
                     ActualEndDate = b.ActualEndDate,
                     StatusId = b.StatusId,
+                    SubActivityTitle = b.SubActivityTitle
                 }).OrderByDescending(x => x.ActivityId)
                   .ToList();
                 response.data.ProjectSubActivityListModel = activityDetaillist;
@@ -1459,18 +1461,19 @@ namespace HumanitarianAssistance.Service.Classes
                 ProjectActivityModel actvityModel = new ProjectActivityModel()
                 {
                     ActivityDescription = obj.ActivityDescription,
-                    ActivityId=obj.ActivityId,
-                     StatusId=obj.StatusId,
-                      ActivityName=obj.ActivityName,
-                       ActualEndDate=obj.ActualEndDate,
-                        ActualStartDate=obj.ActualStartDate,
-                         BudgetLineId=obj.BudgetLineId,
-                          ParentId=obj.ParentId,
-                           Target= obj.Target,
-                           PlannedEndDate= obj.PlannedEndDate,
-                            PlannedStartDate =obj.PlannedStartDate,
-                            EmployeeID=obj.EmployeeID
-                             
+                    ActivityId = obj.ActivityId,
+                    StatusId = obj.StatusId,
+                    ActivityName = obj.ActivityName,
+                    ActualEndDate = obj.ActualEndDate,
+                    ActualStartDate = obj.ActualStartDate,
+                    BudgetLineId = obj.BudgetLineId,
+                    ParentId = obj.ParentId,
+                    Target = obj.Target,
+                    PlannedEndDate = obj.PlannedEndDate,
+                    PlannedStartDate = obj.PlannedStartDate,
+                    EmployeeID = obj.EmployeeID,
+                    SubActivityTitle =obj.SubActivityTitle
+
                 };
 
                 if (parent != null)
@@ -1509,6 +1512,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.ModifiedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
                     obj.ModifiedById = UserId;
+                    obj.SubActivityTitle = model.SubActivityTitle;
                     await _uow.ProjectActivityDetailRepository.UpdateAsyn(obj);
                 }
                 response.data.ProjectActivityDetail = obj;
@@ -1674,7 +1678,7 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.ProvinceId = activityDetail.ProjectActivityProvinceDetail.Select(x => x.ProvinceId);
                     obj.DistrictID = activityDetail.ProjectActivityProvinceDetail.Select(x => x.DistrictID);
                 }
-              
+
                 response.data.ProjectActivityDetails = obj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
