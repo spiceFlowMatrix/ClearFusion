@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HumanitarianAssistance.Common\HumanitarianAssistance.Common.csproj" />
-    <ProjectReference Include="..\HumanitarianAssistance.Entities\HumanitarianAssistance.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

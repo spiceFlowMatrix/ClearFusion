@@ -29,6 +29,9 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public float? Achieved { get; set; }
         public float? Target { get; set; }
 
+        public string SubActivityTitle { get; set; }
+
+
 
     }
 }

@@ -364,6 +364,11 @@ namespace HumanitarianAssistance.Service.APIResponses
         public BudgetLineBreakdownModel BudgetLineBreakdownModel { get; set; }
         public ProjectIndicatorViewModel ProjectIndicator { get; set; }
         public List<IndicatorQuestions> Questions { get; set; }
+        public IList<ProjectHiringRequestModel> ProjectHiringRequestModel { get; set; }
+        
+        public IList<ProjectHiringCandidateDetailModel> ProjectHiringCandidateDetailModel { get; set; }
+
+
 
         #region Marketing    
         public PolicyTimeSchedule policyTimeScheduleDetails { get; set; }

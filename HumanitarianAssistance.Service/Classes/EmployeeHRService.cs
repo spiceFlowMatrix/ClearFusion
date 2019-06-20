@@ -171,7 +171,7 @@ namespace HumanitarianAssistance.Service.Classes
                             }
 
                             //update total attendance hours
-                            if (workingHours != 0 && overtime == 0)
+                            if ((workingHours != 0 || workingMinutes !=0) && overtime == 0)
                             {
                                 xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
                                 xEmployeeMonthlyAttendanceRecord.AttendanceMinutes += workingMinutes.Value;
@@ -179,7 +179,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                             }
                             //update total attendance hours and also add overtime hours
-                            else if (workingHours != 0 && overtime != 0)
+                            else if ((workingHours != 0 || workingMinutes !=0) && overtime != 0)
                             {
                                 xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
                                 xEmployeeMonthlyAttendanceRecord.OvertimeHours = xEmployeeMonthlyAttendanceRecord.OvertimeHours ?? 0;
@@ -422,13 +422,19 @@ namespace HumanitarianAssistance.Service.Classes
                             }
 
                             double convertMinutesToHours = Math.Round(((double)(payrollAttendance.OverTimeMinutes + payrollAttendance.AttendanceMinutes) / 60d),2);
-                            obj.GrossSalary = Math.Round((double)(obj.TotalGeneralAmount * (obj.PresentDays + obj.LeaveHours + obj.OverTimeHours + convertMinutesToHours) + obj.TotalAllowance),2);
+                            obj.GrossSalary = Math.Round((double)(obj.TotalGeneralAmount * (payrollAttendance.AttendanceHours.Value + obj.LeaveHours + payrollAttendance.OvertimeHours.Value + convertMinutesToHours) + obj.TotalAllowance),2);
                             obj.PensionAmount = Math.Round(((double)(obj.GrossSalary * payrollDetail.FirstOrDefault().PensionRate) / 100),2); // i.e. 4.5 % => 0.045
 
                             // eliminate hours and only show minutes if minutes is 60 we already added them to overtime hours so minutes = 0
-                            obj.OvertimeMinutes = payrollAttendance.OverTimeMinutes==60 ? 0 : Convert.ToInt32(Math.Truncate(Math.Round((decimal)((float)payrollAttendance.OverTimeMinutes / 60f), 2) * 60));
+
+                            decimal overtimeHour = Math.Round((decimal)((float)payrollAttendance.OverTimeMinutes / 60f), 2);
+
+                            obj.OvertimeMinutes = Convert.ToInt32((overtimeHour- Math.Truncate(overtimeHour)) * 60);
                             // eliminate hours and only show minutes if minutes is 60 we already added them to AttendanceHours so minutes = 0
-                            obj.WorkingMinutes= payrollAttendance.AttendanceMinutes== 60? 0: Convert.ToInt32(Math.Truncate(Math.Round((decimal)((float)payrollAttendance.AttendanceMinutes / 60f), 2) * 60)); 
+
+                            decimal attendanceMinutes = Math.Round((decimal)((float)payrollAttendance.AttendanceMinutes / 60f), 2);
+
+                            obj.WorkingMinutes= Convert.ToInt32((attendanceMinutes - Math.Truncate(attendanceMinutes)) * 60); 
 
                             if (obj.GrossSalary > 5000)
                             {

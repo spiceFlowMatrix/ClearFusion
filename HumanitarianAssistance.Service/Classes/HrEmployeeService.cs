@@ -2868,13 +2868,9 @@ namespace HumanitarianAssistance.Service.Classes
                 //    _uow.JobGradeRepository.FindAllAsync(x=> x.IsDeleted == false).Result.ToList()
                 //);
 
-                var queryResult = EF.CompileAsyncQuery(
-                (ApplicationDbContext ctx) => ctx.JobGrade.Where(x => x.IsDeleted == false));
-                var jobGradelist = await Task.Run(() =>
-                    queryResult(_uow.GetDbContext()).ToListAsync().Result
-                );
+                var queryResult = await _uow.GetDbContext().JobGrade.Where(x => x.IsDeleted == false).ToListAsync();
 
-                var jobGradeDetailsList = jobGradelist.Select(x => new JobGradeModel
+                List<JobGradeModel> jobGradeDetailsList = queryResult.Select(x => new JobGradeModel
                 {
                     GradeId = x.GradeId,
                     GradeName = x.GradeName,
@@ -4123,6 +4119,7 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> MonthlyEmployeeAttendanceReport(MonthlyEmployeeAttendanceReportModel obj)
         {
             APIResponse response = new APIResponse();
+
             try
             {
                 TimeSpan officeintime, officeouttime;
@@ -4130,7 +4127,15 @@ namespace HumanitarianAssistance.Service.Classes
                 List<MonthlyEmployeeAttendanceModel> empmonthlyattendancelist = new List<MonthlyEmployeeAttendanceModel>();
                 //var officeid = await _uow.EmployeeProfessionalDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeId == employeeid);
 
-                var payrolltimelist = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false && x.OfficeId == obj.OfficeId && x.PayrollMonth == obj.month);
+                EmployeeProfessionalDetail employeeProfessionalDetail = await _uow.GetDbContext().EmployeeProfessionalDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeId == obj.employeeid);
+
+                var payrolltimelist = await _uow.PayrollMonthlyHourDetailRepository.FindAsync(x => x.IsDeleted == false && x.OfficeId == obj.OfficeId && x.PayrollMonth == obj.month && x.AttendanceGroupId== employeeProfessionalDetail.AttendanceGroupId);
+
+                if (payrolltimelist == null)
+                {
+                    throw new Exception("Attendance not found for selected month");
+                }
+
                 string time = Convert.ToDateTime(payrolltimelist.InTime).ToString("hh:mm");
                 officeintime = Convert.ToDateTime(time).TimeOfDay;
 
