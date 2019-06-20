@@ -980,7 +980,6 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 var playout = _uow.PlayoutMinutesRepository.FindAll(x => scheduleList.Any(s => s.ScheduleId == x.ScheduleId)).ToList();
                 APIResponse response1 = await GetJobDetailsById(jobId, userId);
                 InvoiceModel invoiceDetails = new InvoiceModel();
-
                 if (scheduleList.Count > 0)
                 {
                     if (playout.Count > 0)
@@ -1155,7 +1154,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var invoiceDetails = await _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).OrderByDescending(x => x.InvoiceId).FirstOrDefaultAsync();
+               // var invoiceDetails = await _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).OrderByDescending(x => x.InvoiceId).FirstOrDefaultAsync();
+                var invoiceDetails =  await _uow.InvoiceGenerationRepository.FindAsync(x => x.JobId == jobId && x.IsDeleted == false);
                 if (invoiceDetails != null)
                 {
                     invoiceDetails.IsDeleted = true;
