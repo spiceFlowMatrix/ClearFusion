@@ -157,7 +157,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
     }
     #endregion
 
-    #region "SelectCandidate"
+    #region "HiringRequestSelectCandidate"
     [HttpPost]
     public async Task<APIResponse> HiringRequestSelectCandidate([FromBody] HiringSelectCandidateModel model)
     {

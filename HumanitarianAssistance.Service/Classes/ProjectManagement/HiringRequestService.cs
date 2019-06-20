@@ -375,6 +375,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                                                                   .HiringRequestCandidates
                                                                   .Where(x => x.HiringRequestId == model.HiringRequestId)
                                                                   .Include(e => e.EmployeeDetail)
+                                                                  .ThenInclude(x=> x.EmployeeProfessionalDetail)
                                                                   .OrderByDescending(i => i.EmployeeID)
                                                                   .Select(x => new ProjectHiringCandidateDetailModel
                                                                   {
@@ -461,6 +462,25 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             {
                 if (model != null)
                 {
+
+
+
+                    EmployeeDetail employeeDetail = await _uow.GetDbContext().EmployeeDetail.Include(x=> x.EmployeeProfessionalDetail)
+                                                                                                    .FirstOrDefaultAsync(x => x.IsDeleted == false
+                                                                                                    && x.EmployeeID == model.EmployeeId);
+
+                    if (employeeDetail != null && employeeDetail.EmployeeTypeId == (int)EmployeeTypeStatus.Prospective)
+                    {
+                        employeeDetail.EmployeeTypeId= (int)EmployeeTypeStatus.Active;
+                        employeeDetail.EmployeeProfessionalDetail.EmployeeTypeId = (int)EmployeeTypeStatus.Active;
+                        employeeDetail.EmployeeProfessionalDetail.HiredOn = DateTime.UtcNow;
+                        employeeDetail.EmployeeProfessionalDetail.ModifiedById = userId;
+                        employeeDetail.EmployeeProfessionalDetail.ModifiedDate = DateTime.UtcNow;
+
+                        await _uow.EmployeeDetailRepository.UpdateAsyn(employeeDetail);
+                        await _uow.GetDbContext().SaveChangesAsync();
+                    }
+
                     HiringRequestCandidates hiringRequestCandidates = await _uow.GetDbContext().HiringRequestCandidates
                                                                                .FirstOrDefaultAsync(x => x.IsDeleted == false
                                                                                && x.EmployeeID == model.EmployeeId && x.HiringRequestId == model.HiringRequestId);
@@ -470,6 +490,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                         hiringRequestCandidates.IsSelected = true;
                         hiringRequestCandidates.ModifiedById = userId;
                         hiringRequestCandidates.ModifiedDate = DateTime.UtcNow;
+                      
 
                         _uow.GetDbContext().HiringRequestCandidates.Update(hiringRequestCandidates);
                         await _uow.GetDbContext().SaveChangesAsync();
@@ -484,6 +505,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     analyticalInfo.IsDeleted = false;
                     analyticalInfo.CreatedById = userId;
                     analyticalInfo.CreatedDate = DateTime.UtcNow;
+                    analyticalInfo.EmployeeID = model.EmployeeId;
                     analyticalInfo.BudgetlineId = model.BudgetLineId;
                     analyticalInfo.ProjectId = model.ProjectId;
                     analyticalInfo.HiringRequestId = model.HiringRequestId;
