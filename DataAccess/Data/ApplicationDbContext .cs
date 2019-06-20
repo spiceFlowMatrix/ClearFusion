@@ -5,7 +5,6 @@ using DataAccess.DbEntities.Marketing;
 using DataAccess.DbEntities.OnlyForDT;
 using DataAccess.DbEntities.Project;
 using DataAccess.DbEntities.Store;
-using HumanitarianAssistance.Entities.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,7 +27,6 @@ namespace HumanitarianAssistance.Entities
 
 
 
-        public DbSet<AccountNoteDetail> AccountNoteDetail { get; set; }
 
         public DbSet<Permissions> Permissions { get; set; }
 

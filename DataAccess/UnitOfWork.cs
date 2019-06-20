@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using HumanitarianAssistance.Entities.Models;
 using HumanitarianAssistance.Entities;
 using DataAccess.DbEntities;
 using System.Threading.Tasks;
@@ -16,7 +15,6 @@ namespace DataAccess
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _mschaContext;
-        private IGenericRepository<AccountNoteDetail> _accountNoteDetail;
         private IGenericRepository<Permissions> _permissinsRepository;
         private IGenericRepository<OfficeDetail> _officedetailsRepository;
         private IGenericRepository<UserDetails> _userdetailsRepository;
@@ -871,13 +869,7 @@ namespace DataAccess
                 return _permissinsRepository = _permissinsRepository ?? new GenericRepository<Permissions>(_mschaContext);
             }
         }
-        public IGenericRepository<AccountNoteDetail> AccountNoteDetailRepository
-        {
-            get
-            {
-                return _accountNoteDetail = _accountNoteDetail ?? new GenericRepository<AccountNoteDetail>(_mschaContext);
-            }
-        }
+      
         public IGenericRepository<PolicyDetail> PolicyRepository
         {
             get
