@@ -318,7 +318,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             try
             {
                 var employeeExist = await _uow.GetDbContext().HiringRequestCandidates.FirstOrDefaultAsync(x => x.EmployeeID == model.EmployeeID &&
-                                                                                                               x.IsDeleted == false && x.HiringRequestId==model.HiringRequestId);
+                                                                                                               x.IsDeleted == false && x.HiringRequestId == model.HiringRequestId);
                 if (employeeExist != null)
                 {
 
@@ -328,7 +328,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     employeeExist.ModifiedDate = DateTime.UtcNow;
                     employeeExist.IsDeleted = false;
                     employeeExist.IsShortListed = model.IsShortListed;
-                     
+
 
 
                     await _uow.HiringRequestCandidatesRepository.UpdateAsyn(employeeExist);
@@ -388,7 +388,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                                                                       Gender = x.EmployeeDetail.SexId == (int)Sex.Male ? "Male" :
                                                                                 x.EmployeeDetail.SexId == (int)Sex.Female ? "Female" :
                                                                                 x.EmployeeDetail.SexId == (int)Gender.OTHER ? "Other" : null,
-                                                                      IsInterViewed= x.EmployeeDetail.InterviewDetails.Any(y=>y.EmployeeID==x.EmployeeID && y.IsDeleted==false),
+                                                                      IsInterViewed = x.EmployeeDetail.InterviewDetails.Any(y => y.EmployeeID == x.EmployeeID && y.IsDeleted == false),
                                                                       IsShortListed = x.IsShortListed,
                                                                       IsSelected = x.IsSelected,
                                                                       
@@ -436,7 +436,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     {
                         throw new Exception("Job does not exists");
                     }
-                   
+
 
                 }
                 response.StatusCode = StaticResource.successStatusCode;
@@ -451,5 +451,92 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
 
 
         }
+
+        #region HiringRequestSelectCandidate
+        public async Task<APIResponse> HiringRequestSelectCandidate(HiringSelectCandidateModel model, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (model != null)
+                {
+                    HiringRequestCandidates hiringRequestCandidates = await _uow.GetDbContext().HiringRequestCandidates
+                                                                               .FirstOrDefaultAsync(x => x.IsDeleted == false
+                                                                               && x.EmployeeID == model.EmployeeId && x.HiringRequestId == model.HiringRequestId);
+
+                    if (hiringRequestCandidates != null)
+                    {
+                        hiringRequestCandidates.IsSelected = true;
+                        hiringRequestCandidates.ModifiedById = userId;
+                        hiringRequestCandidates.ModifiedDate = DateTime.UtcNow;
+
+                        _uow.GetDbContext().HiringRequestCandidates.Update(hiringRequestCandidates);
+                        await _uow.GetDbContext().SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("Candidate not found");
+                    }
+
+                    EmployeeSalaryAnalyticalInfo analyticalInfo = new EmployeeSalaryAnalyticalInfo();
+
+                    analyticalInfo.IsDeleted = false;
+                    analyticalInfo.CreatedById = userId;
+                    analyticalInfo.CreatedDate = DateTime.UtcNow;
+                    analyticalInfo.BudgetlineId = model.BudgetLineId;
+                    analyticalInfo.ProjectId = model.ProjectId;
+                    analyticalInfo.HiringRequestId = model.HiringRequestId;
+
+                    await _uow.GetDbContext().EmployeeSalaryAnalyticalInfo.AddAsync(analyticalInfo);
+                    await _uow.GetDbContext().SaveChangesAsync();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
+        #region CompleteHiringRequest
+        public async Task<APIResponse> CompleteHiringRequest(long hiringRequestId, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (hiringRequestId != 0)
+                {
+                    ProjectHiringRequestDetail projectHiringRequestDetail = await _uow.GetDbContext()
+                                                                                .ProjectHiringRequestDetail
+                                                                                .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                x.HiringRequestId == hiringRequestId);
+
+                    projectHiringRequestDetail.IsCompleted = true;
+
+                    _uow.GetDbContext().ProjectHiringRequestDetail.Update(projectHiringRequestDetail);
+                    await _uow.GetDbContext().SaveChangesAsync();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        #endregion
+
     }
 }

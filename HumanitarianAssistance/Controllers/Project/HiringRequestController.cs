@@ -157,6 +157,35 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
     }
     #endregion
 
+    #region "SelectCandidate"
+    [HttpPost]
+    public async Task<APIResponse> HiringRequestSelectCandidate([FromBody] HiringSelectCandidateModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _hiringRequestService.HiringRequestSelectCandidate(model, id);
+      }
+      return apiRespone;
+    }
+    #endregion
+
+    #region "SelectCandidate"
+    [HttpPost]
+    public async Task<APIResponse> CompleteHiringRequest([FromBody] long hiringRequestId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _hiringRequestService.CompleteHiringRequest(hiringRequestId, id);
+      }
+      return apiRespone;
+    }
+    #endregion
   }
 
 
