@@ -74,6 +74,89 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
     }
     #endregion
 
+    #region "getAllEmployeeList"
+    [HttpGet]
+    public async Task<APIResponse> GetAllEmployeeList()
+    {
+      APIResponse apiresponse = new APIResponse();
+      apiresponse = await _hiringRequestService.GetAllEmployeeList();
+      return apiresponse;
+
+    }
+    #endregion
+
+    #region "AddHiringRequestCamdidate"
+    [HttpPost]
+    public async Task<APIResponse> AddHiringRequestCamdidate([FromBody]HiringRequestCandidateModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _hiringRequestService.AddHiringRequestCandidate(Model, id);
+      }
+      return apiRespone;
+    }
+    #endregion
+
+    #region "EditHiringRequestCandidate"
+    [HttpPost]
+    public async Task<APIResponse> EditHiringRequestCandidate([FromBody]ProjectHiringCandidateDetailModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _hiringRequestService.EditHiringRequestCandidate(Model, id);
+      }
+      return apiRespone;
+    }
+    #endregion
+
+    #region "EditHiringRequestCandidate"
+    [HttpPost]
+    public async Task<APIResponse> EditInterviewedCandidateDetail([FromBody]HiringRequestCandidateModel Model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _hiringRequestService.EditIntetviewdCandidateDetail(Model, id);
+      }
+      return apiRespone;
+    }
+    #endregion
+
+
+
+    #region "GetRequestedCandidiateListById"
+    [HttpPost]
+    public async Task<APIResponse> GetHiringCandidatesListById([FromBody] ProjectHiringCandidateDetailModel model) {
+      APIResponse apiresponse = new APIResponse();
+      apiresponse = await _hiringRequestService.GetAllCandidateList(model);
+      return apiresponse;
+
+    }
+
+    #endregion
+    #region "AddCandidateInterviewDetail"
+    [HttpPost]
+    public async Task<APIResponse> AddCandidateInterviewDetail([FromBody] CandidateInterViewModel model)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _hiringRequestService.AddCandidateInterviewDetail(model, id);
+      }
+      return apiRespone;
+    }
+    #endregion
+
   }
 
 

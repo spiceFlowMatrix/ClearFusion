@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190617111624_addColumnInReuestCandidate17062019")]
+    partial class addColumnInReuestCandidate17062019
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4306,8 +4308,6 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("GradeId");
 
-                    b.Property<long?>("HiringRequestId");
-
                     b.Property<bool>("IsActive");
 
                     b.Property<bool?>("IsDeleted");
@@ -4332,9 +4332,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("GradeId");
-
-                    b.HasIndex("HiringRequestId")
-                        .IsUnique();
 
                     b.HasIndex("ModifiedById");
 
@@ -6720,10 +6717,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<bool>("IsSelected");
-
-                    b.Property<bool>("IsShortListed");
-
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
@@ -7330,7 +7323,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Position");
 
-                    b.Property<int?>("ProfessionId");
+                    b.Property<string>("Profession");
 
                     b.Property<long?>("ProjectId");
 
@@ -7351,8 +7344,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("OfficeId");
-
-                    b.HasIndex("ProfessionId");
 
                     b.HasIndex("ProjectId");
 
@@ -11516,10 +11507,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("GradeId");
 
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectHiringRequestDetail", "ProjectHiringRequestDetail")
-                        .WithOne("JobHiringDetails")
-                        .HasForeignKey("DataAccess.DbEntities.JobHiringDetails", "HiringRequestId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
@@ -12731,10 +12718,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetails")
                         .WithMany()
                         .HasForeignKey("OfficeId");
-
-                    b.HasOne("DataAccess.DbEntities.ProfessionDetails", "ProfessionDetails")
-                        .WithMany()
-                        .HasForeignKey("ProfessionId");
 
                     b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
                         .WithMany()

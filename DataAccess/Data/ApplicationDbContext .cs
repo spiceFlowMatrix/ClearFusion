@@ -263,6 +263,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectHiringControl> ProjectHiringControl { get; set; }
        
         public DbSet<ProjectHiringRequestDetail> ProjectHiringRequestDetail { get; set; }
+        public DbSet<HiringRequestCandidates> HiringRequestCandidates { get; set; }
+
 
         #endregion
 

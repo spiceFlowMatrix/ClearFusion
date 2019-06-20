@@ -18,7 +18,11 @@ namespace DataAccess.DbEntities.Project
         public long HiringRequestId { get; set; }
         public string HiringRequestCode { get; set; }
         public string Description { get; set; }
-        public string Profession { get; set; }
+        //public string Profession { get; set; }
+        [ForeignKey("ProfessionId")]
+        public int? ProfessionId { get; set; }
+        public ProfessionDetails ProfessionDetails { get; set; }
+
         public string Position { get; set; }
         public int? TotalVacancies { get; set; }
         public int? FilledVacancies { get; set; }
@@ -47,6 +51,7 @@ namespace DataAccess.DbEntities.Project
         [ForeignKey("ProjectId")]
         public ProjectDetail ProjectDetail { get; set; }
         public bool IsCompleted { get; set; }
+        public JobHiringDetails JobHiringDetails { get; set; }
 
     }
 }

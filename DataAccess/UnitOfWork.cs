@@ -160,7 +160,7 @@ namespace DataAccess
         private IGenericRepository<ProjectDetail> _projectDetailNewRepository;
         private IGenericRepository<ProjectPhaseDetails> _projectPhaseDetailsRepository;
         private IGenericRepository<ProjectOtherDetail> _projectOtherDetailRepository;
-        
+
         private IGenericRepository<ProjectAssignTo> _projectAssignToRepository;
         private IGenericRepository<ProjectProgram> _projectProgramRepository;
         private IGenericRepository<ProjectArea> _projectAreaRepository;
@@ -195,7 +195,7 @@ namespace DataAccess
         private IGenericRepository<ActivityDocumentsDetail> _activityDocumentsDetailRepository;
         private IGenericRepository<ProjectActivityExtensions> _projectActivityExtensionRepository;
 
-        
+
 
 
 
@@ -218,7 +218,7 @@ namespace DataAccess
         private IGenericRepository<ClientDetails> _ClientDetailsRepository;
         private IGenericRepository<UnitRate> _unitRateRepository;
         private IGenericRepository<InvoiceApproval> _invoiceApprovalRepository;
-        private IGenericRepository<InvoiceGeneration> _invoiceGenerationRepository;        
+        private IGenericRepository<InvoiceGeneration> _invoiceGenerationRepository;
         private IGenericRepository<Channel> _channelRepository;
         private IGenericRepository<PolicyOrderSchedule> _policyOrderScheduleRepository;
         private IGenericRepository<PolicyTimeSchedule> _policyTimeScheduleRepository;
@@ -248,6 +248,8 @@ namespace DataAccess
         private IGenericRepository<ProjectHiringControl> _projectHiringControlRepository;
 
         private IGenericRepository<ProjectHiringRequestDetail> _projectHiringRequestRepository;
+        private IGenericRepository<HiringRequestCandidates> _hiringRequestCandidatesRepository;
+
         public UnitOfWork(ApplicationDbContext mschaContext)
         {
             _mschaContext = mschaContext;
@@ -1443,7 +1445,7 @@ namespace DataAccess
         }
 
 
-        
+
         public IGenericRepository<ProjectAssignTo> ProjectAssignToRepository
         {
             get
@@ -1529,8 +1531,8 @@ namespace DataAccess
                 return _jobPhaseRepository = _jobPhaseRepository ?? new GenericRepository<JobPhase>(_mschaContext);
             }
         }
-        
-         public IGenericRepository<Producer> ProducerRepository
+
+        public IGenericRepository<Producer> ProducerRepository
         {
             get
             {
@@ -1960,6 +1962,14 @@ namespace DataAccess
             }
         }
 
+        public IGenericRepository<HiringRequestCandidates> HiringRequestCandidatesRepository
+        {
+            get
+            {
+                return _hiringRequestCandidatesRepository =
+                    _hiringRequestCandidatesRepository ?? new GenericRepository<HiringRequestCandidates>(_mschaContext);
+            }
+        }
         public void Save()
         {
             _mschaContext.SaveChanges();

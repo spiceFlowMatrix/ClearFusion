@@ -207,6 +207,7 @@ namespace DataAccess
         IGenericRepository<ProjectActivitiesControl> ProjectActivitiesControlRepository { get; }
         IGenericRepository<ProjectHiringControl> ProjectHiringControlRepository { get; }
         IGenericRepository<ProjectHiringRequestDetail> ProjectHiringRequestRepository { get; }
+        IGenericRepository<HiringRequestCandidates> HiringRequestCandidatesRepository { get; }
 
 
         #endregion
