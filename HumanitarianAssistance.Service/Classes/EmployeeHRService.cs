@@ -171,7 +171,7 @@ namespace HumanitarianAssistance.Service.Classes
                             }
 
                             //update total attendance hours
-                            if (workingHours != 0 && overtime == 0)
+                            if ((workingHours != 0 || workingMinutes !=0) && overtime == 0)
                             {
                                 xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
                                 xEmployeeMonthlyAttendanceRecord.AttendanceMinutes += workingMinutes.Value;
@@ -179,7 +179,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                             }
                             //update total attendance hours and also add overtime hours
-                            else if (workingHours != 0 && overtime != 0)
+                            else if ((workingHours != 0 || workingMinutes !=0) && overtime != 0)
                             {
                                 xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
                                 xEmployeeMonthlyAttendanceRecord.OvertimeHours = xEmployeeMonthlyAttendanceRecord.OvertimeHours ?? 0;
