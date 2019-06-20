@@ -21,6 +21,7 @@ namespace DataAccess.DbEntities
 		public double SalaryPercentage { get; set; }
 		public int EmployeeID { get; set; }
 		public EmployeeDetail EmployeeDetail { get; set; }
-
-	}
+        public long? HiringRequestId { get; set; }
+        public ProjectHiringRequestDetail ProjectHiringRequestDetail { get; set; }
+    }
 }

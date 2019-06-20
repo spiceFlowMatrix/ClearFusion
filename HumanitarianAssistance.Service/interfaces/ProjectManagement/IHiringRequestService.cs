@@ -20,7 +20,10 @@ namespace HumanitarianAssistance.Service.interfaces.ProjectManagement
         Task<APIResponse> AddCandidateInterviewDetail(CandidateInterViewModel model, string userId); 
         Task<APIResponse> EditHiringRequestCandidate(ProjectHiringCandidateDetailModel model, string userId);
         Task<APIResponse> EditIntetviewdCandidateDetail(HiringRequestCandidateModel model, string userId);
+        Task<APIResponse> HiringRequestSelectCandidate(HiringSelectCandidateModel model, string userId);
+        Task<APIResponse> CompleteHiringRequest(long hiringRequestId, string userId);
 
-        
+
+
     }
 }
