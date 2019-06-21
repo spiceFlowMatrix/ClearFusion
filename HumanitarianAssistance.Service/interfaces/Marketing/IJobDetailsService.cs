@@ -25,5 +25,7 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> GenerateInvoice(int jobId, string userId);
         Task<APIResponse> FetchInvoice(int jobId, string userId);
         Task<APIResponse> ApproveInvoice(int jobId, string userId);
+        Task<APIResponse> RemoveInvoice(int jobId, string userId);
+
     }
 }
