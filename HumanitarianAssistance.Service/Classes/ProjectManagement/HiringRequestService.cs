@@ -181,36 +181,35 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             APIResponse response = new APIResponse();
             try
             {
-                string description = string.Empty;
+                string description = model.Description.ToLower().Trim();
 
-                description = model.Description.ToLower().Trim();
-                ProjectHiringRequestDetail ifExist = await _uow.GetDbContext().ProjectHiringRequestDetail.FirstOrDefaultAsync(x => x.IsDeleted == false &&
-                                                                                           x.Description.ToLower().Trim() == description);
+                bool recordExists = await _uow.GetDbContext().ProjectHiringRequestDetail.AnyAsync(x => x.IsDeleted == false &&
+                                                                                           x.Description.ToLower().Trim() == description && x.HiringRequestId != model.HiringRequestId);
 
-                if (ifExist == null)
+                if (!recordExists)
                 {
 
-                    ProjectHiringRequestDetail hrDeatil = await _uow.GetDbContext().ProjectHiringRequestDetail
+                    ProjectHiringRequestDetail projectHiringRequest = await _uow.GetDbContext().ProjectHiringRequestDetail
                                                                                               .FirstOrDefaultAsync(x => x.HiringRequestId == model.HiringRequestId &&
                                                                                                                         x.IsDeleted == false);
 
-                    hrDeatil.BasicPay = model.BasicPay;
-                    hrDeatil.BudgetLineId = model.BudgetLineId;
-                    hrDeatil.ModifiedById = userId;
-                    hrDeatil.ModifiedDate = DateTime.UtcNow;
-                    hrDeatil.CurrencyId = model.CurrencyId;
-                    hrDeatil.Description = model.Description;
-                    hrDeatil.EmployeeID = model.EmployeeID;
-                    hrDeatil.FilledVacancies = model.FilledVacancies;
-                    hrDeatil.GradeId = model.GradeId;
-                    hrDeatil.IsCompleted = model.IsCompleted;
-                    hrDeatil.OfficeId = model.OfficeId;
-                    hrDeatil.Position = model.Position;
-                    hrDeatil.ProfessionId = model.ProfessionId;
-                    hrDeatil.ProjectId = model.ProjectId;
-                    hrDeatil.TotalVacancies = model.TotalVacancies;
+                    projectHiringRequest.BasicPay = model.BasicPay;
+                    projectHiringRequest.BudgetLineId = model.BudgetLineId;
+                    projectHiringRequest.ModifiedById = userId;
+                    projectHiringRequest.ModifiedDate = DateTime.UtcNow;
+                    projectHiringRequest.CurrencyId = model.CurrencyId;
+                    projectHiringRequest.Description = model.Description;
+                    projectHiringRequest.EmployeeID = model.EmployeeID;
+                    projectHiringRequest.FilledVacancies = model.FilledVacancies;
+                    projectHiringRequest.GradeId = model.GradeId;
+                    projectHiringRequest.IsCompleted = model.IsCompleted;
+                    projectHiringRequest.OfficeId = model.OfficeId;
+                    projectHiringRequest.Position = model.Position;
+                    projectHiringRequest.ProfessionId = model.ProfessionId;
+                    projectHiringRequest.ProjectId = model.ProjectId;
+                    projectHiringRequest.TotalVacancies = model.TotalVacancies;
 
-                    var objdetail = await _uow.ProjectHiringRequestRepository.UpdateAsyn(hrDeatil);
+                    var objdetail = await _uow.ProjectHiringRequestRepository.UpdateAsyn(projectHiringRequest);
                     await _uow.GetDbContext().SaveChangesAsync();
                     // Note : edit ProjectJob in old Ui
                     if (objdetail.HiringRequestId != 0)
@@ -224,7 +223,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                             jobDetail.OfficeId = model.OfficeId;
                             jobDetail.IsActive = true;
                             jobDetail.GradeId = model.GradeId;
-                            jobDetail.HiringRequestId = hrDeatil.HiringRequestId;
+                            jobDetail.HiringRequestId = projectHiringRequest.HiringRequestId;
                             jobDetail.IsDeleted = false;
                             jobDetail.ModifiedById = userId;
                             jobDetail.ModifiedDate = DateTime.UtcNow;
@@ -232,7 +231,6 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
 
                             await _uow.JobHiringDetailsRepository.UpdateAsyn(jobDetail);
                             await _uow.GetDbContext().SaveChangesAsync();
-
                         }
                     }
                 }
