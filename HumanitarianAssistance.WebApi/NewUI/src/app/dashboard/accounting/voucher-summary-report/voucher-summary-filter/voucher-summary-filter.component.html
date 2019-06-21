@@ -1,0 +1,138 @@
+<div class="padding_30px">
+  <!-- <div class="row">
+   <h3>Filters</h3>
+  </div>
+  <hr> -->
+    <div class="row">
+        <div class="col-sm-12">
+          <lib-search-dropdown
+          placeholder="Accounts"
+          [multiSelect]="true"
+          placeholderSearchLabel="Find Accounts..."
+          noEntriesFoundLabel="No matching accounts found"
+          [dataSource]="multiAccountsList"
+          [selectedValue]="accountFilter"
+          (openedChange)="
+          onOpenedAccountMultiSelectChange($event)
+          "
+        >
+        </lib-search-dropdown>
+        </div>
+        <div class="col-sm-12">
+          <lib-search-dropdown
+          placeholder="Offices"
+          [multiSelect]="true"
+          placeholderSearchLabel="Find Office..."
+          noEntriesFoundLabel="No matching office found"
+          [dataSource]="multiOfficesList"
+          [selectedValue]="officeFilter"
+          (openedChange)="
+          onOpenedOfficeMultiSelectChange($event)
+          "
+        >
+        </lib-search-dropdown>
+        </div>
+
+      <!-- <div class="row"> -->
+        <div class="col-sm-12">
+          <lib-search-dropdown
+          placeholder="Journals"
+          [multiSelect]="true"
+          placeholderSearchLabel="Find Journal..."
+          noEntriesFoundLabel="No matching journal found"
+          [dataSource]="multiJournalList"
+          [selectedValue]="journalFilter"
+          (openedChange)="
+          onOpenedJournalMultiSelectChange($event)
+          "
+        >
+        </lib-search-dropdown>
+        </div>
+        <div class="col-sm-12">
+          <lib-search-dropdown
+                          placeholder="Projects"
+                          [multiSelect]="true"
+                          placeholderSearchLabel="Find Project..."
+                          noEntriesFoundLabel="No matching project found"
+                          [dataSource]="multiProjectList"
+                          [selectedValue]="projectFilter"
+                          (openedChange)="
+                            onOpenedProjectMultiSelectChange($event)
+                          "
+                        >
+                        </lib-search-dropdown>
+        </div>
+        <div class="col-sm-12">
+            <lib-search-dropdown
+                            placeholder="Project Jobs"
+                            [multiSelect]="true"
+                            placeholderSearchLabel="Find Project Job..."
+                            noEntriesFoundLabel="No matching project job found"
+                            [dataSource]="multiProjectJobList"
+                            [selectedValue]="projectJobFilter"
+                            (openedChange)="
+                            onOpenedProjectJobMultiSelectChange($event)
+                            "
+                          >
+                          </lib-search-dropdown>
+          </div>
+      <!-- </div> -->
+      <!-- <div class="row"> -->
+        <div class="col-sm-12">
+          <lib-search-dropdown
+          placeholder="BudgetLines"
+          [multiSelect]="true"
+          placeholderSearchLabel="Find BudgetLine..."
+          noEntriesFoundLabel="No matching budgetline found"
+          [dataSource]="multiBudgetLineList"
+          [selectedValue]="budgetLineFilter"
+          (openedChange)="
+          onOpenedBudgetLineMultiSelectChange($event)
+          "
+        >
+        </lib-search-dropdown>
+        </div>
+      <!-- </div> -->
+      <!-- <div class="row"> -->
+        <div class="col-sm-12">
+          <mat-form-field>
+            <mat-label>Select Currency</mat-label>
+            <mat-select [(ngModel)]="selectedCurrency">
+              <mat-option *ngFor="let currency of currencyList" [value]="currency.CurrencyId">
+                {{currency.CurrencyCode}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+            <mat-form-field>
+                <mat-label>Select Type</mat-label>
+                <mat-select [(ngModel)]="selectedRecordType">
+                  <mat-option *ngFor="let type of recordType" [value]="type.id">
+                    {{type.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
+      <!-- </div> -->
+      <div class="row pull-right">
+        <div class="col-sm-5">
+            <button
+            mat-raised-button
+            color="primary"
+            (click)="onApplyFilter()"
+          >
+            Apply
+          </button>
+        </div>
+        <div class="col-sm-5">
+            <button
+            mat-raised-button
+            (click)="initializeModel()"
+          >
+            Reset
+          </button>
+          </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,114 @@
+<div class="project-report-main">
+  <div class="body-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+          <mat-card [ngStyle]="scrollStyles">
+            <div class="row">
+              <div class="col-sm-7">
+                <h4 class="main_heading">
+                </h4>
+              </div>
+              <div class="col-sm-5 text-right">
+                <button
+                  mat-icon-button
+                  class="margin_left_10"
+                  [matMenuTriggerFor]="voucherSummaryReportMenu"
+                >
+                  <mat-icon *ngIf="!summaryLoader; else summaryReportLoaderTemplate">settings</mat-icon>
+                  <ng-template #summaryReportLoaderTemplate>
+                    <div class="spinner_center padding_top_5 padding_bottom_5">
+                      <mat-spinner [diameter]="25"> </mat-spinner>
+                    </div>
+                  </ng-template>
+                </button>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-12">
+                  <div>
+                      <mat-accordion displayMode="flat" multi class="mat-table">
+                          <section matSort class="mat-elevation-z2 mat-header-row">
+                            <span class="mat-header-cell" mat-sort-header="voucherCode">Voucher Code</span>
+                            <span class="mat-header-cell" mat-sort-header="voucherDescription">Voucher Description</span>
+                            <span class="mat-header-cell" mat-sort-header="voucherDate">Voucher Date</span>
+                          </section>
+
+                          <mat-expansion-panel *ngFor="let item of voucherSummaryReport" (opened)="getVoucherTransactions(item.VoucherNo)">
+                            <mat-expansion-panel-header class="mat-row">
+                              <span class="mat-cell">{{item.VoucherCode}}</span>
+                              <span class="mat-cell">{{item.VoucherDescription}}</span>
+                              <span class="mat-cell">{{item.Date |date: 'yyyy-MM-dd'}}</span>
+                            </mat-expansion-panel-header>
+                            <div
+                    class="responsive_table-responsive table-responsive mar_tp_40"
+                  >
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <td width="2%"></td>
+                          <td><span class="mat-header-cell">Account Code</span></td>
+                          <td><span class="mat-header-cell">Account Name</span></td>
+                          <td><span class="mat-header-cell">Currency Name</span></td>
+                          <td><span class="mat-header-cell">Transaction Description</span></td>
+                          <td><span class="mat-header-cell">Amount</span></td>
+                          <td><span class="mat-header-cell">Transaction Type</span></td>
+                          <td width="3%"></td>
+                        </tr>
+
+                        <tr *ngFor="let item of voucherSummaryTransactionModel">
+                          <td width="2%"></td>
+                          <td> {{item.AccountCode}}</td>
+                          <td> {{item.AccountName}}
+                          </td>
+                          <td>{{item.CurrencyName }}
+                          </td>
+                          <td>{{item.TransactionDescription }}
+                          </td>
+                          <td>{{item.Amount }}
+                          </td>
+                          <td>{{item.TransactionType }}
+                          </td>
+                          <td width="3%"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                          </mat-expansion-panel>
+                        </mat-accordion>
+                  </div>
+              </div>
+            </div>
+            <mat-paginator
+            [length]="totalCount"
+            [pageSize]="filterData.pageSize"
+            [pageIndex]="filterData.pageIndex"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            (page)="pageEvent($event)"
+          >
+          </mat-paginator>
+
+          <hr />
+<!--
+          <input type="file" (change)="getSignedURL($event)"> -->
+          </mat-card>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<mat-menu #voucherSummaryReportMenu="matMenu">
+  <div (click)="$event.stopPropagation()">
+    <div class="padding_15px">
+      <app-voucher-summary-filter [multiAccountsList]="multiAccountsList"
+      [multiOfficesList]="multiOfficesList" [multiJournalList]="multiJournalList"
+      [multiProjectList]="multiProjectList" [currencyList]="currencyList" [recordType]="recordType"
+      (filterApplied)="filterApplied($event)">
+      </app-voucher-summary-filter>
+    </div>
+  </div>
+</mat-menu>

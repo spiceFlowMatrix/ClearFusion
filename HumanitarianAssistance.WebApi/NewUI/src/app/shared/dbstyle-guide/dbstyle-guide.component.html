@@ -1,0 +1,354 @@
+<!-- <app-dbsidebar></app-dbsidebar> -->
+<div class="project-management-main">
+  <div class="main_body">
+    <!-- <div class="body_header">
+      <mat-card>
+        <div class="top-header clearfix">
+          <h3>Style-guide</h3>
+          <nav class="navbar navbar-default">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span
+                  class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul>
+                <li> <a routerLink="/projects" routerLinkActive="active">My Projects</a></li>
+                <li><a routerLink="/proposals" routerLinkActive="active">Proposals</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </mat-card>
+    </div> -->
+    <div class="body-content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-10 col-sm-offset-1">
+            <mat-card>
+              <div class="project-details">
+                <h4 class="main_heading">Colors</h4>
+              </div>
+              <div class="color-palate">
+                <div class="color-list">
+                  <section class="color primary_color">
+                    <h2 class="name">Primary-color</h2>
+                    <ul class="details">
+                      <li>rgb(26, 26, 26)</li>
+                      <li>#1A1A1A</li>
+                    </ul>
+                  </section>
+                  <section class="color secondary_color">
+                    <h2 class="name ">Secondary Color </h2>
+                    <ul class="details">
+                      <li>rgba(246, 251, 254, 1)</li>
+                      <li>#f6fbff</li>
+                    </ul>
+                  </section>
+                  <section class="color secondary_2">
+                    <h2 class="name">Secondary Color</h2>
+                    <ul class="details">
+                      <li>rgb(247, 247, 247)</li>
+                      <li>#f7f7f7</li>
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </mat-card>
+            <div class="mar_tp_20"></div>
+            <div class="mar_tp_20"></div>
+            <mat-card>
+              <div class="project-details">
+                <h4 class="main_heading bdr_heading">Buttons</h4>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <button class="btn primary_btn">Default Button</button>
+                </div>
+                <div class="col-sm-3">
+                  <button class="btn secondary_btn ">Secondary Button</button>
+                </div>
+                <div class="col-sm-3">
+                  <button class="btn primary_btn disable">Disable Button</button>
+                </div>
+                <div class="col-sm-3">
+                  <div class="upload-box">
+                    <div class="hold"> <span class="btn-file"> Browse File
+                        <input type="file">
+                      </span> <a href="#">Maximum file size 20 MB</a></div>
+                  </div>
+                </div>
+              </div>
+            </mat-card>
+            <div class="mar_tp_20"></div>
+            <mat-card>
+              <div class="project-details">
+                <h4 class="main_heading bdr_heading">TYPOGRAPHY</h4>
+              </div>
+              <div class="component typography">
+
+                <!-- Typography -->
+                <h1>Heading 1</h1>
+                <h2>Heading 2</h2>
+                <h3>Heading 3</h3>
+                <h4>Heading 4</h4>
+                <h5>Heading 5</h5>
+                <h6>Heading 6</h6>
+                <div class="desc">
+                  <h3>Paragraphs</h3>
+                  <p>All Paragraphs will be set to the proper <span class="helper">font-size:</span> <span class="helper">0.95em/15px</span>,
+                    and the proper <span class="helper">line-height:</span> <span class="helper">1.4em</span> for
+                    proper readability.</p>
+                </div>
+                <p class="half">With just the click of a button, you can choose your custom card, add a personal
+                  photo, write your message and click send. We print, stuff, stamp and mail your physical card for
+                  you.</p>
+              </div>
+            </mat-card>
+            <div class="mar_tp_20"></div>
+            <mat-card>
+              <div class="project-details">
+                <h4 class="main_heading bdr_heading">Editable Form</h4>
+              </div>
+              <div class="form-group">
+
+                <input matInput class="form-control project_input" #projectName placeholder="Project Name" [disabled]="false">
+              </div>
+              <div class="form-group">
+                <textarea class="form-control text_manage" matInput #projectDescription placeholder="Project Description Text"
+                  name="projectDescription"></textarea>
+              </div>
+            </mat-card>
+            <div class="mar_tp_20"></div>
+            <mat-card>
+              <div class="project-details">
+                <h4 class="main_heading bdr_heading">Table</h4>
+              </div>
+              <div class="responsive_table-responsive ">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                        <td width="1%"><p class="width_8"></p></td>
+                      <td width="5%"></td>
+                      <td width="40%"><a class="add_new" (click)="addNewProject(0)">Add New....</a></td>
+                      <td width="20%"></td>
+                      <td width="20%"></td>
+                      <td width="5%"></td>
+                      <td width="1%"></td>
+                    </tr>
+                    <tr class="selected">
+                        <td width="1%"><p class="width_8"></p></td>
+                      <td class="grey-text" width="5%">Code/Id</td>
+                      <td width="40%" text-align="left">
+                        <p class="diamond">Name/Description</p>
+                      </td>
+                      <td class="grey-text text-right" width="10%">23 Hours</td>
+                      <td class="text-left" width="30%">
+                        <p class="diamond">Project State</p>
+                      </td>
+                      <td class="" width="7"><a class="blue-circle "><i class="far fa-bell"></i></a></td>
+                      <td width="1%" class="text-center"><i class="material-icons font-12"> arrow_forward_ios </i></td>
+                    </tr>
+                    <tr class="">
+                        <td width="1%"><p class="width_8"></p></td>
+                      <td class="grey-text" width="5%">Code/Id</td>
+                      <td width="40%" text-align="left">
+                        <p class="diamond">Name/Description</p>
+                      </td>
+                      <td class="grey-text text-right" width="10%">23 Hours</td>
+                      <td class="text-left" width="30%">
+                        <p class="diamond">Project State</p>
+                      </td>
+                      <td class="" width="7"><a class="blue-circle "><i class="far fa-bell"></i></a></td>
+                      <td width="1%" class="text-center"><i class="material-icons font-12"> arrow_forward_ios </i></td>
+                    </tr>
+                    <tr class="">
+                        <td width="1%"><p class="width_8"></p></td>
+                      <td class="grey-text" width="5%">Code/Id</td>
+                      <td width="40%" text-align="left">
+                        <p class="diamond">Name/Description</p>
+                      </td>
+                      <td class="grey-text text-right" width="10%">23 Hours</td>
+                      <td class="text-left" width="30%">
+                        <p class="diamond">Project State</p>
+                      </td>
+                      <td class="" width="7"><a class="blue-circle "><i class="far fa-bell"></i></a></td>
+                      <td width="1%" class="text-center"><i class="material-icons font-12"> arrow_forward_ios </i></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </mat-card>
+            <div class="mar_tp_20"></div>
+            <mat-card>
+              <div class="project-details">
+                <h4 class="main_heading bdr_heading">Form</h4>
+              </div>
+              <div class="forms">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="material-icons">person_outlined</i></span>
+                          <input name="first_name" placeholder="First Name" class="form-control" type="text">
+                          <a class="add_plus"><i class="fa fa-plus"></i></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="material-icons">person_outlined</i></span>
+                          <input name="first_name" placeholder="Last Name" class="form-control" type="text">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="material-icons">lock_outlined</i></span>
+                          <input name="first_name" placeholder="Password" class="form-control" type="Password">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 ">
+                    <div class="selectContainer">
+                      <div class="input-group"> <span class="input-group-addon"><i class="material-icons">
+                            view_headline
+                          </i></span>
+                        <select name="state" class="form-control selectpicker">
+                          <option value=" ">Please select your state</option>
+                          <option>Alabama</option>
+                          <option>Alaska</option>
+                          <option>Arizona</option>
+                          <option>Arkansas</option>
+                          <option>California</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="">
+                    <div class="col-sm-6">
+                      <div class="column">
+                        <h5>Checkboxes</h5>
+
+                        <div class="ex-checkbox checked">
+
+                            <mat-checkbox [checked]="isChecked">Check me!</mat-checkbox>
+                          </div>
+                          <div class="ex-checkbox">
+                              <mat-checkbox>Default checkbox</mat-checkbox>
+
+                            </div>
+                            <div class="ex-checkbox ">
+                                <mat-checkbox class="long_text">Default Checkbox with a very long label text which doesn't fit in
+                                    one line</mat-checkbox>
+
+                              </div>
+                              <div class="ex-checkbox disable">
+                                  <mat-checkbox [checked]="isChecked">Disabled Checkbox Button</mat-checkbox>
+
+                                </div>
+                                <div class="ex-checkbox disable">
+                                    <mat-checkbox>Disabled Checkbox Button</mat-checkbox>
+
+                                  </div>
+
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="column">
+                        <h5>Radio buttons</h5>
+                        <div class="ex-radio">
+                          <input type="radio" id="radio_one" name="radio_group" checked="checked" />
+                          <label for="radio_one">Default Radio Button</label>
+                        </div>
+                        <div class="ex-radio">
+                          <input type="radio" id="radio_two" name="radio_group" />
+                          <label for="radio_two">Default Radio Button</label>
+                        </div>
+                        <div class="ex-radio" style="width: 300px">
+                          <input type="radio" id="radio_five" name="radio_group" />
+                          <label for="radio_five">Default Checkbox with a very long label text which doesn't fit in
+                            one line</label>
+                        </div>
+                        <div class="ex-radio">
+                          <input type="radio" id="radio_three" disabled name="disabled" />
+                          <label for="radio_three">Disabled Radio Button</label>
+                        </div>
+                        <div class="ex-radio">
+                          <input type="radio" id="radio_four" checked="checked" disabled name="disabled" />
+                          <label for="radio_four">Disabled Radio Button</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </mat-card>
+            <div class="mar_tp_20"></div>
+            <mat-card>
+              <div class="project-details">
+                <h4 class="main_heading bdr_heading">Icons</h4>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <h5>Default Icons </h5>
+                  <div class="row">
+                    <div class="col-sm-3"> <a class="blue-circle "><i class="far fa-bell"></i></a> </div>
+                    <div class="col-sm-3"> <a class="blue-circle "><i class="far fa-user"></i></a> </div>
+                    <div class="col-sm-3"> <a class="blue-circle "><i class="far fa-bookmark"></i></a> </div>
+                    <div class="col-sm-3"> <a class="blue-circle "><i class="far fa-calendar"></i></a> </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <h5>Selected Icons </h5>
+                  <div class="row">
+                    <div class="col-sm-3"> <a class="blue-circle active"><i class="far fa-bell"></i></a> </div>
+                    <div class="col-sm-3"> <a class="blue-circle active "><i class="far fa-user"></i></a> </div>
+                    <div class="col-sm-3"> <a class="blue-circle active"><i class="far fa-bookmark"></i></a> </div>
+                    <div class="col-sm-3"> <a class="blue-circle active"><i class="far fa-calendar"></i></a> </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card>
+            <div class="mar_tp_20"></div>
+            <mat-card>
+              <div class="project-details">
+                <h4 class="main_heading">Datepicker</h4>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="date_picker">
+                    <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+                    <mat-datepicker-toggle matSuffix [for]="picker" class="blue-circle"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </div>
+                </div>
+              </div>
+            </mat-card>
+            <div class="mar_tp_20"></div>
+            <mat-card>
+              <div class="row">
+                <div class="col-sm-12">
+                  <h4 class="main_heading">Icon</h4>
+                </div>
+                <div class="col-sm-3">
+                  <mat-icon>arrow_right_alt</mat-icon>
+                  <mat-icon>person_outline</mat-icon>
+                </div>
+              </div>
+            </mat-card>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+<div>
+  <h1 mat-dialog-title>
+    New Sub Activity
+    <button mat-icon-button class="pull-right" (click)="onCancelPopup()">
+      <mat-icon aria-label="Example cancel icon">clear</mat-icon>
+    </button>
+  </h1>
+  <form class="example-form" [formGroup]="projectSubActivityForm"
+    (ngSubmit)="projectSubActivityForm.valid ? onFormSubmit(projectSubActivityForm.value) : null">
+    <div mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-lg-12 col-sm-6">
+              <mat-form-field class="example-full-width">
+                <input matInput type="text" formControlName="SubActivityTitle" placeholder="Sub Activity Title" />
+              </mat-form-field>
+            </div>
+            <div class="col-lg-12 col-sm-6">
+              <mat-form-field class="example-full-width">
+                <textarea matInput formControlName="ActivityDescription" placeholder="Activity Description"
+                  matTextareaAutosize matAutosizeMinRows="5" matAutosizeMaxRows="7"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field>
+                <input matInput formControlName="PlannedStartDate" [matDatepicker]="planningStartDatepicker"
+                  placeholder="Start Date" />
+                <mat-datepicker-toggle matSuffix [for]="planningStartDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker color="primary" #planningStartDatepicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field>
+                <input matInput formControlName="PlannedEndDate" [min]="plannedStartDate"
+                  [matDatepicker]="planningEndDatepicker" placeholder="End Date" />
+                <mat-datepicker-toggle matSuffix [for]="planningEndDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker color="primary" #planningEndDatepicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field class="example-full-width">
+                <mat-select placeholder="Assignee" formControlName="EmployeeID">
+                  <mat-option *ngFor="let item of employeeList" [value]="item.EmployeeId">
+                    {{ item.EmployeeName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field class="example-full-width">
+                <input matInput appNumberOnly="true" formControlName="Target" placeholder="Target" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions class="pull-right">
+      <button mat-raised-button (click)="onCancelPopup()">Cancel</button>
+      <button mat-raised-button color="primary" [disabled]="addSubActivityLoaderFlag">
+        <span class="pull-left spinner_center margin_top_10" *ngIf="addSubActivityLoaderFlag">
+          <mat-spinner [diameter]="15"></mat-spinner>
+        </span>
+        Add
+      </button>
+    </div>
+  </form>
+</div>

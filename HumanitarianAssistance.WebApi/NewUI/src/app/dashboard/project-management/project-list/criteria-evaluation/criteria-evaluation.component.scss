@@ -1,0 +1,62 @@
+.funding-box-wrap {padding:20px; list-style:none;    /* background-color: #efefef; */
+    padding: 20px;
+    list-style: none;
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    margin-top: 20px;
+   
+}
+.mrg-top { margin-top: 0px; }
+.funding-method-status-wrap ul { padding-left:0;list-style:none;}
+.proposal-header{text-align: center;}
+:host /deep/ .sector-and-funding-status-wrap-ul ul li {
+   // display:inline-block;
+    margin-right:10px;
+    list-style:none;
+    &:last-child {  
+        list-style:none; 
+        display:block;
+        padding-right:30px;
+        .mat-form-field-wrapper { 
+            max-width:500px;
+            margin:0 auto;
+            textarea { 
+                background-color:#fff;
+                padding:10px;
+            }
+        }
+    }
+}
+
+.funding-box{padding-left:0;}
+.capacity-available-compensation ul {padding-left: 0}
+.target-Beneficiary-wrap ul li {display: inline-block; padding-left:0;list-style:none;}
+.capacity-available-compensation ul li{ padding: 4px;list-style:none;}
+.disabling-condition-wrap ul li{display: inline-block; list-style: none; padding: 4px; text-align: center; margin-top: 14px;}
+.priority-condition-wrap ul li{display: inline-block; list-style: none; padding-left:0 }
+ .priority-condition-wrap ul{padding-left: 0;}
+ :host /deep/  .mat-button-toggle-group-appearance-standard, .mat-button-toggle-standalone.mat-button-toggle-appearance-standard{border-radius: 20px;}
+ :host /deep/ .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+    line-height: 28px;
+    padding: 0 12px;
+}
+.middle-header-disabling{text-align: center; margin: 12px 0 0;}
+:host /deep/ .mat-form-field{display: block; width:100%;}
+:host /deep/ .mat-expanded.mat-expansion-panel-spacing .mat-expansion-panel-header .mat-content .mat-expansion-panel-header-title{font-weight: 700;}
+.funding-box-wrap-eligibility{padding:20px; list-style:none;    /* background-color: #efefef; */
+    padding: 20px;
+    list-style: none;
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);   
+}
+// .sticky-score-wrap {
+//     padding-top:80px;
+//     .sticky-score {
+//         position:fixed;
+//         top:90px;
+//         // width:876px;
+//         background-color:#ffffff;
+//         border-bottom:1px solid #efefef;
+//         z-index:100000;
+//         margin-left:-16px;
+//         padding:0 15px;
+//     }
+// }

@@ -1,0 +1,46 @@
+<div>
+  <h1 mat-dialog-title>
+    <span *ngIf="data.showHideDropdown === office">Select Office</span>
+    <span *ngIf="data.showHideDropdown === journal">Select Journal</span>
+    <span *ngIf="data.showHideDropdown === project">Select Project</span>
+
+    <!-- <button mat-icon-button [mat-dialog-close]="data.data" class="pull-right">
+      <mat-icon aria-label="cancel">clear</mat-icon>
+    </button> -->
+  </h1>
+  <div mat-dialog-content>
+    <!-- <div class="row"> -->
+    <div class="col-sm-12">
+      <div class="main-multi-select-list">
+        <div *ngIf="data.showHideDropdown === office">
+          <ul *ngFor="let item of data.data" class="padding_left_0">
+            <mat-checkbox
+              (change)="onOfficeItemClick(item)"
+              [(ngModel)]="item.IsChecked"
+              >{{ item.OfficeName }}</mat-checkbox
+            >
+          </ul>
+        </div>
+        <div *ngIf="data.showHideDropdown === journal">
+          <ul *ngFor="let item of data.data" class="padding_left_0">
+            <mat-checkbox
+              (change)="onJournalItemClick(item)"
+              [(ngModel)]="item.IsChecked"
+              >{{ item.JournalName }}</mat-checkbox
+            >
+          </ul>
+        </div>
+        <div *ngIf="data.showHideDropdown === project">
+          <ul *ngFor="let item of data.data" class="padding_left_0">
+            <mat-checkbox
+              (change)="onProjectItemClick(item)"
+              [(ngModel)]="item.IsChecked"
+              >{{ item.ProjectName }}</mat-checkbox
+            >
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- </div> -->
+  </div>
+</div>

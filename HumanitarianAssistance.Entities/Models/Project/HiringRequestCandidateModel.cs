@@ -9,6 +9,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public long CandidateId { get; set; }
         public long HiringRequestId { get; set; }
         public int? EmployeeID { get; set; }
+        public long? ProjectId { get; set; }
 
     }
 }

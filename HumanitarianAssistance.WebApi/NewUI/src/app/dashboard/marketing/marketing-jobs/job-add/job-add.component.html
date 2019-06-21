@@ -1,0 +1,86 @@
+<div>
+    <form [formGroup]="jobDetailsForm" (ngSubmit)="onSubmit(jobDetailsForm)" role="form" action="POST">
+<h1 mat-dialog-title>
+  Create Job
+    <button mat-icon-button [mat-dialog-close]="data.data" class="pull-right">
+        <mat-icon aria-label="cancel">clear</mat-icon>
+    </button>
+</h1>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="row">
+          <div class="col-sm-12">
+              <mat-form-field class="example-full-width">
+                  <input formControlName="jobname" matInput #jobName placeholder="Job Name" name="jobName"/>
+               </mat-form-field>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+            <mat-form-field class="example-full-width">
+                <input #endDate class="fixedWidth" formControlName="endDate"
+                  matInput [matDatepicker]="picker" placeholder="End Date"/>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+            <mat-form-field class="example-full-width">
+                <mat-select placeholder="Client/Contract Id" name="contractname" (selectionChange)="onContractChange($event.value)" formControlName="contractname">
+                  <mat-option *ngFor="let contract of data.contractsList" [value]="contract.ContractId">
+                    {{ contract.ContractByClients }}
+                  </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                  <input appNumberOnly="true" matInput #minute (blur)="calculateJobPrice('minutes', minute.value)" placeholder="Minutes" formControlName="minutes"/>
+              </mat-form-field>
+          </div>
+          <div class="col-sm-6">
+              <mat-form-field class="example-form-field">
+                  <input appNumberOnly="true" matInput #rates (blur)="calculateJobPrice('rate', rates.value)" placeholder="Rate" formControlName="rate"/>
+                </mat-form-field>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+            <mat-form-field class="example-full-width">
+            <input placeholder="Total" matInput readonly formControlName="total"/>
+            </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+            <mat-form-field class="example-full-width">
+            <input matInput placeholder="Contract Rate" readonly formControlName="unitRate"/>
+            </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-6">
+              <mat-form-field  class="example-full-width">
+            <input matInput placeholder="Discount" formControlName="discount" readonly/>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-6">
+              <mat-form-field  class="example-full-width">
+            <input matInput placeholder="Discount %" formControlName="discountPercent" readonly/>
+            </mat-form-field>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="pull-right">
+  <button mat-raised-button [mat-dialog-close]="data.data">Cancel</button>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="!jobDetailsForm.valid || addJobLoader" cdkFocusInitial>
+     <span class="pull-left spinner_center margin_top_10" *ngIf="addJobLoader"><mat-spinner [diameter]="15"></mat-spinner></span>
+    Create
+  </button>
+</div>
+</form>
+</div>

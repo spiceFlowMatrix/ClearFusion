@@ -1,0 +1,368 @@
+<div class="voucher-listing-main">
+  <div class="container-fluid">
+
+    <!-- <br>
+    <br>
+
+    <div class="container-fluid">
+
+        <h1>Send some basic messages</h1>
+
+
+        <div class="row">
+            <form class="form-inline" (ngSubmit)="sendMessage()" #messageForm="ngForm">
+                <div class="form-group">
+                    <label class="sr-only" for="message">Message</label>
+                    <input type="text" class="form-control" id="message" placeholder="your message..." name="message" [(ngModel)]="message" required>
+                </div>
+                <button type="submit" class="btn btn-primary" [disabled]="!messageForm.valid">Send SignalR Message</button>
+            </form>
+        </div>
+        <div class="row" *ngIf="messages.length > 0">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Messages</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let message of messages; let i = index">
+                            <td>{{i + 1}}</td>
+                            <td>{{message}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" *ngIf="messages.length <= 0">
+            <span>No messages</span>
+        </div>
+    </div>
+
+    <br>
+    <br> -->
+
+    <div class="row">
+      <div class="col-sm-12">
+        <!-- <div class="row">
+          <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
+            <mat-card>
+                <p>Project Duration</p>
+              <div *ngIf="
+              !activitySummaryLoader;
+              else projectDurationLoaderTemplate">
+                  <h4>{{ activitySummary.ProjectDuration }} Days</h4>
+              </div>
+              <ng-template #projectDurationLoaderTemplate>
+                  <div class="spinner_center padding_top_5 padding_bottom_5">
+                    <mat-spinner [diameter]="25"></mat-spinner>
+                  </div>
+                </ng-template>
+            </mat-card>
+          </div>
+          <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
+            <mat-card>
+                <p>Activities on Schedule</p>
+              <div *ngIf="
+              !activitySummaryLoader;
+              else activityOnScheduleLoaderTemplate">
+                  <h4>{{ activitySummary.ActivityOnSchedule }}</h4>
+              </div>
+              <ng-template #activityOnScheduleLoaderTemplate>
+                  <div class="spinner_center padding_top_5 padding_bottom_5">
+                    <mat-spinner [diameter]="25"></mat-spinner>
+                  </div>
+                </ng-template>
+            </mat-card>
+          </div>
+          <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
+            <mat-card>
+                <p>Late Start</p>
+              <div *ngIf="
+              !activitySummaryLoader;
+              else lateStartLoaderTemplate">
+                  <h4>{{ activitySummary.LateStart }}</h4>
+              </div>
+              <ng-template #lateStartLoaderTemplate>
+                <div class="spinner_center padding_top_5 padding_bottom_5">
+                  <mat-spinner [diameter]="25"></mat-spinner>
+                </div>
+              </ng-template>
+            </mat-card>
+          </div>
+          <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
+            <mat-card>
+                <p>Late End</p>
+              <div *ngIf="
+              !activitySummaryLoader;
+              else lateEndLoaderTemplate">
+                  <h4>{{ activitySummary.LateEnd }}</h4>
+              </div>
+              <ng-template #lateEndLoaderTemplate>
+                  <div class="spinner_center padding_top_5 padding_bottom_5">
+                    <mat-spinner [diameter]="25"></mat-spinner>
+                  </div>
+                </ng-template>
+            </mat-card>
+          </div>
+          <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
+            <mat-card>
+                <p>Slippage</p>
+              <div *ngIf="
+              !activitySummaryLoader;
+              else activitySummaryLoaderTemplate">
+                  <h4>{{ activitySummary.Slippage }}</h4>
+              </div>
+              <ng-template #activitySummaryLoaderTemplate>
+                  <div class="spinner_center padding_top_5 padding_bottom_5">
+                    <mat-spinner [diameter]="25"></mat-spinner>
+                  </div>
+                </ng-template>
+            </mat-card>
+          </div>
+          <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
+            <mat-card>
+                <p>Progress</p>
+              <div *ngIf="
+              !activitySummaryLoader;
+              else activityProgressLoaderTemplate">
+                  <h4>{{ activitySummary.Progress | number: "2.2-2" }} %</h4>
+              </div>
+              <ng-template #activityProgressLoaderTemplate>
+                  <div class="spinner_center padding_top_5 padding_bottom_5">
+                    <mat-spinner [diameter]="25"></mat-spinner>
+                  </div>
+                </ng-template>
+            </mat-card>
+          </div>
+        </div> -->
+        <br />
+      </div>
+
+      <div [class]="colsm6">
+        <div>
+          <div class="row">
+            <div class="col-sm-12">
+              <span class="font_x_large">Project Activities</span> &nbsp;
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="onAddActivityClicked()"
+              >
+                Add Activity
+              </button>
+              <button mat-raised-button color="primary" class="pull-right">
+                Gantt View
+              </button>
+            </div>
+          </div>
+
+          <br />
+          <mat-card [ngStyle]="scrollStyles" *ngIf="filterViewFlag; else filterTemplate;">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <mat-form-field class="example-form-field">
+                      <input
+                        matInput
+                        placeholder="Search Activity"
+                        [(ngModel)]="projectActivityFilter.FilterValue"
+                        (keyup.enter)="projectActivityFilter.FilterValue != '' ? onSearchFilterApplied(): null"
+                      />
+                    </mat-form-field>
+                    <!-- Apply -->
+                    &nbsp;
+                    <button
+                      mat-raised-button
+                      class="margin_left_10"
+                      color="primary"
+                      [disabled]="projectActivityFilter.FilterValue === ''"
+                      (click)="onSearchFilterApplied()"
+                    >
+                      Apply
+                    </button>
+                    &nbsp;
+                    <!-- Reset -->
+                    <button mat-raised-button (click)="onSearchFilterReset()">
+                      Reset
+                    </button>
+
+                    <!-- Filter -->
+                    <button mat-icon-button class="margin_left_10" (click)="filterViewFlag = !filterViewFlag">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+
+                    <div class="all_grey_text ">
+                      {{ totalCount }} Activities
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 margin_top_10">
+                <div
+                  class="responsive_table-responsive"
+                  *ngIf="!activityListLoader; else activityListLoaderTemplate"
+                >
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td width="1%"><p class="width_8"></p></td>
+                        <td width="37%" class="text-left">
+                          Activity Description
+                        </td>
+                        <td width="10%" class="text-center">
+                          Start Date
+                        </td>
+                        <td width="10%" class="text-center">Due Date</td>
+                        <td width="10%" class="text-center">
+                          Progress
+                        </td>
+                        <td width="10%" class="text-center">
+                          Slippage
+                        </td>
+                        <td width="20%" class="text-center">
+                          Status
+                        </td>
+                        <td width="1%" class="text-center"></td>
+                        <td width="1%" class="text-center"></td>
+                      </tr>
+                      <tr
+                        (click)="onProjectActivityClick(item)"
+                        *ngFor="let item of projectActivityList"
+                        [ngClass]="{
+                          selected: selectedProjectActivityId == item.ActivityId
+                        }"
+                      >
+                        <td width="1%"><p class="width_8"></p></td>
+                        <td
+                          width="37%"
+                          class="grey-text"
+                        >
+                          <p>{{ item.ActivityDescription }}</p>
+                        </td>
+                        <td width="10%" text-align="left">
+                          <p class="diamond">
+                            {{ item.PlannedStartDate | date: "dd/MM/yyyy" }}
+                          </p>
+                        </td>
+                        <td width="10%" text-align="left">
+                          <p class="text_overflow">
+                            {{ item.PlannedEndDate | date: "dd/MM/yyyy" }}
+                          </p>
+                        </td>
+                        <td width="10%" class="text-center">
+                          {{ item.Progress }}
+                        </td>
+                        <td width="10%" class="text-center">
+                          {{ item.Slippage }}
+                        </td>
+                        <td width="20%" class="text-center">
+                          {{ item.StatusId | projectPhase: projectPhasesList }}
+                        </td>
+                        <td width="1%" class="text-center">
+                          <button
+                            mat-icon-button
+                            color="warn"
+                            *ngIf="
+                              !item.IsLoading && !item.IsError;
+                              else loadingProjectActivityTemplate
+                            "
+                            (click)="onDeleteActivityClick(item.ActivityId)"
+                          >
+                            <i class="material-icons">
+                              delete
+                            </i>
+                          </button>
+                          <ng-template #loadingProjectActivityTemplate>
+                            <mat-spinner
+                              [diameter]="15"
+                              *ngIf="
+                                item.IsLoading && !item.IsError;
+                                else errorProjectActivityTemplate
+                              "
+                            ></mat-spinner>
+                            <ng-template #errorProjectActivityTemplate>
+                              <button mat-icon-button color="warn">
+                                <i class="material-icons">
+                                  warning
+                                </i>
+                              </button>
+                            </ng-template>
+                          </ng-template>
+                        </td>
+                        <td width="1%" class="text-center">
+                          <i
+                            *ngIf="selectedProjectActivityId == item.ActivityId"
+                            class="material-icons font-12"
+                          >
+                            arrow_forward_ios
+                          </i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- <mat-paginator
+                  [length]="voucherFilter.totalCount"
+                  [pageSize]="voucherFilter.pageSize"
+                  [pageIndex]="voucherFilter.pageIndex"
+                  [pageSizeOptions]="[5, 10, 25, 100]"
+                  (page)="pageEvent($event)"
+                >
+                </mat-paginator> -->
+
+                <ng-template #activityListLoaderTemplate>
+                  <br />
+                  <mat-spinner
+                    class="center_loader"
+                    diameter="50"
+                  ></mat-spinner>
+                </ng-template>
+              </div>
+            </div>
+          </mat-card>
+          <ng-template #filterTemplate>
+              <mat-card [ngStyle]="scrollStyles">
+                  <a
+                  class="back_arrow"
+                  (click)="filterViewFlag = !filterViewFlag"
+                >
+                  <i class="fas fa-arrow-left"></i>
+                </a>
+                <h4 class="filter_text">Advanced Filter</h4>
+                <br />
+
+                <app-project-activity-filtering [projectId]="projectId" [budgetLineList]="budgetLineList" [employeeList]="employeeList" (projectActivityListUpdate)="projectActivityListUpdate($event)"></app-project-activity-filtering>
+
+              </mat-card>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- project activity detail -->
+      <div [hidden]="!showProjectActivityDetail" class="col-sm-6">
+        <app-project-activity-phase
+          [recurringTypeList]="recurringTypeList"
+          [budgetLineList]="budgetLineList"
+          [employeeList]="employeeList"
+          [provinceSelectionList]="provinceSelectionList"
+          [districtMultiSelectList]="districtMultiSelectList"
+          [activityDetail]="activityDetail"
+          (updateActivity)="updateActivity($event)"
+          (refreshProjectSummary)="refreshProjectSummary()"
+          (updateActivityStatusId)="onUpdateActivityStatusId($event)"
+          (selectedProvinceDetailId)="onSelectedProvinceDetailId($event)"
+          [activityByIdLoader]="activityByIdLoader"
+          [projectId]="projectId"
+          [districtLoaderFlag]="districtLoaderFlag"
+          (parentActivityListRefresh)="onParentListRefrsh($event)"
+        ></app-project-activity-phase>
+      </div>
+    </div>
+  </div>
+</div>

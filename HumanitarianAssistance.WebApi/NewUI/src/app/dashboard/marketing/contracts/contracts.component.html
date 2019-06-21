@@ -1,0 +1,234 @@
+<div class="body-content">
+  <div class="container-fluid">
+    <!-- modal -->
+
+    <div class="row">
+      <div [class]="colsm6">
+        <mat-card [ngStyle]="scrollStyles">
+          <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':display}">
+            <!-- modal-dialog -->
+            <div class="modal-dialog modal-filter" role="document">
+              <!-- modal-content -->
+              <div class="modal-content">
+
+                <!-- modal-body -->
+                <div class="modal-body">
+                  <button type="button" class="close" aria-label="Close" (click)="closeModalDialog()"><span aria-hidden="true">&times;</span></button>
+                  <label>Contracts</label> &nbsp; &nbsp;<i (click)="RefreshFilters()" class="fa fa-refresh"></i>
+                  <form [formGroup]="filtersForm">
+                      <mat-form-field class="example-full-width">
+                    <input matInput (change)="onChange('contractId',contractIds.value)" #contractIds name="contractId"
+                      formControlName="contractId" placeholder="Search By Id" />
+                      </mat-form-field>
+                    <br>
+                    <div class="row">
+                      <div class="col-sm-6">
+                          <mat-form-field class="example-full-width">
+                        <input matInput #unitRate (change)="onChange('unitRate',unitRate.value)" appNumberOnly="true"
+                          formControlName="unitRate" matInput placeholder="Unit Rate"/>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-sm-6">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Filter Options</mat-label>
+                              <mat-select  #filterType (selectionChange)="onChange('filterType',filterType.value)" formControlName="filterType"
+                              placeholder="Filter">
+                                <mat-option *ngFor="let food of filters" [value]="food.Value">
+                                    {{food.Value}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                        <!-- <small>Filter Options</small> -->
+                        <!-- <mat-form-field class="example-full-width">
+                          <mat-label>Filter Options</mat-label>
+                          <mat-select [value]="filtersForm.filterType"  [(ngModel)]="filtersForm.filterType"
+                            (selectionChange)="onChange('filterType', $event.value)">
+                            <mat-option *ngFor="let item of filters" [value]="item.Value">
+                              {{item.Value}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field> -->
+                        <!-- <select #filterType (change)="onChange('filterType',filterType.value)" formControlName="filterType"
+                          placeholder="Filter">
+                          <option [ngValue]="undefined" disabled selected>Filter Options</option>
+                          <option *ngFor="let food of filters" [value]="food.Value">
+                            {{food.Value}}
+                          </option>
+                        </select> -->
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-sm-6">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Currency</mat-label>
+                              <mat-select  #currency (selectionChange)="onChange('currency',currency.value)" formControlName="currency"
+                              placeholder="Currency">
+                                <mat-option *ngFor="let food of currencies" [value]="food.CurrencyId">
+                                    {{food.CurrencyCode}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                        <!-- <small>Currency</small> -->
+                        <!-- <select #currency (change)="onChange('currency',currency.value)" formControlName="currency"
+                          placeholder="Currency">
+                          <option [ngValue]="undefined" disabled selected>Select Currency</option>
+                          <option *ngFor="let food of currencies" [value]="food.CurrencyId">
+                            {{food.CurrencyCode}}</option>
+                        </select> -->
+                      </div>
+                      <div class="col-sm-6">
+                        <small>Approved</small>
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <mat-radio-group name="isApproved" formControlName="isApproved">
+                              <mat-radio-button (change)="onChange('Approved', $event.value)" *ngFor="let lang of ApprovalModel"
+                                [value]="lang.Value">
+                                {{lang.disp}}</mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                      <div class="col-sm-6">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Client</mat-label>
+                              <mat-select  (selectionChange)="onChange('clientName',clientNameId.value)" placeholder="Client" #clientNameId
+                              formControlName="clientName">
+                                <mat-option *ngFor="let contract of clientList" [value]="contract.ClientName">
+                                    {{contract.ClientName}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                        <!-- <small>Client</small>
+                        <select (change)="onChange('clientName',clientNameId.value)" placeholder="Client" #clientNameId
+                          formControlName="clientName">
+                          <option [ngValue]="undefined" disabled selected="selected">Select Client</option>
+                          <option *ngFor="let contract of clientList" [value]="contract.ClientName">{{contract.ClientName}}</option>
+                        </select> -->
+                      </div>
+                    </div>
+                    <br />
+                    <div class="row text-center">
+                      <mat-button-toggle-group (change)="onChange('activity',$event.value)" #group="matButtonToggleGroup"
+                        formControlName="activity">
+                        <mat-button-toggle *ngFor="let item of activities;" [value]="item.ActivityTypeId">{{item.ActivityName}}</mat-button-toggle>
+                      </mat-button-toggle-group>
+                    </div>
+                    <!-- <br>
+                    <div class="filter-btn-wrap">
+                      <button type="submit">Filter</button>
+                    </div>
+                    <br> -->
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-details">
+              <div class="row">
+                  <div class="col-sm-10">
+                      <h4 class="main_heading">
+                          Contracts
+                       </h4>
+                  </div>
+                  <div class="col-sm-2">
+                      <button (click)="openModalFilter()"
+                      mat-icon-button
+                      class="margin_left_10 pull-right"
+                    >
+                      <mat-icon>settings</mat-icon>
+                    </button>
+                  </div>
+    
+                </div>
+            <!-- <h4 class="main_heading bdr_heading">Contracts <a (click)="openModalFilter()"><i class="fa fa-cog black_icon pull-right"></i></a></h4> -->
+          </div>
+          <div class="row">
+              <div
+              *ngIf="contractListLoaderFlag; else contractListTemplate"
+              class="col-sm-12"
+            ><br/><br/><br/>
+              <mat-spinner
+                class="center_loader"
+                diameter="50"
+              ></mat-spinner>
+            </div>
+            <ng-template #contractListTemplate>
+                <div class="col-sm-12">
+                    <div class="responsive_table-responsive">
+                        <table class="table table-bordered">
+                          <tbody>
+                            <tr>
+                              <td width="1%">
+                                <p class="width_8"></p>
+                              </td>
+                              <td width="5%"></td>
+                              <td width="40%"><a class="add_new" (click)="onItemClick(0)" *ngIf="isEditingAllowed">Add New....</a></td>
+                              <td width="20%"></td>
+                              <td width="20%"></td>
+                              <td width="5%"></td>
+                              <td width="1%"></td>
+                            </tr>
+                            <tr *ngFor="let db of contractsList" (click)="onItemClick(db.ContractId)" [ngClass]="{'selected': selectedRowID === db.ContractId}">
+                              <td width="1%">
+                                <p class="width_8"></p>
+                              </td>
+                              <td class="grey-text" width="5%">{{db.ContractCode}}/{{db.ContractId}}</td>
+                              <td width="40%" text-align="left">
+                                <p class="diamond">{{db.ClientName}}</p>
+                              </td>
+                              <td class="text-right" width="10%">{{db.UnitRate}}</td>
+                              <td class="text-left" width="30%">
+                                <!-- <p class="diamond">{{db.Medium}}</p> -->
+                              </td>
+                              <td class="" width="7"><a class="blue-circle "><i class="far fa-bell"></i></a></td>
+                              <td width="1%" class="text-center"><i *ngIf="selectedRowID === db.ContractId" class="material-icons font-12"> arrow_forward_ios </i></td>
+                            </tr>
+
+                            <!-- <tr *ngFor="let db of contractsList" (click)="onItemClick(db.ContractId)">
+                              <td width="5%">
+                                <p>{{db.ContractCode}}</p>
+                              </td>
+                              <td width="20%">
+                                <p>{{db.ClientName}}</p>
+                              </td>
+                              <td width="20%">
+                                <p>{{db.UnitRate}}</p>
+                              </td>
+                              <td width="40%">
+                                <p>{{db.Medium}}</p>
+                              </td>
+                            </tr> -->
+                          </tbody>
+                        </table>
+                        <mat-paginator
+                        [length]="length"
+                        [pageSize]="pageSize"
+                        [pageIndex]="pageIndex"
+                        [pageSizeOptions]="pageSizeOptions"
+                        (page)="pagination($event)"
+                      >
+                      </mat-paginator>
+                      </div>
+                </div>
+            </ng-template>
+          </div>
+        </mat-card>
+      </div>
+      <div [hidden]="!showContractDetail" class="col-sm-6">
+        <app-contract-details [contractId]="contractId" (updateContractList)="updateContractListById($event)"
+          (addContractList)="addContractListById($event)" (deleteContract)="onContractDeleted($event)"
+          (hideDetailPanel)="hideDetailPanel($event)" [isEditingAllowed]="isEditingAllowed"></app-contract-details>
+      </div>
+      <!-- <div [ngStyle]="{'display':!showContractDetail ? 'none' : 'block'}" class="col-sm-6">
+          <app-contract-details (GetContract)="GetContractList($event)" (deleteContract)="onContractDeleted($event)" [type]="type" [contractId]="contractId"></app-contract-details>
+    </div> -->
+    </div>
+  </div>
+
+  <!-- <button type="button" class="btn btn-info btn-lg" (click)="openModalDialog()">Open Login Modal Dialog!</button> -->
+  <div class="backdrop modal-style" [ngStyle]="{'display':display}"></div>

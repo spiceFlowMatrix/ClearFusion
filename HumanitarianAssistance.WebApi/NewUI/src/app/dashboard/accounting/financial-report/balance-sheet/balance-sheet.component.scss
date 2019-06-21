@@ -1,0 +1,25 @@
+.font_smallcaps_12 {
+    text-transform: uppercase;
+    font-variant-caps: all-small-caps;
+}
+
+.filtersPopup {
+    position:absolute; top:35px; right: 60px;
+    background-color: white;
+    padding: 12px;
+    max-width: 235px;
+    border: 1px solid silver;
+    z-index: 100;
+}
+
+
+
+
+  
+  .settings-full-width {
+    width: 100%;
+  }
+  
+  .settings-full-width:nth-last-child() {
+    margin-bottom: 10px;
+  }

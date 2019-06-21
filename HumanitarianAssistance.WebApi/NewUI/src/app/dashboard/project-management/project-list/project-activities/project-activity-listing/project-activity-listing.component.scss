@@ -1,0 +1,20 @@
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: #00d4b1;
+}
+.mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-done, .mat-step-header .mat-step-icon-state-edit{
+  background-color: #00d4b1 !important;
+}
+.mat-step-icon-state-edit .mat-step-icon{
+  background-color: #00d4b1 !important;
+}
+
+.back_arrow {
+  color: #212121;
+  font-size: 14px;
+  float: left;
+  padding-right: 20px;
+}
+.filter_text {
+  margin-top: 0;
+  margin-bottom: 0;
+}

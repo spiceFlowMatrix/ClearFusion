@@ -282,7 +282,8 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             APIResponse response = new APIResponse();
             try
             {
-                var employeeExist = await _uow.GetDbContext().HiringRequestCandidates.FirstOrDefaultAsync(x => x.EmployeeID == model.EmployeeID && x.IsDeleted == false);
+                var employeeExist = await _uow.GetDbContext().HiringRequestCandidates
+                                              .FirstOrDefaultAsync(x => x.EmployeeID == model.EmployeeID && x.ProjectHiringRequestDetail.ProjectId == model.ProjectId && x.IsDeleted == false);
                 if (employeeExist == null)
                 {
                     HiringRequestCandidates candidateDeatil = new HiringRequestCandidates()
@@ -299,7 +300,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                 }
                 else
                 {
-                    throw new Exception("Candidate already exists");
+                    throw new Exception("Candidate already exists with a job in project");
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

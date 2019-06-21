@@ -1,0 +1,227 @@
+<div class="voucher-listing-main">
+  <div class="body-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div [ngStyle]="scrollStyles" [class]="colsm6">
+          <as-split direction="horizontal">
+            <as-split-area [size]="listingScreenWidth">
+              <div #voucherListing>
+                <mat-card [ngStyle]="scrollStyles">
+                  <div>
+                    <button
+                      mat-raised-button
+                      color="accent"
+                      (click)="openAddVoucherDialog()"
+                      *ngIf="isEditingAllowed"
+                    >
+                      Add
+                    </button>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-form-field class="example-form-field">
+                          <input
+                            matInput
+                            placeholder="Search"
+                            [(ngModel)]="voucherFilter.FilterValue"
+                            (keyup.enter)="
+                              voucherFilter.FilterValue != ''
+                                ? onFilterApplied()
+                                : null
+                            "
+                          />
+                        </mat-form-field>
+                        <!-- Apply -->
+                        &nbsp;
+                        <button
+                          mat-raised-button
+                          color="accent"
+                          class="margin_left_10"
+                          [disabled]="voucherFilter.FilterValue === ''"
+                          (click)="onFilterApplied()"
+                        >
+                          Apply
+                        </button>
+                        &nbsp;
+                        <!-- Reset -->
+                        <button mat-raised-button (click)="onFilterReset()">
+                          Reset
+                        </button>
+
+                        <!-- Filter -->
+                        <button
+                          mat-icon-button
+                          class="margin_left_10"
+                          [matMenuTriggerFor]="menu"
+                        >
+                          <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                          <button
+                            mat-menu-item
+                            (click)="$event.stopPropagation()"
+                          >
+                            <mat-checkbox
+                              [(ngModel)]="voucherFilter.VoucherNoFlag"
+                              >Voucher No</mat-checkbox
+                            >
+                          </button>
+                          <button
+                            mat-menu-item
+                            (click)="$event.stopPropagation()"
+                          >
+                            <mat-checkbox
+                              [(ngModel)]="voucherFilter.ReferenceNoFlag"
+                              >Reference No</mat-checkbox
+                            >
+                          </button>
+                          <button
+                            mat-menu-item
+                            (click)="$event.stopPropagation()"
+                          >
+                            <mat-checkbox
+                              [(ngModel)]="voucherFilter.DescriptionFlag"
+                              >Description</mat-checkbox
+                            >
+                          </button>
+                          <button
+                            mat-menu-item
+                            (click)="$event.stopPropagation()"
+                          >
+                            <mat-checkbox
+                              [(ngModel)]="voucherFilter.JournalNameFlag"
+                              >Journal Name</mat-checkbox
+                            >
+                          </button>
+                          <button
+                            mat-menu-item
+                            (click)="$event.stopPropagation()"
+                          >
+                            <mat-checkbox [(ngModel)]="voucherFilter.DateFlag"
+                              >Date</mat-checkbox
+                            >
+                          </button>
+                        </mat-menu>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-12">
+                        {{ voucherFilter.totalCount }} Vouchers
+                      </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                      <div
+                        *ngIf="voucherListLoaderFlag; else voucherListTemplate"
+                        class="col-sm-12"
+                      >
+                        <mat-spinner
+                          class="center_loader"
+                          diameter="50"
+                        ></mat-spinner>
+                      </div>
+                      <ng-template #voucherListTemplate>
+                        <div class="col-sm-12">
+                          <div class="responsive_table-responsive">
+                            <table class="table table-bordered">
+                              <tbody>
+                                <tr>
+                                  <td width="1%"><p class="width_8"></p></td>
+                                  <td width="5%" class="text-center">
+                                    Voucher No
+                                  </td>
+                                  <td width="20%" class="text-left">
+                                    Reference No
+                                  </td>
+                                  <td width="40%" class="text-left">
+                                    Description
+                                  </td>
+                                  <td width="20%" class="text-center">
+                                    Journal Name
+                                  </td>
+                                  <td width="5%" class="text-center">
+                                    Voucher Date
+                                  </td>
+                                  <td width="1%" class="text-center"></td>
+                                </tr>
+                                <tr
+                                  (click)="onItemClick(item.VoucherNo)"
+                                  *ngFor="let item of voucherList"
+                                  [ngClass]="{
+                                    selected:
+                                      selectedVoucherId == item.VoucherNo
+                                  }"
+                                >
+                                  <td width="1%"><p class="width_8"></p></td>
+                                  <td width="5%" class="grey-text">
+                                    {{ item.VoucherNo }}
+                                  </td>
+                                  <td width="20%" text-align="left">
+                                    <p class="diamond">
+                                      {{ item.ReferenceNo }}
+                                    </p>
+                                  </td>
+                                  <td width="40%" text-align="left">
+                                    <p class="text_overflow">
+                                      {{ item.Description }}
+                                    </p>
+                                  </td>
+                                  <td width="20%" class="text-center">
+                                    {{ item.JournalName }}
+                                  </td>
+                                  <td width="5%" class="text-center">
+                                    {{ item.VoucherDate | date: "dd/MM/yyyy" }}
+                                  </td>
+                                  <td width="1%" class="text-center">
+                                    <i
+                                      *ngIf="
+                                        selectedVoucherId == item.VoucherNo
+                                      "
+                                      class="material-icons font-12"
+                                    >
+                                      arrow_forward_ios
+                                    </i>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <mat-paginator
+                            [length]="voucherFilter.totalCount"
+                            [pageSize]="voucherFilter.pageSize"
+                            [pageIndex]="voucherFilter.pageIndex"
+                            [pageSizeOptions]="[5, 10, 25, 100]"
+                            (page)="pageEvent($event)"
+                          >
+                          </mat-paginator>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
+                </mat-card>
+              </div>
+            </as-split-area>
+
+            <!-- voucher detail -->
+            <as-split-area [size]="detailScreenWidth" [hidden]="!showVoucherDetail">
+              <div>
+                <app-voucher-details
+                  [voucherId]="selectedVoucherId"
+                  [journalList]="journalList"
+                  [currencyList]="currencyList"
+                  [officeList]="officeList"
+                  [projectList]="projectList"
+                  [voucherTypeList]="voucherTypeList"
+                  [inputLevelAccountList]="inputLevelAccountList"
+                  (voucherDetailChanged)="voucherDetailChangedEmit($event)"
+                  [isEditingAllowed]="isEditingAllowed"
+                ></app-voucher-details>
+              </div>
+              </as-split-area>
+          </as-split>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

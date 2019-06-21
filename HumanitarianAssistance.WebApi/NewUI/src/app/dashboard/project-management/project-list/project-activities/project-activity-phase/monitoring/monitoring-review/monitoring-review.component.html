@@ -1,0 +1,151 @@
+<div class="project-monitoring-main">
+  <div class="row" mat-dialog-title>
+    <div class="col-sm-8" style="font-size: large;">
+      Monitoring Review
+    </div>
+    <div class="col-sm-4">
+      <!-- <button mat-raised-button color="primary" (click)="addMonitoringIndicator()">
+        Add Indicator
+      </button> -->
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="addMonitoringIndicator()"
+        [disabled]="filterLoaderFlag"
+      >
+        Add Indicator
+      </button>
+    </div>
+  </div>
+  <hr>
+  <div mat-dialog-content>
+    <div class="row">
+      <div class="col-sm-6" style="font-size: large;">
+        Indicators
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="monitoringReviewList.MonitoringDate" placeholder="monitoring date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <br />
+    <div *ngFor="let item of monitoringReviewList.MonitoringReviewModel; let i=index">
+      <div class="row">
+        <div class="col-sm-8">
+          <mat-form-field>
+            <mat-label>Indicator Name</mat-label>
+            <mat-select (selectionChange)="getQuestionsList(i)" [(ngModel)]="item.ProjectIndicatorId">
+              <mat-option *ngFor="let indicator of projectIndicatorList" [value]="indicator.projectIndicatorId">
+                {{indicator.projectIndicatorName}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4" style="
+                text-align: right;
+            ">
+          <mat-icon class="icon_cursor small_icon text-danger tp_15 icon_width" (click)="onDelete(i)">
+            delete
+          </mat-icon>
+        </div>
+      </div>
+
+      <br />
+
+      <div class="row">
+        <div class="col-sm-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Question</th>
+                <th>Verification</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let question of item.IndicatorQuestions">
+                <td>
+                  {{ question.Question }}
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Source Name</mat-label>
+                    <mat-select [(ngModel)]="question.Verification">
+                      <mat-option *ngFor="let verification of monitoringVerificationSource" [value]="verification.name">
+                        {{verification.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Score</mat-label>
+                    <mat-select [(ngModel)]="question.Score">
+                      <mat-option *ngFor="let score of monitoringScore" [value]="score.score">
+                        {{score.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <mat-form-field class="example-full-width">
+          <textarea matInput placeholder="Positive Points" [(ngModel)]="monitoringReviewList.PositivePoints"
+            matTextareaAutosize matAutosizeMinRows="4"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-12">
+        <mat-form-field class="example-full-width">
+          <textarea matInput placeholder="Negative Points" [(ngModel)]="monitoringReviewList.NegativePoints"
+            matTextareaAutosize matAutosizeMinRows="4"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-12">
+        <mat-form-field class="example-full-width">
+          <textarea matInput placeholder="Recommendations" [(ngModel)]="monitoringReviewList.Recommendations"
+            matTextareaAutosize matAutosizeMinRows="4"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-12">
+        <mat-form-field class="example-full-width">
+          <textarea matInput placeholder="Remarks" [(ngModel)]="monitoringReviewList.Remarks" matTextareaAutosize
+            matAutosizeMinRows="4"></textarea>
+        </mat-form-field>
+      </div>
+
+
+
+
+
+    </div>
+  </div>
+  <div mat-dialog-actions class="pull-right">
+    <button mat-raised-button (click)="onCancelPopup()">
+      Cancel
+    </button>
+    <button
+    mat-raised-button
+    color="primary"
+    (click)="saveMonitoringReview()"
+    [disabled]="filterLoaderFlag"
+  >
+    <span
+      class="pull-left spinner_center margin_top_10"
+      *ngIf="filterLoaderFlag"
+    >
+      <mat-spinner [diameter]="15"></mat-spinner>
+    </span>
+    Save
+  </button>
+  </div>
+</div>

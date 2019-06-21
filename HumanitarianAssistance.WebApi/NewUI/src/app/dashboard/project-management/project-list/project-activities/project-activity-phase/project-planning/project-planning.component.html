@@ -1,0 +1,179 @@
+<div class="project-planning-main">
+  <mat-card>
+    <ng-template #activityListLoaderTemplate>
+      <br />
+      <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+    </ng-template>
+
+    <div  *ngIf="!activityListLoader; else activityListLoaderTemplate">
+      <div class="row">
+
+        <div class="col-sm-8 font_large">
+          Activity Details
+        </div>
+
+        <ng-container *ngIf="addUploadDocumentPermission">
+        <div class="col-sm-3 pull-right">
+          <button mat-raised-button color="primary" (click)="openDocumentsDialog()">
+            Documents
+          </button>
+        </div>
+      </ng-container>
+
+      </div>
+      <hr />
+
+      <form class="example-form" [formGroup]="projectActivityForm">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-lg-12 col-sm-12">
+                <mat-form-field class="example-full-width">
+                  <textarea matInput formControlName="Description" placeholder="Activity Description"
+                    matTextareaAutosize matAutosizeMinRows="5" matAutosizeMaxRows="7"></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-6 col-sm-6">
+                <mat-form-field>
+                  <input matInput formControlName="ActivityStartDate" [matDatepicker]="planningStartDatepicker"
+                    placeholder="Start Date" />
+                  <mat-datepicker-toggle matSuffix [for]="planningStartDatepicker"></mat-datepicker-toggle>
+                  <mat-datepicker color="primary" #planningStartDatepicker></mat-datepicker>
+                  <!-- <mat-hint>This is the planned start date</mat-hint> -->
+                </mat-form-field>
+              </div>
+              <div class="col-lg-6 col-sm-6">
+                <mat-form-field>
+                  <input matInput [min]="activityStartDate" formControlName="ActivityEndDate"
+                    [matDatepicker]="planningEndDatepicker" placeholder="End Date" />
+                  <mat-datepicker-toggle matSuffix [for]="planningEndDatepicker"></mat-datepicker-toggle>
+                  <mat-datepicker color="primary" #planningEndDatepicker></mat-datepicker>
+                  <!-- <mat-hint>This is the planned end date</mat-hint> -->
+                </mat-form-field>
+              </div>
+              <div class="col-lg-6 col-sm-6">
+                  <mat-form-field>
+                    <input matInput formControlName="ActualStartDate" [matDatepicker]="planningActualStartDatepicker"
+                      placeholder="Actual Start Date" />
+                    <mat-datepicker-toggle matSuffix [for]="planningActualStartDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker color="primary" #planningActualStartDatepicker></mat-datepicker>
+                    <!-- <mat-hint>This is the planned start date</mat-hint> -->
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                  <mat-form-field>
+                    <input matInput [min]="activityActualStartdate" formControlName="ActualEndDate"
+                      [matDatepicker]="planningActualEndDatepicker" placeholder="Actual End Date" />
+                    <mat-datepicker-toggle matSuffix [for]="planningActualEndDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker color="primary" #planningActualEndDatepicker></mat-datepicker>
+                    <!-- <mat-hint>This is the planned end date</mat-hint> -->
+                  </mat-form-field>
+                </div>
+
+              <div class="col-lg-6 col-sm-6">
+                <mat-form-field class="example-full-width">
+                  <mat-select placeholder="Budget Line" formControlName="BudgetLine">
+                    <mat-option *ngFor="let item of budgetLineList" [value]="item.BudgetLineId">
+                      {{ item.BudgetName }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-6 col-sm-6">
+                <mat-form-field class="example-full-width">
+                  <mat-select placeholder="Assignee" formControlName="Assignee">
+                    <mat-option *ngFor="let item of employeeList" [value]="item.EmployeeId">
+                      {{ item.EmployeeName }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-6 col-sm-6">
+                <!-- <mat-form-field class="example-full-width">
+                <mat-select placeholder="Location" formControlName="Location">
+                  <mat-option
+                    *ngFor="let item of officeList"
+                    [value]="item.OfficeId"
+                  >
+                    {{ item.OfficeName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field> -->
+
+                <mat-form-field class="example-full-width">
+                  <mat-select placeholder="Select Province" formControlName="ProvinceId"
+                    (selectionChange)="onProvinceDetailChange($event)" multiple>
+                    <mat-option *ngFor="let item of provinceSelectionList" [value]="item.value">{{ item.label }}
+                    </mat-option>
+                  </mat-select>
+
+                   <!-- <mat-spinner class="center_loader custom_load" *ngIf="provinceDistrictFlag;" diameter="20">
+                </mat-spinner> -->
+                </mat-form-field>
+              </div>
+              <div class="col-lg-6 col-sm-6">
+                <mat-form-field class="example-full-width">
+                  <mat-select placeholder="Select District" formControlName="DistrictID" multiple>
+                    <mat-option *ngFor="let item of districtMultiSelectList" [value]="item.value">{{ item.label }}
+                    </mat-option>
+                  </mat-select>
+                 <mat-spinner class="center_loader custom_load" *ngIf="districtLoaderFlag" diameter="20">
+              </mat-spinner>
+                </mat-form-field>
+              </div>
+
+
+
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-sm-offset-3 text-center">
+                <span class="font_large">Recurring</span>
+                <mat-slide-toggle formControlName="Recurring" class="padding_left_10" color="primary" [checked]="true">
+                </mat-slide-toggle>
+              </div>
+
+              <div *ngIf="recurringFlag" class="col-sm-6 col-sm-offset-3 text-center">
+                <mat-form-field class="example-full-width">
+                  <input matInput formControlName="RecurringCount" placeholder="Recur count" type="number" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="recurringFlag" class="col-sm-10 col-sm-offset-1 text-center">
+                <mat-radio-group class="example-radio-group" formControlName="RecurringType">
+                  <mat-radio-button class="example-radio-button" *ngFor="let item of recurringTypeList"
+                    [value]="item.Id">
+                    {{ item.Name }}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- <div class="row">
+        <div class="col-sm-12">
+          Progress 25%
+        </div>
+      </div> -->
+      <br />
+
+      <ng-container *ngIf="addExtensionPermission">
+        <div class="row">
+          <div class="col-sm-2">
+            <h4>Extensions</h4>
+          </div>
+          <div class="col-sm-3">
+            <button mat-icon-button (click)="onExtensionClicked()">
+              <mat-icon aria-label="add">add</mat-icon>
+            </button>
+          </div>
+          <div class="col-sm-12">
+            <lib-listing-delete [tableHeaderList]="tableHeaderList" [tableContentList]="extensionList"
+              (deleteConfirm)="deleteExtension($event)"></lib-listing-delete>
+          </div>
+        </div>
+      </ng-container>
+
+    </div>
+  </mat-card>
+</div>

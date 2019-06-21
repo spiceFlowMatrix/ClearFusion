@@ -1,0 +1,13 @@
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+
+namespace HumanitarianAssistance.Controllers {
+    [Route("api/Value/[Action]")]
+    public class ValueController : Controller {
+        [HttpGet]
+        public async Task<string> Get () {
+            return "Value";
+        }
+
+    }
+}

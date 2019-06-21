@@ -1,0 +1,220 @@
+<div class="hirimg-request-detail-main">
+  <div class="row">
+    <div class="col-sm-6">
+      <span class="font_x_large">Hiring Request Details</span> &nbsp;
+    </div>
+    <div class="col-sm-6">
+      <button mat-raised-button color="primary" (click)="onCompleteHiringRequestClicked()">
+        Complete Request
+      </button> &nbsp;
+      <button mat-raised-button color="primary" (click)="onEditHiringRequestClicked()">
+        Edit
+      </button>
+      <br />
+      <br />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12" *ngIf="hiringReuestDetailLoader; else hiringRequestTemplate">
+      <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+    </div>
+    <ng-template #hiringRequestTemplate>
+      <mat-card [ngStyle]="scrollStyles">
+        <form class="example-form" [formGroup]="hiringRequestForm">
+          <div mat-dialog-content>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-lg-12 col-sm-12">
+                    <!-- {{ hiringRequestDetail.HiringRequestId/hiringRequestDetail.HiringRequestCode}} -->
+                  </div>
+                  <div class="col-lg-12 col-sm-12">
+                    <mat-form-field class="example-full-width">
+                      <textarea matInput name="Description" formControlName="Description" placeholder="Description"
+                        matTextareaAutosize matAutosizeMinRows="5" matAutosizeMaxRows="7" readonly="true"></textarea>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <input matInput formControlName="Position" placeholder="Position" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Profession" formControlName="ProfessionId">
+                        <mat-option *ngFor="let item of professionList" [value]="item.ProfessionId">
+                          {{ item.ProfessionName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Budget Line" formControlName="BudgetLineId" readonly>
+                        <mat-option *ngFor="let item of budgetLineList" [value]="item.BudgetLineId">
+                          {{ item.BudgetName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <input matInput formControlName="TotalVacancies" placeholder="Total Vacancies" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Office" formControlName="OfficeId" readonly>
+                        <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
+                          {{ item.OfficeName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <input matInput formControlName="FilledVacancies" placeholder="Filled Vacancies" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <input matInput formControlName="BasicPay" placeholder="BasicPay" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Job Grade" formControlName="GradeId" readonly>
+                        <mat-option *ngFor="let item of jobGradeList" [value]="item.GradeId">
+                          {{ item.GradeName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-sm-12">
+            <button mat-raised-button color="primary" (click)="onAddCandidateClicked()">
+              Add Candidate
+            </button>
+
+            <div class="col-sm-12 responsive_table-responsive">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td width="1%">
+                      <p class="width_8"></p>
+                    </td>
+                    <td width="15%">Code/Id</td>
+                    <td width="20%">Full Name</td>
+                    <td width="15%">Gender</td>
+                    <td width="20%">Interview </td>
+                    <td width="15%">Current Status</td>
+                    <td width="15%" class="text-right"></td>
+                  </tr>
+                  <tr *ngFor="let item of candidateList">
+                    <td width="1%">
+                      <p class="width_8"></p>
+                    </td>
+                    <td width="15%">{{ item.EmployeeID }}/{{ item.EmployeeCode }} </td>
+                    <td width="20%">{{ item.EmployeeName }}</td>
+                    <td width="20%">{{ item.Gender }} </td>
+                    <td width="15%"> None
+                      <a *ngIf="(item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate"
+                        (click)="seeCandidateDetail('dashboard/hr/interview-form')">See Interview Details</a>
+                    </td>
+                    <td width="15%">{{ item.EmployeeTypeName }}
+                      <a *ngIf="item.EmployeeTypeId == employeeType.Candidate &&
+                      !((item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate) &&
+                      !(item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == true || interviewCompleteCheckFlag == true)"
+                        (click)="onAddInterviewCandidate(item)"> Interview Candidate</a>
+                    </td>
+                    <td width="20%" class="text-right">
+
+
+                      <span *ngIf="item.EmployeeTypeId !== employeeType.Active; else forActiveEmployeeTemplate">
+                        <span *ngIf="item.IsInterViewed">
+                          <button *ngIf="!item.IsShortListed; else selectedCandidateTemplate" mat-raised-button
+                            color="accent" pTooltip="Short List" tooltipPosition="top" aria-label="ShortList"
+                            (click)="OnShortListClick(item)">ShortList
+                          </button>
+                          <ng-template #selectedCandidateTemplate>
+                            <button mat-stroked-button
+                             *ngIf="!item.IsSelected; else selectedTemplatebutton" (click)="onSelectedCandidate(item)">
+                              <mat-icon aria-label="done">
+                                done
+                              </mat-icon>
+                              Select
+                            </button>
+                            <ng-template #selectedTemplatebutton>
+                                <button  mat-stroked-button mat-raised-button
+                                color="accent">
+                                    <mat-icon aria-label="done" >
+                                      done
+                                    </mat-icon>
+                                    Selected
+                                  </button>
+                            </ng-template>
+
+                          </ng-template>
+                        </span>
+                      </span>
+
+                      <ng-template #forActiveEmployeeTemplate>
+                        <button *ngIf="!item.IsShortListed; else selectedCandidateTemplate"
+                        mat-stroked-button (click)="onSelectedCandidate(item)">
+                          <mat-icon aria-label="done">
+                            done
+                          </mat-icon>
+                          Select
+                        </button>
+                        <ng-template #selectedTemplatebutton>
+                            <button  mat-stroked-button mat-raised-button
+                            color="accent">
+                                <mat-icon aria-label="done" >
+                                  done
+                                </mat-icon>
+                                Selected
+                              </button>
+                        </ng-template>
+
+
+                      </ng-template>
+
+
+                      <!-- <button *ngIf="((item.EmployeeTypeId == employeeType.Candidate) &&
+                                     item.IsInterViewed == true ||
+                                     interviewCompleteCheckFlag == true) || item.IsShortListed == false; else selectedCandidate" mat-raised-button
+                        color="accent" pTooltip="Short List" tooltipPosition="top" aria-label="ShortList"
+                        (click)="OnShortListClick(item)">ShortList
+
+                      </button>
+                      <ng-template #selectedCandidate>
+                        <button *ngIf="item.IsShortListed==true" mat-stroked-button pTooltip=""
+                          tooltipPosition="top" aria-label="Verify voucher" (click)="onSelectedCandidate()">
+                          <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">
+                            done
+                          </mat-icon>
+                          Select
+                        </button>
+                      </ng-template> -->
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+
+            </div>
+            <br />
+          </div>
+        </div>
+      </mat-card>
+
+    </ng-template>
+  </div>
+
+</div>
