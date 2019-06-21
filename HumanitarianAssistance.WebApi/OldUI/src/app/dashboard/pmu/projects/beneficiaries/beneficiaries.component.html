@@ -1,0 +1,140 @@
+
+<div class="row">
+  <div class="col-sm-12">
+      <div class="main-heading clearfix">
+              <h3 class="page-heading">Project Beneficiaries</h3>
+              <dx-button
+              class="button-info btn btn-default btn-green"
+              text="Back"              
+              [routerLink]="['../projects']">
+              </dx-button>           
+      </div>        
+      <dx-data-grid 
+        id="gridContainer" 
+        [dataSource]="dataSource"
+        [allowColumnReordering]="true"
+        [allowColumnResizing]="true"
+        [columnAutoWidth]="true">
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-column-chooser [enabled]="true" ></dxo-column-chooser>    
+        <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="false" [allowAdding]="true" >
+            <dxo-popup title="PMU Beneficiary Details" [showTitle]="true" [width]="700" [height]="345" [closeOnOutsideClick]="true" [position]="{ my: 'center', at: 'center', of: 'window' }">
+            </dxo-popup>
+          </dxo-editing>
+            <!-- editing -->
+            <!-- editing -->
+        <!-- <dxo-pager
+          [allowedPageSizes]="[5, 8, 15, 30]"
+          [showInfo]="true"
+          [showNavigationButtons]="true"
+          [showPageSizeSelector]="true"
+          [visible]="true">
+      </dxo-pager>  -->
+      <dxo-paging [pageSize]="7"></dxo-paging>
+      <dxo-pager [allowedPageSizes]="[5, 8, 15, 30]" [showInfo]="true" [showNavigationButtons]="true" [showPageSizeSelector]="true"
+            [visible]="true">
+      </dxo-pager>
+
+      <dxo-scrolling mode="infinite"></dxo-scrolling>
+        <dxo-filter-row 
+            [visible]="true">
+        </dxo-filter-row>
+        <dxo-header-filter 
+            [visible]="true"></dxo-header-filter>
+        <dxo-search-panel 
+            [visible]="true" 
+            [width]="240" 
+            placeholder="Search..."></dxo-search-panel>
+
+        <!-- <dxi-column dataField="SerialNo" caption="SerialNo" cellTemplate="CellTemplateSerialNo"  editorType="dxNumberBox"></dxi-column>          
+            <div *dxTemplate="let data of 'CellTemplateSerialNo'">
+                  <dx-number-box
+                        [value]=""
+                        [showSpinButtons]="true"
+                        [showClearButton]="false">
+                  </dx-number-box> 
+            </div> -->
+        <dxi-column 
+            dataField="SerialNo"                 
+            caption="Serial No"> 
+            <dxi-validation-rule type="required"></dxi-validation-rule>    
+            <dx-number-box
+                  [value]=""
+                  [showSpinButtons]="true"
+                  [showClearButton]="true">
+            </dx-number-box>     
+        </dxi-column>
+        <dxi-column 
+            dataField="Name" 
+            caption="Name">  
+            <dxi-validation-rule type="required"></dxi-validation-rule>        
+        </dxi-column>      
+      <dxi-column 
+            dataField="FName"
+            caption="F/Name">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+      <dxi-column 
+            dataField="Province"
+            caption="Province">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column> 
+      <dxi-column 
+            dataField="District"
+            caption="District">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column> 
+      <dxi-column 
+            dataField="Village"
+            caption="Village">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column> 
+      <dxi-column 
+            dataField="IDNo"
+            caption="ID#">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column> 
+      <dxi-column 
+            dataField="Age"
+            caption="Age">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column> 
+      <dxi-column dataField="Sex">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+            <dxo-lookup
+                [dataSource]="sextypes"
+                valueExpr="SexTypeId"
+                displayExpr="SexTypeName">
+            </dxo-lookup>
+      </dxi-column>
+      <dxi-column dataField="MaritalStatus">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+            <dxo-lookup
+                [dataSource]="maritalStatustypes"
+                valueExpr="maritalStatusId"
+                displayExpr="maritalStatusName">
+            </dxo-lookup>
+      </dxi-column>  
+      <dxi-column 
+            dataField="Referrer"
+            caption="Referrer">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+      <dxi-column 
+            dataField="ReferDate"
+            caption="Refer Date" dataType="date">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+      <dxi-column 
+            dataField="TypeOfCase"
+            caption="TypeOfCase">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+      <dxi-column 
+            dataField="TelephoneNo"
+            caption="Telephone No">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+    </dx-data-grid>  
+  </div>
+</div>

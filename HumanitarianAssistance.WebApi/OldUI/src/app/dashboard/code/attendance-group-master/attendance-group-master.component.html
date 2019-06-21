@@ -1,0 +1,58 @@
+<div class="main-page dv-main-pg">
+  <div class="main-attendance-group-code">
+    <div class="row" >
+      <div class="col-sm-12" >
+        <div class="main-heading clearfix">
+            <h3 class="page-heading">Attendance Group Master</h3>
+          <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="ShowPopup()">
+          </dx-button>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div>
+          <dx-data-grid id="gridContainer" [dataSource]="attendanceGroupList" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="false" (onRowUpdated)="onEditAttendanceGroup($event)" [showRowLines]="true">
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-editing mode="row" [allowUpdating]="true"></dxo-editing>
+            <dxi-column dataField="Id" [visible]="false"></dxi-column>
+            <dxi-column dataField="Name"></dxi-column>
+            <dxi-column dataField="Description"></dxi-column>
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add Attendance Group -->
+<dx-popup class="popup" [width]="500" [height]="250" [showTitle]="true" title="Add Attendance Group" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="popupAddAttendanceGroupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="onFormSubmit(attendanceGroupData)">
+      <dx-form id="form" [formData]="attendanceGroupData" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+        validationGroup="customerData">
+        <dxi-item dataField="Name">
+          <dxi-validation-rule type="required" message="Attendance group name is required">
+          </dxi-validation-rule>
+        </dxi-item>
+
+        <dxi-item dataField="Description">
+          <dxi-validation-rule type="required" message="Attendance group description is required">
+          </dxi-validation-rule>
+        </dxi-item>
+      </dx-form>
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Add" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+        </dx-button>
+        <dx-button text="Cancel" (onClick)="onCancelClick()">
+        </dx-button>
+      </div>
+    </form>
+    <ngx-loading [show]="loader" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+  </div>
+</dx-popup>

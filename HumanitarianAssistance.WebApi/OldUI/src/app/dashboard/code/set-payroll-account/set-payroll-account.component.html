@@ -1,0 +1,56 @@
+<div class="main-salary-head-code">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-heading">Set Payroll Accounts</h3>
+        <br>
+        <br>
+        <dx-button style="margin-top: 20px;" text="Save For All Employees" [disabled]="!selectedPayrollList?.length" type="success" (click)="saveSelectedPayrollHeads()"
+        *ngIf="isEditingAllowed"></dx-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <dx-data-grid id="gridContainer" [dataSource]="payrollHeadDataSource" [allowColumnReordering]="true"
+        [allowColumnResizing]="true" [columnAutoWidth]="true" (onEditorPreparing)="logEvent('onEditorPreparing',$event)"
+        (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+        (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)"
+        (onRowUpdating)="logEvent('RowUpdating',$event)" (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)"
+        (onRowRemoved)="logEvent('RowRemoved',$event)" (onSelectionChanged)="selectionChangedHandler($event)">
+        <dxo-selection [selectAllMode]="allMode" [showCheckBoxesMode]="checkBoxesMode" mode="multiple" *ngIf="isEditingAllowed"></dxo-selection>
+
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-editing mode="batch" [allowAdding]="false" [allowUpdating]="true" [allowDeleting]="false" *ngIf="isEditingAllowed"> </dxo-editing>
+
+        <dxi-column dataField="PayrollHeadId" caption="SalaryHeadId" [visible]="false"></dxi-column>
+
+        <dxi-column dataField="PayrollHeadTypeId" caption="Head Type">
+          <dxo-lookup [dataSource]="salaryHeadTypeDropdown" valueExpr="HeadTypeId" displayExpr="HeadTypeName">
+          </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="PayrollHeadName"></dxi-column>
+
+        <dxi-column dataField="Description"></dxi-column>
+
+        <dxi-column dataField="AccountNo" caption="Account">
+          <dxo-lookup [dataSource]="levelFourAccounts" valueExpr="AccountNo" displayExpr="AccountName">
+          </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="TransactionTypeId"  caption="Transaction Type" [editorOptions]="{disabled: true}">
+          <dxo-lookup [dataSource]="transactionTypeDropdown" valueExpr="TransactionTypeId" displayExpr="TransactionTypeName">
+          </dxo-lookup>
+        </dxi-column>
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+      </dx-data-grid>
+    </div>
+  </div>
+
+  <ngx-loading [show]="savingPayrollHead"></ngx-loading>
+</div>

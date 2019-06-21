@@ -1,0 +1,9 @@
+<app-header></app-header>
+<section class="wrapper dv-custom-nw">
+    <app-sidebar [toggle]="toggleSide"></app-sidebar>
+    <div class="right-side-wrap container-fluid">
+        <router-outlet></router-outlet>
+    </div>
+</section>
+
+<ngx-loading [show]="LoaderFlag" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>

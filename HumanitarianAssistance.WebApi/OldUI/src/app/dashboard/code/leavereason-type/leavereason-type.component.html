@@ -1,0 +1,55 @@
+<div class="leavereason-type">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="main-heading clearfix">
+                <h3 class="page-heading">Leave Type</h3>
+                <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showPopup()" *ngIf="isEditingAllowed"></dx-button>
+            </div>
+            <div>
+                <dx-data-grid id="gridContainer" [dataSource]="leavereasondt" [allowColumnReordering]="true" [allowColumnResizing]="true" [showRowLines]="true">
+                    <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+                    <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+                    <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+                    <dxo-header-filter [visible]="true">
+                    </dxo-header-filter>
+                    <dxo-filter-row [visible]="showFilterRow">
+                    </dxo-filter-row>
+                    <dxi-column dataField="LeaveReasonId"></dxi-column>
+                    <dxi-column dataField="ReasonName"></dxi-column>
+                    <dxi-column dataField="Unit"></dxi-column>
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+                    <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
+                    <div *dxTemplate="let data of 'CellTemplateEdit'">
+                        <a href="javascript:void()" (click)="GetLeaveReasonDetailById(data)">Edit</a>
+                    </div>
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+</div>
+
+<dx-popup class="popup" [width]="600" [height]="250" [showTitle]="true" title="Add/Edit Leave Reason" [dragEnabled]="false"
+    [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+    <div *dxTemplate="let data of 'content'">
+        <form action="your-action" (submit)="onFormSubmit(leavereasondata)">
+            <dx-form id="form" [formData]="leavereasondata" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                validationGroup="customerData">
+                <dxi-item dataField="ReasonName">
+                    <dxi-validation-rule type="required" message="Reason Name is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Unit">
+                    <dxi-validation-rule type="required" message="Unit is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+            </dx-form>
+            <br />
+            <div class="btn-grp-wrap">
+                <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                <dx-button text="Cancel" (onClick)="HidePopup()"></dx-button>
+            </div>
+        </form>
+        <ngx-loading [show]="leaveReasonPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+    </div>
+</dx-popup>

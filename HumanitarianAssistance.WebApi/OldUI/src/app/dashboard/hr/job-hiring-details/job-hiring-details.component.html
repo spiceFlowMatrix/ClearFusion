@@ -1,0 +1,105 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="main-heading clearfix">
+      <h3 class="page-heading">Job Hiring Details</h3>
+      <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showHideAddJobHiringPopup()" 
+      *ngIf="isEditingAllowed"></dx-button>
+    </div>
+    <div>
+      <dx-data-grid id="gridContainer" [dataSource]="jobHiringDetails" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" (onRowUpdating)="logEvent('onRowUpdating',$event)">
+
+        <dxo-editing mode="popup" [allowUpdating]="true" 
+        *ngIf="isEditingAllowed">
+          <dxo-popup title="Job Hiring" [showTitle]="true" [width]="700" [height]="345" [dragEnabled]="false" [closeOnOutsideClick]="true">
+          </dxo-popup>
+        </dxo-editing>
+
+        <dxo-header-filter [visible]="true"> </dxo-header-filter>
+        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+
+        <dxi-column dataField="JobCode" [editorOptions]="{readOnly: true}"></dxi-column>
+        <dxi-column dataField="JobDescription"></dxi-column>
+        <dxi-column dataField="OfficeId" caption="Office Name" [width]="160">
+          <dxo-lookup [dataSource]="officeTypeDropdown" valueExpr="OfficeId" displayExpr="OfficeName">
+          </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="ProfessionId" caption="Profession">
+          <dxo-lookup [dataSource]="professionTypeDropdown" valueExpr="ProfessionId" displayExpr="ProfessionName">
+          </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="GradeId" caption="Grade" [width]="150">
+          <dxo-lookup [dataSource]="jobGradeTypeDropdown" valueExpr="GradeId" displayExpr="GradeName">
+          </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="Unit" caption="Vacancies" [width]="120"></dxi-column>
+        <dxi-column dataField="ApprovedInterviews" caption="Approved Interviews" [width]="120" [editorOptions]="{readOnly: true }"></dxi-column>
+
+
+        <dxi-column dataField="IsActive" caption="Active" [width]="90"></dxi-column>
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+      </dx-data-grid>
+    </div>
+  </div>
+</div>
+
+<!-- Add Job Hiring Details -->
+<dx-popup class="popup" [width]="600" [height]="510" [showTitle]="true" title="Job Hiring" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="popupAddJobHiringVisible">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view [height]="460" showScrollbar="always" direction="both">
+      <form action="your-action" (submit)="onFormSubmit('addJobHiringDetails',jobHiringForm)">
+        <dx-form id="form" [formData]="jobHiringForm" [colCount]="1" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="jobHiringData">
+          <dxi-item dataField="JobCode" [editorOptions]="{ width: '100%', max: 100, readOnly: true}">
+            <dxi-validation-rule type="required" message="JobCode is required">
+            </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="JobDescription" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="2">
+            <dxi-validation-rule type="required" message="Job Description is required">
+            </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="OfficeId" editorType="dxSelectBox" [editorOptions]="{
+                  dataSource: officeTypeDropdown, 
+                  value: jobHiringForm.OfficeId,
+                  displayExpr: 'OfficeName',
+                  valueExpr: 'OfficeId'}">
+            <dxo-label text="Office"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="ProfessionId" editorType="dxSelectBox" [editorOptions]="{
+                                  dataSource: professionTypeDropdown, 
+                                  value: ProfessionId,
+                                  displayExpr: 'ProfessionName',
+                                  valueExpr: 'ProfessionId'}">
+            <dxo-label text="Profession"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+
+          </dxi-item>
+          <dxi-item dataField="GradeId" editorType="dxSelectBox" [editorOptions]="{
+                                  dataSource: jobGradeTypeDropdown, 
+                                  value: GradeId,
+                                  displayExpr: 'GradeName',
+                                  valueExpr: 'GradeId'}">
+            <dxo-label text="Grade"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="Unit" editorType="dxNumberBox" [editorOptions]="{ width: '100%'}">
+            <dxo-label text="Vacancies"></dxo-label>
+            <dxi-validation-rule type="required" message="Vacancies is required"> </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="IsActive" [editorOptions]="{ width: '100%'}">
+          </dxi-item>
+        </dx-form>
+        <br />
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="jobHiringData" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (onClick)="showHideAddJobHiringPopup()"></dx-button>
+        </div>
+      </form>
+
+      <ngx-loading [show]="addJobHiringPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

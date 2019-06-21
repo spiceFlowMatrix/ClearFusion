@@ -1,0 +1,97 @@
+<div class="row">
+  <div class="col-sm-12">
+
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <h3> {{employeeSalaryDetail.EmployeeName}} </h3>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-sm-6">Employee Code : {{employeeSalaryDetail.EmployeeCode}}</div>
+      <div class="col-sm-6">Currency: AFG</div>
+
+
+
+      <div class="col-sm-12">
+        <h4> Primary Salary Heads: </h4>
+      </div>
+
+      <div class="col-sm-12">
+        <dx-data-grid id="gridContainer" [dataSource]="payrollHeadModelList" [showBorders]="true">
+          <dxi-column dataField="PayrollHeadId" [visible]='false' [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="PayrollHeadName" [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="AccountNo" [allowEditing]="false">
+            <dxo-lookup [dataSource]="levelFourAccounts" valueExpr="AccountCode" displayExpr="AccountName">
+            </dxo-lookup>
+          </dxi-column>
+          <dxi-column dataField="TransactionTypeId" [allowEditing]="false">
+            <dxo-lookup [dataSource]="transactionTypeDropdown" valueExpr="TransactionTypeId" displayExpr="TransactionTypeName">
+            </dxo-lookup>
+          </dxi-column>
+          <dxi-column dataField="Amount" [allowEditing]="false">
+          </dxi-column>
+        </dx-data-grid>
+      </div>
+
+      <br>
+
+      <div class="col-sm-12">
+        <h4> Salary Heads: </h4>
+      </div>
+
+      <div class="col-sm-12">
+        <dx-data-grid id="gridContainer" [dataSource]="employeeSalaryDetail.EmployeePayrollList" [showBorders]="true">
+          <dxi-column dataField="MonthlyAmount" [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="SalaryHead" [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="SalaryHeadType" [allowEditing]="false">
+          </dxi-column>
+          <dxi-column dataField="AccountNo" [allowEditing]="false">
+            <dxo-lookup [dataSource]="levelFourAccounts" valueExpr="AccountCode" displayExpr="AccountName">
+            </dxo-lookup>
+          </dxi-column>
+          <dxi-column dataField="TransactionTypeId" [allowEditing]="false">
+            <dxo-lookup [dataSource]="transactionTypeDropdown" valueExpr="TransactionTypeId" displayExpr="TransactionTypeName">
+            </dxo-lookup>
+          </dxi-column>
+        </dx-data-grid>
+      </div>
+
+      <div class="col-sm-12" style="margin-top: 20px;" *ngIf="referenceNo==null">
+        <div class="row" >
+          <div class="col-sm-6 text-right" >
+            <span>
+              <dx-button text='Generate Salary Voucher' (onClick)="onGenerateSalaryVoucher()"></dx-button>
+            </span>
+          </div>
+
+          <div class="col-sm-6 text-right">
+            <dx-select-box [dataSource]="journalDropdown" displayExpr="JournalName" valueExpr="JournalCode" placeholder="Select Journal"
+              [showClearButton]="true" (onValueChanged)="selectedJournal($event)">
+              <dxi-validation-rule type="required" message="Journal is required">
+              </dxi-validation-rule>
+            </dx-select-box>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 20px;">
+        <div class="col-sm-12 text-center">
+          <div class="col-sm-4" *ngIf="referenceNo!=null">
+            Salary Voucher Reference No: {{referenceNo}}
+          </div>
+          <div class="col-sm-4" *ngIf="referenceNo!=null">
+              <dx-button text="Reverse Salary Payment" (onClick)="onClickReverseSalary(voucherNo)"></dx-button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <ngx-loading [show]="empSalaryLoading"></ngx-loading>
+</div>

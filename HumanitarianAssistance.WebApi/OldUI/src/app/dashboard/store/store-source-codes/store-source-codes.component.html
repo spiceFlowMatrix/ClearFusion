@@ -1,0 +1,108 @@
+<div class="main-page dv-main-pg">
+  <div class="heading-hdr">
+    <div class="clearfix">
+      <h3 class="page-heading" [ngClass]="{'myclass' : false}">Store Source Code</h3>
+    </div>
+  </div>
+
+  <div class="main-journal-code">
+    <div class="row">
+      <br>
+      <div class="col-sm-12">
+        <div class="main-heading clearfix">
+
+          <div class="col-sm-6">
+            <dx-select-box #selectBox [dataSource]="sourceTypeDataList" displayExpr="SourceTypeName" valueExpr="Id"
+              [value]="selectedSourceType" (onValueChanged)="sourceTypeChanged($event)">
+            </dx-select-box>
+          </div>
+
+          <div class="col-sm-6">
+            <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="ShowPopup()" *ngIf="isEditingAllowed">
+            </dx-button>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-sm-12">
+
+        <div>
+          <dx-data-grid id="gridContainer" [dataSource]="sourceCodeDatalist" [allowColumnReordering]="true"
+            [allowColumnResizing]="true" (onRowUpdated)="EditStoreSourceCode($event)" (onRowRemoving)="logEvent('RowRemoving')"
+            (onRowRemoved)="DeleteStoreSourceCode($event)" [columnAutoWidth]="false" [showRowLines]="true">
+
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-filter-row [visible]="showFilterRow"></dxo-filter-row>
+            <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"></dxo-editing>
+            <dxi-column dataField="SourceCodeId" [visible]="false"></dxi-column>
+            <dxi-column dataField="Code" [allowEditing]="false" [width]="140" ></dxi-column>
+            <dxi-column dataField="Description"></dxi-column>
+            <dxi-column dataField="Address"></dxi-column>
+            <dxi-column dataField="Phone" [editorOptions]="{ mask: '(000) 000-0000'}"></dxi-column>
+            <dxi-column dataField="Fax"></dxi-column>
+            <dxi-column dataField="EmailAddress"></dxi-column>
+            <dxi-column dataField="Guarantor"></dxi-column>
+            <dxo-paging [pageSize]="20"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add Store Source Code -->
+<dx-popup class="popup" [width]="600" [height]="450" [showTitle]="true" title="Add Store Source Code" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="popupAddStoreSourceCodeVisible">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="onFormSubmit(sourceCodeData)">
+      <dx-form id="form" [formData]="sourceCodeData" [readOnly]="false" [showColonAfterLabel]="true"
+        [showValidationSummary]="true" validationGroup="customerData" (onFieldDataChanged)="onFieldDataChanged($event)">
+
+        <dxi-item dataField="Code" [editorOptions]="{disabled: true}">
+          <dxi-validation-rule type="required" message="Code is required">
+          </dxi-validation-rule>
+        </dxi-item>
+
+        <dxi-item dataField="Description">
+          <dxi-validation-rule type="required" message="Description is required">
+          </dxi-validation-rule>
+        </dxi-item>
+
+        <dxi-item dataField="Address">
+          <dxi-validation-rule type="required" message="Address is required">
+          </dxi-validation-rule>
+        </dxi-item>
+
+        <dxi-item dataField="EmailAddress">
+              <dxi-validation-rule type="email"></dxi-validation-rule>
+        </dxi-item>
+
+        <dxi-item dataField="Fax">
+        </dxi-item>
+
+        <dxi-item dataField="Guarantor">
+        </dxi-item>
+
+        <dxi-item dataField="Phone" editorType="dxNumberBox" [editorOptions]="{  mode: 'number', minLength:10, maxLength: 14}">
+            <dxi-validation-rule type="required" message="PhoneNo is required">
+            </dxi-validation-rule>
+            <dxi-validation-rule type="custom" [validationCallback]="validateRange(1000000000, 99999999999999)" message="Out of range"></dxi-validation-rule>
+          </dxi-item>
+          
+      </dx-form>
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Add" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+        </dx-button>
+        <dx-button text="Cancel" (onClick)="HidePopup()">
+        </dx-button>
+      </div>
+    </form>
+    <ngx-loading [show]="StoreCodeLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+</dx-popup>

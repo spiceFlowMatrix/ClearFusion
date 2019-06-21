@@ -1,0 +1,158 @@
+<div class="main-project-hiring">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Project Hiring</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-3 container">
+      <div class="row thumbnail card ">
+        <div class="project-hiring-left">
+
+          <div class="col-sm-12">
+
+            <dx-list #list [dataSource]="projectDataSource" [height]="610" [searchEnabled]="true" [searchExpr]="['ReferenceNo','CurrencyCode','JournalName','Description']"
+              selectionMode="single" pageLoadMode="nextButton" nextButtonText="See More" (onItemClick)="onProjectSelectionChanged($event.itemData)"
+              searchMode="contains" itemTemplate="listItem" pageSize="10">
+
+              <div *dxTemplate="let data of 'listItem' ">
+                <div *ngIf="data.VoucherNo != 0; else showMore" class="text-left">
+                  <div class="col-sm-12">
+                    <h4> {{data.ProjectId}}</h4>
+                  </div>
+                  <div class="col-sm-12">
+                    Project: {{data.ProjectName}}
+                  </div>
+
+
+                </div>
+                <ng-template #showMore>Show More</ng-template>
+              </div>
+            </dx-list>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-9">
+      <div class="row thumbnail card">
+        <div class="project-hiring-right">
+          <div class="project-hiring-right-top">
+
+            <div class="col-sm-4">
+              <div class="row">
+                <div class="col-sm-12">
+                  Job Name: Test Job Name
+                </div>
+                <div class="col-sm-12">
+                  Project Name: Test Job Name
+                </div>
+                <div class="col-sm-12">
+                  Job Grade: 3
+                </div>
+                <div class="col-sm-12">
+                  Job Position: Analyst
+                </div>
+                <div class="col-sm-12">
+                  Office: GFO
+                </div>
+                <div class="col-sm-12">
+                  Hourly Rate: AFN 90
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="row">
+                <div class="col-sm-12">
+                  Total Vacancies: 50
+                </div>
+                <div class="col-sm-12">
+                  Total Candidates: 36
+                </div>
+                <div class="col-sm-12">
+                  Existing Employee: 20
+                </div>
+                <div class="col-sm-12">
+                  New Candidates: 16
+                </div>
+                <div class="col-sm-12">
+                  Approved Candidates: 12
+                </div>
+                <div class="col-sm-12">
+                  Remaining Vacancies: 38
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-5">
+              <div class="row">
+                <div class="col-sm-12">
+                  <h4> Hiring Panel</h4>
+                </div>
+                <div class="col-sm-12">
+                  <dx-data-grid id="gridContaine" [dataSource]="hiringPanelDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                    [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+                    (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+                    (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+                    <dxo-paging [pageSize]="5"></dxo-paging>
+                    <dxo-pager [showPageSizeSelector]="false" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                    </dxo-pager>
+                    <dxo-filter-row [visible]="false"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                    <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true">
+                    </dxo-editing>
+
+                    <dxi-column dataField="EmployeeName" caption="Employee Name" [visible]="true">
+                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-column>
+                    <dxi-column dataField="Position" caption="Position" alignment="right">
+                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-column>
+
+                  </dx-data-grid>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <hr>
+
+          <div class="project-hiring-right-bottom">
+
+            <div class="col-sm-12">
+              <div id="tabs">
+
+                <dx-tabs #apiTabs [dataSource]="tabs" [selectedIndex]="0" [width]="300" [height]="50" (onItemClick)="selectTab($event.itemData)"></dx-tabs>
+                <div class="dx-fieldset">
+
+                  <div *ngIf="selectedTab == 1">
+                    <div class="dx-field">
+                      <app-new-candidates></app-new-candidates>
+                    </div>
+                  </div>
+
+                  <div *ngIf="selectedTab == 2">
+                    <div class="dx-field">
+                      <app-existing-employees></app-existing-employees>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ngx-loading [show]="projectHiringLoading"></ngx-loading>
+</div>

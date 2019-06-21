@@ -1,0 +1,60 @@
+<div class="main-new-candidates">
+  <div class="row">
+    <div class="col-sm-12">
+      <dx-data-grid id="gridContaine" [dataSource]="newEmployeeDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+        (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+        (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+        <dxo-paging [pageSize]="5"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="false" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+        </dxo-pager>
+        <dxo-filter-row [visible]="false"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+        <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="false"> </dxo-editing>
+
+        <dxi-column dataField="EmployeeName" caption="Candidate Name" [visible]="true">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column dataField="Profession" caption="Profession" [visible]="true">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column caption="Full Detail" alignment="center" [width]="150" cellTemplate="CellTemplateFullDetail"></dxi-column>
+        <div *dxTemplate="let data of 'CellTemplateFullDetail'">
+          <a href="javascript:void(0)" (click)="onFullDetailEvent(data)">Approve</a>
+        </div>
+
+        <dxi-column caption="CV Document" alignment="center" [width]="150" cellTemplate="CellTemplateCvDocument"></dxi-column>
+        <div *dxTemplate="let data of 'CellTemplateCvDocument'">
+          <a href="javascript:void(0)" (click)="onCvDocumentEvent(data)">Approve</a>
+        </div>
+
+        <dxi-column dataField="Notes" caption="Notes">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column caption="Interview" alignment="center" [width]="150" cellTemplate="CellTemplateInterview"></dxi-column>
+        <div *dxTemplate="let data of 'CellTemplateInterview'">
+          <a href="javascript:void(0)" (click)="onInterviewEvent(data)">Generate Interview</a>
+          <!-- <a href="javascript:void(0)" (click)="onInterviewEvent(data)">Not Shortlisted</a>
+          <a href="javascript:void(0)" (click)="onInterviewEvent(data)">View Interview</a> -->
+        </div>
+
+        <dxi-column dataField="Position" caption="Current Position" alignment="right">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column caption="Action" alignment="center" [width]="280" cellTemplate="CellTemplateAction"></dxi-column>
+        <div *dxTemplate="let data of 'CellTemplateAction'">
+          <a href="javascript:void(0)" (click)="onActionEvent('Approve',data)">Approve</a> |
+          <a href="javascript:void(0)" (click)="onActionEvent('Reject', data)">Reject</a> |
+          <a href="javascript:void(0)" (click)="onActionEvent('Edit', data)">Edit</a> |
+          <a href="javascript:void(0)" (click)="onActionEvent('Delete', data)">Delete</a>
+        </div>
+
+      </dx-data-grid>
+    </div>
+  </div>
+</div>

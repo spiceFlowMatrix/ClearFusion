@@ -1,0 +1,18 @@
+.dv-nw-tab .dx-datagrid-header-panel{ border: 1px solid #ccc;
+    margin: 6px;
+    padding: 6px;}
+.dv-pyroll-cont{
+    position: absolute;
+    z-index: 11;
+    right: 152px;
+    margin-top: 4px;
+}
+.col-sm-6.dv-pddng{ padding-right: 0px;}
+.col-sm-6.dv-pd-hr{ padding-left: 7px;}
+
+.empProject{ margin-top: 20px; margin-left: 15px;}
+@media all and (max-width:991px){
+.dv-pyroll-cont{ padding: 12px; position: initial;}
+.dv-pyroll-cont .row{ width: 100%;}
+.dv-pyroll-cont .col-md-4.col-sm-12{ margin-bottom: 7px; padding-right: 0px;}
+}

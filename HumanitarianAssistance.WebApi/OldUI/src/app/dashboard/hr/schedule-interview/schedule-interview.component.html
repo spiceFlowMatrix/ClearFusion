@@ -1,0 +1,105 @@
+<div class="main-page dv-main-pg">
+  <div class="heading-hdr">
+    <div class="clearfix">
+      <h3 class="page-heading" [ngClass]="{'myclass' : false}">Schedule Interview</h3>
+    </div>
+  </div>
+</div>
+
+
+
+
+<dx-tabs #apiTabs [(selectedIndex)]="selectedIndex" [dataSource]="showInfoTabs" (onItemClick)="onTabClick($event)"></dx-tabs>
+
+
+<br>
+
+
+<div *ngIf="tabValue==0">
+
+
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-10 col-md-10 set-job-bx">
+
+          <form action="your-action" (submit)="onScheduleFormSet(scheduleformData)">
+
+            <div class="row">
+              <div class="col-md-8">
+                <dx-form id="form" [(formData)]="scheduleformData" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                  validationGroup="customerData">
+
+                  <dxi-item dataField="Job" editorType="dxSelectBox">
+                    <dx-select-box [dataSource]="jobCodeDropdown" (onValueChanged)="onJobCodeSelectedValue($event.value)" displayExpr="JobCode"
+                      valueExpr="JobId" [(value)]="selectValueForJobCode">
+                    </dx-select-box>
+
+                  </dxi-item>
+                  <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{ value: currentDate, min: currentDate, displayFormat: 'dd/MM/yyyy',showClearButton: 'true' }">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                  </dxi-item>
+                </dx-form>
+              </div>
+
+              <div class="col-md-4 text-center">
+                <dx-button text="Confirm Schedule" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-12">
+
+      <dx-data-grid id="grid-container" [dataSource]="prospectiveEmployeeData" keyExpr="EmployeeId" [(selectedRowKeys)]="selectedRows"
+        [columnAutoWidth]="true" (onSelectionChanged)="selectionChangedHandler($event)" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        (onRowUpdating)="logEvent('onRowUpdating',$event)">
+
+        <dxo-selection [showCheckBoxesMode]="onClick" mode="multiple"></dxo-selection>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+        <dxi-column dataField="EmployeeId"></dxi-column>
+        <dxi-column dataField="EmployeeName"></dxi-column>
+        <dxi-column dataField="PhoneNo" caption="Contact"> </dxi-column>
+        <dxi-column dataField="ProfessionId" caption="Profession">
+          <dxo-lookup [dataSource]="professionTypeDropdown" valueExpr="ProfessionId" displayExpr="ProfessionName">
+          </dxo-lookup>
+        </dxi-column>
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+      </dx-data-grid>
+    </div>
+    <br>
+
+  </div>
+
+  <br>
+  <br>
+  <br>
+
+</div>
+
+
+<div *ngIf="tabValue==1">
+  <div>
+    <app-approvals [jobCodeDropdown]="jobCodeDropdown" [jobGradeDropdown]="jobGradeDropdown"></app-approvals>
+  </div>
+</div>
+
+<div *ngIf="tabValue==2">
+  <div>
+    <app-approved-employee [jobCodeDropdown]="jobCodeDropdown" [jobGradeDropdown]="jobGradeDropdown"></app-approved-employee>
+  </div>
+</div>

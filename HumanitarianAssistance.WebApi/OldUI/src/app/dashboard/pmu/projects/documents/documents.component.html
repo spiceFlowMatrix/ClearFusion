@@ -1,0 +1,130 @@
+
+<div class="row">
+  <div class="col-sm-12">
+      <div class="main-heading clearfix">
+              <h3 class="page-heading">Documents</h3>
+              <dx-button
+              class="button-info btn btn-default btn-green"
+              text="Back"
+             [routerLink]="['../projects']">
+              </dx-button>           
+      </div>        
+      <dx-data-grid 
+        id="gridContainer" 
+        [dataSource]="dataSource"
+        [allowColumnReordering]="true"
+        [allowColumnResizing]="true"
+        [columnAutoWidth]="true">
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-column-chooser [enabled]="true" ></dxo-column-chooser>    
+            <!-- editing -->
+            <dxo-editing mode="popup" [allowUpdating]="false" [allowDeleting]="true" [allowAdding]="true" >
+              <dxo-popup title="Add Document Details" [closeOnOutsideClick]="true" [showTitle]="true" [width]="700" [height]="345" [position]="{ my: 'center', at: 'center', of: 'window' }">
+              </dxo-popup>
+            </dxo-editing>
+            <!-- editing -->
+        <!-- <dxo-pager
+          [allowedPageSizes]="[5, 8, 15, 30]"
+          [showInfo]="true"
+          [showNavigationButtons]="true"
+          [showPageSizeSelector]="true"
+          [visible]="true">
+      </dxo-pager>  -->
+      <dxo-paging [pageSize]="7"></dxo-paging>
+      <dxo-pager [allowedPageSizes]="[5, 8, 15, 30]" [showInfo]="true" [showNavigationButtons]="true" [showPageSizeSelector]="true"
+            [visible]="true">
+      </dxo-pager>
+
+      <dxo-scrolling mode="infinite"></dxo-scrolling>
+        <dxo-filter-row 
+            [visible]="true">
+        </dxo-filter-row>
+        <dxo-header-filter 
+            [visible]="true"></dxo-header-filter>
+        <dxo-search-panel 
+            [visible]="true" 
+            [width]="240" 
+            placeholder="Search..."></dxo-search-panel>
+
+        <dxi-column 
+            dataField="DocumentDate"                 
+            caption="Document Date" [visible]="false" dataType="date">     
+            <dxi-validation-rule type="required"></dxi-validation-rule>     
+        </dxi-column>
+        <dxi-column 
+            dataField="DocumentName"                 
+            caption="Document Name">     
+            <dxi-validation-rule type="required"></dxi-validation-rule>     
+        </dxi-column>
+        <dxi-column dataField="DocumentType">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+            <dxo-lookup
+                [dataSource]="doctype"
+                valueExpr="DocTypeId"
+                displayExpr="DocTypeName">
+            </dxo-lookup>
+        </dxi-column>     
+        <!-- <dxi-column 
+            dataField="DocumentFile"
+            caption="Document File">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+            <dx-file-uploader accept="image/*"></dx-file-uploader>
+        </dxi-column> -->
+        <dxi-column dataField="DocumentFile" caption="Document File" cellTemplate="CellTemplateDocumentFile"></dxi-column>          
+            <div *dxTemplate="let data of 'CellTemplateDocumentFile'">
+                <a>Document</a>
+            </div>
+        <!-- <dxi-column 
+            dataField="DocumentFile"
+            caption="Document File">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+            <dx-file-uploader
+                selectButtonText="Choose File"
+                labelText="No file choosen"
+                accept="image/*"
+                uploadMode="useButtons">
+            </dx-file-uploader>
+        </dxi-column> -->
+    </dx-data-grid>  
+  </div>
+</div>
+
+<!-- Add Project PMU -->
+<dx-popup class="popup" [width]="800" [height]="800" [showTitle]="true" title="Add PMU Project Details" [dragEnabled]="false" [closeOnOutsideClick]="true">
+<div *dxTemplate="let data of 'content'">
+
+    <form action="your-action" (submit)="onFormSubmit($event)">
+        <dx-form id="form" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true" validationGroup="customerData">
+            <dxi-item>   
+                <!-- <dx-select-box
+                [dataSource]="data"
+                displayExpr="ProjectName"
+                valueExpr="ID"                
+                placeholder="Select Project"
+                [showClearButton]="true"                
+                (onValueChanged)="selectedFinancialYear($event)"
+            ></dx-select-box>      -->
+            </dxi-item>
+
+            <dxi-item dataField="Project"
+                editorType="dxSelectBox"
+                [editorOptions]="{ dataSource: projectPmu }">
+                <dxi-validation-rule 
+                    type="required">
+                </dxi-validation-rule>
+            </dxi-item>                              
+        </dx-form>
+        <br />
+        <div class="btn-grp-wrap">
+            <dx-button text="Add" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+            </dx-button>
+
+            <dx-button text="Cancel" (onClick)="cancelDeleteVoucher()">
+            </dx-button>
+
+        </div>
+
+    </form>
+</div>
+</dx-popup>
+<!-- Add Project PMU -->

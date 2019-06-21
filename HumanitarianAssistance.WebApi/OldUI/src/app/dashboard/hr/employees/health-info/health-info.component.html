@@ -1,0 +1,103 @@
+<div class="main-health-info">
+  <div *ngIf="setFlagAddEdit == false">
+    <div *ngIf="tabEventValue != 3">
+      <dx-button text="Add New" type="success" (click)="addHealthDetails()"></dx-button>
+    </div>
+
+    <br>
+    <div>
+
+      <div class="row text-center">
+        <div class="col-sm-6 col-sm-offset-3">
+          <div class="healthNoDetails">
+            <div class="caption  alert alert-info" style="margin-top: 50px; padding: 20px;">
+              <h4>No Details Found</h4>
+            </div>
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="setFlagAddEdit == true">
+    <dx-button text="Edit" type="success" (click)="editHealthDetails()"></dx-button>
+  </div>
+
+  <div *ngIf="setFlagAddEdit == true" class="porject-des-listing">
+    <ul>
+      <li>
+        <h4>Blood Group :</h4>
+        <span>{{healthModelObj.BloodGroup == null ? "" : healthModelObj.BloodGroup}}</span>
+      </li>
+      <li>
+        <h4>Medical History:</h4>
+        <span>{{healthModelObj.MedicalHistory == null ? "" : healthModelObj.MedicalHistory}}</span>
+      </li>
+      <li>
+        <h4>Smoke And Drink:</h4>
+        <span>{{healthModelObj.SmokeAndDrink }}</span>
+      </li>
+      <li>
+        <h4>Insurance:</h4>
+        <span>{{healthModelObj.Insurance }}</span>
+      </li>
+      <li>
+        <h4>Measure Dieases:</h4>
+        <span> {{healthModelObj.MeasureDieases }}</span>
+      </li>
+      <li>
+        <h4>Allergic Substance:</h4>
+        <span>{{healthModelObj.AllergicSubstance }}</span>
+      </li>
+      <li>
+        <h4>Family History:</h4>
+        <span>{{healthModelObj.FamilyHistory }}</span>
+      </li>
+    </ul>
+  </div>
+  <ngx-loading [show]="healthInfoLoading"></ngx-loading>
+
+</div>
+
+<!-- Health Modal Popup -->
+<dx-popup class="popup" [width]="600" [height]="800" [showTitle]="true" title="Health Information" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="healthForm">
+
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="onFormSubmitHealth(healthModel)">
+      <dx-form id="form" [formData]="healthModel" [colCount]="1" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+        validationGroup="healthInfoValidationDetails">
+
+        <dxi-item dataField="BloodGroup" editorType="dxSelectBox" [editorOptions]="{ dataSource : bloodGroupSource , displayExpr: 'BloodGroup', valueExpr: 'BloodGroup' }">
+        </dxi-item>
+
+        <dxi-item dataField="MedicalHistory">
+        </dxi-item>
+
+        <dxi-item dataField="SmokeAndDrink" editorType="dxCheckBox" [editorOptions]="{ value : SmokeAndDrink }">
+          <dxo-label text="Smoke And Drink"></dxo-label>
+        </dxi-item>
+
+        <dxi-item dataField="Insurance" editorType="dxCheckBox" [editorOptions]="{ value : Insurance }">
+        </dxi-item>
+
+        <dxi-item dataField="MeasureDieases" editorType="dxCheckBox" [editorOptions]="{ value : MeasureDieases }">
+          <dxo-label text="Measure Disease"></dxo-label>
+        </dxi-item>
+
+        <dxi-item dataField="AllergicSubstance" editorType="dxCheckBox" [editorOptions]="{ value : AllergicSubstance }">
+
+        </dxi-item>
+
+        <dxi-item dataField="FamilyHistory" editorType="dxCheckBox" [editorOptions]="{ value : FamilyHistory }">
+        </dxi-item>
+
+      </dx-form>
+      <div class="btn-grp-wrap">
+        <dx-button text="Save" type="success" [useSubmitBehavior]="true"></dx-button>
+        <dx-button text="Cancel" (click)="hideHealthPopup()"></dx-button>
+      </div>
+    </form>
+  </div>
+
+</dx-popup>

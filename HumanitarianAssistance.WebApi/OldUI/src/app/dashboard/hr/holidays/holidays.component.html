@@ -1,0 +1,128 @@
+<div class="main-holidays dv-mn-holidy">
+
+  <dx-button text="Set Weekly Holidays" (click)="ShowAddHolidayWeeklyPopup()"></dx-button>
+
+  <br>
+  <dx-scheduler [dataSource]="holidayData" [views]="['month']" currentView="month" [min]="minDateValue" [max]="maxDateValue"
+    [currentDate]="currentDate" [height]="600" appointmentTemplate="holidaysTemplate" (onAppointmentClick)="onAppointmentClick($event)"
+    (onAppointmentDblClick)="onAppointmentDblClick($event)" (onAppointmentRendered)="onAppointmentRendered($event)" (onCellClick)="onCellClick($event)"
+    appointmentTooltipTemplate="tooltip-template">
+
+    <dxo-editing [allowAdding]="false" [allowDeleting]="false" [allowDragging]="false" [allowResizing]="false"></dxo-editing>
+
+    <div *dxTemplate="let item of 'holidaysTemplate'">
+      <i>{{item.HolidayName}}</i>
+    </div>
+
+
+    <div *dxTemplate="let item of 'tooltip-template'">
+      <div class='holidaysDetails-tooltip'>
+
+        <div class='holidaysDetails-info'>
+          <div class='holidaysDetails-title' style="border-left: 5px solid #343f51;">
+            <h4> {{item.HolidayName}}</h4>
+          </div>
+        </div>
+        <br>
+        <dx-button text='Edit details' (onClick)='ShowEditHolidayPopup(item)'>
+        </dx-button>
+        <dx-button text='Delete' (onClick)='ShowDeleteHolidayPopup(item)'>
+        </dx-button>
+
+      </div>
+    </div>
+
+
+  </dx-scheduler>
+  <br>
+</div>
+
+
+<!-- ADD HOLIDAY POPUP-->
+<dx-popup class="popup" [width]="650" [height]="300" [showTitle]="true" title="Holidays" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="popupHolidayVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view showScrollbar="always" direction="both">
+      <form action="your-action" (submit)="onFormSubmit(1, holidayFormData)">
+        <dx-form id="form" [formData]="holidayFormData" [colCount]="1" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="holidayDetails">
+
+          <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'dd/MM/yyyy', readOnly: true }">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="HolidayName">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Remarks" editorType="dxTextArea" [editorOptions]="{ height: 80 }">
+          </dxi-item>
+
+        </dx-form>
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="holidayDetails" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (click)="HideAddHolidayPopup()"></dx-button>
+        </div>
+      </form>
+    </dx-scroll-view>
+    <ngx-loading [show]="addHolidayPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+
+</dx-popup>
+
+<!-- ADD HOLIDAY Weekly POPUP-->
+<dx-popup class="popup" [width]="750" [height]="200" [showTitle]="true" title="Weekly Holidays" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="popupHolidayWeeklyVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view showScrollbar="always" direction="both">
+      <form action="your-action" (submit)="onFormSubmit(2,holidayFormWeeklyData)">
+        <dx-form id="form" [formData]="holidayFormWeeklyData" [colCount]="7" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="holidayWeeklyDetails">
+          <dxi-item dataField="Sun" editorType="dxCheckBox" [editorOptions]="{value: Sun }">
+          </dxi-item>
+          <dxi-item dataField="Mon" editorType="dxCheckBox" [editorOptions]="{value: Mon }">
+          </dxi-item>
+          <dxi-item dataField="Tue" editorType="dxCheckBox" [editorOptions]="{value: Tue }">
+          </dxi-item>
+          <dxi-item dataField="Wed" editorType="dxCheckBox" [editorOptions]="{value: Wed }">
+          </dxi-item>
+          <dxi-item dataField="Thu" editorType="dxCheckBox" [editorOptions]="{value: Thu }">
+          </dxi-item>
+          <dxi-item dataField="Fri" editorType="dxCheckBox" [editorOptions]="{value: Fri }">
+          </dxi-item>
+          <dxi-item dataField="Sat" editorType="dxCheckBox" [editorOptions]="{value: Sat }">
+          </dxi-item>
+        </dx-form>
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="holidayWeeklyDetails" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (click)="HideAddHolidayWeeklyPopup()"></dx-button>
+        </div>
+      </form>
+    </dx-scroll-view>
+    <ngx-loading [show]="holidayWeeklyPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+  </div>
+
+</dx-popup>
+
+<!-- DELETE HOLIDAY POPUP -->
+<dx-popup class="popup" [width]="300" [height]="200" [showTitle]="true" title="Holidays" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="popupDeleteHolidayVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view showScrollbar="always" direction="both">
+      <p class="text-center">Are you sure to delete this holiday ? </p>
+      <p class="text-center">{{holidayFormData.HolidayName}}</p>
+      <dx-button text="Save" (click)="DeleteHoliday(holidayFormData.HolidayId)"></dx-button>
+      <dx-button text="Cancel" (click)="HideDeleteHolidayPopup()"></dx-button>
+    </dx-scroll-view>
+
+    <ngx-loading [show]="deleteHolidayPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+
+</dx-popup>

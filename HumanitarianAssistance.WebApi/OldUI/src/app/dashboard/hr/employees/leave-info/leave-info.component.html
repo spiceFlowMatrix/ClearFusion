@@ -1,0 +1,242 @@
+<div class="main-health-info">
+
+  <div *ngIf="tabEventValue != 3" class="">
+    <dx-button text="Assign Leave" (onClick)="showAssignLeavePopup()" *ngIf="isEditingAllowed"></dx-button>
+    <dx-button text="Applied Leave" (onClick)="showHideLeaveDetailsPopup()" *ngIf="isEditingAllowed"></dx-button>
+  </div>
+  <div *ngIf="tabEventValue == 3" class="dv-btn-lft">
+    <dx-button text="Applied Leave" (onClick)="showHideLeaveDetailsPopup()" *ngIf="isEditingAllowed"></dx-button>
+  </div>
+
+  <dx-data-grid id="gridContainer" [dataSource]="leaveInfoDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+    [showRowLines]="true">
+    <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch" *ngIf="isEditingAllowed"></dxo-editing>
+
+    <dxo-filter-row [visible]="true"> </dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+    <dxi-column dataField="LeaveReasonName" caption="Leave Type">
+      <dxi-validation-rule type="required"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="Unit" caption="Days" dataType="number">
+      <dxi-validation-rule type="required"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="AssignUnit" caption="Assigned Days" dataType="number">
+      <dxi-validation-rule type="required"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="BlanceLeave" caption="Balance Leave" dataType="number">
+      <dxi-validation-rule type="required"></dxi-validation-rule>
+    </dxi-column>
+
+    <div *ngIf="tabEventValue != 3 && isEditingAllowed" >
+      <dxi-column caption="Action" alignment="center" cellTemplate="CellTemplateEdit"></dxi-column>
+      <div *dxTemplate="let data of 'CellTemplateEdit'">
+        <a href="javascript:void(0)" (click)="onAssignDaysShowPopup(data)">Edit</a> |
+        <a href="javascript:void(0)" (click)="onApplyLeaveByemployeeIdShowPopup(data)">Apply Leave</a>
+      </div>
+    </div>
+
+    <dxo-paging [pageSize]="10"></dxo-paging>
+  </dx-data-grid>
+  <br>
+
+  <ngx-loading [show]="leaveInfoLoading"></ngx-loading>
+
+</div>
+
+
+<!-- Assign Leave -->
+<dx-popup class="popup" [width]="600" [height]="300" [showTitle]="true" title="Assign Leave" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="popupAssignLeaveVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view [height]="400" showScrollbar="always" direction="both">
+     
+      <form action="your-action" (submit)="onFormSubmit(leaveInfoData)">
+        <dx-form id="form" [formData]="leaveInfoData" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="leaveInfoValidationDetails">
+
+          <dxi-item dataField="FinancialYearId" editorType="dxSelectBox" [editorOptions]="{ dataSource: financialYearDropdown, displayExpr: 'FinancialYearName', valueExpr: 'FinancialYearId'  }">
+            <dxo-label text="Financial Year"></dxo-label>
+            <dxi-validation-rule type="required" message="Financial Year  is required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="LeaveReasonId">
+            <dxo-label text="Reason Type"></dxo-label>
+            <dx-select-box (onValueChanged)="getUnitType($event)" [dataSource]="leaveReasonTypeDropdown" valueExpr="LeaveReasonId" displayExpr="ReasonName"
+              [(value)]="LeaveReasonIdBinding">
+            </dx-select-box>
+            <dxi-validation-rule type="required" message="Leave Reason is required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Unit" editorType="dxNumberBox" [editorOptions]="{ disabled: true }">
+            <dxo-label text="Units"></dxo-label>
+            <dxi-validation-rule type="required" message="Unit is required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="AssignUnit" editorType="dxNumberBox" [editorOptions]="{ isValid : assignUnitIsValid , value:0, min:0, showSpinButtons: true, onKeyUp: 'onAssignUnitValueChange($event)'}">
+            <dxo-label text="Assign Units"></dxo-label>
+            <dxi-validation-rule type="required" message="Assigned Units is required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Description" [colSpan]="2" editorType="dxTextArea" [editorOptions]="{ height: 80 }">
+            <dxo-label text="Remark"></dxo-label>
+          </dxi-item>
+
+        </dx-form>
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="leaveInfoValidationDetails" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (click)="hideAssignLeavePopup()"></dx-button>
+        </div>
+      </form>
+
+      <ngx-loading [show]="assignLeavePopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+    </dx-scroll-view>
+  </div>
+
+</dx-popup>
+
+<!-- Leave Details -->
+<dx-popup class="popup" [width]="1000" [minHeight]="500" [showTitle]="true" title="Leave Details" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="popupLeaveDetailsVisible">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view  showScrollbar="always" direction="both">
+    
+      <dx-data-grid id="gridContainer" [dataSource]="leavedetailsDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [showRowLines]="true">
+        <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+
+        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+        <dxi-column dataField="ToDate" caption="Date" dataType="date" format="dd/MM/yyyy" [width]="130">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column dataField="LeaveReasonName" caption="Leave Reason" [width]="130">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Remarks" caption="Remark">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="ApplyLeaveStatus" caption="Status" alignment="center" [width]="100"></dxi-column>
+
+        <div *ngIf="tabEventValue != 3">
+          <dxi-column caption="Action" alignment="center" cellTemplate="CellTemplateEdit" [width]="100"></dxi-column>
+          <div *dxTemplate="let data of 'CellTemplateEdit'">
+            <div *ngIf="data.data.ApplyLeaveStatus == '' || data.data.ApplyLeaveStatusId == null">
+              <a href="javascript:void(0)" (click)="onAppliedLeaveDetailsDelete(data)">Delete</a>
+            </div>
+          </div>
+        </div>
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+      </dx-data-grid>
+    </dx-scroll-view>
+    <ngx-loading [show]="leaveDetailsPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+</dx-popup>
+
+<!-- Edit -->
+<dx-popup class="popup" [width]="600" [height]="250" [showTitle]="true" title="Edit Leave" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="PopupEditLeaveInfoVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view showScrollbar="always" direction="both">
+    
+      <form action="your-action" (submit)="onEditLeaveInfoSubmit(editLeaveInfoFormData)">
+        <dx-form id="form" [formData]="editLeaveInfoFormData" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="editLeaveValidationDetails">
+
+          <dxi-item dataField="LeaveReasonName" [editorOptions]="{ disabled: true }">
+            <dxo-label text="Leave Type"></dxo-label>
+            <dxi-validation-rule type="required" message="LeaveReason is required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Unit" editorType="dxNumberBox" [editorOptions]="{ disabled: true }">
+            <dxo-label text="Total Leave"></dxo-label>
+            <dxi-validation-rule type="required" message="Assigned Units is required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="AssignUnit" editorType="dxNumberBox">
+            <dxo-label text="Assigned Leave"></dxo-label>
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="BlanceLeave" editorType="dxNumberBox" [editorOptions]="{ disabled: true }">
+            <dxo-label text="Balance Leave"></dxo-label>
+            <dxi-validation-rule type="required" message="Assigned Units is required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+        </dx-form>
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="editLeaveValidationDetails" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (click)="hideEditLeaveInfoPopup()"></dx-button>
+        </div>
+      </form>
+
+      <ngx-loading [show]="editAssignLeavePopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+  </dx-scroll-view>
+  </div>
+</dx-popup>
+
+<!-- Apply Leave -->
+<dx-popup class="popup" [width]="600" [height]="400" [showTitle]="true" title="Apply Leave" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="popupApplyLeaveVisible">
+
+  <div *dxTemplate="let data of 'content'">
+      <dx-scroll-view  showScrollbar="always" direction="both">
+    
+        <div class="row">
+
+          <div class="col-sm-4">
+            <p-calendar [(ngModel)]="selectedDates" [minDate]="hiredOnDate" [maxDate]="maxDateValue" [disabledDates]="disabledDates"
+              selectionMode="multiple" [inline]="true"></p-calendar>
+          </div>
+          <div class="col-sm-1"></div>
+          <div class="col-sm-7">
+
+            <form action="your-action" (submit)="onLeaveApplied(applyLeaveDataSource)">
+              <dx-form id="form" [formData]="applyLeaveDataSource" [colCount]="1" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                validationGroup="applyLeaveValidationDetails">
+
+                <dxi-item dataField="LeaveReasonName" [editorOptions]="{ readOnly: true }">
+                  <dxo-label text="Leave Type"></dxo-label>
+                  <dxi-validation-rule type="required" message="LeaveReason is required">
+                  </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="BlanceLeave" editorType="dxNumberBox" [editorOptions]="{ readOnly: true }">
+                  <dxo-label text="Balance Leave"></dxo-label>
+                  <dxi-validation-rule type="required" message="Assigned Units is required">
+                  </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="Remarks" [colSpan]="2" editorType="dxTextArea" [editorOptions]="{ height: 80 }">
+                  <dxi-validation-rule type="required">
+                  </dxi-validation-rule>
+                </dxi-item>
+
+              </dx-form>
+              <div class="btn-grp-wrap">
+                <dx-button text="Save" type="success" validationGroup="applyLeaveValidationDetails" [useSubmitBehavior]="true"></dx-button>
+                <dx-button text="Cancel" (click)="hideApplyLeavePopup()"></dx-button>
+              </div>
+            </form>
+
+          </div>
+
+        </div>
+        <ngx-loading [show]="applyLeavePopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

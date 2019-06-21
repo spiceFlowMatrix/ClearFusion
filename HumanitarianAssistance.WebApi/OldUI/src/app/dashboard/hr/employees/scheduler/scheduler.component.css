@@ -1,0 +1,20 @@
+.iconButton{
+    background-color: white;
+}
+/* .dx-button.dx-button-normal.dx-state-hover{ background-color: #e6e6e6; border-color: #bebebe; box-shadow: 0 1px 3px #bebebe;} */
+.dx-button-has-icon .dx-button-content{ padding: 5px !important;}
+/* .dx-button.dx-button-normal{     border-radius: 4px;
+    -webkit-box-shadow: 0 1px 3px #ddd;
+    -moz-box-shadow: 0 1px 3px #ddd;
+    box-shadow: 0 1px 3px #ddd;
+    border-width: 1px;
+    border-style: solid;
+    background-color: #fff;
+    border-color: #ddd;
+    color: #333;
+    position: absolute;
+    top:3px;
+    right: 12px;
+    height: 30px;
+    margin-top: 3px;
+} */

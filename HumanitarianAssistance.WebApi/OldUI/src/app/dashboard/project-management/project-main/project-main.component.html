@@ -1,0 +1,303 @@
+<div class="main-projects">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+
+        <div class="row">
+          <div class="col-sm-6">
+            <h3 class="page-headin">Projects</h3>
+          </div>
+          <div class="col-sm-6 text-right" style="margin-top:20px">
+            <a (click)="onToggleNewOpportunity()">New Opportunity</a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2 section">
+      <div class="left">
+        <div class="row">
+          <div class="col-sm-12 container">
+            <div class="row thumbnail card">
+              <div class="col-sm-12 text-right">
+                <div class="emp-add-btn">
+                  <span>
+                    <i class="fa fa-plus-circle" aria-hidden="true" (click)="onShowAddProjectForm()"></i>
+                  </span>
+                </div>
+              </div>
+              <br>
+              <div class="col-sm-12">
+                <div class="voucher-left-listing-height">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <br>
+                      <dx-list #list [dataSource]="projectDetailsList" [height]="500" [searchEnabled]="true" [searchExpr]="['ReferenceNo','CurrencyCode','JournalName','Description']"
+                        selectionMode="single" pageLoadMode="nextButton" nextButtonText="See More" (onItemClick)="onVoucherSelectionChanged($event)"
+                        searchMode="contains" itemTemplate="listItem">
+                        <div *dxTemplate="let data of 'listItem' ">
+                          <div *ngIf="data.VoucherNo != 0; else showMore" class="text-left">
+                            <div class="col-sm-12">
+                              <h4> {{data.ReferenceNo}}</h4>
+                            </div>
+                            <div class="col-sm-12">
+                              Currency: {{data.CurrencyCode}}
+                            </div>
+                            <div class="col-sm-12 text-ellip">
+                              Description: {{data.Description}}
+                            </div>
+                            <div class="col-sm-12">
+                              <div class="row">
+                                <div class="col-sm-10 voucher-overflow">
+                                  Journal Name: {{data.JournalName}}
+                                </div>
+                                <div class="col-sm-2">
+                                  <a href="javascript:void(0); ">
+                                    <i class="fa fa-paperclip"></i>
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <ng-template #showMore>Show More</ng-template>
+                        </div>
+                      </dx-list>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+
+    <div>
+      <div class="col-sm-10 section" *ngIf="showNewOpportunityForm == true; else hideNewOpportunity">
+        <div class="row">
+          <div class="thumbnail card">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-6">
+
+                  <h4 class="page-headin">
+                    Project Phase :
+                    <small>Concept/EOI Creation</small>
+                  </h4>
+                  <h4 class="page-headin">
+                    Criteria Score :
+                    <small>NA </small>
+                  </h4>
+                  <h4 class="page-headin">
+                    Budget Details :
+                    <small>NA</small>
+                  </h4>
+                  <h4 class="page-headin">
+                    Time in Phase :
+                    <small>27 hours</small>
+                  </h4>
+
+
+                </div>
+                <div class="col-sm-3">
+                  <h5>Project Documents</h5>
+                  <div class="thumbnail card panelcard">
+                    <div class="row btn-clss">
+                      <div class="col-md-6"><label>Concept : </label></div>
+                      <div class="col-md-3"><button type="button" class="btn btn-primary">Attach</button></div>
+                    </div>
+                    <div class="row btn-clss">
+                      <div class="col-md-6"><label>EOI : </label></div>
+                      <div class="col-md-3"><button type="button" class="btn btn-success">Download</button></div>
+                    </div>
+                    <div class="row btn-clss">
+                      <div class="col-md-6"><label>Presentation : </label></div>
+                      <div class="col-md-3"><button type="button" class="btn btn-success">Download</button></div>
+                    </div>
+                    <div class="row btn-clss">
+                      <div class="col-md-6"><label>Budget : </label></div>
+                      <div class="col-md-3"><button type="button" class="btn btn-primary">Attach</button></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <h5>Available Action</h5>
+                  <div class="thumbnail card panelcard">
+                    <div class="row btn-clss">
+                      <div class="col-md-6"><label>As Editor : </label></div>
+                      <div class="col-md-3"><button type="button" class="btn btn-primary">Submit</button></div>
+                    </div>
+                    <div class="row btn-clss">
+                      <div class="col-md-6"><label>As Director : </label></div>
+                      <div class="col-md-3"><button type="button" class="btn btn-success btn-drctr">Approve</button>
+                      </div>
+                      <div class="col-md-3"><button type="button" class="btn btn-danger btn-drctr">Reject</button> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="thumbnail card">
+            <div class="container">
+              <ul class="nav nav-tabs">
+                <li (click)="openInfoTabs(1)" [ngClass]="{'active': true}">
+                  <a style="cursor: pointer;" data-toggle="tab">Project Details</a>
+                </li>
+                <li (click)="openInfoTabs(2)">
+                  <a style="cursor: pointer;" data-toggle="tab">Criteria Evaluations</a>
+                </li>
+                <li (click)="openInfoTabs(3)">
+                  <a style="cursor: pointer;" data-toggle="tab">Activities</a>
+                </li>
+                <li (click)="openInfoTabs(4)">
+                  <a style="cursor: pointer;" data-toggle="tab">Procurement Items</a>
+                </li>
+                <li (click)="openInfoTabs(5)">
+                  <a style="cursor: pointer;" data-toggle="tab">Budget Lines</a>
+                </li>
+                <li (click)="openInfoTabs(6)">
+                  <a style="cursor: pointer;" data-toggle="tab">Project Jobs</a>
+                </li>
+                <li (click)="openInfoTabs(7)">
+                  <a style="cursor: pointer;" data-toggle="tab">Hiring</a>
+                </li>
+                <li (click)="openInfoTabs(8)">
+                  <a style="cursor: pointer;" data-toggle="tab">Bidding Committee</a>
+                </li>
+              </ul>
+              <div class="tab-content">
+
+                <div *ngIf="openInfoTab == 1" class="tab-pane fade in active">
+                  <div class="tab_1">
+
+
+                    <ul>
+                      <li>
+                        <h4>Project Name : <small>NA</small> </h4>
+
+                      </li>
+
+                      <li>
+                        <h4>Duration : <small> NA</small></h4>
+
+                      </li>
+                      <li>
+                        <h4>Resources : <small> NA</small></h4>
+
+                      </li>
+                      <li>
+                        <h4>Client's Name : <small>NA</small></h4>
+
+                      </li>
+                      <li>
+                        <h4>URL : <small>NA</small></h4>
+
+                      </li>
+
+                    </ul>
+
+                  </div>
+                </div>
+
+                <div *ngIf="openInfoTab == 2" class="tab-pane fade in active">
+                  <div class="tab_2">
+                    <app-criteria-evaluation></app-criteria-evaluation>
+                  </div>
+                </div>
+                <div *ngIf="openInfoTab == 3" class="tab-pane fade in active">
+                  <div class="tab_3">
+                    <app-activities></app-activities>
+                  </div>
+                </div>
+                <div *ngIf="openInfoTab == 4" class="tab-pane fade in active">
+                  <div class="tab_4">
+                    <app-procurement-items></app-procurement-items>
+                  </div>
+                </div>
+                <div *ngIf="openInfoTab == 5" class="tab-pane fade in active">
+                  <div class="tab_5">
+                    <app-budget-lines></app-budget-lines>
+                  </div>
+                </div>
+                <div *ngIf="openInfoTab == 6" class="tab-pane fade in active">
+                  <div class="tab_5">
+                    <app-project-jobs></app-project-jobs>
+                  </div>
+                </div>
+                <div *ngIf="openInfoTab == 7" class="tab-pane fade in active">
+                  <div class="tab_5">
+                    <app-hiring></app-hiring>
+                  </div>
+                </div>
+                <div *ngIf="openInfoTab == 8" class="tab-pane fade in active">
+                  <div class="tab_5">
+                    <app-bidding-committee></app-bidding-committee>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #hideNewOpportunity>
+        <br>
+        <div class="row">
+          <app-new-opportunity></app-new-opportunity>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<dx-popup class="popup" [width]="800" [height]="400" [showTitle]="true" title="Project" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="addEditProjectFormPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view showScrollbar="always" direction="both">
+
+      <form action="your-action">
+        <dx-form id="form" [formData]="projectDetailsForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="voucherData" (onFieldDataChanged)="onFieldDataChanged($event)">
+          <dxi-item itemType="group" [colCount]="2">
+            <dxi-item dataField="ProjectCode" caption="Project Code">
+            </dxi-item>
+            <dxi-item dataField="ProjectName" caption="Project Name">
+            </dxi-item>
+            <dxi-item dataField="Description" caption="Project Description">
+            </dxi-item>
+            <dxi-item dataField="MeasureType" editorType="dxNumberBox" caption="Measure Type">
+            </dxi-item>
+            <dxi-item dataField="IsArchive" editorType="dxCheckBox" caption="Archived?">
+            </dxi-item>
+            <dxi-item dataField="ExtensionEndDate" editorType="dxDateBox" caption="Extension End Date">
+            </dxi-item>
+            <dxi-item dataField="ExtensionStartDate" editorType="dxDateBox" caption="Extension Start Date">
+            </dxi-item>
+            <dxi-item dataField="ProjectPhase" caption="Project Phase">
+            </dxi-item>
+            <dxi-item dataField="CriteriaScore" caption="Criteria Score">
+            </dxi-item>
+            <dxi-item dataField="BudgetDetails" caption="Budget Details">
+            </dxi-item>
+            <dxi-item dataField="TimeInPhase" editorType="dxNumberBox" caption="Time(In Hours)">
+            </dxi-item>
+          </dxi-item>
+        </dx-form>
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="voucherData" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (click)="hideAddEditProjectForm()"></dx-button>
+        </div>
+      </form>
+
+    </dx-scroll-view>
+  </div>
+</dx-popup>

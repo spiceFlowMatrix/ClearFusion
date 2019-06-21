@@ -1,0 +1,389 @@
+<div class="main-employee-interview-form">
+  <div class="row">
+
+    <div class="col-sm-12">
+
+      <div *ngIf="empInterviewFormListFlag == true ; else backButton">
+        <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showAddEmpInterviewForm()" *ngIf="isEditingAllowed"></dx-button>
+      </div>
+
+      <ng-template #backButton>
+        <dx-button class="button-info btn btn-default btn-green" text="Back" (onClick)="onBackButtonClick()"></dx-button>
+      </ng-template>
+
+    </div>
+
+    <div *ngIf="empInterviewFormListFlag">
+      <div class="col-sm-12">
+        <br>
+
+        <dx-data-grid id="gridContainer" [dataSource]="interviewDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+          [columnAutoWidth]="true" [showRowLines]="true">
+          <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch" *ngIf="isEditingAllowed"></dxo-editing>
+          <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+          <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+          <dxo-header-filter [visible]="true"> </dxo-header-filter>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+          <dxi-column dataField="InterviewDetailsId" [visible]="false"></dxi-column>
+          <dxi-column dataField="CandidateName" [visible]="true"></dxi-column>
+          <dxi-column dataField="DutyStation"></dxi-column>
+          <dxi-column caption="Action" alignment="center" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
+          <div *dxTemplate="let data of 'CellTemplateEdit'">
+            <a href="javascript:void(0)" (click)="onEditEmpInterviewShowForm(data.data, false)">Edit</a> |
+            <a href="javascript:void(0)" (click)="onEditEmpInterviewShowForm(data.data, true)">View</a>
+          </div>
+
+          <dxi-column dataField="InterviewStatus" [width]="200" caption="Approval" cellTemplate="CellTemplateInterviewForm"></dxi-column>
+          <div *dxTemplate="let cell of 'CellTemplateInterviewForm'">
+            <div *ngIf="cell.value == null">
+              <dx-radio-group [items]="interviewFormRadioGroup" layout="horizontal" (onValueChanged)="onIsInterviewFormApprovedValueChanged(cell, $event)">
+              </dx-radio-group>
+            </div>
+            <div *ngIf="cell.value == 'reject'">
+              Rejected
+            </div>
+            <div *ngIf="cell.value == 'approved'">
+              Approved
+            </div>
+
+          </div>
+
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+        </dx-data-grid>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- Add / Edit-->
+  <div *ngIf="addEmpInterviewDetailsFlag">
+    <div class="row">
+      <div class="col-sm-12">
+        <br>
+
+
+
+
+
+        <div class="row">
+          <div class="col-sm-12">
+
+            <form action="your-action" (submit)="onInterviewFormSubmit(empInterviewFormMainForm)">
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h3 class="panel-title text-left">Interview Form</h3>
+                    </div>
+                    <div class="panel-body">
+
+                      <dx-form id="form" [formData]="empInterviewFormMainForm" [colCount]="2" [readOnly]="interviewFormViewOnly" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                        validationGroup="interviewFormValidationDetails">
+
+
+                        <dxi-item itemType="group" [colSpan]="2" [colCount]="2">
+                          
+                          <!-- job dropdown -->
+                          <dxi-item dataField="EmployeeID" editorType="dxSelectBox" [disabled]="selectEmpDropdownFlag" [editorOptions]="{ dataSource: employeeListDataSource, value: empInterviewFormMainForm.EmployeeID, displayExpr: 'CodeEmployeeName', valueExpr: 'EmployeeId', searchEnabled: true, placeholder: 'Select Employee'}">
+                            <dxo-label text="Employee"></dxo-label>
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                          </dxi-item>
+
+                          <dxi-item dataField="JobId" editorType="dxSelectBox" [editorOptions]="{dataSource: jobCodeDropdown, value: empInterviewFormMainForm.JobId, displayExpr: 'JobCode', valueExpr: 'JobId', searchEnabled: true, placeholder: 'Select Job'}">
+                            <dxo-label text="Job"></dxo-label>
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                          </dxi-item>
+
+                        </dxi-item>
+
+
+                        <dxi-item itemType="tabbed" [colSpan]="2">
+                          <!-- Rating Based Criteria -->
+                          <dxi-tab title="Rating Based Criteria">
+
+                            <dx-data-grid id="gridContainer" [dataSource]="ratingBasedCriteriaDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                              [showRowLines]="true">
+
+                              <dxo-editing [allowAdding]="!interviewFormViewOnly" [allowUpdating]="!interviewFormViewOnly" mode="batch"></dxo-editing>
+                              <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+                              <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+                              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+                              <dxi-column dataField="CriteriaQuestion" caption=" "> </dxi-column>
+
+                              <dxi-column dataField="Rating" caption="Rating" [width]="200">
+                                <dxo-lookup [dataSource]="skillRatingRadioGroup" displayExpr="SkillRatingName" valueExpr="SkillRatingId"></dxo-lookup>
+                              </dxi-column>
+
+                              <dxo-paging [pageSize]="10"></dxo-paging>
+                              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                            </dx-data-grid>
+
+                          </dxi-tab>
+
+                          <!-- Language -->
+                          <dxi-tab title="Language">
+
+                            <dx-data-grid id="gridContainer" [dataSource]="languagesListDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                              [showRowLines]="true">
+                              <dxo-editing [allowAdding]="!interviewFormViewOnly" [allowUpdating]="!interviewFormViewOnly" mode="batch"></dxo-editing>
+                              <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+                              <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+                              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+
+                              <dxi-column dataField="LanguageId" [visible]="false"> </dxi-column>
+
+                              <dxi-column dataField="LanguageName" caption=" "> </dxi-column>
+
+                              <dxi-column dataField="Reading" caption="Reading">
+                                <dxo-lookup [dataSource]="skillRatingDropdown" displayExpr="SkillRatingName" valueExpr="SkillRatingId"></dxo-lookup>
+                                <dxi-validation-rule type="required"></dxi-validation-rule>
+                              </dxi-column>
+                              <dxi-column dataField="Writing" caption="Writing">
+                                <dxo-lookup [dataSource]="skillRatingDropdown" displayExpr="SkillRatingName" valueExpr="SkillRatingId"></dxo-lookup>
+                              </dxi-column>
+                              <dxi-column dataField="Listening" caption="Listening">
+                                <dxo-lookup [dataSource]="skillRatingDropdown" displayExpr="SkillRatingName" valueExpr="SkillRatingId"></dxo-lookup>
+                              </dxi-column>
+                              <dxi-column dataField="Speaking" caption="Speaking">
+                                <dxo-lookup [dataSource]="skillRatingDropdown" displayExpr="SkillRatingName" valueExpr="SkillRatingId"></dxo-lookup>
+                              </dxi-column>
+
+
+                              <dxo-paging [pageSize]="10"></dxo-paging>
+                              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                            </dx-data-grid>
+
+                          </dxi-tab>
+
+                          <!-- Training -->
+                          <dxi-tab title="Training">
+
+                            <dx-data-grid id="gridContainer" [dataSource]="trainingListDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                              [showRowLines]="true">
+                              <dxo-editing [allowAdding]="!interviewFormViewOnly" [allowUpdating]="!interviewFormViewOnly" mode="batch"></dxo-editing>
+                              <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+                              <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+                              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+                              <dxi-column dataField="TrainingId" [visible]="false">
+                              </dxi-column>
+
+                              <dxi-column dataField="TraininigType" caption="Training Type">
+                                <dxo-lookup [dataSource]="trainingTypeDropdown" displayExpr="TrainingTypeName" valueExpr="TrainingTypeId"></dxo-lookup>
+                              </dxi-column>
+
+                              <dxi-column dataField="TrainingName">
+                                <dxi-validation-rule type="required"></dxi-validation-rule>
+                              </dxi-column>
+
+                              <dxi-column dataField="StudyingCountry" caption="Studying Country, City">
+                                <dxi-validation-rule type="required"></dxi-validation-rule>
+                              </dxi-column>
+
+                              <dxi-column dataField="StartDate" caption="Start Date" alignment="right" dataType="date" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
+                                <dxi-validation-rule type="required"></dxi-validation-rule>
+                              </dxi-column>
+                              <dxi-column dataField="EndDate" caption="End Date" alignment="right" dataType="date" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
+                                <dxi-validation-rule type="required"></dxi-validation-rule>
+                              </dxi-column>
+
+                              <dxo-paging [pageSize]="10"></dxo-paging>
+                              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                            </dx-data-grid>
+
+                          </dxi-tab>
+
+                          <!-- Technical Question -->
+                          <dxi-tab title="Technical Question">
+
+                            <dx-data-grid id="gridContainer" [dataSource]="technicalQuestionsListDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                              [showRowLines]="true">
+                              <dxo-editing [allowAdding]="!interviewFormViewOnly" [allowUpdating]="!interviewFormViewOnly" mode="batch"></dxo-editing>
+                              <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+                              <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+                              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+                              <dxi-column dataField="TechnicalQuestionId" [visible]="false">
+                              </dxi-column>
+                              <dxi-column dataField="Question" caption=" " allowEditing="false">
+                              </dxi-column>
+
+
+                              <dxi-column dataField="Answer" caption="Answer">
+                                <dxo-lookup [dataSource]="skillRatingRadioGroup" displayExpr="SkillRatingName" valueExpr="SkillRatingId"></dxo-lookup>
+                              </dxi-column>
+
+                              <dxo-paging [pageSize]="10"></dxo-paging>
+                              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                            </dx-data-grid>
+
+                          </dxi-tab>
+                        </dxi-item>
+
+                        <dxi-item dataField="ProfessionalCriteriaMarks" editorType="dxNumberBox">
+                          <dxo-label text="Professional Criteria Marks"></dxo-label>
+                          <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="MarksObtained" [colSpan]="2" editorType="dxNumberBox">
+                          <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="WrittenTestMarks" [colSpan]="2" editorType="dxNumberBox">
+                          <dxo-label text="Written Test Marks Obtained"></dxo-label>
+                          <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="Ques1" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: yesNoRadioGroup, layout: 'horizontal' }">
+                          <dxo-label text="Are you willing to Travel to proviences if required?"></dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="Ques2" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: yesNoRadioGroup, layout: 'horizontal' }">
+                          <dxo-label text="Do you have any health related issue?"></dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="Ques3" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: yesNoRadioGroup, layout: 'horizontal' }">
+                          <dxo-label text="Are you willing to consider opportunity if it's based in the provinces?"></dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="PreferedLocation" [colSpan]="2">
+                          <dxo-label text="What province would you prefer, if you consider an opportunity given to you?"></dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="NoticePeriod" [colSpan]="2">
+                        </dxi-item>
+                       
+                        <dxi-item dataField="JoiningDate" [colSpan]="2" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
+                          <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="TotalMarksObtained" [colSpan]="2" editorType="dxNumberBox">
+                          <dxi-validation-rule type="required"></dxi-validation-rule>
+                        </dxi-item>
+
+                        <!-- Compensation -->
+                        <dxi-item itemType="group" [colSpan]="2" [colCount]="2" caption="Compensation and Benefits Requirement (Current / Target)">
+
+
+                          <dxi-item itemType="group" [colSpan]="1" [colCount]="1" caption="Current">
+
+                            <dxi-item dataField="CurrentBase" editorType="dxNumberBox">
+                              <dxo-label text="Base"></dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="CurrentTransportation">
+                              <dxo-label text="Transportation"></dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="CurrentMeal">
+                              <dxo-label text="Meal"></dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="CurrentOther" editorType="dxNumberBox">
+                              <dxo-label text="Other"></dxo-label>
+                            </dxi-item>
+
+                          </dxi-item>
+                          <dxi-item itemType="group" [colSpan]="1" [colCount]="1" caption="Expectation">
+
+                            <dxi-item dataField="ExpectationBase" editorType="dxNumberBox">
+                              <dxo-label text="Base Salary"></dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="ExpectationTransportation">
+                              <dxo-label text="Transportation"></dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="ExpectationMeal">
+                              <dxo-label text="Meal"></dxo-label>
+                            </dxi-item>
+                            <dxi-item dataField="ExpectationOther" editorType="dxNumberBox">
+                              <dxo-label text="Other"></dxo-label>
+                            </dxi-item>
+
+                          </dxi-item>
+
+                        </dxi-item>
+
+
+                        <!-- Recommendation -->
+                        <dxi-item itemType="group" [colSpan]="2"  caption="Recommendation">
+
+                          <dxi-item dataField="Status" [colSpan]="2">
+                          </dxi-item>
+                        </dxi-item>
+
+                        <dxi-item itemType="group" [colSpan]="2">
+
+                        <dx-data-grid id="gridContainer" [dataSource]="Interviewers" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                        [showRowLines]="true">
+                        <dxo-editing [allowAdding]="!interviewFormViewOnly" [allowUpdating]="!interviewFormViewOnly" [allowDeleting]="!interviewFormViewOnly" mode="batch"></dxo-editing>
+                        <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+                        <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+                        <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+                        <dxi-column dataField="Interviewer">
+                            <dxo-lookup [dataSource]="employeeListDataSource" valueExpr="EmployeeId" displayExpr="CodeEmployeeName">
+                              </dxo-lookup>
+                        </dxi-column>    
+                        <dxo-paging [pageSize]="10"></dxo-paging>
+                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                      </dx-data-grid>
+                        </dxi-item>
+
+                      </dx-form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="text-center">
+                    <div *ngIf="!interviewFormViewOnly">
+                    <div *ngIf="currentApproveReject == true; else approvalReject">
+                      <dx-button text="Save" type="success" validationGroup="interviewFormValidationDetails" [useSubmitBehavior]="true"></dx-button>
+                      <dx-button text="Cancel" (onClick)="hideAddEmpInterviewForm()"></dx-button>
+                    </div>
+                  </div>
+                    <ng-template #approvalReject>
+                      <dx-button text="Cancel" (onClick)="hideAddEmpInterviewForm()"></dx-button>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ngx-loading [show]="empInterviewFormLoader"></ngx-loading>
+</div>
+
+
+
+<dx-popup class="popup" [width]="350" [height]="120" [showTitle]="true" title="Interview Result Confirmation" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="popupApprovalFormConfVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="text-center">
+      <dx-button text="Confirm" (onClick)="onApprovalConfirmationClick()">
+      </dx-button>
+      <dx-button text="Cancel" (onClick)="hideInterviewApprovalConfirmation()">
+      </dx-button>
+    </div>
+  </div>
+</dx-popup>
