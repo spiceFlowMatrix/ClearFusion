@@ -1059,7 +1059,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var unitRateList = (from ur in _uow.GetDbContext().UnitRates
+                var unitRateList = await (from ur in _uow.GetDbContext().UnitRates
                                     join at in _uow.GetDbContext().ActivityTypes on ur.ActivityTypeId equals at.ActivityTypeId
                                     where !ur.IsDeleted.Value && !at.IsDeleted.Value
                                     select (new UnitRateDetailsModel
@@ -1074,10 +1074,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                         QualityId = ur.QualityId,
                                         TimeCategoryId = ur.TimeCategoryId,
                                         MediaCategoryId = ur.MediaCategoryId
-                                    })).ToList();
+                                    })).ToListAsync();
 
                 response.data.TotalCount = unitRateList.Count(x => x.IsDeleted == false);
-                response.data.UnitRateDetails = unitRateList;
+                response.data.UnitRateDetails = unitRateList.OrderByDescending(x=>x.UnitRateId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

@@ -8,7 +8,7 @@ namespace HumanitarianAssistance.ViewModels.Models
     {
 
 		public int EmployeeSalaryAnalyticalInfoId { get; set; }
-		public int AccountCode { get; set; }
+		public int? AccountCode { get; set; }
 		public long ProjectId { get; set; }
 		public long BudgetLineId { get; set; }
 		public double SalaryPercentage { get; set; }

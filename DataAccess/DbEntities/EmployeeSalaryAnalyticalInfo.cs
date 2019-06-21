@@ -13,7 +13,7 @@ namespace DataAccess.DbEntities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column(Order = 1, TypeName = "serial")]
 		public int EmployeeSalaryAnalyticalInfoId { get; set; }
-		public int AccountCode { get; set; }
+		public int? AccountCode { get; set; }
 		public long ProjectId { get; set; }
 		public ProjectDetail ProjectDetail { get; set; }
 		public long BudgetlineId { get; set; }

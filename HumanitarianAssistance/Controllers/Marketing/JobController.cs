@@ -96,6 +96,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
       return apiRespone;
     }
 
+   
+
+
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
     public async Task<APIResponse> FetchInvoice([FromBody]int jobId)
@@ -285,5 +288,20 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
 
     #endregion
 
+    #region"RemoveInvoice AS 22/06/19"
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    public async Task<APIResponse> RemoveInvoice([FromBody]int jobId)
+    {
+      APIResponse apiRespone = null;
+      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      if (user != null)
+      {
+        var id = user.Id;
+        apiRespone = await _iJobDetailsService.RemoveInvoice(jobId, id);
+      }
+      return apiRespone;
+    }
+    #endregion
   }
 }
