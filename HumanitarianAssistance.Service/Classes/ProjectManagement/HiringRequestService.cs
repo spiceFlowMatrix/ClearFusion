@@ -283,7 +283,10 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             try
             {
                 var employeeExist = await _uow.GetDbContext().HiringRequestCandidates
-                                              .FirstOrDefaultAsync(x => x.EmployeeID == model.EmployeeID && x.ProjectHiringRequestDetail.ProjectId == model.ProjectId && x.IsDeleted == false);
+                                              .FirstOrDefaultAsync(x => x.EmployeeID == model.EmployeeID
+                                              && x.HiringRequestId == model.HiringRequestId
+                                              && x.IsDeleted == false && x.IsSelected);
+
                 if (employeeExist == null)
                 {
                     HiringRequestCandidates candidateDeatil = new HiringRequestCandidates()

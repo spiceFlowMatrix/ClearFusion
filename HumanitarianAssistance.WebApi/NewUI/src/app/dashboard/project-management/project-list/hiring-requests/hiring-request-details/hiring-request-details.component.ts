@@ -335,7 +335,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           (response: IResponseData) => {
             if (response.statusCode === 200) {
               data.IsSelected = !data.IsSelected;
-              data.EmployeeTypeId = !data.EmployeeTypeId;
+              data.EmployeeTypeId = this.employeeType.Active;
             } else {
               this.toastr.error(response.message);
             }
