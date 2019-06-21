@@ -270,7 +270,7 @@ namespace HumanitarianAssistance.WebApi
             {
                 //configuration.RootPath = "ClientApp/dist";
                 configuration.RootPath = "NewUI/dist";
-
+                //configuration.RootPath = "OldUI/dist";
 
             });
         }
@@ -279,7 +279,7 @@ namespace HumanitarianAssistance.WebApi
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
         {
             // update database
-            //UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+            UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
             if (env.IsDevelopment())
             {
@@ -325,6 +325,7 @@ namespace HumanitarianAssistance.WebApi
 
                 //spa.Options.SourcePath = "ClientApp";
                 spa.Options.SourcePath = "NewUI";
+                //spa.Options.SourcePath = "OldUI";
 
                 if (env.IsDevelopment())
                 {
