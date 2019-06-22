@@ -370,6 +370,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 obj.ScheduleCode = scheduleCode;
                 obj.MediumId = model.MediumId;
                 obj.ChannelId = model.ChannelId;
+                obj.IsActive = true;
                 obj.Description = model.Description;
                 if (model.RepeatDays != null && model.RepeatDays.Count > 0)
                 {
@@ -445,7 +446,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
         public async Task<APIResponse> AddEditSchedule(SchedulerModel model, string userId)
         {
-            long LatestScheduleId = 0;
+           // long LatestScheduleId = 0;
             var scheduleCode = string.Empty;
             model.ProjectId = model.ProjectId == 0 ? null : model.ProjectId;
             model.PolicyId = model.PolicyId == 0 ? null : model.PolicyId;
@@ -669,6 +670,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                             existRecord.ModifiedById = userId;
                             existRecord.ModifiedDate = DateTime.Now;
                             existRecord.MediumId = model.MediumId;
+                            existRecord.IsActive = true;
                             existRecord.ChannelId = model.ChannelId;
                             existRecord.StartTime = TimeSpan.Parse(model.StartTime);
                             existRecord.EndTime = TimeSpan.Parse(model.EndTime);
@@ -705,7 +707,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                           .Include(p => p.ProjectDetail)
                                           .Include(e => e.PolicyDetails)
                                           .Include(o => o.JobDetails)
-                                          .Where(v => v.IsDeleted == false && (v.JobDetails.JobId == v.JobId || v.ProjectDetail.ProjectId == v.ProjectId || v.PolicyDetails.PolicyId == v.PolicyId) && v.StartDate <= DateTime.UtcNow && DateTime.UtcNow.Date <= v.EndDate)
+                                          .Where(v => v.IsDeleted == false && v.IsActive == true && (v.JobDetails.JobId == v.JobId || v.ProjectDetail.ProjectId == v.ProjectId || v.PolicyDetails.PolicyId == v.PolicyId))
                                           .ToListAsync();
                 var ScheduleList = activityList.Select(b => new SchedulerModel
                 {
@@ -729,7 +731,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     Saturday = b.Saturday,
                     Sunday = b.Sunday
                 }).ToList();
-                ScheduleList = FilterListByDays(ScheduleList);
+               //ScheduleList = FilterListByDays(ScheduleList);
                 //var ScheduleList = await (from j in _uow.GetDbContext().ScheduleDetails
                 //                                join mc in _uow.GetDbContext().PolicyDetails on j.PolicyId equals mc.PolicyId
                 //                                join pd in _uow.GetDbContext().JobDetails on j.JobId equals pd.JobId
