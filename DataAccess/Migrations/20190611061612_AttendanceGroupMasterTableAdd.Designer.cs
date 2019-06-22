@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190611061612_AttendanceGroupMasterTableAdd")]
+    partial class AttendanceGroupMasterTableAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -845,25 +847,11 @@ namespace DataAccess.Migrations
                     b.Property<long>("AttendanceGroupId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
                     b.Property<string>("Description");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("Name");
 
                     b.HasKey("AttendanceGroupId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
 
                     b.ToTable("AttendanceGroupMaster");
                 });
@@ -1757,13 +1745,9 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("OutTime");
 
-                    b.Property<int>("OverTimeMinutes");
-
                     b.Property<string>("Remarks");
 
                     b.Property<string>("TotalWorkTime");
-
-                    b.Property<int>("WorkTimeMinutes");
 
                     b.HasKey("AttendanceId");
 
@@ -2527,8 +2511,6 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("AttendanceHours");
 
-                    b.Property<int>("AttendanceMinutes");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -2562,8 +2544,6 @@ namespace DataAccess.Migrations
                     b.Property<double?>("NetSalary");
 
                     b.Property<int?>("OfficeId");
-
-                    b.Property<int>("OverTimeMinutes");
 
                     b.Property<int?>("OvertimeHours");
 
@@ -3109,8 +3089,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<long?>("AttendanceGroupId");
-
                     b.Property<string>("ContractStatus");
 
                     b.Property<string>("CreatedById");
@@ -3171,8 +3149,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("WorkType");
 
                     b.HasKey("EmployeeProfessionalId");
-
-                    b.HasIndex("AttendanceGroupId");
 
                     b.HasIndex("CreatedById");
 
@@ -5869,8 +5845,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<long?>("AttendanceGroupId");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -5898,8 +5872,6 @@ namespace DataAccess.Migrations
                     b.Property<int?>("WorkingTime");
 
                     b.HasKey("PayrollMonthlyHourID");
-
-                    b.HasIndex("AttendanceGroupId");
 
                     b.HasIndex("CreatedById");
 
@@ -6897,8 +6869,6 @@ namespace DataAccess.Migrations
                     b.Property<int?>("RecurringCount");
 
                     b.Property<int?>("StatusId");
-
-                    b.Property<string>("SubActivityTitle");
 
                     b.Property<float?>("Target");
 
@@ -10234,17 +10204,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.AttendanceGroupMaster", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.BudgetLineType", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -10931,10 +10890,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeProfessionalDetail", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.AttendanceGroupMaster", "AttendanceGroupMaster")
-                        .WithMany()
-                        .HasForeignKey("AttendanceGroupId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -11958,10 +11913,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.PayrollMonthlyHourDetail", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.AttendanceGroupMaster", "AttendanceGroupMaster")
-                        .WithMany()
-                        .HasForeignKey("AttendanceGroupId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");

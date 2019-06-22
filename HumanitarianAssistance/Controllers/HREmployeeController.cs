@@ -434,10 +434,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpGet]
-    public async Task<object> GetAllEmployeesAttendanceByDate(string SelectedDate, int OfficeId, bool attendancestatus)
+    [HttpPost]
+    public async Task<object> GetAllEmployeesAttendanceByDate([FromBody] EmployeeAttendanceFilterViewModel model)
     {
-      APIResponse response = await _iHREmployee.GetAllEmployeesAttendanceByDate(SelectedDate, OfficeId, attendancestatus);
+      APIResponse response = await _iHREmployee.GetAllEmployeesAttendanceByDate(model);
       return response;
     }
 

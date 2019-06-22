@@ -84,6 +84,12 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddEditPensionDebitAccount(long accountId, string userId);
         Task<APIResponse> GetPensionDebitAccount();
 
+        #region Attendance Groups
+        Task<APIResponse> GetAttendanceGroups();
+        Task<APIResponse> AddAttendanceGroups(AttendanceGroupMasterModel model, string userId);
+        Task<APIResponse> EditAttendanceGroups(AttendanceGroupMasterModel model, string userId);
+        #endregion
+
         #region Language
         Task<APIResponse> EditLanguage(LanguageModel model, string UserId);
         Task<APIResponse> AddLanguage(LanguageModel model, string UserId);

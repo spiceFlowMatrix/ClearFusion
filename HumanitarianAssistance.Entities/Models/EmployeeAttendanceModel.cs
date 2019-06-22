@@ -23,6 +23,9 @@ namespace HumanitarianAssistance.ViewModels.Models
         public bool LeaveStatus { get; set; }
         public int? FinancialYearId { get; set; }
         public int? OfficeId { get; set; }
+        public long? AttendanceGroupId { get; set; }
+        public int? WorkTimeMinutes { get; set; }
+        public int? OvertimeMinutes { get; set; }
     }
 
     public class DisplayEmployeeAttendanceModel

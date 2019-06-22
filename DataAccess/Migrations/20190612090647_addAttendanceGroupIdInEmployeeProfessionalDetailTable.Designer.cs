@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190612090647_addAttendanceGroupIdInEmployeeProfessionalDetailTable")]
+    partial class addAttendanceGroupIdInEmployeeProfessionalDetailTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1757,13 +1759,9 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("OutTime");
 
-                    b.Property<int>("OverTimeMinutes");
-
                     b.Property<string>("Remarks");
 
                     b.Property<string>("TotalWorkTime");
-
-                    b.Property<int>("WorkTimeMinutes");
 
                     b.HasKey("AttendanceId");
 
@@ -2527,8 +2525,6 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("AttendanceHours");
 
-                    b.Property<int>("AttendanceMinutes");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -2562,8 +2558,6 @@ namespace DataAccess.Migrations
                     b.Property<double?>("NetSalary");
 
                     b.Property<int?>("OfficeId");
-
-                    b.Property<int>("OverTimeMinutes");
 
                     b.Property<int?>("OvertimeHours");
 
