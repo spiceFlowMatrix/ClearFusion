@@ -1230,41 +1230,6 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     employeeinfo.EmployeeTypeId = model.EmployeeTypeId;
                     await _uow.EmployeeDetailRepository.UpdateAsyn(employeeinfo);
-
-                    //if (model.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
-                    //{
-
-                    //    var financiallist = await _uow.FinancialYearDetailRepository.FindAsync(x => x.IsDefault == true);
-
-                    //    var queryResult = EF.CompileAsyncQuery(
-                    //        (ApplicationDbContext ctx) => ctx.HolidayDetails
-                    //        .Where(x => x.IsDeleted == false && x.FinancialYearId == financiallist.FinancialYearId));
-                    //    var holidaylist = await Task.Run(() =>
-                    //        queryResult(_uow.GetDbContext()).ToListAsync().Result
-                    //    );
-
-                    //    List<EmployeeAttendance> attendancelist = new List<EmployeeAttendance>();
-                    //    foreach (var list in holidaylist)
-                    //    {
-                    //        EmployeeAttendance attendance = new EmployeeAttendance();
-                    //        attendance.EmployeeId = (int)model.EmployeeId;
-                    //        attendance.InTime = list.Date.Date;
-                    //        attendance.OutTime = list.Date.Date;
-                    //        attendance.TotalWorkTime = "0";
-                    //        attendance.HoverTimeHours = 0;
-                    //        attendance.AttendanceTypeId = (int)AttendanceType.H;
-                    //        attendance.HolidayId = list.HolidayId;
-                    //        attendance.Date = list.Date;
-                    //        attendance.CreatedDate = model.CreatedDate;
-                    //        attendance.CreatedById = model.CreatedById;
-                    //        attendance.IsDeleted = false;
-                    //        attendance.FinancialYearId = financiallist.FinancialYearId;
-                    //        attendancelist.Add(attendance);
-                    //    }
-                    //    await _uow.GetDbContext().EmployeeAttendance.AddRangeAsync(attendancelist);
-                    //    await _uow.SaveAsync();
-
-                    //}
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1297,6 +1262,7 @@ namespace HumanitarianAssistance.Service.Classes
                     existrecord.TrainingBenefits = model.TrainingBenefits;
                     existrecord.JobDescription = model.JobDescription;
                     existrecord.ResignationReason = model.ResignationReason;
+                    existrecord.AttendanceGroupId = model.AttendanceGroupId;
                     existrecord.MembershipSupportInPoliticalParty = model.MembershipSupportInPoliticalParty;
                     existrecord.ModifiedById = model.ModifiedById;
                     existrecord.ModifiedDate = model.ModifiedDate;
@@ -1380,24 +1346,17 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                //var employeeprofessional = await Task.Run(() =>
-                //    _uow.GetDbContext().EmployeeProfessionalDetail.Include(e => e.EmployeeType)
-                //    .Include(o => o.OfficeDetail)
-                //    .Include(d => d.DesignationDetails)
-                //    .Include(d => d.Department).Where(x => x.EmployeeId == EmployeeId).ToListAsync()
-                //);
 
-                var queryResult = EF.CompileAsyncQuery(
-                  (ApplicationDbContext ctx) => ctx.EmployeeProfessionalDetail.Include(e => e.EmployeeType)
-                    .Include(o => o.OfficeDetail)
-                    .Include(d => d.DesignationDetails)
-                    .Include(d => d.Department)
-                    .Where(x => x.EmployeeId == EmployeeId));
-                var employeeprofessional = await Task.Run(() =>
-                    queryResult(_uow.GetDbContext()).ToListAsync().Result
-                );
+                var employeeProfessionalDetail = await _uow.GetDbContext().EmployeeProfessionalDetail
+                                      .Include(z=> z.AttendanceGroupMaster)
+                                      .Include(e => e.EmployeeType)
+                                      .Include(o => o.OfficeDetail)
+                                      .Include(d => d.DesignationDetails)
+                                      .Include(d => d.Department)
+                                      .Where(x => x.EmployeeId == EmployeeId)
+                                      .ToListAsync();
 
-                var employeeprofessionallist = employeeprofessional.Select(x => new EmployeeProfessionalDetailModel
+                var employeeprofessionallist = employeeProfessionalDetail.Select(x => new EmployeeProfessionalDetailModel
                 {
                     EmployeeProfessionalId = x.EmployeeProfessionalId,
                     EmployeeTypeId = x.EmployeeTypeId,
@@ -1416,7 +1375,9 @@ namespace HumanitarianAssistance.Service.Classes
                     ResignationOn = x.ResignationOn != null ? Convert.ToDateTime(x.ResignationOn).Date : x.ResignationOn,
                     ResignationReason = x.ResignationReason,
                     JobDescription = x.JobDescription,
-                    TrainingBenefits = x.TrainingBenefits
+                    TrainingBenefits = x.TrainingBenefits,
+                    AttendanceGroupId= x.AttendanceGroupId,
+                    AttendanceGroupName= x.AttendanceGroupMaster == null ? "" : x.AttendanceGroupMaster.Name
                 }).ToList();
                 response.data.EmployeeProfessionalList = employeeprofessionallist;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -1668,32 +1629,32 @@ namespace HumanitarianAssistance.Service.Classes
         //    return response;
         //}
 
-        public async Task<APIResponse> GetAllEmployeesAttendanceByDate(string SelectedDate, int OfficeId, bool attendancestatus)
+        public async Task<APIResponse> GetAllEmployeesAttendanceByDate(EmployeeAttendanceFilterViewModel model)
         {
             APIResponse response = new APIResponse();
             try
             {
 
-                int month = Convert.ToDateTime(SelectedDate).Date.Month;
+                int month = DateTime.Parse(model.SelectedDate).Month;
 
-                List<EmployeeAttendance> empattendancelist = _uow.EmployeeAttendanceRepository.FindAllAsync(x => x.Date.Date == DateTime.Parse(SelectedDate).Date).Result.ToList();  //marked or not
+                List<EmployeeAttendance> empattendancelist = _uow.EmployeeAttendanceRepository.FindAllAsync(x => x.Date.Date == DateTime.Parse(model.SelectedDate).Date).Result.ToList();  //marked or not
 
                 List<EmployeeDetail> activelist = await _uow.GetDbContext().EmployeeDetail
                                               .Include(x => x.EmployeeProfessionalDetail) // use to get officeId 
                                               .Include(x => x.EmployeeAttendance)
-                                              .Where(x => x.EmployeeProfessionalDetail.OfficeId == OfficeId &&
-                                                          x.EmployeeProfessionalDetail.HiredOn.Value.Date <= DateTime.Parse(SelectedDate).Date &&
+                                              .Where(x => x.EmployeeProfessionalDetail.OfficeId == model.OfficeId &&
+                                                          x.EmployeeProfessionalDetail.HiredOn.Value.Date <= DateTime.Parse(model.SelectedDate).Date &&
                                                           x.EmployeeProfessionalDetail.EmployeeTypeId == (int)EmployeeTypeStatus.Active &&
-                                                          x.IsDeleted == false)
+                                                          x.IsDeleted == false && x.EmployeeProfessionalDetail.AttendanceGroupId== model.AttendanceGroupId)
                                               .OrderBy(x => x.EmployeeID)
                                               .ToListAsync();                 //EmployeeTypeId is moved to EmployeeProfessionalDetails table
 
                 IList<EmployeeAttendanceModel> empAttModel = new List<EmployeeAttendanceModel>();
-                if (attendancestatus == true)
+                if (model.AttendanceStatus)
                 {
                     //response.data.AttendanceStatus = attendancestatus;
                     empAttModel = activelist.SelectMany(x => x.EmployeeAttendance)
-                                            .Where(x => x.Date.Date == DateTime.Parse(SelectedDate).Date)
+                                            .Where(x => x.Date.Date == DateTime.Parse(model.SelectedDate).Date)
                                             .Select(x => new EmployeeAttendanceModel
                                             {
                                                 AttendanceId = x.AttendanceId,
@@ -1720,8 +1681,8 @@ namespace HumanitarianAssistance.Service.Classes
                     int count = 0;
 
                     //Get Default In-time and out-time for an office and for current year and current month
-                    PayrollMonthlyHourDetail xPayrollMonthlyHourDetail = _uow.GetDbContext().PayrollMonthlyHourDetail.Where(x => x.IsDeleted == false && x.OfficeId == OfficeId && x.PayrollYear == DateTime.Now.Year
-                                                                                                                            && x.PayrollMonth == month).FirstOrDefault();
+                    PayrollMonthlyHourDetail xPayrollMonthlyHourDetail = _uow.GetDbContext().PayrollMonthlyHourDetail.FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == model.OfficeId && x.PayrollYear == DateTime.Now.Year
+                                                                                                                            && x.PayrollMonth == month && x.AttendanceGroupId== model.AttendanceGroupId);
                     if (xPayrollMonthlyHourDetail != null)
                     {
 
@@ -1739,7 +1700,7 @@ namespace HumanitarianAssistance.Service.Classes
                                 obj.InTime = xPayrollMonthlyHourDetail.InTime;
                                 obj.OutTime = xPayrollMonthlyHourDetail.OutTime;
                                 obj.LeaveStatus = false;
-                                obj.OfficeId = OfficeId;
+                                obj.OfficeId = model.OfficeId;
                                 empAttModel.Add(obj);
                             }
                         }

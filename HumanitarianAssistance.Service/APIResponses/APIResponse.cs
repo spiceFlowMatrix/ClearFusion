@@ -357,7 +357,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
         public ActivityDocumentsDetailModel activityDocumnentDetail { get; set; }
         public List<ActivityDocumentDetailModel> ActivityDocumentDetailModel { get; set; }
-
+        public List<AttendanceGroupMasterModel> AttendanceGroupMasterList { get; set; }
 
         public ProjectCashFlowModel ProjectCashFlowModel { get; set; }
         public List<BudgetLineBreakdownListModel> BudgetLineBreakdownList { get; set; }

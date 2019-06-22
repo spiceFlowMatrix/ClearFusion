@@ -10,4 +10,12 @@ namespace HumanitarianAssistance.ViewModels.Models
         public int? Month { get; set; }
         public int? Year { get; set; }
     }
+
+    public class EmployeeAttendanceFilterViewModel
+    {
+        public string SelectedDate { get; set; }
+        public int? OfficeId { get; set; }
+        public bool AttendanceStatus { get; set; }
+        public long AttendanceGroupId { get; set; }
+    }
 }

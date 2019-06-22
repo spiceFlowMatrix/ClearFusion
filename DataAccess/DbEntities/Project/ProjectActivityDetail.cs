@@ -65,6 +65,7 @@ namespace DataAccess.DbEntities.Project
         public float? Target { get; set; }
         [Range(0, 100)]
         public float? Achieved { get; set; }
+        public string SubActivityTitle { get; set; }
         //public DateTime? ActualStartDate { get; set; }
         //public DateTime? ActualEndDate { get; set; }
         //public string ImplementationMethod { get; set; }

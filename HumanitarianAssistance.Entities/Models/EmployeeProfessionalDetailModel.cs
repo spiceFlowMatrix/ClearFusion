@@ -30,5 +30,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string PassportNo { get; set; }
         public int? ProfessionId { get; set; }
         public string TinNumber { get; set; }
+        public long? AttendanceGroupId { get; set; }
+        public string AttendanceGroupName { get; set; }
     }
 }
