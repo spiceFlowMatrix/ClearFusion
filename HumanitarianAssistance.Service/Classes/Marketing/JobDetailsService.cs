@@ -135,12 +135,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                          TotalPrice = jp.TotalPrice,
                                          CreatedDate = j.CreatedDate,
                                          IsInvoiceApproved = jp.IsInvoiceApproved
-                                     })).Take(10).Skip(0).OrderByDescending(x => x.CreatedDate).ToListAsync();
-
-
-
-
-
+                                     })).OrderByDescending(x => x.JobId).Take(10).Skip(0).ToListAsync();
 
                 //var list = await _uow.JobDetailsRepository.FindAllAsync(x => !x.IsDeleted.Value);
                 response.data.JobDetailsModel = JobList;
@@ -286,7 +281,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             {
 
 
-                var JobList = (from j in _uow.GetDbContext().JobDetails
+                var JobList = await (from j in _uow.GetDbContext().JobDetails
                                join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
                                join cd in _uow.GetDbContext().ContractDetails on j.ContractId equals cd.ContractId
                                join cur in _uow.GetDbContext().CurrencyDetails on cd.CurrencyId equals cur.CurrencyId
@@ -314,7 +309,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    JobPriceId = jp.JobPriceId,
                                    CurrencyCode = cur.CurrencyCode
 
-                               })).FirstOrDefault();
+                               })).FirstOrDefaultAsync();
                 response.data.JobPriceDetail = JobList;
                 response.StatusCode = 200;
                 response.Message = "Success";
@@ -475,7 +470,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var JobList1 = (from j in _uow.GetDbContext().JobDetails
+                var JobList1 = await (from j in _uow.GetDbContext().JobDetails
                                 join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
                                 where !j.IsDeleted.Value && !jp.IsDeleted.Value
                                 select (new JobDetailsModel
@@ -496,7 +491,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                     Discount = jp.Discount,
                                     DiscountPercent = jp.DiscountPercent,
                                     Minutes = jp.Minutes
-                                })).ToList();
+                                })).ToListAsync();
 
                 if (model != null)
                 {
@@ -679,8 +674,9 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                    FinalRate = jp.FinalRate,
                                    FinalPrice = jp.FinalPrice,
                                    TotalPrice = jp.TotalPrice,
-                                   IsInvoiceApproved = jp.IsInvoiceApproved
-                               })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).OrderByDescending(x => x.CreatedDate).ToList();
+                                   IsInvoiceApproved = jp.IsInvoiceApproved,
+                                   CreatedDate= j.CreatedDate
+                               })).OrderByDescending(x => x.JobId).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
                 response.data.TotalCount = await _uow.GetDbContext().JobDetails.CountAsync(x => x.IsDeleted == false);
                 response.data.JobDetailsModel = JobList;
                 response.StatusCode = 200;
@@ -727,7 +723,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                JobPriceModel JobDetails = (from j in _uow.GetDbContext().JobDetails
+                JobPriceModel JobDetails = await (from j in _uow.GetDbContext().JobDetails
                                             join jp in _uow.GetDbContext().JobPriceDetails on j.JobId equals jp.JobId
                                             join cd in _uow.GetDbContext().ContractDetails on j.ContractId equals cd.ContractId
                                             join cur in _uow.GetDbContext().CurrencyDetails on cd.CurrencyId equals cur.CurrencyId
@@ -741,7 +737,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                                 StartDate = cd.StartDate,
                                                 IsApproved = j.IsApproved,
                                                 ClientName = cd.ClientName
-                                            })).FirstOrDefault();
+                                            })).FirstOrDefaultAsync();
 
                 //var imagepath = Path.Combine(_hostingEnvironment.WebRootPath, "agreement-logo.png");
                 //< img width = '100' height = '100' src = " + imagepath + @" >
@@ -913,6 +909,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
 
         }
 
+
+       
+
+
         public async Task<APIResponse> FetchInvoice(int jobId, string userId)
         {
             APIResponse response = new APIResponse();
@@ -980,7 +980,6 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 var playout = _uow.PlayoutMinutesRepository.FindAll(x => scheduleList.Any(s => s.ScheduleId == x.ScheduleId)).ToList();
                 APIResponse response1 = await GetJobDetailsById(jobId, userId);
                 InvoiceModel invoiceDetails = new InvoiceModel();
-
                 if (scheduleList.Count > 0)
                 {
                     if (playout.Count > 0)
@@ -1096,6 +1095,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
+                
+
                 var invoiceGeneration = _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).FirstOrDefault();
                 if(invoiceGeneration != null)
                 {
@@ -1122,6 +1123,14 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                             await _uow.InvoiceApprovalRepository.UpdateAsyn(existRecord);
                         }
                     }
+
+                    List<ScheduleDetails> scheduleDetails = await _uow.GetDbContext().ScheduleDetails.Where(x => x.IsDeleted == false && x.JobId == jobId).ToListAsync();
+
+                    scheduleDetails.ForEach(x => x.IsActive = false);
+
+                    _uow.GetDbContext().ScheduleDetails.UpdateRange(scheduleDetails);
+                    await _uow.GetDbContext().SaveChangesAsync();
+
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Invoice Approved successfully";
                 }
@@ -1139,6 +1148,35 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
+        #region "RemoveInvoice AS 22/06/19"
+        public async Task<APIResponse> RemoveInvoice(int jobId, string userId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+               // var invoiceDetails = await _uow.InvoiceGenerationRepository.GetAll().AsQueryable().Where(x => x.JobId == jobId && x.IsDeleted == false).OrderByDescending(x => x.InvoiceId).FirstOrDefaultAsync();
+                var invoiceDetails =  await _uow.InvoiceGenerationRepository.FindAsync(x => x.JobId == jobId && x.IsDeleted == false);
+                if (invoiceDetails != null)
+                {
+                    invoiceDetails.IsDeleted = true;
+                    await _uow.InvoiceGenerationRepository.UpdateAsyn(invoiceDetails);
+                    response.StatusCode = 200;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = 400;
+                    response.Message = "Data Not Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
+        #endregion
     }
 }
 

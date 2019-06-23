@@ -1,0 +1,88 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th *ngFor="let item of tableHeaderList">{{ item }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of tableContentList">
+      <div
+        *ngIf="
+          item.IsDeleted;
+          then showEditItemTemplate;
+          else showListItemTemplate
+        "
+      ></div>
+
+      <ng-template #showListItemTemplate>
+        <td>
+          {{ item.UserId | users: userList }}
+        </td>
+        <td>
+          {{ item.RoleId | projectPeopleRole: roleList }}
+        </td>
+        <td>
+          {{ item.DateAdded | date: "dd/MM/yyyy" }}
+        </td>
+      </ng-template>
+      <ng-template #showEditItemTemplate>
+        <!-- <form [formGroup]="editPeopleForm" action="POST"> -->
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>User</mat-label>
+            <mat-select [(value)]="item.UserId">
+              <mat-option *ngFor="let i of userList" [value]="i.UserId">
+                {{ i.Username }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>Role</mat-label>
+            <mat-select  [(value)]="item.RoleId">
+              <mat-option *ngFor="let i of roleList" [value]="i.Id">
+                {{ i.Role }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+        <!-- </form> -->
+      </ng-template>
+
+      <td *ngIf="showEdit && !item.IsDeleted; else editActionTemplate">
+        <mat-icon
+          class="delete_icon_rearrange"
+          aria-label="edit"
+          (click)="editAction(item)"
+        >
+          edit
+        </mat-icon>
+      </td>
+      <ng-template #editActionTemplate>
+        <td>
+          <button mat-icon-button (click)="onEditFormSubmit(item)">
+            <mat-icon aria-label="save">send</mat-icon>
+          </button>
+        </td>
+        <td></td>
+        <td>
+          <button mat-icon-button (click)="onEditCancel(item)">
+            <mat-icon aria-label="clear">clear</mat-icon>
+          </button>
+        </td>
+      </ng-template>
+
+      <td *ngIf="showDelete && showEdit && !item.IsDeleted">
+        <mat-icon
+          class="delete_icon_rearrange"
+          color="warn"
+          aria-label="delete"
+          (click)="confirmDeleteAction(item)"
+        >
+          delete
+        </mat-icon>
+      </td>
+    </tr>
+  </tbody>
+</table>

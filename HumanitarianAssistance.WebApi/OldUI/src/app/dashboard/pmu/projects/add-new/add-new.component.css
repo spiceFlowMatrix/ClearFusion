@@ -1,0 +1,17 @@
+.second {
+    margin-right:75%;
+    /* text-align: left; */
+}
+
+a:hover {
+    text-decoration: underline;
+    color: green;
+}
+
+.btn-green {
+    margin-right: 5px;
+}
+
+.heading{
+    color: grey;
+}

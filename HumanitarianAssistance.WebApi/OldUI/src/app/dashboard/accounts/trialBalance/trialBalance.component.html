@@ -1,0 +1,191 @@
+<div class="main-journal">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="main-heading clearfix">
+                <h3 class="page-headin">Trial Balance</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 dxagninptblk">
+
+            <form action="your-action" (submit)="onApplyingFilter(trailFilters)">
+                <dx-form id="form" [(formData)]="trailFilters" [colCount]="5" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                    validationGroup="customerData">
+
+                    <dxi-item dataField="OfficesList" placeholder="Select Office" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: officeDropdown, displayExpr: 'OfficeName', valueExpr: 'OfficeId', multiline: false, maxDisplayedTags: 0, showClearButton:'true', selectAllMode: 'allPages', showSelectionControls: true, value: selectedOffices, searchEnabled: true }">
+                        <dxo-label text="Office"></dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyDropdown, value: selectedCurrency, displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId', showClearButton:'true', searchEnabled: true }">
+                        <dxo-label text="Currency"></dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="RecordType" editorType="dxSelectBox" [editorOptions]="{ dataSource: recordTypeDropdown, value: defaultRecordType, displayExpr: 'Name', valueExpr: 'Id', showClearButton:'true'  }">
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="accountLists" placeholder="Select Accounts" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: accountDropdown, displayExpr: 'AccountName', valueExpr: 'AccountCode', multiline: false, maxDisplayedTags: 0, showClearButton:'true', selectAllMode: 'allPages', showSelectionControls: true, value: selectedAccounts, searchEnabled: true }">
+                        <dxo-label text="Accounts"></dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <!-- Date range Selector for Trial balance -->
+                    <dxi-item dataField="Date" class="dsplcal cal-custom-outer">
+                        <div class="cal-custom-in">
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                            
+                            <p-calendar name="trialBalanceDateRange" [(ngModel)]="trialBalanceDateRange" dateFormat="dd/mm/yy" selectionMode="range"
+                                showIcon="true" [style]="{'position': 'relative', 'overflow': 'visible', 'z-index': '999'}"></p-calendar>
+                        </div>
+                    </dxi-item>
+                    
+                </dx-form>
+                <br>
+                <div class="row">
+                    <div class="col-md-offset-2 col-md-8 text-center">
+                        <dx-button text="Update Filter" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="viewPdfFlag; else trialBalancePdfView">
+
+        <div class="col-sm-12 text-right">
+            <dx-button text="View Pdf" (onClick)="showTrialBalancePdf()"></dx-button>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="col-sm-12">
+            <div>
+                <dx-data-grid id="gridContainer" [dataSource]="trailBalanceData" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                    [columnAutoWidth]="true">
+
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+
+                    <dxi-column dataField="ChartOfAccountNewCode" caption="Account" [width]="200">
+                    </dxi-column>
+                    <dxi-column dataField="ChartOfAccountNewId" caption="Account Name" [width]="250">
+                        <dxo-lookup [dataSource]="accountDropdown" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                    </dxi-column>
+                    <dxi-column dataField="Description" caption="Description" [width]="250">
+                    </dxi-column>
+                    <dxi-column dataField="CurrencyName" caption="Currency" [width]="200">
+                    </dxi-column>
+                    <dxi-column dataField="DebitAmount" caption="Debit" alignment="right" [width]="200">
+                    </dxi-column>
+                    <dxi-column dataField="CreditAmount" caption="Credit" alignment="right" [width]="200">
+                    </dxi-column>
+
+                    <dxo-summary>
+                        <dxi-total-item column="DebitAmount" summaryType="sum" showInColumn="DebitAmount" [customizeText]="customizeValue">
+                        </dxi-total-item>
+                        <dxi-total-item column="CreditAmount" summaryType="sum" showInColumn="CreditAmount" [customizeText]="customizeValue">
+                        </dxi-total-item>
+                    </dxo-summary>
+
+
+                    <dxo-remote-operations [sorting]="true" [paging]="true"> </dxo-remote-operations>
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]"></dxo-pager>
+
+
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+
+
+    <ng-template #trialBalancePdfView>
+        <br>
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <div class="emp-close-btn">
+                    <i class="fa fa-times-circle" aria-hidden="true" (click)="hideTrialBalancePdf()"></i>
+                </div>
+            </div>
+        </div>
+
+
+        <dx-button text="Print" class="button-info btn btn-default btn-green" (click)="printTrialBalanceReport()"></dx-button>
+
+
+        <div class="row" id="print-content-trial-balance-report">
+            <div class="col-sm-12">
+
+                <div class="header">
+                    <div class="headingPart1">
+
+                        <div style="text-align: center;">
+                            <h3> Coordination of Humanitarian Assistance (CHA)</h3>
+                            <h4>GROUP TRIAL REPORT</h4>
+                        </div>
+
+                    </div>
+                    <br>
+
+                    <div class="mainTable" style="text-align: center;padding-left: 30px; padding-right: 30px; padding-top: 10px;">
+
+                        <table style="text-align: center; width: 100%; border-collapse: collapse;" border="1">
+                            <tr>
+                                <th style="text-align: center;">
+                                    Group
+                                </th>
+                                <th style="text-align: center;">
+                                    Description
+                                </th>
+                                <th style="text-align: center;">
+                                    Debit
+                                </th>
+                                <th style="text-align: center;">
+                                    Credit
+                                </th>
+                                <th style="text-align: center;">
+                                    Expenditure
+                                </th>
+                            </tr>
+
+                            <tr *ngFor="let item of trailBalanceData;">
+                                <td>{{item?.ChartOfAccountNewCode}}</td>
+                                <td>{{item?.Description}}</td>
+                                <td>{{item?.DebitAmount}}</td>
+                                <td>{{item?.CreditAmount}}</td>
+                                <td>{{item?.DebitAmount - item?.CreditAmount}}</td>
+                            </tr>
+
+
+                            <tr style="font-weight: bolder;">
+                                <td> </td>
+                                <td> </td>
+                                <td>{{debitSumForReport}}</td>
+                                <td>{{creditSumForReport}}</td>
+                                <td> {{balanceSumForReport}}</td>
+
+                            </tr>
+
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <br>
+        <br>
+
+    </ng-template>
+
+
+    <ngx-loading [show]="trialBalanceLoader"></ngx-loading>
+</div>

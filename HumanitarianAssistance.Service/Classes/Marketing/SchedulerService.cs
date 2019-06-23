@@ -190,8 +190,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                         Name = scheduleById.PolicyDetails != null ? scheduleById.PolicyDetails.PolicyName : scheduleById.ProjectDetail != null ? scheduleById.ProjectDetail.ProjectName : scheduleById.JobDetails != null ? scheduleById.JobDetails.JobName : null,
                         StartTime = scheduleById.StartTime.ToString(@"hh\:mm"),
                         EndTime = scheduleById.EndTime.ToString(@"hh\:mm"),
-                        StartDate = scheduleById.StartDate.ToString(),
-                        EndDate = scheduleById.EndDate.ToString(),
+                        StartDate = scheduleById.StartDate,
+                        EndDate = scheduleById.EndDate,
                         ProjectId = scheduleById.ProjectId,
                         JobId = scheduleById.JobId,
                         ScheduleCode = scheduleById.ScheduleCode,
@@ -261,16 +261,16 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             var status1 = false;
             bool save = false;
             bool status = false;
-            DateTime startDate = DateTime.Parse(DateTime.Parse(model.StartDate).ToShortDateString());
-            DateTime dataStartDate = DateTime.Parse(data.StartDate.ToShortDateString());
-            DateTime endDate = DateTime.Parse(DateTime.Parse(model.EndDate).ToShortDateString());
-            DateTime dataEndDate = DateTime.Parse(data.EndDate.ToShortDateString());
+            DateTime startDate = model.StartDate;
+            DateTime dataStartDate = data.StartDate;
+            DateTime endDate = model.EndDate;
+            DateTime dataEndDate = data.EndDate;
             if (startDate >= dataStartDate)
             {
                 if (endDate >= dataStartDate)
                 {
                     var istrueDays = model.RepeatDays.Where(d => d.status == true).ToList();
-                    if(istrueDays.Count() == 0)
+                    if (istrueDays.Count() == 0)
                     {
                         status1 = true;
                     }
@@ -370,6 +370,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 obj.ScheduleCode = scheduleCode;
                 obj.MediumId = model.MediumId;
                 obj.ChannelId = model.ChannelId;
+                obj.IsActive = true;
                 obj.Description = model.Description;
                 if (model.RepeatDays != null && model.RepeatDays.Count > 0)
                 {
@@ -433,19 +434,19 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 FilterSchedulerModel data = new FilterSchedulerModel();
                 data.ChannelId = obj.ChannelId;
                 data.MediumId = obj.MediumId;
-                data.StartDate = obj.StartDate.ToShortDateString();
+                data.StartDate = obj.StartDate;
                 APIResponse responseData = await FilterScheduleList(data);
                 response.data.SchedulerList = responseData.data.SchedulerList;
                 response.data.scheduleDetails = obj;
                 response.StatusCode = StaticResource.successStatusCode;
-            }           
-           
+            }
+
             return response;
         }
 
         public async Task<APIResponse> AddEditSchedule(SchedulerModel model, string userId)
         {
-            long LatestScheduleId = 0;
+            // long LatestScheduleId = 0;
             var scheduleCode = string.Empty;
             model.ProjectId = model.ProjectId == 0 ? null : model.ProjectId;
             model.PolicyId = model.PolicyId == 0 ? null : model.PolicyId;
@@ -493,14 +494,14 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                 response.StatusCode = response2.StatusCode;
                                 response.Message = response2.Message;
                             }
-                            
+
                         }
 
                     }
                     else
                     {
                         APIResponse response1 = await SaveSchedule(model, userId);
-                        if(response1.StatusCode == 200)
+                        if (response1.StatusCode == 200)
                         {
                             APIResponse response2 = await GetScheduleDetailsById(Convert.ToInt32(response1.data.scheduleDetails.ScheduleId));
                             response.data.scheduleDetailsModel = response2.data.scheduleDetailsModel;
@@ -509,7 +510,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                             response.data.scheduleDetails = response1.data.scheduleDetails;
                             response.Message = "Schedule created successfully";
                         }
-                       else
+                        else
                         {
                             response.StatusCode = response1.StatusCode;
                             response.Message = response1.Message;
@@ -669,6 +670,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                             existRecord.ModifiedById = userId;
                             existRecord.ModifiedDate = DateTime.Now;
                             existRecord.MediumId = model.MediumId;
+                            existRecord.IsActive = true;
                             existRecord.ChannelId = model.ChannelId;
                             existRecord.StartTime = TimeSpan.Parse(model.StartTime);
                             existRecord.EndTime = TimeSpan.Parse(model.EndTime);
@@ -705,7 +707,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                           .Include(p => p.ProjectDetail)
                                           .Include(e => e.PolicyDetails)
                                           .Include(o => o.JobDetails)
-                                          .Where(v => v.IsDeleted == false && (v.JobDetails.JobId == v.JobId || v.ProjectDetail.ProjectId == v.ProjectId || v.PolicyDetails.PolicyId == v.PolicyId) && v.StartDate <= DateTime.UtcNow && DateTime.UtcNow.Date <= v.EndDate)
+                                          .Where(v => v.IsDeleted == false && v.IsActive == true && (v.JobDetails.JobId == v.JobId || v.ProjectDetail.ProjectId == v.ProjectId || v.PolicyDetails.PolicyId == v.PolicyId))
                                           .ToListAsync();
                 var ScheduleList = activityList.Select(b => new SchedulerModel
                 {
@@ -713,8 +715,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     Name = b.PolicyDetails != null ? b.PolicyDetails.PolicyName : b.ProjectDetail != null ? b.ProjectDetail.ProjectName : b.JobDetails != null ? b.JobDetails.JobName : null,
                     StartTime = b.StartTime.ToString(@"hh\:mm"),
                     EndTime = b.EndTime.ToString(@"hh\:mm"),
-                    StartDate = b.StartDate.ToShortDateString(),
-                    EndDate = b.EndDate.ToShortDateString(),
+                    StartDate = b.StartDate,
+                    EndDate = b.EndDate,
                     ProjectId = b.ProjectId,
                     JobId = b.JobId,
                     ChannelId = b.ChannelId,
@@ -729,7 +731,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     Saturday = b.Saturday,
                     Sunday = b.Sunday
                 }).ToList();
-                ScheduleList = FilterListByDays(ScheduleList);
+                //ScheduleList = FilterListByDays(ScheduleList);
                 //var ScheduleList = await (from j in _uow.GetDbContext().ScheduleDetails
                 //                                join mc in _uow.GetDbContext().PolicyDetails on j.PolicyId equals mc.PolicyId
                 //                                join pd in _uow.GetDbContext().JobDetails on j.JobId equals pd.JobId
@@ -780,37 +782,32 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
+
+        //Remove the unecessary code and correct the linq query by AS 19/06/2019
         public async Task<APIResponse> FilterScheduleList(FilterSchedulerModel model)
         {
-            var dateTime = DateTime.Now;
-            var currentTime = dateTime.Hour + ":" + dateTime.Minute;
-            string today = dateTime.DayOfWeek.ToString();
             APIResponse response = new APIResponse();
             try
             {
                 var activityList = await _uow.GetDbContext().ScheduleDetails
-                                      .Include(p => p.Mediums)
-                                      .Include(p => p.ProjectDetail)
-                                      .Include(e => e.PolicyDetails)
-                                      .Include(o => o.JobDetails)
-                                      .Where(v => v.IsDeleted == false)
-                                      .Where(v => v.JobDetails != null ? v.JobDetails.JobId == v.JobId : true)
-                                      .Where(v => v.ProjectDetail != null ? v.ProjectDetail.ProjectId == v.ProjectId : true)
-                                      .Where(v => v.PolicyDetails != null ? v.PolicyDetails.PolicyId == v.PolicyId : true)
-                                      .Where(v => v.StartDate.Date <= DateTime.UtcNow.Date && DateTime.UtcNow.Date <= v.EndDate.Date)
-                                      .ToListAsync();
+                                          .Include(p => p.ProjectDetail)
+                                          .Include(e => e.PolicyDetails)
+                                          .Include(o => o.JobDetails)
+                                          .Where(v => v.IsDeleted == false && v.IsActive==true && v.StartDate>=model.StartDate && v.ChannelId==model.ChannelId && v.MediumId==model.MediumId 
+                                          &&(v.JobDetails.JobId == v.JobId || v.ProjectDetail.ProjectId == v.ProjectId || v.PolicyDetails.PolicyId == v.PolicyId))
+                                          .ToListAsync();
                 var ScheduleList = activityList.Select(b => new SchedulerModel
                 {
                     PolicyId = b.PolicyId,
                     Name = b.PolicyDetails != null ? b.PolicyDetails.PolicyName : b.ProjectDetail != null ? b.ProjectDetail.ProjectName : b.JobDetails != null ? b.JobDetails.JobName : null,
                     StartTime = b.StartTime.ToString(@"hh\:mm"),
                     EndTime = b.EndTime.ToString(@"hh\:mm"),
-                    StartDate = b.StartDate.ToShortDateString(),
-                    EndDate = b.EndDate.ToShortDateString(),
+                    StartDate = b.StartDate,
+                    EndDate = b.EndDate,
                     ProjectId = b.ProjectId,
                     JobId = b.JobId,
-                    MediumId = b.MediumId,
                     ChannelId = b.ChannelId,
+                    MediumId = b.MediumId,
                     ScheduleType = b.ScheduleType,
                     ScheduleId = b.ScheduleId,
                     Monday = b.Monday,
@@ -821,26 +818,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                     Saturday = b.Saturday,
                     Sunday = b.Sunday
                 }).ToList();
-                if (ScheduleList != null)
-                {
-                    ScheduleList = FilterListByDays(ScheduleList);
-
-
-                    if (model.StartDate != null)
-                    {
-                        ScheduleList = ScheduleList.Where(x => x.MediumId == model.MediumId && x.ChannelId == model.ChannelId && x.StartDate == model.StartDate.ToString()).ToList();
-                    }
-                    else
-                    {
-                        ScheduleList = ScheduleList.Where(x => x.MediumId == model.MediumId && x.ChannelId == model.ChannelId).ToList();
-                    }
-
-                }
                 response.data.SchedulerList = ScheduleList;
                 response.StatusCode = 200;
                 response.Message = "Success";
-
-
+   
             }
             catch (Exception ex)
             {
@@ -882,48 +863,48 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return model;
         }
+        //Remove the unecessary code and correct the linq query by AS 18/06/2019
         public async Task<APIResponse> AddEditPlayoutMinutes(PlayoutMinutesModel model, string userId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                if (model.PlayoutMinuteId == 0 || model.PlayoutMinuteId == null)
+                bool IsExist = await _uow.PlayoutMinutesRepository.AnyAsync(x => x.IsDeleted == false && x.ScheduleId == model.ScheduleId);
+                if (!IsExist)
                 {
-                    PlayoutMinutes obj = _mapper.Map<PlayoutMinutesModel, PlayoutMinutes>(model);
-                    obj.TotalMinutes = model.TotalMinutes;
-                    obj.DroppedMinutes = model.DroppedMinutes;
-                    obj.ScheduleId = model.ScheduleId;
-                    obj.CreatedById = userId;
-                    obj.CreatedById = userId;
-                    obj.CreatedDate = DateTime.Now;
-                    obj.IsDeleted = false;
-                    obj.CreatedDate = DateTime.Now;
-                    await _uow.PlayoutMinutesRepository.AddAsyn(obj);
+                    //PlayoutMinutes obj = _mapper.Map<PlayoutMinutesModel, PlayoutMinutes>(model);
+                    PlayoutMinutes objPlayoutMinutes = new PlayoutMinutes
+                    {
+                        TotalMinutes = model.TotalMinutes,
+                        DroppedMinutes = model.DroppedMinutes,
+                        ScheduleId = model.ScheduleId,
+                        CreatedById = userId,
+                        CreatedDate = DateTime.Now,
+                        IsDeleted = false
+                    };
+                    await _uow.PlayoutMinutesRepository.AddAsyn(objPlayoutMinutes);
                     await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Playout Minutes Added Successfully";
                 }
                 else
                 {
-                    var existRecord = await _uow.PlayoutMinutesRepository.FindAsync(x => x.IsDeleted == false && x.PlayoutMinuteId == model.PlayoutMinuteId);
-                    if (existRecord != null)
-                    {
-                        _mapper.Map(model, existRecord);
-                        existRecord.IsDeleted = false;
-                        existRecord.ScheduleId = model.ScheduleId;
-                        existRecord.ModifiedById = userId;
-                        existRecord.ModifiedDate = DateTime.Now;
-                        existRecord.TotalMinutes = model.TotalMinutes;
-                        existRecord.DroppedMinutes = model.DroppedMinutes;
-                        //existRecord.ScheduleName = model.ScheduleName;
-                        existRecord.CreatedDate = DateTime.Now;
-                        //existRecord.Description = model.Description;
+                    //_mapper.Map(model, existRecord);
+                    var objPlayoutMinutes = await _uow.PlayoutMinutesRepository.FindAsync(x=>x.IsDeleted==false && x.ScheduleId==model.ScheduleId);
+                    objPlayoutMinutes.IsDeleted = false;
+                    objPlayoutMinutes.ScheduleId = model.ScheduleId;
+                    objPlayoutMinutes.ModifiedById = userId;
+                    objPlayoutMinutes.ModifiedDate = DateTime.Now;
+                    objPlayoutMinutes.TotalMinutes = model.TotalMinutes;
+                    objPlayoutMinutes.DroppedMinutes = model.DroppedMinutes;
+                    //existRecord.ScheduleName = model.ScheduleName;
+                    //objPlayoutMinutes.CreatedDate = DateTime.Now;
+                    //existRecord.Description = model.Description;
 
-                        await _uow.PlayoutMinutesRepository.UpdateAsyn(existRecord);
-                        response.data.playoutMinutesDetails = existRecord;
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Playout minutes Updated successfully";
-                    }
+                    await _uow.PlayoutMinutesRepository.UpdateAsyn(objPlayoutMinutes);
+                    response.data.playoutMinutesDetails = objPlayoutMinutes;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Playout minutes Updated successfully";
                 }
             }
             catch (Exception ex)
@@ -933,25 +914,25 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             }
             return response;
         }
-        public async Task<APIResponse> DeletePlayoutMinutes(int id, string userId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                var scheduleInfo = await _uow.PlayoutMinutesRepository.FindAsync(c => c.PlayoutMinuteId == id);
-                scheduleInfo.IsDeleted = true;
-                scheduleInfo.ModifiedById = userId;
-                scheduleInfo.ModifiedDate = DateTime.UtcNow;
-                await _uow.PlayoutMinutesRepository.UpdateAsyn(scheduleInfo, scheduleInfo.PlayoutMinuteId);
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Playout minutes Deleted Successfully";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
+public async Task<APIResponse> DeletePlayoutMinutes(int id, string userId)
+{
+    APIResponse response = new APIResponse();
+    try
+    {
+        var scheduleInfo = await _uow.PlayoutMinutesRepository.FindAsync(c => c.PlayoutMinuteId == id);
+        scheduleInfo.IsDeleted = true;
+        scheduleInfo.ModifiedById = userId;
+        scheduleInfo.ModifiedDate = DateTime.UtcNow;
+        await _uow.PlayoutMinutesRepository.UpdateAsyn(scheduleInfo, scheduleInfo.PlayoutMinuteId);
+        response.StatusCode = StaticResource.successStatusCode;
+        response.Message = "Playout minutes Deleted Successfully";
+    }
+    catch (Exception ex)
+    {
+        response.StatusCode = StaticResource.failStatusCode;
+        response.Message = StaticResource.SomethingWrong + ex.Message;
+    }
+    return response;
+}
     }
 }

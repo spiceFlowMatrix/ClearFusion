@@ -1,0 +1,541 @@
+<div class="body-content">
+  <div class="container-fluid">
+    <div class="col-sm-12">
+      <div class="col-sm-6">
+        <div class="row">
+          <mat-card [ngStyle]="scrollStyles">
+            <div
+              *ngIf="jobDetailsLoaderFlag; else jobDetailsTemplate"
+              class="col-sm-12"
+            >
+              <br /><br /><br />
+              <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+            </div>
+            <ng-template #jobDetailsTemplate>
+              <div class="row">
+                <div class="col-sm-1">
+                  <button
+                    style="margin-top: 12px; margin-right: -25px;"
+                    [routerLink]="['/marketing/jobs']"
+                    mat-icon-button
+                    class="pull-right"
+                  >
+                    <mat-icon aria-label="Example cancel icon"
+                      >arrow_back</mat-icon
+                    >
+                  </button>
+                </div>
+                <div class="col-sm-5"><h3>Job Details</h3></div>
+                <div class="col-sm-4 pull-right">
+                  <div *ngIf="!approvedJobFlag; else approvedJob">
+                    <button
+                     mat-raised-button
+                     color= "accent">
+                      <mat-icon aria-label="done">done</mat-icon>
+                      APPROVED
+                    </button>
+                  </div>
+                  <ng-template #approvedJob>
+
+                      <button mat-stroked-button
+                      *ngIf="isApproveRejectAllowed"
+                      (click)="ApproveJobs()">
+                      <mat-icon aria-label="done" *ngIf="!approveJobLoader">done</mat-icon>
+                      <span
+                        class="pull-left  margin_top_10"
+                        *ngIf="approveJobLoader">
+                        <mat-spinner [diameter]="15"></mat-spinner>
+                      </span>
+                      APPROVE
+                    </button>
+                  </ng-template>
+                </div>
+              </div>
+              <form [formGroup]="jobDetailsForm" (ngSubmit)="onSave()">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <mat-form-field class="example-full-width">
+                          <input
+                            formControlName="jobname"
+                            matInput
+                            #jobName
+                            placeholder="Job Name"
+                            (change)="
+                              onJobDetailUpdate('jobname', jobName.value)
+                            "
+                            name="jobName"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <span
+                      class="validationError"
+                      *ngIf="formErrors.contractname"
+                      >{{ formErrors.jobname }}</span
+                    >
+                  </div>
+                </div>
+                <div class="row"></div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <h4>Client Details</h4>
+                    <label>Please Select a client and an active Contract</label>
+                    <mat-form-field class="example-full-width">
+                      <mat-select
+                        (selectionChange)="onChange($event.value)"
+                        name="contractname"
+                        formControlName="clientname"
+                        placeholder="Client Name"
+                        name="contractname"
+                      >
+                        <mat-option
+                          *ngFor="let contract of contractsListByClient"
+                          [value]="contract.ClientId"
+                        >
+                          {{ contract.ClientName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <span
+                      class="validationError"
+                      *ngIf="formErrors.contractname"
+                      >{{ formErrors.contractname }}</span
+                    >
+                    <label>Which client is the job for?</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-select
+                        (selectionChange)="
+                          onJobDetailUpdate('contractname', $event.value)
+                        "
+                        name="contractname"
+                        formControlName="contractname"
+                        placeholder="Contract"
+                        name="contractname"
+                      >
+                        <mat-option
+                          *ngFor="let contract of contractsListByClient"
+                          [value]="contract.ContractId"
+                        >
+                          {{ contract.ContractId }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <span
+                      class="validationError"
+                      *ngIf="formErrors.contractname"
+                      >{{ formErrors.contractname }}</span
+                    >
+                    <label>Please Select an active Contract</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-5">
+                    <h4>Price Details</h4>
+                    <mat-form-field class="example-full-width">
+                      <input
+                        #minute
+                        (change)="onJobDetailUpdate('minutes', minute.value)"
+                        formControlName="minutes"
+                        matInput
+                        appNumberOnly="true"
+                        placeholder="Minutes"
+                      />
+                    </mat-form-field>
+
+
+                    <label>Numeric Only</label>
+                    <span class="validationError" *ngIf="formErrors.minutes">{{
+                      formErrors.minutes
+                    }}</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-5">
+                    <label>Contract Rate</label> &nbsp; &nbsp;{{
+                      unitRate
+                    }}
+                    &nbsp;{{ currencyCode }}
+                    <mat-form-field class="example-full-width">
+                      <input
+                        #rates
+                        (change)="onJobDetailUpdate('rate', rates.value)"
+                        formControlName="rate"
+                        matInput
+                        appNumberOnly="true"
+                        placeholder="Rate"
+                    /></mat-form-field>
+                    <span class="validationError" *ngIf="formErrors.rate">{{
+                      formErrors.rate
+                    }}</span>
+                    <br />
+                    <button mat-raised-button
+                    type="submit"
+                    color="primary">
+                      Save
+                    </button>
+                  </div>
+                </div>
+                <br />
+                <div class="row">
+                  <mat-tab-group>
+                    <mat-tab label="Price Summary" class="active">
+                      <div class="container-fluid">
+                        <h4>Contract</h4>
+                        <div class="row">
+                          <div class="col-sm-1"></div>
+                          <div class="col-sm-3"><label>Rate</label></div>
+                          <div class="col-sm-4">
+                            <label>{{ jobDetails.UnitRate }}</label>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-1"></div>
+                          <div class="col-sm-3"><label>Date</label></div>
+                          <div class="col-sm-4">
+                            <label>{{
+                              jobDetails.EndDate | date: "dd/MM/yyyy"
+                            }}</label>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-1"></div>
+                          <div class="col-sm-3"><label>Created By</label></div>
+                          <div class="col-sm-3">
+                            <label>{{ jobDetails.CreatedBy }}</label>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-1"></div>
+                          <div class="col-sm-3"><label>Approved By</label></div>
+                        </div>
+                        <h4>Job</h4>
+                        <div class="row">
+                          <div class="col-sm-1"></div>
+                          <div class="col-sm-3"><label>Rate</label></div>
+                          <div class="col-sm-4">
+                            <label>{{ jobDetails.FinalRate }}</label>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-1"></div>
+                          <div class="col-sm-3"><label>Minutes</label></div>
+                          <div class="col-sm-4">
+                            <label>{{ jobDetails.Minutes }}</label>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-1"></div>
+                          <div class="col-sm-3"><label>Total</label></div>
+                          <div class="col-sm-4">
+                            <label>{{ jobDetails.TotalPrice }}</label>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-1"></div>
+                          <div class="col-sm-3"><label>EndDate </label></div>
+                          <div class="col-sm-4">
+                            <label>{{ jobDetails.EndDate | date: "dd/MM/yyyy" }}</label>
+                          </div>
+                        </div>
+                        <h4>Discount</h4>
+                        <div class="row">
+                          <div class="col-sm-1"></div>
+                          <div class="col-sm-3"><label>Discount</label></div>
+                          <div class="col-sm-4">
+                            <label>{{ jobDetails.Discount }}</label>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-1"></div>
+                          <div class="col-sm-3"><label>Discount %</label></div>
+                          <div class="col-sm-4">
+                            <label>{{
+                              jobDetails.DiscountPercent | number: "1.2-2"
+                            }}</label>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-tab>
+                  </mat-tab-group>
+
+                  <div class="tab-content">
+                    <div
+                      id="price-details"
+                      class="tab-pane fade in active"
+                    ></div>
+                    <div id="details" class="tab-pane fade">
+                      <h3>Details</h3>
+                    </div>
+                    <div id="messages" class="tab-pane fade">
+                      <h3>Messages</h3>
+                    </div>
+                    <div id="documents" class="tab-pane fade">
+                      <h3>Documents</h3>
+                    </div>
+                    <div id="logs" class="tab-pane fade"><h3>Logs</h3></div>
+                  </div>
+                </div>
+              </form>
+            </ng-template>
+          </mat-card>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div clas="row">
+          <mat-card [ngStyle]="scrollStyles">
+            <div class="row">
+              <div
+                *ngIf="jobDetails1LoaderFlag; else jobDetails1Template"
+                class="col-sm-12"
+              >
+                <br /><br /><br />
+                <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+              </div>
+              <ng-template #jobDetails1Template>
+                <div class="col-sm-12">
+                  <h3>Workflow</h3>
+                  <mat-tab-group>
+                    <mat-tab label="Agreement" class="active">
+                      <div
+                        class="container-fluid"
+                        style="width:100%; padding-top:10px;"
+                      >
+                        <p>
+                          By clicking on agree, you are providing an electronic
+                          signature of your consent towards this contract. This
+                          agreement is binding and cannot be reversed.
+                        </p>
+                        <p>
+                          Once the contract is agreed upon, schedulers will be
+                          able to schedule playout for this job.
+                        </p>
+
+                        <div *ngIf="!approveButton || !isAgreeDisagreeAllowed; else agree">
+                            <button
+                          mat-raised-button
+                          (click)="AgreementAccepted()"
+                             >
+                              Agree
+                            </button>
+                          </div>
+                          <ng-template #agree>
+                              <button mat-raised-button
+                              color= "accent"
+                              *ngIf="approveButton"
+                              >
+                              Agreed
+                            </button>
+                          </ng-template>
+
+                        <!-- <button
+                          [disabled]="approveButton || !isAgreeDisagreeAllowed"
+                          (click)="AgreementAccepted()"
+                          mat-stroked-button
+                        >
+                          Agree</button> -->
+                        <br /><br />
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <button
+                              mat-raised-button
+                              [disabled]="
+                                downloadAgreement || downloadAgreementLoader
+                              "
+                              (click)="generateAgreementDocPdf()"
+                            >
+                              <!-- <button mat-raised-button> -->
+                              Download Agreement Document
+                            </button>
+                          </div>
+                          <div class="col-sm-6">
+                            <span
+                              class="spinner_center"
+                              *ngIf="downloadAgreementLoader"
+                              ><mat-spinner [diameter]="25"></mat-spinner
+                            ></span>
+                          </div>
+                        </div>
+
+                        <br />
+                        <label>*Will be available when agreement is done.</label>
+                      </div>
+                    </mat-tab>
+                    <mat-tab label="Invoice">
+                      <div
+                        class="container-fluid"
+                        style="width:100%; padding-top:10px;"
+                      >
+                        <div class="row">
+                          <br />
+                          <div class="col-sm-6">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <label>Job Name</label>
+                              </div>
+                              <div class="col-sm-6">
+                                {{ invoiceDetails.JobName }}
+                              </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <label>Client Name</label>
+                              </div>
+                              <div class="col-sm-6">
+                                {{ invoiceDetails.ClientName }}
+                              </div>
+                            </div>
+                            <br /><br />
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <label>Currency</label>
+                              </div>
+                              <div class="col-sm-6">
+                                {{ invoiceDetails.CurrencyCode }}
+                              </div>
+                            </div>
+                            <br /><br />
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <label>End Date</label>
+                              </div>
+                              <div class="col-sm-6">
+                                {{
+                                  invoiceDetails.EndDate | date: "dd/MM/yyyy"
+                                }}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <label>Job Rate</label>
+                              </div>
+                              <div class="col-sm-6">
+                                {{ invoiceDetails.JobRate }}
+                              </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <label>Total Minutes</label>
+                              </div>
+                              <div class="col-sm-6">
+                                {{ invoiceDetails.TotalMinutes }}
+                              </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <label>Playout Minutes</label>
+                              </div>
+                              <div class="col-sm-6">
+                                {{ invoiceDetails.TotalRunningMinutes }}
+                              </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <label>Final Price</label>
+                              </div>
+                              <div class="col-sm-6">
+                                {{ invoiceDetails.FinalPrice }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-3">
+                              <button
+                                [disabled]="
+                                  disableInvoiceBtn || approveInvoiceSpinnerFlag
+                                "
+                                (click)="ApproveInvoice()"
+                                mat-raised-button
+                              >
+                                <span
+                                  class="pull-left spinner_center margin_top_10"
+                                  *ngIf="approveInvoiceSpinnerFlag"
+                                  ><mat-spinner [diameter]="15"></mat-spinner
+                                ></span>
+                                Approve
+                              </button>
+                            </div>
+                            <div class="col-sm-3">
+                              <button
+                                [disabled]="
+                                  disableInvoiceBtn || rejectInvoiceSpinnerFlag
+                                "
+                                (click)="RejectInvoice()"
+                                mat-raised-button
+                              >
+                                <span
+                                  class="pull-left spinner_center margin_top_10"
+                                  *ngIf="rejectInvoiceSpinnerFlag"
+                                  ><mat-spinner [diameter]="15"></mat-spinner
+                                ></span>
+                                Reject
+                              </button>
+                            </div>
+                            <div class="col-sm-4">
+                              <button
+                                [disabled]="
+                                  disableInvoiceGenerationBtn ||
+                                  genrateInvoiceSpinnerFlag
+                                "
+                                (click)="generateInvoice()"
+                                mat-raised-button
+                              >
+                                <span
+                                  class="pull-left spinner_center margin_top_10"
+                                  *ngIf="genrateInvoiceSpinnerFlag"
+                                  ><mat-spinner [diameter]="15"></mat-spinner
+                                ></span>
+                                Generate Invoice
+                              </button>
+                            </div>
+                            <div class="col-sm-2">
+                              <button
+                                (click)="generateInvoicePdf()"
+                                [disabled]="exportPdfBtn"
+                                mat-icon-button
+                                pTooltip="Export to PDF"
+                                tooltipPosition="top"
+                              >
+                                <mat-icon>description</mat-icon>
+                              </button>
+                            </div>
+                          </div>
+                        <br />
+                        <div class="row"></div>
+                        <br />
+                      </div>
+                    </mat-tab>
+                  </mat-tab-group>
+
+                  <div class="tab-content">
+                    <div id="invoice" class="tab-pane fade in">
+                      <div
+                        class="container-fluid"
+                        style="width:500px; padding-top:10px;"
+                      >
+                        <h3>Invoice</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

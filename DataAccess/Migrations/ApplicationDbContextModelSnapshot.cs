@@ -548,7 +548,10 @@ namespace DataAccess.Migrations
                         new { PageId = 82, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProposalReport" },
                         new { PageId = 83, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectIndicators" },
                         new { PageId = 84, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectPeople" },
-                        new { PageId = 85, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "VoucherSummaryReport" }
+                        new { PageId = 85, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "VoucherSummaryReport" },
+                        new { PageId = 86, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "HiringRequests" },
+                        new { PageId = 87, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "PensionDebitAccount" },
+                        new { PageId = 88, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "AttendanceGroupMaster" }
                     );
                 });
 
@@ -3243,7 +3246,7 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<int>("AccountCode");
+                    b.Property<int?>("AccountCode");
 
                     b.Property<long>("BudgetlineId");
 
@@ -3252,6 +3255,8 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("EmployeeID");
+
+                    b.Property<long?>("HiringRequestId");
 
                     b.Property<bool?>("IsDeleted");
 
@@ -3270,6 +3275,8 @@ namespace DataAccess.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("EmployeeID");
+
+                    b.HasIndex("HiringRequestId");
 
                     b.HasIndex("ModifiedById");
 
@@ -4306,6 +4313,8 @@ namespace DataAccess.Migrations
 
                     b.Property<int?>("GradeId");
 
+                    b.Property<long?>("HiringRequestId");
+
                     b.Property<bool>("IsActive");
 
                     b.Property<bool?>("IsDeleted");
@@ -4330,6 +4339,9 @@ namespace DataAccess.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("GradeId");
+
+                    b.HasIndex("HiringRequestId")
+                        .IsUnique();
 
                     b.HasIndex("ModifiedById");
 
@@ -6700,6 +6712,42 @@ namespace DataAccess.Migrations
                     );
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Project.HiringRequestCandidates", b =>
+                {
+                    b.Property<long>("CandidateId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int?>("EmployeeID");
+
+                    b.Property<long>("HiringRequestId");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<bool>("IsSelected");
+
+                    b.Property<bool>("IsShortListed");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.HasKey("CandidateId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.HasIndex("HiringRequestId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("HiringRequestCandidates");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Project.PriorityCriteriaDetail", b =>
                 {
                     b.Property<long>("PriorityCriteriaDetailId")
@@ -7289,7 +7337,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Position");
 
-                    b.Property<string>("Profession");
+                    b.Property<int?>("ProfessionId");
 
                     b.Property<long?>("ProjectId");
 
@@ -7310,6 +7358,8 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("OfficeId");
+
+                    b.HasIndex("ProfessionId");
 
                     b.HasIndex("ProjectId");
 
@@ -11052,6 +11102,10 @@ namespace DataAccess.Migrations
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("DataAccess.DbEntities.Project.ProjectHiringRequestDetail", "ProjectHiringRequestDetail")
+                        .WithMany()
+                        .HasForeignKey("HiringRequestId");
+
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
@@ -11287,7 +11341,7 @@ namespace DataAccess.Migrations
                         .HasForeignKey("CreatedById");
 
                     b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
+                        .WithMany("InterviewDetails")
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -11456,6 +11510,10 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.JobGrade", "JobGrade")
                         .WithMany()
                         .HasForeignKey("GradeId");
+
+                    b.HasOne("DataAccess.DbEntities.Project.ProjectHiringRequestDetail", "ProjectHiringRequestDetail")
+                        .WithOne("JobHiringDetails")
+                        .HasForeignKey("DataAccess.DbEntities.JobHiringDetails", "HiringRequestId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -12349,6 +12407,26 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Project.HiringRequestCandidates", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID");
+
+                    b.HasOne("DataAccess.DbEntities.Project.ProjectHiringRequestDetail", "ProjectHiringRequestDetail")
+                        .WithMany()
+                        .HasForeignKey("HiringRequestId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Project.PriorityCriteriaDetail", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -12648,6 +12726,10 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.OfficeDetail", "OfficeDetails")
                         .WithMany()
                         .HasForeignKey("OfficeId");
+
+                    b.HasOne("DataAccess.DbEntities.ProfessionDetails", "ProfessionDetails")
+                        .WithMany()
+                        .HasForeignKey("ProfessionId");
 
                     b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
                         .WithMany()

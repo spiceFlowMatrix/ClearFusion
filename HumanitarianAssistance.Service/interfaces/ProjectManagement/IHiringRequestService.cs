@@ -12,6 +12,18 @@ namespace HumanitarianAssistance.Service.interfaces.ProjectManagement
         Task<APIResponse> AddProjectHiringRequest(ProjectHiringRequestModel model, string userId);
         Task<APIResponse> GetallHiringRequestDetail();
         Task<APIResponse> EditProjectHiringRequest(ProjectHiringRequestModel model, string userId);
+        Task<APIResponse> GetAllEmployeeList();
+
+        Task<APIResponse> AddHiringRequestCandidate(HiringRequestCandidateModel model, string userId);
+        Task<APIResponse> GetAllCandidateList(ProjectHiringCandidateDetailModel model);
+
+        Task<APIResponse> AddCandidateInterviewDetail(CandidateInterViewModel model, string userId); 
+        Task<APIResponse> EditHiringRequestCandidate(ProjectHiringCandidateDetailModel model, string userId);
+        Task<APIResponse> EditIntetviewdCandidateDetail(HiringRequestCandidateModel model, string userId);
+        Task<APIResponse> HiringRequestSelectCandidate(HiringSelectCandidateModel model, string userId);
+        Task<APIResponse> CompleteHiringRequest(long hiringRequestId, string userId);
+
+
 
     }
 }

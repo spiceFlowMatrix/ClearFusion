@@ -1,0 +1,112 @@
+<div class="main-store-depreciation-report">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Depreciation Report</h3>
+      </div>
+    </div>
+    <div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 dxagninptblk">
+
+      <form action="your-action" (submit)="onApplyingFilter(depreciationReportFilter)">
+        <dx-form id="form" [(formData)]="depreciationReportFilter" [colCount]="5" [readOnly]="false" [showColonAfterLabel]="true"
+          [showValidationSummary]="true" validationGroup="customerData" (onFieldDataChanged)="onFieldDataChanged($event)">
+
+          <dxi-item dataField="CurrentDate" editorType="dxDateBox" [editorOptions]="{type: 'date',  width: '100%', displayFormat: 'dd/MM/yyyy', showClearButton: 'true'}">
+            <dxo-label alignment="left"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="StoreId" editorType="dxSelectBox" [editorOptions]="{ dataSource: storeTabs, displayExpr: 'text', valueExpr: 'id', searchEnabled: true, showClearButton:true , placeholder: 'Select Store' }">
+            <dxo-label text="Store"></dxo-label>
+            <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+          </dxi-item>
+
+          <dxi-item dataField="InventoryId" editorType="dxSelectBox" [editorOptions]="{ dataSource: inventoryList, valueExpr: 'InventoryId', displayExpr: 'InventoryName', searchEnabled: true, showClearButton: true, placeholder: 'Select Inventory'  }">
+            <dxo-label text="Inventory" alignment="left"></dxo-label>
+            <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+          </dxi-item>
+
+          <dxi-item dataField="ItemGroupId" editorType="dxSelectBox" [editorOptions]="{ dataSource: itemGroupList, valueExpr: 'ItemGroupId', displayExpr: 'ItemGroupName', searchEnabled: true, showClearButton: false, placeholder: 'Select Item Group'  }">
+            <dxo-label text="Item Group" alignment="left"></dxo-label>
+            <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+          </dxi-item>
+
+          <dxi-item dataField="ItemId" editorType="dxSelectBox" [disabled]="itemDropDownDisable" [editorOptions]="{ readOnly: itemDropDownDisable, dataSource: inventoryItemDataSource, displayExpr: 'ItemName', valueExpr: 'ItemId', searchEnabled: true, showClearButton:true , placeholder: 'Select Item' }">
+            <dxo-label text="Item"></dxo-label>
+            <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+          </dxi-item>
+
+
+        </dx-form>
+
+
+
+        <br>
+        <div class="row">
+          <div class="col-md-offset-2 col-md-8 text-center">
+            <dx-button text="Update Filter" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+
+
+
+  <div class="row">
+
+    <!-- <div class="col-sm-12 text-right">
+      <br>
+
+      <div class="col-sm-5" style="max-width: 30rem;">
+        <dx-date-box (onValueChanged)="onDateSelected($event.value)" displayFormat="dd/MM/yyyy" [disabledDates]="holidaysDateList"
+          type="date">
+        </dx-date-box>
+      </div>
+
+    </div> -->
+
+    <div class="col-sm-12">
+      <br>
+
+      <dx-data-grid id="gridContainer" [dataSource]="depreciationReportDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true">
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+        <dxi-column dataField="ItemName" [visible]="true">
+        </dxi-column>
+        <dxi-column dataField="PurchaseId" [visible]="true">
+        </dxi-column>
+        <dxi-column dataField="PurchaseDate" dataType="datetime" format="dd/MM/yyy" [visible]="true">
+        </dxi-column>
+        <dxi-column dataField="PurchasedCost" [visible]="true">
+        </dxi-column>
+        <dxi-column dataField="HoursSincePurchase" [visible]="true">
+        </dxi-column>
+        <dxi-column dataField="DepreciationRate" [visible]="true">
+        </dxi-column>
+        <dxi-column dataField="DepreciationAmount" [visible]="true">
+        </dxi-column>
+        <dxi-column dataField="CurrentValue" [visible]="true">
+        </dxi-column>
+
+      </dx-data-grid>
+
+    </div>
+
+  </div>
+
+  <ngx-loading [show]="depreciationReportLoading"></ngx-loading>
+
+</div>

@@ -1,0 +1,41 @@
+<div class="voucher-detail-main">
+  <div class="row">
+    <div class="col-sm-12" *ngIf="projectJobsDetailLoader; else projectJobsDetailtemplate">
+      <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+    </div>
+    <ng-template #projectJobsDetailtemplate>
+      <div class="col-sm-12">
+
+        <div class="row">
+          <div class="col-sm-12">
+            <b>Project Job</b>
+            <div *ngIf="editProjectJobsDetailLoader; else showArchive" class="loader-mr-left pull-right">
+              <mat-spinner class="margin_top_10" diameter="20">
+              </mat-spinner>
+            </div>
+            <ng-template #showArchive>
+              <div *ngIf="archiveButton" class="pull-right">
+                <button (click)="DeleteProjectJob(projectJobId)" mat-icon-button>
+                  <mat-icon matTooltip="Archive">delete</mat-icon>
+                </button>
+              </div>
+            </ng-template>
+
+          </div>
+
+        </div>
+        <br>
+        <br>
+        <div class="row">
+          <div class="col-sm-6">
+            <mat-form-field class="example-full-width">
+              <input matInput placeholder="Project Job Name" [(ngModel)]="projectJobsDetail.ProjectJobName"
+                (change)="onProjectJobsValuechange()" />
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+    </ng-template>
+  </div>
+</div>

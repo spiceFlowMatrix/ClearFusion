@@ -1,0 +1,13 @@
+<div class="row">
+  <br>
+  <br>
+  <div class="col-sm-3">
+      <h3 style="font-size: 21px; color: #898989; top: 0; text-align: -webkit-center;">Pension Debit Account:</h3>
+  </div>
+  <div class="col-sm-3" style="padding-top: 10px;">
+      <dx-select-box [dataSource]="inputLevelAccounts" placeholder="Choose Account" (onItemClick)="onAccountSelection($event.itemData.AccountCode)"
+                            displayExpr="AccountName" valueExpr="AccountCode" [(value)]="selectedAccount" [searchEnabled]="true">
+                        </dx-select-box>
+  </div>
+  <ngx-loading [show]="loading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+</div>

@@ -1,0 +1,82 @@
+<div class="main-page dv-main-pg">
+  <div class="heading-hdr">
+    <div class="clearfix">
+      <h3 class="page-heading" [ngClass]="{'myclass' : false}">Journal Code</h3>
+    </div>
+  </div>
+
+  <div class="main-journal-code">
+    <div class="row">
+      <br>
+        <div class="main-heading clearfix">
+
+          <div class="col-sm-12">
+            <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="ShowPopup()" *ngIf="isEditingAllowed">
+            </dx-button>
+          </div>
+
+        </div>
+
+      <div class="col-sm-12">
+
+        <div>
+          <dx-data-grid id="gridContainer" [dataSource]="paymentTypesDataSource" [allowColumnReordering]="true"
+            [allowColumnResizing]="true" (onRowUpdated)="EditPaymentTypes($event)"
+            (onRowRemoved)="DeletePaymentTypes($event)" [columnAutoWidth]="false" [showRowLines]="true">
+
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"></dxo-editing>
+            <dxi-column dataField="Id" [allowEditing]="false"></dxi-column>
+            <dxi-column dataField="Name" [width]="140" >
+            <dxi-validation-rule type="required" message="Payment Name is required">
+              </dxi-validation-rule>
+            </dxi-column>
+            <dxi-column dataField="ChartOfAccountNewId" caption="Account">
+                <dxi-validation-rule type="required" message="Account is required">
+                  </dxi-validation-rule>
+              <dxo-lookup [dataSource]="inputLevelAccounts" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+            </dxi-column>
+            <dxo-paging [pageSize]="20"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add Payment Type Code -->
+<dx-popup class="popup" [width]="600" [height]="250" [showTitle]="true" title="Add Payment Type" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="showPaymentPopUp">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="onAddPaymentType(paymentTypes)">
+      <dx-form id="form" [formData]="paymentTypes" [readOnly]="false" [showColonAfterLabel]="true"
+        [showValidationSummary]="true" validationGroup="customerData">
+
+        <dxi-item dataField="Name">
+          <dxi-validation-rule type="required" message="Payment Name is required">
+          </dxi-validation-rule>
+        </dxi-item>
+
+        <dxi-item dataField="AccountId" caption="Account" placeholder="Select Accounts" editorType="dxSelectBox" [editorOptions]="{ dataSource: inputLevelAccounts, displayExpr: 'AccountName', valueExpr: 'AccountCode', multiline: false, maxDisplayedTags: 0, showClearButton:'true', selectAllMode: 'allPages', searchEnabled: true }">
+          <dxi-validation-rule type="required" message="Account is required">
+          </dxi-validation-rule>
+        </dxi-item>
+
+      </dx-form>
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Add" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+        </dx-button>
+        <dx-button text="Cancel" (onClick)="HidePopup()">
+        </dx-button>
+      </div>
+    </form>
+    <ngx-loading [show]="paymentLoader" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+</dx-popup>

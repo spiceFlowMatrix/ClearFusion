@@ -1,0 +1,57 @@
+<div class="row">
+
+  <div class="col-sm-12 text-center">
+    <div class="dividerz">
+      <p style="font-size: 20px; padding: 30px;">Finalized list of Prospective Employee</p>
+    </div>
+  </div>
+
+
+  <div class="col-sm-12 container-fluid">
+    <dx-data-grid id="grid-container" [dataSource]="approvedEmployeeData" keyExpr="EmployeeId" [selectedRowKeys]="selectedRows"
+      [columnAutoWidth]="true" [allowColumnReordering]="true" [allowColumnResizing]="true">
+
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+      <dxi-column dataField="EmployeeId"></dxi-column>
+      <dxi-column dataField="EmployeeName"></dxi-column>
+      <dxi-column dataField="PhoneNo" caption="Contact"> </dxi-column>
+      <dxi-column dataField="JobId" caption="JobCode">
+        <dxo-lookup [dataSource]="jobCodeDropdown" valueExpr="JobId" displayExpr="JobCode">
+        </dxo-lookup>
+      </dxi-column>
+      <dxi-column dataField="GradeId" caption="Grade">
+        <dxo-lookup [dataSource]="jobGradeDropdown" valueExpr="GradeId" displayExpr="GradeName">
+        </dxo-lookup>
+      </dxi-column>
+
+      <dxi-column dataField="Approval1" caption="General Assembly" cellTemplate="GeneralAssemblyCell"></dxi-column>
+      <div *dxTemplate="let cell of 'GeneralAssemblyCell'">
+        <div *ngIf="cell.value == true" style="color:green">Approved</div>
+        <div *ngIf="cell.value == false" style="color:red">Not Approved</div>
+      </div>
+      <dxi-column dataField="Approval2" caption="Director" cellTemplate="DirectorCell"></dxi-column>
+      <div *dxTemplate="let cell of 'DirectorCell'">
+        <div *ngIf="cell.value == true" style="color:green">Approved</div>
+        <div *ngIf="cell.value == false" style="color:red">Not Approved</div>
+      </div>
+      <dxi-column dataField="Approval3" caption="General Admin" cellTemplate="GeneralAdminCell"></dxi-column>
+      <div *dxTemplate="let cell of 'GeneralAdminCell'">
+        <div *ngIf="cell.value == true" style="color:green">Approved</div>
+        <div *ngIf="cell.value == false" style="color:red">Not Approved</div>
+      </div>
+      <dxi-column dataField="Approval4" caption="Field Office Manager" cellTemplate="FieldOfficeManagerCell"></dxi-column>
+      <div *dxTemplate="let cell of 'FieldOfficeManagerCell'">
+        <div *ngIf="cell.value == true" style="color:green">Approved</div>
+        <div *ngIf="cell.value == false" style="color:red">Not Approved</div>
+      </div>
+
+
+      <dxo-paging [pageSize]="10"></dxo-paging>
+    </dx-data-grid>
+  </div>
+
+  <ngx-loading [show]="approvedEmployeeListLoader"></ngx-loading>
+
+</div>

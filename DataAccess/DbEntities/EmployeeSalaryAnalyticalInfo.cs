@@ -13,7 +13,7 @@ namespace DataAccess.DbEntities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column(Order = 1, TypeName = "serial")]
 		public int EmployeeSalaryAnalyticalInfoId { get; set; }
-		public int AccountCode { get; set; }
+		public int? AccountCode { get; set; }
 		public long ProjectId { get; set; }
 		public ProjectDetail ProjectDetail { get; set; }
 		public long BudgetlineId { get; set; }
@@ -21,6 +21,7 @@ namespace DataAccess.DbEntities
 		public double SalaryPercentage { get; set; }
 		public int EmployeeID { get; set; }
 		public EmployeeDetail EmployeeDetail { get; set; }
-
-	}
+        public long? HiringRequestId { get; set; }
+        public ProjectHiringRequestDetail ProjectHiringRequestDetail { get; set; }
+    }
 }

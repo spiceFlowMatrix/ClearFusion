@@ -1,0 +1,138 @@
+<div class="nav-side-menu">
+  <!-- <div class="icon-wrap">
+    <div class="icon">
+      <div class="bar"></div>
+
+    </div>
+  </div> -->
+
+  <div class="brand"> <i class="fa fa-universal-access"></i>Humanitarian</div>
+  <!-- <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i> -->
+  <div class="menu-list">
+
+    <ul id="menu-content" class="menu-content collapse " >
+      <li [ngClass]="selectedLink == 1 ? 'active' : ''" (click)="onsideBarLinkClicked('project/project-dashboard', 1)" *ngIf="displayChildModule(ModulesProject.Project)">
+        <a class="projects">Projects</a>
+      </li>
+
+      <li data-toggle="collapse" data-target="#products" class="collapsed" *ngIf="displayChildModule(ModulesAccounting.ChartOfAccount) || displayChildModule(ModulesAccounting.FinancialReport) || displayChildModule(ModulesAccounting.Vouchers) || displayChildModule(ModulesAccounting.ExchangeRates) || displayChildModule(ModulesAccounting.GainLossReport)
+    || displayChildModule(ModulesAccounting.Journal) || displayChildModule(ModulesAccounting.Ledger) || displayChildModule(ModulesAccounting.TrialBalance) || displayChildModule(ModulesAccounting.PensionPayments) || displayChildModule(ModulesAccounting.VoucherSummaryReport)">
+        <a>Accounting<span class="arrow"></span></a>
+      </li>
+
+      <ul class="sub-menu collapse" id="products">
+
+        <!-- <li [ngClass]="{'active': selectedLink == 2 }" *ngIf="displayChildModule(ModulesAccounting.Vouchers)">
+          <a routerLink="/accounting/vouchers">Vouchers</a>
+        </li> -->
+        <li [ngClass]="{'active': selectedLink == 2 }" (click)="onsideBarLinkClicked('/accounting/vouchers', 2)" *ngIf="displayChildModule(ModulesAccounting.Vouchers)"><a>Vouchers</a></li>
+        <li [ngClass]="{'active': selectedLink == 3 }" (click)="onsideBarLinkClicked('/accounting/chart-of-accounts', 3)" *ngIf="displayChildModule(ModulesAccounting.ChartOfAccount)"><a>Charts of Account</a></li>
+        <li [ngClass]="{'active': selectedLink == 4 }" (click)="onsideBarLinkClicked('/accounting/financial-report', 4)"  *ngIf="displayChildModule(ModulesAccounting.FinancialReport)"><a>Financial Report</a></li>
+        <li [ngClass]="{'active': selectedLink == 5 }" (click)="onsideBarLinkClicked('/accounting/gain-loss-report', 5)" *ngIf="displayChildModule(ModulesAccounting.GainLossReport)"><a>Gain/Loss Report</a></li>
+        <li [ngClass]="{'active': selectedLink == 59 }" (click)="onsideBarLinkClicked('/accounting/voucher-summary-report', 59)" *ngIf="displayChildModule(ModulesAccounting.VoucherSummaryReport)"><a>Voucher Summary Report</a></li>
+        <li [ngClass]="{'active': selectedLink == 17 }" (click)="onsideBarLinkClicked('/accounting/exchange-rate', 17)" *ngIf="displayChildModule(ModulesAccounting.ExchangeRates)"><a>Exchange Rates</a></li>
+        <li [ngClass]="{'active': selectedLink == 18 }" (click)="onOldUiPageClick('dashboard/accounts/journal', 18)" *ngIf="displayChildModule(ModulesAccounting.Journal)"><a>Journal</a></li>
+        <li [ngClass]="{'active': selectedLink == 19 }" (click)="onOldUiPageClick('dashboard/accounts/ledger', 19)" *ngIf="displayChildModule(ModulesAccounting.Ledger)"><a>Ledger</a></li>
+        <li [ngClass]="{'active': selectedLink == 20 }" (click)="onOldUiPageClick('dashboard/accounts/trialbalance', 20)" *ngIf="displayChildModule(ModulesAccounting.TrialBalance)"><a>Trial Balance</a></li>
+        <li [ngClass]="{'active': selectedLink == 21 }" (click)="onOldUiPageClick('dashboard/accounts/pension-payments', 21)" *ngIf="displayChildModule(ModulesAccounting.PensionPayments)"><a>Pension Payments</a></li>
+
+      </ul>
+
+      <li data-toggle="collapse" data-target="#service" class="collapsed" *ngIf="displayChildModule(ModulesMarketing.ModulesMarketingMaster)">
+        <a> Marketing <span class="arrow"></span></a>
+      </li>
+      <ul class="sub-menu collapse" id="service">
+        <li [ngClass]="{'active': selectedLink == 6 }" (click)="onsideBarLinkClicked('/marketing', 6)" *ngIf="displayChildModule(ModulesMarketing.Marketing)"><a>Dashboard</a></li>
+        <li [ngClass]="{'active': selectedLink == 7 }" (click)="onsideBarLinkClicked('/marketing/activityType', 7)" *ngIf="displayModulePages(Marketing.ActivityType)"><a routerLinkActive="active-link">Activity Type</a></li>
+        <li [ngClass]="{'active': selectedLink == 18 }" (click)="onsideBarLinkClicked('/marketing/channel', 18)" *ngIf="displayModulePages(Marketing.Channel)"><a>Channel</a></li>
+        <li [ngClass]="{'active': selectedLink == 8 }" (click)="onsideBarLinkClicked('/marketing/media-category', 8)" *ngIf="displayModulePages(Marketing.MediaCategory)"><a>Media Category</a></li>
+        <li [ngClass]="{'active': selectedLink == 9 }" (click)="onsideBarLinkClicked('/marketing/medium', 9)" *ngIf="displayModulePages(Marketing.Medium)"><a>Medium</a></li>
+        <li [ngClass]="{'active': selectedLink == 10 }" (click)="onsideBarLinkClicked('/marketing/nature', 10)" *ngIf="displayModulePages(Marketing.Nature)"><a>Nature</a></li>
+        <li [ngClass]="{'active': selectedLink == 11 }" (click)="onsideBarLinkClicked('/marketing/phase', 11)" *ngIf="displayModulePages(Marketing.Phase)"><a>Phase</a></li>
+        <li [ngClass]="{'active': selectedLink ==  16 }" (click)="onsideBarLinkClicked('/marketing/producer', 16)" *ngIf="displayModulePages(Marketing.Producer)"><a>Producer</a></li>
+        <li [ngClass]="{'active': selectedLink == 12 }" (click)="onsideBarLinkClicked('/marketing/quality', 12)" *ngIf="displayModulePages(Marketing.Quality)"><a>Quality</a></li>
+        <li [ngClass]="{'active': selectedLink == 13 }" (click)="onsideBarLinkClicked('/marketing/time-category', 13)" *ngIf="displayModulePages(Marketing.TimeCategory)"><a>Time Category</a></li>
+      </ul>
+
+      <!-- <li data-toggle="collapse" data-target="#policyservice" class="collapsed" *ngIf="displayChildModule(ModulesMarketing.ModulesMarketingMaster)">
+        <a> Policy Master <span class="arrow"></span></a>
+      </li> -->
+      <!-- <ul class="sub-menu collapse" id="policyservice">
+        <li [ngClass]="{'active': selectedLink == 14 }" (click)="onsideBarLinkClicked('/marketing/media-category', 14)" *ngIf="displayModulePages(Marketing.MediaCategory)"><a routerLinkActive="active-link">Media Category</a></li>
+        <li [ngClass]="{'active': selectedLink == 15 }" (click)="onsideBarLinkClicked('/marketing/medium', 15)" *ngIf="displayModulePages(Marketing.Medium)"><a>Medium</a></li>
+        <li [ngClass]="{'active': selectedLink ==  16 }" (click)="onsideBarLinkClicked('/marketing/producer', 16)" *ngIf="displayModulePages(Marketing.Producer)"><a>Producer</a></li>
+      </ul> -->
+
+      <li (click)="onOldUiPageClick('dashboard/user/users', 58)" *ngIf="displayModulePages(UserModule)" > <a>Users</a>
+      </li>
+      <li data-toggle="collapse" data-target="#configuration" class="collapsed" *ngIf="displayChildModule(ModulesConfigurationPages.ConfigurationPages)">
+        <a> Configuration Pages <span class="arrow"></span></a>
+      </li>
+      <ul class="sub-menu collapse" id="configuration">
+        <li [ngClass]="{'active': selectedLink == 22 }" (click)="onOldUiPageClick('dashboard/code/journal-code', 22)" *ngIf="displayModulePages(ConfigurationPages.JournalCodes)"><a routerLinkActive="active-link">Journal Codes</a></li>
+        <li [ngClass]="{'active': selectedLink == 23 }" (click)="onOldUiPageClick('dashboard/code/currency-code', 23)" *ngIf="displayModulePages(ConfigurationPages.CurrencyCodes)"><a>Currency Codes</a></li>
+        <li [ngClass]="{'active': selectedLink ==  24 }" (click)="onOldUiPageClick('dashboard/code/office-code', 24)" *ngIf="displayModulePages(ConfigurationPages.OfficeCodes)"><a>Office Codes</a></li>
+        <li [ngClass]="{'active': selectedLink ==  25 }" (click)="onOldUiPageClick('dashboard/code/financial-year', 25)" *ngIf="displayModulePages(ConfigurationPages.FinancialYear)"><a>Financial Year</a></li>
+        <li [ngClass]="{'active': selectedLink ==  26 }" (click)="onOldUiPageClick('dashboard/code/pension-rate', 26)" *ngIf="displayModulePages(ConfigurationPages.PensionRate)"><a>Pension Rate</a></li>
+        <li [ngClass]="{'active': selectedLink ==  27 }" (click)="onOldUiPageClick('dashboard/code/employee-contract-content', 27)" *ngIf="displayModulePages(ConfigurationPages.EmployeeContract)"><a>Employee Contract</a></li>
+        <li [ngClass]="{'active': selectedLink ==  28 }" (click)="onOldUiPageClick('dashboard/code/appraisal-questions', 28)" *ngIf="displayModulePages(ConfigurationPages.AppraisalQuestions)"><a>Appraisal Questions</a></li>
+        <li [ngClass]="{'active': selectedLink ==  29 }" (click)="onOldUiPageClick('dashboard/code/technical-questions', 29)" *ngIf="displayModulePages(ConfigurationPages.TechnicalQuestions)"><a>Technical Questions</a></li>
+        <li [ngClass]="{'active': selectedLink ==  30 }" (click)="onOldUiPageClick('dashboard/code/email-setting', 30)" *ngIf="displayModulePages(ConfigurationPages.EmailSettings)"><a>Email Settings</a></li>
+        <!-- <li [ngClass]="{'active': selectedLink ==  31 }" (click)="onOldUiPageClick('dashboard/code/exchange-rate', 31)"><a>Exchange Rate</a></li> -->
+        <li [ngClass]="{'active': selectedLink ==  32 }" (click)="onOldUiPageClick('dashboard/code/leavereason-type', 32)" *ngIf="displayModulePages(ConfigurationPages.LeaveType)"><a>Leave Type</a></li>
+        <li [ngClass]="{'active': selectedLink ==  33 }" (click)="onOldUiPageClick('dashboard/code/profession-detail', 33)" *ngIf="displayModulePages(ConfigurationPages.Profession)"><a>Profession</a></li>
+        <li [ngClass]="{'active': selectedLink ==  34 }" (click)="onOldUiPageClick('dashboard/code/department-code', 34)" *ngIf="displayModulePages(ConfigurationPages.Department)"><a>Department</a></li>
+        <li [ngClass]="{'active': selectedLink ==  35 }" (click)="onOldUiPageClick('dashboard/code/qualification-type', 35)" *ngIf="displayModulePages(ConfigurationPages.Qualification)"><a>Qualification</a></li>
+        <li [ngClass]="{'active': selectedLink ==  36 }" (click)="onOldUiPageClick('dashboard/code/designation-type', 36)" *ngIf="displayModulePages(ConfigurationPages.Designation)"><a>Designation</a></li>
+        <li [ngClass]="{'active': selectedLink ==  37 }" (click)="onOldUiPageClick('dashboard/code/job-grade', 37)" *ngIf="displayModulePages(ConfigurationPages.JobGrade)"><a>Job Grade</a></li>
+        <li [ngClass]="{'active': selectedLink ==  38 }" (click)="onOldUiPageClick('dashboard/code/salary-head', 38)" *ngIf="displayModulePages(ConfigurationPages.SalaryHead)"><a>Salary Head</a></li>
+        <li [ngClass]="{'active': selectedLink ==  39 }" (click)="onOldUiPageClick('dashboard/code/salary-tax-report-content', 39)" *ngIf="displayModulePages(ConfigurationPages.SalaryTaxReportContent)"><a>Salary Tax Report Content</a></li>
+        <li [ngClass]="{'active': selectedLink ==  40 }" (click)="onOldUiPageClick('dashboard/code/set-payroll-account', 40)" *ngIf="displayModulePages(ConfigurationPages.PayrollAccount)"><a>Set Payroll Account</a></li>
+
+      </ul>
+
+      <li data-toggle="collapse" data-target="#HR" class="collapsed"  *ngIf="displayChildModule(HRModulePagesMaster.HRPages)">
+        <a>HR<span class="arrow"></span></a>
+      </li>
+
+      <ul class="sub-menu collapse" id="HR">
+
+        <li [ngClass]="{'active': selectedLink == 41 }" (click)="onOldUiPageClick('dashboard/hr/employees', 41)" *ngIf="displayModulePages(HRPages.Employees)"><a>Employees</a></li>
+        <li [ngClass]="{'active': selectedLink == 42 }" (click)="onOldUiPageClick('dashboard/hr/payroll-daily-hours', 42)" *ngIf="displayModulePages(HRPages.PayrollDailyHours)"><a>Payroll Daily Hours</a></li>
+        <li [ngClass]="{'active': selectedLink == 43 }" (click)="onOldUiPageClick('dashboard/hr/holidays', 43)" *ngIf="displayModulePages(HRPages.Holidays)"><a>Holidays</a></li>
+        <li [ngClass]="{'active': selectedLink == 44 }" (click)="onOldUiPageClick('dashboard/hr/attendance', 44)" *ngIf="displayModulePages(HRPages.Attendance)"><a>Attendance</a></li>
+        <li [ngClass]="{'active': selectedLink == 45 }" (click)="onOldUiPageClick('dashboard/hr/approve-leave', 45)" *ngIf="displayModulePages(HRPages.ApproveLeave)"><a>Approve Leave</a></li>
+        <li [ngClass]="{'active': selectedLink == 46 }" (click)="onOldUiPageClick('dashboard/hr/employee-salary', 46)" *ngIf="displayModulePages(HRPages.MonthlyPayrollRegister)"><a>Monthly Payroll Register</a></li>
+        <li [ngClass]="{'active': selectedLink == 47 }" (click)="onOldUiPageClick('dashboard/hr/job-hiring-details', 47)" *ngIf="displayModulePages(HRPages.Jobs)"><a>Jobs</a></li>
+        <li [ngClass]="{'active': selectedLink == 48 }" (click)="onOldUiPageClick('dashboard/hr/interview-form', 48)" *ngIf="displayModulePages(HRPages.Interview)"><a>Interview</a></li>
+        <li [ngClass]="{'active': selectedLink == 49 }" (click)="onOldUiPageClick('dashboard/hr/employee-appraisal', 49)" *ngIf="displayModulePages(HRPages.EmployeeAppraisal)"><a>Employee Appraisal</a></li>
+        <li [ngClass]="{'active': selectedLink == 50 }" (click)="onOldUiPageClick('dashboard/hr/advances', 50)" *ngIf="displayModulePages(HRPages.Advances)"><a>Advances</a></li>
+        <li [ngClass]="{'active': selectedLink == 51 }" (click)="onOldUiPageClick('dashboard/hr/summary', 51)" *ngIf="displayModulePages(HRPages.Summary)"><a>Summary</a></li>
+      </ul>
+
+      <li data-toggle="collapse" data-target="#Store" class="collapsed" *ngIf="displayChildModule(StoreModulePagesMaster.StorePages)">
+        <a>Store<span class="arrow"></span></a>
+      </li>
+
+      <ul class="sub-menu collapse" id="Store">
+
+        <li [ngClass]="{'active': selectedLink == 52 }" (click)="onOldUiPageClick('dashboard/store/store-master', 52)" *ngIf="displayModulePages(StorePages.Categories)"><a>Categories</a></li>
+        <li [ngClass]="{'active': selectedLink == 53 }" (click)="onOldUiPageClick('dashboard/store/store-source-codes', 53)" *ngIf="displayModulePages(StorePages.StoreSourceCodes)"><a>Store Source Codes</a></li>
+        <li [ngClass]="{'active': selectedLink == 54 }" (click)="onOldUiPageClick('dashboard/store/payment-types', 54)" *ngIf="displayModulePages(StorePages.PaymentTypes)"><a>Payment Types</a></li>
+        <li [ngClass]="{'active': selectedLink == 55 }" (click)="onOldUiPageClick('dashboard/store/store-main', 55)" *ngIf="displayModulePages(StorePages.Store)"><a>Store</a></li>
+        <li [ngClass]="{'active': selectedLink == 56 }" (click)="onOldUiPageClick('dashboard/store/procurment-summary', 56)" *ngIf="displayModulePages(StorePages.ProcurementSummary)"><a>Procurment Summary</a></li>
+        <li [ngClass]="{'active': selectedLink == 57 }" (click)="onOldUiPageClick('dashboard/store/store-depreciation-report', 57)" *ngIf="displayModulePages(StorePages.DepreciationReport)"><a>Depreciation Report</a></li>
+      </ul>
+
+      <!-- <li (click)="onsideBarLinkClicked('/style-guide')"> <a>Style-guide</a>
+      </li> -->
+
+      <li (click)="onOldUIClick()"> <a>Old UI</a>
+      </li>
+
+      <li (click)="onLogout()"> <i class="fas fa-sign-out-alt"></i> <a> Logout</a>
+      </li>
+
+    </ul>
+  </div>
+</div>

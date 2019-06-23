@@ -1,0 +1,12 @@
+<div mat-dialog-content>
+  <div class="row">
+      <label>Are you sure?</label>
+  </div>
+</div>
+<div mat-dialog-actions class="pull-right">
+    <button mat-raised-button color="primary" (click)="confirmAction()"  cdkFocusInitial>
+        <span class="pull-left spinner_center"></span>
+       Yes
+     </button>
+  <button mat-raised-button [mat-dialog-close]="data.data">No</button>
+</div>

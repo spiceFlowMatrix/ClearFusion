@@ -1,0 +1,502 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="main-heading clearfix">
+      <h3 class="page-heading"> Manage Analytical Codes </h3>
+    </div>
+  </div>
+  <div class="col-sm-12">
+    <div>
+      <div id="tabs">
+        <!-- <div class="caption">API</div> -->
+        <dx-tabs #apiTabs [dataSource]="tabs" [selectedIndex]="0" (onItemClick)="selectTab($event)"></dx-tabs>
+
+        <!-- Tab 1  Donor Budget Line -->
+        <div *ngIf="showSelectedTab==0">
+
+          <dx-data-grid id="gridContainer" 
+                        [dataSource]="dataSource" 
+                        [allowColumnReordering]="true" [allowColumnResizing]="true" [columnAutoWidth]="true" 
+                        (onEditingStart)="logEvent('EditingStart')"
+                        (onInitNewRow)="logEvent('InitNewRow')"
+                        (onRowInserting)="logEvent('RowInserting')"
+                        (onRowInserted)="logEvent('RowInserted')"
+                        (onRowUpdating)="logEvent('RowUpdating')"
+                        (onRowUpdated)="logEvent('RowUpdated')"
+                        (onRowRemoving)="logEvent('RowRemoving')"
+                        (onRowRemoved)="logEvent('RowRemoved')" >
+
+            <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true">
+            </dxo-header-filter>
+            <dxo-filter-row [visible]="showFilterRow">
+            </dxo-filter-row>
+            <dxo-selection mode="multiple">
+            </dxo-selection>
+
+            <!-- editing -->
+            <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true">
+              <dxo-popup title="Analytical Code" [showTitle]="true" [width]="700" [height]="345" [closeOnOutsideClick]="true" [position]="{ my: 'center', at: 'center', of: window }">
+              </dxo-popup>
+            </dxo-editing>
+            <!-- editing -->
+
+            <dxi-column dataField="Code" [calculateCellValue]="calculateCellValue"></dxi-column>
+            <dxi-column dataField="Donor"></dxi-column>
+            <dxi-column dataField="Program"></dxi-column>
+            <dxi-column dataField="Project"></dxi-column>
+            <dxi-column dataField="Area"></dxi-column>
+            <dxi-column dataField="Sector"></dxi-column>
+            <dxi-column dataField="Job"></dxi-column>
+            <dxi-column dataField="Description"></dxi-column>
+            <dxi-column dataField="Amount"></dxi-column>
+            <dxi-column dataField="Currency"></dxi-column>
+            <dxi-column dataField="Book"></dxi-column>
+            <dxi-column dataField="DonorCode"></dxi-column>
+            <dxi-column dataField="Status"></dxi-column>
+            <!-- <dxi-column dataField="Edit" caption="Edit" alignment="left" cellTemplate="CellTemplateOpen"></dxi-column> -->
+
+            <div class="text-center" *dxTemplate="let data of 'CellTemplateOpen'">
+              <a href="javascript:void(0)" (click)="editAnalyticalCodes()">Edit</a>
+            </div>
+
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+
+          </dx-data-grid>
+        </div>
+
+        <!-- Tab 2  Areas -->
+        <div *ngIf="showSelectedTab==1">
+
+          <dx-data-grid id="gridContainer"
+                        [dataSource]="dataSource"
+                        [allowColumnReordering]="true"
+                        [allowColumnResizing]="true"
+                        [columnAutoWidth]="true"
+                        (onEditingStart)="logEvent('EditingStart')"
+                        (onInitNewRow)="logEvent('InitNewRow')"
+                        (onRowInserting)="logEvent('RowInserting')"
+                        (onRowInserted)="logEvent('RowInserted')"
+                        (onRowUpdating)="logEvent('RowUpdating')"
+                        (onRowUpdated)="logEvent('RowUpdated')"
+                        (onRowRemoving)="logEvent('RowRemoving')"
+                        (onRowRemoved)="logEvent('RowRemoved')"  >
+            
+            <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true">
+            </dxo-header-filter>
+            <dxo-filter-row [visible]="showFilterRow">
+            </dxo-filter-row>
+            <dxo-selection mode="multiple">
+            </dxo-selection>
+
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+
+            <!-- editing -->
+            <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [form]="{
+                items: ['Code','Description','Status']
+            }">
+              <dxo-popup title="Analytical Codes" [showTitle]="true" [closeOnOutsideClick]="true" [width]="700" [height]="345" [position]="{ my: 'center', at: 'center', of: window }">
+              </dxo-popup>
+            </dxo-editing>
+            <!-- editing -->
+
+            <dxi-column dataField="Code" [calculateCellValue]="calculateCellValue"></dxi-column>
+            <dxi-column dataField="Description"></dxi-column>
+            <dxi-column dataField="Status"></dxi-column>
+
+            <div class="text-center" *dxTemplate="let data of 'CellTemplateOpen'">
+              <a href="javascript:void()" (click)="editAnalyticalCodes()">Edit</a>
+            </div>
+
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+            
+          </dx-data-grid>                    
+          
+        </div>
+
+        <!-- Tab 3  Sectors -->
+        <div *ngIf="showSelectedTab==2">
+
+          <dx-data-grid id="gridContainer" 
+                        [dataSource]="dataSource" 
+                        [allowColumnReordering]="true" 
+                        [allowColumnResizing]="true" 
+                        [columnAutoWidth]="true"
+                        (onEditingStart)="logEvent('EditingStart')"
+                        (onInitNewRow)="logEvent('InitNewRow')"
+                        (onRowInserting)="logEvent('RowInserting')"
+                        (onRowInserted)="logEvent('RowInserted')"
+                        (onRowUpdating)="logEvent('RowUpdating')"
+                        (onRowUpdated)="logEvent('RowUpdated')"
+                        (onRowRemoving)="logEvent('RowRemoving')"
+                        (onRowRemoved)="logEvent('RowRemoved')" >
+
+            <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true">
+            </dxo-header-filter>
+            <dxo-filter-row [visible]="showFilterRow">
+            </dxo-filter-row>
+            <dxo-selection mode="multiple">
+            </dxo-selection>
+
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+
+            <!-- editing -->
+            <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [form]="{
+              items: ['Code','Description','Status']
+          }">
+              <dxo-popup title="Analytical Codes" [showTitle]="true" [width]="700" [closeOnOutsideClick]="true" [height]="345" [position]="{ my: 'center', at: 'center', of: window }">
+              </dxo-popup>
+            </dxo-editing>
+            <!-- editing -->
+
+            <dxi-column dataField="Code" [calculateCellValue]="calculateCellValue">
+                <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            
+            <dxi-column dataField="Description"></dxi-column>
+           
+            <dxi-column dataField="Status"></dxi-column>
+
+            <div class="text-center" *dxTemplate="let data of 'CellTemplateOpen'">
+              <a href="javascript:void()" (click)="editAnalyticalCodes()">Edit</a>
+            </div>
+
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+
+          </dx-data-grid>
+        </div>
+
+        <!-- Tab 4  Programs -->
+        <div *ngIf="showSelectedTab==3">
+
+          <dx-data-grid id="gridContainer" 
+                        [dataSource]="dataSource" 
+                        [allowColumnReordering]="true" 
+                        [allowColumnResizing]="true" 
+                        [columnAutoWidth]="true"
+                        (onEditingStart)="logEvent('EditingStart')"
+                        (onInitNewRow)="logEvent('InitNewRow')"
+                        (onRowInserting)="logEvent('RowInserting')"
+                        (onRowInserted)="logEvent('RowInserted')"
+                        (onRowUpdating)="logEvent('RowUpdating')"
+                        (onRowUpdated)="logEvent('RowUpdated')"
+                        (onRowRemoving)="logEvent('RowRemoving')"
+                        (onRowRemoved)="logEvent('RowRemoved')" >
+
+            <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true">
+            </dxo-header-filter>
+            <dxo-filter-row [visible]="showFilterRow">
+            </dxo-filter-row>
+            <dxo-selection mode="multiple">
+            </dxo-selection>
+
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+
+            <!-- editing -->
+            <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [form]="{
+              items: ['Code','Description','Status']
+              }">
+              <dxo-popup title="Analytical Codes" [showTitle]="true" [width]="700" [height]="345" [closeOnOutsideClick]="true" [position]="{ my: 'center', at: 'center', of: window }">
+              </dxo-popup>
+            </dxo-editing>
+            <!-- editing -->
+
+            <dxi-column dataField="Code" [calculateCellValue]="calculateCellValue"></dxi-column>
+            <dxi-column dataField="Description"></dxi-column>
+            <dxi-column dataField="Status"></dxi-column>
+
+            <div class="text-center" *dxTemplate="let data of 'CellTemplateOpen'">
+              <a href="javascript:void()" (click)="editAnalyticalCodes()">Edit</a>
+            </div>
+
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+
+          </dx-data-grid>
+        </div>
+
+        <!-- Tab 5  Projects -->
+        <div *ngIf="showSelectedTab==4">
+
+          <dx-data-grid id="gridContainer" 
+                        [dataSource]="tab5"   
+                        [allowColumnReordering]="true" 
+                        [allowColumnResizing]="true" 
+                        [columnAutoWidth]="true"
+                        (onEditingStart)="logEvent('EditingStart')"
+                        (onInitNewRow)="logEvent('InitNewRow')"
+                        (onRowInserting)="logEvent('RowInserting')"
+                        (onRowInserted)="logEvent('RowInserted')"
+                        (onRowUpdating)="logEvent('RowUpdating')"
+                        (onRowUpdated)="logEvent('RowUpdated')"
+                        (onRowRemoving)="logEvent('RowRemoving')"
+                        (onRowRemoved)="logEvent('RowRemoved')" >
+            <!-- <dxo-export [enabled]="true" fileName="Orders"></dxo-export> -->
+
+            <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true">
+            </dxo-header-filter>
+            <dxo-filter-row [visible]="showFilterRow">
+            </dxo-filter-row>
+            <dxo-selection mode="multiple">
+            </dxo-selection>
+
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+
+            <!-- editing -->
+            <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [form]="{
+              items: ['Code','Description','Program','Budget','ProjectStartDate','ProjectEndDate','ReceivedAmount','ProjectCurrency','Status']
+              }">
+              <dxo-popup title="Analytical Codes" [showTitle]="true" [width]="700" [height]="345" [closeOnOutsideClick]="true" [position]="{ my: 'center', at: 'center', of: window }">
+              </dxo-popup>
+            </dxo-editing>
+            <!-- editing -->
+
+            <dxi-column dataField="Code" [calculateCellValue]="calculateCellValue"></dxi-column>
+            <dxi-column dataField="Description"></dxi-column>
+            <dxi-column dataField="Program"></dxi-column>
+            <dxi-column dataField="Budget"></dxi-column>
+            <dxi-column dataField="ProjectStartDate" dataType="date"></dxi-column>
+            <dxi-column dataField="ProjectEndDate" dataType="date"></dxi-column>
+            <dxi-column dataField="ReceivedAmount"></dxi-column>
+            <dxi-column dataField="ProjectCurrency"></dxi-column>
+            <dxi-column dataField="Status"></dxi-column>
+            <dxi-column dataField="documentId" caption="Document" [allowEditing]="false" alignment="right" cellTemplate="CellTemplateDocument"></dxi-column>
+            <div *dxTemplate="let data of 'CellTemplateDocument'">
+              <a [routerLink]="['../document']">Document</a>
+            </div>
+
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+
+          </dx-data-grid>
+        </div>
+
+        <!-- Tab 6  Jobs -->
+        <div *ngIf="showSelectedTab==5">
+
+          <dx-data-grid id="gridContainer" 
+                        [dataSource]="dataSource" 
+                        [allowColumnReordering]="true" 
+                        [allowColumnResizing]="true" 
+                        [columnAutoWidth]="true"
+                        (onEditingStart)="logEvent('EditingStart')"
+                        (onInitNewRow)="logEvent('InitNewRow')"
+                        (onRowInserting)="logEvent('RowInserting')"
+                        (onRowInserted)="logEvent('RowInserted')"
+                        (onRowUpdating)="logEvent('RowUpdating')"
+                        (onRowUpdated)="logEvent('RowUpdated')"
+                        (onRowRemoving)="logEvent('RowRemoving')"
+                        (onRowRemoved)="logEvent('RowRemoved')">
+
+            <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true">
+            </dxo-header-filter>
+            <dxo-filter-row [visible]="showFilterRow">
+            </dxo-filter-row>
+            <dxo-selection mode="multiple">
+            </dxo-selection>
+
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+
+            <!-- editing -->
+            <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [form]="{
+              items: ['Code','Description','Donor','Program','Project','Area','Sector','Status']
+              }">
+              <dxo-popup title="Analytical Codes" [showTitle]="true" [width]="700" [closeOnOutsideClick]="true" [height]="345" [position]="{ my: 'center', at: 'center', of: window }">
+              </dxo-popup>
+            </dxo-editing>
+            <!-- editing -->
+
+            <dxi-column dataField="Code" [calculateCellValue]="calculateCellValue"></dxi-column>
+            <dxi-column dataField="Description"></dxi-column>
+            <dxi-column dataField="Donor"></dxi-column>
+            <dxi-column dataField="Program"></dxi-column>
+            <dxi-column dataField="Project"></dxi-column>
+            <dxi-column dataField="Area"></dxi-column>
+            <dxi-column dataField="Sector"></dxi-column>
+           
+            <dxi-column dataField="Status"></dxi-column>
+
+            <div class="text-center" *dxTemplate="let data of 'CellTemplateOpen'">
+              <a href="javascript:void()" (click)="editAnalyticalCodes()">Edit</a>
+            </div>
+
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+
+          </dx-data-grid>
+        </div>
+
+        <!-- Tab 7  Cost Books -->
+        <div *ngIf="showSelectedTab==6">
+
+          <dx-data-grid id="gridContainer" 
+                        [dataSource]="dataSource" 
+                        [allowColumnReordering]="true" 
+                        [allowColumnResizing]="true" 
+                        [columnAutoWidth]="true"
+                        (onEditingStart)="logEvent('EditingStart')"
+                        (onInitNewRow)="logEvent('InitNewRow')"
+                        (onRowInserting)="logEvent('RowInserting')"
+                        (onRowInserted)="logEvent('RowInserted')"
+                        (onRowUpdating)="logEvent('RowUpdating')"
+                        (onRowUpdated)="logEvent('RowUpdated')"
+                        (onRowRemoving)="logEvent('RowRemoving')"
+                        (onRowRemoved)="logEvent('RowRemoved')" >
+
+            <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true">
+            </dxo-header-filter>
+            <dxo-filter-row [visible]="showFilterRow">
+            </dxo-filter-row>
+            <dxo-selection mode="multiple">
+            </dxo-selection>
+
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+
+            <!-- editing -->
+            <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [form]="{
+              items: ['Code','Description','Status']
+              }">
+              <dxo-popup title="Analytical Codes" [showTitle]="true" [width]="700" [height]="345" [closeOnOutsideClick]="true" [position]="{ my: 'center', at: 'center', of: window }">
+              </dxo-popup>
+            </dxo-editing>
+            <!-- editing -->
+
+            <dxi-column dataField="Code" [calculateCellValue]="calculateCellValue"></dxi-column>
+            <dxi-column dataField="Description"></dxi-column>
+            
+            <dxi-column dataField="Status"></dxi-column>
+            <div class="text-center" *dxTemplate="let data of 'CellTemplateOpen'">
+              <a href="javascript:void()" (click)="editAnalyticalCodes()">Edit</a>
+            </div>
+
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+
+          </dx-data-grid>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Edit AnalyticalCode -->
+  <dx-popup class="popup" [width]="800" [height]="800" [showTitle]="true" title="Edit Chart Of Account" [dragEnabled]="false"
+    [closeOnOutsideClick]="true" [(visible)]="popupVisibleEditAnalyticalCodes">
+    <div *dxTemplate="let data of 'content'">
+
+      <form action="your-action" (submit)="onFormSubmit($event)">
+        <dx-form id="form" [formData]="analyticalCodes" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="customerData">
+
+          <dxi-item dataField="Code">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Donor">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Program">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Project">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Area">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Sector">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+
+          <dxi-item dataField="Job">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+
+          <dxi-item dataField="Description">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Amount">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Currency">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Book">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="DonorCode">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Currency">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Status">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+
+
+        </dx-form>
+
+        <br />
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+          </dx-button>
+
+          <dx-button text="Cancel" (onClick)="cancelDeleteVoucher()">
+          </dx-button>
+        </div>
+      </form>
+
+    </div>
+  </dx-popup>
+  <!-- Edit AnalyticalCode -->

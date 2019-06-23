@@ -1,0 +1,84 @@
+<div class="main-employee-salary">
+  <div class="dv-nw-tab">
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a data-toggle="tab" href="#probationary" (click)="onTabClick(1)">Probationary</a>
+      </li>
+      <li>
+        <a data-toggle="tab" href="#partTime" (click)="onTabClick(2)">Part Time</a>
+      </li>
+      <li>
+        <a data-toggle="tab" href="#permanent" (click)="onTabClick(3)">Permanent</a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+
+      <!-- probationary -->
+      <div id="probationary" class="tab-pane fade in active tab-editors" *ngIf="selectedTab == 1">
+        <br>
+        <div class="dv-editor">
+          <p>
+            <strong> Probationary Contract - English </strong>
+          </p>
+          <dx-button class="btn-english" text="Save" (click)="Save()" *ngIf="isEditingAllowed"></dx-button>
+          <div>
+            <ckeditor [(ngModel)]="ckeditorContentEnglish" [config]="{uiColor: '#000000', defaultLanguage :'en', language: 'en'}"></ckeditor>
+          </div>
+          <br>
+          <br>
+          <p>
+            <strong> Probationary Contract - Dari </strong>
+          </p>
+          <div>
+            <ckeditor [(ngModel)]="ckeditorContentDari" [config]="{uiColor: '#000000', defaultLanguage :'fa', language: 'fa'}"></ckeditor>
+          </div>
+        </div>
+      </div>
+
+      <!-- partTime -->
+      <div id="partTime" class="tab-pane fade in active tab-editors" *ngIf="selectedTab == 2">
+        <div class="dv-editor">
+          <p>
+            <strong> Part Time Contract - English </strong>
+          </p>
+          
+          <dx-button class="btn-english" text="Save" (click)="Save()" *ngIf="isEditingAllowed"></dx-button>
+          <div>
+            <ckeditor [(ngModel)]="ckeditorContentEnglish" [config]="{uiColor: '#000000', defaultLanguage :'en', language: 'en'}"></ckeditor>
+          </div>
+          <br>
+          <br>
+          <p>
+            <strong> Part Time Contract - Dari </strong>
+          </p>
+          <div>
+            <ckeditor [(ngModel)]="ckeditorContentDari" [config]="{uiColor: '#000000', defaultLanguage :'fa', language: 'fa'}"></ckeditor>
+          </div>
+        </div>
+      </div>
+
+      <!-- permanent -->
+      <div id="permanent" class="tab-pane fade in active tab-editors" *ngIf="selectedTab == 3">
+        <div class="dv-editor">
+          <p>
+            <strong> Permanent Contract - English </strong>
+          </p>
+          <dx-button class="btn-english" text="Save" (click)="Save()" *ngIf="isEditingAllowed"></dx-button>
+          <div>
+            <ckeditor [(ngModel)]="ckeditorContentEnglish" [config]="{uiColor: '#000000', defaultLanguage :'en', language: 'en'}"></ckeditor>
+          </div>
+          <br>
+          <br>
+          <p>
+            <strong> Permanent Contract - Dari </strong>
+          </p>
+          <div>
+            <ckeditor [(ngModel)]="ckeditorContentDari" [config]="{uiColor: '#000000', defaultLanguage :'fa', language: 'fa'}"></ckeditor>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+</div>

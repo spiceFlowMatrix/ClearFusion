@@ -1,0 +1,332 @@
+<nav class="navbar navbar-inverse navbar-fixed-left" [ngClass]="{'close-left-bar': toggle}">
+    <div class="container">
+        <div id="navbar" class=" left-sidebar">
+            <ul class="nav navbar-nav">
+                <li (click)="toggleSideFun()" title="User" *ngIf="displayModulePages(User.Users)">
+                    <a (click)="navigateToPath('user/users')">
+                        <span>
+                            <i class="fa fa-user"></i>
+                        </span> User</a>
+                </li>
+                <li class="dropdown" title="Code" *ngIf="displayModule(Module.Code)">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span>
+                            <i class="fa fa-code"></i>
+                        </span> Code
+                        <i class="fa fa-angle-down pull-right"></i>
+                    </a>
+                    <ul class="dropdown-menu sec-drop-fix">
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.ChartOfAccount)">
+                            <a (click)="navigateToPath('code/chart-of-accounts')">Charts Of Accounts</a>
+                        </li> -->
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.JournalCodes)">
+                            <a (click)="navigateToPath('code/journal-code')">Journal Codes</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.CurrencyCodes)">
+                            <a (click)="navigateToPath('code/currency-code')">Currency Codes</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.OfficeCodes)">
+                            <a (click)="navigateToPath('code/office-code')">Office Codes</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.FinancialYear)">
+                            <a (click)="navigateToPath('code/financial-year')">Financial Year</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.PensionRate)">
+                            <a (click)="navigateToPath('code/pension-rate')">Pension Rate</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.EmployeeContract)">
+                            <a (click)="navigateToPath('code/employee-contract-content')">Employee Contract</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.PensionDebitAccount)">
+                            <a (click)="navigateToPath('code/pension-debit-account')">Pension Debit Account</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.AppraisalQuestions)">
+                            <a (click)="navigateToPath('code/appraisal-questions')">Appraisal Questions</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.TechnicalQuestions)">
+                            <a (click)="navigateToPath('code/technical-questions')">Technical Questions</a>
+                        </li>
+                        <!-- <li (click)="toggleSideFun()">
+                            <a [routerLink]="['code/analytical-codes']">Analytical Codes</a>
+                        </li> -->
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.EmailSettings)">
+                            <a (click)="navigateToPath('code/email-setting')">Email Settings</a>
+                        </li>
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.ExchangeRate)">
+                            <a (click)="navigateToPath('code/exchange-rate')">Exchange Rate</a>
+                        </li> -->
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.LeaveReason)">
+                            <a (click)="navigateToPath('code/leavereason-type')">Leave Type</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Profession)">
+                            <a (click)="navigateToPath('code/profession-detail')">Profession</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Department)">
+                            <a (click)="navigateToPath('code/department-code')">Department</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Qualification)">
+                            <a (click)="navigateToPath('code/qualification-type')"> Qualification</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Designation)">
+                            <a (click)="navigateToPath('code/designation-type')">Designation</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.JobGrade)">
+                            <a (click)="navigateToPath('code/job-grade')">Job Grade</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.SalaryHead)">
+                            <a (click)="navigateToPath('code/salary-head')">Salary Head</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.SalaryTaxReportContent)">
+                            <a (click)="navigateToPath('code/salary-tax-report-content')">Salary Tax Report Content</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.SetPayrollAccount)">
+                            <a (click)="navigateToPath('code/set-payroll-account')">Set Payroll Account</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.AttendanceGroupMaster)">
+                            <a (click)="navigateToPath('code/attendance-group-master')">Attendance Group Master</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown" title="Accounts" *ngIf="displayModule(Module.Accounting)">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span>
+                            <i class="fa fa-money"></i>
+                        </span> Accounts
+                        <i class="fa fa-angle-down pull-right"></i>
+                    </a>
+                    <ul class="dropdown-menu sec2-drop-fix">
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Accounting.Vouchers)">
+                            <a (click)="navigateToPath('accounts/vouchers')">Vouchers</a>
+                        </li> -->
+                        <!-- <li role="separator" class="divider" *ngIf="displaySeparator([Accounting.Journal,Accounting.LedgerStatement,Accounting.BudgetBalance,Accounting.TrialBalance])"></li> -->
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Accounting.Journal)">
+                            <a (click)="navigateToPath('accounts/journal')">Journal</a>
+                        </li>
+                        <li (click)="toggleSideFun()">
+                            <a (click)="navigateToPath('accounts/ledger')" *ngIf="displayModulePages(Accounting.LedgerStatement)">Ledger Statement</a>
+                        </li>
+                        <!-- <li (click)="toggleSideFun()">
+                            <a (click)="navigateToPath('accounts/budgetbalance')" *ngIf="displayModulePages(Accounting.BudgetBalance)">Budget Balance</a>
+                        </li> -->
+                        <li (click)="toggleSideFun()">
+                            <a (click)="navigateToPath('accounts/trialbalance')" *ngIf="displayModulePages(Accounting.TrialBalance)">Trial Balance</a>
+                        </li>
+                        <li role="separator" class="divider" *ngIf="displaySeparator([Accounting.FinancialReport,Accounting.CategoryPopulator,Accounting.ExchangeGainLoss,Accounting.GainLossTransaction,Accounting.PensionPayments])"></li>
+                        <!-- <li (click)="toggleSideFun()">
+                            <a (click)="navigateToPath('accounts/financialreport')" *ngIf="displayModulePages(Accounting.FinancialReport)">Financial Report</a>
+                        </li> -->
+                        <!-- <li (click)="toggleSideFun()">
+                            <a [routerLink]="['accounts/currency-exchange-analysis']">Currency Exchange Analysis</a>
+                        </li> -->
+                        <!-- <li (click)="toggleSideFun()">
+                            <a (click)="navigateToPath('accounts/category-populator')" *ngIf="displayModulePages(Accounting.CategoryPopulator)">Category Populator</a>
+                        </li> -->
+                        <!-- <li (click)="toggleSideFun()">
+                            <a (click)="navigateToPath('accounts/exchange-gain-loss')" *ngIf="displayModulePages(Accounting.ExchangeGainLoss)">Exchange Gain Loss</a>
+                        </li> -->
+
+
+                        <!-- <li (click)="toggleSideFun()">
+                            <a (click)="navigateToPath('accounts/exchange-gain-loss-transaction')" *ngIf="displayModulePages(Accounting.GainLossTransaction)">Gain/Loss Transaction</a>
+                        </li> -->
+
+                        <li (click)="toggleSideFun()">
+                                <a (click)="navigateToPath('accounts/pension-payments')" *ngIf="displayModulePages(Accounting.PensionPayments)">Pension Payments</a>
+                            </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown" title="HR" *ngIf="displayModule(Module.HR)">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span>
+                            <i class="fa fa-users"></i>
+                        </span> HR
+                        <i class="fa fa-angle-down pull-right"></i>
+                    </a>
+                    <ul class="dropdown-menu third-drop-fix">
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Employees)">
+                            <a (click)="navigateToPath('hr/employees')">Employees</a>
+                        </li>
+
+                        <li role="separator" class="divider" *ngIf="displaySeparator([HR.PayrollDailyHours,HR.Holidays])"></li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.PayrollDailyHours)">
+                            <a (click)="navigateToPath('hr/payroll-daily-hours')">Payroll Daily Hours</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Holidays)">
+                            <a (click)="navigateToPath('hr/holidays')">Holidays</a>
+                        </li>
+                        <li role="separator" class="divider" *ngIf="displaySeparator([HR.Attendance,HR.ApproveLeave,HR.MonthlyPayrollRegister])"></li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Attendance)">
+                            <a (click)="navigateToPath('hr/attendance')">Attendance</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.ApproveLeave)">
+                            <a (click)="navigateToPath('hr/approve-leave')">Approve Leave</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.MonthlyPayrollRegister)">
+                            <a (click)="navigateToPath('hr/employee-salary')">Monthly Payroll Register</a>
+                        </li>
+                        <li role="separator" class="divider" *ngIf="displaySeparator([HR.Jobs,HR.Interview])"></li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Jobs)">
+                            <a (click)="navigateToPath('hr/job-hiring-details')">Jobs</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Interview)">
+                            <a (click)="navigateToPath('hr/interview-form')">Interview</a>
+                        </li>
+
+                        <li role="separator" class="divider" *ngIf="displaySeparator([HR.EmployeeAppraisal, HR.Advances, HR.Summary])"></li>
+
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.EmployeeAppraisal)">
+                            <a (click)="navigateToPath('hr/employee-appraisal')">Employee Appraisal</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Advances)">
+                            <a (click)="navigateToPath('hr/advances')">Advances</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Summary)">
+                            <a (click)="navigateToPath('hr/summary')">Summary</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown" title="Store" *ngIf="displayModule(Module.Store)">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span>
+                            <i class="fa fa-shopping-cart"></i>
+                        </span> Store
+                        <i class="fa fa-angle-down pull-right"></i>
+                    </a>
+                    <ul class="dropdown-menu forth-drop-fix">
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.Categories)">
+                            <a href="javascript:void(0)" (click)="navigateToPath('store/store-master')">Categories</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.StoreSourceCodes)">
+                            <a href="javascript:void(0)" (click)="navigateToPath('store/store-source-codes')">Store Source Codes</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.PaymentTypes)">
+                            <a href="javascript:void(0)" (click)="navigateToPath('store/payment-types')">Payment Types</a>
+                        </li>
+                        <li role="separator" class="divider" *ngIf="displaySeparator([Store.Store,Store.ProcurementSummary,Store.DepreciationReport])"></li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.Store)">
+                            <a href="javascript:void(0)" (click)="navigateToPath('store/store-main')">Store</a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.ProcurementSummary)">
+                            <a href="javascript:void(0)" (click)="navigateToPath('store/procurment-summary')">Procurment
+                                Summary
+                            </a>
+                        </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.DepreciationReport)">
+                            <a href="javascript:void(0)" (click)="navigateToPath('store/store-depreciation-report')">Depreciation
+                                Report
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown" title="PMU" *ngIf="displayModule(6)">
+                    <!-- <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span>
+                            <i class="fa fa-file" aria-hidden="true"></i>
+                        </span> PMU
+                        <i class="fa fa-angle-down pull-right"></i>
+                    </a> -->
+                    <ul class="dropdown-menu nine-drop-fix">
+                        <li (click)="toggleSideFun()">
+                            <a (click)="navigateToPath('project-management/projectsmain')">Projects</a>
+                        </li>
+
+                        <li (click)="toggleSideFun()">
+                            <a (click)="navigateToPath('project-management/project-purchase')"> Project Purchase</a>
+                        </li>
+
+                        <li (click)="toggleSideFun()">
+                            <a (click)="navigateToPath('project-management/project-hiring')"> Project Hiring</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- /sidebar end -->
+
+<!-- User template -->
+<div>
+    <ng-template #passwordTemplate>
+        <form name="ChangePassword" [formGroup]="ChangePassword" class="login-inner" (ngSubmit)="onSubmitPasswordChange(ChangePassword.value)">
+            <div class="modal-header gray-header ">
+                <h4 class="modal-title pull-left">Change Password</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="modalChangePassword.hide();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gray-body" style="background-color:#fff;color:#000">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label>Current Password:</label>
+                                <span style="color:red">*</span>
+                            </div>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" (blur)="passwordIsValid(currentPassword.value)" formControlName="CurrentPassword"
+                                    placeholder="Current Password" />
+                                <div *ngIf="!isValidPassword">
+                                    <span style="color:Red">Wrong Password</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label>New Password:</label>
+                                <span style="color:red">*</span>
+                            </div>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="password" formControlName="NewPassword" placeholder="New Password" />
+                                <div *ngIf="ChangePassword.controls['NewPassword'].errors && !ChangePassword.controls['NewPassword'].pristine" class="error-msg">
+                                    <div [hidden]="!ChangePassword.controls['NewPassword'].errors.required">New Password
+                                        is required.</div>
+                                    <div [hidden]="!ChangePassword.controls['NewPassword'].errors.patternInvalid">New Password
+                                        is invalid.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label>Confirm Password:</label>
+                                <span style="color:red">*</span>
+                            </div>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" formControlName="ConfirmPassword" placeholder="Confirm Password" />
+
+                                <div *ngIf="ChangePassword.controls['ConfirmPassword'].errors && !ChangePassword.controls['ConfirmPassword'].pristine" class="error-msg">
+                                    <div *ngIf="!ChangePassword.controls['ConfirmPassword'].errors.ConfirmPassword">Confirm
+                                        Password is wrong.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer gray-body">
+                <div class="pull-right">
+                    <button type="submit" [disabled]="!isFormValid || !ChangePassword.valid " class="btn btn-primary add-btn-basic">Save</button>
+                    <a (click)="modalChangePassword.hide()" class="btn btn-default">Cancel</a>
+                </div>
+            </div>
+
+        </form>
+        <div>
+            <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+        </div>
+    </ng-template>
+
+</div>

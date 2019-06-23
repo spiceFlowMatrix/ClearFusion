@@ -1,0 +1,32 @@
+<div class="mainAttendanceReport">
+
+  <br>
+  <div class="dx-field">
+    <div class="dx-field-value">
+      <dx-date-box [value]="currentDate" displayFormat="MMM, yyyy" maxZoomLevel="year" (onValueChanged)="onMonthlyAttendanceDateSelected($event)">
+      </dx-date-box>
+    </div>
+  </div>
+
+
+  <div class="gridAttendanceReport">
+    <dx-data-grid id="gridContainer" [dataSource]="monthlyAttendanceReportList" [allowColumnReordering]="true" [allowColumnResizing]="true"
+      [columnAutoWidth]="true" [showRowLines]="true">
+      <dxo-filter-row [visible]="true"> </dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-scrolling mode="infinite"></dxo-scrolling>
+
+
+      <dxi-column dataField="Date" [visible]='true'> </dxi-column>
+      <dxi-column dataField="InTime" dataType="datetime" format="hh:mm a"></dxi-column>
+      <dxi-column dataField="OutTime" dataType="datetime" format="hh:mm a"></dxi-column>
+      <dxi-column dataField="LateArrival" [width]="105"> </dxi-column>
+      <dxi-column dataField="EarlyOut" [width]="100"> </dxi-column>
+      <dxi-column dataField="AttendanceType" [width]="190"> </dxi-column>
+      <dxi-column dataField="Hours"> </dxi-column>
+      <dxi-column dataField="OverTimeHours" [width]="140"> </dxi-column>
+    </dx-data-grid>
+
+  </div>
+  <ngx-loading [show]="monthlyAttendanceReportInfoLoading"></ngx-loading>
+</div>

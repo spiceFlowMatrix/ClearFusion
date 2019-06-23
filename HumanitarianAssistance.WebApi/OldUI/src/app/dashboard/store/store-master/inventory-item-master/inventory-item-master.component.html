@@ -1,0 +1,49 @@
+<div class="main-inventory-item-master">
+  <div class="row">
+    <div class="col-sm-12">
+
+
+      <dx-data-grid id="gridContainer" [dataSource]="inventoryItemMasterDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+        (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+        (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+        <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"> </dxo-editing>
+
+        <dxi-column dataField="ItemId" caption="Item Id" [visible]="false"></dxi-column>
+
+        <dxi-column dataField="ItemInventory" caption="Item Inventory" alignment="right" [visible]="true">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+          <dxo-lookup [dataSource]="inventoryMasterDataSource" displayExpr="InventoryName" valueExpr="InventoryId"></dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="ItemName" caption="Item Name">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column dataField="ItemCode" caption="Code">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column dataField="Description" caption="Description">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column dataField="Voucher" caption="Voucher" alignment="right" [visible]="true">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+          <dxo-lookup [dataSource]="voucherDataSource" displayExpr="ReferenceNo" valueExpr="VoucherNo"></dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="ItemType" caption="Item Type" alignment="right" [visible]="true">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+          <dxo-lookup [dataSource]="itemTypeMasterDataSource" displayExpr="TypeName" valueExpr="ItemType"></dxo-lookup>
+        </dxi-column>
+
+      </dx-data-grid>
+    </div>
+  </div>
+</div>

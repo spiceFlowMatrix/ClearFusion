@@ -1,0 +1,33 @@
+  <div class="comment-text mar_tp_10" *ngFor="let Chat of ProjectCommunicationModel">
+    <div class="user_name">
+      <p>{{Chat.UserRole}}</p>
+    </div>
+    <div class="user_text">
+      <div class="row">
+        <div class="col-sm-10">
+          <p> <b>{{Chat.CreatedByName}}</b>{{Chat.CreatedDate}}</p>
+          <p>{{Chat.ProjectDescription}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="comment-text  mar_tp_10 ">
+  <div class="user_name">
+    <p>HR</p>
+  </div>
+  <div class="user_text">
+      <div class="">
+          <div class="form-group">
+            <form (ngSubmit)="sendProjectMessage(message)" #chatForm="ngForm">
+              <div>
+                <textarea class="form-control transparent_bg" placeholder="Type Here" id="message" name="message"
+                  [(ngModel)]="message" (keydown.enter)="sendProjectMessage(message)" required></textarea>
+              </div>
+           
+            </form>
+          </div>
+        </div>
+  </div>
+</div>
+

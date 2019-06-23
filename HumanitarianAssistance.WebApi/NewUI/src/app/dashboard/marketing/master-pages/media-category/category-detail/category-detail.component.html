@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-sm-6">
+          <!-- <span (click)="onHideDetailPanel()"><i title="Back to List" class="fas fa-arrow-left"></i></span> -->
+        </div>
+        <div class="col-sm-6">
+            <div *ngIf="archiveButton" class="col-sm -6 pull-right">
+                <button pTooltip="Archive"
+                tooltipPosition="top"
+                  (click)="DeleteMediaCategory(mediaCategoryId)"
+                  color="warn"
+                  mat-icon-button
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+          <!-- <div *ngIf="archiveButton" class="col-sm-6"><a class="pull-right" (click)="DeleteMediaCategory(mediaCategoryId)">Archive</a></div> -->
+        </div>
+      </div>
+      <form [formGroup]="mediaCategoryDetailsForm">
+        <div class="row">
+            <div
+              *ngIf="mediaCategoryDetailFlag; else categoryDetailTemplate"
+              class="col-sm-12"
+            ><br/>
+              <mat-spinner
+                class="center_loader"
+                diameter="50"
+              ></mat-spinner>
+            </div>
+        <ng-template #categoryDetailTemplate>
+            <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <!-- <label>Media Category</label> -->
+                  <mat-form-field class="example-full-width">
+                  <input (change)="onChange(mediaCategoryName.value)" #mediaCategoryName formControlName="mediaCategoryName"
+                    matInput name="mediaCategoryName" placeholder="Media Category" />
+                    </mat-form-field>
+                </div>
+            </div>
+        </ng-template>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>

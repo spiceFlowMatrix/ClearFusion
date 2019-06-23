@@ -1,0 +1,219 @@
+<div class="heading-hdr">
+    <div class="main-heading clearfix">
+        <h3 class="page-headin">Budget Balance</h3>
+    </div>
+</div>
+<div class="employee-details-outer budget-balnce-outer">
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-4 project-left-part-outer" id="task-activity">
+            <div class="emp-left-part budget-left-col1">
+                <div class="emp-listing project-left-listing search-task">
+                    <dx-list #list [dataSource]="projectList" [height]="400" [searchEnabled]="true" searchExpr="ProjectName" searchMode="contains">
+                        <div *dxTemplate="let data of 'item'" [ngClass]="{'active': selectedItemProject == data}">
+                            <a href="javascript:void(0);" (click)="selectedProject(data);">
+                                <div class="pro-icon-left">
+                                    <i class="fa fa-file-text" aria-hidden="true"></i>
+                                </div>
+                                <p>
+                                    <span class="wrapspan">
+                                        <span>{{data.ProjectName}}</span>
+                                        <span>{{data.Description}}</span>
+                                    </span>
+                                </p>
+                            </a>
+                        </div>
+                    </dx-list>
+                </div>
+            </div>
+            <div class="emp-left-part budget-left-col2 search-task">
+                <dx-list #list [dataSource]="projectBudgetLine" [height]="400" [searchEnabled]="true" searchExpr="Description" searchMode="contains">
+                    <div *dxTemplate="let element of 'item'" [ngClass]="{'active': selectedItemBudget == element}">
+                        <a href="javascript:void(0);" (click)="selectedBudgetLineFunc(element)">
+                            <div class="pro-icon-left">
+                                <i class="fa fa-file-text" aria-hidden="true"></i>
+                            </div>
+                            <p>
+                                <span class="wrapspan">
+                                    <span>{{element.Description}}</span>
+                                </span>
+                            </p>
+                        </a>
+                    </div>
+                </dx-list>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-7 col-md-8 emp-right-part-outer">
+            <div class="emp-right-part">
+                <div class="emp-right-part-hdr">
+                    <div class="budget-sumry-list">
+                        <h3>Summary</h3>
+                        <ul>
+                            <li id="linkpop2" (click)="toggleWithAnimationOptionsPopOver2()">
+                                <h4>Total Expenditure</h4>
+                                <p>{{TotalExpenditure}}</p>
+                            </li>
+                            <li id="linkpop1" (click)="toggleWithAnimationOptionsPopOver1()">
+                                <h4>Total Income</h4>
+                                <p>{{TotalIncome}}</p>
+                            </li>
+                            <li id="linkpop3" (click)="toggleWithAnimationOptionsPopOver3()">
+                                <h4>Total Payable</h4>
+                                <p>{{TotalPayable}}</p>
+                            </li>
+                            <li id="linkpop4" (click)="toggleWithAnimationOptionsPopOver4()">
+                                <h4>Total Receivable</h4>
+                                <p>{{TotalReceivable}}</p>
+                            </li>
+                            <li>
+                                <h4>Balance</h4>
+                                <p>{{Balance}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="budgt-right-cont">
+                    <dx-data-grid id="gridContainer" [dataSource]="projectBudget" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                        [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+                        (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+                        (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+                        <dxo-paging [pageSize]="10"></dxo-paging>
+                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                        <dxi-column dataField="TransactionId" caption="TransactionId" [visible]="false"></dxi-column>
+                        <dxi-column dataField="TransactionDate" dataType="date" caption="Transaction Date"></dxi-column>
+                        <dxi-column dataField="Description" caption="Line Item Description"></dxi-column>
+                        <dxi-column dataField="AccountName" caption="Account">
+                        </dxi-column>
+                        <dxi-column dataField="DebitAmount" caption="Debit" alignment="right"></dxi-column>
+                        <dxi-column dataField="CreditAmount" caption="Credit" alignment="right"></dxi-column>
+                        <dxi-column dataField="DebitAccount" caption="Debit Account" alignment="right" [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="CreditAccount" caption="Credit Account" alignment="right" [visible]="false">
+                        </dxi-column>
+                        <dxi-column dataField="Amount" caption="Amount" alignment="right"></dxi-column>
+
+                        <dxo-summary>
+                            <dxi-total-item column="DebitAmount" summaryType="sum">
+                            </dxi-total-item>
+                            <dxi-total-item column="CreditAmount" summaryType="sum">
+                            </dxi-total-item>
+                        </dxo-summary>
+
+                    </dx-data-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Expenditure PopOver -->
+<dx-popover target="#linkpop1" position="bottom" [width]="650" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="withAnimationOptionsVisiblePopOver1">
+    <dxo-animation>
+        <dxo-show type="pop" [from]="{ scale: 0 }" [to]="{ scale: 1 }"></dxo-show>
+        <dxo-hide type="fade" [from]="1" [to]="0"></dxo-hide>
+    </dxo-animation>
+    <div *dxTemplate="let data = model of 'content'">
+        <dx-data-grid id="gridContainer" [dataSource]="TotalExpenditureModel" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+            (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+            (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+            
+            <dxi-column dataField="BudgetLineName" caption="Budget Line">
+            </dxi-column>
+
+            <dxi-column dataField="ReceivedDate" caption="Received Date" dataType="date">
+            </dxi-column>
+
+            <dxi-column dataField="Remark" caption="Remark">
+            </dxi-column>
+
+            <dxi-column dataField="Amount" caption="Amount">
+            </dxi-column>
+
+           
+        </dx-data-grid>
+    </div>
+</dx-popover>
+
+<!-- Income PopOver -->
+<dx-popover target="#linkpop2" position="bottom" [width]="600" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="withAnimationOptionsVisiblePopOver2">
+    <dxo-animation>
+        <dxo-show type="pop" [from]="{ scale: 0 }" [to]="{ scale: 1 }"></dxo-show>
+        <dxo-hide type="fade" [from]="1" [to]="0"></dxo-hide>
+    </dxo-animation>
+    <div *dxTemplate="let data = model of 'content'">
+        <dx-data-grid id="gridContainer" [dataSource]="TotalIncomeModel" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+            (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+            (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+           
+            <dxi-column dataField="BudgetLineName" caption="Budget Line">
+            </dxi-column>
+
+            <dxi-column dataField="Remark" caption="Remark">
+            </dxi-column>
+
+            <dxi-column dataField="PaymentDate" caption="Payment Date" dataType="date">
+            </dxi-column>
+
+            <dxi-column dataField="Amount" caption="Amount" alignment="right">
+            </dxi-column>
+
+           
+        </dx-data-grid>
+    </div>
+</dx-popover>
+
+<!-- Payable PopOver -->
+<dx-popover target="#linkpop3" position="bottom" [width]="600" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="withAnimationOptionsVisiblePopOver3">
+    <dxo-animation>
+        <dxo-show type="pop" [from]="{ scale: 0 }" [to]="{ scale: 1 }"></dxo-show>
+        <dxo-hide type="fade" [from]="1" [to]="0"></dxo-hide>
+    </dxo-animation>
+    <div *dxTemplate="let data = model of 'content'">
+        <dx-data-grid id="gridContainer" [dataSource]="TotalPayableModel" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+            (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+            (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+            
+            <dxi-column dataField="BudgetPayableId" caption="Payable Id" alignment="right">
+            </dxi-column>
+
+            <dxi-column dataField="BudgetLineTypeName" caption="Budget Line">
+            </dxi-column>
+
+            <dxi-column dataField="Amount" caption="Amount" alignment="right">
+            </dxi-column>
+           
+        </dx-data-grid>
+    </div>
+</dx-popover>
+
+<!-- Receivable PopOver -->
+<dx-popover target="#linkpop4" position="bottom" [width]="600" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="withAnimationOptionsVisiblePopOver4">
+    <dxo-animation>
+        <dxo-show type="pop" [from]="{ scale: 0 }" [to]="{ scale: 1 }"></dxo-show>
+        <dxo-hide type="fade" [from]="1" [to]="0"></dxo-hide>
+    </dxo-animation>
+    <div *dxTemplate="let data = model of 'content'">
+        <dx-data-grid id="gridContainer" [dataSource]="TotalReceivableModel" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+            (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+            (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+            
+            <dxi-column dataField="BudgetReceivalbeId" caption="Receivable Id">
+            </dxi-column>
+
+            <dxi-column dataField="BudgetLineTypeName" caption="Budget Line">
+            </dxi-column>
+
+            <dxi-column dataField="Amount" caption="Amount" alignment="right">
+            </dxi-column>
+
+        </dx-data-grid>
+    </div>
+</dx-popover>

@@ -1,0 +1,91 @@
+<div class="project-activity-phase-main">
+  <div class="row">
+    <div class="col-sm-10">
+      <!-- {{ activityDetail.ActivityDescription }} -->
+      <!-- ActivityName -->
+    </div>
+    <div class="col-sm-2">
+      <button
+    mat-raised-button
+    color="primary"
+        [disabled]="editActivityLoader"
+        (click)="onSaveProjectActivity()"
+  >
+    <span
+      class="pull-left spinner_center margin_top_10"
+      *ngIf="editActivityLoader"
+    >
+      <mat-spinner [diameter]="15"></mat-spinner>
+    </span>
+    Save
+  </button>
+      <br />
+      <br />
+    </div>
+  </div>
+  <div [ngStyle]="scrollStyles">
+    <app-project-planning
+      [activityDetail]="activityDetail"
+      [planningDocumentsList]="planningDocumentsList"
+      [budgetLineList]="budgetLineList"
+      [employeeList]="employeeList"
+      [officeList]="officeList"
+      [provinceSelectionList]="provinceSelectionList"
+      [districtMultiSelectList]="districtMultiSelectList"
+      [recurringTypeList]="recurringTypeList"
+      [districtLoaderFlag]="districtLoaderFlag"
+      (selectedProvinceId)="onSelectedProvinceId($event)"
+
+    ></app-project-planning>
+    <br />
+
+    <div class="row">
+      <div class="col-sm-6">
+        <h4>Implementation Sub-Activities</h4>
+      </div>
+      <div class="col-sm-3">
+        <button mat-icon-button (click)="openAddSubActivityDialog()">
+          <mat-icon aria-label="add">add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+   <div  *ngFor="let item of projectSubActivityList">
+    <br />
+    <app-sub-activities [subActivityDetail]="item" (updateActivityStatusId)="onUpdateActivityStatusId($event)"></app-sub-activities>
+    <br />
+   </div>
+
+    <div class="row">
+      <div class="col-sm-2">
+        <h4>Monitoring</h4>
+      </div>
+      <div class="col-sm-3">
+        <button mat-icon-button (click)="openAddProjectMonitoringDialog()">
+          <mat-icon aria-label="add">add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <app-monitoring [projectId]="projectId" [activityId]="activityId"></app-monitoring>
+    <br />
+
+    <!-- <app-project-implementation
+      [activityDetail]="activityDetail"
+      [implementationDocumentsList]="implementationDocumentsList"
+      (deleteDocument)="deleteDocument($event)"
+      (documentListRefresh)="documentListRefresh($event)"
+      (documentDownload)="documentDownload($event)"
+      (updateActivityStatusId)="onUpdateActivityStatusId($event)"
+    ></app-project-implementation> -->
+
+    <!-- <app-project-monitoring
+      [activityDetail]="activityDetail"
+      [monitoringDocumentsList]="monitoringDocumentsList"
+      (deleteDocument)="deleteDocument($event)"
+      (documentListRefresh)="documentListRefresh($event)"
+      (documentDownload)="documentDownload($event)"
+      (updateActivityStatusId)="onUpdateActivityStatusId($event)"
+    ></app-project-monitoring> -->
+  </div>
+</div>

@@ -1,0 +1,132 @@
+<div class="main-analytical-info">
+    <div class="row">
+        <div class="col-sm-12 clearfix">
+
+            <div class="row">
+                <div class="col-sm-12" style="text-align: right; padding: 18px;">
+                    <dx-button (onClick)="onShowAddAnalyticalForm()" text="Add" *ngIf="isEditingAllowed"></dx-button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <dx-data-grid id="gridContainer" [dataSource]="salaryAnalyticalInfoDS" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                        [columnAutoWidth]="true">
+                        <dxo-paging [pageSize]="10"></dxo-paging>
+                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+
+                        <dxi-column dataField="EmployeeSalaryAnalyticalInfoId" caption="Salary Analytical Id" [visible]="false"></dxi-column>
+
+                        <dxi-column dataField="EmployeeID" caption="Close Relatives Id" [visible]="false" [editorOptions]="{readOnly: true}"></dxi-column>
+
+                        <dxi-column dataField="AccountCode" aption="Account Code">
+                            <dxo-lookup [dataSource]="accountsList" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-column>
+                        
+                        <dxi-column dataField="ProjectId" caption="Project">
+                            <dxo-lookup [dataSource]="projectList" displayExpr="ProjectCodeName" valueExpr="ProjectId"></dxo-lookup>
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-column>
+
+                        <dxi-column dataField="BudgetLineName" caption="Budget Line">
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-column>
+
+                        <dxi-column dataField="SalaryPercentage" dataType="number" alignment="right">
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-column>
+
+                        <dxi-column caption="Action" alignment="center" [width]="150" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
+
+                        <div *dxTemplate="let data of 'CellTemplateEdit'">
+                            <a href="javascript:void(0)" (click)="onShowEditAnalyticalForm(data.data)">Edit</a> |
+                            <a href="javascript:void(0)" (click)="onShowDeleteAnalyticalForm(data.data)">Delete</a>
+                        </div>
+
+                    </dx-data-grid>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Add/Edit -->
+<dx-popup class="popup" [width]="600" [height]="400" [showTitle]="true" title="Analytical" [dragEnabled]="false" [closeOnOutsideClick]="true"
+    [(visible)]="addEditAnalyticalInfoPopupVisible">
+    <div *dxTemplate="let data of 'content'">
+
+        <form action="your-action" (submit)="AddEditAnalyticalInfo(analyticalForm)">
+            <dx-form id="form" [formData]="analyticalForm" [readOnly]="false" labelLocation="top" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                validationGroup="analyticalValidation" (onFieldDataChanged)="onFieldDataChanged($event)">
+                <dxi-item itemType="group" [colCount]="1">
+
+                    <!-- <dxi-item dataField="AccountCode" editorType="dxNumberBox">
+                        <dxo-label text="Account Code" alignment="left"></dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item> -->
+
+                    <dxi-item dataField="AccountCode" editorType="dxSelectBox" [editorOptions]="{ dataSource: accountsList, valueExpr: 'AccountCode', displayExpr: 'AccountName', showScrollbar: 'always', searchEnabled: true,showClearButton: true  }">
+                        <dxo-label text="Account Code" alignment="left"></dxo-label>
+                        <dxi-validation-rule type="required">
+                        </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="ProjectId" editorType="dxSelectBox" [editorOptions]="{ dataSource: projectList, valueExpr: 'ProjectId', displayExpr: 'ProjectCodeName', showScrollbar: 'always', searchEnabled: true,showClearButton: true  }">
+                        <dxo-label text="Project" alignment="left"></dxo-label>
+                        <dxi-validation-rule type="required">
+                        </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="BudgetLineId" editorType="dxSelectBox" [editorOptions]="{ dataSource: budgetLineList, valueExpr: 'BudgetLineId', displayExpr: 'BudgetCodeName', searchEnabled: true,showClearButton: true  }">
+                        <dxo-label text="Budget Line" alignment="left"></dxo-label>
+                        <dxi-validation-rule type="required">
+                        </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="SalaryPercentage" editorType="dxNumberBox">
+                        <dxo-label text="Salary Percentage" alignment="left"></dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                </dxi-item>
+
+            </dx-form>
+
+            <div class="btn-grp-wrap">
+                <dx-button text="Save" type="success" validationGroup="analyticalValidation" [useSubmitBehavior]="true"> </dx-button>
+                <dx-button text="Cancel" (onClick)="hideAddEditAnalyticalInfoPopupVisible()"> </dx-button>
+            </div>
+
+        </form>
+
+        <ngx-loading [show]="analyticalPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+    </div>
+</dx-popup>
+
+
+<!-- confirmation -->
+<dx-popup class="popup" [width]="400" [height]="250" [showTitle]="true" title="Confirmation Message" [dragEnabled]="false"
+    [closeOnOutsideClick]="true" [(visible)]="deleteConfirmationPopup">
+    <div *dxTemplate="let data of 'content'">
+        <form action="your-action">
+            <div class="form-group">
+                <label for="officecode">Are you sure ?</label>
+            </div>
+            <br />
+            <div class="btn-grp-wrap">
+                <dx-button text="Delete" type="success" (onClick)="deleteAnalyticalInfoConfirm()"></dx-button>
+                <dx-button text="Cancel" (onClick)="hideDeleteConfirmationPopup()"></dx-button>
+            </div>
+        </form>
+        <ngx-loading [show]="deleteAnalyticalFormPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+    </div>
+</dx-popup>

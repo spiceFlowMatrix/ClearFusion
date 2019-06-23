@@ -1,0 +1,153 @@
+<div class="main-details-of-note">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div class="row">
+        <div class="col-sm-12">
+          <form action="your-action" (submit)="selectedDetailsOfNoteFilter(detailsOfNoteFilterForm)">
+
+            <div class="row filter-padding">
+              <div class="col-sm-8">
+                <dx-form id="form" [(formData)]="detailsOfNoteFilterForm" [readOnly]="false" labelLocation="left" [showColonAfterLabel]="true"
+                  [showValidationSummary]="true" [colCount]="2">
+
+
+                  <dxi-item dataField="FinancialYear" editorType="dxSelectBox" [editorOptions]="{ dataSource: financialYearArr, value: detailsOfNoteFilterForm.FinancialYear, displayExpr: 'FinancialYearName', valueExpr: 'FinancialYearId', placeholder: 'Select Financial Year', searchEnabled: true, showClearButton:'true'  }">
+                    <dxo-label text="Financial Year"></dxo-label>
+                    <dxi-validation-rule type="required"> </dxi-validation-rule>
+                  </dxi-item>
+                  <dxi-item dataField="Currency" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyModel, value: detailsOfNoteFilterForm.Currency, displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId', placeholder: 'Select Currency', searchEnabled: true, showClearButton:'true'  }">
+                    <dxo-label text="Currency"></dxo-label>
+                    <dxi-validation-rule type="required"> </dxi-validation-rule>
+                  </dxi-item>
+
+
+                </dx-form>
+
+              </div>
+              <div class="col-sm-4">
+                <dx-button text="Update Filter" type="success" [useSubmitBehavior]="true"></dx-button>
+              </div>
+            </div>
+
+
+          </form>
+        </div>
+      </div>
+
+      <!-- pdf -->
+      <div class="row">
+        <div class="col-sm-12 text-right">
+          <dx-button (onClick)="exportDetailsOfNotesPdf()" text="Export Pdf"></dx-button>
+        </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-sm-10">
+                  <h3 class="panel-title text-left">Details of Note</h3>
+                </div>
+                <div class="col-sm-2 text-right">
+                  <div class="emp-close-btn">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="panel-body">
+
+              <div id="mainDetailOfNotesPdf">
+
+                <div class="main-table-outer" style="margin: 40px 16px;">
+                  <table style="margin:0 auto;font-size:15px;font-family:arial;width:100%;" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td align="center">
+                        <h3 style="font-family:arial; font-size:20px; font-weight: 600;">COORDINATION OF HUMANITARIAN ASSISTANCE</h3>
+                        <h4 style="font-family:arial; font-size:16px;">NOTES TO THE ACCOUNTS IN ( {{ selectedCurrency !=null ? selectedCurrency : null}} ) FOR THE YEAR
+                          {{selectedFinancialYearName}}
+                        </h4>
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                      <td>
+                        <table style="width:100%;border-collapse: collapse; font-size:18px;">
+                          <tr style="border-top:2px solid #515151;">
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td height="10"></td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <table style="width:100%;border-collapse: collapse; font-size:18px;">
+                          <thead>
+                            <tr style="border-top:2px solid #515151;">
+                              <th style="width: 10%;"></th>
+                              <th>Account Code</th>
+                              <th>Account Name</th>
+                              <th style="text-align: right;">Debit</th>
+                              <th style="text-align: right;">Credit</th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            <ng-container *ngFor="let detailsOfNotesList of detailOfNotesReportDataSource">
+                              <tr style="border-bottom:2px solid #515151; border-top:2px solid #515151;">
+                                <td colspan="5">Note No. : {{detailOfNotesReportDataSource != null ? detailsOfNotesList.DetailsOfNotesList[0].Notes
+                                  : ''}}</td>
+                              </tr>
+                              <tr *ngFor="let item of detailsOfNotesList.DetailsOfNotesList">
+                                <td style="width: 10%;"></td>
+                                <td>{{item.ChartOfAccountCode}}</td>
+                                <td>{{item.AccountName}}</td>
+                                <td align="right">{{item.DebitAmount}}</td>
+                                <td align="right">{{item.CreditAmount}}</td>
+                              </tr>
+                              <tr style="border-top:2px solid #515151;">
+
+                                <td colspan="2">
+                                  <strong>Balance: {{detailsOfNotesList.BalanceSum}}</strong>
+                                </td>
+                                <td>&nbsp;</td>
+
+                                <td align="right">
+                                  <strong>{{detailsOfNotesList.DebitSum}}</strong>
+                                </td>
+                                <td align="right">
+                                  <strong>{{detailsOfNotesList.CreditSum}}</strong>
+                                </td>
+                              </tr>
+                            </ng-container>
+                          </tbody>
+                          <tr>
+                            <td height="10"></td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+
+                  </table>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+</div>
+<ngx-loading [show]="detailsOfNoteLoader"></ngx-loading>

@@ -1,0 +1,58 @@
+<div class="main-notification-panel">
+  <div class="row">
+    <div class="col-sm-12">
+      <h3>Notifications</h3>
+
+
+
+      <dx-list #list [dataSource]="dummy" [height]="500" [searchEnabled]="false" [searchExpr]="['userName','createdDate']" selectionMode="single"
+        searchMode="contains" itemTemplate="notificationListItem">
+        <div *dxTemplate="let item of 'notificationListItem' ">
+          <div class="notification-text text-left">
+
+            <a routerLink="{{item.notificationPath}}" (click)="onNotificationClicked(item)">
+              <div class="row container" [ngStyle]="item.isRead == false ? { 'background-color': '#f6f6f6', 'border-left': 'solid #343f51'  }: null">
+                <!-- <div class="row container" [ngStyle]="{ item.isRead == false ? 'background-color': '#f6f6f6' : null  'border-left': item.isRead == false ? solid '#343f51' : null }"> -->
+                <div class="col-xm-2">
+                  <div class="notification-image">
+                    <img src="assets/images/profile-pic.jpg" alt="" />
+                  </div>
+                </div>
+                <div class="col-xm-10">
+                  <div class="notification-text">
+                    <div class="notification-inner-text">
+                      <p>{{item.loggedDetail}} By
+                        <br>
+                        <strong>{{item.userName}}</strong>
+                      </p>
+                      <small>{{item.createdDate | date}} {{item.createdDate | date:'shortTime'}}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+
+          </div>
+        </div>
+      </dx-list>
+
+
+
+      <!-- <ul class="noti-listing">
+        <li class="notread" *ngFor="let item of dummy">
+          <a routerLink="{{item.notificationPath}}" (click)="onNotificationClicked(item)">
+            <figure>
+              <img src="assets/images/profile-pic.jpg" alt="" />
+            </figure>
+            <p>{{item.loggedDetail}} By
+              <strong>{{item.userName}}</strong>
+            </p>
+            <small>{{item.createdDate | date}} {{item.createdDate | date:'shortTime'}}</small>
+          </a>
+        </li>
+      </ul> -->
+
+
+    </div>
+  </div>
+</div>

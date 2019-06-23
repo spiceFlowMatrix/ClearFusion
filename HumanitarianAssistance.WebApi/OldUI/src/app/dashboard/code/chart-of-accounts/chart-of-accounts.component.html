@@ -1,0 +1,271 @@
+
+<div class="main-page dv-main-pg">
+  <div class="heading-hdr">
+    <div class="clearfix">
+      <h3 class="page-heading" [ngClass]="{'myclass' : false}">Manage Chart of Accounts</h3>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12" *ngIf="isEditingAllowed">
+      <div class="main-heading clearfix">
+        
+        <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="addChartOfAccount()">
+        </dx-button>
+        <br>
+      </div>
+    </div>
+    <div class="col-sm-12">
+
+      <!--  Chart of Accounts Filters -->
+      <dx-tree-list id="employees" [dataSource]="chartOfAccountsData" keyExpr="AccountCode" parentIdExpr="ParentID" [showRowLines]="true"
+        [allowColumnReordering]="true" [allowColumnResizing]="true" [columnAutoWidth]="true" [expandedRowKeys]="[1]" (onRowUpdating)="EditChartOfAccount($event)">
+       
+        <dxo-editing mode="popup" [allowUpdating]="true" [form]="{items: ['AccountName', 'AccountTypeId']}" *ngIf="isEditingAllowed">
+          <dxo-popup title="Chart of account" [closeOnOutsideClick]="true" [showTitle]="true" [width]="700" [height]="220" [position]="{ my: 'center', at: 'center', of: windows }">
+          </dxo-popup>
+        </dxo-editing>
+        <!-- editing -->
+        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+
+        <dxi-column dataField="AccountName"> </dxi-column>
+        <dxi-column dataField="ChartOfAccountCode" caption="Account Code" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="AccountTypeId" caption="Account Type">
+          <dxo-lookup [dataSource]="accountTypeDropdown" valueExpr="AccountTypeId" displayExpr="AccountTypeName">
+          </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="AccountLevelId" [allowEditing]="false" [visible]="false"></dxi-column>
+
+      </dx-tree-list>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add chart of account -->
+<dx-popup class="popup overitepopups" [width]="800" [height]="350" [showTitle]="true" title="Chart Of Account" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" (onShowing)="onShowing()" [(visible)]="popupVisibleAddChartOfAccount">
+
+  <div *dxTemplate="let data of 'content'">
+
+    <div class="dx-field margin-auto text-center">
+      <div class="row">
+        <div class="col-sm-3 col-sm-offset-2" style="margin-top: 10px;">
+          Add Account Level :
+        </div>
+        <div class="col-sm-5" style="max-width: 30rem;">
+          <dx-select-box [dataSource]="accountLevelDropdown" (onValueChanged)="accountLevelSelectedValue($event)" [(value)]="selectValue"
+            displayExpr="AccountLevelName" valueExpr="ID">
+          </dx-select-box>
+        </div>
+      </div>
+    </div>
+    <br>
+
+    <!-- Main Level Account -->
+    <div *ngIf="formToggle==1">
+      <form action="your-action" (submit)="onAddAccounts(fMainLevelAccount)">
+        <dx-form id="form" [(formData)]="fMainLevelAccount" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="customerData">
+
+          <dxi-item dataField="AccountName">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="AccountTypeId" caption="Account Type" editorType="dxSelectBox" [editorOptions]="{ dataSource: accountTypeDropdown, value: AccountTypeId, displayExpr: 'AccountTypeName', valueExpr: 'AccountTypeId', searchEnabled: true }">
+            <dxo-label text="Account Type"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Show" editorType="dxCheckBox">
+          </dxi-item>
+
+          <dxi-item dataField="MDCode" editorType="dxNumberBox"> </dxi-item>
+
+          <dxi-item dataField="AccountCode" [editorOptions]="{ mask: '0'}">
+            <dxo-label text="Account Code"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+        </dx-form>
+        <br />
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+          </dx-button>
+
+          <dx-button text="Cancel" (onClick)="cancelChartOfAccount()">
+          </dx-button>
+        </div>
+      </form>
+      <br>
+      <br>
+    </div>
+
+    <!-- Control Level Account -->
+    <div *ngIf="formToggle==2">
+
+      <form action="your-action" (submit)="onAddAccounts(fControlLevelAccount)">
+        <dx-form id="form" [(formData)]="fControlLevelAccount" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="customerData" (onFieldDataChanged)="onControlLevelFieldDataChanged($event)">
+
+          <dxi-item dataField="MainLevel" editorType="dxSelectBox" [editorOptions]="{ dataSource: mainLevelArr, displayExpr: 'AccountName', valueExpr: 'AccountCode', searchEnabled: true }">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="AccountName">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="AccountTypeId" title="Account Type" editorType="dxSelectBox" [editorOptions]="{ dataSource: accountTypeDropdown, value: AccountTypeId, displayExpr: 'AccountTypeName', valueExpr: 'AccountTypeId', searchEnabled: true }">
+            <dxo-label text="Account Type"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Show" editorType="dxCheckBox">
+          </dxi-item>
+
+          <dxi-item dataField="MDCode" label="Donor MIS Code">
+          </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+            <dxi-item dataField="AccountCodePref" editorType="dxNumberBox" [editorOptions]="{readOnly: true}">
+              <dxo-label text="Account Code"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="AccountCode" [editorOptions]="{ mask: '0'}">
+              <dxo-label text=" "></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+          </dxi-item>
+
+        </dx-form>
+        <br>
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+          </dx-button>
+
+          <dx-button text="Cancel" (onClick)="cancelChartOfAccount()">
+          </dx-button>
+        </div>
+      </form>
+
+    </div>
+
+    <!-- Sub Level Account -->
+    <div *ngIf="formToggle==3">
+      <form action="your-action" (submit)="onAddAccounts(fSubLevelAccount,formToggle)">
+        <dx-form id="form" [(formData)]="fSubLevelAccount" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="customerData" (onFieldDataChanged)="onSubLevelFieldDataChanged($event)">
+
+          <dxi-item dataField="ControlLevel" editorType="dxSelectBox" [editorOptions]="{ dataSource: controlLevelArr, displayExpr: 'AccountName', valueExpr: 'AccountCode', searchEnabled: true }">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="AccountName">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="AccountTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: accountTypeDropdown, value: AccountTypeId, displayExpr: 'AccountTypeName', valueExpr: 'AccountTypeId' , searchEnabled: true  }">
+            <dxo-label text="Account Type"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Show" editorType="dxCheckBox">
+          </dxi-item>
+
+
+          <dxi-item dataField="MDCode" caption="DonorMISCode">
+          </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+            <dxi-item dataField="AccountCodePref" editorType="dxNumberBox" [editorOptions]="{readOnly: true}">
+              <dxo-label text="Account Code"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="AccountCode" [editorOptions]="{ mask: '00'}">
+              <dxo-label text=" "></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+          </dxi-item>
+
+        </dx-form>
+
+        <br>
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+          </dx-button>
+
+          <dx-button text="Cancel" (onClick)="cancelChartOfAccount()">
+          </dx-button>
+        </div>
+      </form>
+
+    </div>
+
+    <!-- Input Level Account -->
+    <div *ngIf="formToggle==4">
+
+      <form action="your-action" (submit)="onAddAccounts(fInputLevelAccount)">
+        <dx-form id="form" [(formData)]="fInputLevelAccount" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="customerData" (onFieldDataChanged)="onInputLevelFieldDataChanged($event)">
+
+
+          <dxi-item dataField="SubLevel" editorType="dxSelectBox" [editorOptions]="{ dataSource: subLevelArr, displayExpr: 'AccountName', valueExpr: 'AccountCode', searchEnabled: true   }">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="AccountName">
+            <dxi-validation-rule type="required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="AccountTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: accountTypeDropdown, value: AccountTypeId, displayExpr: 'AccountTypeName', valueExpr: 'AccountTypeId' , searchEnabled: true }">
+            <dxo-label text="Account Type"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Show" editorType="dxCheckBox">
+          </dxi-item>
+
+
+
+          <dxi-item dataField="MDCode" caption="DonorMISCode">
+          </dxi-item>
+
+
+          <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+            <dxi-item dataField="AccountCodePref" editorType="dxNumberBox" [editorOptions]="{readOnly: true}">
+              <dxo-label text="Account Code"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="AccountCode" [editorOptions]="{ mask: '00'}">
+              <dxo-label text=" "></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+          </dxi-item>
+
+
+        </dx-form>
+
+        <br />
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+          </dx-button>
+
+          <dx-button text="Cancel" (onClick)="cancelChartOfAccount()">
+          </dx-button>
+        </div>
+      </form>
+
+    </div>
+
+    <ngx-loading [show]="chartOfAccountpopupLoader"></ngx-loading>
+
+  </div>
+</dx-popup>
+<!-- Add chart of account -->

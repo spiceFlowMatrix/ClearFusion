@@ -1,0 +1,179 @@
+<div class="body-content">
+  <div class="income-expense-main">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+          <mat-card [ngStyle]="scrollStyles">
+            <div class="row">
+              <div class="col-sm-6">
+                <h4 class="main_heading bdr_heading">
+                  Income
+                </h4>
+              </div>
+              <div class="col-sm-6">
+                <div class="pull-right">
+                  <button
+                    mat-icon-button
+                    pTooltip="Filter"
+                    tooltipPosition="top"
+                    (click)="show = !show"
+                  >
+                    <i class="fa black_icon fa-sliders-h font_x_large"> </i>
+                  </button>
+
+                  <button
+                    mat-icon-button
+                    color="accent"
+                    pTooltip="View Report"
+                    tooltipPosition="top"
+                    [routerLink]="[
+                      'view',
+                      selectedDate | date: 'yyyy-MM-dd',
+                      selectedToDate | date: 'yyyy-MM-dd',
+                      selectedCurrency
+                    ]"
+                  >
+                    <i class="fa fa-clipboard font_x_large"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- filter -->
+            <div *ngIf="show" class="filtersPopup">
+              <mat-form-field>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  placeholder="As of date"
+                  [(ngModel)]="selectedDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field>
+                <input
+                  matInput
+                  [matDatepicker]="picker2"
+                  placeholder="Up to date"
+                  [(ngModel)]="selectedToDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker2"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field class="settings-full-width">
+                <mat-select
+                  placeholder="Currency"
+                  [(ngModel)]="selectedCurrency"
+                  class="settings-full-width"
+                >
+                  <mat-option
+                    *ngFor="let currency of currencyList"
+                    [value]="currency.CurrencyId"
+                  >
+                    {{ currency.CurrencyCode }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button class="pull-right" (click)="show = !show">OK</button>
+            </div>
+            <!-- filter -->
+
+            <div class="row">
+              <div class="col-sm-12">
+                Income
+                <mat-spinner
+                  *ngIf="incomeListLoaderFlag"
+                  [diameter]="20"
+                ></mat-spinner>
+                <tr *ngFor="let item of incomeList">
+                  <td>
+                    <lib-inline-edit
+                      [value]="item"
+                      (action)="onValueChangeEmit($event)"
+                      (addAction)="addActionEmit($event)"
+                      [disabled]="!isEditingAllowed"
+                    ></lib-inline-edit>
+                  </td>
+                </tr>
+                <div *ngIf="inputFieldIncomeFlag">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      #income
+                      matInput
+                      type="text"
+                      maxlength="150"
+                      name="income"
+                      (keyup.enter)="onAdd(INCOME_ID, income.value)"
+                      (change)="onAdd(INCOME_ID, income.value)"
+                    />
+                  </mat-form-field>
+                </div>
+
+                <button
+                  mat-icon-button
+                  (click)="toggleInputFieldIncome()"
+                  *ngIf="isEditingAllowed"
+                >
+                  <mat-icon aria-label="icon"> add_circle_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="row margin_top_50">
+              <div class="col-sm-6">
+                <h4 class="main_heading bdr_heading">Expenses</h4>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <mat-spinner
+                  *ngIf="expenseListLoaderFlag"
+                  [diameter]="20"
+                ></mat-spinner>
+                <tr *ngFor="let item of expenseList">
+                  <td>
+                    <lib-inline-edit
+                      [value]="item"
+                      (action)="onValueChangeEmit($event)"
+                      (addAction)="addActionEmit($event)"
+                      [disabled]="!isEditingAllowed"
+                    ></lib-inline-edit>
+                  </td>
+                </tr>
+                <div *ngIf="inputFieldExpenseFlag">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      #expense
+                      matInput
+                      type="text"
+                      maxlength="150"
+                      name="expense"
+                      (keyup.enter)="onAdd(EXPENSE_ID, expense.value)"
+                      (change)="onAdd(EXPENSE_ID, expense.value)"
+                    />
+                  </mat-form-field>
+                </div>
+
+                <button
+                  mat-icon-button
+                  (click)="toggleInputFieldExpense()"
+                  *ngIf="isEditingAllowed"
+                >
+                  <mat-icon aria-label="icon"> add_circle_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

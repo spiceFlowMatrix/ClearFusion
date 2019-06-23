@@ -1,0 +1,325 @@
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+<div class="main-summary">
+  <div class="alert bg-white" role="alert">
+    <div style="font-size: 20px;">
+      <span class="glyphicon glyphicon-list"></span> Summary
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- filter -->
+    <div class="col-sm-3">
+
+      <div class="thumbnail card left-search-panel filter">
+        <div class="caption text-center">
+          <div class="row">
+            <div class="col-sm-12 text-left">
+              <div class="row">
+                <div class="col-sm-6" style="font-size: 20px; font-weight: bold; opacity: 0.5">
+                  Filter
+                  <span class="dx-icon-filter icon" style="font-weight: bold"></span>
+                </div>
+                <!-- <div class="col-sm-6 text-right">
+                  <dx-button text="Filter" (onClick)="getAllTotalCounts()"></dx-button>
+                </div> -->
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <form action="your-action" (submit)="getAllTotalCounts(summaryFilterFormData)">
+                <dx-form id="form" [(formData)]="summaryFilterFormData" (onFieldDataChanged)="onFieldDataChanged($event)" [colCount]="1"
+                  [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true" validationGroup="filterDetails">
+
+                  <dxi-item dataField="EmployeeTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeTypeList, displayExpr: 'EmployeeTypeName', valueExpr: 'EmployeeTypeId', value: employeeTypeId }">
+                    <dxo-label text="Employee Type"></dxo-label>
+                    <dxi-validation-rule type="required"> </dxi-validation-rule>
+                  </dxi-item>
+
+                  <dxi-item dataField="RecordTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: recordTypeList, displayExpr: 'RecordTypeName', valueExpr: 'RecordTypeId', value: recordType }">
+                    <dxo-label text="Record Type"></dxo-label>
+                    <dxi-validation-rule type="required"> </dxi-validation-rule>
+                  </dxi-item>
+
+                  <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [disabled]="currencyFlag" [editorOptions]="{ dataSource: currencyTypeList, displayExpr: 'CurrencyName', valueExpr: 'CurrencyId', value: currencyId }">
+                    <dxo-label text="Currency"></dxo-label>
+                    <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+                  </dxi-item>
+
+                  <!-- <dxi-item dataField="FinancialYearId" editorType="dxSelectBox" [editorOptions]="{ dataSource: financialYearList, displayExpr: 'FinancialYearName', valueExpr: 'FinancialYearId' }">
+                    <dxo-label text="Financial Year"></dxo-label>
+                    <dxi-validation-rule type="required"> </dxi-validation-rule>
+                  </dxi-item> -->
+
+
+                  <dxi-item dataField="Year" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'yyyy', maxZoomLevel:'year', minZoomLevel: 'century' }">
+                    <dxo-label text="Year"></dxo-label>
+                    <dxi-validation-rule type="required"> </dxi-validation-rule>
+                  </dxi-item>
+
+                  <dxi-item dataField="MonthId" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'MMMM', pickerType:'rollers', maxZoomLevel:'year', minZoomLevel: 'century', showClearButton: 'true' }">
+                    <dxo-label text="Month"></dxo-label>
+                    <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+                  </dxi-item>
+
+                  <dxi-item dataField="DeductionId" editorType="dxSelectBox" [editorOptions]="{ dataSource: totalDeductionData, displayExpr: 'HeadName', valueExpr: 'SalaryHeadId', showClearButton: 'true' }">
+                    <dxo-label text="Deduction"></dxo-label>
+                    <!--  [showClearButton]="true" -->
+                    <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+                  </dxi-item>
+
+                  <dxi-item dataField="AllowanceId" editorType="dxSelectBox" [editorOptions]="{ dataSource: totalAllowanceData, displayExpr: 'HeadName', valueExpr: 'SalaryHeadId', showClearButton: 'true' }">
+                    <dxo-label text="Allowance"></dxo-label>
+                    <!--  [showClearButton]="true" -->
+                    <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+                  </dxi-item>
+
+                </dx-form>
+                <div class="btn-grp-wrap">
+                  <dx-button text="Filter" type="success" validationGroup="filterDetails" [useSubmitBehavior]="true"></dx-button>
+                  <!-- <dx-button text="Cancel" (click)="HideAddHolidayPopup()"></dx-button> -->
+                </div>
+              </form>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Consolidated Currency -->
+    <div *ngIf="currencyFlag == false ; else singleCurrency" class="col-sm-9">
+
+      <div class="row">
+
+        <!-- total employee -->
+        <div class="col-sm-6 dv-smmry-dt">
+          <div class="thumbnail card">
+            <div class="caption">
+
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="dv-img-cstm text-center">
+                    <img class="image-light" src="assets/images/employee.png" alt="Profile Image" />
+                  </div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="title-light">Total Employee</div>
+                  <div class="totalCountSize"> {{totalEmployee != null ? totalEmployee : 0}}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- total gross salary -->
+        <div class="col-sm-6 dv-smmry-dt">
+          <div class="thumbnail card">
+            <div class="caption">
+
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="dv-img-cstm text-center">
+                    <img class="image-light" src="assets/images/total.png" alt="Profile Image" />
+                  </div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="title-light">Total Gross Salary</div>
+                  <div class="totalCountSize"> {{totalGrossSalary != null ? totalGrossSalary : 0}}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- total deduction -->
+        <div class="col-sm-6 dv-smmry-dt">
+          <div class="thumbnail card">
+            <div class="caption">
+
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="dv-img-cstm text-center">
+                    <img class="image-light" src="assets/images/deductions.png" alt="Profile Image" />
+                  </div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="title-light"> {{deductionName == null ? "Total Deduction" : "Total " + deductionName.HeadName}}</div>
+                  <div class="totalCountSize">{{totalDeduction != null ? totalDeduction : 0}}</div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+        <!-- total allowances -->
+        <div class="col-sm-6 dv-smmry-dt">
+          <div class="thumbnail card">
+            <div class="caption">
+
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="dv-img-cstm text-center">
+                    <img class="image-light" src="assets/images/allowances.png" alt="Profile Image" />
+                  </div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="title-light"> {{allowanceName == null ? "Total Allowance" : "Total " + allowanceName.HeadName}}</div>
+                  <div class="totalCountSize">{{totalAllowances != null ? totalAllowances : 0}}</div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+
+    <!-- Single Currency -->
+    <ng-template #singleCurrency>
+      <div class="col-sm-9">
+        <div class="row">
+          <!-- total employee -->
+        <div class="col-sm-12 dv-smmry-dt">
+            <div class="thumbnail card">
+              <div class="caption">
+  
+                <div class="row">
+                  <div class="col-sm-2">
+                    <div class="dv-img-cstm text-center">
+                      <img class="image-light" src="assets/images/employee.png" alt="Profile Image" />
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="title-light">Total Employee</div>
+                    <div class="totalCountSize"> {{totalEmployee != null ? totalEmployee : 0}}</div>
+                  </div>
+                </div>
+  
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+
+          <!-- gross salary -->
+          <div class="col-sm-4 dv-smmry-dt-snd">
+            <div class="thumbnail card left-search-panel">
+              <div class="caption text-center">
+                <div class="row top-card" style="background-color: #3dc5ab;">
+                  <div class="col-sm-4">
+                    <img class="image-light" src="assets/images/total.png" height="60px" width="60px" alt="Profile Image" />
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="top-card-heading">
+                      Gross Salary
+                    </div>
+                  </div>
+                </div>
+                <div class="row text-left">
+                  <div class="col-sm-12">
+                    <br>
+                    <div class="list-group">
+                      <a class="list-group-item disabled">
+                        Gross Salary
+                      </a>
+                      <a class="list-group-item" *ngFor="let item of employeeSummaryDetailsList; let i = index">{{item.CurrencyDetail[0].CurrencyName}} ( {{item.CurrencyDetail[0].CurrencyCode}} ) : {{item.TotalGrossSalary}}</a>
+                    </div>
+
+                    <!-- <div class="list-group">
+                      <a class="list-group-item disabled">
+                        Gross Salary
+                      </a>
+                      <a class="list-group-item">Afgan (Afg) : 5607</a>
+                      <a class="list-group-item">USA (Dollar) : 5607</a>
+                      <a class="list-group-item">IN (Rupees) : 5607</a>
+                      <a class="list-group-item">Vestibulum at eros</a>
+                    </div> -->
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- total Deduction -->
+          <div class="col-sm-4 dv-smmry-dt-snd">
+            <div class="thumbnail card left-search-panel">
+              <div class="caption text-center">
+                <div class="row top-card" style="background-color: #3dc5ab;">
+                  <div class="col-sm-4">
+                    <img class="image-light" src="assets/images/deductions.png" height="60px" width="60px" alt="Profile Image" />
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="top-card-heading">
+                      Total Deduction
+                    </div>
+                  </div>
+                </div>
+                <div class="row text-left">
+                  <div class="col-sm-12">
+                    <br>
+                    <div class="list-group">
+                      <a class="list-group-item disabled">
+                        {{deductionName == null ? "Total Deduction" : "Total " + deductionName.HeadName}}
+                      </a>
+                      <a class="list-group-item" *ngFor="let item of employeeSummaryDetailsList; let i = index">{{item.CurrencyDetail[0].CurrencyName}} ( {{item.CurrencyDetail[0].CurrencyCode}} ) : {{item.TotalDeduction}}</a>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- total allowance -->
+          <div class="col-sm-4 dv-smmry-dt-snd">
+            <div class="thumbnail card left-search-panel">
+              <div class="caption text-center">
+                <div class="row top-card" style="background-color: #3dc5ab;">
+                  <div class="col-sm-4">
+                    <img class="image-light" src="assets/images/allowances.png" height="60px" width="60px" alt="Profile Image" />
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="top-card-heading">
+                      Total Allowances
+                    </div>
+                  </div>
+                </div>
+                <div class="row text-left">
+                  <div class="col-sm-12">
+                    <br>
+                    <div class="list-group">
+                      <a class="list-group-item disabled">
+                        {{allowanceName == null ? "Total Allowance" : "Total " + allowanceName.HeadName}}
+                      </a>
+                      <a class="list-group-item" *ngFor="let item of employeeSummaryDetailsList; let i = index">{{item.CurrencyDetail[0].CurrencyName}} ( {{item.CurrencyDetail[0].CurrencyCode}} ) : {{item.TotalAllowance}}</a>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </ng-template>
+
+  </div>
+
+
+  <ngx-loading [show]="summaryLoader"></ngx-loading>
+</div>

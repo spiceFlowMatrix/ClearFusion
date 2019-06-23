@@ -1,0 +1,235 @@
+<div class="main-vouchers">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="main-heading clearfix">
+                <h3 class="page-headin">Vouchers</h3>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="left">
+
+                <div class="row">
+                    <div class="col-sm-12 container">
+                        <div class="row thumbnail card">
+                            <div class="col-sm-12 text-right">
+                                <div class="emp-add-btn">
+                                    <span>
+                                        <i class="fa fa-plus-circle" aria-hidden="true" (click)="onShowAddVoucherForm()" *ngIf="isEditingAllowed"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="col-sm-12">
+                                <div class="voucher-left-listing-height">
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <form action="your-action" (submit)="onFieldVoucheFilterChanged(voucherFilterForm)">
+                                                <dx-form id="form" [formData]="voucherFilterForm" [readOnly]="false"
+                                                    labelLocation="top" [showColonAfterLabel]="true"
+                                                    [showValidationSummary]="true">
+                                                    <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{ displayFormat:'dd/MM/yyyy', placeholder: 'Select Date', showClearButton: true }">
+                                                        <dxo-label text="Date" alignment="left"></dxo-label>
+                                                    </dxi-item>
+
+                                                    <dxi-item dataField="OfficesList" editorType="dxTagBox"
+                                                        showCheckBoxesMode="normal" [editorOptions]="{ dataSource: officeCodeModel, displayExpr: 'OfficeName', valueExpr: 'OfficeId', value: selectedOffices, placeholder: 'Select Office', multiline: false, maxDisplayedTags: 1, searchEnabled: true, showClearButton:'true', selectAllMode: 'allPages', showSelectionControls: true }">
+                                                        <dxo-label text="Office"></dxo-label>
+                                                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                                    </dxi-item>
+
+                                                </dx-form>
+                                                <div class="voucher-upd-btn">
+                                                    <dx-button text="Update Filter" type="success" [useSubmitBehavior]="true"></dx-button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="col-sm-12">
+
+                                            <br>
+
+                                            <dx-list #list [dataSource]="voucherDetailsList" [height]="610"
+                                                [searchEnabled]="true" [searchExpr]="['ReferenceNo','CurrencyCode','JournalName','Description']"
+                                                selectionMode="single" pageLoadMode="nextButton" nextButtonText="See More"
+                                                (onItemRendered)="onVoucherItemRendered($event)" (onItemClick)="onVoucherSelectionChanged($event.itemData)"
+                                                searchMode="contains" itemTemplate="listItem">
+                                                <div *dxTemplate="let data of 'listItem' ">
+                                                    <div *ngIf="data.VoucherNo != 0; else showMore" class="text-left">
+                                                        <div class="col-sm-12">
+                                                            <h4> {{data.ReferenceNo}}</h4>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            Currency: {{data.CurrencyCode}}
+                                                        </div>
+                                                        <div class="col-sm-12 text-ellip">
+                                                            Description: {{data.Description}}
+                                                        </div>
+                                                        <div class="col-sm-12">
+
+
+
+                                                            <div class="row">
+                                                                <div class="col-sm-10 voucher-overflow">
+                                                                    Journal Name: {{data.JournalName}}
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <a href="javascript:void(0); " (click)="selectedReferenceNo(data)" *ngIf="isEditingAllowed">
+                                                                        <i class="fa fa-paperclip"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                    <ng-template #showMore>Show More</ng-template>
+                                                </div>
+                                            </dx-list>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+
+        <div class="col-sm-9 vouchers-transaction">
+            <div class="thumbnail card">
+                <div class="container">
+
+                    <div class="row">
+                        <div class="col-sm-12 voucher-detail-hdr">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h3 class="page-headin">Voucher Ref No: {{selectedVoucherData != null ? selectedVoucherData.ReferenceNo : ""}}
+                                    </h3>
+                                    <div *ngIf="selectedVoucherData != null">
+                                            Voucher Date: {{selectedVoucherData.VoucherDate | date: 'MMM d, y'}}
+                                        </div>
+                                    <br>
+
+                                    Description: {{selectedVoucherData != null ? selectedVoucherData.Description : ""}}
+                                    <br>
+
+                                </div>
+                                <div class="col-sm-6 text-right">
+                                    <br>
+                                    <div *ngIf="selectedVoucherData != null && isEditingAllowed">
+                                        <a (click)="onShowEditVoucherForm()">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12">
+                            <app-transaction [isEditingAllowed]="isEditingAllowed"></app-transaction>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <ngx-loading [show]="voucherLoading"></ngx-loading>
+</div>
+
+
+<!-- Add / Edit-->
+<dx-popup class="popup" [width]="800" [height]="350" [showTitle]="true" title="Voucher" [dragEnabled]="false"
+    [closeOnOutsideClick]="true" [(visible)]="addEditVoucherFormPopupVisible">
+    <div *dxTemplate="let data of 'content'">
+        <dx-scroll-view showScrollbar="always" direction="both">
+            <form action="your-action" (submit)="onVoucherFormSubmit(voucherDetailsForm)">
+                <dx-form id="form" [formData]="voucherDetailsForm" [readOnly]="false" [showColonAfterLabel]="true"
+                    [showValidationSummary]="true" validationGroup="voucherData" (onFieldDataChanged)="onFieldDataChanged($event)">
+                    <dxi-item itemType="group" [colCount]="2">
+
+                        <dxi-item dataField="FinancialYearId" editorType="dxSelectBox" [editorOptions]="{ dataSource: financialYearArr, value: voucherDetailsForm.FinancialYearId, valueExpr: 'FinancialYearId', displayExpr: 'FinancialYearName', searchEnabled: true, showClearButton: false  }">
+                            <dxo-label text="Financial Year" alignment="left"></dxo-label>
+                            <dxi-validation-rule type="required">
+                            </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyModel, value: voucherDetailsForm.CurrencyId, valueExpr: 'CurrencyId', displayExpr: 'CurrencyCode', searchEnabled: true, showClearButton: false  }">
+                            <dxo-label text="Currency" alignment="left"></dxo-label>
+                            <dxi-validation-rule type="required">
+                            </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="OfficeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: officeCodeModel, value: voucherDetailsForm.OfficeId, valueExpr: 'OfficeId', displayExpr: 'OfficeName', searchEnabled: true, showClearButton: false  }">
+                            <dxo-label text="Office" alignment="left"></dxo-label>
+                            <dxi-validation-rule type="required">
+                            </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="VoucherDate" editorType="dxDateBox" [editorOptions]="{ width: '100%', showClearButton: 'true' , displayFormat: 'dd/MM/yyyy'}">
+                            <dxo-label alignment="left"></dxo-label>
+                            <dxi-validation-rule type="required">
+                            </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="ChequeNo">
+                            <dxo-label alignment="left"></dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="JournalCode" editorType="dxSelectBox" [editorOptions]="{ dataSource: journalcodelist, value: voucherDetailsForm.JournalCode, valueExpr: 'JournalCode', displayExpr: 'JournalName', searchEnabled: true, showClearButton: false  }">
+                            <dxo-label text="Journal" alignment="left"></dxo-label>
+                            <dxi-validation-rule type="required">
+                            </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="VoucherTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: voucherTypeArr, value: voucherDetailsForm.VoucherTypeId, valueExpr: 'VoucherTypeId', displayExpr: 'VoucherTypeName', searchEnabled: true, showClearButton: false  }">
+                            <dxo-label text="Voucher Type" alignment="left"></dxo-label>
+                            <dxi-validation-rule type="required">
+                            </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="Description">
+                            <dxo-label alignment="left"></dxo-label>
+                            <dxi-validation-rule type="required">
+                            </dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="ProjectId" editorType="dxSelectBox" [editorOptions]="{ dataSource: projectArr, value: voucherDetailsForm.ProjectId, valueExpr: 'ProjectId', displayExpr: 'ProjectName', searchEnabled: true, showClearButton: true  }">
+                            <dxo-label text="Project" alignment="left"></dxo-label>
+                        </dxi-item>
+                        <dxi-item dataField="BudgetLineId" editorType="dxSelectBox" [editorOptions]="{ dataSource: budgetLineFilteredList, value: voucherDetailsForm.BudgetLineId, valueExpr: 'BudgetLineId', displayExpr: 'Description', searchEnabled: true, showClearButton: true  }">
+                            <dxo-label text="Budget Line" alignment="left"></dxo-label>
+                        </dxi-item>
+
+                    </dxi-item>
+
+                </dx-form>
+
+                <div class="btn-grp-wrap">
+                    <dx-button text="Save" type="success" validationGroup="voucherData" [useSubmitBehavior]="true"></dx-button>
+                    <dx-button text="Cancel" (onClick)="hideAddEditVoucherForm()"></dx-button>
+                </div>
+            </form>
+            <ngx-loading [show]="addEditVoucherFormPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+        </dx-scroll-view>
+    </div>
+</dx-popup>
+
+<dx-popup class="popup doc-popup-content" [width]="800" [height]="650" [showTitle]="false" title="Vouchers Documents"
+    [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisibleDocument" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
+    <div *dxTemplate="let data of 'content' ">
+        <app-document [VoucherNo]="voucherNoMain " [docpath]="defaultDoc " [voucherDocumentDetails]="voucherDocumentDetails "></app-document>
+    </div>
+</dx-popup>

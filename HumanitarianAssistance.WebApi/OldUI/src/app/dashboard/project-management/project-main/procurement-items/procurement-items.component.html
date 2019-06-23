@@ -1,0 +1,24 @@
+<div>
+    <dx-data-grid id="gridContainer" [dataSource]="officecodedt" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" [showRowLines]="true">
+        <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+        <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+        <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+        <dxo-header-filter [visible]="true">
+        </dxo-header-filter>
+
+        <dxo-filter-row [visible]="true">
+        </dxo-filter-row>
+        <dxi-column dataField="OfficeCode"></dxi-column>
+        <dxi-column dataField="OfficeName"></dxi-column>
+        <dxi-column dataField="OfficeKey" [visible]="false"></dxi-column>
+        <dxi-column dataField="SupervisorName"></dxi-column>
+        <dxi-column dataField="PhoneNo"></dxi-column>
+        <dxi-column dataField="FaxNo"></dxi-column>
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxi-column caption="Action" alignment="center" cellTemplate="CellTemplateEdit"></dxi-column>
+        <div *dxTemplate="let data of 'CellTemplateEdit'">
+            <a href="javascript:void(0)" (click)="GetOfficeDetailByCode(data)">Edit</a>
+        </div>
+    </dx-data-grid>
+</div>

@@ -1,0 +1,282 @@
+
+<div class="row">
+  <div class="col-sm-12">
+      <div class="main-heading clearfix">
+          <h3 class="page-heading">Edit PMU Project Details</h3>
+          <dx-button
+              class="button-info btn btn-default btn-green"
+              text="Cancel"
+              [routerLink]="['../projects']">
+          </dx-button> 
+          <dx-button
+              class="button-info btn btn-default btn-green"
+              text="Save">
+      </dx-button>         
+      </div> 
+
+      <dx-form id="form"           
+      [readOnly]="false"
+      [showColonAfterLabel]="true"
+      [showValidationSummary]="true"
+      [minColWidth]="233"
+      colCount="auto"
+      [colCountByScreen]="colCountByScreen"
+      [screenByWidth]="screen">
+      validationGroup="customerData">
+
+      <dxi-item dataField="Project" editorType="dxSelectBox" [editorOptions]="{ dataSource: projecttype, displayExpr: 'ProjectTypeName', valueExpr: 'ProjectTypeId'  }">
+          <dxi-validation-rule type="required" message="Project"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Measure Type"  editorType="dxSelectBox" [editorOptions]="{ dataSource: measuretype, displayExpr: 'MeasureTypeName', valueExpr: 'MeasureTypeId'  }">
+          <dxi-validation-rule 
+              type="required"
+              message="Measure Type">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Opportunity No. Type">
+          <dxi-validation-rule 
+              type="required"
+              message="Opportunity No. Type is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Opportunity #">
+          <dxi-validation-rule 
+              type="required"
+              message="Opportunity # Name is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Province">
+          <dxi-validation-rule 
+          type="required"
+          message="Province Name is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="District">
+          <dxi-validation-rule 
+              type="required"
+              message="District is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Office">
+          <dxi-validation-rule 
+              type="required"
+              message="Office is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="PMU Sector">
+          <dxi-validation-rule 
+              type="required"
+              message="PMU Sector is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Start Date" editorType="dxDateBox">
+          <dxi-validation-rule 
+              type="required"
+              message="Start Date is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="End Date" editorType="dxDateBox">
+          <dxi-validation-rule 
+              type="required"
+              message="End Date is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Currency Type">
+          <dxi-validation-rule 
+              type="required"
+              message="Currency Type is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Budget">
+          <dxi-validation-rule 
+              type="required"
+              message="Budget is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Direct Beneficiary Male">
+          <dxi-validation-rule 
+              type="required"
+              message="Direct Beneficiary Male is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Direct Beneficiary Female">
+          <dxi-validation-rule 
+              type="required"
+              message="Direct Beneficiary Female is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Indirect Beneficiary Male">
+          <dxi-validation-rule 
+              type="required"
+              message="Indirect Beneficiary Male is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Indirect Beneficiary Female">
+          <dxi-validation-rule 
+              type="required"
+              message="Indirect Beneficiary Female is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Project Goal">
+          <dxi-validation-rule 
+              type="required"
+              message="Project Goal is required">
+          </dxi-validation-rule>
+          <dx-text-area placeholder="Type a text here..."></dx-text-area>
+      </dxi-item>
+      <dxi-item dataField="Project Objectives">
+          <dxi-validation-rule 
+              type="required"
+              message="Project Objectives is required">
+          </dxi-validation-rule>
+      <dx-text-area placeholder="Type a text here..."></dx-text-area>
+      </dxi-item>
+      <dxi-item dataField="Main Activities">
+              <dxi-validation-rule 
+              type="required"
+              message="Main Activities is required">
+          </dxi-validation-rule>
+          <dx-text-area placeholder="Type a text here..."></dx-text-area>
+      </dxi-item>
+
+      <h3 style="color:grey;">Gender Consideration</h3>
+
+      <dxi-item dataField="Donor Name">
+      <dxi-validation-rule 
+          type="required"
+          message="Donor Name is required">
+      </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Donor Contact Person">
+      <dxi-validation-rule 
+          type="required"
+          message="Donor Contact Person is required">
+      </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Donor Contact Designation">
+          <dxi-validation-rule 
+              type="required"
+              message="Donor Contact Designation is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Donor Contact Person Email">
+          <dxi-validation-rule 
+              type="required"
+              message="Donor Contact Person Email is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Donor Contact Person Cell#">
+          <dxi-validation-rule 
+              type="required"
+              message="Donor Contact Person Cell# is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="EOI">
+          <dxi-validation-rule 
+              type="required"
+              message="EOI is required">
+          </dxi-validation-rule>
+          <a class="second">Download</a>
+      </dxi-item>
+      <dxi-item dataField="Concept">
+          <dxi-validation-rule 
+              type="required"
+              message="Concept is required">
+          </dxi-validation-rule>
+          <a class="second">Download</a>
+      </dxi-item>
+      <dxi-item dataField="Proposal">
+          <dxi-validation-rule 
+              type="required"
+              message="Proposal is required">
+          </dxi-validation-rule>
+          <a class="second">Download</a>
+      </dxi-item>
+      <dxi-item dataField="Budget">
+          <dxi-validation-rule 
+              type="required"
+              message="Budget is required">
+          </dxi-validation-rule>
+          <a class="second">Download</a>
+      </dxi-item>
+      <dxi-item dataField="Presentation">
+          <dxi-validation-rule 
+              type="required"
+              message="Presentation is required">
+          </dxi-validation-rule>
+          <a class="second">Download</a>
+      </dxi-item>
+      <dxi-item dataField="Contract">
+          <dxi-validation-rule 
+              type="required"
+              message="Contract is required">
+          </dxi-validation-rule>
+          <a class="second">Download</a>
+      </dxi-item>
+      <dxi-item dataField="REOI Receive Date" editorType="dxDateBox">
+          <dxi-validation-rule 
+              type="required"
+              message="REOI Receive Date is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Submission Date" dataType="date" editorType="dxDateBox">
+          <dxi-validation-rule 
+              type="required"
+              message="Submission Date is required">
+          </dxi-validation-rule>
+      </dxi-item>
+      
+      <h3 style="color:grey;">Gender Consideration</h3>
+
+      <dxi-item dataField="Strength Consideration">
+      <dxi-validation-rule 
+          type="required"
+          message="Strength Consideration is required">
+      </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Gender Consideration">
+      <dxi-validation-rule 
+          type="required"
+          message="Gender Consideration is required">
+      </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Remarks">
+          <dxi-validation-rule 
+              type="required"
+              message="Remarks is required">
+          </dxi-validation-rule>
+          <dx-text-area placeholder="Type a text here..."></dx-text-area>
+      </dxi-item>
+
+
+      <dxi-item dataField="Security">
+      <dxi-validation-rule 
+          type="required"
+          message="Security is required">
+      </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Security Consideration">
+      <dxi-validation-rule 
+          type="required"
+          message="Security Consideration is required">
+      </dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="Remarks">
+          <dxi-validation-rule 
+              type="required"
+              message="Remarks is required">
+          </dxi-validation-rule>
+          <dx-text-area placeholder="Type a text here..."></dx-text-area>
+      </dxi-item>
+      <dxi-item dataField="Comments">
+          <dxi-validation-rule 
+              type="required"
+              message="Comments is required">
+          </dxi-validation-rule>
+          <dx-text-area placeholder="Type a text here..."></dx-text-area>
+      </dxi-item>
+      </dx-form>
+  </div>
+</div>
+
+<br>

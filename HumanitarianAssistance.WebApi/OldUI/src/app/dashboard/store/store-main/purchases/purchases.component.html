@@ -1,0 +1,465 @@
+<div class="main-purchases">
+
+  <div class="row" [style.visibility]="isItemPresentFlag == true ? 'visible' : 'hidden' ">
+
+    <div class="col-sm-12 text-right">
+      <dx-button text="Add" (onClick)="onAddPurchasePopup()" *ngIf="isEditingAllowed"></dx-button>
+    </div>
+
+    <div class="col-sm-12">
+      <br>
+
+      <dx-data-grid id="gridContainer" [dataSource]="purchaseDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+        (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+        (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        
+        <dxi-column caption="ItemImage" caption="ItemImage" alignment="center" [width]="150" cellTemplate="docPurchaseItemImage">
+        </dxi-column>
+        <div *dxTemplate="let data of 'docPurchaseItemImage'">
+          <div class="emp-dp-sec content">
+            <div class="content-overlay"></div>
+            <figure>
+              <img class="content-image" src="{{data.data.ImageFileName == null || data.data.ImageFileName == '' ? defaultImagePath : data.data.ImageFileName}}"
+                height="100px" width="100px" alt="Profile Image" />
+            </figure>
+            <div class="content-details fadeIn-top">
+              <dx-file-uploader accept="image/*" selectButtonText="Update Image" uploadMode="useForm" [(value)]="selectedProfileImage"
+                (onValueChanged)="onImageSelectUpdate($event, data)" [multiple]="false" *ngIf="isEditingAllowed"></dx-file-uploader>
+            </div>
+          </div>
+        </div>
+       
+        <dxi-column dataField="PurchaseId" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="SerialNo" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Currency" caption="Currency">
+          <dxo-lookup [dataSource]="currencyModel" valueExpr="CurrencyId" displayExpr="CurrencyCode">
+          </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="UnitCost" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Quantity" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="TotalCost" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="TotalCostUSD" caption="Total Cost (USD)" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="CurrentQuantity" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column caption="Attachment" alignment="center" cellTemplate="docPurchaseTemplate" *ngIf="isEditingAllowed"> </dxi-column>
+        <div *dxTemplate="let data of 'docPurchaseTemplate'">
+          <a href="javascript:void(0);" (click)="onSelectPurchaseForDoc(data.data)">
+            <i class="fa fa-paperclip"></i>
+          </a>
+        </div>
+
+        <dxi-column caption="Action" alignment="center" cellTemplate="editDeletePurchaseTemplate" *ngIf="isEditingAllowed"> </dxi-column>
+        <div *dxTemplate="let data of 'editDeletePurchaseTemplate'">
+          <a href="javascript:void(0)" (click)="onEditPurchasePopup(data)">Edit</a> |
+          <a href="javascript:void(0)" (click)="onDeletePurchase(data.data)">Delete</a>
+        </div>
+
+
+        <dxo-summary>
+          <dxi-total-item column="UnitCost" displayFormat="Unit Cost: {0}" summaryType="sum"> </dxi-total-item>
+          <dxi-total-item column="Quantity" displayFormat="Quantity: {0}" summaryType="sum"> </dxi-total-item>
+          <dxi-total-item column="TotalCost" displayFormat="Total Cost: {0}" summaryType="sum"> </dxi-total-item>
+          <dxi-total-item column="TotalCostUSD" displayFormat="Total Cost(USD): {0}" summaryType="sum"> </dxi-total-item>
+          <dxi-total-item column="CurrentQuantity" displayFormat="Current Quantity: {0}" summaryType="sum"> </dxi-total-item>
+        </dxo-summary>
+
+      </dx-data-grid>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Add -->
+<dx-popup class="popup" [width]="800" [height]="650" [showTitle]="true" title="Purchase" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="addPurchaseFormPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+
+    <dx-scroll-view showScrollbar="always" direction="both">
+
+      <form action="your-action" (submit)="onPurchaseFormSubmit(purchaseDetailsForm)">
+        <dx-form id="form" [formData]="purchaseDetailsForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="addPurchaseData" (onFieldDataChanged)="onFieldDataChanged($event)">
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="SerialNo">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Currency" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyModel, value: purchaseDetailsForm.Currency, valueExpr: 'CurrencyId', displayExpr: 'CurrencyCode', searchEnabled: true, showClearButton: false  }">
+              <dxo-label text="Currency" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="PurchaseDate" editorType="dxDateBox" [editorOptions]="{type: 'date', displayFormat: 'dd/MM/yyyy' }">
+              <dxo-label alignment="left" text="Order Date"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="DeliveryDate" editorType="dxDateBox" [editorOptions]="{type: 'date',  displayFormat: 'dd/MM/yyyy' }">
+              <dxo-label alignment="left" text="Receipt Date"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+
+            <dxi-item dataField="UnitType" editorType="dxSelectBox" [editorOptions]="{ dataSource: unitTypeDataSource, value: purchaseDetailsForm.UnitType, valueExpr: 'UnitTypeId', displayExpr: 'UnitTypeName', searchEnabled: true, showClearButton: false  }">
+              <dxo-label text="Unit Type" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="UnitCost" editorType="dxNumberBox" [editorOptions]="{ value: 00.0, min: 0, showSpinButtons: true}">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Quantity" editorType="dxNumberBox" [editorOptions]="{ value: 0, min: 0, showSpinButtons: true}">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="PurchasedById" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeList, value: purchaseDetailsForm.PurchasedById, valueExpr: 'EmployeeId', displayExpr: 'CodeEmployeeName', searchEnabled: true, showClearButton: false  }">
+              <dxo-label text="Purchased/Receipt By" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+        </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="ImageFileName">
+              <div id="fileuploader-container">
+                <dxo-label text="Image"></dxo-label>
+                <dx-file-uploader selectButtonText="Select Image" labelText="" accept="*" uploadMode="useForm" (onValueChanged)="onPurchaseImageSelect($event)"
+                  [multiple]="false">
+                </dx-file-uploader>
+              </div>
+            </dxi-item>
+
+            <dxi-item dataField="Invoice">
+              <div id="fileuploader-container">
+                <dxo-label text="Invoice"></dxo-label>
+                <dx-file-uploader selectButtonText="Select Invoice" labelText="" accept="*" uploadMode="useForm" (onValueChanged)="onPurchaseInvoiceSelect($event)"
+                  [multiple]="false">
+                </dx-file-uploader>
+              </div>
+            </dxi-item>
+
+          </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="VoucherId" editorType="dxSelectBox" [editorOptions]="{ dataSource: voucherDataSource, valueExpr: 'VoucherNo', displayExpr: 'ReferenceNo', showClearButton: false , searchEnabled: true }">
+              <dxo-label text="Voucher" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="VoucherDate" [editorOptions]="{type: 'date',  width: '100%', showClearButton: 'true' , displayFormat: 'dd/MM/yyyy', readOnly: 'true'}">
+              <dxo-label text="VoucherDate"></dxo-label>
+              <div>{{purchaseDetailsForm.VoucherDate| date: 'yyyy/MM/dd'}}</div>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="AssetTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: assetTypeDropdown, valueExpr: 'AssetTypeId', displayExpr: 'AssetTypeName', showClearButton: false , searchEnabled: true }">
+              <dxo-label text="Asset Type" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="InvoiceNo">
+              <dxo-label alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="InvoiceDate" editorType="dxDateBox" [editorOptions]="{type: 'date',  width: '100%', showClearButton: 'true' , displayFormat: 'dd/MM/yyyy'}">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Status" editorType="dxSelectBox" [editorOptions]="{ dataSource: statusAtTimeOfIssueDropdown, valueExpr: 'StatusAtTimeOfIssueId', displayExpr: 'StatusName', searchEnabled: true, showClearButton: true  }">
+              <dxo-label text="Status" alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="ReceiptTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: receiptTypeDropdown, valueExpr: 'ReceiptTypeId', displayExpr: 'ReceiptTypeName', searchEnabled: true, showClearButton: true  }">
+              <dxo-label text="Receipt Type" alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="ReceivedFromLocation" editorType="dxSelectBox" [editorOptions]="{ dataSource: storeLocationDropdown, valueExpr: 'SourceCodeId', displayExpr: 'SourceCodeName', showClearButton: false , searchEnabled: true }">
+              <dxo-label alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="ProjectId" editorType="dxSelectBox" [editorOptions]="{ dataSource: projectArr,valueExpr: 'ProjectId', displayExpr: 'ProjectCodeName', searchEnabled: true, showClearButton: true  }">
+              <dxo-label text="Project" alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="BudgetLineId" editorType="dxSelectBox" [editorOptions]="{ dataSource: budgetLineDropdown, valueExpr: 'BudgetLineId', displayExpr: 'BudgetCodeName', searchEnabled: true, showClearButton: true  }">
+              <dxo-label text="Budget Line" alignment="left"></dxo-label>
+            </dxi-item>
+
+          </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="ApplyDepreciation">
+              <dxo-label alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="DepreciationRate" editorType="dxNumberBox" [editorOptions]="{ value: 0, showSpinButtons: true, readOnly: !purchaseDetailsForm.ApplyDepreciation}">
+              <dxo-label text="Depreciation Rate (%)" alignment="left"></dxo-label>
+            </dxi-item>
+          </dxi-item>
+
+            <dxi-item itemType="group" caption="Accounting (Voucher Creation)" [colCount]="2">
+
+                <dxi-item dataField="PaymentTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: paymentTypesDataSource, value: purchaseDetailsForm.PaymentTypeId, valueExpr: 'Id', displayExpr: 'Name', searchEnabled: true, showClearButton: false  }">
+                    <dxo-label text="Payment Type" alignment="left"></dxo-label>
+                  </dxi-item>
+
+                  <dxi-item dataField="JournalCode" editorType="dxSelectBox" [editorOptions]="{ dataSource: journalcodelist, value: purchaseDetailsForm.JournalCode, valueExpr: 'JournalCode', displayExpr: 'JournalName', searchEnabled: true, showClearButton: false  }">
+                      <dxo-label text="Journal" alignment="left"></dxo-label>
+                  </dxi-item>
+              
+            </dxi-item>
+          
+        </dx-form>
+
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="addPurchaseData" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (onClick)="hideAddPurchaseFormPopupVisible()"></dx-button>
+        </div>
+      </form>
+
+    </dx-scroll-view>
+
+    <ngx-loading [show]="addPurchaseFormPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+</dx-popup>
+
+<!-- Edit-->
+<dx-popup class="popup" [width]="800" [height]="650" [showTitle]="false" title="Purchase" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="editPurchaseFormPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+      <dx-scroll-view  showScrollbar="always" direction="both">
+    <div class="row text-left">
+      <div *ngIf="purchaseDetailsForm.IsPurchaseVerified">
+          <div class="col-sm-6">
+              <button (click)="UnverifyPurchase()" class="btn btn-danger">Unverify Purchase</button>
+          </div>
+          <div class="col-sm-5" *ngIf="purchaseDetailsForm.VerifiedPurchaseVoucherReferenceNo !=null">
+              Voucher Reference No: {{purchaseDetailsForm.VerifiedPurchaseVoucherReferenceNo}}
+          </div>
+      </div>
+
+      <div class="col-sm-11" *ngIf="!purchaseDetailsForm.IsPurchaseVerified">
+          <button (click)="verifyPurchase()" class="btn btn-success">Verify Purchase</button>
+      </div>
+      
+        <div class="col-sm-1">
+          <span (click)="hideEditPurchaseFormPopupVisible()">X</span>
+        </div>
+    </div>
+<br>        
+
+      <form action="your-action" (submit)="onPurchaseFormSubmit(purchaseDetailsForm)">
+        <dx-form id="form" [formData]="purchaseDetailsForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="editPurchaseData" (onFieldDataChanged)="onFieldDataChanged($event)">
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="SerialNo">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Currency" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyModel, value: purchaseDetailsForm.Currency, valueExpr: 'CurrencyId', displayExpr: 'CurrencyCode', searchEnabled: true, showClearButton: false  }">
+              <dxo-label text="Currency" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="PurchaseDate" editorType="dxDateBox" [editorOptions]="{type: 'date',  displayFormat: 'dd/MM/yyyy' }">
+              <dxo-label alignment="left" text="Order Date"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="DeliveryDate" editorType="dxDateBox" [editorOptions]="{ type: 'date', displayFormat: 'dd/MM/yyyy' }">
+              <dxo-label alignment="left" text="Receipt Date"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+
+            <dxi-item dataField="UnitType" editorType="dxSelectBox" [editorOptions]="{ dataSource: unitTypeDataSource, value: purchaseDetailsForm.UnitType, valueExpr: 'UnitTypeId', displayExpr: 'UnitTypeName', searchEnabled: true, showClearButton: false  }">
+              <dxo-label text="Unit Type" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="UnitCost" editorType="dxNumberBox" [editorOptions]="{ value: purchaseDetailsForm.UnitCost,min: 0, showSpinButtons: true}">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Quantity" editorType="dxNumberBox" [editorOptions]="{ value: purchaseDetailsForm.Quantity, min: 0, showSpinButtons: true}">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="PurchasedById" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeList, value: purchaseDetailsForm.PurchasedById, valueExpr: 'EmployeeId', displayExpr: 'CodeEmployeeName', searchEnabled: true, showClearButton: false  }">
+              <dxo-label text="Purchased/Receipt By" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+          </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="VoucherId" editorType="dxSelectBox" (onValueChanged)="getVoucherDate($event.value)" [editorOptions]="{ dataSource: voucherDataSource, valueExpr: 'VoucherNo', displayExpr: 'ReferenceNo', showClearButton: false , searchEnabled: true }">
+              <dxo-label text="Voucher" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="VoucherDate" editorType="dxDateBox" [editorOptions]="{ type: 'date',width: '100%', showClearButton: 'true' , displayFormat: 'dd/MM/yyyy'}">
+              <dxo-label alignment="left"></dxo-label>
+              <div>{{purchaseDetailsForm.VoucherDate | date: 'yyyy/MM/dd'}}</div>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="AssetTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: assetTypeDropdown, valueExpr: 'AssetTypeId', displayExpr: 'AssetTypeName', showClearButton: false , searchEnabled: true }">
+              <dxo-label text="Asset Type" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="InvoiceNo">
+              <dxo-label alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="InvoiceDate" editorType="dxDateBox" [editorOptions]="{type: 'date', width: '100%', showClearButton: 'true' , displayFormat: 'dd/MM/yyyy'}">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            
+
+            <dxi-item dataField="Status" editorType="dxSelectBox" [editorOptions]="{ dataSource: statusAtTimeOfIssueDropdown, valueExpr: 'StatusAtTimeOfIssueId', displayExpr: 'StatusName', searchEnabled: true, showClearButton: true  }">
+              <dxo-label text="Status" alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="ReceiptTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: receiptTypeDropdown, valueExpr: 'ReceiptTypeId', displayExpr: 'ReceiptTypeName', searchEnabled: true, showClearButton: true  }">
+              <dxo-label text="Receipt Type" alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="ReceivedFromLocation" editorType="dxSelectBox" [editorOptions]="{ dataSource: storeLocationDropdown, valueExpr: 'SourceCodeId', displayExpr: 'SourceCodeName', showClearButton: false , searchEnabled: true }">
+              <dxo-label alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="ProjectId" editorType="dxSelectBox" [editorOptions]="{ dataSource: projectArr,valueExpr: 'ProjectId', displayExpr: 'ProjectCodeName', searchEnabled: true, showClearButton: true  }">
+              <dxo-label text="Project" alignment="left"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="BudgetLineId" editorType="dxSelectBox" [editorOptions]="{ dataSource: budgetLineDropdown, valueExpr: 'BudgetLineId', displayExpr: 'BudgetCodeName', searchEnabled: true, showClearButton: true  }">
+              <dxo-label text="Budget Line" alignment="left"></dxo-label>
+            </dxi-item>
+          </dxi-item>
+          <dxi-item itemType="group" [colCount]="2">
+              <dxi-item dataField="ApplyDepreciation">
+                  <dxo-label alignment="left"></dxo-label>
+                </dxi-item>
+    
+                <dxi-item dataField="DepreciationRate" editorType="dxNumberBox" [editorOptions]="{ value: purchaseDetailsForm.DepreciationRate, showSpinButtons: true, readOnly: !purchaseDetailsForm.ApplyDepreciation}">
+                  <dxo-label text="Depreciation Rate (%)" alignment="left"></dxo-label>
+                </dxi-item>
+          </dxi-item>
+
+          <dxi-item itemType="group" caption="Accounting (Voucher Creation)" [colCount]="2">
+
+            <dxi-item dataField="PaymentTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: paymentTypesDataSource, value: purchaseDetailsForm.PaymentTypeId, valueExpr: 'Id', displayExpr: 'Name', searchEnabled: true, showClearButton: false  }">
+                <dxo-label text="Payment Type" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+              <dxi-item dataField="JournalCode" editorType="dxSelectBox" [editorOptions]="{ dataSource: journalcodelist, value: purchaseDetailsForm.JournalCode, valueExpr: 'JournalCode', displayExpr: 'JournalName', searchEnabled: true, showClearButton: false  }">
+                  <dxo-label text="Journal" alignment="left"></dxo-label>
+                  <dxi-validation-rule type="required">
+                  </dxi-validation-rule>
+              </dxi-item>
+
+          </dxi-item>
+
+          <dxi-item dataField="VerifiedPurchaseVoucher" [visible]="false">
+              <dxo-label text="Verified Purchase Voucher" alignment="left"></dxo-label>
+            </dxi-item>
+
+        </dx-form>
+
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="editPurchaseData" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (onClick)="hideEditPurchaseFormPopupVisible()"></dx-button>
+        </div>
+      </form>
+    </dx-scroll-view>
+    <ngx-loading [show]="editPurchaseFormPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+  </div>
+</dx-popup>
+
+<!-- confirmation -->
+<dx-popup class="popup" [width]="400" [height]="200" [showTitle]="true" title="Confirmation Message" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="deleteConfirmationPopup">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action">
+      <div class="form-group">
+        <label for="officecode">Are you sure want to delete this Purchase Item?</label>
+      </div>
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Delete" type="success" (onClick)="deletePurchaseItemConfirmed()"></dx-button>
+        <dx-button text="Cancel" (onClick)="hideConfirmationPopup()"></dx-button>
+      </div>
+    </form>
+    <ngx-loading [show]="deletePurchaseFormPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+  </div>
+</dx-popup>
+
+
+<!-- document -->
+<dx-popup class="popup doc-popup-content" [width]="800" [height]="500" [showTitle]="false" title="Purchase Documents" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="purchaseDocumentPopupVisible" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
+  <div *dxTemplate="let data of 'content' ">
+    <app-purchases-document [defaultObj]="defaultObj"></app-purchases-document>
+
+  </div>
+</dx-popup>
+
+<!-- Image Update Conformation Model -->
+<dx-popup class="popup" [width]="600" [height]="300" [showTitle]="true" title="Update Profile" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="popupImageUpdateVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <img src="{{imageURL}}" height="100px" width="100px" alt="Profile Image" />
+      </div>
+    </div>
+    <div class="text-center">Do you wanna Update Profile Image ?</div>
+    <div class="btn-grp-wrap">
+      <dx-button text="Save" type="success" (click)="ChangeEmployeeImage()" validationGroup="imgGeneralDetails" [useSubmitBehavior]="true"></dx-button>
+      <dx-button text="Cancel" [useSubmitBehavior]="false" (click)="closeImageUpdateForm()"></dx-button>
+    </div>
+
+    <ngx-loading [show]="profileImageChangePopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+</dx-popup>

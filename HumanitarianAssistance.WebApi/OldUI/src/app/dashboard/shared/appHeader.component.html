@@ -1,0 +1,195 @@
+<header class="clearfix">
+
+    <div class="pull-left">
+        <a class="navbar-brand" href="javascript:void(0)">
+            <i class="fa fa-universal-access" aria-hidden="true"></i>
+        </a>
+        <button type="button" class="navbar-toggle collapsed" (click)="toggleSideFun()">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <div class="pull-right right_header">
+        <div class="user-offce-drop-hdr">
+            <!-- <form name="" method="post" action="javascript:void(0);">
+                <div class="sp-dropdown pull-left">
+                    <select>
+                        <option>Select Category</option>
+                        <option>Category Name</option>
+                        <option>Category Name</option>
+                        <option>Category Name</option>
+                        <option>Category Name</option>
+                    </select>
+                    <i class="fa fa-caret-down"></i>
+                </div>
+                <div class="sp-input-wrap pull-right">
+                    <input type="text" placeholder="Search">
+                    <input type="submit" value="">
+                </div>
+            </form> -->
+                <!-- <div class="dx-field">
+                    <div class="col-sm-6 dx-field-value">
+                        <dx-select-box [dataSource]="officecodelist" placeholder="Choose Office" (onItemClick)="onOfficeSelected($event.itemData.OfficeId)"
+                            displayExpr="OfficeName" valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
+                        </dx-select-box>
+                    </div>
+            </div> -->
+
+        </div>
+        <div class="profile-dropdown pull-right">
+            <div class="dropdown">
+
+                <div class="bell-noti-icon" (click)="toggleNotificationPanel()">
+                    <i class="fa fa-bell" id="notificationBell"></i>
+                     <span *ngIf="notificationIsReadCount != 0" class="notificationCount label label-success"> {{notificationIsReadCount}}</span>
+                </div> &nbsp;
+
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <img src="assets/images/profile-pic.jpg" alt="" />
+                    <span>{{UserName}}</span>
+                    <i class="fa fa-angle-down pull-right"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a (click)="ChangePasswordModal(passwordTemplate)">
+                            <i class="fa fa-lock"></i> Change Password</a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-user"></i> Profile</a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-cog"></i> Account Setting</a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-question-circle"></i> Help</a>
+                    </li>
+                    <li>
+                        <a (click)="logout()">
+                            <i class="fa fa-sign-out"></i> Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+<div>
+    <ng-template #passwordTemplate>
+        <form name="ChangePassword" [formGroup]="ChangePassword" class="login-inner" (ngSubmit)="onSubmitPasswordChange(ChangePassword.value)">
+            <div class="modal-header gray-header ">
+                <h4 class="modal-title pull-left">Change Password</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="modalChangePassword.hide();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gray-body" style="background-color:#fff;color:#000">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label>Current Password:</label>
+                                <span style="color:red">*</span>
+                            </div>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" (blur)="passwordIsValid(currentPassword.value)" formControlName="CurrentPassword"
+                                    placeholder="Current Password" />
+                                <div *ngIf="!isValidPassword">
+                                    <span style="color:Red">Wrong Password</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label>New Password:</label>
+                                <span style="color:red">*</span>
+                            </div>
+                            <div class="col-sm-7">
+                                <input class="form-control" type="password" formControlName="NewPassword" placeholder="New Password" />
+                                <div *ngIf="ChangePassword.controls['NewPassword'].errors && !ChangePassword.controls['NewPassword'].pristine" class="error-msg">
+                                    <div [hidden]="!ChangePassword.controls['NewPassword'].errors.required">New Password is required.</div>
+                                    <div [hidden]="!ChangePassword.controls['NewPassword'].errors.patternInvalid">New Password is invalid.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label>Confirm Password:</label>
+                                <span style="color:red">*</span>
+                            </div>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" formControlName="ConfirmPassword" placeholder="Confirm Password" />
+
+                                <div *ngIf="ChangePassword.controls['ConfirmPassword'].errors && !ChangePassword.controls['ConfirmPassword'].pristine" class="error-msg">
+                                    <div *ngIf="!ChangePassword.controls['ConfirmPassword'].errors.ConfirmPassword">Confirm Password is wrong.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer gray-body">
+                <div class="pull-right">
+                    <button type="submit" [disabled]="!isFormValid || !ChangePassword.valid " class="btn btn-primary add-btn-basic">Save</button>
+                    <a (click)="modalChangePassword.hide()" class="btn btn-default">Cancel</a>
+                </div>
+            </div>
+
+        </form>
+        <div>
+            <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+        </div>
+    </ng-template>
+
+</div>
+
+
+<dx-popover class="noti-popup-outer" target="#notificationBell" position="top" [width]="300" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)"
+    [(visible)]="notificationPanelVisible">
+    <div *dxTemplate="let data of 'content'">
+        <app-notification-panel [notificationDataSource]="notificationDataSource" (notificationIsReadCount)="setNotificationIsReadCount($event)"></app-notification-panel>
+    </div>
+</dx-popover>
+
+
+
+
+<!-- <header class="clearfix">
+
+    <div class="pull-left">
+        <a class="navbar-brand" href="javascript:void(0)">
+            <i class="fa fa-universal-access" aria-hidden="true"></i>
+        </a>
+        <button type="button" class="navbar-toggle collapsed" (click)="toggleSideFun()">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+
+    <div class="pull-right right_header" style="margin-top: 15px; padding: 10px;">
+        <div class="dx-field">
+            <div class="dx-field-value">
+                <dx-select-box [dataSource]="officecodelist" placeholder="Choose Office" (onValueChanged)="onOfficeSelected($event)" displayExpr="OfficeName"
+                    valueExpr="OfficeId">
+                </dx-select-box>
+            </div>
+        </div>
+    </div>
+</header> -->

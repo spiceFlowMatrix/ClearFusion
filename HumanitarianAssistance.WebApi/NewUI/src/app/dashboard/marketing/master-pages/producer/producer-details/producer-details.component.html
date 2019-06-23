@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-sm-6">
+        </div>
+        <div class="col-sm-6">
+              <div *ngIf="archiveButton" class="col-sm -6 pull-right">
+                  <button pTooltip="Archive"
+                  tooltipPosition="top"
+                    (click)="DeleteProducer(producerId)"
+                    color="warn"
+                    mat-icon-button
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+        </div>
+      </div>
+      <form [formGroup]="producerDetailsForm">
+        <div class="row">
+            <div
+            *ngIf="producerDetailsLoaderFlag; else producerDetailsTemplate"
+            class="col-sm-12"
+          ><br/>
+            <mat-spinner
+              class="center_loader"
+              diameter="50"
+            ></mat-spinner>
+          </div>
+          <ng-template #producerDetailsTemplate>
+              <div class="col-sm-12">
+                  <div class="col-sm-6">
+                    <!-- <label>Producer</label> -->
+                    <mat-form-field class="example-full-width">
+                    <input (change)="onChange(producerName.value)" #producerName formControlName="producerName" matInput name="producerName"
+                      placeholder="Producer Name" />
+                      </mat-form-field>
+                  </div>
+                </div>
+          </ng-template>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>

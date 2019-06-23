@@ -1,0 +1,200 @@
+
+<div class="row">
+  <div class="col-sm-12">
+      <div class="main-heading clearfix">
+            <h3 class="page-heading">Project Activities</h3>
+            <dx-button
+                  class="button-info btn btn-default btn-green"
+                  text="Back"  [routerLink]="['../monitoring']">
+            </dx-button>       
+      </div>  
+      <!-- "data-grid"    -->
+      <dx-data-grid 
+            id="gridContainer" 
+            [dataSource]="dataSource"
+            [allowColumnReordering]="true"
+            [allowColumnResizing]="true"
+            [columnAutoWidth]="true">
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-column-chooser [enabled]="true" ></dxo-column-chooser>    
+
+            <dxo-paging [pageSize]="7"></dxo-paging>
+            <dxo-pager [allowedPageSizes]="[5, 8, 15, 30]" [showInfo]="true" [showNavigationButtons]="true" [showPageSizeSelector]="true"
+                  [visible]="true">
+            </dxo-pager>
+
+            <dxo-scrolling mode="infinite"></dxo-scrolling>
+            <!-- editing -->
+            <dxo-editing mode="popup" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" >
+            <dxo-popup title="Add/Edit PMU Activity Details" [showTitle]="true" [width]="700" [height]="345" [closeOnOutsideClick]="true" [position]="{ my: 'center', at: 'center', of: 'window' }">
+            </dxo-popup>
+            </dxo-editing>
+            <!-- editing -->
+
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                  <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+            <dxo-filter-row 
+                  [visible]="true">
+            </dxo-filter-row>
+            <dxo-header-filter 
+                  [visible]="true"></dxo-header-filter>
+            <dxo-search-panel 
+                  [visible]="true" 
+                  [width]="240" 
+                  placeholder="Search..."></dxo-search-panel>
+            <dxi-column 
+                  dataField="ActivityDesc"                 
+                  caption="Activity Desc" >
+                  <dxi-validation-rule type="required"></dxi-validation-rule>          
+            </dxi-column>
+            <dxi-column 
+                  dataField="PlannedStartDate" 
+                  caption="Planned Start Date" dataType="date">     
+                  <dxi-validation-rule type="required"></dxi-validation-rule>     
+            </dxi-column>      
+            <dxi-column 
+                  dataField="PlannedEndDate"
+                  caption="Planned End Date" dataType="date">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column dataField="BudgetLine" >
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                  <dxo-lookup
+                        [dataSource]="budgettype"
+                        valueExpr="BudgetTypeId"
+                        displayExpr="BudgetTypeName">
+                  </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="Resource">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                  <dxo-lookup
+                  [dataSource]="resourcetype"
+                  valueExpr="ResourceTypeId"
+                  displayExpr="ResourceTypeName">
+                  </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="LocationOfActivity" caption="Activity Location">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                  <dxo-lookup
+                  [dataSource]="activitylocationtype"
+                  valueExpr="ActivityLocationTypeId"
+                  displayExpr="ActivityLocationTypeName">
+                  </dxo-lookup>
+            </dxi-column>
+            <dxi-column 
+                  dataField="ActualStartDate"
+                  caption="Actual Start Date" dataType="date">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column 
+                  dataField="ActualEndDate"
+                  caption="Actual End Date" dataType="date">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column 
+                  dataField="ImplementationMethod"
+                  caption="Implementation Method">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column 
+                  dataField="Challenges"
+                  caption="Challenges">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column 
+                  dataField="OvercomingChallenges"
+                  caption="Overcoming Challenges">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column 
+                  dataField="DeviationJustification"
+                  caption="Deviation Justification">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column 
+                  dataField="RecurringType"
+                  caption="Recurring Type">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column 
+                  dataField="RecurringDay"
+                  caption="Recurring Day">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column 
+                  dataField="RecurringMonth"
+                  caption="Recurring Month">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column 
+                  dataField="Complete"
+                  caption="Complete" dataType="boolean">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column 
+                  dataField="Monitoring"
+                  caption="Monitoring" dataType="boolean">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column dataField="MonitoringLink" caption="Monitoring" cellTemplate="CellTemplateMonitoring" [width]="100" ></dxi-column>   
+                  <div class="text-center" *dxTemplate="let data of 'CellTemplateMonitoring'">
+                        <a href="javascript:void(0)" (click)="openPopup()">Monitoring</a>
+                  </div>
+
+            <dxi-column dataField="Documents" caption="Documents" cellTemplate="CellTemplateDocument"></dxi-column>          
+                  <div *dxTemplate="let data of 'CellTemplateDocument'">
+                        <a [routerLink]="['../documents']">Document</a>
+                  </div>
+    </dx-data-grid> 
+  </div>
+</div>
+
+<dx-popup class="popup" [width]="500" [height]="800" [showTitle]="true" title="Monitoring Details" [dragEnabled]="false" [closeOnOutsideClick]="true"
+[(visible)]="openPopupVisible">
+<div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="onFormSubmit(monitoringForm)">
+        <dx-form id="form" [formData]="monitoringdata" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true" validationGroup="customerData">
+            <dxi-item dataField="Rating" editorType="dxSelectBox" [editorOptions]="{ dataSource: ratingtype, displayExpr: 'RatingTypeName', valueExpr: 'RatingTypeId'  }">
+                  <dxi-validation-rule type="required" message="Rating is required">
+                  </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="VerificationSource"  editorType="dxTextArea" [editorOptions]="{ placeholder: '' }">
+                <dxi-validation-rule type="required" message="Verification Source is required">
+                </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="Strengths" editorType="dxTextArea" [editorOptions]="{ placeholder: '' }">
+                  <dxi-validation-rule type="required" message="Strengths is required">
+                  </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="Weeknesses" editorType="dxTextArea" [editorOptions]="{ placeholder: '' }">
+                  <dxi-validation-rule type="required" message="Weeknesses is required">
+                  </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="Challenges" editorType="dxTextArea" [editorOptions]="{ placeholder: '' }">
+                  <dxi-validation-rule type="required" message="Challenges is required">
+                  </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="Recommendations" editorType="dxTextArea" [editorOptions]="{ placeholder: '' }">
+                  <dxi-validation-rule type="required" message="Recommendations is required">
+                  </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="Comments" editorType="dxTextArea" [editorOptions]="{ placeholder: '' }">
+                  <dxi-validation-rule type="required" message="Comments is required">
+                  </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="Frequency Of Monitoring" >
+                  <dxi-validation-rule type="required" message="Frequency Of Monitoring is required">
+                  </dxi-validation-rule>
+            </dxi-item>     
+        </dx-form>
+        <br />
+        <div class="btn-grp-wrap">
+            <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+            </dx-button>
+            <dx-button text="Close" (onClick)="HidePopup()">
+            </dx-button>
+        </div>
+    </form>
+</div>
+</dx-popup>

@@ -1,0 +1,14 @@
+<mat-form-field class="example-full-width">
+  <mat-select [placeholder]="placeholder" [multiple]="multiSelect" [(value)]="selectedValue" (openedChange)="onOpenedChange($event)"
+    (selectionChange)="onSelectionChanged()">
+
+    <ngx-mat-select-search [formControl]="dataSourceFilterCtrl" [placeholderLabel]="placeholderSearchLabel"
+      [noEntriesFoundLabel]="'No matching found'"></ngx-mat-select-search>
+
+    <mat-option #allSelected *ngIf="multiSelect" (click)="selectAll()" [value]="0">Select All</mat-option>
+
+      <mat-option *ngFor="let item of filteredDataSource | async" [(value)]="item.Id" (click)=" multiSelect? onTossle(allSelected.viewValue) : null">
+        {{ item.Name }}
+      </mat-option>
+  </mat-select>
+</mat-form-field>

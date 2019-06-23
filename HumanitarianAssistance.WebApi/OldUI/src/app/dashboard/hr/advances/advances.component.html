@@ -1,0 +1,308 @@
+<div class="main-employee-appraisal">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Employee Advance Details</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-6">
+          <div style="max-width: 250px;">
+            <dx-date-box [value]="advanceDateSelectedValue" displayFormat="MMM, yyyy" maxZoomLevel="year" (onValueChanged)="onAdvanceDateSelected($event)">
+            </dx-date-box>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showEmpAdvancesAddPopup()" *ngIf="isEditingAllowed"></dx-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <br>
+      <dx-data-grid id="gridContainer" [dataSource]="employeeAdvancesDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" [showRowLines]="true">
+        <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+        <dxi-column dataField="EmployeeId" [visible]="false"></dxi-column>
+        <dxi-column dataField="EmployeeCode"></dxi-column>
+        <dxi-column dataField="EmployeeName"></dxi-column>
+        <dxi-column dataField="AdvanceDate" [width]="200" dataType="date" format="dd/MM/yyyy" [visible]="false"></dxi-column>
+        <dxi-column dataField="CurrencyId" caption="Currency">
+          <dxo-lookup [dataSource]="currencyDataSource" valueExpr="CurrencyId" displayExpr="CurrencyName">
+          </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="VoucherReferenceNo" caption="Voucher Reference No">
+          <dxo-lookup [dataSource]="voucherDropdown" valueExpr="VoucherNo" displayExpr="ReferenceNo">
+          </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="ApprovedBy" caption="Approved By">
+          <dxo-lookup [dataSource]="employeeListDataSource" valueExpr="EmployeeId" displayExpr="CodeEmployeeName">
+          </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="ModeOfReturn" caption="Mode of Return"></dxi-column>
+        <dxi-column dataField="Description" [visible]="false"></dxi-column>
+        <dxi-column dataField="RequestAmount"></dxi-column>
+        <dxi-column dataField="AdvanceAmount"></dxi-column>
+
+        <dxi-column caption="Action" alignment="center" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
+        <div *dxTemplate="let data of 'CellTemplateEdit'">
+          <a href="javascript:void(0)" (click)="onEditEmpAdvancesShowPopup(data)">Edit</a>
+        </div>
+
+        <dxi-column dataField="IsApproved" caption="Is Approved" alignment="center" cellTemplate="CellTemplateIsApproved"></dxi-column>
+        <div *dxTemplate="let cell of 'CellTemplateIsApproved'">
+
+          <div *ngIf="cell.value == true; else isApprovedFalse">
+            Approved
+          </div>
+
+          <ng-template #isApprovedFalse>
+            <dx-switch [value]="cell.value" offText="No" onText="Yes" (onValueChanged)="onIsApprovedValueChanged(cell, $event)"></dx-switch>
+          </ng-template>
+
+        </div>
+
+        <dxi-column caption="Advance History" alignment="center" cellTemplate="CellTemplateEditHistory"></dxi-column>
+        <div *dxTemplate="let data of 'CellTemplateEditHistory'">
+          <a href="javascript:void(0)" (click)="onShowEmployeeAdvanceHistoryPopUp(data)">Details</a>
+        </div>
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+      </dx-data-grid>
+
+    </div>
+  </div>
+
+
+  <ngx-loading [show]="advancesLoader"></ngx-loading>
+</div>
+
+
+<!-- Add -->
+<dx-popup class="popup" [width]="800" [height]="530" [showTitle]="true" title="Advances" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="addEmpAdvancesPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view [height]="480" showScrollbar="always" direction="both">
+      
+      <br>
+
+      <form action="your-action" (submit)="AddEmployeeAdvances(employeeAdvancesForm)">
+        <dx-form id="form" [formData]="employeeAdvancesForm" [readOnly]="false" labelLocation="top" [showColonAfterLabel]="true"
+          [showValidationSummary]="true" validationGroup="advancerData">
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="EmployeeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeListDataSource, value: employeeAdvancesForm.EmployeeId, valueExpr: 'EmployeeId', displayExpr: 'CodeEmployeeName', searchEnabled: true,showClearButton: true  }">
+              <dxo-label text="Employee" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="AdvanceDate" editorType="dxDateBox" [editorOptions]="{ width: '100%', displayFormat: 'dd/MM/yyyy', showClearButton: 'true'}">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Advance Date is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyDataSource, value: 'null', valueExpr: 'CurrencyId', displayExpr: 'CurrencyName', showClearButton: false , searchEnabled: true }">
+              <dxo-label text="Currency" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Currency is required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="ApprovedBy" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeListDataSource, valueExpr: 'EmployeeId', displayExpr: 'CodeEmployeeName', searchEnabled: true,showClearButton: true  }">
+              <dxo-label text="Approved By" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="NumberOfInstallments" editorType="dxNumberBox" [editorOptions]="{ value: 1, min: 1, max: 12, showSpinButtons: 'true'}">
+              <dxo-label text="Number Of Installments" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Sequence No. is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="ModeOfReturn">
+              <dxo-label text="Mode Of Return" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Sequence No. is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+          </dxi-item>
+          <dxi-item dataField="Description" [colSpan]="1" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+            <dxo-label alignment="left"></dxo-label>
+            <dxi-validation-rule type="required" message="Description is required">
+            </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="RequestAmount" editorType="dxNumberBox" [editorOptions]="{ value: 00.0, showSpinButtons: 'true'}">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Request Amount is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="AdvanceAmount" editorType="dxNumberBox" [editorOptions]="{ value: 00.0, showSpinButtons: 'true'}">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Advance Amount is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+          </dxi-item>
+
+        </dx-form>
+
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="advancerData" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (onClick)="hideEmpAdvancesAddPopup()"></dx-button>
+        </div>
+      </form>
+      <ngx-loading [show]="addEmpAdvancesPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+    </dx-scroll-view>
+  </div>
+</dx-popup>
+
+
+<!-- Edit -->
+<dx-popup class="popup" [width]="800" [height]="530" [showTitle]="true" title="Appraisal" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="editEmpAdvancesPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view [height]="480" showScrollbar="always" direction="both">
+
+      <form action="your-action" (submit)="EditEmployeeAdvances(employeeAdvancesForm)">
+        <dx-form id="form" [formData]="employeeAdvancesForm" [readOnly]="false" labelLocation="top" [showColonAfterLabel]="true"
+          [showValidationSummary]="true" validationGroup="advancerData">
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="EmployeeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeListDataSource, disabled: true, valueExpr: 'EmployeeId', displayExpr: 'CodeEmployeeName', searchEnabled: true,showClearButton: true  }">
+              <dxo-label text="Employee" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="AdvanceDate" editorType="dxDateBox" [editorOptions]="{ width: '100%', displayFormat: 'dd/MM/yyyy',showClearButton: 'true' }">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Advance Date is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyDataSource, valueExpr: 'CurrencyId', displayExpr: 'CurrencyName', showClearButton: false  }">
+              <dxo-label text="Currency" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Currency is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="ApprovedBy" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeListDataSource, valueExpr: 'EmployeeId', displayExpr: 'CodeEmployeeName', searchEnabled: true,showClearButton: true  }">
+              <dxo-label text="Approved By" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="NumberOfInstallments" editorType="dxNumberBox" [editorOptions]="{ min: 1, max: 12, showSpinButtons: 'true'}">
+              <dxo-label text="Number Of Installments" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Sequence No. is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+
+            <dxi-item dataField="ModeOfReturn">
+              <dxo-label text="Mode of Return" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Sequence No. is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+          </dxi-item>
+          <dxi-item dataField="Description" [colSpan]="1" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+            <dxo-label alignment="left"></dxo-label>
+            <dxi-validation-rule type="required" message="Description is required">
+            </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item itemType="group" [colCount]="2">
+            <dxi-item dataField="RequestAmount" [disabled]="approvedEditDisableFlag">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Request Amount is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="AdvanceAmount" [disabled]="approvedEditDisableFlag">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required" message="Advance Amount is required">
+              </dxi-validation-rule>
+            </dxi-item>
+          </dxi-item>
+
+        </dx-form>
+
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="advancerData" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (onClick)="onShowHideEmpAdvancesEditPopup()"></dx-button>
+        </div>
+       
+        <ng-template #approvedEditDisable>
+          <div class="btn-grp-wrap">
+            <dx-button text="Cancel" (onClick)="onShowHideEmpAdvancesEditPopup()"></dx-button>
+          </div>
+        </ng-template>
+      </form>
+
+      <ngx-loading [show]="editEmpAdvancesPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+    </dx-scroll-view>
+  </div>
+</dx-popup>
+
+<!-- Approval Conform -->
+<dx-popup class="popup" [width]="300" [height]="150" [showTitle]="false" title="Conformation" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="conformEmpAdvancesPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="text-center">
+          <h3>Are you sure ?</h3>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="text-center">
+          <dx-button text="Save" (onClick)="approvalForAdvance()"></dx-button>
+          <dx-button text="Cancel" (onClick)="onShowHideEmpAdvancesConformPopup()"></dx-button>
+        </div>
+      </div>
+    </div>
+
+    <ngx-loading [show]="conformEmpAdvancesPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+  </div>
+</dx-popup>
+
+<!-- Advance Installment History Pop Up -->
+<dx-popup class="popup" [width]="800" [height]="250" [showTitle]="true" title="Advance History" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="showAdvanceHistoryPopUp">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view showScrollbar="always" direction="both">
+      <dx-data-grid id="gridContainer" [dataSource]="advancesHistoryDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [showRowLines]="true">
+        <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+        <dxi-column dataField="PaymentDate" dataType="date" format="dd/MM/yyyy"></dxi-column>
+        <dxi-column dataField="InstallmentPaid"></dxi-column>
+        <dxi-column dataField="BalanceAmount"></dxi-column>
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+      </dx-data-grid>
+
+      <div class="col-sm-12">
+        <div class="text-center">
+          <dx-button text="Cancel" (onClick)="onHideAdvanceHistoryPopUp()"></dx-button>
+        </div>
+      </div>
+    </dx-scroll-view>
+  </div>
+</dx-popup>
