@@ -5,8 +5,8 @@ jobs:
       - image: microsoft/dotnet:2.1-sdk
     steps:
       - checkout
-      - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebAPI.csproj
-      - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebAPI.csproj -c Release -o release
+      - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
+      - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
       - run: mkdir HumanitarianAssistance.WebApi/release/Documents
       - persist_to_workspace:
           root: .
