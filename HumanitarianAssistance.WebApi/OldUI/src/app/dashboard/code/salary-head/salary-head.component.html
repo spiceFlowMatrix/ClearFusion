@@ -1,0 +1,111 @@
+<div class="main-salary-head-code">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-heading">Salary Head</h3>
+        <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showAddSalaryHeadPopup()" *ngIf="isEditingAllowed"></dx-button>
+      </div>
+      <div>
+        <dx-data-grid id="gridContainer" [dataSource]="salaryHeadList" [allowColumnReordering]="true" [allowColumnResizing]="true"
+          [showRowLines]="true">
+          <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+          <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+          <dxo-header-filter [visible]="true">
+          </dxo-header-filter>
+          <dxo-filter-row [visible]="true">
+          </dxo-filter-row>
+
+          <dxi-column dataField="SalaryHeadId" [visible]="false" [width]="130"></dxi-column>
+          <dxi-column dataField="HeadTypeId" caption="Head Type">
+            <dxo-lookup [dataSource]="salaryHeadTypeDropdown" valueExpr="HeadTypeId" displayExpr="HeadTypeName">
+            </dxo-lookup>
+          </dxi-column>
+          <dxi-column dataField="HeadName"></dxi-column>
+          <dxi-column dataField="Description"></dxi-column>
+          <dxi-column dataField="AccountNo" caption="Account">
+              <dxo-lookup [dataSource]="levelFourAccounts" valueExpr="AccountCode" displayExpr="AccountName">
+              </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="TransactionTypeId" caption="Transaction Type" [editorOptions]="{disabled: true}">
+                <dxo-lookup [dataSource]="transactionTypeDropdown" valueExpr="TransactionTypeId" displayExpr="TransactionTypeName">
+                </dxo-lookup>
+              </dxi-column>
+
+          <dxi-column caption="Action" alignment="center" [width]="150" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
+          <div *dxTemplate="let data of 'CellTemplateEdit'">
+            <a href="javascript:void(0)" (click)="getSalaryHeadById(data)">Edit</a> |
+            <a href="javascript:void(0)" (click)="deleteSalaryHeadById(data)">Delete</a>
+          </div>
+
+
+          <dxo-paging [pageSize]="20"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+        </dx-data-grid>
+      </div>
+    </div>
+  </div>
+</div>
+
+<dx-popup class="popup" [width]="600" [height]="370" [showTitle]="true" title="Salary Head" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="addSalaryHeadpopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="onFormSubmit(salaryHeadData)">
+      <dx-form id="form" [formData]="salaryHeadData" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+        validationGroup="salaryHeadDataValidatation">
+
+        <dxi-item dataField="HeadTypeId" editorType="dxSelectBox" [editorOptions]="{
+                dataSource: salaryHeadTypeDropdown, 
+                value: HeadTypeId,
+                displayExpr: 'HeadTypeName',
+                valueExpr: 'HeadTypeId'}">
+          <dxo-label text="Head Type" style="text-align:left;"></dxo-label>
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-item>
+
+        <dxi-item dataField="HeadName" style="text-align:left;">
+          <dxi-validation-rule type="required">
+          </dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="Description" style="text-align:left;">
+        </dxi-item>
+        <dxi-item dataField="AccountNo" editorType="dxSelectBox" [editorOptions]="{dataSource:levelFourAccounts, valueExpr: 'AccountCode', displayExpr: 'AccountName', showClearButton: true  }">
+            <dxo-label text="Account" style="text-align:left;"></dxo-label>
+            <dxi-validation-rule type="required">
+          </dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="TransactionTypeId" [visible]="false" editorType="dxSelectBox" [editorOptions]="{dataSource:transactionTypeDropdown, valueExpr: 'TransactionTypeId', displayExpr: 'TransactionTypeName', showClearButton: true  }">
+            <dxo-label text="Transaction Type" style="text-align:left;"></dxo-label>
+        </dxi-item>
+        <dxi-item dataField="SaveForAll" editorType="dxCheckBox" [editorOptions]="{value: salaryHeadData.SaveForAll }">
+            <dxo-label text="Save For All Employees" style="text-align:left;"></dxo-label>
+        </dxi-item>
+      </dx-form>
+      <div class="btn-grp-wrap">
+        <dx-button text="Save" type="success" validationGroup="salaryHeadDataValidatation" [useSubmitBehavior]="true"></dx-button>
+        <dx-button text="Cancel" (onClick)="hideAddSalaryHeadPopup()"></dx-button>
+      </div>
+    </form>
+    <ngx-loading [show]="salaryHeadPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+</dx-popup>
+
+
+
+<!-- confirmation -->
+<dx-popup class="popup" [width]="400" [height]="150" [showTitle]="true" title="Confirmation Message" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="deleteConfirmationPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action">
+      <div class="form-group">
+        <label for="officecode">Are you sure want to delete ?</label>
+      </div>
+      <div class="btn-grp-wrap">
+        <dx-button text="Delete" type="success" (onClick)="deleteSalaryHeadDetail()"></dx-button>
+        <dx-button text="Cancel" (onClick)="hideDeleteSalaryHeadPopup()"></dx-button>
+      </div>
+    </form>
+    <ngx-loading [show]="deleteSalaryHeadPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+</dx-popup>

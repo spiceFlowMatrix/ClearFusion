@@ -1,0 +1,24 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th *ngFor="let item of tableHeaderList">{{ item }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of tableContentList">
+      <td *ngFor="let headerItem of tableHeaderList">
+        {{ item[headerItem] }}
+      </td>
+      <td *ngIf="!showDelete">
+        <mat-icon
+          class="delete_icon_rearrange"
+          color="warn"
+          aria-label="delete"
+          (click)="confirmDeleteAction(item)"
+          >delete</mat-icon
+        >
+        <!-- </button> -->
+      </td>
+    </tr>
+  </tbody>
+</table>

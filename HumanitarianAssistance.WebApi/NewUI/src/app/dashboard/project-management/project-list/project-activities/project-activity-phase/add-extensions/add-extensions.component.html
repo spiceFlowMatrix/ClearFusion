@@ -1,0 +1,85 @@
+<div>
+  <h1 mat-dialog-title>
+    Add Extension
+    <button mat-icon-button class="pull-right" (click)="onCancelPopup()">
+      <mat-icon aria-label="Example cancel icon">clear</mat-icon>
+    </button>
+  </h1>
+  <form
+    class="example-form"
+    [formGroup]="extensionForm"
+    (ngSubmit)="extensionForm.valid ? onFormSubmit(extensionForm.value) : null"
+  >
+    <div mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field>
+                <input
+                  matInput
+                  formControlName="StartDate"
+                  [matDatepicker]="extensionStartDatepicker"
+                  placeholder="Start Date"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="extensionStartDatepicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker
+                  color="primary"
+                  #extensionStartDatepicker
+                ></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field>
+                <input
+                  matInput
+                  formControlName="EndDate"
+                  [min]="extensionStartDate"
+                  [matDatepicker]="extensionEndDatepicker"
+                  placeholder="End Date"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="extensionEndDatepicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker
+                  color="primary"
+                  #extensionEndDatepicker
+                ></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-12 col-sm-12">
+              <mat-form-field class="example-full-width">
+                <textarea
+                  matInput
+                  formControlName="Description"
+                  placeholder="Description"
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions class="pull-right">
+      <button mat-raised-button (click)="onCancelPopup()">Cancel</button>
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="addExtensionLoaderFlag"
+      >
+        <span
+          class="pull-left spinner_center margin_top_10"
+          *ngIf="addExtensionLoaderFlag"
+        >
+          <mat-spinner [diameter]="15"></mat-spinner>
+        </span>
+        Add
+      </button>
+    </div>
+  </form>
+</div>

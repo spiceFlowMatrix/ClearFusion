@@ -1,0 +1,50 @@
+<div class="main-profession-details">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="main-heading clearfix">
+                <h3 class="page-heading">Profession Details</h3>
+                <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="ShowPopup()" *ngIf="isEditingAllowed"></dx-button>
+            </div>
+            <div>
+                <dx-data-grid id="gridContainer" [dataSource]="professiondt" [allowColumnReordering]="true" [allowColumnResizing]="true" [showRowLines]="true">
+                    <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+                    <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+                    <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+                    <dxo-header-filter [visible]="true">
+                    </dxo-header-filter>
+                    <dxo-filter-row [visible]="showFilterRow">
+                    </dxo-filter-row>
+                    <dxi-column dataField="ProfessionId" [width]="130"></dxi-column>
+                    <dxi-column dataField="ProfessionName"></dxi-column>
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+                    <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
+                    <div *dxTemplate="let data of 'CellTemplateEdit'">
+                        <a href="javascript:void(0)" (click)="GetProfessionDetailById(data)">Edit</a>
+                    </div>
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+</div>
+
+<dx-popup class="popup" [width]="600" [height]="200" [showTitle]="true" title="Profession Details" [dragEnabled]="false"
+    [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+    <div *dxTemplate="let data of 'content'">
+        <form action="your-action" (submit)="onFormSubmit(professiondata)">
+            <dx-form id="form" [formData]="professiondata" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                validationGroup="customerData">
+                <dxi-item dataField="ProfessionName">
+                    <dxi-validation-rule type="required" message="Profession Name is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+            </dx-form>
+            <br />
+            <div class="btn-grp-wrap">
+                <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                <dx-button text="Cancel" (onClick)="HidePopup()"></dx-button>
+            </div>
+        </form>
+        <ngx-loading [show]="professionDetailPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+    </div>
+</dx-popup>

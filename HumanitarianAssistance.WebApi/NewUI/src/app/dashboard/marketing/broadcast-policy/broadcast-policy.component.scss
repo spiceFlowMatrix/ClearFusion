@@ -1,0 +1,19 @@
+.modal-dialog {
+  width: 500px;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  display: none;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+}
+button.cstm-btn.mat-button {
+  border: 1px solid;
+  border-color: darkgray;
+}

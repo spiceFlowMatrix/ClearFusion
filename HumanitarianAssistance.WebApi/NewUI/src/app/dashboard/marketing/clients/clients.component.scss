@@ -1,0 +1,28 @@
+// input {
+// width: 70px
+// }
+
+.modal-dialog {
+    width:350px;
+}
+
+// .modal {
+//     position: fixed;
+//     top: 0;
+//     right: 0;
+//     bottom: 0;
+//     left: 0;
+//     z-index: 999;
+//     display: none;
+//     overflow: hidden;
+//     -webkit-overflow-scrolling: touch;
+//     outline: 0;
+// }
+.mat-card .modal {
+    position: absolute;
+    left: auto;
+    bottom: auto;
+    top: 20px;
+    right: 15px;
+  }
+  

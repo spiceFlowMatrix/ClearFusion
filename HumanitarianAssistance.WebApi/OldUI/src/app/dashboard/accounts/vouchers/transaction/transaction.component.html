@@ -1,0 +1,72 @@
+<div class="row">
+    <div class="col-sm-12" *ngIf="transactionFlag == true">
+        <div class="main-heading clearfix">
+            <h3 class="page-headin">Transactions</h3>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <dx-button text="Save" (click)="SaveTransactions()" *ngIf="isEditingAllowed"></dx-button>
+            </div>
+        </div>
+        <br>
+
+        <dx-data-grid id="gridContainer" [dataSource]="dataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)"
+            (onInitNewRow)="logEvent('InitNewRow',$event)" (onRowInserting)="logEvent('RowInserting',$event)"
+            (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+            (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)"
+            (onRowRemoved)="logEvent('RowRemoved',$event)"
+            (onEditorPreparing)="onEditorPreparing($event)">
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+            </dxo-pager>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <!-- editing -->
+            <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" [form]="{
+                items: ['Description','DebitAccount','CreditAccount','Amount']
+            }" *ngIf="isEditingAllowed">
+               
+            </dxo-editing>
+            <!-- editing -->
+
+            <dxi-column dataField="TransactionId" caption="TransactionId" [visible]="false"></dxi-column>
+
+            <dxi-column dataField="AccountNo" caption="Account" alignment="right" [visible]="true">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+                <dxo-lookup [dataSource]="AccountsArr" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+            </dxi-column>
+
+            <dxi-column dataField="Description" caption="Line Item Description" alignment="right">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-column>
+
+            <dxi-column dataField="Debit" caption="Debit Amount" alignment="right" dataType="number" [editorOptions]="{ min: 0 }">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-column>
+
+            <dxi-column dataField="Credit" caption="Credit Amount" alignment="right" dataType="number" [editorOptions]="{ min: 0 }">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+                <dxi-validation-rule type='custom' [reevaluate]="true" [validationCallback]="onValidationCallbackCredit"></dxi-validation-rule>
+            </dxi-column>
+
+            <dxi-column dataField="ProjectId" caption="Project" alignment="right" [visible]="true" [setCellValue]="setProjectValue">
+                <dxo-lookup [dataSource]="projectArr" displayExpr="ProjectName" valueExpr="ProjectId"></dxo-lookup>
+            </dxi-column>
+
+            <dxi-column dataField="BudgetLineId" caption="Budget Line" alignment="right" [visible]="true">
+                <dxo-lookup [dataSource]="getFilteredBudgetLines" displayExpr="Description" valueExpr="BudgetLineId"></dxo-lookup>
+            </dxi-column>
+
+            <dxo-summary>
+                <dxi-total-item column="Debit" summaryType="sum">
+                </dxi-total-item>
+                <dxi-total-item column="Credit" summaryType="sum">
+                </dxi-total-item>
+            </dxo-summary>
+
+        </dx-data-grid>
+    </div>
+    <ngx-loading [show]="transactionsLoading"></ngx-loading>
+</div>

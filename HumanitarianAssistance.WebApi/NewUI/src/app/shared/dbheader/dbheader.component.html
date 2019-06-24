@@ -1,0 +1,51 @@
+<div class="db-header-main">
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="top-header">
+        <a
+          *ngIf="currentRoute.match('/my-project/')"
+          routerLink="/project/my-projects"
+          class="back_arrow"
+        >
+          <i class="fas fa-arrow-left"></i>
+        </a>
+        <h3>{{ headerName | uppercase }}</h3>
+        <nav class="navbar navbar-default">
+          <div class="navbar-header">
+            <span
+              type="button"
+              class="navbar-toggle collapsed"
+              data-toggle="collapse"
+              data-target="#navbar"
+              aria-expanded="false"
+              aria-controls="navbar"
+            >
+              <i class="material-icons"> more_vert </i>
+            </span>
+          </div>
+        </nav>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul>
+            <!-- <li>
+              <a routerLink="/file-upload-demo" routerLinkActive="active">
+                file-upload-demo
+              </a>
+            </li> -->
+            <li *ngFor="let item of menuList">
+              <a [routerLink]="[item.Link]" routerLinkActive="active">{{
+                item.Text
+              }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 text-right">
+      <button mat-button (click)="onTrainingClick()">
+        <i class="material-icons">link</i>
+        Training
+      </button>
+    </div>
+  </div>
+</div>

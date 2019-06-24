@@ -1,0 +1,183 @@
+<div class="main-orders">
+  <div class="row" [style.visibility]="isItemPresentFlag == true ? 'visible' : 'hidden' ">
+    <div class="col-sm-12 text-right">
+      <dx-button text="Add" (onClick)="onAddOrderPopup()" *ngIf="isEditingAllowed"></dx-button>
+    </div>
+
+    <div class="col-sm-12">
+      <br>
+      <dx-data-grid id="gridContainer" [dataSource]="orderDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+        (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+        (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxi-column dataField="OrderId" caption="Procurements Id" [visible]="true"> </dxi-column>
+        <dxi-column dataField="Purchase" caption="Purchase Id" [visible]="true"> </dxi-column>
+        <dxi-column dataField="InventoryItem" [visible]="true"> </dxi-column>
+        <dxi-column dataField="IssuedQuantity" [visible]="true"> </dxi-column>
+        <dxi-column dataField="IssueDate" [visible]="true" dataType="date" format="dd/MM/yyyy"> </dxi-column>
+        <dxi-column dataField="MustReturn" caption="Must Return" [visible]="true"> </dxi-column>
+        <dxi-column dataField="Returned" caption="Returned" [visible]="true"> </dxi-column>
+        <dxi-column dataField="ReturnedDate" [visible]="true" dataType="date" format="dd/MM/yyyy"> </dxi-column>
+
+
+        <dxi-column dataField="IssueVoucherNo">
+        </dxi-column>
+        <dxi-column dataField="Project" caption="Project">
+          <dxo-lookup [dataSource]="projectList" valueExpr="ProjectId" displayExpr="ProjectName"></dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="IssedToLocation"> 
+            <dxo-lookup [dataSource]="storeLocationDropdown" displayExpr="SourceCodeName" valueExpr="SourceCodeId"></dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="StatusAtTimeOfIssue">
+          <dxo-lookup [dataSource]="statusAtTimeOfIssueDropdown" valueExpr="StatusAtTimeOfIssueId" displayExpr="StatusName"> </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="Remarks" caption="Remarks" cellTemplate="RemarksCell" [width]="150"></dxi-column>
+        <div *dxTemplate="let cell of 'RemarksCell'">
+          <div>
+            <a id="id{{cell.data.OrderId}}" (mouseenter)="togglePopoverDefault(cell)" (mouseleave)="togglePopoverDefault(cell)">Details</a>
+          </div>
+
+        </div>
+
+        <dxi-column caption="Action" alignment="center" [width]="150" cellTemplate="editDeleteOrderTemplate" *ngIf="isEditingAllowed"> </dxi-column>
+        <div *dxTemplate="let data of 'editDeleteOrderTemplate'">
+          <a href="javascript:void(0)" (click)="onEditOrderPopup(data.data)">Edit</a> |
+          <a href="javascript:void(0)" (click)="onDeleteOrderPopupConfirmation(data.data)">Delete</a>
+        </div>
+
+
+        <dxo-summary>
+          <dxi-total-item column="IssuedQuantity"  displayFormat="Quantity: {0}" summaryType="sum"> </dxi-total-item>
+        </dxo-summary>
+
+      </dx-data-grid>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Add / Edit-->
+<dx-popup class="popup" [width]="800" [height]="500" [showTitle]="true" title="Procurements" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="addOrdersFormPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view showScrollbar="always" direction="both">
+
+      <form action="your-action" (submit)="onOrderFormSubmit(orderDetailsForm)">
+        <dx-form id="form" [formData]="orderDetailsForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="addOrderData" (onFieldDataChanged)="onFieldDataChanged($event)">
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="Purchase" editorType="dxSelectBox" [editorOptions]="{ dataSource: purchaseDataSource, valueExpr: 'PurchaseId', displayExpr: 'PurchaseId', searchEnabled: true, showClearButton: false  }">
+              <dxo-label text="Purchase" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="IssuedQuantity" editorType="dxNumberBox" [editorOptions]="{ min: 0 }">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule *ngIf="showValidationForAdd == true" type='custom' [reevaluate]="false" [validationCallback]="onValidationCallback"></dxi-validation-rule>
+              <dxi-validation-rule *ngIf="showValidationForAdd == false" type='custom' [reevaluate]="false" [validationCallback]="onValidationCallbackEdit"></dxi-validation-rule>
+            </dxi-item>
+
+
+            <dxi-item dataField="IssuedToEmployeeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeList, value: orderDetailsForm.IssuedToEmployeeId, valueExpr: 'EmployeeId', displayExpr: 'CodeEmployeeName', searchEnabled: true, showClearButton: false  }">
+              <dxo-label text="Issued To Employee" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="IssueDate" editorType="dxDateBox" [editorOptions]="{type: 'date',  displayFormat: 'dd/MM/yyyy' }">
+              <dxo-label alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="IssueVoucherNo">
+              <dxo-label text="Issue Voucher No" alignment="left"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Project" editorType="dxSelectBox" [editorOptions]="{ dataSource: projectList, valueExpr: 'ProjectId', displayExpr: 'ProjectName', searchEnabled: true, showClearButton: false  }">
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="IssedToLocation" editorType="dxSelectBox" [editorOptions]="{ dataSource: storeLocationDropdown, valueExpr: 'SourceCodeId', displayExpr: 'SourceCodeName', showClearButton: false , searchEnabled: true }">
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="StatusAtTimeOfIssue" editorType="dxSelectBox" [editorOptions]="{ dataSource: statusAtTimeOfIssueDropdown, valueExpr: 'StatusAtTimeOfIssueId', displayExpr: 'StatusName', searchEnabled: true, showClearButton: true  }">
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+
+            <dxi-item dataField="MustReturn">
+              <dxo-label alignment="left" text="Must Return"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="Returned">
+              <dxo-label alignment="left" text="Returned"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="ReturnedDate" editorType="dxDateBox" [editorOptions]="{ type: 'date', readOnly: !orderDetailsForm.Returned ,displayFormat: 'dd/MM/yyyy' }">
+              <dxo-label alignment="left"></dxo-label>
+            </dxi-item>
+          </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2">
+            <dxi-item dataField="Remarks" [colSpan]="2" editorType="dxTextArea" [editorOptions]="{height: 100}">
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+          </dxi-item>
+
+        </dx-form>
+
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="addOrderData" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (onClick)="hideAddOrdersFormPopupVisible()"></dx-button>
+        </div>
+      </form>
+
+    </dx-scroll-view>
+    <ngx-loading [show]="addEditOrderFormPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+  </div>
+</dx-popup>
+
+
+<!-- confirmation -->
+<dx-popup class="popup" [width]="400" [height]="200" [showTitle]="true" title="Confirmation Message" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="deleteConfirmationPopup">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action">
+      <div class="form-group">
+        <label for="officecode">Are you sure want to delete this Order Item?</label>
+      </div>
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Delete" type="success" (onClick)="onDeleteOrderItemConfirmed()"></dx-button>
+        <dx-button text="Cancel" (onClick)="hideDeleteConfirmationPopup()"></dx-button>
+      </div>
+    </form>
+    <ngx-loading [show]="deleteOrderFormPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+</dx-popup>
+
+
+
+<!-- popover -->
+<dx-popover target="{{keyValue}}" position="top" [width]="200" [(visible)]="defaultVisible">
+  <div *dxTemplate="let data = model of 'content'">
+
+    <div class="row">
+      <div class="col-sm-12">{{popoverData != null ? popoverData : ""}} </div>
+    </div>
+
+  </div>
+</dx-popover>

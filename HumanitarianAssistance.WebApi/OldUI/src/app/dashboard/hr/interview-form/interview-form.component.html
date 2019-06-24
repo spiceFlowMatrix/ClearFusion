@@ -1,0 +1,41 @@
+<div class="main-interview-form">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Employee Interview Form</h3>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div>
+        <div id="tabs">
+          <dx-tabs #apiTabs [dataSource]="tabs" [selectedIndex]="0" [width]="300" [height]="50" (onItemClick)="selectTab($event)"></dx-tabs>
+          <div class="dx-fieldset">
+
+            <div *ngIf="interviewFormTabFlag == true; else exitInterviewTabFlag">
+              <div class="dx-field">
+
+                <app-employee-interview-form [isEditingAllowed]="isEditingAllowed"></app-employee-interview-form>
+
+              </div>
+            </div>
+
+            <ng-template #exitInterviewTabFlag>
+              <div class="dx-field">
+
+                <app-employee-exit-interview-form [isEditingAllowed]="isEditingAllowed"></app-employee-exit-interview-form>
+
+              </div>
+            </ng-template>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

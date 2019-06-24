@@ -1,0 +1,159 @@
+<div>
+  <form
+    [formGroup]="addVoucherForm"
+    (ngSubmit)="onAddVoucher(addVoucherForm)"
+    role="form"
+    action="POST"
+  >
+    <h1 mat-dialog-title>
+      Create Voucher
+      <button mat-icon-button [mat-dialog-close]="data.data" class="pull-right">
+        <mat-icon aria-label="clear">clear</mat-icon>
+      </button>
+    </h1>
+    <div mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <mat-form-field class="example-full-width">
+              <textarea
+                matInput
+                placeholder="Description"
+                name="Description"
+                formControlName="Description"
+              ></textarea>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  [matDatepicker]="voucherDatePicker"
+                  placeholder="Voucher Date"
+                  formControlName="VoucherDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="voucherDatePicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #voucherDatePicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-select
+                  placeholder="Currency"
+                  name="CurrencyId"
+                  formControlName="CurrencyId"
+                >
+                  <mat-option
+                    *ngFor="let item of data.currencyList"
+                    [value]="item.CurrencyId"
+                  >
+                    {{ item.CurrencyName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-select
+                  placeholder="Office"
+                  name="OfficeId"
+                  formControlName="OfficeId"
+                >
+                  <mat-option
+                    *ngFor="let item of data.officeList"
+                    [value]="item.OfficeId"
+                  >
+                    {{ item.OfficeName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <mat-select
+                  placeholder="Journal"
+                  name="JournalCode"
+                  formControlName="JournalCode"
+                >
+                  <mat-option
+                    *ngFor="let item of data.journalList"
+                    [value]="item.JournalCode"
+                  >
+                    {{ item.JournalName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <mat-select
+                  placeholder="Voucher Type"
+                  name="VoucherTypeId"
+                  formControlName="VoucherTypeId"
+                >
+                  <mat-option
+                    *ngFor="let item of data.voucherTypeList"
+                    [value]="item.VoucherTypeId"
+                  >
+                    {{ item.VoucherTypeName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field class="example-form-field">
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Cheque No"
+                  name="ChequeNo"
+                  formControlName="ChequeNo"
+                />
+              </mat-form-field>
+
+              <!-- <mat-form-field class="example-full-width">
+                <mat-select placeholder="Project" name="ProjectId" formControlName="ProjectId">
+                    <mat-option *ngFor="let item of data.projectList" [value]="item.ProjectId" >
+                        {{item.ProjectName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> -->
+
+              <!-- <mat-form-field class="example-full-width">
+                <mat-select placeholder="Budget Line">
+                    <mat-option *ngFor="let item of data.budgetLineList" [value]="item.BudgetLineId">
+                        {{item.BudgetLineName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions class="pull-right">
+      <button mat-raised-button [mat-dialog-close]="data.data">Cancel</button>
+
+      <!-- <button mat-raised-button color="primary" type="submit" [disabled]="!addVoucherForm.valid || addVoucherLoader" cdkFocusInitial>
+     <span class="pull-left spinner_center" *ngIf="addVoucherLoader"><mat-spinner [diameter]="15"></mat-spinner></span>
+    Create
+  </button> -->
+
+      <button
+        mat-raised-button
+        color="accent"
+        type="submit"
+        [disabled]="!addVoucherForm.valid || addVoucherLoader"
+        cdkFocusInitial
+      >
+        <span *ngIf="!addVoucherLoader; else addVoucherLoaderTemplate"
+          >Create</span
+        >
+        <ng-template #addVoucherLoaderTemplate>
+          <div class="spinner_center padding_bottom_5">
+            <mat-spinner [diameter]="25"> </mat-spinner>
+          </div>
+        </ng-template>
+      </button>
+    </div>
+  </form>
+</div>

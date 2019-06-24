@@ -1,0 +1,83 @@
+<div class="main-approve-leave">
+  <div class="heading-hdr">
+    <div class="clearfix">
+      <h3 class="page-heading" [ngClass]="{'myclass' : false}">Approve Leave</h3>
+    </div>
+  </div>
+  <div class="main-heading clearfix" *ngIf="isEditingAllowed">
+    <dx-button class="button-info btn btn-default btn-green" text="Reject" (click)="showApproveRejectPopup('Reject')" >
+    </dx-button>
+    <dx-button class="button-info btn btn-default btn-green" text="Approve" (click)="showApproveRejectPopup('Approve')" >
+    </dx-button>
+  </div>
+
+  <div class="right">
+
+    <dx-data-grid id="gridContainer" [dataSource]="leavedetailsDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+      [columnAutoWidth]="true" (onSelectionChanged)="selectionChangedHandler($event)">
+      <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch" *ngIf="isEditingAllowed"></dxo-editing>
+
+      <dxo-selection mode="multiple"></dxo-selection>
+      <dxo-filter-row [visible]="true"> </dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-scrolling mode="infinite"></dxo-scrolling>
+
+      <dxi-column dataField="ApplyLeaveId" caption="Leave Id" [visible]="false">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+
+      <dxi-column dataField="EmployeeName" [width]="250" caption="Employee Name">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+
+      <dxi-column dataField="EmployeeCode" [width]="250" caption="Employee Code">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+
+      <dxi-column dataField="FromDate" caption="Date" dataType="date" format="dd/MM/yyyy" [width]="150">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+
+      <dxi-column dataField="LeaveReasonName" caption="Leave Reason" [width]="200">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+
+      <dxi-column dataField="Remarks" caption="Remark">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+      <dxo-paging [pageSize]="10"></dxo-paging>
+
+    </dx-data-grid>
+  </div>
+
+  <ngx-loading [show]="approveLeaveListloading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+</div>
+
+
+<!-- Leave Approval Conformation Model -->
+<dx-popup class="popup" [width]="300" [height]="150" [showTitle]="true" title="Confirmation Message" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="popupApproveRejectVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view [height]="100" showScrollbar="always" direction="both">
+
+      <div class="text-center">{{approveRejectText}}</div>
+      <div class="btn-grp-wrap">
+        <div *ngIf="approverejectbuttonToggle == 'true'">
+          <dx-button text="Ok" (click)="conformApproveRejectLeave('Approve')"></dx-button>
+          <dx-button text="Cancel" (click)="closeApproveRejectPopup()"></dx-button>
+        </div>
+
+        <div *ngIf="approverejectbuttonToggle == 'false'">
+          <dx-button text="Ok" (click)="conformApproveRejectLeave('Reject')"></dx-button>
+          <dx-button text="Cancel" (click)="closeApproveRejectPopup()"></dx-button>
+        </div>
+
+      </div>
+
+      <ngx-loading [show]="approveLeavePopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+    </dx-scroll-view>
+  </div>
+
+</dx-popup>

@@ -1,0 +1,84 @@
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card [ngStyle]="scrollStyles">
+      <div class="row">
+<!--
+        <div class="loader-mr-left pull-right" *ngIf="updateRecordLoader;else showDeleteIcon">
+          <mat-spinner diameter="20"></mat-spinner>
+        </div> -->
+        <!-- <ng-template #showDeleteIcon> -->
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-12">
+                <h4 class="main_heading">PROJECT INDICATOR DETAILS</h4>
+              </div>
+            </div>
+          </div>
+        <!-- </ng-template> -->
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <form [formGroup]="indicatorForm" (ngSubmit)="OnSubmit(indicatorForm.value)">
+            <div class="col-sm-8">
+              <mat-form-field class="example-full-width">
+                <input matInput formControlName="indicatorName" placeholder="Indicator Name">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-2">
+              <button mat-icon-button pTooltip="Add Question" type="button" tooltipPosition="top" (click)="addItem()" *ngIf="!NewIndicatorLoaderFlag; else indicatorChangeLoaderTemplate">
+                <mat-icon aria-label="Add">add</mat-icon>
+              </button>
+                <ng-template #indicatorChangeLoaderTemplate>
+                  <div class="spinner_center padding_top_5 padding_bottom_5">
+                    <mat-spinner [diameter]="25"></mat-spinner>
+                  </div>
+                </ng-template>
+            </div>
+            <hr>
+            <div formArrayName="questions" *ngFor="let item of questions.controls; let i = index;">
+              <div [formGroupName]="i" class="col-sm-11">
+                <mat-form-field class="example-full-width">
+                  <textarea matInput formControlName="question" placeholder="Question {{i+1}}"></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-1">
+                <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="warn" (click)="onDelete(i)">
+                  delete
+                </mat-icon>
+              </div>
+            </div>
+            <div class="col-sm-12">
+                <button
+                mat-raised-button
+                color="primary"
+                [disabled]="indicatorForm.value.indicatorName == undefined || indicatorForm.value.indicatorName =='' || EditLoaderFlag"
+                type="submit"
+                >
+                <span *ngIf="!EditLoaderFlag; else editIndicatorLoaderTemplate"
+                  >Save</span
+                >
+                <ng-template #editIndicatorLoaderTemplate>
+                  <div class="spinner_center padding_top_5 padding_bottom_5">
+                    <mat-spinner [diameter]="25"></mat-spinner>
+                  </div>
+                </ng-template>
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="top-header clearfix">
+          <h3></h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

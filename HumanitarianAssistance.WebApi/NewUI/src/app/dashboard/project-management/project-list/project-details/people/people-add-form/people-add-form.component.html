@@ -1,0 +1,36 @@
+<div class="people-add-form">
+  <form
+    [formGroup]="addPeopleForm"
+    (ngSubmit)="onAddFormSubmit(addPeopleForm.value)"
+    action="POST"
+    class="example-form"
+  >
+    <div class="row">
+      <div class="col-sm-4">
+        <mat-form-field class="example-full-width">
+          <mat-label>User</mat-label>
+          <mat-select formControlName="userId">
+            <mat-option *ngFor="let item of userList" [value]="item.UserId">
+              {{ item.Username }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4">
+        <mat-form-field class="example-full-width">
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="roleId">
+            <mat-option *ngFor="let item of roleList" [value]="item.Id">
+              {{ item.Role }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4">
+        <button mat-icon-button [disabled]="!addPeopleForm.valid">
+          <mat-icon aria-label="save">send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

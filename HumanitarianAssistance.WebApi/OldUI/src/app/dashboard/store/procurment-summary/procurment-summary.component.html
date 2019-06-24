@@ -1,0 +1,102 @@
+<div class="main-procurment-summary">
+  <div class="row">
+
+    <div class="col-sm-12 text-right">
+      <br>
+      <div class="col-sm-5" style="max-width: 30rem;">
+        <dx-select-box [dataSource]="employeeList" id="employeedropdown" placeholder="Select Employee" (onValueChanged)="onEmployeeSelectedValue($event)" displayExpr="CodeEmployeeName"
+          valueExpr="EmployeeId" searchEnabled="true" showClearButton="false">
+        </dx-select-box>
+      </div>
+
+      <div class="col-sm-5" style="max-width: 30rem;">
+          <dx-select-box [dataSource]="currencyDropdown" id="currencydropdown" placeholder="Select Currency" displayExpr="CurrencyCode" (onValueChanged)="onEmployeeSelectedValue($event)" 
+            valueExpr="CurrencyId" searchEnabled="true" showClearButton="false">
+          </dx-select-box>
+        </div>
+
+    </div>
+
+    <div class="col-sm-12">
+      <br>
+
+      <dx-data-grid id="gridContainer" [dataSource]="procurmentDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true">
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+        <dxi-column dataField="ProcurementId" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="ProcurementDate" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="EmployeeName" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Store" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Inventory" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Item" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column dataField="TotalCost" caption="Total Cost" cellTemplate="TotalCostCell"></dxi-column>
+        <div *dxTemplate="let cell of 'TotalCostCell'">
+          <div>
+            <a id="id{{cell.data.ProcurementId}}" (mouseenter)="toggleDefault(cell)" (mouseleave)="toggleDefault(cell)">{{cell.value}}</a>
+          </div>
+
+        </div>
+
+        <dxi-column dataField="MustReturn" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="VoucherNo" [visible]="false">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Returned" [visible]="true">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="VoucherDate" [visible]="true" dataType="date" [format]="{ type: 'dd/MM/yyyy' }">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
+        <div *dxTemplate="let data of 'CellTemplateEdit'">
+            <a href="javascript:void(0)" (click)="NaviageToVoucherDetail(data)">Go to Voucher</a>
+        </div>
+
+        <dxo-summary>
+          <dxi-total-item column="TotalCost" summaryType="sum">
+          </dxi-total-item>
+      </dxo-summary>
+
+      </dx-data-grid>
+
+    </div>
+
+  </div>
+  <ngx-loading [show]="procurementSummaryLoading"></ngx-loading>
+
+
+
+
+  <dx-popover target="{{keyValue}}" position="top" [width]="200" [(visible)]="defaultVisible">
+    <div *dxTemplate="let data = model of 'content'">
+      <div class="row">
+        <div class="col-sm-12">Unit Type: {{popoverData.UnitType}} </div>
+        <div class="col-sm-12">Amount: {{popoverData.Amount}} </div>
+        <div class="col-sm-12">Unit Cost: {{popoverData.UnitCost}} </div>
+        <div class="col-sm-12">Currency: {{popoverData.Currency}} </div>
+      </div>
+
+    </div>
+  </dx-popover>
+
+</div>

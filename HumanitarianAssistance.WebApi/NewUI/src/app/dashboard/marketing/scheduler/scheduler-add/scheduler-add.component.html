@@ -1,0 +1,135 @@
+
+<div class="mat-detail"  align="center">
+    <div mat-dialog-content>
+       <div class="row">
+          <mat-button-toggle-group #group="matButtonToggleGroup" [(ngModel)]="scheduleDetailsForm.scheduleType">
+              <mat-button-toggle (change)="selectionChanged($event)" *ngFor="let item of scheduleType;" 
+                [value]="item.Value" >{{item.Value}}</mat-button-toggle>
+          </mat-button-toggle-group>
+          <button mat-icon-button [mat-dialog-close]="data.data" class="pull-right">
+              <mat-icon aria-label="cancel">clear</mat-icon>
+          </button>
+       </div>
+        <br/>
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <mat-form-field class="example-full-width" *ngIf="enableProject">
+                    <mat-select [(ngModel)]="scheduleDetailsForm.projectId"
+                      placeholder="Project"
+                    >
+                      <mat-option
+                        *ngFor="let contract of data.projectList"
+                        [value]="contract.ProjectId"
+                      >
+                        {{ contract.ProjectName }}
+                      </mat-option>
+                    </mat-select>                 
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" *ngIf="enableJob">
+                      <mat-select [(ngModel)]="scheduleDetailsForm.jobId"
+                        placeholder="Job"
+                      >
+                        <mat-option
+                          *ngFor="let contract of data.jobList"
+                          [value]="contract.JobId"
+                        >
+                          {{ contract.JobName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" *ngIf="enablePolicy">
+                        <mat-select [(ngModel)]="scheduleDetailsForm.policyId"
+                          placeholder="Policy" (selectionChange)="policyChanged($event.value)"
+                        >
+                          <mat-option
+                            *ngFor="let contract of data.policyList"
+                            [value]="contract.PolicyId"
+                          >
+                            {{ contract.PolicyName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col-sm-3">                     
+          </div>
+          <div class="col-sm-3">
+              <mat-form-field class="example-full-width" style="width:100%;float:left;">
+                  <input  [(ngModel)]="scheduleDetailsForm.startTime" matInput atp-time-picker placeholder="Start Time"/>
+                </mat-form-field>
+          </div>
+          <div class="col-sm-3">
+              <mat-form-field class="example-full-width" style="width:100%;float:right;">
+                  <input  [(ngModel)]="scheduleDetailsForm.endTime" matInput atp-time-picker placeholder="End Time"/>
+              </mat-form-field>
+          </div>
+          <div class="col-sm-3"></div>  
+        </div>
+                           
+      
+        <mat-slide-toggle
+        class="example-margin"
+        (change)="toggle($event)">More Options
+      </mat-slide-toggle>
+      <br/>
+        <div class="row" *ngIf="getValidationForStartTime()">
+                    <span style="color:red; font-size: 12px" >Please select Start and End Times</span>
+        </div>
+       
+        <div *ngIf="enableRepeatDaysDiv">
+            <h4>RECURRING</h4>     
+                  <div class="row">
+                    <div class="example-button-row" align="center">
+                      <button [style.background]="item.status?'LightGray':'White'" (click)="selectDays(item.Value)" mat-fab *ngFor="let item of days" class="dot">
+                        <span >{{item.Value}}</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="showRepeatDaysError">
+                    <span style="color:red; font-size: 12px">Please select Repeat Days</span>
+                  </div>
+                  <br/>
+                  <div class="row">
+                    <div class="col-sm-3"></div>
+                      <div class="col-sm-3">
+                          <mat-form-field style="width:100%;float:left;">
+                            <input [(ngModel)]="scheduleDetailsForm.startDate" (dateChange)="dateChange()"
+                              (dateInput)="dateChange()" matInput [matDatepicker]="picker" placeholder="Start Date">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-sm-3">
+                          <mat-form-field style="width:100%;float:right;">
+                            <input [(ngModel)]="scheduleDetailsForm.endDate" (dateChange)="dateChange()"
+                            (dateInput)="dateChange()" matInput [matDatepicker]="picker1" placeholder="End Date" >
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-sm-3"></div>
+                  </div>   
+                  <div class="row" *ngIf="showStartEndDatesError">
+                    <span style="color:red; font-size: 12px">Please select Start and End Dates</span>
+                  </div>
+        </div>        
+       
+  </div>
+  <div mat-dialog-actions class="pull-right">
+      <button mat-raised-button [mat-dialog-close]="data.data">Cancel</button>    
+      <button (click)="SaveSchedule()" [disabled]="!isEditingAllowed || addScheduleLoader" *ngIf="!enableupdateBtn" mat-raised-button color="accent" cdkFocusInitial>        
+          <span class="pull-left spinner_center margin_top_10" *ngIf="addScheduleLoader"><mat-spinner [diameter]="15"></mat-spinner></span>
+          <!-- <span class="pull-left spinner_center" *ngIf="addScheduleLoader"><mat-spinner [diameter]="15"></mat-spinner></span> -->
+        Create
+      </button>
+      <button (click)="updateSchedule()" [disabled]="!isEditingAllowed || addScheduleLoader" mat-raised-button color="accent" *ngIf="enableupdateBtn" cdkFocusInitial>        
+          <span class="pull-left spinner_center margin_top_10" *ngIf="addScheduleLoader"><mat-spinner [diameter]="15"></mat-spinner></span>
+        <!-- <span class="pull-left spinner_center" *ngIf="addScheduleLoader"><mat-spinner [diameter]="15"></mat-spinner></span> -->
+      Update
+    </button>
+    </div>
+</div>

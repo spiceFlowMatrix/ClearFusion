@@ -1,0 +1,480 @@
+<div class="main-store-main">
+
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="main-heading clearfix">
+        <div class="col-sm-2">
+            <h3 class="page-headin">Store</h3>
+        </div>
+        <div class="col-sm-4 main-heading clearfix" style="padding-top: 16px;">
+            <dx-select-box [dataSource]="officecodelist" placeholder="Choose Office" (onItemClick)="onOfficeSelected($event.itemData.OfficeId)"
+            displayExpr="OfficeName" valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
+        </dx-select-box>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div>
+        <dx-tabs #apiTabs [dataSource]="storeTabs" [selectedIndex]="0" [width]="400" [height]="50" (onItemClick)="selectTab($event)"></dx-tabs>
+        <div class="dx-fieldset store-main-outer">
+
+          <div class="row">
+            <!-- Master (Inventory) -->
+            <div class="col-sm-2 store-left-list-bx store-left-list-bx1 ">
+
+              <div class="thumbnail card">
+                <div class="">
+
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <h4>Master (Inventory)</h4>
+                    </div>
+                    <div class="col-sm-8 text-right">
+                      <dx-button text="Add" (click)="openAddEditInventoryForm()" *ngIf="isEditingAllowed"></dx-button>
+                    </div>
+                  </div>
+
+                  <dx-list #list [dataSource]="inventoryList" [height]="500" [searchEnabled]="true" [searchExpr]="['InventoryName','InventoryCode','InventoryDescription']"
+                    selectionMode="single" (onItemClick)="onInventoryClick($event.itemData)" searchMode="contains" itemTemplate="listItem">
+
+                    <div *dxTemplate="let data of 'listItem' ">
+                      <div class="text-left store-card-left-bx">
+                        <div class="col-sm-12">
+                          <h6>{{data.InventoryName}}</h6>
+                        </div>
+                        <div class="col-sm-12">
+                          Code: {{data.InventoryCode}}
+                        </div>
+                        <div class="col-sm-12 text-ellip">
+                          <div class="row">
+                            <div class="col-sm-10">
+                              {{data.InventoryDescription}}
+                            </div>
+                            <div class="col-sm-2" *ngIf="isEditingAllowed">
+                              <a (click)="onShowEditInventoryForm(data)">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </dx-list>
+
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Item Group -->
+            <div class="col-sm-2 store-left-list-bx store-left-list-bx2">
+              <div class="thumbnail card">
+                <div class="">
+
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h4>Item Group</h4>
+                    </div>
+                    <div class="col-sm-9 text-right">
+                      <dx-button text="Add" (click)="openAddEditItemGroupForm()" *ngIf="isEditingAllowed"></dx-button>
+                    </div>
+                  </div>
+
+                  <dx-list #list [dataSource]="itemGroupDataSource" [height]="500" [searchEnabled]="true" [searchExpr]="['ItemName','ItemCode','Description']"
+                    selectionMode="single" (onItemClick)="onItemGroupClick($event.itemData)" searchMode="contains" itemTemplate="listItem">
+                    <div *dxTemplate="let data of 'listItem' ">
+                        <div class="text-left store-card-left-bx">
+                          <div class="col-sm-12">
+                            <h6>{{data.ItemGroupName}}</h6>
+                          </div>
+                          <div class="col-sm-12">
+                            Code: {{data.ItemGroupCode}}
+                          </div>
+                          <div class="col-sm-12 text-ellip">
+                            <div class="row">
+                              <div class="col-sm-10">
+                                {{data.Description}}
+                              </div>
+                              <div class="col-sm-2" *ngIf="isEditingAllowed">
+                                <a (click)="onShowEditItemGroupForm(data)">
+                                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                  </dx-list>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Item (Code) -->
+            <div class="col-sm-2 store-left-list-bx store-left-list-bx2">
+              <div class="thumbnail card">
+                <div class="">
+
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h4> Item (Code)</h4>
+                    </div>
+                    <div class="col-sm-9 text-right">
+                      <dx-button text="Add" (click)="openAddEditInventoryItemForm()" *ngIf="isEditingAllowed"></dx-button>
+                    </div>
+                  </div>
+
+                  <dx-list #list [dataSource]="inventoryItemDataSource" [height]="500" [searchEnabled]="true" [searchExpr]="['ItemName','ItemCode','Description']"
+                    selectionMode="single" (onItemClick)="onInventoryItemClick($event.itemData)" searchMode="contains" itemTemplate="listItem">
+                    <div *dxTemplate="let data of 'listItem' ">
+
+                      <div class="text-left store-card-left-bx">
+                        <div class="col-sm-12">
+                          <h6>{{data.ItemName}}</h6>
+                        </div>
+                        <div class="col-sm-12">
+                          Code: {{data.ItemCode}}
+                        </div>
+                        <div class="col-sm-12 text-ellip">
+                          {{data.Description}}
+                        </div>
+                      </div>
+
+                    </div>
+                  </dx-list>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Item Details -->
+            <div class="col-sm-6 store-right-col">
+
+              <div class="thumbnail card">
+                <div class="container">
+
+                  <div class="row">
+                    <div class="col-sm-12 store-detail-hdr">
+                      <div class="row">
+
+
+                        <div class="col-sm-11">
+                          <h3>Item Details: {{inventoryItemSelectedForm !=null ? inventoryItemSelectedForm.ItemName : null}}
+                          </h3>
+                        </div>
+
+                        <div class="col-sm-1 text-right" [style.visibility]="inventoryItemSelectedForm.ItemCode != null ? 'visible' : 'hidden' ">
+                          <br>
+                          <a (click)="onShowEditInventoryItemForm()" *ngIf="isEditingAllowed">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                          </a>
+                        </div>
+
+                        <br>
+
+                        <div class="col-sm-12">
+                          Item : {{inventoryItemSelectedForm !=null ? inventoryItemSelectedForm.ItemCode : null}}
+                          <br> Description: {{inventoryItemSelectedForm !=null ? inventoryItemSelectedForm.Description :
+                          null}}
+                        </div>
+
+                        <div class="col-sm-12">
+
+                          <div class="row">
+                            <div class="col-sm-4">
+                              <h4>Purchased Amount</h4>
+                              {{amountDetails != null ? amountDetails.ProcuredAmount : 0}}
+                            </div>
+                            <div class="col-sm-4">
+                              <h4>Spent Amount</h4>
+                              {{amountDetails != null ? amountDetails.SpentAmount : 0}}
+                            </div>
+                            <div class="col-sm-4">
+                              <h4>Current Amount</h4>
+                              {{amountDetails != null ? amountDetails.CurrentAmount : 0}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <br>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="panel-group" id="accordion">
+                            <div class="panel panel-default">
+                              <div class="panel-heading">
+                                <h4 class="panel-title">
+                                  <a data-toggle="collapse" data-parent="#accordion" href="#itemSpecification">Item Specification</a>
+                                </h4>
+                              </div>
+                              <div id="itemSpecification" class="panel-collapse collapse out">
+                                <div class="panel-body">
+
+                                  <br>
+
+                                  <dx-data-grid id="gridContainer" [dataSource]="itemSpecificationDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                                    [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+                                    (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)"
+                                    (onRowUpdating)="logEvent('RowUpdating',$event)" (onRowUpdated)="logEvent('RowUpdated',$event)"
+                                    (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+                                    <dxo-paging [pageSize]="10"></dxo-paging>
+                                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+                                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                                    <dxo-editing mode="batch" [allowAdding]="false" [allowUpdating]="true" [allowDeleting]="false" *ngIf="isEditingAllowed"> </dxo-editing>
+
+                                    <dxi-column dataField="ItemSpecificationMasterId" [visible]="false">
+                                      <dxo-lookup [dataSource]="itemSpecificationDataSourceMaster" displayExpr="ItemSpecificationField" valueExpr="ItemSpecificationMasterId"></dxo-lookup>
+                                      <dxi-validation-rule type="required"></dxi-validation-rule>
+                                    </dxi-column>
+
+                                    <dxi-column dataField="ItemSpecificationField" caption="Field" [editorOptions]="{readOnly: true}">
+                                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                    </dxi-column>
+                                    <dxi-column dataField="ItemSpecificationValue" caption="Value">
+                                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                    </dxi-column>
+
+                                  </dx-data-grid>
+
+                                </div>
+                              </div>
+                            </div>
+
+
+                          </div>
+                        </div>
+
+
+
+                        <div class="main-store-item-details">
+                          <div class="row">
+                            <div class="col-sm-12">
+
+
+                              <ul class="nav nav-tabs">
+                                <li class="active">
+                                  <a data-toggle="tab" href="#purchases" (click)="selectItemTab(1)">Purchases</a>
+                                </li>
+                                <li>
+                                  <a data-toggle="tab" href="#orders" (click)="selectItemTab(2)">Issue Details</a>
+                                </li>
+                              </ul>
+
+                              <div class="tab-content">
+                                <div id="purchases" class="tab-pane fade in active">
+                                  <br>
+                                  <app-purchases [isEditingAllowed]="isEditingAllowed" (getItemAmounts)="getItemAmounts($event)"></app-purchases>
+
+                                </div>
+                                <div id="orders" class="tab-pane fade">
+                                  <br>
+                                  <app-orders [isEditingAllowed]="isEditingAllowed" (getItemAmounts)="getItemAmounts($event)"></app-orders>
+                                </div>
+                              </div>
+
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </div>
+
+
+                      <ng-template #purchaseOrderNotPresent>
+                        no data
+                      </ng-template>
+
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <ngx-loading [show]="storeMainLoading"></ngx-loading>
+
+  </div>
+
+
+  <!-- Add / Edit Inventory -->
+  <dx-popup class="popup" [width]="800" [height]="350" [showTitle]="true" title="Inventory" [dragEnabled]="false" [closeOnOutsideClick]="true"
+    [(visible)]="inventoryAddEditPopupVisible">
+    <div *dxTemplate="let data of 'content'">
+      <dx-scroll-view showScrollbar="always" direction="both">
+
+        <form action="your-action" (submit)="onAddEditInventory(inventoryForm)">
+          <dx-form id="form" [formData]="inventoryForm" [readOnly]="false" labelLocation="top" [showColonAfterLabel]="true" [showValidationSummary]="true"
+            validationGroup="inventoryData">
+            <dxi-item itemType="group" [colCount]="2">
+
+              <dxi-item dataField="InventoryCode" [editorOptions]="{disabled: true}">
+                <dxo-label text="Inventory Code" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+              <dxi-item dataField="InventoryName">
+                <dxo-label text="Inventory Name" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+              <dxi-item dataField="InventoryDescription">
+                <dxo-label text="Inventory Description" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+              <dxi-item dataField="InventoryDebitAccount" editorType="dxSelectBox" [editorOptions]="{ dataSource: accountsList, valueExpr: 'AccountCode', displayExpr: 'AccountName', searchEnabled: true, showClearButton: false  }">
+                <dxo-label text="Inventory Account" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+              <dxi-item dataField="AssetType" editorType="dxSelectBox" [editorOptions]="{ dataSource: assetTypeList, value:inventoryForm.AssetType, disabled: true, valueExpr: 'AssetTypeId', displayExpr: 'AssetTypeName', searchEnabled: true, showClearButton: false  }">
+                <dxo-label text="Asset Type" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+
+            </dxi-item>
+
+          </dx-form>
+
+
+          <div class="btn-grp-wrap">
+            <dx-button text="Save" type="success" validationGroup="inventoryData" [useSubmitBehavior]="true"></dx-button>
+            <dx-button text="Cancel" (onClick)="hideInventoryAddEditPopupVisible()"></dx-button>
+          </div>
+
+        </form>
+
+      </dx-scroll-view>
+      <ngx-loading [show]="addEditInventoryPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+    </div>
+  </dx-popup>
+
+  
+  <!-- Add / Edit Group Item -->
+  <dx-popup class="popup" [width]="800" [height]="400" [showTitle]="true" title="Group Item" [dragEnabled]="false" [closeOnOutsideClick]="true"
+    [(visible)]="itemGroupEditPopupVisible">
+    <div *dxTemplate="let data of 'content'">
+      <dx-scroll-view showScrollbar="always" direction="both">
+
+        <form action="your-action" (submit)="onAddEditItemGroup(itemGroupForm)">
+          <dx-form id="form" [formData]="itemGroupForm" [readOnly]="false" labelLocation="top" [showColonAfterLabel]="true" [showValidationSummary]="true"
+            validationGroup="advancerData" (onFieldDataChanged)="onFieldDataChangedItemGroup($event)">
+            <dxi-item itemType="group" [colCount]="2">
+
+
+              <dxi-item dataField="InventoryId" editorType="dxSelectBox" [editorOptions]="{ dataSource: inventoryList, valueExpr: 'InventoryId',  displayExpr: 'InventoryName', searchEnabled: true, showClearButton: false  }">
+                <dxo-label text="Inventory" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+
+              <dxi-item dataField="ItemGroupName">
+                <dxo-label text="Item Group Name" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+              <dxi-item dataField="ItemGroupCode" [editorOptions]="{disabled: true}">
+                <dxo-label text="Item Code" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+            </dxi-item>
+            <dxi-item itemType="group" [colCount]="2">
+
+              <dxi-item dataField="Description" [colSpan]="2" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+                <dxo-label text="Description" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+            </dxi-item>
+
+          </dx-form>
+
+
+          <div class="btn-grp-wrap">
+            <dx-button text="Save" type="success" validationGroup="advancerData" [useSubmitBehavior]="true"></dx-button>
+            <dx-button text="Cancel" (onClick)="hideItemGroupEditPopup()"></dx-button>
+          </div>
+
+        </form>
+
+      </dx-scroll-view>
+      <ngx-loading [show]="addEditItemGroupPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+    </div>
+  </dx-popup>
+
+  <!-- Add / Edit Item -->
+  <dx-popup class="popup" [width]="800" [height]="400" [showTitle]="true" title="Store Item" [dragEnabled]="false" [closeOnOutsideClick]="true"
+    [(visible)]="inventoryItemEditPopupVisible">
+    <div *dxTemplate="let data of 'content'">
+      <dx-scroll-view showScrollbar="always" direction="both">
+
+        <form action="your-action" (submit)="onAddEditInventoryItem(inventoryItemForm)">
+          <dx-form id="form" [formData]="inventoryItemForm" [readOnly]="false" labelLocation="top" [showColonAfterLabel]="true" [showValidationSummary]="true"
+            validationGroup="advancerData" (onFieldDataChanged)="onFieldDataChanged($event)">
+            <dxi-item itemType="group" [colCount]="2">
+
+
+              <dxi-item dataField="ItemGroupId" editorType="dxSelectBox" [editorOptions]="{ dataSource: itemGroupDataSource, valueExpr: 'ItemGroupId', displayExpr: 'ItemGroupName', searchEnabled: true, showClearButton: false  }">
+                <dxo-label text="Item Group" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+
+              <dxi-item dataField="ItemName">
+                <dxo-label text="Item Name" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+              <dxi-item dataField="ItemCode" [editorOptions]="{disabled: true}">
+                <dxo-label text="Item Code" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+              <dxi-item dataField="ItemType" editorType="dxSelectBox" [editorOptions]="{ dataSource: itemTypeDataSource, valueExpr: 'ItemType', displayExpr: 'TypeName', searchEnabled: true, showClearButton: false  }">
+                <dxo-label text="Item Type" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+
+            </dxi-item>
+            <dxi-item itemType="group" [colCount]="2">
+
+              <dxi-item dataField="Description" [colSpan]="2" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+                <dxo-label text="Description" alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+            </dxi-item>
+
+          </dx-form>
+
+
+          <div class="btn-grp-wrap">
+            <dx-button text="Save" type="success" validationGroup="advancerData" [useSubmitBehavior]="true"></dx-button>
+            <dx-button text="Cancel" (onClick)="hideInventoryItemEditPopup()"></dx-button>
+          </div>
+
+        </form>
+
+      </dx-scroll-view>
+      <ngx-loading [show]="addEditInventoryItemPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+    </div>
+  </dx-popup>

@@ -1,0 +1,935 @@
+<div class="main-employee-salary">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Employee Salary</h3>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div>
+        <div id="tabs">
+          <dx-tabs #apiTabs [dataSource]="employeeSalarytabs" [selectedIndex]="0" [width]="300" [height]="50"
+            (onItemClick)="selectEmployeeSalaryTab($event.itemData)"></dx-tabs>
+          <div class="dx-fieldset">
+
+            <div *ngIf="employeeSalaryTabFlag == true; else approvedSalaryFlag">
+              <div class="dx-field">
+
+                <div class="row">
+                  <div class="col-sm-12">
+
+                    <div class="cardPayrollForm">
+                      <form action="your-action" (submit)="onEmployeePayrollFilter(employeeePayrollFilterData)">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <dx-form id="form" [(formData)]="employeeePayrollFilterData" [colCount]="1" [readOnly]="false"
+                              [showColonAfterLabel]="true" [showValidationSummary]="true" validationGroup="customerData">
+
+                              <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'MMM , yyyy', minZoomLevel: 'decade' , maxZoomLevel: 'year', pickerType : 'date',  showClearButton: 'true' }">
+                                <dxi-validation-rule type="required"></dxi-validation-rule>
+                              </dxi-item>
+
+                            </dx-form>
+                          </div>
+                          <div class="col-sm-1 text-left">
+                            <dx-button text="Filter" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                          </div>
+                          <div class="col-sm-1" style="padding-top: 7px;">
+                            Office:
+                          </div>
+                          <div class="col-sm-3">
+                             <dx-select-box [dataSource]="officeDropdownList" placeholder="Choose Office" (onItemClick)="onOfficeSelected($event.itemData.OfficeId)"
+                            displayExpr="OfficeName" valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
+                        </dx-select-box>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
+                <br>
+
+                <div class="row">
+                  <div class="col-sm-4"></div>
+                  <div class="col-sm-4">
+
+                    <div class="thumbnail card left-search-panel filter" *ngIf="isEditingAllowed">
+                      <div class="caption text-center">
+                        <div class="row">
+
+                          <dx-button text="Save" (click)="onSaveConfirmationPopup()"></dx-button>
+                          <dx-button text="Approve" [disabled]="!selectedRowsList?.length" (click)="onApproveConfirmationPopup()"></dx-button>
+
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="col-sm-4"></div>
+                </div>
+
+
+
+                <div id="hourlyBased">
+                  <br>
+                  <div class="main-paymentByHourlyBased">
+
+                    <br>
+
+                    <dx-data-grid id="gridContainer" [dataSource]="employeePayrollByHourlyBased"
+                      [allowColumnReordering]="true" [allowColumnResizing]="true" [columnAutoWidth]="true"
+                      [showRowLines]="true" (onSelectionChanged)="selectionChangedHandler($event)" (onRowUpdated)="onRowPreparedUpdateSalaryEvent($event)"
+                      [hoverStateEnabled]="true" (onRowUpdating)="onRowUpdating($event)">
+                      <dxo-editing [allowAdding]="false" [allowUpdating]="true" mode="cell" *ngIf="isEditingAllowed"></dxo-editing>
+                      <dxo-selection mode="multiple" showCheckBoxesMode="always"></dxo-selection>
+                      <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                      <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                      <dxi-column dataField="EmployeeId" [visible]='false' [allowEditing]="false">
+                      </dxi-column>
+
+                      <dxi-column caption="More Details" cellTemplate="MoreDetails" [allowEditing]="false"></dxi-column>
+                      <div *dxTemplate="let data of 'MoreDetails'">
+                        <span>
+                          <i class="fa fa-info-circle" (click)="onRowClickHourlyBased(data.key)"></i>
+                        </span>
+                      </div>
+
+                      <dxi-column dataField="EmployeeName" caption="EmployeeName" [allowEditing]="false" cellTemplate="CellTemplateEdit"></dxi-column>
+                      <div *dxTemplate="let data of 'CellTemplateEdit'">
+                        <a href="javascript:void(0)" (click)="onEmployeeNameClicked(data)">{{data.data.EmployeeName}}</a>
+                      </div>
+                      <dxi-column dataField="EmployeeCode" [allowEditing]="false"> </dxi-column>
+
+                      <dxi-column dataField="CurrencyId" caption="Currency" [allowEditing]="false">
+                        <dxo-lookup [dataSource]="currencyTypeDropdown" valueExpr="CurrencyId" displayExpr="CurrencyName"
+                          valueExpr="CurrencyId"></dxo-lookup>
+                      </dxi-column>
+
+                      <dxi-column dataField="TotalWorkHours" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="PresentDays" caption="Present Hours" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="WorkingMinutes" caption="Present Minutes" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="OverTimeHours" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="OvertimeMinutes" caption="Overtime Minutes" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="LeaveHours" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="TotalGeneralAmount" caption="Hourly Rate" [allowEditing]="false">
+                      </dxi-column>
+                      <dxi-column dataField="TotalAllowance" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="TotalDeduction" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="PensionAmount" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="SalaryTax" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="GrossSalary" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="NetSalary" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="AdvanceAmount" [allowEditing]="false"> </dxi-column>
+
+                      <dxi-column dataField="IsAdvanceApproved" caption="Advance Approved" cellTemplate="IsAdvanceApproved"
+                        [allowEditing]="false"></dxi-column>
+                      <div *dxTemplate="let cell of 'IsAdvanceApproved'">
+                        <div *ngIf="cell.data.IsAdvanceApproved ==true ; else isAdvanceAmountNullHourly">
+                          <div *ngIf="cell.value == true; else isApprovedHourlyFalse"> Approved </div>
+                          <ng-template #isApprovedHourlyFalse>
+                            <dx-switch [value]="cell.value" offText="No" onText="Yes" (onValueChanged)="onIsAdvanceApprovedValueChanged(cell, $event, 2)"></dx-switch>
+                          </ng-template>
+                        </div>
+                        <ng-template #isAdvanceAmountNullHourly> Not Approved </ng-template>
+                      </div>
+                     
+                      <dxi-column dataField="AdvanceRecoveryAmount" [allowEditing]="IsAdvanceRecovery"> </dxi-column>
+
+
+                      <dxi-column dataField="IsAdvanceRecovery" caption="Advance Recovery" cellTemplate="IsAdvanceRecovery"
+                        [allowEditing]="false" (setCellValue)="onSetCellValue()"></dxi-column>
+                      <div *dxTemplate="let cell of 'IsAdvanceRecovery'">
+                        <div *ngIf="cell.data.IsAdvanceRecovery == false ; else isAdvanceAmountRecoveryNull">
+                          <div *ngIf="cell.value == false; else isApprovedHourlyRecoveryFalse">
+                            <dx-switch [value]="cell.value" offText="No" onText="Yes" (onValueChanged)="onIsAdvanceRecoveryApprovedValueChanged(cell, $event, 2)"></dx-switch>
+                          </div>
+                          <ng-template #isApprovedHourlyRecoveryFalse>
+                            <dx-switch [value]="cell.value" offText="No" onText="Yes" (onValueChanged)="onIsAdvanceRecoveryApprovedValueChanged(cell, $event, 2)"></dx-switch>
+                          </ng-template>
+                        </div>
+                        <ng-template #isAdvanceAmountRecoveryNull>
+                          <dx-switch [value]="cell.value" offText="No" onText="Yes" (onValueChanged)="onIsAdvanceRecoveryApprovedValueChanged(cell, $event, 2)"></dx-switch>
+                        </ng-template>
+                      </div>
+
+                      <dxi-column dataField="IsApproved" caption="Approved" [allowEditing]="false">
+                      </dxi-column>
+
+                      <dxo-paging [pageSize]="10"></dxo-paging>
+
+                    </dx-data-grid>
+
+                    <br>
+                    <br>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <ng-template #approvedSalaryFlag>
+              <div class="dx-field">
+
+                <div class="row">
+                  <div class="col-sm-12">
+
+                    <!-- <div class="employee-payroll-form dxagninptblk">
+                      <form action="your-action" (submit)="onEmployeeApprovedSalaryFilter(employeeApprovedSalaryFormFilter)">
+                        <br>
+                        <div class="dv-col-dt">
+                          <div class="row">
+
+                            <div class="col-md-10">
+                              <dx-form id="form" [(formData)]="employeeApprovedSalaryFormFilter" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true"
+                                [showValidationSummary]="true" validationGroup="customerData"> -->
+
+                    <!-- <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyTypeDropdown, displayExpr: 'CurrencyName', valueExpr: 'CurrencyId', showClearButton:'true'  }">
+                                  <dxo-label text="Currency"></dxo-label>
+                                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                                </dxi-item> -->
+                    <!-- <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'MMM , yyyy', minZoomLevel: 'decade' , maxZoomLevel: 'year', pickerType : 'date', max: currentDate,  showClearButton: 'true' }">
+                                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                                </dxi-item>
+
+                              </dx-form>
+                            </div>
+                            <br>
+                            <div class="col-md-2 text-center dv-col-btn">
+                              <dx-button text="Filter" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div> -->
+
+                    <div class="cardPayrollForm">
+                      <form action="your-action" (submit)="onEmployeeApprovedSalaryFilter(employeeApprovedSalaryFormFilter)">
+                        <div class="row">
+
+                          <div class="col-sm-4">
+                            <dx-form id="form" [(formData)]="employeeApprovedSalaryFormFilter" [colCount]="1"
+                              [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                              validationGroup="customerData">
+                              <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'MMM , yyyy', minZoomLevel: 'decade' , maxZoomLevel: 'year', pickerType : 'date',  showClearButton: 'true' }">
+                                <dxi-validation-rule type="required"></dxi-validation-rule>
+                              </dxi-item>
+
+                            </dx-form>
+                          </div>
+                          <div class="col-sm-1 text-left">
+                            <dx-button text="Filter" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                          </div>
+                          <div class="col-sm-3 text-left">
+                              <dx-button text="Disapprove Payroll" [disabled]="!employeeList?.EmployeeList?.length" (click)="showDisapproveConfirmationPopup()" *ngIf="isEditingAllowed"></dx-button>
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
+
+                <br>
+
+                <div *ngIf="hourlyBasedSalarySlipFlag; else salarySlipReport">
+
+                  <dx-data-grid id="gridContainer" [dataSource]="approvedSalaryDataSource" [allowColumnReordering]="true"
+                    [allowColumnResizing]="true" [columnAutoWidth]="true" [showRowLines]="true" [hoverStateEnabled]="true" 
+                    (onSelectionChanged)="disapproveSalarySelectionChanged($event)">
+                    <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch" *ngIf="isEditingAllowed"></dxo-editing>
+                    <dxo-selection mode="multiple" showCheckBoxesMode="always"></dxo-selection>
+                    <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                    <dxi-column dataField="EmployeeId" [visible]='false'>
+                    </dxi-column>
+
+                    <dxi-column caption="More Details" cellTemplate="MoreDetails"></dxi-column>
+                    <div *dxTemplate="let data of 'MoreDetails'">
+                      <span>
+                        <i class="fa fa-info-circle" (click)="onRowClickApprovedSalaryHourlyBased(data.key)"></i>
+                      </span>
+                    </div>
+
+                    <dxi-column dataField="EmployeeName" caption="EmployeeName" cellTemplate="CellTemplateEdit"></dxi-column>
+                    <div *dxTemplate="let data of 'CellTemplateEdit'">{{data.data.EmployeeName}}
+                    </div>
+                    <dxi-column dataField="EmployeeCode"> </dxi-column>
+                    <dxi-column dataField="CurrencyId" caption="Currency">
+                      <dxo-lookup [dataSource]="currencyTypeDropdown" valueExpr="CurrencyId" displayExpr="CurrencyName"
+                        valueExpr="CurrencyId"></dxo-lookup>
+                    </dxi-column>
+                    <dxi-column dataField="TotalWorkHours" caption="Total Duration"> </dxi-column>
+                    <dxi-column dataField="PresentDays" caption="Present Hours"> </dxi-column>
+                    <dxi-column dataField="OverTimeHours"> </dxi-column>
+                    <dxi-column dataField="LeaveHours"> </dxi-column>
+                    <!-- <dxi-column dataField="TotalGeneralAmount" caption="Monthly Salary"> </dxi-column> -->
+                    <dxi-column dataField="TotalAllowance"> </dxi-column>
+                    <dxi-column dataField="TotalDeduction"> </dxi-column>
+                    <dxi-column dataField="PensionAmount"> </dxi-column>
+                    <dxi-column dataField="SalaryTax"> </dxi-column>
+                    <dxi-column dataField="GrossSalary"> </dxi-column>
+                    <dxi-column dataField="NetSalary"> </dxi-column>
+                    <dxi-column dataField="AdvanceAmount"> </dxi-column>
+                    <dxi-column dataField="AdvanceRecoveryAmount"> </dxi-column>
+
+                    <dxi-column dataField="GeneratePayment" caption="Generate Payment" cellTemplate="generatePaymentTemplate" *ngIf="isEditingAllowed"></dxi-column>
+                    <div *dxTemplate="let data of 'generatePaymentTemplate'">
+                      <!-- <div *ngIf="data.value == true"> -->
+                      <span>
+                        <i class="fa fa-file" (click)="onClickGenaratePaymentLink(data.key)"></i>
+                      </span>
+                      <!-- </div> -->
+                    </div>
+
+                    <!-- <dxi-column dataField="IsAdvanceApproved" caption="Advance Approved" cellTemplate="IsAdvanceApproved"></dxi-column>
+                      <div *dxTemplate="let cell of 'IsAdvanceApproved'">
+                        <div *ngIf="cell.data.AdvanceAmount != 0 ; else isAdvanceAmountNullHourly">
+                          <div *ngIf="cell.value == true; else isApprovedHourlyFalse"> Approved </div>
+                          <ng-template #isApprovedHourlyFalse>
+                            <dx-switch [value]="cell.value" offText="No" onText="Yes" (onValueChanged)="onIsAdvanceApprovedValueChanged(cell, $event, 2)"></dx-switch>
+                          </ng-template>
+                        </div>
+                        <ng-template #isAdvanceAmountNullHourly> - </ng-template>
+                      </div>
+
+                      <dxi-column dataField="IsApproved" caption="Salary Slip" cellTemplate="IsApproved"></dxi-column>
+                      <div *dxTemplate="let data of 'IsApproved'">
+                        <div *ngIf="data.value == true">
+                          <span>
+                            <i class="fa fa-file" (click)="onClickSalarySlip(data.key)"></i>
+                          </span>
+                        </div>
+                      </div>
+                      <dxi-column dataField="AdvanceRecoveryAmount"> </dxi-column>
+                      <dxi-column dataField="IsAdvanceRecovery" caption="Advance Recovery" cellTemplate="IsAdvanceRecovery"></dxi-column>
+                      <div *dxTemplate="let cell of 'IsAdvanceRecovery'">
+                        <div *ngIf="cell.data.AdvanceRecoveryAmount != 0 ; else isAdvanceAmountRecoveryNull">
+                          <div *ngIf="cell.value == true; else isApprovedHourlyRecoveryFalse">
+                            <dx-switch [value]="!cell.value" offText="No" onText="Yes" (onValueChanged)="onIsAdvanceRecoveryApprovedValueChanged(cell, $event, 2)"></dx-switch>
+                          </div>
+                          <ng-template #isApprovedHourlyRecoveryFalse>
+                            Approved
+                          </ng-template>
+                        </div>
+                        <ng-template #isAdvanceAmountRecoveryNull> - </ng-template>
+                      </div>
+
+                      <dxi-column dataField="IsApproved" caption="Approved">
+                      </dxi-column> -->
+
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+
+                  </dx-data-grid>
+                </div>
+
+                <ng-template #salarySlipReport>
+                  <br>
+
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+
+                          <div class="row">
+                            <div class="col-sm-10">
+                              <h3 class="panel-title text-left">Salary Slip</h3>
+                            </div>
+                            <div class="col-sm-2 text-right">
+                              <div class="emp-close-btn" (click)="closeSalarySlipDetails()">
+                                <i class="fa fa-times-circle" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="panel-body">
+
+
+
+
+                          <div class="salarySlipDetail row">
+                            <div class="col-sm-6 text-left">
+                              <dx-button (click)="generatePdf()" text="Export Pdf"></dx-button>
+                            </div>
+
+                          </div>
+
+                          <br>
+                          <br>
+                          <!-- pdf -->
+                          <!-- <div style="width:960px; margin:0 auto; font-family:times new roman; font-size:14px;"> -->
+                          <div id="salarySlipReportPdf" style="margin:0 auto; font-family: arial; font-size:14px;">
+
+                            <table cellpadding="0" width="100%" height="100%" cellspacing="0" style="padding:20px;">
+                              <tr>
+                                <td style="padding:10px;">
+                                  <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td align="center" style="padding-bottom:10px;">
+                                        <img src="assets/images/reportLogo.png" width="100" height="100" />
+                                        <p style="font-size:20px; font-weight:600; margin-bottom:10px;">COORDINATION OF
+                                          HUMANITARIAN
+                                          ASSISTANCE</p>
+                                        <p style="font-size:20px; margin:0px;  font-weight:600;">MONTHLY
+                                          PAYSLIP/VOUCHER</p>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                          <tr>
+                                            <td style="border-top:2px solid #555; padding-left:20px; padding-top:14px;">
+                                              <strong style="margin-right:20px;">Payment Date:</strong> {{currentDate |
+                                              date}}
+                                            </td>
+                                            <td style="border-top:2px solid #555;  padding-top:14px;">
+                                              <strong style="margin-right:20px;">Salary Month:</strong>
+                                              {{selectSalarySlipDateForm
+                                              != null ? selectSalarySlipDateForm.Month : 0 }}
+                                            </td>
+                                            <td style="border-top:2px solid #555;  padding-top:14px;">
+                                              <strong style="margin-right:20px;">Salary Year:</strong>
+                                              {{selectSalarySlipDateForm
+                                              != null ? selectSalarySlipDateForm.Year : 0000 }}
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <table width="100%" cellpadding="0" align="left" cellspacing="0" style="padding-top:14px;">
+                                          <tr>
+                                            <th style="border-top:2px solid #555; text-align:left; padding-top:12px;">
+                                              Employee Code
+                                            </th>
+                                            <th style="border-top:2px solid #555; text-align:left; padding-left:20px; padding-top:12px;">
+                                              Employee Name
+                                            </th>
+                                            <th style="border-top:2px solid #555;  text-align:left;padding-left:20px; padding-top:12px;">
+                                              Designation
+                                            </th>
+                                            <th style="border-top:2px solid #555;  text-align:left;padding-left:20px; padding-top:12px;">
+                                              Type
+                                            </th>
+                                            <th style="border-top:2px solid #555; text-align:left; padding-left:20px; padding-top:12px;">
+                                              Office
+                                            </th>
+                                            <th style="border-top:2px solid #555; text-align:left; padding-left:20px; padding-top:12px;">
+                                              Sex
+                                            </th>
+                                          </tr>
+                                          <tr>
+                                            <th style="padding-top:12px; color:#777; font-weight:normal; text-align:left;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].EmployeeCode
+                                              : xxxx}}
+                                            </th>
+                                            <th style="padding-left:20px; color:#777; font-weight:normal; text-align:left;padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].EmployeeName
+                                              : xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px; color:#777; font-weight:normal; text-align:left;padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Designation
+                                              : xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px;color:#777; font-weight:normal; text-align:left;padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Type :
+                                              xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px; color:#777; font-weight:normal;text-align:left; padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Office :
+                                              xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px; color:#777; font-weight:normal;text-align:left; padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Sex :
+                                              xxxxx}}
+                                            </th>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>
+                                        <table width="100%" cellpadding="0" align="left" cellspacing="0" style="padding-top:40px; padding-bottom:40px;">
+                                          <tr>
+                                            <th style="padding-bottom:10px;" colspan="9" align="center">Analytical
+                                              information</th>
+                                          </tr>
+                                          <tr>
+                                            <th style="text-align:center; padding-top:12px;">
+                                              B/Line
+                                            </th>
+                                            <th style="text-align:left; padding-left:20px; padding-top:12px;">
+                                              Program
+                                            </th>
+                                            <th style="text-align:left;padding-left:20px; padding-top:12px;">
+                                              Project
+                                            </th>
+                                            <th style="text-align:center;padding-left:20px; padding-top:12px;">
+                                              Job
+                                            </th>
+                                            <th style="text-align:center; padding-left:20px; padding-top:12px;">
+                                              Sector
+                                            </th>
+                                            <th style="text-align:center; padding-left:20px; padding-top:12px;">
+                                              Area
+                                            </th>
+                                            <th style="text-align:center;padding-left:20px; padding-top:12px;">
+                                              Account
+                                            </th>
+                                            <th style="text-align:center; padding-left:20px; padding-top:12px;">
+                                              Salary(%)
+                                            </th>
+                                            <th style="text-align:center; padding-left:20px; padding-top:12px;">
+                                              Salary
+                                            </th>
+                                          </tr>
+                                          <tr>
+                                            <th style="padding-top:12px; color:#777; font-weight:normal; text-align:center;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].BudgetLine :
+                                              xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px; color:#777; font-weight:normal; text-align:left;padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Program :
+                                              xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px; color:#777; font-weight:normal; text-align:left;padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].ProjectId :
+                                              xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px;color:#777; font-weight:normal; text-align:center;padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].JobId :
+                                              xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px; color:#777; font-weight:normal;text-align:center; padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Sector :
+                                              xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px; color:#777; font-weight:normal;text-align:center; padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Area :
+                                              xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px;color:#777; font-weight:normal; text-align:center;padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Account :
+                                              xxxxx}}
+                                            </th>
+                                            <th style="padding-left:20px; color:#777; font-weight:normal;text-align:center; padding-top:12px;">
+                                              {{employeeSalarySlipList != null ?
+                                              employeeSalarySlipList[0].SalaryPercentage : xxxxx}} %
+                                            </th>
+                                            <th style="padding-left:20px; color:#777; font-weight:normal;text-align:center; padding-top:12px;">
+                                              {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Salary :
+                                              xxxxx}}
+                                            </th>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding-top:30px; text-align:left;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                          <tr>
+                                            <td width="25%" valign="top">
+                                              <table width="100%" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                  <td>
+                                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                                      <tr>
+                                                        <th style="padding-bottom:15px; vertical-align:top;">Basic
+                                                          Salary</th>
+                                                        <td style="color:#777777; vertical-align:top;">
+                                                          {{employeeSalarySlipList
+                                                          != null ? employeeSalarySlipList[0].BasicSalary : xxxxx}}
+                                                        </td>
+                                                      </tr>
+                                                      <tr>
+                                                        <th style="padding-bottom:15px; vertical-align:top;">Currency
+                                                          Code</th>
+                                                        <td style="color:#777777; vertical-align:top;">
+                                                          {{employeeSalarySlipList
+                                                          != null ? employeeSalarySlipList[0].CurrencyCode : xxxxx}}
+                                                        </td>
+                                                      </tr>
+                                                      <tr>
+                                                        <th style="padding-bottom:15px; vertical-align:top;">Attendance</th>
+                                                        <td style="color:#777777; vertical-align:top;">
+                                                          {{employeeSalarySlipList
+                                                          != null ? employeeSalarySlipList[0].Attendance : xxxxx}}
+                                                        </td>
+                                                      </tr>
+                                                      <tr>
+                                                        <th style="padding-bottom:15px; vertical-align:top;">Absents</th>
+                                                        <td style="color:#777777; vertical-align:top;">
+                                                          {{employeeSalarySlipList
+                                                          != null ? employeeSalarySlipList[0].Absentese : xxxxx}}
+                                                        </td>
+                                                      </tr>
+                                                      <tr>
+                                                        <th style="padding-bottom:15px; vertical-align:top;">Salary</th>
+                                                        <td style="color:#777777; vertical-align:top;">
+                                                          {{employeeSalarySlipList
+                                                          != null ? employeeSalarySlipList[0].Salary : xxxxx}}
+                                                        </td>
+                                                      </tr>
+                                                    </table>
+                                                  </td>
+                                                </tr>
+                                              </table>
+                                            </td>
+                                            <td width="10%"></td>
+                                            <td style="vertical-align:top;">
+
+
+
+                                              <table width="100%" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                  <td colspan="10" style="text-align:center; padding-bottom:4px; font-size:15px; font-weight:600; border-bottom:2px solid #555;">Allowance</td>
+                                                </tr>
+                                                <tr>
+                                                  <th *ngFor="let item of employeeSalarySlipList" style="text-align:left; padding-left:20px; padding-top:12px;">
+                                                    {{item.HeadTypeId == 1 ? item.SalaryHead : xxxxx}}
+                                                  </th>
+                                                </tr>
+                                                <tr>
+                                                  <td *ngFor="let item of employeeSalarySlipList" style="padding-left:20px; color:#777; font-weight:normal; text-align:left;padding-top:12px;">
+                                                    {{item.HeadTypeId == 1 ? item.MonthlyAmount : xxxxx}}
+                                                  </td>
+                                                </tr>
+                                              </table>
+
+                                              <table width="100%" style="padding-top:15px;" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                  <td colspan="10" style="text-align:center; padding-bottom:4px; font-size:15px; font-weight:600; border-bottom:2px solid #555;">Dedication</td>
+                                                </tr>
+                                                <tr>
+                                                  <th *ngFor="let item of employeeSalarySlipList" style="text-align:left; padding-left:20px; padding-top:12px;">
+                                                    {{item.HeadTypeId == 2 ? item.SalaryHead : xxxxx}}
+                                                  </th>
+                                                </tr>
+                                                <tr>
+                                                  <td *ngFor="let item of employeeSalarySlipList" style="padding-left:20px; color:#777; font-weight:normal; text-align:left;padding-top:12px;">
+                                                    {{item.HeadTypeId == 2 ? item.MonthlyAmount : xxxxx}}
+                                                  </td>
+                                                </tr>
+                                              </table>
+
+
+
+                                              <table width="100%" style="padding-top:15px;" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                  <th style="text-align:center; padding-top:12px;">
+                                                    Gross Salary
+                                                  </th>
+                                                  <th style="text-align:left; color:#777; padding-left:20px; padding-top:12px;">
+                                                    {{employeeSalarySlipList != null ?
+                                                    employeeSalarySlipList[0].GrossSalary : xxxxx}}
+                                                  </th>
+                                                  <th style="text-align:left;padding-left:20px; font-size:18px; padding-top:12px;">
+                                                    Net Salary for Month
+                                                  </th>
+                                                  <th style="text-align:center;padding-left:20px; padding-top:12px;">
+                                                    {{employeeSalarySlipList != null ?
+                                                    employeeSalarySlipList[0].CurrencyCode : xxxxx}}
+                                                  </th>
+                                                  <th style="text-align:center; padding-left:20px; padding-top:12px;">
+                                                    {{employeeSalarySlipList != null ?
+                                                    employeeSalarySlipList[0].NetSalary : xxxxx}}
+                                                  </th>
+                                                </tr>
+
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td style="font-weight:600; padding-top:30px; padding-bottom:10px;">Other Desc:
+                                      </td>
+                                      {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Description : ""}}
+                                    </tr>
+                                    <tr>
+                                      <td style="padding-top:15px; color:#555;">This is to acknowledge that I have
+                                        received
+                                        an amount of {{employeeSalarySlipList != null ?
+                                        employeeSalarySlipList[0].CurrencyCode
+                                        : xxxxx}} {{employeeSalarySlipList != null ? employeeSalarySlipList[0].Salary :
+                                        xxxxx}}
+                                        and I am fully aware and agreed with all of the above mentioned printed
+                                        information</td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding-top:10px;">
+                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td style="font-weight:600; padding-right:20px; padding-bottom:10px; width: 130px;">Employee
+                                              Code</td>
+                                            <td style="color:#555;">{{employeeSalarySlipList != null ?
+                                              employeeSalarySlipList[0].EmployeeCode
+                                              : xxxxx}}
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td style="font-weight:600; padding-right:20px;  width: 130px;">Employee
+                                              Name</td>
+                                            <td style="color:#555;">{{employeeSalarySlipList != null ?
+                                              employeeSalarySlipList[0].EmployeeName
+                                              : xxxxx}}
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td colspan="2" style=" text-align:left; padding-right:20px; padding-top:40px; padding-bottom:50px; font-size:18px;">Signature</td>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                              <br>
+                              <br>
+                            </table>
+
+
+                          </div>
+
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+
+              </div>
+            </ng-template>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<ngx-loading [show]="empSalaryLoading"></ngx-loading>
+
+
+
+
+<!-- More Details -->
+<dx-popup class="popup" fullScreen="true" [width]="1000" [showTitle]="true" title="Employee Details" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="employeeMoreDetailsPopup">
+  <div *dxTemplate="let data of 'content'" style="text-align: unset;" class="emp-slry-detail-popup">
+
+    <dx-scroll-view #scrollView id="scrollview" [height]="500" [scrollByContent]="true"
+      [scrollByThumb]="true" showScrollbar="onHover" [bounceEnabled]="false">
+
+      <div class="dv-nw-tab">
+        <ul class="nav nav-tabs">
+          <li *ngFor="let item of showInfoTabsMain" (click)="openInfoTabs(item.id)" [ngClass]="{'active': item.id == openInfoTab}">
+            <a style="cursor: pointer;" data-toggle="tab">{{item.text}}</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div *ngIf="openInfoTab==1" class="tab-pane fade in active">
+            <app-professional-info [employeeId]="employeeId"></app-professional-info>
+          </div>
+          <div *ngIf="openInfoTab==2" class="tab-pane fade in active">
+            <app-history [employeeId]="employeeId"></app-history>
+          </div>
+          <div *ngIf="openInfoTab==3" class="tab-pane fade in active">
+            <app-leave-info [employeeId]="employeeId"></app-leave-info>
+          </div>
+          <div *ngIf="openInfoTab==4" class="tab-pane fade in active">
+            <app-health-info [employeeId]="employeeId"></app-health-info>
+          </div>
+          <div *ngIf="openInfoTab==5" class="tab-pane fade in active">
+            <div class="mainScheduler">
+              <app-scheduler [employeeId]="employeeId"></app-scheduler>
+            </div>
+          </div>
+          <div *ngIf="openInfoTab==6" class="tab-pane fade in active">
+            <app-payroll [employeeId]="employeeId"></app-payroll>
+          </div>
+          <div *ngIf="openInfoTab==7" class="tab-pane fade in active">
+            <app-monthly-attendance-report [employeeId]="employeeId"></app-monthly-attendance-report>
+          </div>
+
+        </div>
+      </div>
+
+    </dx-scroll-view>
+  </div>
+</dx-popup>
+
+
+<!-- Hourly based More Detail popup -->
+<dx-popup class="popup" [width]="1000" [showTitle]="true" title="Employee Details" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="hourlyBasedMoreDetailsPopup">
+  <div *dxTemplate="let data of 'content'" style="text-align: unset;" class="emp-slry-detail-popup">
+
+    <dx-scroll-view [height]="500" showScrollbar="always" direction="both">
+      <form action="your-action" (submit)="onEmpSalaryFormSubmit(empSalaryForm)">
+
+        <dx-form id="form" [formData]="empSalaryForm" [readOnly]="false" [colCount]="1" [showColonAfterLabel]="true"
+          [showValidationSummary]="true" validationGroup="empSalaryFormValidationDetails">
+
+
+          <dxi-item itemType="group" [colSpan]="1" [colCount]="3">
+            <dxi-item dataField="PensionRate" editorType="dxNumberBox" [colSpan]="1" [editorOptions]="{ value: empSalaryForm.PensionRate }">
+              <dxo-label text="Pension Rate"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <!-- <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [editorOptions]="{readOnly: true, dataSource: currencyTypeDropdown, value: empSalaryForm.CurrencyId, displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId', searchEnabled: true, placeholder: 'Select Currency'}">
+            <dxo-label text="Currency11"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="PaymentType" editorType="dxSelectBox" [editorOptions]="{readOnly: true, dataSource: salaryTypeModel, value: empSalaryForm.PaymentType, displayExpr: 'Type', valueExpr: 'Id', placeholder: 'Select Salary Type'}">
+            <dxo-label text="Salary Type"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item> -->
+
+
+          </dxi-item>
+          <dxi-item itemType="group">
+            <dx-data-grid id="gridContainer" keyExpr="PayrollId" [dataSource]="hourlyBasedSetPayrollList.employeepayrolllist"
+              [allowColumnReordering]="true" [allowColumnResizing]="true" [showRowLines]="true">
+              <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+              <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+
+              <dxi-column dataField="SalaryHeadType" [width]="160" [editorOptions]="{disabled: true}"></dxi-column>
+              <dxi-column dataField="SalaryHead" [editorOptions]="{disabled: true}"></dxi-column>
+              <dxi-column dataField="MonthlyAmount" [width]="150"></dxi-column>
+              <dxi-column dataField="AccountNo" [width]="150" [visible]="false"></dxi-column>
+              <dxi-column dataField="TransactionTypeId" [width]="150" [visible]="false"></dxi-column>
+
+              <dxo-paging [pageSize]="10"></dxo-paging>
+            </dx-data-grid>
+          </dxi-item>
+
+        </dx-form>
+        <!-- <div class="btn-grp-wrap">
+        <dx-button text="Save" type="success" validationGroup="empSalaryFormValidationDetails" [useSubmitBehavior]="true"></dx-button>
+        <dx-button text="Cancel" (onClick)="hideHourlyBasedMoreDetailsPopup()"></dx-button>
+      </div> -->
+
+      </form>
+    </dx-scroll-view>
+  </div>
+</dx-popup>
+
+
+
+<!-- Approved Salary Hourly based More Detail popup -->
+<dx-popup class="popup" minHeight="550" [width]="1000" [showTitle]="true" title="Payroll Details" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="approvedSalaryMoreDetailsPopup">
+  <div *dxTemplate="let data of 'content'" style="text-align: unset;" class="emp-slry-detail-popup">
+    <dx-scroll-view showScrollbar="always" direction="both">
+
+      <form action="your-action" (submit)="onEmpSalaryFormSubmit(empSalaryForm)">
+
+        <dx-form id="form" [formData]="empSalaryForm" [readOnly]="true" [colCount]="1" [showColonAfterLabel]="true"
+          [showValidationSummary]="true" validationGroup="empSalaryFormValidationDetails">
+
+
+          <dxi-item itemType="group" [colSpan]="1" [colCount]="3">
+            <dxi-item dataField="PensionRate" editorType="dxNumberBox" [colSpan]="1" [editorOptions]="{ value: empSalaryForm.PensionRate }">
+              <dxo-label text="Pension Rate"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+          </dxi-item>
+          <dxi-item itemType="group">
+            <dx-data-grid id="gridContainer" keyExpr="PayrollId" [dataSource]="approvedHourlySalaryDataSource.EmployeePayrollList"
+              [allowColumnReordering]="true" [allowColumnResizing]="true" [showRowLines]="true">
+              <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+              <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+              <dxi-column dataField="SalaryHeadType" [width]="160" [editorOptions]="{readOnly: true}"></dxi-column>
+              <dxi-column dataField="SalaryHead" [editorOptions]="{readOnly: true}"></dxi-column>
+              <dxi-column dataField="MonthlyAmount" [width]="150" [editorOptions]="{readOnly: true}"></dxi-column>
+              <dxi-column dataField="AccountNo" [width]="150" [visible]="true" [editorOptions]="{readOnly: true}">
+                  <dxo-lookup [dataSource]="levelFourAccounts" value="AccountNo" valueExpr="AccountCode" displayExpr="AccountName">
+                    </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="TransactionTypeId" [width]="150" [visible]="true" [editorOptions]="{readOnly: true}">
+                  <dxo-lookup [dataSource]="transactionTypeDropdown" valueExpr="TransactionTypeId" displayExpr="TransactionTypeName">
+                    </dxo-lookup>
+              </dxi-column>
+              
+              <dxo-paging [pageSize]="20"></dxo-paging>
+            </dx-data-grid>
+          </dxi-item>
+
+        </dx-form>
+        <!-- <div class="btn-grp-wrap">
+        <dx-button text="Cancel" (onClick)="hideApprovedSalaryMoreDetailsPopup()"></dx-button>
+      </div> -->
+
+      </form>
+    </dx-scroll-view>
+  </div>
+</dx-popup>
+
+
+<!-- Approve confirmation  -->
+<dx-popup class="popup" [width]="350" [height]="150" [showTitle]="true" title="Employee Salary Approval" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="approveConfirmationPopup">
+  <div *dxTemplate="let data of 'content'">
+    <p>Are You Sure ?</p>
+    <dx-button text="Yes" (click)="onApproveList()"></dx-button>
+    <dx-button text="No" (click)="hideApproveConfirmationPopup()"></dx-button>
+
+    <ngx-loading [show]="salaryApprovalConfirmLoading"></ngx-loading>
+  </div>
+</dx-popup>
+
+<!-- Save confirmation  -->
+<dx-popup class="popup" [width]="350" [height]="150" [showTitle]="true" title="Save Employee Salary" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="saveConfirmationPopup">
+  <div *dxTemplate="let data of 'content'">
+    <p>Are You Sure ?</p>
+    <dx-button text="Yes" (click)="onSaveEmployeeSalaryDataList()"></dx-button>
+    <dx-button text="No" (click)="hideSaveConfirmationPopup()"></dx-button>
+
+    <!-- <ngx-loading [show]="salarySaveConfirmLoading"></ngx-loading> -->
+  </div>
+</dx-popup>
+
+
+
+<!-- Salary Payment  -->
+<dx-popup class="popup" [width]="1100" [height]="650" [showTitle]="true" title="Salary Payment" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="salaryPaymentPopup">
+  <div *dxTemplate="let data of 'content'">
+
+    <dx-scroll-view showScrollbar="always" direction="both">
+      <app-employee-salary-slip [employeeSalaryDetail]="employeeSalaryDetail" [levelFourAccounts]="levelFourAccounts"
+        [employeeId]="employeeId" [PayrollMonth]="employeeApprovedSalaryFormFilter.Date" [inputDate]="employeeApprovedSalaryFormFilter.Date" (showEmployeeSalaryPaymentPopup)="showEmployeeSalaryPaymentPopup($event)"></app-employee-salary-slip>
+    </dx-scroll-view>
+
+  </div>
+</dx-popup>
+ 
+<!-- Disapprove Salary confirmation  -->
+<dx-popup class="popup" [width]="350" [height]="150" [showTitle]="true" title="Disapprove Employee Salary" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="disapproveConfirmationPopup">
+  <div *dxTemplate="let data of 'content'">
+    <p>Are You Sure ?</p>
+    <dx-button text="Yes" (click)="onDisapproveList()"></dx-button>
+    <dx-button text="No" (click)="hideDisapproveConfirmationPopup()"></dx-button>
+
+    <ngx-loading [show]="salaryApprovalConfirmLoading"></ngx-loading>
+  </div>
+</dx-popup>

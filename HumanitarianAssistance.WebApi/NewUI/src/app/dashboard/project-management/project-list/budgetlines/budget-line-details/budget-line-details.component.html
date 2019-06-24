@@ -1,0 +1,240 @@
+<div class="voucher-detail-main">
+  <div class="row">
+    <div class="col-sm-12" *ngIf="budgetDetailLoader; else budgetDetailtemplate">
+      <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+    </div>
+
+    <ng-template #budgetDetailtemplate>
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-6 font_large">
+            {{ budgetLineDetail.BudgetName }}
+          </div>
+          <div class="col-sm-6">
+            <ng-template #showeEditButton>
+              <button mat-icon-button class="pull-right" (click)="showEditDetail($event,true)">
+                <mat-icon aria-label="Edit">edit</mat-icon>
+              </button>
+            </ng-template>
+
+            <mat-spinner *ngIf="editBudgetDetailLoader; else showeEditButton" class="center_loader pull-right"
+              diameter="20">
+            </mat-spinner>
+          </div>
+        </div>
+        <br>
+        <div class="row border_bottom">
+          <div class="col-sm-4">
+            <div class="row">
+              <div class="col-sm-3">
+                <button mat-icon-button>
+                  <mat-icon class="green_color" aria-label="Example icon-button with a heart icon">credit_card
+                  </mat-icon>
+                </button>
+              </div>
+              <div class="col-sm-9">
+                <div class="row">
+                  <div class="col-sm-12">
+                    Initial Budget
+                  </div>
+
+
+                </div>
+                <div class="row">
+                  <div class="col-sm-3">
+                    {{ selectedCurrency | currencyCode
+                        : currencyList }}
+                  </div>
+                  <div class="col-sm-9">
+                    {{budgetLineDetail.InitialBudget}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="row">
+              <div class="col-sm-3">
+                <button mat-icon-button>
+                  <mat-icon class="red_color" aria-label="Example icon-button with a heart icon">arrow_downward
+                  </mat-icon>
+                </button>
+              </div>
+              <div class="col-sm-9">
+                Expenditure
+              </div>
+              <div class="col-sm-9">
+                {{ selectedCurrency | currencyCode
+                    : currencyList }}
+                {{getTotalExpenditures}}
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="row">
+              <div class="col-sm-3">
+                <button mat-icon-button>
+                  <mat-icon aria-label="Example icon-button with a heart icon">trending_up</mat-icon>
+                </button>
+              </div>
+              <div class="col-sm-9">
+                Balance
+              </div>
+              <div class="col-sm-9">
+                {{ selectedCurrency | currencyCode
+                    : currencyList }}
+                {{getTotalBalance()}}
+              </div>
+            </div>
+          </div>
+          <br>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="heading_budget_line">
+
+
+              <div *ngIf="showEditTempDetail">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <mat-form-field class="example-full-width">
+                      <input matInput type="number" placeholder="Initial Budget"
+                        [(ngModel)]="budgetLineDetail.InitialBudget" (change)="onBudgetLineValuechange()" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-4">
+                    <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Currency" [(ngModel)]="budgetLineDetail.CurrencyId"
+                        (selectionChange)="onBudgetLineValuechange()">
+                        <mat-option *ngFor="let item of currencyList" [value]="item.CurrencyId">
+                          {{ item.CurrencyName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+
+                  </div>
+                  <div class="col-sm-4">
+                    <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Project Job" [(ngModel)]="budgetLineDetail.ProjectJobId"
+                        (selectionChange)="onBudgetLineValuechange()">
+                        <mat-option *ngFor="let item of projectJobList" [value]="item.ProjectJobId">
+                          {{ item.ProjectJobName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <mat-form-field class="example-full-width">
+                      <textarea matInput placeholder="Budget Description" name="BudgetName"
+                        (change)="onBudgetLineValuechange()" [(ngModel)]="budgetLineDetail.BudgetName"></textarea>
+                    </mat-form-field>
+                  </div>
+                  <!-- <div class="col-sm-4">
+                    <mat-form-field class="example-full-width">
+                      <input matInput type="text" placeholder="Balance" (change)="onBudgetLineValuechange()" />
+                    </mat-form-field>
+                  </div> -->
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <mat-card [ngStyle]="scrollStyles">
+
+          <!-- <button mat-raised-button (click)="openAddBudgetLineDialog()">
+            Add
+          </button> -->
+
+          <div class="row">
+            <div *ngIf="transactionListLoaderFlag; else transactionListTemplate;" class="col-sm-12">
+              <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+            </div>
+
+            <ng-template #transactionListTemplate>
+              <div class=col-sm-12 *ngIf="noDataFoundFlag==true;">
+                No Data Found
+              </div>
+              <div class="col-sm-12 responsive_table-responsive">
+                <ul *ngFor="let item of transactionDetailList">
+                  <li> {{ item.UserName }} </li>
+                  <li> {{ item.CurrencyId | currencyCode : currencyList }}</li>
+                  <li *ngIf="item.Debit == 0"> credited {{ item.Credit }} </li>
+                  <li *ngIf="item.Credit == 0"> debited {{ item.Debit }}</li>
+                  <li> {{ item.TransactionDate | date: 'medium'  }}</li>
+                  <!-- <li >{{( item.Debit/budgetLineDetail.InitialBudget ) * 100}}%</li> -->
+                </ul>
+                <!-- <tbody>
+                  <tr>
+                    <td width="1%">
+                      <p class="width_8"></p>
+                    </td>
+                    <td width="15%">User Name</td>
+                    <td width="20%" text-align="text-center">CurrencyName</td>
+                    <td width="20%" text-align="text-center">Debit</td>
+                    <td width="10%" text-align="left">Credit</td>
+                    <td width="10%" text-align="left">TransactionDate</td>
+                  </tr>
+                  <tr *ngFor="let item of transactionDetailList"
+                    [ngClass]="{'selected': selectedBudgetLineId == item.BudgetLineId}">
+                    <td width="1%">
+                      <p class="width_8"></p>
+                    </td>
+                    <td width="15%" class="grey-text">
+                      {{ item.UserName }}
+                    </td>
+
+                    <td width="20%" class="text-center">
+                      {{ item.CurrencyId | currencyCode
+                          : currencyList }}
+                    </td>
+
+                    <td width="20%" text-align="text-center">
+                      <span *ngIf="creditAmountFlag"> credited {{ item.Credit }} </span>
+                    </td>
+                    <td width="15%" text-align="left">
+                      <span *ngIf="debitedAmountFlag"> debited {{ item.Debit }}</span>
+                    </td>
+
+
+
+                    <td width="20%" class="text-center">
+                      {{ item.TransactionDate }}
+                    </td>
+
+
+
+                    <td width="1%" class="text-center"><i *ngIf="selectedBudgetId == item.BudgetLineId"
+                        class="material-icons font-12"> arrow_forward_ios </i></td>
+                  </tr>
+
+                </tbody> -->
+
+
+                <!-- <mat-paginator
+                [length]="voucherFilter.totalCount"
+                [pageSize]="voucherFilter.pageSize"
+                [pageIndex]="voucherFilter.pageIndex"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                (page)="pageEvent($event)"
+              >
+              </mat-paginator> -->
+              </div>
+            </ng-template>
+          </div>
+
+        </mat-card>
+      </div>
+
+
+    </ng-template>
+  </div>
+</div>

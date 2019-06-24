@@ -1,0 +1,32 @@
+ /* #gridContainer {
+    height: 440px;
+}
+ .options {
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #f5f5f5;
+}
+ .caption {
+    font-size: 18px;
+    font-weight: 500;
+}
+ .option {
+    margin-top: 10px;
+}
+ .option > span {
+    margin-right: 10px;
+}
+ .option > .dx-selectbox {
+    display: inline-block;
+    vertical-align: middle;
+} */
+
+.main-vouchers{
+    background-color: #f8f9fa;
+}
+
+.card { box-shadow: 0 1px 2px 0  rgba(0,0,0,0.2); transition: 0.3s;}
+.card:hover { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); }
+
+.voucher-detail-hdr{border-bottom: 1px solid #ccc; padding-bottom: 20px;}
+.voucher-overflow{ overflow: hidden; text-overflow: ellipsis;}

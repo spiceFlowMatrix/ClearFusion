@@ -1,0 +1,194 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="main-heading clearfix">
+    </div>
+  </div>
+
+  <div class="col-sm-12">
+    <div class="dv-nw-tab">
+
+      <ul class="nav nav-tabs">
+        <li class="active">
+          <a data-toggle="tab" href="#markAttendance" (click)="markAttendanceTabClicked()">Mark Attendance</a>
+        </li>
+        <li>
+          <a data-toggle="tab" href="#previousAttendance" (click)="previousAttendanceTabClicked()">Edit Attendance</a>
+        </li>
+      </ul>
+
+      <!-- tab -->
+      <div class="tab-content">
+
+        <!-- Mark Attendance -->
+        <div id="markAttendance" class="tab-pane fade in active">
+          <div class="row">
+            <div class="col-sm-12 container-fluid">
+              <div *ngIf="isEditingAllowed">
+              <dx-button style="margin-top: 20px;" text="Save Attendance" [disabled]="!selectedEmployeeList?.length" type="success" (click)="saveEmployeeAttendance()"
+                *ngIf="isAttandanceMarked"></dx-button>
+              </div>
+              <div *ngIf="!isEditingAllowed" style="margin-top: 20px;">
+                <br>
+              </div>
+              <div class="dx-field">
+                    
+                <div class="dx-field-value">
+                  <dx-date-box (onValueChanged)="onDateSelectionChange($event.value, false)" [(value)]="markAttendenceDate" displayFormat="dd/MM/yyyy"
+                    [max]="currentDate" [min]="minDateValue" type="date">
+                  </dx-date-box>
+                </div>
+
+                <div class="dx-field-value">
+                <dx-select-box (onValueChanged)="onAttendanceGroupChange($event.value)" [dataSource]="attendanceGroupList" placeholder="Choose Attendance Group"
+                    displayExpr="Name" valueExpr="Id" [value]="AttendanceGroupId" [searchEnabled]="true">
+                </dx-select-box>
+                  </div>
+                  <div class="dx-field-value">
+                    <span style="padding-left: 66px;">Attendance Group:</span>
+                   </div>
+
+              </div>
+
+              <div *ngIf="isAttandanceMarked; else attandanceAlreadyMarked">
+                <div id="data-grid-dem">
+                  <br>
+
+                  <dx-data-grid id="gridContainer" [dataSource]="employeeAttendanceList" keyExpr="EmployeeId" height="600" [allowColumnReordering]="true"
+                    [allowColumnResizing]="true" [columnAutoWidth]="true" (onSelectionChanged)="selectionChangedHandler($event)"
+                    [showRowLines]="true">
+
+                    <dxo-selection [selectAllMode]="allMode" [showCheckBoxesMode]="checkBoxesMode" mode="multiple"></dxo-selection>
+
+                    <dxo-editing mode="batch" [allowUpdating]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+                    <dxo-scrolling mode="infinite"></dxo-scrolling>
+                    <dxi-column dataField="EmployeeId" [width]="120" [editorOptions]="{disabled: true}"></dxi-column>
+                    <dxi-column dataField="EmployeeCode" [editorOptions]="{disabled: true}"></dxi-column>
+                    <dxi-column dataField="EmployeeName" [editorOptions]="{disabled: true}"></dxi-column>
+                    <dxi-column dataField="InTime" dataType="datetime" format="HH:mm a" editorType="dxDateBox" [editorOptions]="{value: todaySetTime, type: 'time', pickerType : 'rollers' }">
+                    </dxi-column>
+                    <dxi-column dataField="OutTime" dataType="datetime" format="HH:mm a" editorType="dxDateBox" [editorOptions]="{value: todaySetTime, type: 'time' , pickerType : 'rollers' }">
+                      <dxi-validation-rule type="required"></dxi-validation-rule>
+                    </dxi-column>
+                    <dxi-column dataField="AttendanceTypeId" caption="Leave Reason">
+                      <dxo-lookup [dataSource]="attendanceTypeDropdown" displayExpr="AttendanceTypeName" valueExpr="AttendanceTypeId">
+                      </dxo-lookup>
+                    </dxi-column>
+                    <dxi-column dataField="Date" caption="Date" value="currentDate" [visible]="false" format="dd/MM/yyyy" type="date" dataType="date"
+                      editorType="dxDateBox" [editorOptions]="{value: currentDate}" [allowEditing]="false">
+                    </dxi-column>
+                    <dxi-column dataField="LeaveStatus" [visible]="false">
+                    </dxi-column>
+                    <dxi-column dataField="AttendanceId" [visible]="false">
+                    </dxi-column>
+
+                  </dx-data-grid>
+                </div>
+              </div>
+
+              <br>
+              <br>
+              <br>
+
+            </div>
+            <ng-template #attandanceAlreadyMarked>
+              <br>
+              <div class="row text-center">
+                <div class="col-sm-6 col-sm-offset-3">
+                  <div class="attandanceMarkedMsg">
+                    <div class="caption  alert alert-info" style="margin-top: 50px; padding: 20px;">
+                      <h4 style="margin-bottom: 0px;">Attendance has already marked !</h4>
+                      <br> To update attendance goto next Tab.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+
+          </div>
+        </div>
+
+        <!-- Previous Attendance -->
+        <div id="previousAttendance" class="tab-pane fade">
+          <div class="row">
+
+            <div class="col-sm-12 container-fluid">
+              <div class="dx-field">
+                <div *ngIf="isEditingAllowed">
+                <div class="dx-field-value">
+                  <dx-date-box (onValueChanged)="onDateSelectionChange($event.value, true)" [value]="previousAttendanceDate" [max]="currentDate"
+                    [min]="minDateValue" displayFormat="dd/MM/yyyy" type="date">
+                  </dx-date-box>
+                </div>
+              </div>
+              <div *ngIf="!isEditingAllowed" style="margin-top: 20px;">
+                  <br>
+                </div>
+              </div>
+
+              <div *ngIf="ispreviousAttendanceMarked; else previousAttendanceNotMarked">
+                <div id="data-grid-demo">
+
+                  <dx-data-grid id="gridContainer" [dataSource]="employeePreviousAttendanceList" keyExpr="EmployeeId" height="600" [allowColumnReordering]="true"
+                    [allowColumnResizing]="true" [columnAutoWidth]="true" (onRowUpdating)="onAttendenceChangeEmployeeById($event)"
+                    [showRowLines]="true">
+
+                    <dxo-editing mode="row" [allowUpdating]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+                    <dxo-scrolling mode="virtual"></dxo-scrolling>
+                    <dxi-column dataField="EmployeeId" [width]="120" [editorOptions]="{disabled: true}"></dxi-column>
+                    <dxi-column dataField="EmployeeCode" [editorOptions]="{disabled: true}"></dxi-column>
+                    <dxi-column dataField="EmployeeName" [editorOptions]="{disabled: true}"></dxi-column>
+                    <dxi-column dataField="InTime" [width]="150" dataType="datetime" format="HH:mm a" editorType="dxDateBox" [editorOptions]="{ type: 'time', pickerType : 'rollers' }">
+                    </dxi-column>
+                    <dxi-column dataField="OutTime" [width]="150" dataType="datetime" format="HH:mm a" editorType="dxDateBox" [editorOptions]="{ type: 'time', pickerType : 'rollers' }">
+                      <dxi-validation-rule type="required"></dxi-validation-rule>
+                    </dxi-column>
+                    <dxi-column dataField="AttendanceTypeId" caption="LeaveReason" [width]="125">
+                      <dxo-lookup [dataSource]="attendanceTypeDropdown" displayExpr="AttendanceTypeName" valueExpr="AttendanceTypeId">
+                      </dxo-lookup>
+                    </dxi-column>
+                    <dxi-column dataField="Date" caption="Date" [visible]="false" value="todayDate" type="date" dataType="date" editorType="dxDateBox"
+                      [editorOptions]="{value: previousAttendanceDate}" [allowEditing]="false">
+                    </dxi-column>
+                    <dxi-column dataField="LeaveStatus" [visible]="false">
+                    </dxi-column>
+                    <dxi-column dataField="AttendanceId" [visible]="false">
+                    </dxi-column>
+
+                  </dx-data-grid>
+
+                </div>
+              </div>
+
+              <br>
+              <br>
+              <br>
+            </div>
+            <ng-template #previousAttendanceNotMarked>
+              <br>
+              <div class="row text-center">
+                <div class="col-sm-6 col-sm-offset-3">
+                  <div class="previousAttendanceMsg">
+                    <div class="caption  alert alert-info" style="margin-top: 50px; padding: 20px;">
+                      <h4 style="margin-bottom: 0px;">Attendance not marked !</h4>
+                      <br> To mark attendance goto previous Tab.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+
+          </div>
+        </div>
+
+      </div>
+      <!-- tab close -->
+
+    </div>
+
+  </div>
+
+
+
+  <ngx-loading [show]="attendenceLoader"></ngx-loading>
+
+</div>

@@ -1,0 +1,452 @@
+<div class="panel-group" id="accordion">
+
+  <!-- Education -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#Education1">
+          Education
+        </a>
+      </h4>
+    </div>
+    <div id="Education1" class="panel-collapse collapse in">
+      <div class="panel-body">
+
+        <dx-data-grid id="gridContainer" [dataSource]="educationDS" [allowColumnReordering]="true" [allowColumnResizing]="true" [columnAutoWidth]="true"
+          (onEditingStart)="logEventEducation('EditingStart',$event)" (onInitNewRow)="logEventEducation('InitNewRow',$event)"
+          (onRowInserting)="logEventEducation('RowInserting',$event)" (onRowInserted)="logEventEducation('RowInserted',$event)"
+          (onRowUpdating)="logEventEducation('RowUpdating',$event)" (onRowUpdated)="logEventEducation('RowUpdated',$event)"
+          (onRowRemoving)="logEventEducation('RowRemoving',$event)" (onRowRemoved)="logEventEducation('RowRemoved',$event)">
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+          <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+
+          <dxi-column dataField="EmployeeEducationsId" caption="EmployeeEducationsId" [visible]="false"></dxi-column>
+
+          <dxi-column dataField="EmployeeID" caption="EmployeeID" [visible]="false" [editorOptions]="{ readOnly: true }"></dxi-column>
+
+          <dxi-column dataField="EducationFrom" dataType="date" format="dd/MM/yyyy" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+          <dxi-column dataField="EducationTo" dataType="date" format="dd/MM/yyyy" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="FieldOfStudy" caption="Field Of Study" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Institute" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Degree" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+        </dx-data-grid>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- OutsideOrganization -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#outsideOrganization">
+          Employment History Outside Of Organization
+        </a>
+      </h4>
+    </div>
+    <div id="outsideOrganization" class="panel-collapse collapse">
+      <div class="panel-body">
+
+        <dx-data-grid id="gridContainer" [dataSource]="employeeOutsideOrganizationDS" [allowColumnReordering]="true" [allowColumnResizing]="true"
+          [columnAutoWidth]="true" (onEditingStart)="logEventOutsideOrganization('EditingStart',$event)" (onInitNewRow)="logEventOutsideOrganization('InitNewRow',$event)"
+          (onRowInserting)="logEventOutsideOrganization('RowInserting',$event)" (onRowInserted)="logEventOutsideOrganization('RowInserted',$event)"
+          (onRowUpdating)="logEventOutsideOrganization('RowUpdating',$event)" (onRowUpdated)="logEventOutsideOrganization('RowUpdated',$event)"
+          (onRowRemoving)="logEventOutsideOrganization('RowRemoving',$event)" (onRowRemoved)="logEventOutsideOrganization('RowRemoved',$event)">
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+          <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+
+          <dxi-column dataField="EmployeeHistoryOutsideOrganizationId" caption="Outside Of Organization Id" [visible]="false"></dxi-column>
+
+          <dxi-column dataField="EmployeeID" caption="EmployeeID" [visible]="false" [editorOptions]="{ readOnly: true }"></dxi-column>
+
+          <dxi-column dataField="EmploymentFrom" dataType="date" format="dd/MM/yyyy" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+          <dxi-column dataField="EmploymentTo" dataType="date" format="dd/MM/yyyy" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Organization" caption="Organization" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="MonthlySalary" alignment="right" dataType="number">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="ReasonForLeaving" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Position" alignment="right">
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-column>
+
+        </dx-data-grid>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- OutsideCountry -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#outsideCountry">
+          Employment History Outside Of The Country
+        </a>
+      </h4>
+    </div>
+    <div id="outsideCountry" class="panel-collapse collapse">
+      <div class="panel-body">
+
+        <dx-data-grid id="gridContainer" [dataSource]="educationOutsideCountryDS" [allowColumnReordering]="true" [allowColumnResizing]="true"
+          [columnAutoWidth]="true" (onEditingStart)="logEventOutsideCountry('EditingStart',$event)" (onInitNewRow)="logEventOutsideCountry('InitNewRow',$event)"
+          (onRowInserting)="logEventOutsideCountry('RowInserting',$event)" (onRowInserted)="logEventOutsideCountry('RowInserted',$event)"
+          (onRowUpdating)="logEventOutsideCountry('RowUpdating',$event)" (onRowUpdated)="logEventOutsideCountry('RowUpdated',$event)"
+          (onRowRemoving)="logEventOutsideCountry('RowRemoving',$event)" (onRowRemoved)="logEventOutsideCountry('RowRemoved',$event)">
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+          <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+
+          <dxi-column dataField="EmployeeHistoryOutsideCountryId" caption="Employee History Outside Country Id" [visible]="false"></dxi-column>
+
+          <dxi-column dataField="EmployeeID" caption="EmployeeID" [visible]="false" [editorOptions]="{ readOnly: true }"></dxi-column>
+
+          <dxi-column dataField="EmploymentFrom" dataType="date" format="dd/MM/yyyy" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="EmploymentTo" dataType="date" format="dd/MM/yyyy" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Organization" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="MonthlySalary" alignment="right" dataType="number">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="ReasonForLeaving" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Position" alignment="right">
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-column>
+
+        </dx-data-grid>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CloseRelatives -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#closeRelatives">
+          Information Regarding Close Relatives
+        </a>
+      </h4>
+    </div>
+    <div id="closeRelatives" class="panel-collapse collapse">
+      <div class="panel-body">
+
+        <dx-data-grid id="gridContainer" [dataSource]="informatioRegardingCloseRelativesDS" [allowColumnReordering]="true" [allowColumnResizing]="true"
+          [columnAutoWidth]="true" (onEditingStart)="logEventCloseRelatives('EditingStart',$event)" (onInitNewRow)="logEventCloseRelatives('InitNewRow',$event)"
+          (onRowInserting)="logEventCloseRelatives('RowInserting',$event)" (onRowInserted)="logEventCloseRelatives('RowInserted',$event)"
+          (onRowUpdating)="logEventCloseRelatives('RowUpdating',$event)" (onRowUpdated)="logEventCloseRelatives('RowUpdated',$event)"
+          (onRowRemoving)="logEventCloseRelatives('RowRemoving',$event)" (onRowRemoved)="logEventCloseRelatives('RowRemoved',$event)">
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+          <dxo-filter-row [visible]="false"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+          <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+
+          <dxi-column dataField="EmployeeRelativeInfoId" caption="Close Relatives Id" [visible]="false"></dxi-column>
+
+          <dxi-column dataField="EmployeeID" caption="Close Relatives Id" [visible]="false" [editorOptions]="{readOnly: true}"></dxi-column>
+
+          <dxi-column dataField="Name" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Relationship" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Position" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Email" alignment="right" >
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+            <dxi-validation-rule type="email"></dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="PhoneNo" alignment="right" editorType="dxNumberBox" [editorOptions]="{  mode: 'number', minLength:10, maxLength: 14}">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+            <dxi-validation-rule type="custom" [validationCallback]="validateRange(1000000000, 99999999999999)" message="Out of range"></dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Organization" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+        </dx-data-grid>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- otherThanRelatives -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#otherThanRelatives">
+          Information About Three Referees Other Than Relatives
+        </a>
+      </h4>
+    </div>
+    <div id="otherThanRelatives" class="panel-collapse collapse">
+      <div class="panel-body">
+
+        <dx-data-grid id="gridContainer" [dataSource]="otherThanRelativesDS" [allowColumnReordering]="true" [allowColumnResizing]="true"
+          [columnAutoWidth]="true" (onEditingStart)="logEventotherThanRelatives('EditingStart',$event)" (onInitNewRow)="logEventotherThanRelatives('InitNewRow',$event)"
+          (onRowInserting)="logEventotherThanRelatives('RowInserting',$event)" (onRowInserted)="logEventotherThanRelatives('RowInserted',$event)"
+          (onRowUpdating)="logEventotherThanRelatives('RowUpdating',$event)" (onRowUpdated)="logEventotherThanRelatives('RowUpdated',$event)"
+          (onRowRemoving)="logEventotherThanRelatives('RowRemoving',$event)" (onRowRemoved)="logEventotherThanRelatives('RowRemoved',$event)">
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+          <dxo-filter-row [visible]="false"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+          <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+
+          <dxi-column dataField="EmployeeInfoReferencesId" caption="Other Than Relatives Id" [visible]="false"></dxi-column>
+
+          <dxi-column dataField="EmployeeID" caption="Close Relatives Id" [visible]="false" [editorOptions]="{readOnly: true}"></dxi-column>
+
+          <dxi-column dataField="Name" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Relationship" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Position" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Email" alignment="right" >
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+            <dxi-validation-rule type="email"></dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="PhoneNo" alignment="right" editorType="dxNumberBox" [editorOptions]="{  mode: 'number', minLength:10, maxLength: 14}">
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="custom" [validationCallback]="validateRange(1000000000, 99999999999999)" message="Out of range"></dxi-validation-rule>
+            </dxi-column>
+            
+          <dxi-column dataField="Organization" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+        </dx-data-grid>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- otherSkills -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#otherSkills">
+          Other Skills
+        </a>
+      </h4>
+    </div>
+    <div id="otherSkills" class="panel-collapse collapse">
+      <div class="panel-body">
+
+        <dx-data-grid id="gridContainer" [dataSource]="otherSkillsDS" [allowColumnReordering]="true" [allowColumnResizing]="true"
+          [columnAutoWidth]="true" (onEditingStart)="logEventOtherSkills('EditingStart',$event)" (onInitNewRow)="logEventOtherSkills('InitNewRow',$event)"
+          (onRowInserting)="logEventOtherSkills('RowInserting',$event)" (onRowInserted)="logEventOtherSkills('RowInserted',$event)"
+          (onRowUpdating)="logEventOtherSkills('RowUpdating',$event)" (onRowUpdated)="logEventOtherSkills('RowUpdated',$event)"
+          (onRowRemoving)="logEventOtherSkills('RowRemoving',$event)" (onRowRemoved)="logEventOtherSkills('RowRemoved',$event)">
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+          <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+
+          <dxi-column dataField="EmployeeOtherSkillsId" caption="Other Skills Id" [visible]="false"></dxi-column>
+
+          <dxi-column dataField="EmployeeID" caption="Close Relatives Id" [visible]="false" [editorOptions]="{readOnly: true}"></dxi-column>
+
+          <dxi-column dataField="TypeOfSkill" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="AbilityLevel" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Experience" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="Remarks" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+        </dx-data-grid>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- salaryBudgets -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#salaryBudgets">
+          Salary Budgets
+        </a>
+      </h4>
+    </div>
+    <div id="salaryBudgets" class="panel-collapse collapse">
+      <div class="panel-body">
+        <dx-data-grid id="gridContainer" [dataSource]="salaryBudgetsDS" [allowColumnReordering]="true" [allowColumnResizing]="true"
+          [columnAutoWidth]="true" (onEditingStart)="logEventSalaryBudgets('EditingStart',$event)" (onInitNewRow)="logEventSalaryBudgets('InitNewRow',$event)"
+          (onRowInserting)="logEventSalaryBudgets('RowInserting',$event)" (onRowInserted)="logEventSalaryBudgets('RowInserted',$event)"
+          (onRowUpdating)="logEventSalaryBudgets('RowUpdating',$event)" (onRowUpdated)="logEventSalaryBudgets('RowUpdated',$event)"
+          (onRowRemoving)="logEventSalaryBudgets('RowRemoving',$event)" (onRowRemoved)="logEventSalaryBudgets('RowRemoved',$event)">
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+          <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+
+          <dxi-column dataField="EmployeeSalaryBudgetId" caption="Salary Budget Id" [visible]="false"></dxi-column>
+
+          <dxi-column dataField="EmployeeID" caption="Close Relatives Id" [visible]="false" [editorOptions]="{readOnly: true}"></dxi-column>
+
+          <dxi-column dataField="Year" dataType="date" format="yyyy" alignment="right" [editorOptions]="{ maxZoomLevel: 'decade', minZoomLevel: 'decade'}">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="CurrencyId" caption="Currency">
+            <dxo-lookup [dataSource]="currencyDataSource" valueExpr="CurrencyId" displayExpr="CurrencyName"> </dxo-lookup>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="SalaryBudget" dataType="number" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+
+          <dxi-column dataField="BudgetDisbursed" dataType="number" alignment="right">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-column>
+        </dx-data-grid>
+      </div>
+    </div>
+  </div>
+
+  <!-- Can Speak Languages  -->
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#employeeLanguages">
+          Languages Employee Can Speak
+          </a>
+        </h4>
+      </div>
+      <div id="employeeLanguages" class="panel-collapse collapse">
+        <div class="panel-body">
+  
+          <dx-data-grid id="gridContainer" [dataSource]="employeeLanguagesDS" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="true" (onEditingStart)="logEventEmployeeLanguages('EditingStart',$event)" (onInitNewRow)="logEventEmployeeLanguages('InitNewRow',$event)"
+            (onRowInserting)="logEventEmployeeLanguages('RowInserting',$event)" (onRowInserted)="logEventEmployeeLanguages('RowInserted',$event)"
+            (onRowUpdating)="logEventEmployeeLanguages('RowUpdating',$event)" (onRowUpdated)="logEventEmployeeLanguages('RowUpdated',$event)"
+            (onRowRemoving)="logEventEmployeeLanguages('RowRemoving',$event)" (onRowRemoved)="logEventEmployeeLanguages('RowRemoved',$event)">
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+  
+            <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+  
+            <dxi-column dataField="SpeakLanguageId" [visible]="false">
+            </dxi-column>
+
+            <dxi-column dataField="LanguageId" alignment="right" caption="Language">
+                <dxo-lookup [dataSource]="languageList" displayExpr="LanguageName" valueExpr="LangaugeId"></dxo-lookup>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-column>
+  
+            <dxi-column dataField="Writing" alignment="right">
+                <dxo-lookup [dataSource]="languageSpeakingFluency" displayExpr="Fluency" valueExpr="Id"></dxo-lookup>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-column>
+  
+            <dxi-column dataField="Speaking" alignment="right">
+                <dxo-lookup [dataSource]="languageSpeakingFluency" displayExpr="Fluency" valueExpr="Id"></dxo-lookup>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-column>
+
+            <dxi-column dataField="Reading" alignment="right">
+                <dxo-lookup [dataSource]="languageSpeakingFluency" displayExpr="Fluency" valueExpr="Id"></dxo-lookup>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-column>
+  
+            <dxi-column dataField="Listening" alignment="right">
+                <dxo-lookup [dataSource]="languageSpeakingFluency" displayExpr="Fluency" valueExpr="Id"></dxo-lookup>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-column>
+
+              <dxi-column dataField="EmployeeId" caption="EmployeeId" [visible]="false" [editorOptions]="{ readOnly: true }">
+              </dxi-column>
+  
+          </dx-data-grid>
+  
+        </div>
+      </div>
+    </div>
+  
+
+
+</div>

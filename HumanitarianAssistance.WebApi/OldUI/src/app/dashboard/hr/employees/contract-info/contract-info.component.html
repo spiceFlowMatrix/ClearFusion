@@ -1,0 +1,558 @@
+<div class="main-health">
+
+  <div class="row">
+    <div class="col-sm-12 container">
+
+      <br>
+
+      <dx-button text="Add New" (onClick)="ShowAddContractPopup()" *ngIf="isEditingAllowed"></dx-button>
+      <br>
+      <br>
+
+      <dx-data-grid id="gridContainer" [dataSource]="contractInfoDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" (onSelectionChanged)="selectionChangedHandler($event)" [showRowLines]="true" (onRowRemoved)="logEvent('RowRemoved',$event)">
+
+        <!-- <dxo-selection [selectAllMode]="allMode" [showCheckBoxesMode]="checkBoxesMode" mode="multiple"></dxo-selection> -->
+
+        <dxo-editing mode="batch" [allowDeleting]="true" *ngIf="isEditingAllowed"></dxo-editing>
+
+        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+        <dxi-column dataField="EmployeeId" [visible]="false">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="EmployeeNameDari" [visible]="false">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="EmployeeContractId" [visible]="false">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <!-- <dxi-column dataField="HistoryDate" caption="History Date" [width]="150" format="dd/MM/yyyy" dataType="date">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column> -->
+        <dxi-column dataField="EmployeeCode">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+          </dxi-column>
+        <dxi-column dataField="FatherName">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+      
+        <dxi-column dataField="Designation">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="ContractStartDate" format="dd/MM/yyyy" dataType="date">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="ContractEndDate" format="dd/MM/yyyy" dataType="date">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="DurationOfContract">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Salary">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Grade">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="ProjectName">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="DutyStation">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Country">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Province">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="BudgetLine">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="Job">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="WorkTime">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="WorkDayHours">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateShowContract"></dxi-column>
+        <div *dxTemplate="let data of 'CellTemplateShowContract'">
+          <a href="javascript:void(0)" (click)="getContractDetailReport(data)">View Contract</a>
+        </div>
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+
+      </dx-data-grid>
+
+    </div>
+  </div>
+  <ngx-loading [show]="contractListLoading"></ngx-loading>
+
+</div>
+
+
+<!-- ADD CONTRACT POPUP-->
+<dx-popup class="popup" [width]="800" [height]="650" [showTitle]="true" title="Add Employee Contract Details" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="popupContractVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view showScrollbar="always" direction="both">
+
+      <form action="your-action" (submit)="onEmployeeContractFormSubmit(employeeContractForm)">
+        <div class="text-right">
+
+        </div>
+        <dx-form id="form" [formData]="employeeContractForm" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" validationGroup="payrollValidationDetails"
+          [showValidationSummary]="true" (onFieldDataChanged)="onFieldDataChanged($event)">
+
+          <dxi-item itemType="group" [colSpan]="2" [colCount]="2">
+
+            <dxi-item dataField="EmployeeId" [visible]="false" editorType="dxSelectBox" [editorOptions]="{readOnly: true, value: employeeContractForm.EmployeeId, dataSource: employeeListDataSource, displayExpr: 'CodeEmployeeName', valueExpr: 'EmployeeId', searchEnabled: true}">
+              <dxo-label text="Employee"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="FatherName" [editorOptions]="{ readOnly: true}">
+              <dxo-label text="Father Name"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="FatherNameDari">
+              <dxo-label text="نام پدر"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="EmployeeCode" [editorOptions]="{ readOnly: true}">
+              <dxo-label text="Employee Code"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="EmployeeCode" [editorOptions]="{ readOnly: true}">
+              <dxo-label text="کود نمبر کارمند"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="Designation" editorType="dxSelectBox" [editorOptions]="{dataSource: designationDropdown, displayExpr: 'Designation', valueExpr: 'DesignationId', searchEnabled: true}">
+              <dxo-label text="Designation"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="DesignationDari">
+              <dxo-label text="وظیفه"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="ContractStartDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', max: employeeContractForm.ContractStartDate, showClearButton: true }">
+              <dxo-label text="Contract Start Date"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="ContractStartDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', max: employeeContractForm.ContractStartDate, showClearButton: true }">
+              <dxo-label text="تاریخ شروع قرارداد"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="ContractEndDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', min: employeeContractForm.ContractEndDate,  showClearButton: true }">
+              <dxo-label text="Contract End Date"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="ContractEndDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', min: employeeContractForm.ContractEndDate,  showClearButton: true }">
+              <dxo-label text="تاریخ ختم قرارداد"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="DurationOfContract" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.DurationOfContract , showSpinButtons: true}">
+              <dxo-label text="Duration Of Contract"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="DurationOfContract" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.DurationOfContract , showSpinButtons: true}">
+              <dxo-label text="مدت قرارداد"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Salary" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.Salary , showSpinButtons: true}">
+              <dxo-label text="Salary"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Salary" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.Salary , showSpinButtons: true}">
+              <dxo-label text="معاش"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Grade" editorType="dxSelectBox" [editorOptions]="{dataSource: gradeDropDown, displayExpr: 'GradeName', valueExpr: 'GradeId', searchEnabled: true}">
+              <dxo-label text="Grade"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="GradeDari">
+              <dxo-label text="گرید"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="DutyStation" editorType="dxSelectBox" [editorOptions]="{dataSource: officeListDataSource, displayExpr: 'OfficeName', valueExpr: 'OfficeId', searchEnabled: true}">
+              <dxo-label text="Duty Station"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="DutyStationDari">
+              <dxo-label text="محل وظیفه"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Country" editorType="dxSelectBox" [editorOptions]="{dataSource: countryDropdown, displayExpr: 'CountryName', valueExpr: 'CountryId', searchEnabled: true}">
+              <dxo-label text="Country"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="CountryDari">
+              <dxo-label text="کشور"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Province" editorType="dxSelectBox" [editorOptions]="{dataSource: stateDropdown, displayExpr: 'ProvinceName', valueExpr: 'ProvinceId', searchEnabled: true}">
+              <dxo-label text="Province"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="ProvinceDari">
+              <dxo-label text="ولایت"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="Project" (change)="getAllBudgetLineDetails(projectDataSource.ProjectId)" editorType="dxSelectBox" [editorOptions]="{dataSource: projectDataSource, displayExpr: 'ProjectNameCode', valueExpr: 'ProjectId', searchEnabled: true}">
+              <dxo-label text="Project Name"></dxo-label>
+              <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+            </dxi-item>
+
+            <dxi-item dataField="ProjectNameDari">
+              <dxo-label text="نام پروژه"></dxo-label>
+              <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+            </dxi-item>
+
+            <dxi-item dataField="BudgetLine" editorType="dxSelectBox" [editorOptions]="{dataSource: projectBudgetLineDataSource, displayExpr: 'BudgetCodeName', valueExpr: 'BudgetLineId', searchEnabled: true}">
+              <dxo-label text="Budget Line"></dxo-label>
+              <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+            </dxi-item>
+
+            <dxi-item dataField="BudgetLineDari">
+              <dxo-label text="لین بودجوی"></dxo-label>
+              <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
+            </dxi-item>
+
+            <dxi-item dataField="Job">
+              <dxo-label text="Job"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="JobDari">
+              <dxo-label text="کار"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="WorkTime" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.WorkTime, showSpinButtons: true}">
+              <dxo-label text="Work Time"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="WorkTime" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.WorkTime, showSpinButtons: true}">
+              <dxo-label text="وقت کاری"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="WorkDayHours" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.WorkDayHours, showSpinButtons: true}">
+              <dxo-label text="Work Day (Hours)"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="WorkDayHours" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.WorkDayHours, showSpinButtons: true}">
+              <dxo-label text="ساعات کاری"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+          </dxi-item>
+
+        </dx-form>
+        <br>
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="historyDetails" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (click)="hideAddContractPopup()"></dx-button>
+        </div>
+
+      </form>
+      <ngx-loading [show]="addContractPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+    </dx-scroll-view>
+  </div>
+</dx-popup>
+
+
+
+<!-- Employee Contract Popup -->
+<dx-popup class="popup doc-popup-content" [height]="550" [showTitle]="true" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="contractEmployeePopup" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
+  <!-- <div *dxTemplate="let data of 'content'" style="overflow-y: scroll;max-height: 600px; padding-left:30px; padding-right:30px; width: 100%"> -->
+  <div *dxTemplate="let data of 'content'">
+
+    <dx-scroll-view #scrollView id="scrollview" [height]="500" [scrollByContent]="true" [scrollByThumb]="true"
+      showScrollbar="onHover" [bounceEnabled]="false">
+
+      <br>
+      <dx-button (click)="generatePdf()" text="Export Pdf"></dx-button>
+      <div id="contractReportPdf" style="background-color: #fff;">
+        <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <td>
+              <table class="table-responsive" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" id="parent_tbl">
+                <tr>
+                  <td>
+                    <table width="100%" align="left" cellpadding="0;" cellspacing="0" id="child_tbl" style=" background:#fff;">
+                      <tr>
+                        <td style="color:#333; font-family: Times New Roman;font-size:18px; text-align:left;">
+                          <img src="assets/images/reportLogo.png" width="100" height="100">
+                        </td>
+                        <td style="text-align:center;padding:10px 0;font-size: 20px;" translate>Coordination of Humanitarian
+                          Assistance
+                          <br>
+                          <span style="color:#333; font-family: Times New Roman;font-size:28px;text-transform: capitalize;">
+                            <strong>Coordination of Humanitarian Assistance</strong>
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr> </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <table class="pdf" border="0" cellpadding="0" style="text-align:left;" cellspacing="0" width="100%">
+          <tbody>
+            <tr>
+              <td style="font-size: 20px;color: #302d2d; padding:2px  0; padding-left:20px; ">Employment Contract</td>
+            </tr>
+            <tr>
+              <td style="font-size: 20px;color: #302d2d; padding:2px  0; padding-left:50px;" translate>Employment Contract</td>
+            </tr>
+            <tr>
+              <td style="font-size: 16px;color: #302d2d;padding:12px  0 2px;">
+                <p style="margin-bottom:0px;">This contract is between Coordination of Humanitarian Assistance (CHA) and
+                  employees for specific task, the details of the contract are as follow:</p>
+                <!-- <p style="margin-bottom:0px;"></p> -->
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size: 16px;color: #302d2d;padding:2px  0; padding-top:12px; text-align:left;">
+                <p translate dir="rtl">This contract is between Coordination of Humanitarian Assistance (CHA) and employees for specific task, the details of the contract are as follow:</p>
+                <!-- <p translate></p> -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%" style="padding-top:30px;">
+          <tbody>
+            <tr>
+              <td style="width:90%; text-align:left; padding-right:20px;">
+                <table width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="width:40%; vertical-align:top; font-weight:600; line-height:34px;">Employee's Name /
+                        <span style="padding-left:20px;" translate>Employee's Name</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.EmployeeName}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.EmployeeNameDari}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Father Name /
+                        <span style="padding-left:20px;" translate>Father Name</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.FatherName}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.FatherNameDari}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Employee Code /
+                        <span style="padding-left:20px;" translate>Employee Code</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.EmployeeCode}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.EmployeeCode}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Designation /
+                        <span style="padding-left:20px;" translate>Designation</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.Designation}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.DesignationDari}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Contract Start Date /
+                        <span style="padding-left:20px;" translate>Contract Start Date</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.ContractStartDate | date}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.ContractStartDate
+                        | date}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Contract End Date /
+                        <span style="padding-left:20px;" translate>Contract End Date</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.ContractEndDate | date}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.ContractEndDate
+                        | date}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Duration Of Contract
+                        /
+                        <span style="padding-left:20px;" translate>Duration Of Contract</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.DurationOfContract}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.DurationOfContract}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Salary /
+                        <span style="padding-left:20px;" translate>Salary</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.Salary}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.Salary}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Grade /
+                        <span style="padding-left:20px;" translate>Grade</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.GradeName}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.GradeDari}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Project Name /
+                        <span style="padding-left:20px;" translate>Project Name</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.ProjectName}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.ProjectNameDari}}</td>
+                    </tr>
+                    <tr style="page-break-after:always">
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Project Code /
+                        <span style="padding-left:20px;" translate>Project Code</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.ProjectCode}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.ProjectCode}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Duty Station /
+                        <span style="padding-left:20px;" translate>Duty Station</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.DutyStation}}</td>
+                      <td style="width:5%"><p style="page-break-before: always"></td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.DutyStationDari}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Province /
+                        <span style="padding-left:20px;" translate>Province</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.Province}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.ProvinceDari}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Budget Line /
+                        <span style="padding-left:20px;" translate>Budget Line</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.BudgetLine}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.BudgetLineDari}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Job /
+                        <span style="padding-left:20px;" translate>Job</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.Job}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.JobDari}}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Work Time /
+                        <span style="padding-left:20px;" translate>Work Time</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.WorkTime}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.WorkTime}}</td>
+                    </tr>
+                    <tr>
+                      <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Work Day (Hours) /
+                        <span style="padding-left:20px;" translate>Work Day (Hours)</span>
+                      </td>
+                      <td style="width:30%;border-bottom:1px solid">{{contractDetails.WorkDayHours}}</td>
+                      <td style="width:5%">&nbsp;</td>
+                      <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.WorkDayHours}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td style="width:10% ; padding-right:20px; vertical-align:top;">
+                <img src="{{contractDetails.EmployeeImage == null || contractDetails.EmployeeImage == '' ? defaultImagePath : contractDetails.EmployeeImage}}"
+                  style="width: 130px;float: right;">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 20px; text-align:left;">
+          <tr>
+            <td style="width:50%; vertical-align: top; border-right: 1px solid #000; padding-right: 20px; text-align:left;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="font-size:16px; font-weight:600;"> Conditions: </td>
+                </tr>
+                <tr>
+                  <td style="font-size:16px; font-weight:600;"></td>
+                </tr>
+                <tr>
+                  <td style="font-size:14">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td colspan="4" style="font-size:14; line-height: 22px; text-align:left;">
+                          <!-- <ng-template *ngIf="englishContent != null"> -->
+                          <span [innerHTML]="contractDetails.ContentEnglish"></span>
+
+                          <!-- </ng-template> -->
+
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+            <td style="width:50%; vertical-align: top;padding-left:20px; text-align:right;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="font-size:14px; font-weight:600; padding-right:20px;">
+                    <!-- <ng-template *ngIf="contractDetails.ContentDari != null"> -->
+                    <span dir="rtl" [innerHTML]="contractDetails.ContentDari"></span>
+                    <!-- </ng-template> -->
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </dx-scroll-view>
+
+  </div>
+</dx-popup>

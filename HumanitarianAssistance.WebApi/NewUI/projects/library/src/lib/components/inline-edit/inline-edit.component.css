@@ -1,0 +1,16 @@
+.example-form-field.content{display:inline-block;}
+.arrow_accord{float: right;}
+.example-form-field.content input{border-bottom:1px solid transparent; background:transparent; box-shadow: none; border:none;font-size: 16px; }
+.example-form-field.content input:hover, .example-form-field.content input:focus {
+  /* border-width: 1px; */
+  outline: none;
+  border-bottom: 1px solid #000000;
+  /* padding: 4px 8px; */
+  /* border-radius: 4px; */
+  /* background: rgba(0,0,0,0.1); */
+  width: auto;
+}
+.inline_edit_content { padding-left: 10px; }
+
+.pull_left { float: left; }
+.spinner_abs { margin-top: 5px; }

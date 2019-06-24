@@ -1,0 +1,103 @@
+<div class="row">
+  <div class="example-form-field inline_edit_content">
+    <div class="spinner_abs pull_left">
+      <div class="spinner_content" *ngIf="value._IsLoading && !value._IsError">
+        <mat-spinner [diameter]="15"></mat-spinner>
+      </div>
+      <div class="spinner_content" *ngIf="value._IsError">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+
+      <div *ngIf="!value._IsError && !value._IsLoading">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+
+    <div class="col-sm-10 col-xs-10">
+      <div class="example-form-field content">
+        <input
+          [required]="required"
+          [(ngModel)]="value.Name"
+          [disabled] ="value._IsLoading || disabled"
+          (change)="onEdit($event)"
+          [name]="name"
+          [type]="type"
+          [placeholder]="placeholder"
+        />
+      </div>
+    </div>
+    <div class="col-sm-2 text-right col-xs-2 ">
+      <!-- <mat-icon
+        *ngIf="!value._IsDeleted"
+        class="icon_cursor small_icon text-danger tp_15"
+        (click)="onDelete()"
+      >
+        delete
+      </mat-icon> -->
+    </div>
+  </div>
+</div>
+
+
+<!-- <div *ngIf="value.Id == 0 || value.Id == null; else idNotZero">
+  <div *ngIf="!value._IsError; else errorTemplate">
+    <div class="inline_content">
+      <mat-spinner [diameter]="15"></mat-spinner>
+      <div class="inline-edit">{{ value.Name }}</div>
+    </div>
+  </div>
+
+  <ng-template #errorTemplate>
+    <div class="inline_content">
+      <i class="fas fa-exclamation-triangle"></i>
+      <div class="example-form-field content">
+        <input
+          [required]="required"
+          [(ngModel)]="value.Name"
+          (keyup.enter)="onAdd($event)"
+          (blur)="onAdd($event)"
+          [name]="name"
+          [type]="type"
+          [placeholder]="placeholder"
+        />
+      </div>
+    </div>
+  </ng-template>
+</div>
+<ng-template #idNotZero>
+  <div *ngIf="!value._IsError; else errorEditTemplate">
+    <div *ngIf="editing">
+      <div class="example-form-field content">
+        <input
+          [required]="required"
+          [(ngModel)]="value.Name"
+          (keyup.enter)="onBlur($event)"
+          (blur)="onBlur($event)"
+          [name]="name"
+          [type]="type"
+          [placeholder]="placeholder"
+        />
+      </div>
+    </div>
+    <div *ngIf="!editing">
+      <div (click)="onEdit(value)" class="inline-edit">{{ value.Name }}</div>
+    </div>
+  </div>
+  <ng-template #errorEditTemplate>
+    <div class="inline_content">
+      <i class="fas fa-exclamation-triangle"></i>
+
+      <div class="example-form-field content">
+        <input
+          [required]="required"
+          [(ngModel)]="value.Name"
+          (keyup.enter)="onBlur($event)"
+          (blur)="onBlur($event)"
+          [name]="name"
+          [type]="type"
+          [placeholder]="placeholder"
+        />
+      </div>
+    </div>
+  </ng-template>
+</ng-template> -->

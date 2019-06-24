@@ -1,0 +1,37 @@
+<div class="row" >
+  <div class="col-sm-12">
+    <div class="row text-center" >
+      <div class="col-sm-12">
+        <h3>Are You Sure?</h3>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-sm-12">
+        <p>
+          This verification will lock in all exchange rates for all currencies
+          on this date. This applies to all offices.
+        </p>
+        <br />
+        <p class="text-center"><strong>This action is not reversible!</strong></p>
+      </div>
+    </div>
+    <div class="row text-right">
+        <div class="col-sm-4"></div>
+      <div class="col-sm-4">
+        <button mat-button color="warn" (click)="onCloseVerifyDialog(false)">
+          <strong>I'm Not Sure!</strong>
+        </button>
+      </div>
+      <div class="col-sm-4">
+        <button
+          mat-raised-button
+          (click)="onCloseVerifyDialog(true)"
+          color="accent"
+        >
+          Verify
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
