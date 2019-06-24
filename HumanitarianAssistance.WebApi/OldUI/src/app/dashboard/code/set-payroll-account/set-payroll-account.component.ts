@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CodeService, HeadType } from '../code.service';
 import { GLOBAL } from '../../../shared/global';
-import { error } from 'selenium-webdriver';
 import {
   applicationPages,
   applicationModule
