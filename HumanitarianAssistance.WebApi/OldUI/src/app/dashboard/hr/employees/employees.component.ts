@@ -1594,7 +1594,13 @@ export class EmployeesComponent implements OnInit {
   //#endregion
 
   saveEmployeeLeave() {
-    this.addEmployeePopupLoading = true;
+      this.addEmployeePopupLoading = true;
+
+      if (this.selectedLeaveList == undefined) {
+          this.toastr.warning('Select leaves to save');
+          this.addEmployeePopupLoading = false;
+          return;
+      }
 
     this.selectedLeaveList.forEach(
       x => (x.employeeId = this.assignLeaveToEmployee)

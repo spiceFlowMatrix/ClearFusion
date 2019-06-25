@@ -270,7 +270,7 @@ namespace HumanitarianAssistance.WebApi
             {
                 //configuration.RootPath = "ClientApp/dist";
                 configuration.RootPath = "NewUI/dist";
-                //configuration.RootPath = "OldUI/dist";
+                configuration.RootPath = "OldUI/dist";
 
             });
         }
@@ -324,8 +324,8 @@ namespace HumanitarianAssistance.WebApi
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
                 //spa.Options.SourcePath = "ClientApp";
-                spa.Options.SourcePath = "NewUI";
-                //spa.Options.SourcePath = "OldUI";
+               // spa.Options.SourcePath = "NewUI";
+                spa.Options.SourcePath = "OldUI";
 
                 if (env.IsDevelopment())
                 {
