@@ -85,7 +85,7 @@ namespace HumanitarianAssistance.WebApi
 
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
-        
+
             // ===== Add Identity ========
             services.AddIdentity<AppUser, IdentityRole>(o =>
             {
