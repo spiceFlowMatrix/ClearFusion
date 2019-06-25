@@ -134,17 +134,17 @@
                     </td>
                     <td width="20%" class="text-right">
 
-                      <button *ngIf="(!item.IsShortListed && !item.IsSelected && item.EmployeeTypeId==employeeType.Candidate)" mat-raised-button
+                      <button *ngIf="(!item.IsShortListed && !item.IsSelected && item.EmployeeTypeId == employeeType.Candidate && item.IsInterViewed)" mat-raised-button
                               color="accent" pTooltip="Short List" tooltipPosition="top" aria-label="ShortList"
                               (click)="OnShortListClick(item)">
                         ShortList
                       </button>
 
-                      <button mat-stroked-button
+                      <button mat-raised-button
                               *ngIf="(!item.IsSelected && item.IsShortListed && item.EmployeeTypeId==employeeType.Candidate) || (item.EmployeeTypeId==employeeType.Active && !item.IsSelected)" (click)="onSelectedCandidate(item)">
-                        <mat-icon aria-label="done">
+                        <!-- <mat-icon aria-label="done">
                           done
-                        </mat-icon>
+                        </mat-icon> -->
                         Select
                       </button>
 

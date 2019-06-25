@@ -279,6 +279,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     [HttpPost]
     public async Task<object> EditEmployeeProfessionalDetail([FromBody] EmployeeProfessionalDetailModel model)
     {
+    
       APIResponse response = null;
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
       if (user != null)
