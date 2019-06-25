@@ -547,6 +547,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     #endregion
 
     #region "GetProjectWinLossStatus"
+    [HttpPost]
     public async Task<APIResponse> GetProjectWinLossStatus([FromBody]long ProjectId)
     {
       APIResponse apiresponse = await _iProject.GetProjectWinLossStatus(ProjectId);

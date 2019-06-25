@@ -85,19 +85,7 @@ namespace HumanitarianAssistance.WebApi
 
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
-            services.AddSwaggerGen(p =>
-            {
-               p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
-                p.AddSecurityDefinition("Bearer", new ApiKeyScheme
-               {
-                   Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                   Name = "Authorization",
-                   In = "header",
-                   Type = "apiKey"
-               });
-            });
-
-
+        
             // ===== Add Identity ========
             services.AddIdentity<AppUser, IdentityRole>(o =>
             {
@@ -258,13 +246,19 @@ namespace HumanitarianAssistance.WebApi
 
 
 
-
-
-
-
-
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSwaggerGen(p =>
+            {
+                p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
+                p.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+            });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -304,7 +298,7 @@ namespace HumanitarianAssistance.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-               c.SwaggerEndpoint("../swagger/v1/swagger.json", "CHA Core API");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
             app.UseSignalR(routes =>
