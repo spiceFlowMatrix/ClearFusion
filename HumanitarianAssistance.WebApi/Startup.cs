@@ -265,7 +265,7 @@ namespace HumanitarianAssistance.WebApi
             {
                 //configuration.RootPath = "ClientApp/dist";
                 configuration.RootPath = "NewUI/dist";
-                //configuration.RootPath = "OldUI/dist";
+                configuration.RootPath = "OldUI/dist";
 
             });
         }
@@ -313,25 +313,39 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpa(spa =>
+            app.UseSpaStaticFiles(new StaticFileOptions
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
+            });
 
-                spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-
-                //spa.Options.SourcePath = "ClientApp";
-                spa.Options.SourcePath = "NewUI";
-                //spa.Options.SourcePath = "OldUI";
-
-                if (env.IsDevelopment())
+            app.Map("/newui", client =>
+            {
+                client.UseSpa(spa =>
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
-                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-                }
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.SourcePath = "NewUI";
+
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+
+                });
+            }).Map("/oldui", admin =>
+            {
+                admin.UseSpa(spa =>
+                {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.SourcePath = "OldUI";
+
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+
+                });
             });
         }
-
 
         //2011
         private static async Task UpdateDatabase(IApplicationBuilder app, UserManager<AppUser> um, RoleManager<IdentityRole> rm, ILogger<DbInitializer> logger)
