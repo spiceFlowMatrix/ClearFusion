@@ -32,6 +32,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Linq;
@@ -84,17 +85,17 @@ namespace HumanitarianAssistance.WebApi
 
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
-            //services.AddSwaggerGen(p =>
-            //{
-            //    p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
-            //    p.AddSecurityDefinition("Bearer", new ApiKeyScheme
-            //    {
-            //        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-            //        Name = "Authorization",
-            //        In = "header",
-            //        Type = "apiKey"
-            //    });
-            //});
+            services.AddSwaggerGen(p =>
+            {
+               p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
+                p.AddSecurityDefinition("Bearer", new ApiKeyScheme
+               {
+                   Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                   Name = "Authorization",
+                   In = "header",
+                   Type = "apiKey"
+               });
+            });
 
 
             // ===== Add Identity ========
@@ -300,11 +301,11 @@ namespace HumanitarianAssistance.WebApi
             app.UseCors(DefaultCorsPolicyName);
             app.UseAuthentication();
 
-            //app.UseSwagger();
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("../swagger/v1/swagger.json", "CHA Core API");
-            //});
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+               c.SwaggerEndpoint("../swagger/v1/swagger.json", "CHA Core API");
+            });
 
             app.UseSignalR(routes =>
             {
