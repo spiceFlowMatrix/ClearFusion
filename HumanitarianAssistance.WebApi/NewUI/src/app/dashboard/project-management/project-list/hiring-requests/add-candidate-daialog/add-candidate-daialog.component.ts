@@ -60,7 +60,6 @@ export class AddCandidateDaialogComponent implements OnInit {
 
   //#region "AddNewCandidate"
   AddNewCandidate(data: number) {
-    debugger;
     if (data != null && data !== undefined) {
       const candidateDetail: IHiringReuestCandidateModel = {
         EmployeeID: data,

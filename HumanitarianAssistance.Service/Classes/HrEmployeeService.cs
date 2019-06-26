@@ -1247,7 +1247,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var existrecord = await _uow.EmployeeProfessionalDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeProfessionalId == model.EmployeeProfessionalId);
+                var existrecord = await _uow.EmployeeProfessionalDetailRepository.FindAsync(x => x.IsDeleted == false && x.EmployeeId == model.EmployeeId);
                 if (existrecord != null)
                 {
                     existrecord.EmployeeTypeId = model.EmployeeTypeId;

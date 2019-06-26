@@ -7,7 +7,7 @@ export interface IHiringReuestDataSource {
   CurrencyList: ICurrencyList[];
   OfficeList: IOfficeListModel[];
   JobGradeList: IJobGradeModel[];
-  ProjectId: any;
+  ProjectId: number;
   HiringRequestDetail: any;
   HiringRequestId: number;
   ProfessionList: IProfessionList[];
@@ -114,4 +114,29 @@ export interface ISelectedCandidateModel {
   ProjectId: number;
   HiringRequestId: number;
   IsSelected: boolean;
+}
+export interface IAttendaneGroupModel{
+  Description: string;
+  Id: number;
+  Name: number;
+}
+export interface IcandidateDetailDataSource {
+  AttendanceGroupList: IAttendaneGroupModel[];
+  HiringRequestDetail: IHiringRequestDetailModel;
+  EmployeeId: number;
+  ProjectId: number;
+  EmployeeContractist: IEmployeeContractList[];
+}
+export interface IEmployeeContractList {
+  EmployeeContractTypeId: number;
+  EmployeeContractTypeName: string;
+}
+export interface CandidateDetailModel{
+  EmployeeContractTypeId: number;
+  AttendanceGroupId: number;
+  ProjectId?: number;
+  EmployeeId: number;
+  HiredOn: Date;
+  OfficeId: number;
+  EmployeeTypeId: number;
 }
