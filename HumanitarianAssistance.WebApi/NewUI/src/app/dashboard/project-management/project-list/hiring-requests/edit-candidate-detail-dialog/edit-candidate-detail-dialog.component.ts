@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { IcandidateDetailDataSource, IAttendaneGroupModel, IHiringRequestDetailModel, IEmployeeContractList, CandidateDetailModel } from '../models/hiring-requests-model';
+import { IcandidateDetailDataSource,
+  IAttendaneGroupModel, IHiringRequestDetailModel, IEmployeeContractList, CandidateDetailModel } from '../models/hiring-requests-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HiringRequestsService } from '../hiring-requests.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
