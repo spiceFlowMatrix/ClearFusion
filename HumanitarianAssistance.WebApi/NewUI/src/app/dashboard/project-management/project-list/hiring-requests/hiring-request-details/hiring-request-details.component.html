@@ -122,7 +122,8 @@
                     <td width="15%">{{ item.EmployeeID }}/{{ item.EmployeeCode }} </td>
                     <td width="20%">{{ item.EmployeeName }}</td>
                     <td width="20%">{{ item.Gender }} </td>
-                    <td width="15%"> <span *ngIf="item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == false">None</span>
+                    <td width="15%"> <span
+                        *ngIf="item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == false">None</span>
                       <a *ngIf="(item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate"
                         (click)="seeCandidateDetail('dashboard/hr/interview-form')">See Interview Details</a>
                     </td>
@@ -204,22 +205,6 @@
 
 
   </ng-template>-->
-                      <!-- <button *ngIf="((item.EmployeeTypeId == employeeType.Candidate) &&
-                 item.IsInterViewed == true ||
-                 interviewCompleteCheckFlag == true) || item.IsShortListed == false; else selectedCandidate" mat-raised-button
-    color="accent" pTooltip="Short List" tooltipPosition="top" aria-label="ShortList"
-    (click)="OnShortListClick(item)">ShortList
-
-  </button>
-  <ng-template #selectedCandidate>
-    <button *ngIf="item.IsShortListed==true" mat-stroked-button pTooltip=""
-      tooltipPosition="top" aria-label="Verify voucher" (click)="onSelectedCandidate()">
-      <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">
-        done
-      </mat-icon>
-      Select
-    </button>
-  </ng-template> -->
 
                     </td>
                   </tr>

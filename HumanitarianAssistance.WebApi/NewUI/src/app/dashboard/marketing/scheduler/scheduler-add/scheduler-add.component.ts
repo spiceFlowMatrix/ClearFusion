@@ -115,7 +115,6 @@ export class SchedulerAddComponent implements OnInit {
   }
 
    GetScheduleById(model) {
-     debugger;
     this.schedulerService
     .Post(
        this.appurl.getApiUrl() + GLOBAL.API_Scheduler_GetScheduleDetailsById, model
@@ -235,7 +234,6 @@ export class SchedulerAddComponent implements OnInit {
       this.SchedulerModel.RepeatDays = this.days;
       this.SchedulerModel.ChannelId = this.data.channelId;
       this.SchedulerModel.MediumId = this.data.mediumId;
-      debugger;
       this.schedulerService.Post(this.appurl.getApiUrl() + GLOBAL.API_Schedule_AddSchedule, this.SchedulerModel)
       .subscribe(data => {
         if (data.StatusCode === 200) {

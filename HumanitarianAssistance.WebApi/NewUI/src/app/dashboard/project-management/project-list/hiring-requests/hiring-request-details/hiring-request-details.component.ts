@@ -18,8 +18,8 @@ import {
   IProfessionList,
   IitervireCandidateModel,
   IHiringReuestCandidateModel,
-  ISelectedCandidateModel,
-  IHiringRequestDetailModel
+  IAttendaneGroupModel,
+  IEmployeeContractList,
 } from '../models/hiring-requests-model';
 import { MatDialog } from '@angular/material';
 import { AddHiringRequestsComponent } from '../add-hiring-requests/add-hiring-requests.component';
@@ -31,6 +31,7 @@ import { EmployeeType } from 'src/app/shared/enum';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { isNgTemplate } from '@angular/compiler';
 import { ActivatedRoute } from '@angular/router';
+import { EditCandidateDetailDialogComponent } from '../edit-candidate-detail-dialog/edit-candidate-detail-dialog.component';
 
 @Component({
   selector: 'app-hiring-request-details',
@@ -48,7 +49,9 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   @Input() professionList: IProfessionList;
 
   employeeList: IEmployeeListModel[] = [];
+  attendanceGroupList: IAttendaneGroupModel[] = [];
   candidateList: IReuestedCandidateDetailModel[] = [];
+  employeeContractist: IEmployeeContractList[] = [];
   interviewCandidatModel: IitervireCandidateModel;
 
   @Output() UpdatedHRListRefresh = new EventEmitter<any[]>();
@@ -93,6 +96,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.initForm();
     this.GetAllEmployeeList();
+    this.GetAllEmployeeContractTypelist();
+    this.GetAllAttendanceGrouplist();
     console.log(this.hiringRequestId);
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
@@ -171,6 +176,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     this.openHiringRequestDialog();
   }
   //#endregion
+
   //#region "openHiringRequestDialog"
   openHiringRequestDialog(): void {
     // NOTE: It passed the data into the Add Activity Model
@@ -317,10 +323,68 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
         );
     }
   }
+  //#region  "GetAllAttendanceGrouplist"
+GetAllAttendanceGrouplist() {
+  this.hiringRequestService.GetAllAttendanceGroupList().subscribe(
+    (response: IResponseData) => {
+      this.attendanceGroupList = [];
+      if (response.statusCode === 200 && response.data !== null) {
+        response.data.forEach(element => {
+          this.attendanceGroupList.push({
+            Id: element.Id,
+            Name: element.Name,
+            Description: element.Description
+          });
+        });
+      }
+    },
+    error => {}
+  );
+}
+//#endregion
+ //#region  "GetAllEmployeeContractTypelist"
+ GetAllEmployeeContractTypelist() {
+  this.hiringRequestService.GetAllEmloyeeContractList().subscribe(
+    (response: IResponseData) => {
+      this.employeeContractist = [];
+      if (response.statusCode === 200 && response.data !== null) {
+        response.data.forEach(element => {
+          this.employeeContractist.push({
+            EmployeeContractTypeId: element.EmployeeContractTypeId,
+            EmployeeContractTypeName: element.EmployeeContractTypeName,
+          });
+        });
+      }
+    },
+    error => {}
+  );
+}
+//#endregion
 
-  //#region  "onSelectedCandidate"
+
+//#region  "onSelectedCandidate"
   onSelectedCandidate(data: any) {
     if (data != null) {
+      if (data.EmployeeTypeId === this.employeeType.Candidate) {
+
+        const dialogRef = this.dialog.open(EditCandidateDetailDialogComponent, {
+          width: '550px',
+          autoFocus: false,
+          data: {
+            HiringRequestDetail: this.hiringRequestDetail,
+            AttendanceGroupList: this.attendanceGroupList,
+            EmployeeId: data.EmployeeID,
+            EmployeeContractist: this.employeeContractist
+          }
+        });
+        dialogRef.componentInstance.employeeTypeDetial.subscribe((data: any) => {
+          data.IsSelected = !data.IsSelected;
+          data.EmployeeTypeId = this.employeeType.Active;
+          data.EmployeeTypeName = 'Active';
+        });
+        dialogRef.afterClosed().subscribe(result => {});
+
+      }   else {
       const candidateDetail: any = {
         EmployeeId: data.EmployeeID,
         HiringRequestId: this.hiringRequestForm.get('HiringRequestId').value,
@@ -348,6 +412,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           }
         );
     }
+  }
   }
   //#endregion
 

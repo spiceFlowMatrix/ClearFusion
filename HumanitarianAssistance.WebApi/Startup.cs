@@ -32,6 +32,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Linq;
@@ -83,18 +84,6 @@ namespace HumanitarianAssistance.WebApi
             Console.WriteLine("Connection string: {0}\n", connectionString);
 
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
-
-            //services.AddSwaggerGen(p =>
-            //{
-            //    p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
-            //    p.AddSecurityDefinition("Bearer", new ApiKeyScheme
-            //    {
-            //        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-            //        Name = "Authorization",
-            //        In = "header",
-            //        Type = "apiKey"
-            //    });
-            //});
 
 
             // ===== Add Identity ========
@@ -253,7 +242,23 @@ namespace HumanitarianAssistance.WebApi
             services.AddRouting();
             services.AddSignalR();
 
+
+
+
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSwaggerGen(p =>
+            {
+                p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
+                p.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+            });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -290,11 +295,11 @@ namespace HumanitarianAssistance.WebApi
             app.UseCors(DefaultCorsPolicyName);
             app.UseAuthentication();
 
-            //app.UseSwagger();
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("../swagger/v1/swagger.json", "CHA Core API");
-            //});
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseSignalR(routes =>
             {
@@ -317,6 +322,7 @@ namespace HumanitarianAssistance.WebApi
             {
                 client.UseSpa(spa =>
                 {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
                     spa.Options.SourcePath = "NewUI";
 
                     if (env.IsDevelopment())
@@ -329,6 +335,7 @@ namespace HumanitarianAssistance.WebApi
             {
                 admin.UseSpa(spa =>
                 {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
                     spa.Options.SourcePath = "OldUI";
 
                     if (env.IsDevelopment())
