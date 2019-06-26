@@ -465,8 +465,6 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                 if (model != null)
                 {
 
-
-
                     EmployeeDetail employeeDetail = await _uow.GetDbContext().EmployeeDetail.Include(x=> x.EmployeeProfessionalDetail)
                                                                                                     .FirstOrDefaultAsync(x => x.IsDeleted == false
                                                                                                     && x.EmployeeID == model.EmployeeId);
