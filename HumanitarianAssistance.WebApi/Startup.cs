@@ -32,6 +32,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Linq;
@@ -83,18 +84,6 @@ namespace HumanitarianAssistance.WebApi
             Console.WriteLine("Connection string: {0}\n", connectionString);
 
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
-
-            //services.AddSwaggerGen(p =>
-            //{
-            //    p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
-            //    p.AddSecurityDefinition("Bearer", new ApiKeyScheme
-            //    {
-            //        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-            //        Name = "Authorization",
-            //        In = "header",
-            //        Type = "apiKey"
-            //    });
-            //});
 
 
             // ===== Add Identity ========
@@ -257,20 +246,26 @@ namespace HumanitarianAssistance.WebApi
 
 
 
-
-
-
-
-
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSwaggerGen(p =>
+            {
+                p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
+                p.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+            });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 //configuration.RootPath = "ClientApp/dist";
                 configuration.RootPath = "NewUI/dist";
-                //configuration.RootPath = "OldUI/dist";
+                configuration.RootPath = "OldUI/dist";
 
             });
         }
@@ -300,11 +295,11 @@ namespace HumanitarianAssistance.WebApi
             app.UseCors(DefaultCorsPolicyName);
             app.UseAuthentication();
 
-            //app.UseSwagger();
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("../swagger/v1/swagger.json", "CHA Core API");
-            //});
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseSignalR(routes =>
             {
@@ -318,23 +313,39 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpa(spa =>
+            app.UseSpaStaticFiles(new StaticFileOptions
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
+            });
 
-                //spa.Options.SourcePath = "ClientApp";
-                spa.Options.SourcePath = "NewUI";
-                //spa.Options.SourcePath = "OldUI";
-
-                if (env.IsDevelopment())
+            app.Map("/newui", client =>
+            {
+                client.UseSpa(spa =>
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
-                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-                }
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.SourcePath = "NewUI";
+
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+
+                });
+            }).Map("/oldui", admin =>
+            {
+                admin.UseSpa(spa =>
+                {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.SourcePath = "OldUI";
+
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+
+                });
             });
         }
-
 
         //2011
         private static async Task UpdateDatabase(IApplicationBuilder app, UserManager<AppUser> um, RoleManager<IdentityRole> rm, ILogger<DbInitializer> logger)

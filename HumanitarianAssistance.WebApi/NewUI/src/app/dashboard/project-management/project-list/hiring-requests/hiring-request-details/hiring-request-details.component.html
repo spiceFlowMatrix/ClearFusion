@@ -154,17 +154,17 @@
                           done
                         </mat-icon>
                         Selected
-                      </button>
+                      </button>-->
 
-                      <!--<span *ngIf="item.EmployeeTypeId !== employeeType.Active; else forActiveEmployeeTemplate">
-    <span *ngIf="item.IsInterViewed">
+                      <span *ngIf="item.EmployeeTypeId !== employeeType.Active; else forActiveEmployeeTemplate">
+    <span *ngIf="item.IsInterViewed" >
       <button *ngIf="!item.IsShortListed; else selectedCandidateTemplate" mat-raised-button
         color="accent" pTooltip="Short List" tooltipPosition="top" aria-label="ShortList"
         (click)="OnShortListClick(item)">ShortList
       </button>
       <ng-template #selectedCandidateTemplate>
         <button mat-stroked-button
-         *ngIf="!item.IsSelected; else selectedTemplatebutton" (click)="onSelectedCandidate(item)">
+         *ngIf="item.IsSelected==false; else selectedTemplatebutton" (click)="onSelectedCandidate(item)">
           <mat-icon aria-label="done">
             done
           </mat-icon>
@@ -203,8 +203,8 @@
     </ng-template>
 
 
-  </ng-template>-->
-                      <!-- <button *ngIf="((item.EmployeeTypeId == employeeType.Candidate) &&
+  </ng-template>
+                       <!--<button *ngIf="((item.EmployeeTypeId == employeeType.Candidate) &&
                  item.IsInterViewed == true ||
                  interviewCompleteCheckFlag == true) || item.IsShortListed == false; else selectedCandidate" mat-raised-button
     color="accent" pTooltip="Short List" tooltipPosition="top" aria-label="ShortList"
@@ -219,7 +219,7 @@
       </mat-icon>
       Select
     </button>
-  </ng-template> -->
+  </ng-template>-->
 
                     </td>
                   </tr>
