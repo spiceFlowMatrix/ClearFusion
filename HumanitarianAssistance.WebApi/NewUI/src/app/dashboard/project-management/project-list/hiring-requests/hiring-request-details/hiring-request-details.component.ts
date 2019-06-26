@@ -377,8 +377,9 @@ GetAllAttendanceGrouplist() {
             EmployeeContractist: this.employeeContractist
           }
         });
-        dialogRef.componentInstance.employeeTypeDetial.subscribe((data: any) => {
-          data.IsSelected = !data.IsSelected;
+        dialogRef.componentInstance.employeeTypeDetial.subscribe((obj: any) => {
+          debugger;
+          data.IsSelected = obj.IsSelected;
           data.EmployeeTypeId = this.employeeType.Active;
           data.EmployeeTypeName = 'Active';
         });

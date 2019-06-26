@@ -502,6 +502,23 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                         throw new Exception("Candidate not found");
                     }
 
+                    //update the hiring request table when candidate is selected
+
+                    ProjectHiringRequestDetail hrDetail = await _uow.GetDbContext().ProjectHiringRequestDetail
+                                                                                 .FirstOrDefaultAsync(x => x.HiringRequestId == model.HiringRequestId &&
+                                                                                                          x.IsDeleted == false);
+                    if (hrDetail != null)
+                    {
+                        int count = await _uow.GetDbContext().HiringRequestCandidates.Where(x => x.HiringRequestId == model.HiringRequestId &&
+                                                                                                 x.IsDeleted == false).CountAsync(x => x.IsSelected);
+                        hrDetail.FilledVacancies = count+1;
+                        await _uow.ProjectHiringRequestRepository.UpdateAsyn(hrDetail);
+                        await _uow.SaveAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("Hiring Job not found");
+                    }
                     EmployeeSalaryAnalyticalInfo analyticalInfo = new EmployeeSalaryAnalyticalInfo();
 
                     analyticalInfo.IsDeleted = false;
