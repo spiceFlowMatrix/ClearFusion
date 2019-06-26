@@ -134,23 +134,23 @@
                         (click)="onAddInterviewCandidate(item)"> Interview Candidate</a>
                     </td>
                     <td width="20%" class="text-right">
-
-                      <button *ngIf="(!item.IsShortListed && !item.IsSelected && item.EmployeeTypeId==employeeType.Candidate)" mat-raised-button
-                              color="accent" pTooltip="Short List" tooltipPosition="top" aria-label="ShortList"
-                              (click)="OnShortListClick(item)">
+                      <button
+                        *ngIf="(!item.IsShortListed && !item.IsSelected && item.EmployeeTypeId == employeeType.Candidate && item.IsInterViewed)"
+                        mat-raised-button color="accent" pTooltip="Short List" tooltipPosition="top"
+                        aria-label="ShortList" (click)="OnShortListClick(item)">
                         ShortList
                       </button>
 
                       <button mat-stroked-button
-                              *ngIf="(!item.IsSelected && item.IsShortListed && item.EmployeeTypeId==employeeType.Candidate) || (item.EmployeeTypeId==employeeType.Active && !item.IsSelected)" (click)="onSelectedCandidate(item)">
+                        *ngIf="(!item.IsSelected && item.IsShortListed && item.EmployeeTypeId==employeeType.Candidate) || (item.EmployeeTypeId==employeeType.Active && !item.IsSelected)"
+                        (click)="onSelectedCandidate(item)">
                         <mat-icon aria-label="done">
                           done
                         </mat-icon>
                         Select
                       </button>
 
-                      <button mat-stroked-button mat-raised-button
-                              color="accent" *ngIf="item.IsSelected">
+                      <button mat-stroked-button mat-raised-button color="accent" *ngIf="item.IsSelected">
                         <mat-icon aria-label="done">
                           done
                         </mat-icon>

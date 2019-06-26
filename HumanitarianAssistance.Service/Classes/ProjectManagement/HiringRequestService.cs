@@ -528,11 +528,10 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     analyticalInfo.BudgetlineId = model.BudgetLineId;
                     analyticalInfo.ProjectId = model.ProjectId;
                     analyticalInfo.HiringRequestId = model.HiringRequestId;
-
                     await _uow.GetDbContext().EmployeeSalaryAnalyticalInfo.AddAsync(analyticalInfo);
                     await _uow.GetDbContext().SaveChangesAsync();
+                    response.ResponseData = hrDetail;
                 }
-
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

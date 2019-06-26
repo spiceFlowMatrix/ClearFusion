@@ -19,7 +19,7 @@ import {
   IitervireCandidateModel,
   IHiringReuestCandidateModel,
   IAttendaneGroupModel,
-  IEmployeeContractList,
+  IEmployeeContractList
 } from '../models/hiring-requests-model';
 import { MatDialog } from '@angular/material';
 import { AddHiringRequestsComponent } from '../add-hiring-requests/add-hiring-requests.component';
@@ -101,8 +101,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     console.log(this.hiringRequestId);
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
-    }
-    )
+    });
     //  this.interviewCompleteCheckFlag = this.hiringRequestDetail.IsInterViewed;
   }
 
@@ -324,49 +323,49 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     }
   }
   //#region  "GetAllAttendanceGrouplist"
-GetAllAttendanceGrouplist() {
-  this.hiringRequestService.GetAllAttendanceGroupList().subscribe(
-    (response: IResponseData) => {
-      this.attendanceGroupList = [];
-      if (response.statusCode === 200 && response.data !== null) {
-        response.data.forEach(element => {
-          this.attendanceGroupList.push({
-            Id: element.Id,
-            Name: element.Name,
-            Description: element.Description
+  GetAllAttendanceGrouplist() {
+    this.hiringRequestService.GetAllAttendanceGroupList().subscribe(
+      (response: IResponseData) => {
+        this.attendanceGroupList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.attendanceGroupList.push({
+              Id: element.Id,
+              Name: element.Name,
+              Description: element.Description
+            });
           });
-        });
-      }
-    },
-    error => {}
-  );
-}
-//#endregion
- //#region  "GetAllEmployeeContractTypelist"
- GetAllEmployeeContractTypelist() {
-  this.hiringRequestService.GetAllEmloyeeContractList().subscribe(
-    (response: IResponseData) => {
-      this.employeeContractist = [];
-      if (response.statusCode === 200 && response.data !== null) {
-        response.data.forEach(element => {
-          this.employeeContractist.push({
-            EmployeeContractTypeId: element.EmployeeContractTypeId,
-            EmployeeContractTypeName: element.EmployeeContractTypeName,
+        }
+      },
+      error => {}
+    );
+  }
+  //#endregion
+  //#region  "GetAllEmployeeContractTypelist"
+  GetAllEmployeeContractTypelist() {
+    this.hiringRequestService.GetAllEmloyeeContractList().subscribe(
+      (response: IResponseData) => {
+        this.employeeContractist = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.employeeContractist.push({
+              EmployeeContractTypeId: element.EmployeeContractTypeId,
+              EmployeeContractTypeName: element.EmployeeContractTypeName
+            });
           });
-        });
-      }
-    },
-    error => {}
-  );
-}
-//#endregion
+        }
+      },
+      error => {}
+    );
+  }
+  //#endregion
 
-
-//#region  "onSelectedCandidate"
+  //#region  "onSelectedCandidate"
   onSelectedCandidate(data: any) {
+    // Note Check for filled vacancies ot exceed total vacancies.
+    if (this.hiringRequestForm.get('FilledVacancies').value <= this.hiringRequestForm.get('TotalVacancies').value) {
     if (data != null) {
       if (data.EmployeeTypeId === this.employeeType.Candidate) {
-
         const dialogRef = this.dialog.open(EditCandidateDetailDialogComponent, {
           width: '550px',
           autoFocus: false,
@@ -378,44 +377,82 @@ GetAllAttendanceGrouplist() {
           }
         });
         dialogRef.componentInstance.employeeTypeDetial.subscribe((obj: any) => {
-          debugger;
-          data.IsSelected = obj.IsSelected;
-          data.EmployeeTypeId = this.employeeType.Active;
-          data.EmployeeTypeName = 'Active';
+          if (obj === this.employeeType.Active) {
+          this.EditselectedCandidate(data);
+          }
+          // to update the table hr
+
+          const candidateDetail: any = {
+            EmployeeId: data.EmployeeID,
+            HiringRequestId: this.hiringRequestForm.get('HiringRequestId')
+              .value,
+            IsSelected: !data.IsSelected,
+            BudgetLineId: this.hiringRequestForm.get('BudgetLineId').value,
+            ProjectId: this.projectId
+          };
+
+          this.hiringRequestService
+            .EditSelectedCandidateDEtail(candidateDetail)
+            .subscribe(
+              (response: IResponseData) => {
+                if (response.statusCode === 200) {
+                  data.IsSelected = !data.IsSelected;
+                  data.EmployeeTypeId = this.employeeType.Active;
+                  data.EmployeeTypeName = 'Active';
+                  this.hiringRequestForm.controls['FilledVacancies'].setValue(response.data.FilledVacancies);
+                } else {
+                  this.toastr.error(response.message);
+                }
+                // this.candidateloaderFlag = false;
+              },
+              error => {
+                this.toastr.error('Someting went wrong');
+                // this.candidateloaderFlag = false;
+              }
+            );
         });
         dialogRef.afterClosed().subscribe(result => {});
-
-      }   else {
-      const candidateDetail: any = {
-        EmployeeId: data.EmployeeID,
-        HiringRequestId: this.hiringRequestForm.get('HiringRequestId').value,
-        IsSelected: !data.IsSelected,
-        BudgetLineId: this.hiringRequestForm.get('BudgetLineId').value,
-        ProjectId: this.projectId
-      };
-
-      this.hiringRequestService
-        .EditSelectedCandidateDEtail(candidateDetail)
-        .subscribe(
-          (response: IResponseData) => {
-            if (response.statusCode === 200) {
-              data.IsSelected = !data.IsSelected;
-              data.EmployeeTypeId = this.employeeType.Active;
-              data.EmployeeTypeName = 'Active';
-            } else {
-              this.toastr.error(response.message);
-            }
-            // this.candidateloaderFlag = false;
-          },
-          error => {
-            this.toastr.error('Someting went wrong');
-            // this.candidateloaderFlag = false;
-          }
-        );
+      } else {
+        this.EditselectedCandidate(data);
+      }
     }
+  } else {
+  this.toastr.warning('No vacancies left');
   }
   }
   //#endregion
+
+//#region "EditselectedCandidate" common function
+EditselectedCandidate(data: any) {
+  const candidateDetail: any = {
+    EmployeeId: data.EmployeeID,
+    HiringRequestId: this.hiringRequestForm.get('HiringRequestId').value,
+    IsSelected: !data.IsSelected,
+    BudgetLineId: this.hiringRequestForm.get('BudgetLineId').value,
+    ProjectId: this.projectId
+  };
+
+  this.hiringRequestService
+    .EditSelectedCandidateDEtail(candidateDetail)
+    .subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200) {
+          data.IsSelected = !data.IsSelected;
+          data.EmployeeTypeId = this.employeeType.Active;
+          data.EmployeeTypeName = 'Active';
+          this.hiringRequestForm.controls['FilledVacancies'].setValue(response.data.FilledVacancies);
+        } else {
+          this.toastr.error(response.message);
+        }
+        // this.candidateloaderFlag = false;
+      },
+      error => {
+        this.toastr.error('Someting went wrong');
+        // this.candidateloaderFlag = false;
+      }
+    );
+}
+//#endregion
 
   //#region "onAddInterviewCandidate"
   onAddInterviewCandidate(event: IReuestedCandidateDetailModel) {
@@ -460,7 +497,8 @@ GetAllAttendanceGrouplist() {
   //#region "onCompleteHiringRequestClicked"
   onCompleteHiringRequestClicked() {
     this.SelctedHiringRequestId = this.hiringRequestForm.get(
-      'HiringRequestId').value;
+      'HiringRequestId'
+    ).value;
     this.hiringRequestService
       .IsCompltedeHrDEtail(this.SelctedHiringRequestId)
       .subscribe(
