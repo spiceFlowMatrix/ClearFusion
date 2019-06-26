@@ -65,7 +65,6 @@ employeeType = {
   }
   //#endregion
   EditCandidateDetail(data: any) {
-    debugger;
     const employeeDetail: any = {
       EmployeeContractTypeId: data.EmployeeContractTypeId,
       AttendanceGroupId: data.Id,

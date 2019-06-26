@@ -73,7 +73,6 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
     }
   }
   ngOnChanges() {
-    debugger;
     console.log('openvalue', this.hiringRequestDetail);
     this.initForm();
   }

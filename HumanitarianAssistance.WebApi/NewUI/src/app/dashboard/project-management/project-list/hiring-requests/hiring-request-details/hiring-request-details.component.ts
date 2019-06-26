@@ -364,7 +364,6 @@ GetAllAttendanceGrouplist() {
 
 //#region  "onSelectedCandidate"
   onSelectedCandidate(data: any) {
-    debugger;
     if (data != null) {
       if (data.EmployeeTypeId === this.employeeType.Candidate) {
 
