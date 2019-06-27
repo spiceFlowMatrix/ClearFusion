@@ -351,22 +351,6 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             return response;
         }
 
-        public async Task<APIResponse> EditIntetviewdCandidateDetail(HiringRequestCandidateModel model, string userId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
-
-
 
         public async Task<APIResponse> GetAllCandidateList(ProjectHiringCandidateDetailModel model)
         {
@@ -509,7 +493,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                     {
                         int count = await _uow.GetDbContext().HiringRequestCandidates.Where(x => x.HiringRequestId == model.HiringRequestId &&
                                                                                                  x.IsDeleted == false).CountAsync(x => x.IsSelected);
-                        hrDetail.FilledVacancies = count+1;
+                        hrDetail.FilledVacancies = count;
                         await _uow.ProjectHiringRequestRepository.UpdateAsyn(hrDetail);
                         await _uow.SaveAsync();
                     }
@@ -550,19 +534,19 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
 
             try
             {
+                ProjectHiringRequestDetail projectHiringRequestDetail = new ProjectHiringRequestDetail();
                 if (hiringRequestId != 0)
                 {
-                    ProjectHiringRequestDetail projectHiringRequestDetail = await _uow.GetDbContext()
-                                                                                .ProjectHiringRequestDetail
-                                                                                .FirstOrDefaultAsync(x => x.IsDeleted == false &&
-                                                                                x.HiringRequestId == hiringRequestId);
+                     projectHiringRequestDetail = await _uow.GetDbContext().ProjectHiringRequestDetail
+                                                                           .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                                     x.HiringRequestId == hiringRequestId);
 
                     projectHiringRequestDetail.IsCompleted = true;
 
-                    _uow.GetDbContext().ProjectHiringRequestDetail.Update(projectHiringRequestDetail);
+                    await  _uow.ProjectHiringRequestRepository.UpdateAsyn(projectHiringRequestDetail);
                     await _uow.GetDbContext().SaveChangesAsync();
                 }
-
+                response.ResponseData = projectHiringRequestDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

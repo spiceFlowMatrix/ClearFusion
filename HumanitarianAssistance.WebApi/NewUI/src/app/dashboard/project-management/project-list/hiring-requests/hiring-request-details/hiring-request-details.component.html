@@ -4,9 +4,23 @@
       <span class="font_x_large">Hiring Request Details</span> &nbsp;
     </div>
     <div class="col-sm-6">
-      <button mat-raised-button color="primary" (click)="onCompleteHiringRequestClicked()">
-        Complete Request
+      <button *ngIf="isCompleted" mat-raised-button color="accent" pTooltip="Request Completed"
+        tooltipPosition="top" aria-label="Request Completed">
+        <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">done</mat-icon>
+        Request Completed
       </button> &nbsp;
+      <button *ngIf="!isCompleted" mat-stroked-button pTooltip="Complete Request"
+        tooltipPosition="top" aria-label="Complete Request" (click)="onCompleteHiringRequestClicked()">
+        <span  *ngIf="!isCompletedFlag; else completedLoderTemplate" >
+            Complete Request
+        </span>
+        <ng-template #completedLoderTemplate>
+            <div class="pull-left">
+                <mat-spinner class="spinner_center" [diameter]="20"> </mat-spinner>
+              </div>
+        </ng-template>
+      </button> &nbsp;
+
       <button mat-raised-button color="primary" (click)="onEditHiringRequestClicked()">
         Edit
       </button>
@@ -141,13 +155,18 @@
                         ShortList
                       </button>
 
-                      <button mat-stroked-button
+                      <button mat-stroked-button mat-raised-button
                         *ngIf="(!item.IsSelected && item.IsShortListed && item.EmployeeTypeId==employeeType.Candidate) || (item.EmployeeTypeId==employeeType.Active && !item.IsSelected)"
-                        (click)="onSelectedCandidate(item)">
-                        <mat-icon aria-label="done">
+                        (click)="onSelectedCandidate(item)" [disabled]="item.IsSelectedFlag">
+                        <mat-icon aria-label="done" *ngIf="!item.IsSelectedFlag; else onSelectedCandidateFlagTemplate">
                           done
                         </mat-icon>
                         Select
+                        <ng-template #onSelectedCandidateFlagTemplate>
+                          <div class="pull-left">
+                            <mat-spinner class="spinner_center" [diameter]="20"> </mat-spinner>
+                          </div>
+                        </ng-template>
                       </button>
 
                       <button mat-stroked-button mat-raised-button color="accent" *ngIf="item.IsSelected">

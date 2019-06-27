@@ -339,7 +339,7 @@ IsCompltedeHrDEtail(hiringRequestId: number ){
   .pipe(
     map(x => {
       const responseData: IResponseData = {
-        data: x,
+        data: x.ResponseData,
         statusCode: x.StatusCode,
         message: x.Message
       };

@@ -115,23 +115,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
     }
     #endregion
 
-    #region "EditHiringRequestCandidate"
-    [HttpPost]
-    public async Task<APIResponse> EditInterviewedCandidateDetail([FromBody]HiringRequestCandidateModel Model)
-    {
-      APIResponse apiRespone = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiRespone = await _hiringRequestService.EditIntetviewdCandidateDetail(Model, id);
-      }
-      return apiRespone;
-    }
-    #endregion
-
-
-
     #region "GetRequestedCandidiateListById"
     [HttpPost]
     public async Task<APIResponse> GetHiringCandidatesListById([FromBody] ProjectHiringCandidateDetailModel model) {
@@ -142,6 +125,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
     }
 
     #endregion
+    
     #region "AddCandidateInterviewDetail"
     [HttpPost]
     public async Task<APIResponse> AddCandidateInterviewDetail([FromBody] CandidateInterViewModel model)
