@@ -24,7 +24,7 @@ export class VoucherService {
   //#region "GetVoucherList"
   GetVoucherList(data: IVoucherListFilterModel) {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_AccountNew_GetAllVoucherList,
+      this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllVoucherList,
       data
     );
   }
@@ -34,7 +34,7 @@ export class VoucherService {
   AddVoucher(data: IAddVoucherModel) {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_AccountNew_AddVoucherDetail,
+        this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_AddVoucherDetail,
         data
       )
       .pipe(
@@ -70,7 +70,7 @@ export class VoucherService {
   //#region "GetVoucherDetailById"
   GetVoucherDetailById(id: number): any {
       return this.globalService
-        .getListById(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_GetVoucherDetailByVoucherNo, id)
+        .getListById(this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetVoucherDetailByVoucherNo, id)
         .pipe(
           map(x => {
             const responseData: IResponseData = {
@@ -228,7 +228,7 @@ export class VoucherService {
   //#region "EditVoucherDetailById"
   EditVoucherDetailById(data: IVoucherDetailModel): any {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_EditVoucherNewDetail, data)
+      .post(this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_EditVoucherDetail, data)
       .pipe(
         map(x => {
 
@@ -246,7 +246,7 @@ export class VoucherService {
   //#region "GetTransactionByVoucherId"
   GetTransactionByVoucherId(id: number): any {
     return this.globalService
-      .getListById(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_GetAllTransactionsByVoucherId, id)
+      .getListById(this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllTransactionsByVoucherId, id)
       .pipe(
         map(x => {
           const responseData: IResponseData = {
@@ -260,62 +260,12 @@ export class VoucherService {
   }
   //#endregion
 
-    //#region "EditTransactionDetail"
-    EditTransactionDetail(data: IEditTransactionModel): any {
-      return this.globalService
-        .post(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_EditVoucherTransaction, data)
-        .pipe(
-          map(x => {
-            const responseData: IResponseData = {
-              data: null,
-              statusCode: x.StatusCode,
-              message: x.Message
-            };
-            return responseData;
-          })
-        );
-    }
-    //#endregion
-
-
-  //#region "DeleteTransactionDetailById"
-  DeleteTransactionDetailById(id: number): any {
-    return this.globalService
-      .getListById(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_DeleteTransactionById, id)
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: null,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        })
-      );
-  }
-  //#endregion
-
-  //#region "AddTransactionList"
-  AddTransactionList(data: IEditTransactionModel[]): any {
-    return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_AddVoucherTransaction, data)
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: null,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        })
-      );
-  }
-  //#endregion
+ 
 
   //#region "AddEditTransactionList"
   AddEditTransactionList(data: AddEditTransactionModel): any {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_AddEditTransactionList, data)
+      .post(this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_AddEditTransactionList, data)
       .pipe(
         map(x => {
           const responseData: IResponseData = {
@@ -332,31 +282,11 @@ export class VoucherService {
   //#region "VoucherVerify"
   VoucherVerify(data: number): any {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_VerifyVoucher, data)
+      .post(this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_VerifyVoucher, data)
       .pipe(
         map(x => {
           const responseData: IResponseData = {
             data: x.data.IsVoucherVerified,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        })
-      );
-  }
-  //#endregion
-
-  //#region "DeleteVoucherDocument"
-  DeleteVoucherDocument(documentId: number) {
-    return this.globalService
-      .post(
-        this.appurl.getApiUrl() + GLOBAL.API_AccountNew_DeleteVoucherDocument,
-        documentId
-      )
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: null,
             statusCode: x.StatusCode,
             message: x.Message
           };

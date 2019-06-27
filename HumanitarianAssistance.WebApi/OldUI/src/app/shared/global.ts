@@ -69,8 +69,7 @@ export class GLOBAL {
   public static API_Accounting_AddVouchersTransaction = 'Account/AddVoucherTransactionDetail';
   public static API_Accounting_EditVouchersTransaction = 'Account/EditVoucherTransactionDetail';
   public static API_Accounting_GetAllJournalDetails = 'Account/GetJouranlVoucherDetails';
-  public static API_Accounting_GetAllLedgerDetails = 'Account/GetAllLedgerDetails';
-  public static API_Accounting_GetAllTrailBalanceDetails = 'Account/GetTrailBlanceDetailsByCondition';
+
   public static API_Accounting_GetAllBudgetLineDetails = 'ProjectPipeLining/GetAllProjectBudgetLineByProjectId';
   public static API_BudgetLine_GetProjectBudgetTransactions = 'Account/GetAllVoucherTransactionDetailByBudgetLine';
   public static API_Accounting_GetProjectAndBudgetLine = 'Account/GetProjectAndBudgetLine';
@@ -345,8 +344,6 @@ export class GLOBAL {
   public static API_Hr_AddInterviewDetails = 'HREmployee/AddInterviewDetails';
   public static API_Hr_EditInterviewDetails = 'HREmployee/EditInterviewDetails';
 
-  public static API_Accounting_GetJouranlVoucherDetailsByCondition = 'Account/GetJouranlVoucherDetailsByCondition';
-
   public static API_Code_ApproveEmployeeAppraisalRequest = 'Code/ApproveEmployeeAppraisalRequest';
   public static API_Code_RejectEmployeeAppraisalRequest = 'Code/RejectEmployeeAppraisalRequest';
 
@@ -526,6 +523,17 @@ export class GLOBAL {
   public static API_Accounting_GetAllVoucherByJouranlId = 'Account/GetAllVoucherByJouranlId';
   public static API_EmployeeHR_AddEmployeeLeaveDetails = 'EmployeeHR/AddEmployeeLeaveDetails';
   public static API_Code_GetApplicationPages = 'Code/GetApplicationPages';
+
+  // Reports
+  public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
+  public static API_AccountReports_GetAllTrailBalanceDetails = 'AccountReports/GetTrailBlanceDetailsByCondition';
+  public static API_AccountReports_GetJournalVoucherDetailsByCondition= 'AccountReports/GetJournalVoucherDetailsByCondition';
+
+
+
+
+
+
 
 
   // public static API_Store_GetAllItemSpecificationDetails = 'Store/GetAllItemSpecificationDetails';

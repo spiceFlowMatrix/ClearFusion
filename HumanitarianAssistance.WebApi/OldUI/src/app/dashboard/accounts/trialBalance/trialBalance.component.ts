@@ -263,7 +263,7 @@ export class TrailBalanceComponent implements OnInit {
     this.accountservice
       .GetAllTrailBalance(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetAllTrailBalanceDetails,
+          GLOBAL.API_AccountReports_GetAllTrailBalanceDetails,
         trialBalanceFilter
       )
       .subscribe(

@@ -74,7 +74,7 @@ export class FundsComponent implements OnInit {
 
     this.globalService
       .getListById(
-        this.appUrl.getApiUrl() + GLOBAL.API_Account_GetAllAccountsByParentId,
+        this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_GetAllAccountsByParentId,
         model.ChartOfAccountNewId
       )
       .subscribe(
@@ -127,7 +127,7 @@ export class FundsComponent implements OnInit {
 
     this.globalService
       .getListById(
-        this.appUrl.getApiUrl() + GLOBAL.API_Account_GetAllAccountsByParentId,
+        this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_GetAllAccountsByParentId,
         model.ChartOfAccountNewId
       )
       .subscribe(
@@ -198,7 +198,7 @@ export class FundsComponent implements OnInit {
 
     this.globalService
       .getListById(
-        this.appUrl.getApiUrl() + GLOBAL.API_Account_GetAllAccountsByParentId,
+        this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_GetAllAccountsByParentId,
         model.ChartOfAccountNewId
       )
       .subscribe(
@@ -354,7 +354,7 @@ export class FundsComponent implements OnInit {
 
     this.globalService
       .getListById(
-        this.appUrl.getApiUrl() + GLOBAL.API_Account_GetMainLevelAccount,
+        this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_GetMainLevelAccount,
         id
       )
       .subscribe(
@@ -426,7 +426,7 @@ export class FundsComponent implements OnInit {
 
 
       this.globalService
-        .post(this.appUrl.getApiUrl() + GLOBAL.API_Account_AddChartOfAccount, obj)
+        .post(this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_AddChartOfAccount, obj)
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
@@ -509,7 +509,7 @@ export class FundsComponent implements OnInit {
 
     this.globalService
       .post(
-        this.appUrl.getApiUrl() + GLOBAL.API_Account_EditChartOfAccount,
+        this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_EditChartOfAccount,
         obj
       )
       .subscribe(
@@ -587,7 +587,7 @@ export class FundsComponent implements OnInit {
 
 
       this.globalService
-        .post(this.appUrl.getApiUrl() + GLOBAL.API_Account_AddChartOfAccount, obj)
+        .post(this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_AddChartOfAccount, obj)
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
@@ -665,7 +665,7 @@ export class FundsComponent implements OnInit {
 
     this.globalService
       .post(
-        this.appUrl.getApiUrl() + GLOBAL.API_Account_EditChartOfAccount,
+        this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_EditChartOfAccount,
         obj
       )
       .subscribe(
@@ -748,7 +748,7 @@ export class FundsComponent implements OnInit {
 
 
       this.globalService
-        .post(this.appUrl.getApiUrl() + GLOBAL.API_Account_AddChartOfAccount, obj)
+        .post(this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_AddChartOfAccount, obj)
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
@@ -836,7 +836,7 @@ export class FundsComponent implements OnInit {
 
     this.globalService
       .post(
-        this.appUrl.getApiUrl() + GLOBAL.API_Account_EditChartOfAccount,
+        this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_EditChartOfAccount,
         obj
       )
       .subscribe(
@@ -932,7 +932,7 @@ export class FundsComponent implements OnInit {
 
 
       this.globalService
-        .post(this.appUrl.getApiUrl() + GLOBAL.API_Account_AddChartOfAccount, obj)
+        .post(this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_AddChartOfAccount, obj)
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
@@ -1039,7 +1039,7 @@ export class FundsComponent implements OnInit {
 
     this.globalService
       .post(
-        this.appUrl.getApiUrl() + GLOBAL.API_Account_EditChartOfAccount,
+        this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_EditChartOfAccount,
         obj
       )
       .subscribe(
@@ -1091,7 +1091,7 @@ export class FundsComponent implements OnInit {
     this.commonLoaderService.showLoader();
 
     this.globalService
-      .post(this.appUrl.getApiUrl() + GLOBAL.API_Account_AddChartOfAccount, obj)
+      .post(this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_AddChartOfAccount, obj)
       .subscribe(
         data => {
           if (data.StatusCode === 200) {
@@ -1134,7 +1134,7 @@ export class FundsComponent implements OnInit {
 
     this.globalService
       .post(
-        this.appUrl.getApiUrl() + GLOBAL.API_Account_EditChartOfAccount,
+        this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_EditChartOfAccount,
         obj
       )
       .subscribe(

@@ -310,7 +310,7 @@ export class LedgerComponent implements OnInit {
 
     this.accountservice
       .GetAllLedgerDetails(
-        this.setting.getBaseUrl() + GLOBAL.API_Accounting_GetAllLedgerDetails,
+        this.setting.getBaseUrl() + GLOBAL.API_AccountReports_GetAllLedgerDetails,
         journalFilter
       )
       .subscribe(
