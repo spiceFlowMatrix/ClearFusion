@@ -52,8 +52,7 @@
         <div>
 
             <dx-data-grid id="gridContainer" [dataSource]="monthlyhoursDatasource" [allowColumnReordering]="true" [allowColumnResizing]="true"
-                [columnAutoWidth]="true" (onRowUpdating)="logEvent('onRowUpdating',$event)" (onRowInserting)="logEvent('RowInserting',$event)"
-                (onRowInserted)="logEvent('RowInserted',$event)" [showRowLines]="true">
+                [columnAutoWidth]="true" [showRowLines]="true">
                 <dxo-editing mode="popup" [allowAdding]="false" [allowUpdating]="false"></dxo-editing>
 
                 <dxo-header-filter [visible]="true"> </dxo-header-filter>

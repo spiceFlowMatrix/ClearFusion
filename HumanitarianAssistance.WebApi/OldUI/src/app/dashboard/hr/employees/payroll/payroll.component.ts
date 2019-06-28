@@ -246,46 +246,46 @@ export class PayrollComponent implements OnInit {
   }
   //#endregion
 
-  //#region "Add Payroll"
-  AddPayrollDetails(data) {
-    this.showPayrollInfoLoader();
-    const obj = [];
-    data.forEach(element => {
-      obj.push({
-        PayrollId: element.PayrollId,
-        SalaryHeadType: element.SalaryHeadType,
-        HeadTypeId: element.HeadTypeId,
-        SalaryHeadId: element.SalaryHeadId,
-        SalaryHead: element.SalaryHead,
-        MonthlyAmount: element.MonthlyAmount,
-        PaymentType: this.payrollForm.PaymentType,
-        CurrencyId: this.payrollForm.CurrencyValue,
-        EmployeeID: this.employeeId,
-        PensionRate: this.pensionRate
-      });
-    });
+  ////#region "Add Payroll"
+  //AddPayrollDetails(data) {
+  //  this.showPayrollInfoLoader();
+  //  const obj = [];
+  //  data.forEach(element => {
+  //    obj.push({
+  //      PayrollId: element.PayrollId,
+  //      SalaryHeadType: element.SalaryHeadType,
+  //      HeadTypeId: element.HeadTypeId,
+  //      SalaryHeadId: element.SalaryHeadId,
+  //      SalaryHead: element.SalaryHead,
+  //      MonthlyAmount: element.MonthlyAmount,
+  //      PaymentType: this.payrollForm.PaymentType,
+  //      CurrencyId: this.payrollForm.CurrencyValue,
+  //      EmployeeID: this.employeeId,
+  //      PensionRate: this.pensionRate
+  //    });
+  //  });
 
-    this.accountservice
-      .AddVoucher(
-        this.setting.getBaseUrl() + GLOBAL.API_HR_AddEmployeeSalaryDetail,
-        obj
-      )
-      .subscribe(
-        // tslint:disable-next-line:no-shadowed-variable
-        data => {
-          this.hidePayrollInfoLoader();
-          if (data.StatusCode === 200) {
-            this.toastr.success('Added Successfully!');
-          // tslint:disable-next-line:curly
-          } else if (data.StatusCode === 400)
-            this.toastr.error('Something went wrong!');
+  //  this.accountservice
+  //    .AddVoucher(
+  //      this.setting.getBaseUrl() + GLOBAL.API_HR_AddEmployeeSalaryDetail,
+  //      obj
+  //    )
+  //    .subscribe(
+  //      // tslint:disable-next-line:no-shadowed-variable
+  //      data => {
+  //        this.hidePayrollInfoLoader();
+  //        if (data.StatusCode === 200) {
+  //          this.toastr.success('Added Successfully!');
+  //        // tslint:disable-next-line:curly
+  //        } else if (data.StatusCode === 400)
+  //          this.toastr.error('Something went wrong!');
 
-          this.GetEmployeePayrollDetails();
-        },
-        error => {}
-      );
-  }
-  //#endregion
+  //        this.GetEmployeePayrollDetails();
+  //      },
+  //      error => {}
+  //    );
+  //}
+  ////#endregion
 
   //#region "Edit Payroll"
   EditPayrollDetails(data) {

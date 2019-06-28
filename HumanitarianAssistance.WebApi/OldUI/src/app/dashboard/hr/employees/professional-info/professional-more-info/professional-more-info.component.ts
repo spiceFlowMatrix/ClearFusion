@@ -800,18 +800,19 @@ export class ProfessionalMoreInfoComponent implements OnInit {
   //#endregion
 
   //#region "logEventCloseRelatives"
-  logEventCloseRelatives(eventName: string, obj) {
+    logEventCloseRelatives(eventName: string, obj) {
+        debugger;
     // tslint:disable-next-line:radix
     const employeeId = parseInt(localStorage.getItem('SelectedEmployee'));
 
-    if(obj.column.dataField==='PhoneNo'){
+        if (obj.column != undefined && obj.column.dataField === 'PhoneNo') {
       let phone= obj.data.PhoneNo.toString();
       if(phone.length>14 || phone.length<10){
         this.toastr.warning('Phone Number should be between 10-14 digits!!!');
       }
     }
 
-    if (eventName === 'RowInserting') {
+      if (eventName === 'RowInserting') {
       const addModel: InformatioRegardingCloseRelativesModel = {
         EmployeeRelativeInfoId: 0,
         EmployeeInfoReferencesId: 0,
@@ -873,7 +874,7 @@ export class ProfessionalMoreInfoComponent implements OnInit {
     // tslint:disable-next-line:radix
     const employeeId = parseInt(localStorage.getItem('SelectedEmployee'));
 
-    if(obj.column.dataField==='PhoneNo'){
+      if (obj.column != undefined && obj.column.dataField === 'PhoneNo') {
       let phone= obj.data.PhoneNo.toString();
       if(phone.length>14 || phone.length<10){
         this.toastr.warning('Phone Number should be between 10-14 digits!!!');

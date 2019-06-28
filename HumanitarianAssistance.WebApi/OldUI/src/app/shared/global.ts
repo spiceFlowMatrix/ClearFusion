@@ -103,7 +103,7 @@ export class GLOBAL {
   public static API_Hr_DeleteEmployeeHistoryDetail = 'HREmployee/DeleteEmployeeHistoryDetail';
   public static API_HR_GetAllPayrollMonthlyHourDetail = 'HREmployee/GetAllPayrollMonthlyHourDetail';
   public static API_HR_GetAllPayrollMonthlyHourDetailFilter = 'EmployeeHR/GetAllPayrollMonthlyHourDetail'; // new EmployeeHR
-  public static API_HR_AddPayrollMonthlyHourDetail = 'EmployeeHR/AddPayrollMonthlyHourDetail';
+  public static API_EmployeeHR_AddPayrollMonthlyHourDetail = 'EmployeeHR/AddPayrollMonthlyHourDetail';
   // public static API_HR_AddPayrollMonthlyHourDetail = 'HREmployee/AddPayrollMonthlyHourDetail';
   public static API_HR_AssignLeaveToEmployeeDetail = 'HREmployee/AssignLeaveToEmployeeDetail';
   public static API_HR_GetAllEmployeeAssignLeave = 'HREmployee/GetAllEmployeeAssignLeave';
@@ -301,7 +301,7 @@ export class GLOBAL {
   public static API_Hr_GetEmployeeContractType = 'HREmployee/GetAllEmployeeContractType';
   public static API_Code_SaveContractContent = 'HREmployee/SaveContractContent';
   public static API_Code_GetAllContractTypeContent = 'HREmployee/GetAllContractTypeContent';
-  public static API_Code_GetSelectedEmployeeContract = 'HREmployee/GetSelectedEmployeeContract';
+  // public static API_Code_GetSelectedEmployeeContract = 'HREmployee/GetSelectedEmployeeContract';
 
   public static API_Hr_GetEmployeeSalaryDetails = 'HREmployee/GetEmployeeSalaryDetails';
   public static API_Hr_EmployeeTaxCalculation = 'HREmployee/EmployeeTaxCalculation';
@@ -429,7 +429,7 @@ export class GLOBAL {
   public static API_EmployeeHr_GetAllEmployeeMonthlyPayrollListApproved = 'EmployeeHR/GetAllEmployeeMonthlyPayrollListApproved';
 
   // public static API_Hr_EmployeePaymentTypeReportForSaveOnly = 'HREmployee/EmployeePaymentTypeReportForSaveOnly'; //old
-  public static API_Hr_EmployeePaymentTypeReportForSaveOnly = 'EmployeeHR/EmployeePaymentTypeReportForSaveOnly'; // new
+    public static API_EmployeeHr_EmployeePaymentTypeReportForSaveOnly = 'EmployeeHR/EmployeePaymentTypeReportForSaveOnly'; // new
 
   // public static API_Hr_EmployeeSalaryTaxDetails = 'HREmployee/EmployeeSalaryTaxDetails';
   public static API_Hr_EmployeeSalaryTaxDetails = 'EmployeeHR/EmployeeSalaryTaxDetails';
