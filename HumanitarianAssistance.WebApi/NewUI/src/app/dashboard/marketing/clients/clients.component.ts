@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ClientsService } from './service/clients.service';
-import { GLOBAL } from 'src/app/shared/global';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import {
   ClientDetailsModel,

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { PolicyModel } from '../model/policy-model';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root'

@@ -1,10 +1,9 @@
 import { Component, OnInit, EventEmitter, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { GLOBAL } from 'src/app/shared/global';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { ContractsService } from '../service/contracts.service';
 import { ToastrService } from 'ngx-toastr';
 import { ContractDetailsModel } from '../model/contract-details.model';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 
 @Component({
@@ -22,9 +21,7 @@ export class ContractApprovalComponent implements OnInit {
   }
 
   confirmAction() {
-    // this.confirmApproveContractFlag = true;
     this.onListRefresh.emit('true');
-    // tslint:disable-next-line:max-line-length
   }
 
 

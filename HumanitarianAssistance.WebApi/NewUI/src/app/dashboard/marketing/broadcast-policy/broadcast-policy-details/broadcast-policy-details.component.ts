@@ -10,7 +10,7 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { BroadcastPolicyService } from '../service/broadcast-policy.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { GLOBAL } from 'src/app/shared/global';
 
 import {

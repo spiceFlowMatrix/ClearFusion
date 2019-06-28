@@ -1397,86 +1397,86 @@ export class ProjectsComponent implements OnInit {
 
   //#region "Employee Contract Details Report"
 
-  getEmployeeContractReport(rowData) {
-    this.assignedEmployeePopup = false;
-    this.loading = true;
-    this.projectsService
-      .GetSelectedEmployeeContract(
-        this.setting.getBaseUrl() + GLOBAL.API_Code_GetSelectedEmployeeContract,
-        // tslint:disable-next-line:radix
-        parseInt(localStorage.getItem('EMPLOYEEOFFICEID')),
-        this.selectedProjectId,
-        this.selectdBudgetLineId,
-        rowData.data.EmployeeId
-      )
-      .subscribe(data => {
-        this.selectedEmployeesReportData = [];
-        if (
-          data.StatusCode === 200 &&
-          data.data.EmployeeContractModellst.length > 0
-        ) {
-          this.selectedEmployeesReportData =
-            data.data.EmployeeContractModellst[0];
-          this.contractPhoto =
-            this.setting.getDocUrl() +
-            data.data.EmployeeContractModellst[0].EmployeeImage;
-          // region "Language Conversion API"
-          if (data.data.EmployeeContractModellst[0].EmployeeName != null) {
-            this.googleObj.q =
-              data.data.EmployeeContractModellst[0].EmployeeName;
-            this.commonService.translate(this.googleObj, this.key).subscribe(
-              (res: any) => {
-                const text = JSON.parse(res._body);
-                this.employeeNameDari =
-                  text.data.translations[0].translatedText;
+  //getEmployeeContractReport(rowData) {
+  //  this.assignedEmployeePopup = false;
+  //  this.loading = true;
+  //  this.projectsService
+  //    .GetSelectedEmployeeContract(
+  //      this.setting.getBaseUrl() + GLOBAL.API_Code_GetSelectedEmployeeContract,
+  //      // tslint:disable-next-line:radix
+  //      parseInt(localStorage.getItem('EMPLOYEEOFFICEID')),
+  //      this.selectedProjectId,
+  //      this.selectdBudgetLineId,
+  //      rowData.data.EmployeeId
+  //    )
+  //    .subscribe(data => {
+  //      this.selectedEmployeesReportData = [];
+  //      if (
+  //        data.StatusCode === 200 &&
+  //        data.data.EmployeeContractModellst.length > 0
+  //      ) {
+  //        this.selectedEmployeesReportData =
+  //          data.data.EmployeeContractModellst[0];
+  //        this.contractPhoto =
+  //          this.setting.getDocUrl() +
+  //          data.data.EmployeeContractModellst[0].EmployeeImage;
+  //        // region "Language Conversion API"
+  //        if (data.data.EmployeeContractModellst[0].EmployeeName != null) {
+  //          this.googleObj.q =
+  //            data.data.EmployeeContractModellst[0].EmployeeName;
+  //          this.commonService.translate(this.googleObj, this.key).subscribe(
+  //            (res: any) => {
+  //              const text = JSON.parse(res._body);
+  //              this.employeeNameDari =
+  //                text.data.translations[0].translatedText;
 
-                // Next
-                if (data.data.EmployeeContractModellst[0].FatherName != null) {
-                  this.googleObj.q =
-                    data.data.EmployeeContractModellst[0].FatherName;
-                  this.commonService
-                    .translate(this.googleObj, this.key)
-                    .subscribe(
-                      (res1: any) => {
-                        const text1 = JSON.parse(res1._body);
-                        this.fatherNameDari =
-                          text1.data.translations[0].translatedText;
-                      },
-                      err => {}
-                    );
-                }
+  //              // Next
+  //              if (data.data.EmployeeContractModellst[0].FatherName != null) {
+  //                this.googleObj.q =
+  //                  data.data.EmployeeContractModellst[0].FatherName;
+  //                this.commonService
+  //                  .translate(this.googleObj, this.key)
+  //                  .subscribe(
+  //                    (res1: any) => {
+  //                      const text1 = JSON.parse(res1._body);
+  //                      this.fatherNameDari =
+  //                        text1.data.translations[0].translatedText;
+  //                    },
+  //                    err => {}
+  //                  );
+  //              }
 
-                // Next
-                if (data.data.EmployeeContractModellst[0].Province != null) {
-                  this.googleObj.q =
-                    data.data.EmployeeContractModellst[0].Province;
-                  this.commonService
-                    .translate(this.googleObj, this.key)
-                    .subscribe(
-                      (res1: any) => {
-                        const text1 = JSON.parse(res1._body);
-                        this.provinceNameDari =
-                          text1.data.translations[0].translatedText;
-                        // Popup Opens
-                        // this.assignedEmployeePopup = false;
-                        this.contractEmployeePopup = true;
-                        this.loading = false;
-                      },
-                      err => {}
-                    );
-                }
-              },
-              err => {}
-            );
-          }
-          //#endregion
-        } else {
-          // this.contractEmployeePopup = true;
-          this.toastr.warning('No contract to download!');
-          this.loading = false;
-        }
-      });
-  }
+  //              // Next
+  //              if (data.data.EmployeeContractModellst[0].Province != null) {
+  //                this.googleObj.q =
+  //                  data.data.EmployeeContractModellst[0].Province;
+  //                this.commonService
+  //                  .translate(this.googleObj, this.key)
+  //                  .subscribe(
+  //                    (res1: any) => {
+  //                      const text1 = JSON.parse(res1._body);
+  //                      this.provinceNameDari =
+  //                        text1.data.translations[0].translatedText;
+  //                      // Popup Opens
+  //                      // this.assignedEmployeePopup = false;
+  //                      this.contractEmployeePopup = true;
+  //                      this.loading = false;
+  //                    },
+  //                    err => {}
+  //                  );
+  //              }
+  //            },
+  //            err => {}
+  //          );
+  //        }
+  //        //#endregion
+  //      } else {
+  //        // this.contractEmployeePopup = true;
+  //        this.toastr.warning('No contract to download!');
+  //        this.loading = false;
+  //      }
+  //    });
+  //}
 
   getAllEmployeeInBudgetLine() {
     this.projectsService

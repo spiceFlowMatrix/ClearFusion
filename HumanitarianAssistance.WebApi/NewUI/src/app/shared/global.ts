@@ -85,8 +85,6 @@ export class GLOBAL {
   public static API_Project_GetDonarListById = 'Project/GetDonarListById';
   public static API_Project_DeleteDonorDetails = 'Project/DeleteDonorDetails';
   public static API_Code_GetAllAccountTypeByCategory = 'Code/GetAllAccountTypeByCategory';
-  public static API_Code_GetAllAccountBalancesByCategory = 'Code/GetAllAccountBalancesByCategory';
-  public static API_Code_GetAllAccountIncomeExpensesByCategory = 'Code/GetAllAccountIncomeExpensesByCategory';
   public static API_Code_GetAllEmployeeList = 'Code/GetAllEmployeeList';
   public static API_Code_AddAccountType = 'Code/AddAccountType';
   public static API_Code_EditAccountType = 'Code/EditAccountType';
@@ -173,42 +171,57 @@ export class GLOBAL {
   public static API_Code_GetAllAccountByAccountHeadTypeId = 'Code/GetAllAccountByAccountHeadTypeId';
   public static API_Code_GetAllJournalDetail = 'Code/GetAllJournalDetail';
 
-  public static API_Account_GetMainLevelAccount = 'Account/GetMainLevelAccount';
-  public static API_Account_GetAllAccountsByParentId = 'Account/GetAllAccountsByParentId';
-  public static API_Account_AddAndGetAllAccountsByParentId = 'Account/AddAndGetAllAccountsByParentId';
-  public static API_Account_GetAllAccountsByAccountHeadTypeId = 'Account/GetAllAccountsByAccountHeadTypeId';
-  public static API_Account_AddChartOfAccount = 'Account/AddChartOfAccount';
-  public static API_Account_DeleteChartOfAccount = 'Account/DeleteChartOfAccount';
-  public static API_Account_EditChartOfAccount = 'Account/EditChartOfAccount';
+
+
+
+  // Chart Of Account
+  public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
+  public static API_ChartOfAccount_GetAllAccountsByParentId = 'ChartOfAccount/GetAllAccountsByParentId';
+  public static API_ChartOfAccount_AddChartOfAccount = 'ChartOfAccount/AddChartOfAccount';
+  public static API_ChartOfAccount_EditChartOfAccount = 'ChartOfAccount/EditChartOfAccount';
+  public static API_ChartOfAccount_DeleteChartOfAccount = 'ChartOfAccount/DeleteChartOfAccount';
+  
+  // Financial Report
+  public static API_FinancialReport_GetAllAccountBalancesByCategory = 'FinancialReport/GetAllAccountBalancesByCategory';
+  public static API_FinancialReport_GetAllAccountIncomeExpensesByCategory = 'FinancialReport/GetAllAccountIncomeExpensesByCategory';
+
+  // Voucher Transaction
+  public static API_VoucherTransaction_GetAllVoucherList = 'VoucherTransaction/GetAllVoucherList';
+  public static API_VoucherTransaction_GetVoucherDetailByVoucherNo = 'VoucherTransaction/GetVoucherDetailByVoucherNo';
+  public static API_VoucherTransaction_AddVoucherDetail = 'VoucherTransaction/AddVoucherDetail';
+  public static API_VoucherTransaction_EditVoucherDetail= 'VoucherTransaction/EditVoucherDetail';
+  public static API_VoucherTransaction_VerifyVoucher = 'VoucherTransaction/VerifyVoucher';
+  public static API_VoucherTransaction_GetAllTransactionsByVoucherId = 'VoucherTransaction/GetAllTransactionsByVoucherId';
+  public static API_VoucherTransaction_AddEditTransactionList = 'VoucherTransaction/AddEditTransactionList';
+
+  // Exchange Rates
+  public static API_ExchangeRates_GetSavedExchangeRates = 'ExchangeRates/GetSavedExchangeRates';
+  public static API_ExchangeRates_SaveSystemGeneratedExchangeRates = 'ExchangeRates/SaveSystemGeneratedExchangeRates';
+  public static API_ExchangeRates_GetExchangeRatesDetail = 'ExchangeRates/GetExchangeRatesDetail';
+  public static API_ExchangeRates_SaveExchangeRatesForAllOffices = 'ExchangeRates/SaveExchangeRatesForAllOffices';
+  public static API_ExchangeRates_VerifyExchangeRates = 'ExchangeRates/VerifyExchangeRates';
+  public static API_ExchangeRates_DeleteExchangeRates = 'ExchangeRates/DeleteExchangeRates';
+
+  // Gain Loss Report
+  public static API_GainLossReport_GetExchangeGainLossFilterAccountList = 'GainLossReport/GetExchangeGainLossFilterAccountList';
+  public static API_GainLossReport_GetExchangeGainLossVoucherList = 'GainLossReport/GetExchangeGainLossVoucherList';
+  public static API_GainLossReport_AddExchangeGainLossVoucher = 'GainLossReport/AddExchangeGainLossVoucher';
+  public static API_GainLossReport_DeleteGainLossVoucherTransaction = 'GainLossReport/DeleteGainLossVoucherTransaction';
+
+
+
+
+
+
+
   public static API_Account_GetAllAccountFilter = 'Account/GetAllAccountFilter';
   public static API_Account_GetAllVoucherType = 'Account/GetAllVoucherType';
   public static API_Account_GetAllInputLevelAccountCode = 'Account/GetAllInputLevelAccountCode';
 
-  //#region "New Accounting"
-  public static API_AccountNew_GetAllVoucherList = 'AccountNew/GetAllVoucherList';
-  public static API_AccountNew_AddVoucherDetail = 'AccountNew/AddVoucherDetail';
-  public static API_AccountNew_GetVoucherDetailByVoucherNo = 'AccountNew/GetVoucherDetailByVoucherNo';
-  public static API_AccountNew_EditVoucherNewDetail = 'AccountNew/EditVoucherNewDetail';
-  public static API_AccountNew_GetAllTransactionsByVoucherId = 'AccountNew/GetAllTransactionsByVoucherId';
-  public static API_AccountNew_DeleteTransactionById = 'AccountNew/DeleteTransactionById';
-  public static API_AccountNew_EditVoucherTransaction = 'AccountNew/EditVoucherTransaction';
-  public static API_AccountNew_AddVoucherTransaction = 'AccountNew/AddVoucherTransaction';
-  public static API_AccountNew_AddEditTransactionList = 'AccountNew/AddEditTransactionList';
-  public static API_AccountNew_VerifyVoucher = 'AccountNew/VerifyVoucher';
-  public static API_AccountNew_SaveSystemGeneratedExchangeRates = 'AccountNew/SaveSystemGeneratedExchangeRates';
-  public static API_AccountNew_SaveExchangeRatesForAllOffices = 'AccountNew/SaveExchangeRatesForAllOffices';
-  public static API_AccountNew_GetSavedExchangeRates = 'AccountNew/GetSavedExchangeRates';
-  public static API_AccountNew_GetExchangeRatesDetail = 'AccountNew/GetExchangeRatesDetail';
-  public static API_AccountNew_VerifyExchangeRates = 'AccountNew/VerifyExchangeRates';
-  public static API_AccountNew_DeleteExchangeRates = 'AccountNew/DeleteExchangeRates';
 
-  public static API_AccountNew_GetExchangeGainLossVoucherList = 'AccountNew/GetExchangeGainLossVoucherList';
-  public static API_AccountNew_DeleteGainLossVoucherTransaction = 'AccountNew/DeleteGainLossVoucherTransaction';
-  public static API_AccountNew_AddExchangeGainLossVoucher = 'AccountNew/AddExchangeGainLossVoucher';
   public static API_Project_GetProjectBudgetLineDetail = 'Project/GetProjectBudgetLineDetail';
   public static API_Project_GetProjectJobDetail = 'Project/GetProjectJobDetail';
   public static API_Code_GetAllProfession = 'Code/GetAllProfession';
-  //#endregion
 
   //#region criteria evaluation form
 
@@ -318,7 +331,6 @@ export class GLOBAL {
   //#region "FinancailReport"
   public static API_FinancialReport_GetExchangeGainLossReport = 'FinancialReport/GetExchangeGainLossReport';
   public static API_FinancialReport_SaveGainLossAccountList = 'FinancialReport/SaveGainLossAccountList';
-  public static API_FinancialReport_GetExchangeGainLossFilterAccountList = 'FinancialReport/GetExchangeGainLossFilterAccountList';
   public static API_FinancialReport_GetDetailOfNotes = 'FinancialReport/GetDetailOfNotes';
   //#endregion
 
@@ -344,7 +356,6 @@ export class GLOBAL {
   public static API_Account_GetRoles = 'Account/GetRoles';
   public static API_FileManagement_GetSignedURL = 'FileManagement/GetSignedURL';
 
-  public static API_AccountNew_DeleteVoucherDocument = 'AccountNew/DeleteVoucherDocument';
   public static API_Dashboard_GetTrainingLink = 'Dashboard/GetTrainingLink';
 
 

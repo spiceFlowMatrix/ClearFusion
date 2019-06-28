@@ -153,7 +153,7 @@ export class GainLossReportService {
   //#region "GetJournalList"
   GetExchangeGainLossFilterAccountList(): any {
     return this.globalService
-      .getList(this.appurl.getApiUrl() + GLOBAL.API_FinancialReport_GetExchangeGainLossFilterAccountList)
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_GainLossReport_GetExchangeGainLossFilterAccountList)
       .pipe(
         map(x => {
           const responseData: IResponseData = {
@@ -187,7 +187,7 @@ export class GainLossReportService {
   //#region "AddGainLossVoucher"
   AddGainLossVoucher(data: IGainLossAddVoucherForm) {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_AddExchangeGainLossVoucher, data)
+      .post(this.appurl.getApiUrl() + GLOBAL.API_GainLossReport_AddExchangeGainLossVoucher, data)
       .pipe(
         map(x => {
           const responseData: IResponseData = {
@@ -204,7 +204,7 @@ export class GainLossReportService {
   //#region "GetGainLossVoucherList"
   GetGainLossVoucherList(): any {
     return this.globalService
-      .getList(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_GetExchangeGainLossVoucherList)
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_GainLossReport_GetExchangeGainLossVoucherList)
       .pipe(
         map(x => {
           const responseData: IResponseData = {
@@ -221,7 +221,7 @@ export class GainLossReportService {
   //#region "DeleteGainLossVoucher"
   DeleteGainLossVoucher(data: number) {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_AccountNew_DeleteGainLossVoucherTransaction, data)
+      .post(this.appurl.getApiUrl() + GLOBAL.API_GainLossReport_DeleteGainLossVoucherTransaction, data)
       .pipe(
         map(x => {
           const responseData: IResponseData = {

@@ -134,7 +134,7 @@ onFormSubmit(data: any) {
     const item = this.chartOfAccountList.length - 1; // use to calculate the index
 
     this.globalService
-      .post(this.appUrl.getApiUrl() + GLOBAL.API_Account_AddChartOfAccount, obj)
+      .post(this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_AddChartOfAccount, obj)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(
         response => {
@@ -212,7 +212,7 @@ addControlLevelAccountDetail(model: any) {
     const index = this.chartOfAccountList[mainLevelIndex].Children.length - 1; // use to calculate the index
 
     this.globalService
-      .post(this.appUrl.getApiUrl() + GLOBAL.API_Account_AddChartOfAccount, obj)
+      .post(this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_AddChartOfAccount, obj)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(
         response => {
@@ -293,7 +293,7 @@ const obj: ChartOfAccountModel = {
 const index = this.chartOfAccountList[mainLevelIndex].Children[controlLevelIndex].Children.length - 1; // use to calculate the index
 
 this.globalService
-  .post(this.appUrl.getApiUrl() + GLOBAL.API_Account_AddChartOfAccount, obj)
+  .post(this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_AddChartOfAccount, obj)
   .pipe(takeUntil(this.destroyed$))
   .subscribe(
     response => {
@@ -383,7 +383,7 @@ addInputLevelAccountDetail(model: any) {
                      .Children[controlLevelIndex].Children[subLevelIndex].Children.length - 1; // use to calculate the index
 
   this.globalService
-    .post(this.appUrl.getApiUrl() + GLOBAL.API_Account_AddChartOfAccount, obj)
+    .post(this.appUrl.getApiUrl() + GLOBAL.API_ChartOfAccount_AddChartOfAccount, obj)
     .pipe(takeUntil(this.destroyed$))
     .subscribe(
       response => {

@@ -383,12 +383,12 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpPost]
-    public async Task<object> GetAllAccountBalancesByCategory([FromBody]BalanceRequestModel model)
-    {
-      APIResponse response = await _accountBalance.GetNoteBalancesByHeadType(model.id, model.currency, model.asOfDate);
-      return response;
-    }
+    // [HttpPost]
+    // public async Task<object> GetAllAccountBalancesByCategory([FromBody]BalanceRequestModel model)
+    // {
+    //   APIResponse response = await _accountBalance.GetNoteBalancesByHeadType(model.id, model.currency, model.asOfDate);
+    //   return response;
+    // }
 
     [HttpPost]
     public async Task<object> AddChartAccountDetail([FromBody] ChartAccountDetailModel model)
@@ -406,12 +406,12 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpPost]
-    public async Task<object> GetAllAccountIncomeExpensesByCategory([FromBody]BalanceRequestModel model)
-    {
-      APIResponse response = await _accountBalance.GetNoteBalancesByHeadType(model.id, model.currency, model.asOfDate, model.upToDate);
-      return response;
-    }
+    // [HttpPost]
+    // public async Task<object> GetAllAccountIncomeExpensesByCategory([FromBody]BalanceRequestModel model)
+    // {
+    //   APIResponse response = await _accountBalance.GetNoteBalancesByHeadType(model.id, model.currency, model.asOfDate, model.upToDate);
+    //   return response;
+    // }
 
     [HttpPost]
     public async Task<object> EditChartAccountDetail([FromBody] ChartAccountDetailModel model)

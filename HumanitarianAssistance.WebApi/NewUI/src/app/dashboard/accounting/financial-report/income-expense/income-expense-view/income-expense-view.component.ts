@@ -146,7 +146,7 @@ export class IncomeExpenseViewComponent implements OnInit {
     this.globalService
       .getListByIdAndDate(
         this.appUrl.getApiUrl() +
-          GLOBAL.API_Code_GetAllAccountIncomeExpensesByCategory,
+          GLOBAL.API_FinancialReport_GetAllAccountIncomeExpensesByCategory,
         dataModel
       )
       .subscribe(data => {
@@ -190,7 +190,7 @@ export class IncomeExpenseViewComponent implements OnInit {
     this.globalService
       .getListByIdAndDate(
         this.appUrl.getApiUrl() +
-          GLOBAL.API_Code_GetAllAccountIncomeExpensesByCategory,
+          GLOBAL.API_FinancialReport_GetAllAccountIncomeExpensesByCategory,
         dataModel
       )
       .subscribe(data => {

@@ -548,10 +548,12 @@ export class ProfessionalInfoComponent implements OnInit {
   //#region "On Form Submit"
   OnFormSubmit(model) {
     // tslint:disable-next-line:curly
-    if (model.EmployeeProfessionalId === 0)
-    this.AddProfessionalDetails(model);
-    // tslint:disable-next-line:curly
-    else this.EditProfessionalDetails(model);
+    //if (model.EmployeeProfessionalId === 0)
+    //this.AddProfessionalDetails(model);
+    //// tslint:disable-next-line:curly
+    //else
+
+        this.EditProfessionalDetails(model);
   }
   //#endregion
 
