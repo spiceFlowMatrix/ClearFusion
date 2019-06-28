@@ -135,8 +135,6 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "initForm"
   initForm() {
-    const valu = this.hiringRequestDetail;
-    console.log(valu);
     this.hiringRequestForm = this.fb.group({
       Description: ['', Validators.required],
       Position: ['', [Validators.required]],
@@ -395,7 +393,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           dialogRef.componentInstance.employeeTypeDetial.subscribe(
             (obj: any) => {
               if (obj === this.employeeType.Active) {
-                // Note: to update the table hr
+                // Note: to update selected candidate detail
                 this.EditselectedCandidate(data);
               }
             }
@@ -413,7 +411,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "EditselectedCandidate" common function
   EditselectedCandidate(data: any) {
-    // note enable loader when we select candidate
+    // note:  enable loader when we click on select candidate
     const obj = this.candidateList.find(x => x.EmployeeID === data.EmployeeID);
     const indexOfCandidate = this.candidateList.indexOf(obj);
     this.candidateList[indexOfCandidate].IsSelectedFlag = true;
