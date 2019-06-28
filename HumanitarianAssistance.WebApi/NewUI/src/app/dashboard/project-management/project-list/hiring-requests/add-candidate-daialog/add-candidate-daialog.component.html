@@ -1,15 +1,18 @@
 <div>
 <h1 mat-dialog-title>
   New Candidate
-    <button  *ngIf="!candidateloaderFlag; else candidateloaderFlagLoaderTemplate" mat-icon-button [mat-dialog-close]="data" class="pull-right">
+    <button   mat-icon-button [mat-dialog-close]="data" class="pull-right"  [disabled]= "candidateloaderFlag">
+    <span *ngIf="!candidateloaderFlag; else candidateloaderFlagLoaderTemplate">
       <mat-icon aria-label="clear">clear</mat-icon>
+    </span>
+    <ng-template #candidateloaderFlagLoaderTemplate>
+      <div class="spinner_center padding_top_5 padding_bottom_5">
+        <mat-spinner [diameter]="20"> </mat-spinner>
+      </div>
+    </ng-template>
     </button>
 </h1>
-  <ng-template #candidateloaderFlagLoaderTemplate>
-    <div class="spinner_center padding_top_5 padding_bottom_5">
-      <mat-spinner [diameter]="20"> </mat-spinner>
-    </div>
-  </ng-template>
+
 
 
 <div class="col-lg-12">

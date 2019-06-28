@@ -83,7 +83,7 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
       Position: ['', [Validators.required]],
       ProfessionId: ['', Validators.required],
       TotalVacancies: [null, Validators.required],
-      FilledVacancies: [null, Validators.required],
+      FilledVacancies: [null],
       BasicPay: [null, Validators.required],
       CurrencyId: [null, Validators.required],
       BudgetLineId: [null, Validators.required],

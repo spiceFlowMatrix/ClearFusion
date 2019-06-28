@@ -47,8 +47,8 @@
     <div mat-dialog-actions class="pull-right">
       <button mat-raised-button [mat-dialog-close]="data">Cancel</button>
       <button mat-raised-button color="primary" type="submit" [disabled]="editHiringRequestLoader">
-        <span *ngIf="!addHiringRequestLoader; else hiringRequestAddLoaderTemplate">Save</span>
-        <ng-template #hiringRequestAddLoaderTemplate>
+        <span *ngIf="!editHiringRequestLoader; else editHiringRequestLoaderTemplate">Save</span>
+        <ng-template #editHiringRequestLoaderTemplate>
           <div class="spinner_center padding_top_5 padding_bottom_5">
             <mat-spinner [diameter]="25"> </mat-spinner>
           </div>
