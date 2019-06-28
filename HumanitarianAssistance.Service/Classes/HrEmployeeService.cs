@@ -2300,28 +2300,6 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public double SalaryCalculate(double grossSalary, double exchangeRate)
-        {
-            double salaryTax = 0;
-            if (grossSalary < 5000)
-            {
-                salaryTax = 0;
-            }
-            else if (grossSalary >= 5000 && grossSalary < 12500)
-            {
-                salaryTax = (grossSalary * exchangeRate - 5000) * 2 / 100;
-            }
-            else if (grossSalary >= 12500 && grossSalary < 100000)
-            {
-                salaryTax = (((grossSalary * exchangeRate - 12500) * 10 / 100) + 150) / exchangeRate;
-            }
-            else
-            {
-                salaryTax = ((((grossSalary * exchangeRate) - 100000) * 20 / 100) + 8900) / exchangeRate;
-            }
-            return salaryTax;
-        }
-
         public async Task<APIResponse> AddHolidayDetails(HolidayDetailsModel model)
         {
             APIResponse response = new APIResponse();
