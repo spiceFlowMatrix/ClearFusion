@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { GlobalService } from '../../../../shared/services/global-services.service';
-import { Observable } from 'rxjs';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { GLOBAL } from 'src/app/shared/global';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { map } from 'rxjs/internal/operators/map';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root'
