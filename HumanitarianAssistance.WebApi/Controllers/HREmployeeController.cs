@@ -139,18 +139,18 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiresponse;
     }
 
-    [HttpPost]
-    public async Task<object> AddEmployeeSalaryDetail([FromBody] List<EmployeePayrollModel> model)
-    {
-      APIResponse apiRespone = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiRespone = await _iHREmployee.AddEmployeeSalaryDetail(model, id);
-      }
-      return apiRespone;
-    }
+    //[HttpPost]
+    //public async Task<object> AddEmployeeSalaryDetail([FromBody] List<EmployeePayrollModel> model)
+    //{
+    //  APIResponse apiRespone = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    apiRespone = await _iHREmployee.AddEmployeeSalaryDetail(model, id);
+    //  }
+    //  return apiRespone;
+    //}
 
     [HttpPost]
     public async Task<object> EditEmployeeSalaryDetail([FromBody] List<EmployeePayrollModel> model)
@@ -260,21 +260,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpPost]
-    public async Task<object> AddEmployeeProfessionalDetail([FromBody] EmployeeProfessionalDetailModel model)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        model.CreatedById = id;
-        model.CreatedDate = DateTime.UtcNow;
-        model.IsDeleted = false;
-        response = await _iHREmployee.AddEmployeeProfessionalDetail(model);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<object> AddEmployeeProfessionalDetail([FromBody] EmployeeProfessionalDetailModel model)
+    //{
+    //  APIResponse response = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    model.CreatedById = id;
+    //    model.CreatedDate = DateTime.UtcNow;
+    //    model.IsDeleted = false;
+    //    response = await _iHREmployee.AddEmployeeProfessionalDetail(model);
+    //  }
+    //  return response;
+    //}
 
     [HttpPost]
     public async Task<object> EditEmployeeProfessionalDetail([FromBody] EmployeeProfessionalDetailModel model)
@@ -293,44 +293,44 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpPost]
-    public async Task<object> AddPayrollMonthlyHourDetail([FromBody] PayrollMonthlyHourDetailModel model)
-    {
-      APIResponse apiRespone = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        model.CreatedById = id;
-        model.CreatedDate = DateTime.UtcNow;
-        model.IsDeleted = false;
-        apiRespone = await _iHREmployee.AddPayrollMonthlyHourDetail(model);
-      }
-      return apiRespone;
-    }
+    //[HttpPost]
+    //public async Task<object> AddPayrollMonthlyHourDetail([FromBody] PayrollMonthlyHourDetailModel model)
+    //{
+    //  APIResponse apiRespone = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    model.CreatedById = id;
+    //    model.CreatedDate = DateTime.UtcNow;
+    //    model.IsDeleted = false;
+    //    apiRespone = await _iHREmployee.AddPayrollMonthlyHourDetail(model);
+    //  }
+    //  return apiRespone;
+    //}
 
-    [HttpPost]
-    public async Task<object> EditPayrollMonthlyHourDetail([FromBody] PayrollMonthlyHourDetailModel model)
-    {
-      APIResponse apiRespone = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        model.ModifiedById = id;
-        model.ModifiedDate = DateTime.UtcNow;
-        model.IsDeleted = false;
-        apiRespone = await _iHREmployee.EditPayrollMonthlyHourDetail(model);
-      }
-      return apiRespone;
-    }
+    //[HttpPost]
+    //public async Task<object> EditPayrollMonthlyHourDetail([FromBody] PayrollMonthlyHourDetailModel model)
+    //{
+    //  APIResponse apiRespone = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    model.ModifiedById = id;
+    //    model.ModifiedDate = DateTime.UtcNow;
+    //    model.IsDeleted = false;
+    //    apiRespone = await _iHREmployee.EditPayrollMonthlyHourDetail(model);
+    //  }
+    //  return apiRespone;
+    //}
 
-    [HttpGet]
-    public async Task<APIResponse> GetAllPayrollMonthlyHourDetail()
-    {
-      APIResponse response = await _iHREmployee.GetAllPayrollMonthlyHourDetail();
-      return response;
-    }
+    //[HttpGet]
+    //public async Task<APIResponse> GetAllPayrollMonthlyHourDetail()
+    //{
+    //  APIResponse response = await _iHREmployee.GetAllPayrollMonthlyHourDetail();
+    //  return response;
+    //}
 
     [HttpGet]
     public async Task<APIResponse> GetAllEmployeeAssignLeave(int EmployeeId)
@@ -355,34 +355,34 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
-    [HttpPost]
-    public async Task<object> EditAssignLeaveToEmployee([FromBody] AssignLeaveToEmployeeModel model)
-    {
-      APIResponse apiRespone = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        model.ModifiedById = id;
-        model.ModifiedDate = DateTime.UtcNow;
-        model.IsDeleted = false;
-        apiRespone = await _iHREmployee.EditAssignLeaveToEmployee(model);
-      }
-      return apiRespone;
-    }
+    //[HttpPost]
+    //public async Task<object> EditAssignLeaveToEmployee([FromBody] AssignLeaveToEmployeeModel model)
+    //{
+    //  APIResponse apiRespone = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    model.ModifiedById = id;
+    //    model.ModifiedDate = DateTime.UtcNow;
+    //    model.IsDeleted = false;
+    //    apiRespone = await _iHREmployee.EditAssignLeaveToEmployee(model);
+    //  }
+    //  return apiRespone;
+    //}
 
-    [HttpPost]
-    public async Task<object> AddEmployeeAttendanceDetails([FromBody] List<EmployeeAttendanceModel> modellist)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        response = await _iHREmployee.AddEmployeeAttendanceDetails(modellist, id);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<object> AddEmployeeAttendanceDetails([FromBody] List<EmployeeAttendanceModel> modellist)
+    //{
+    //  APIResponse response = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    var id = user.Id;
+    //    response = await _iHREmployee.AddEmployeeAttendanceDetails(modellist, id);
+    //  }
+    //  return response;
+    //}
 
     [HttpGet]
     public async Task<object> GetEmployeeProfessionalDetail(int EmployeeId)
@@ -412,12 +412,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpGet]
-    public async Task<object> GetEmployeeGeneralInformationById(int EmployeeId)
-    {
-      APIResponse response = await _iHREmployee.GetEmployeeGeneralInformationById(EmployeeId);
-      return response;
-    }
+    //[HttpGet]
+    //public async Task<object> GetEmployeeGeneralInformationById(int EmployeeId)
+    //{
+    //  APIResponse response = await _iHREmployee.GetEmployeeGeneralInformationById(EmployeeId);
+    //  return response;
+    //}
 
     [HttpPost]
     public async Task<object> ChangeEmployeeImage([FromBody] ChangeEmployeeImage model)
@@ -459,21 +459,21 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
 
-    [HttpGet]
-    public async Task<object> GetProspectiveEmployeesByProfessionId(int ProfessionId)
-    {
-      APIResponse response = await _iHREmployee.GetProspectiveEmployeesByProfessionId(ProfessionId);
-      return response;
-    }
+    //[HttpGet]
+    //public async Task<object> GetProspectiveEmployeesByProfessionId(int ProfessionId)
+    //{
+    //  APIResponse response = await _iHREmployee.GetProspectiveEmployeesByProfessionId(ProfessionId);
+    //  return response;
+    //}
 
     //Alpit
 
-    [HttpGet]
-    public async Task<object> GetAllScheduledProspectiveEmployee()
-    {
-      APIResponse response = await _iHREmployee.GetAllScheduledProspectiveEmployee();
-      return response;
-    }
+    //[HttpGet]
+    //public async Task<object> GetAllScheduledProspectiveEmployee()
+    //{
+    //  APIResponse response = await _iHREmployee.GetAllScheduledProspectiveEmployee();
+    //  return response;
+    //}
 
 
     [HttpGet]
@@ -600,12 +600,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpGet]
-    public async Task<object> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType)
-    {
-      APIResponse response = await _iHREmployee.GetAllEmployeeMonthlyPayrollList(officeid, currencyid, month, year, paymentType);
-      return response;
-    }
+    //[HttpGet]
+    //public async Task<object> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType)
+    //{
+    //  APIResponse response = await _iHREmployee.GetAllEmployeeMonthlyPayrollList(officeid, currencyid, month, year, paymentType);
+    //  return response;
+    //}
 
     [HttpPost]
     public async Task<object> AddHolidayDetails([FromBody] HolidayDetailsModel model)
@@ -702,13 +702,13 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpGet]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
-    public async Task<object> OnPostExport()
-    {
-      APIResponse response = await _iHREmployee.OnPostExport();
-      return response;
-    }
+    //[HttpGet]
+    ////[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Trust")]
+    //public async Task<object> OnPostExport()
+    //{
+    //  APIResponse response = await _iHREmployee.OnPostExport();
+    //  return response;
+    //}
 
     [HttpGet]
     public async Task<object> GetAllDisableCalanderDate(int employeeid, int officeid)
@@ -738,50 +738,50 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpGet]
-    public async Task<object> EmployeesSalarySummary([FromQuery]EmployeeSummaryModel model)
-    {
-      APIResponse response = await _iHREmployee.EmployeesSalarySummary(model);
-      return response;
-    }
+        [HttpGet]
+        public async Task<object> EmployeesSalarySummary([FromQuery]EmployeeSummaryModel model)
+        {
+            APIResponse response = await _iHREmployee.EmployeesSalarySummary(model);
+            return response;
+        }
 
-    [HttpPost]
-    public async Task<object> EmployeePaymentTypeReport([FromBody]List<EmployeePaymentTypeModel> model)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iHREmployee.EmployeePaymentTypeReport(model, user.Id);
-      }
-      return response;
-    }
+        //[HttpPost]
+        //public async Task<object> EmployeePaymentTypeReport([FromBody]List<EmployeePaymentTypeModel> model)
+        //{
+        //  APIResponse response = null;
+        //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        //  if (user != null)
+        //  {
+        //    response = await _iHREmployee.EmployeePaymentTypeReport(model, user.Id);
+        //  }
+        //  return response;
+        //}
 
-    [HttpPost]
-    public async Task<object> EmployeePaymentTypeReportForSaveOnly([FromBody]List<EmployeePaymentTypeModel> model)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iHREmployee.EmployeePaymentTypeReportForSaveOnly(model, user.Id);
-      }
-      return response;
-    }
+        //[HttpPost]
+        //public async Task<object> EmployeePaymentTypeReportForSaveOnly([FromBody]List<EmployeePaymentTypeModel> model)
+        //{
+        //  APIResponse response = null;
+        //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        //  if (user != null)
+        //  {
+        //    response = await _iHREmployee.EmployeePaymentTypeReportForSaveOnly(model, user.Id);
+        //  }
+        //  return response;
+        //}
 
-    [HttpPost]
-    public async Task<object> RemoveApprovedList([FromBody]List<EmployeePaymentTypeModel> model)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iHREmployee.RemoveApprovedList(model, user.Id);
-      }
-      return response;
-    }
+        //[HttpPost]
+        //public async Task<object> RemoveApprovedList([FromBody]List<EmployeePaymentTypeModel> model)
+        //{
+        //  APIResponse response = null;
+        //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        //  if (user != null)
+        //  {
+        //    response = await _iHREmployee.RemoveApprovedList(model, user.Id);
+        //  }
+        //  return response;
+        //}
 
-    [HttpGet]
+        [HttpGet]
     public async Task<object> EmployeePensionReport([FromBody]PensionModel model)
     {
       APIResponse response = null;
@@ -817,17 +817,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpPost]
-    public async Task<object> GetExchangeRate([FromBody]ExchangeRateModel model)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iHREmployee.GetExchangeRate(model);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<object> GetExchangeRate([FromBody]ExchangeRateModel model)
+    //{
+    //  APIResponse response = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    response = await _iHREmployee.GetExchangeRate(model);
+    //  }
+    //  return response;
+    //}
 
     [HttpGet]
     public async Task<object> GetAllEmployeeContractType()
@@ -865,17 +865,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpGet]
-    public async Task<object> GetSelectedEmployeeContract([FromQuery]int OfficeId, int ProjectId, int BudgetLineId, int EmployeeId)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iHREmployee.GetSelectedEmployeeContract(OfficeId, ProjectId, BudgetLineId, EmployeeId);
-      }
-      return response;
-    }
+    //[HttpGet]
+    //public async Task<object> GetSelectedEmployeeContract([FromQuery]int OfficeId, int ProjectId, int BudgetLineId, int EmployeeId)
+    //{
+    //  APIResponse response = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    response = await _iHREmployee.GetSelectedEmployeeContract(OfficeId, ProjectId, BudgetLineId, EmployeeId);
+    //  }
+    //  return response;
+    //}
 
 
     [HttpGet]
@@ -891,17 +891,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
 
-    [HttpGet]
-    public async Task<object> GetEmployeeSalaryDetails([FromQuery]int OfficeId, int year, int month, int EmployeeId)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iHREmployee.GetEmployeeSalaryDetails(OfficeId, year, month, EmployeeId);
-      }
-      return response;
-    }
+    //[HttpGet]
+    //public async Task<object> GetEmployeeSalaryDetails([FromQuery]int OfficeId, int year, int month, int EmployeeId)
+    //{
+    //  APIResponse response = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    response = await _iHREmployee.GetEmployeeSalaryDetails(OfficeId, year, month, EmployeeId);
+    //  }
+    //  return response;
+    //}
 
     [HttpPost]
     public async Task<object> EmployeeTaxCalculation([FromBody]SalaryTaxViewModel model)
@@ -915,17 +915,17 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return response;
     }
 
-    [HttpPost]
-    public async Task<object> EmployeeSalaryTaxDetails([FromBody]SalaryTaxModel model)
-    {
-      APIResponse response = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iHREmployee.EmployeeSalaryTaxDetails(model);
-      }
-      return response;
-    }
+    //[HttpPost]
+    //public async Task<object> EmployeeSalaryTaxDetails([FromBody]SalaryTaxModel model)
+    //{
+    //  APIResponse response = null;
+    //  var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    //  if (user != null)
+    //  {
+    //    response = await _iHREmployee.EmployeeSalaryTaxDetails(model);
+    //  }
+    //  return response;
+    //}
 
     [HttpPost]
     public async Task<APIResponse> AddAdvances([FromBody]AdvancesModel model)

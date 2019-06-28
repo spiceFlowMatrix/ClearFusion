@@ -467,7 +467,9 @@ export class EmployeeInterviewFormComponent implements OnInit {
   //#endregion
 
   //#region "on Edit Exit Interview Form Submit"
-  onEditInterviewFormSubmit(model: any) {
+    onEditInterviewFormSubmit(model: any) {
+        debugger;
+        
     const interviewFormModel: EmpInterviewFormModel = {
       InterviewDetailsId: model.InterviewDetailsId,
       EmployeeID: model.EmployeeID,
@@ -483,7 +485,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
       Experience: model.Experience,
 
-      RatingBasedCriteriaList: model.RatingBasedCriteriaList,
+        RatingBasedCriteriaList: this.ratingBasedCriteriaDataSource,
 
       ProfessionalCriteriaMarks: model.ProfessionalCriteriaMarks,
 
@@ -496,9 +498,9 @@ export class EmployeeInterviewFormComponent implements OnInit {
       NoticePeriod: model.NoticePeriod,
       JoiningDate: model.JoiningDate,
 
-      InterviewLanguageModelList: model.InterviewLanguageModelList,
-      InterviewTrainingModelList: model.InterviewTrainingModelList,
-      InterviewTechQuesModelList: model.InterviewTechQuesModelList,
+        InterviewLanguageModelList: this.languagesListDataSource,
+        InterviewTrainingModelList: this.trainingListDataSource,
+        InterviewTechQuesModelList: this.technicalQuestionsListDataSource,
 
       // Compensation
       CurrentBase: model.CurrentBase,
@@ -556,7 +558,8 @@ export class EmployeeInterviewFormComponent implements OnInit {
   //#endregion
 
   //#region "onEditEmpInterviewShowForm"
-  onEditEmpInterviewShowForm(model: EmpInterviewFormModel, viewOnly: boolean) {
+    onEditEmpInterviewShowForm(model: EmpInterviewFormModel, viewOnly: boolean) {
+        debugger;
     if (model != null) {
       this.disableSelectEmpDropdownFlag();
       this.interviewFormViewOnly = viewOnly;

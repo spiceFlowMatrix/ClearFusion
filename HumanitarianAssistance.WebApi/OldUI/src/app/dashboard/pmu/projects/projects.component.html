@@ -750,7 +750,7 @@
 
             <dxi-column dataField="Download" caption="Action" cellTemplate="CellTemplateDownload"></dxi-column>
             <div *dxTemplate="let data of 'CellTemplateDownload'">
-                <a *ngIf="data.data.Status != 'Recent'" href="javascript:void(0);" (click)="getEmployeeContractReport(data)">View Contract</a>
+                <a *ngIf="data.data.Status != 'Recent'" href="javascript:void(0);">View Contract</a>
             </div>
 
             <dxi-column dataField="Delete" caption="Action" cellTemplate="CellTemplateDelete"></dxi-column>

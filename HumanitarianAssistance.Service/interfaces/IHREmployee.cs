@@ -109,7 +109,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllEmployeeContractType();
         Task<APIResponse> SaveContractContent(ContractTypeModel model, string userid);
         Task<APIResponse> GetAllContractTypeContent(int OfficeId, int EmployeeContractTypeId);
-        Task<APIResponse> GetSelectedEmployeeContract(int OfficeId, int ProjectId, int BudgetLineId, int EmployeeId);
+        // Task<APIResponse> GetSelectedEmployeeContract(int OfficeId, int ProjectId, int BudgetLineId, int EmployeeId);
         Task<APIResponse> GetSelectedEmployeeContractByEmployeeId(int EmployeeId);
 
         Task<APIResponse> GetEmployeeSalaryDetails(int OfficeId, int year, int month, int EmployeeId);

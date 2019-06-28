@@ -4892,63 +4892,63 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetSelectedEmployeeContract(int OfficeId, int ProjectId, int BudgetLineId, int EmployeeId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                //List<EmployeeContractModel> EmployeeContractModellst = new List<EmployeeContractModel>();
-                //var lst = await _uow.BudgetLineEmployeesRepository.FindAllAsync(x => x.ProjectId == ProjectId && x.BudgetLineId == BudgetLineId && x.EmployeeId == EmployeeId);
-                //if (lst != null)
-                //{
-                //    var records = (from edd in await _uow.DesignationDetailRepository.GetAllAsyn()
-                //                   join epr in await _uow.EmployeeProfessionalDetailRepository.GetAllAsyn() on edd.DesignationId equals epr.DesignationId
-                //                   join edr in await _uow.EmployeeDetailRepository.GetAllAsyn() on epr.EmployeeId equals edr.EmployeeID
-                //                   join esd in await _uow.EmployeeSalaryDetailsRepository.GetAllAsyn() on edr.EmployeeID equals esd.EmployeeId
-                //                   join ble in await _uow.BudgetLineEmployeesRepository.GetAllAsyn() on edr.EmployeeID equals ble.EmployeeId
-                //                   join pbl in await _uow.ProjectBudgetLineRepository.GetAllAsyn() on ble.BudgetLineId equals pbl.BudgetLineId
-                //                   join pdr in await _uow.ProjectDetailRepository.GetAllAsyn() on pbl.ProjectId equals pdr.ProjectId
-                //                   join ofd in await _uow.OfficeDetailRepository.GetAllAsyn() on epr.OfficeId equals ofd.OfficeId
-                //                   join str in await _uow.ProvinceDetailsRepository.GetAllAsyn() on edr.ProvinceId equals str.ProvinceId
-                //                   join mph in await _uow.PayrollMonthlyHourDetailRepository.GetAllAsyn() on epr.OfficeId equals mph.OfficeId
-                //                   join cct in await _uow.ContractTypeContentRepository.GetAllAsyn() on epr.EmployeeContractTypeId equals cct.EmployeeContractTypeId
-                //                   where ble.EmployeeId == EmployeeId
-                //                   select new EmployeeContractModel
-                //                   {
-                //                       EmployeeName = edr.EmployeeName,
-                //                       FatherName = edr.FatherName,
-                //                       EmployeeCode = edr.EmployeeCode,
-                //                       Designation = edd.Designation,
-                //                       ContractStartDate = pbl.StartDate,
-                //                       ContractEndDate = pbl.EndDate,
-                //                       DurationOfContract = (pbl.EndDate - pbl.StartDate).Days,
-                //                       Salary = Math.Round(Convert.ToDouble((esd.TotalGeneralAmount + esd.TotalAllowance - esd.Totalduduction) * ble.ProjectPercentage), 2),
-                //                       Grade = null,
-                //                       ProjectName = pdr.ProjectName,
-                //                       ProjectCode = pdr.ProjectId,
-                //                       DutyStation = ofd.OfficeName,
-                //                       Province = str.ProvinceName,
-                //                       BudgetLine = pbl.Description,
-                //                       JobId = null,
-                //                       WorkTime = mph.InTime.Value.Hour,
-                //                       WorkDayHours = (mph.OutTime - mph.InTime).Value.Days,
-                //                       ContentEnglish = cct.ContentEnglish,
-                //                       ContentDari = cct.ContentDari,
-                //                       EmployeeImage = edr.DocumentGUID + edr.Extension
-                //                   }).ToList();
-                //    EmployeeContractModellst.AddRange(records);
-                //}
-                //response.data.EmployeeContractModellst = EmployeeContractModellst;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
-            }
-            return response;
-        }
+        //public async Task<APIResponse> GetSelectedEmployeeContract(int OfficeId, int ProjectId, int BudgetLineId, int EmployeeId)
+        //{
+        //    APIResponse response = new APIResponse();
+        //    try
+        //    {
+        //        //List<EmployeeContractModel> EmployeeContractModellst = new List<EmployeeContractModel>();
+        //        //var lst = await _uow.BudgetLineEmployeesRepository.FindAllAsync(x => x.ProjectId == ProjectId && x.BudgetLineId == BudgetLineId && x.EmployeeId == EmployeeId);
+        //        //if (lst != null)
+        //        //{
+        //        //    var records = (from edd in await _uow.DesignationDetailRepository.GetAllAsyn()
+        //        //                   join epr in await _uow.EmployeeProfessionalDetailRepository.GetAllAsyn() on edd.DesignationId equals epr.DesignationId
+        //        //                   join edr in await _uow.EmployeeDetailRepository.GetAllAsyn() on epr.EmployeeId equals edr.EmployeeID
+        //        //                   join esd in await _uow.EmployeeSalaryDetailsRepository.GetAllAsyn() on edr.EmployeeID equals esd.EmployeeId
+        //        //                   join ble in await _uow.BudgetLineEmployeesRepository.GetAllAsyn() on edr.EmployeeID equals ble.EmployeeId
+        //        //                   join pbl in await _uow.ProjectBudgetLineRepository.GetAllAsyn() on ble.BudgetLineId equals pbl.BudgetLineId
+        //        //                   join pdr in await _uow.ProjectDetailRepository.GetAllAsyn() on pbl.ProjectId equals pdr.ProjectId
+        //        //                   join ofd in await _uow.OfficeDetailRepository.GetAllAsyn() on epr.OfficeId equals ofd.OfficeId
+        //        //                   join str in await _uow.ProvinceDetailsRepository.GetAllAsyn() on edr.ProvinceId equals str.ProvinceId
+        //        //                   join mph in await _uow.PayrollMonthlyHourDetailRepository.GetAllAsyn() on epr.OfficeId equals mph.OfficeId
+        //        //                   join cct in await _uow.ContractTypeContentRepository.GetAllAsyn() on epr.EmployeeContractTypeId equals cct.EmployeeContractTypeId
+        //        //                   where ble.EmployeeId == EmployeeId
+        //        //                   select new EmployeeContractModel
+        //        //                   {
+        //        //                       EmployeeName = edr.EmployeeName,
+        //        //                       FatherName = edr.FatherName,
+        //        //                       EmployeeCode = edr.EmployeeCode,
+        //        //                       Designation = edd.Designation,
+        //        //                       ContractStartDate = pbl.StartDate,
+        //        //                       ContractEndDate = pbl.EndDate,
+        //        //                       DurationOfContract = (pbl.EndDate - pbl.StartDate).Days,
+        //        //                       Salary = Math.Round(Convert.ToDouble((esd.TotalGeneralAmount + esd.TotalAllowance - esd.Totalduduction) * ble.ProjectPercentage), 2),
+        //        //                       Grade = null,
+        //        //                       ProjectName = pdr.ProjectName,
+        //        //                       ProjectCode = pdr.ProjectId,
+        //        //                       DutyStation = ofd.OfficeName,
+        //        //                       Province = str.ProvinceName,
+        //        //                       BudgetLine = pbl.Description,
+        //        //                       JobId = null,
+        //        //                       WorkTime = mph.InTime.Value.Hour,
+        //        //                       WorkDayHours = (mph.OutTime - mph.InTime).Value.Days,
+        //        //                       ContentEnglish = cct.ContentEnglish,
+        //        //                       ContentDari = cct.ContentDari,
+        //        //                       EmployeeImage = edr.DocumentGUID + edr.Extension
+        //        //                   }).ToList();
+        //        //    EmployeeContractModellst.AddRange(records);
+        //        //}
+        //        //response.data.EmployeeContractModellst = EmployeeContractModellst;
+        //        response.StatusCode = StaticResource.successStatusCode;
+        //        response.Message = "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.StatusCode = StaticResource.failStatusCode;
+        //        response.Message = ex.Message;
+        //    }
+        //    return response;
+        //}
 
         public async Task<APIResponse> GetSelectedEmployeeContractByEmployeeId(int EmployeeId)
         {
@@ -4967,9 +4967,9 @@ namespace HumanitarianAssistance.Service.Classes
 
                     List<EmployeeContractModel> dataModel = (from ec in _uow.GetDbContext().EmployeeContract
                                 join e in _uow.GetDbContext().EmployeeDetail on ec.EmployeeId equals e.EmployeeID
-                                join pd in _uow.GetDbContext().ProvinceDetails on e.ProvinceId equals pd.ProvinceId
+                                join pd in _uow.GetDbContext().ProvinceDetails on ec.Province equals pd.ProvinceId
                                 join epd in _uow.GetDbContext().EmployeeProfessionalDetail on e.EmployeeID equals epd.EmployeeId
-                                join dd in _uow.GetDbContext().DesignationDetail on epd.DesignationId equals dd.DesignationId
+                                join dd in _uow.GetDbContext().DesignationDetail on ec.Designation equals dd.DesignationId
                                 join od in _uow.GetDbContext().OfficeDetail on epd.OfficeId equals od.OfficeId
                                 join ect in _uow.GetDbContext().EmployeeContractType on epd.EmployeeContractTypeId equals ect.EmployeeContractTypeId
                                 join jg in _uow.GetDbContext().JobGrade on ec.Grade equals jg.GradeId
@@ -5741,6 +5741,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                          .Include(x=> x.InterviewLanguagesList)
                                                          .Include(x=> x.InterviewTrainingsList)
                                                          .Include(x=> x.HRJobInterviewersList)
+                                                         .Include(x=> x.InterviewTechnicalQuestionList)
                                                          .Where(x => x.IsDeleted == false)
                                                          .ToListAsync();
                 foreach (var model in recordLst)
