@@ -638,7 +638,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                 if (accountIds.Any())
                 {
                     //Get all Accounts that are already saved
-                    List<GainLossSelectedAccounts> gainLossSelectedAccountsList = _uow.GetDbContext().GainLossSelectedAccounts.Where(x => x.IsDeleted == false).ToList();
+                    List<GainLossSelectedAccounts> gainLossSelectedAccountsList = await _uow.GetDbContext().GainLossSelectedAccounts.Where(x => x.IsDeleted == false).ToListAsync();
 
                     if (gainLossSelectedAccountsList.Any())
                     {
@@ -652,7 +652,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                             //Delete and update the table with the accounts already deleted
                             _uow.GetDbContext().UpdateRange(removedGainLossSelectedAccounts);
-                            _uow.GetDbContext().SaveChanges();
+                            await _uow.GetDbContext().SaveChangesAsync();
                         }
 
                         //Get List of Accounts that are to be added
@@ -693,8 +693,8 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                     //Save Accounts to the DB
                     if (gainLossSelectedAccountsList.Any())
                     {
-                        _uow.GetDbContext().GainLossSelectedAccounts.AddRange(gainLossSelectedAccountsList);
-                        _uow.GetDbContext().SaveChanges();
+                       await _uow.GetDbContext().GainLossSelectedAccounts.AddRangeAsync(gainLossSelectedAccountsList);
+                       await _uow.GetDbContext().SaveChangesAsync();
                     }
 
                     response.StatusCode = StaticResource.successStatusCode;

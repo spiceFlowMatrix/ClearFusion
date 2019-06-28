@@ -31,9 +31,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
-        public async Task<APIResponse> GetSavedExchangeRates([FromBody] ExchangeRateVerificationFilter filter)
+        public APIResponse GetSavedExchangeRates([FromBody] ExchangeRateVerificationFilter filter)
         {
-            APIResponse response = await _iExchangeRate.GetSavedExchangeRates(filter);
+            APIResponse response = _iExchangeRate.GetSavedExchangeRates(filter);
             return response;
         }
 

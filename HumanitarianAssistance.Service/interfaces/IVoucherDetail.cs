@@ -38,8 +38,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllLedgerDetailsByCondition(LedgerModels model);
         //Task<APIResponse> GetJouranlVoucherDetailsByCondition(int? CurrencyId = 2, DateTime? fromdate = null, DateTime? todate = null, int? officeid = null, int? RecordType = 1);
         Task<APIResponse> GetJouranlVoucherDetailsByCondition(JournalViewModel model);
-
-        Task<APIResponse> GetAllVoucherTransactionDetailByBudgetLine(long projectId, long budgetLineId);
+       
        // Task<APIResponse> GetProjectAndBudgetLine();
         Task<APIResponse> AddNotesDetails(NotesMasterModel model);
         Task<APIResponse> EditNotesDetails(NotesMasterModel model);

@@ -120,7 +120,7 @@ namespace HumanitarianAssistance.Service.Classes
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong;
+                response.Message = StaticResource.SomethingWrong + " "+ ex.Message;
             }
             return response;
         }

@@ -18,7 +18,6 @@ namespace HumanitarianAssistance.Service.interfaces.Marketing
         Task<APIResponse> AddEditPolicySchedules(ScheduleDetailsModel model, string UserId);
         Task<APIResponse> GetScheduleByDate(string model, string UserId);
         Task<APIResponse> AddEditPolicyTimeSchedule(PolicyTimeScheduleModel model, string UserId);
-        Task<APIResponse> GetPolicyScheduleById(int model, string UserId);
         Task<APIResponse> GetAllSchedule(string UserId);
         Task<APIResponse> GetPolicyTimeScheduleList(int id,string UserId);
         Task<APIResponse> DeletePolicyTimeSchedule(int id, string UserId);

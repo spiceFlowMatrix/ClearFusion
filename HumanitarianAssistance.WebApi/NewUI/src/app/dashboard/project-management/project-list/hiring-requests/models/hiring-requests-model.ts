@@ -96,6 +96,7 @@ export interface IReuestedCandidateDetailModel {
   IsInterViewed?: boolean;
   IsShortListed?: boolean;
   IsSelected?: boolean;
+  IsSelectedFlag?: boolean;
 }
 export interface IProfessionList {
   ProfessionId?: number;

@@ -19,14 +19,12 @@ namespace HumanitarianAssistance.Service.Classes
 {
     public class PermissionService : IPermissions
     {
-        IUnitOfWork _uow;
-        IMapper _mapper;
-        UserManager<AppUser> _userManager;
+        readonly IUnitOfWork _uow;
+        readonly IMapper _mapper;
         public PermissionService(IUnitOfWork uow, IMapper mapper)
         {
             this._uow = uow;
             this._mapper = mapper;
-            
         }
 
        
