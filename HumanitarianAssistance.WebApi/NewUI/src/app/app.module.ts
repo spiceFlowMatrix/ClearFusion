@@ -9,7 +9,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DataInterceptor } from './shared/services/data-interceptor';
 import { GlobalService } from './shared/services/global-services.service';
 import { AppUrlService } from './shared/services/app-url.service';
-import { AuthGuard } from './shared/auth/AuthGuard';
+import { AuthGuard } from './shared/auth/auth-guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LibraryModule } from '../../projects/library/src/lib/library.module';
 import { MatInputModule } from '@angular/material/input';
