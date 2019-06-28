@@ -180,7 +180,7 @@ export class GLOBAL {
   public static API_ChartOfAccount_AddChartOfAccount = 'ChartOfAccount/AddChartOfAccount';
   public static API_ChartOfAccount_EditChartOfAccount = 'ChartOfAccount/EditChartOfAccount';
   public static API_ChartOfAccount_DeleteChartOfAccount = 'ChartOfAccount/DeleteChartOfAccount';
-  
+
   // Financial Report
   public static API_FinancialReport_GetAllAccountBalancesByCategory = 'FinancialReport/GetAllAccountBalancesByCategory';
   public static API_FinancialReport_GetAllAccountIncomeExpensesByCategory = 'FinancialReport/GetAllAccountIncomeExpensesByCategory';
@@ -406,6 +406,8 @@ export class GLOBAL {
   public static API_Code_GetAttendanceGroupst = 'Code/GetAttendanceGroups';
   public static API_HREmployee_GetAllEmployeeContractType = 'HREmployee/GetAllEmployeeContractType';
   public static API_HREmployee_EditEmployeeProfessionalDetail = 'HREmployee/EditEmployeeProfessionalDetail';
+  public static API_HiringRequest_DeleteCandidatDetail = 'HiringRequest/DeleteCandidatDetail';
+
   //#endregion
 
 }

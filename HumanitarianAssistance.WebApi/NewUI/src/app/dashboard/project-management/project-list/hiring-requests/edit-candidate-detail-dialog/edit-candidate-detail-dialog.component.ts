@@ -7,6 +7,7 @@ import { HiringRequestsService } from '../hiring-requests.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { EmployeeType } from 'src/app/shared/enum';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-candidate-detail-dialog',
@@ -22,7 +23,7 @@ hiringRequestDetail: IHiringRequestDetailModel;
 employeeContractist: IEmployeeContractList[] = [];
 candidateDetailForm: FormGroup;
 // loader
-editHiringRequestLoader: false;
+editCandidateDetailLoader = false;
 // input /output
 @Output() employeeTypeDetial = new EventEmitter<any>();
 
@@ -34,6 +35,7 @@ employeeType = {
 };
   constructor(public dialogRef: MatDialogRef<EditCandidateDetailDialogComponent>,
     private fb: FormBuilder,
+    public toastr: ToastrService,
     public hiringRequestService: HiringRequestsService
     , @Inject(MAT_DIALOG_DATA) public data: IcandidateDetailDataSource) {
       this.projectId = data.ProjectId;
@@ -41,7 +43,6 @@ employeeType = {
       this.employeeId = data.EmployeeId,
       this.hiringRequestDetail = data.HiringRequestDetail,
       this.employeeContractist = data.EmployeeContractist;
-
     }
 
   ngOnInit() {
@@ -66,6 +67,7 @@ employeeType = {
   }
   //#endregion
   EditCandidateDetail(data: any) {
+    this.editCandidateDetailLoader = true;
     const employeeDetail: any = {
       EmployeeContractTypeId: data.EmployeeContractTypeId,
       AttendanceGroupId: data.Id,
@@ -80,16 +82,16 @@ employeeType = {
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.employeeTypeDetial.emit(employeeDetail.EmployeeTypeId);
-          // this.toastr.success('Hiring request updated successfully');
         } else {
-          // this.toastr.error(response.message);
+           this.toastr.error(response.message);
         }
+        this.editCandidateDetailLoader = false;
+
         this.onCancelPopup();
-        this.editHiringRequestLoader = false;
       },
       error => {
-        // this.toastr.error('Someting went wrong');
-        this.editHiringRequestLoader = false;
+         this.toastr.error('Someting went wrong');
+        this.editCandidateDetailLoader = false;
       }
     );
   }

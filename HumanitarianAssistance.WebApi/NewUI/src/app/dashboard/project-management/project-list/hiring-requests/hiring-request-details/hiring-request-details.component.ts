@@ -6,9 +6,9 @@ import {
   EventEmitter,
   Output,
   OnChanges
-} from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ICurrencyList } from 'src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model';
+} from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { ICurrencyList } from "src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model";
 import {
   IBudgetLineModel,
   IOfficeListModel,
@@ -20,22 +20,23 @@ import {
   IHiringReuestCandidateModel,
   IAttendaneGroupModel,
   IEmployeeContractList
-} from '../models/hiring-requests-model';
-import { MatDialog } from '@angular/material';
-import { AddHiringRequestsComponent } from '../add-hiring-requests/add-hiring-requests.component';
-import { AddCandidateDaialogComponent } from '../add-candidate-daialog/add-candidate-daialog.component';
-import { HiringRequestsService } from '../hiring-requests.service';
-import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { ToastrService } from 'ngx-toastr';
-import { EmployeeType } from 'src/app/shared/enum';
-import { AppUrlService } from 'src/app/shared/services/app-url.service';
-import { ActivatedRoute } from '@angular/router';
-import { EditCandidateDetailDialogComponent } from '../edit-candidate-detail-dialog/edit-candidate-detail-dialog.component';
+} from "../models/hiring-requests-model";
+import { MatDialog } from "@angular/material";
+import { AddHiringRequestsComponent } from "../add-hiring-requests/add-hiring-requests.component";
+import { AddCandidateDaialogComponent } from "../add-candidate-daialog/add-candidate-daialog.component";
+import { HiringRequestsService } from "../hiring-requests.service";
+import { IResponseData } from "src/app/dashboard/accounting/vouchers/models/status-code.model";
+import { ToastrService } from "ngx-toastr";
+import { EmployeeType, Delete_Confirmation_Texts } from "src/app/shared/enum";
+import { AppUrlService } from "src/app/shared/services/app-url.service";
+import { ActivatedRoute } from "@angular/router";
+import { EditCandidateDetailDialogComponent } from "../edit-candidate-detail-dialog/edit-candidate-detail-dialog.component";
+import { DeleteConfirmationComponent } from "projects/library/src/lib/components/delete-confirmation/delete-confirmation.component";
 
 @Component({
-  selector: 'app-hiring-request-details',
-  templateUrl: './hiring-request-details.component.html',
-  styleUrls: ['./hiring-request-details.component.scss']
+  selector: "app-hiring-request-details",
+  templateUrl: "./hiring-request-details.component.html",
+  styleUrls: ["./hiring-request-details.component.scss"]
 })
 export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#region "input/output"
@@ -104,7 +105,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     this.GetAllEmployeeContractTypelist();
     this.GetAllAttendanceGrouplist();
     this.routeActive.parent.params.subscribe(params => {
-      this.projectId = +params['id'];
+      this.projectId = +params["id"];
     });
   }
 
@@ -121,14 +122,14 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   }
 
   //#region "Dynamic Scroll"
-  @HostListener('window:resize', ['$event'])
+  @HostListener("window:resize", ["$event"])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
     this.scrollStyles = {
-      'overflow-y': 'auto',
-      height: this.screenHeight - 170 + 'px',
-      'overflow-x': 'hidden'
+      "overflow-y": "auto",
+      height: this.screenHeight - 170 + "px",
+      "overflow-x": "hidden"
     };
   }
   //#endregion
@@ -136,9 +137,9 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#region "initForm"
   initForm() {
     this.hiringRequestForm = this.fb.group({
-      Description: ['', Validators.required],
-      Position: ['', [Validators.required]],
-      ProfessionId: ['', Validators.required],
+      Description: ["", Validators.required],
+      Position: ["", [Validators.required]],
+      ProfessionId: ["", Validators.required],
       TotalVacancies: [null, Validators.required],
       FilledVacancies: [null, Validators.required],
       BasicPay: [null, Validators.required],
@@ -184,7 +185,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   openHiringRequestDialog(): void {
     // NOTE: It passed the data into the Add Activity Model
     const dialogRef = this.dialog.open(AddHiringRequestsComponent, {
-      width: '550px',
+      width: "550px",
       autoFocus: false,
       data: {
         BudgetLineList: this.budgetLineList,
@@ -199,7 +200,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     // refresh the list after new request created
     dialogRef.componentInstance.onUpdateHiringRequestListRefresh.subscribe(
       (data: any) => {
-        console.log('emitter', data);
+        console.log("emitter", data);
         this.UpdatedHRListRefresh.emit(data);
         this.hiringRequestForm = this.fb.group({
           Description: [data.Description],
@@ -228,7 +229,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#region "onAddEmployeeClicked"
   onAddCandidateClicked() {
     const dialogRef = this.dialog.open(AddCandidateDaialogComponent, {
-      width: '420px',
+      width: "420px",
       autoFocus: false,
       data: {
         EmployeeList: this.employeeList,
@@ -277,6 +278,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             if (response.statusCode === 200 && response.data != null) {
               response.data.forEach(element => {
                 this.candidateList.push({
+                  CandidateId: element.CandidateId,
                   EmployeeID: element.EmployeeID,
                   EmployeeCode: element.EmployeeCode,
                   EmployeeName: element.EmployeeName,
@@ -295,7 +297,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             this.getCandidateDetailLoader = false;
           },
           error => {
-            this.toastr.error('Someting went wrong');
+            this.toastr.error("Someting went wrong");
             this.getCandidateDetailLoader = false;
           }
         );
@@ -307,7 +309,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       this.isshortlistedLoaderFlag = true;
       const candidateDetail: IHiringReuestCandidateModel = {
         EmployeeID: data.EmployeeID,
-        HiringRequestId: this.hiringRequestForm.get('HiringRequestId').value,
+        HiringRequestId: this.hiringRequestForm.get("HiringRequestId").value,
         IsShortListed: !data.IsShortListed
       };
 
@@ -323,7 +325,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             this.isshortlistedLoaderFlag = false;
           },
           error => {
-            this.toastr.error('Someting went wrong');
+            this.toastr.error("Someting went wrong");
             this.isshortlistedLoaderFlag = false;
           }
         );
@@ -345,7 +347,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
         }
       },
       error => {
-        this.toastr.error('Something went wrong. Please try again...');
+        this.toastr.error("Something went wrong. Please try again...");
       }
     );
   }
@@ -372,15 +374,15 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#region  "onSelectedCandidate"
   onSelectedCandidate(data: any) {
     // Note Check for is filled vacancies exceed total vacancies.
-    const filledVacancy = this.hiringRequestForm.get('FilledVacancies').value;
-    const totalVacancy = this.hiringRequestForm.get('TotalVacancies').value;
+    const filledVacancy = this.hiringRequestForm.get("FilledVacancies").value;
+    const totalVacancy = this.hiringRequestForm.get("TotalVacancies").value;
     if (filledVacancy <= totalVacancy) {
       if (data != null) {
         if (data.EmployeeTypeId === this.employeeType.Candidate) {
           const dialogRef = this.dialog.open(
             EditCandidateDetailDialogComponent,
             {
-              width: '550px',
+              width: "550px",
               autoFocus: false,
               data: {
                 HiringRequestDetail: this.hiringRequestDetail,
@@ -404,7 +406,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
         }
       }
     } else {
-      this.toastr.warning('No vacancies left');
+      this.toastr.warning("No vacancies left");
     }
   }
   //#endregion
@@ -418,9 +420,9 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
     const candidateDetail: any = {
       EmployeeId: data.EmployeeID,
-      HiringRequestId: this.hiringRequestForm.get('HiringRequestId').value,
+      HiringRequestId: this.hiringRequestForm.get("HiringRequestId").value,
       IsSelected: !data.IsSelected,
-      BudgetLineId: this.hiringRequestForm.get('BudgetLineId').value,
+      BudgetLineId: this.hiringRequestForm.get("BudgetLineId").value,
       ProjectId: this.projectId
     };
 
@@ -431,8 +433,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           if (response.statusCode === 200) {
             data.IsSelected = !data.IsSelected;
             data.EmployeeTypeId = this.employeeType.Active;
-            data.EmployeeTypeName = 'Active';
-            this.hiringRequestForm.controls['FilledVacancies'].setValue(
+            data.EmployeeTypeName = "Active";
+            this.hiringRequestForm.controls["FilledVacancies"].setValue(
               response.data.FilledVacancies
             );
           } else {
@@ -440,7 +442,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           }
         },
         error => {
-          this.toastr.error('Someting went wrong');
+          this.toastr.error("Someting went wrong");
         }
       );
   }
@@ -452,7 +454,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       this.addCandidateInterviewLoader = true;
       const interviewCandidatModel: IitervireCandidateModel = {
         EmployeeID: event.EmployeeID,
-        JobDescription: this.hiringRequestForm.get('Description').value
+        JobDescription: this.hiringRequestForm.get("Description").value
       };
       this.hiringRequestService
         .AddInterViewCandidateDetail(interviewCandidatModel)
@@ -461,7 +463,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             if (response.statusCode === 200) {
               event.IsInterViewed = !event.IsInterViewed;
               this.toastr.success(
-                'Candidate Interview is created successfully'
+                "Candidate Interview is created successfully"
               );
             } else {
               this.toastr.error(response.message);
@@ -469,7 +471,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             this.addCandidateInterviewLoader = false;
           },
           error => {
-            this.toastr.error('Someting went wrong. Please try again');
+            this.toastr.error("Someting went wrong. Please try again");
             this.addCandidateInterviewLoader = false;
           }
         );
@@ -479,7 +481,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "seeCandidateDetail page of old Ui"
   seeCandidateDetail(path: string) {
-    window.open(this.appurl.getOldUiUrl() + path, '_blank');
+    window.open(this.appurl.getOldUiUrl() + path, "_blank");
   }
   //#endregion
 
@@ -487,7 +489,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   onCompleteHiringRequestClicked() {
     this.isCompletedFlag = true;
     this.SelctedHiringRequestId = this.hiringRequestForm.get(
-      'HiringRequestId'
+      "HiringRequestId"
     ).value;
     this.hiringRequestService
       .IsCompltedeHrDEtail(this.SelctedHiringRequestId)
@@ -501,10 +503,76 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           this.isCompletedFlag = false;
         },
         error => {
-          this.toastr.error('Someting went wrong');
+          this.toastr.error("Someting went wrong");
           this.isCompletedFlag = false;
         }
       );
-    //#endregion
   }
+  //#endregion
+
+  //#region delete donar datail
+  onCandidateDetailDelete(item: any) {
+    debugger;
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      width: "300px",
+      height: "250px",
+      data: "delete",
+      disableClose: false
+    });
+
+    dialogRef.componentInstance.confirmMessage =
+      Delete_Confirmation_Texts.deleteText1;
+
+    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
+
+    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
+
+    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.componentInstance.confirmDelete.subscribe(
+      res => {
+        dialogRef.componentInstance.isLoading = true;
+        if (
+          item.CandidateId != null &&
+          item.CandidateId !== undefined &&
+          item.CandidateId !== 0
+        ) {
+          const candidateModel: IHiringReuestCandidateModel = {
+            HiringRequestId: this.hiringRequestForm.get("HiringRequestId")
+              .value,
+              CandidateId: item.CandidateId
+          };
+          this.hiringRequestService
+            .DeleteCandidateDetailDetail(candidateModel)
+            .subscribe(
+              response => {
+                if (response.statusCode === 200) {
+                  this.hiringRequestForm.controls["FilledVacancies"].setValue(
+                    response.data.FilledVacancies
+                  );
+                  const findIndex = this.candidateList.findIndex(
+                    x => x.EmployeeID == item.EmployeeID
+                  );
+                  this.candidateList.splice(findIndex, 1);
+                  // this.isCompleted = response.data.IsCompleted;
+                } else {
+                  this.toastr.error(response.message);
+                }
+              dialogRef.componentInstance.onCancelPopup();
+              },
+              error => {
+                this.toastr.error("Someting went wrong");
+              dialogRef.componentInstance.onCancelPopup();
+
+              }
+            );
+        }
+        dialogRef.componentInstance.isLoading = false;
+      },
+      error => {
+        this.toastr.error("Someting went wrong");
+        dialogRef.componentInstance.isLoading = false;
+      }
+    );
+  }
+  //#endregion
 }
