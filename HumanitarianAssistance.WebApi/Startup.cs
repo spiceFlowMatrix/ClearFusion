@@ -265,9 +265,10 @@ namespace HumanitarianAssistance.WebApi
             {
                 //configuration.RootPath = "ClientApp/dist";
                 configuration.RootPath = "NewUI/dist";
-                configuration.RootPath = "OldUI/dist";
-
+                //configuration.RootPath = "OldUI/dist";
             });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -331,7 +332,9 @@ namespace HumanitarianAssistance.WebApi
                     }
 
                 });
-            }).Map("/oldui", admin =>
+            });
+
+            app.Map("/oldui", admin =>
             {
                 admin.UseSpa(spa =>
                 {
@@ -345,6 +348,21 @@ namespace HumanitarianAssistance.WebApi
 
                 });
             });
+
+            //app.Map("/clientapp", admin =>
+            //{
+            //    admin.UseSpa(spa =>
+            //    {
+            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+            //        spa.Options.SourcePath = "ClientApp";
+
+            //        if (env.IsDevelopment())
+            //        {
+            //            spa.UseAngularCliServer(npmScript: "start");
+            //        }
+
+            //    });
+            //});
         }
 
         //2011

@@ -141,7 +141,7 @@ export class BalanceSheetViewComponent implements OnInit {
     this.globalService
       .getListByIdAndDate(
         this.appUrl.getApiUrl() +
-          GLOBAL.API_Code_GetAllAccountBalancesByCategory,
+          GLOBAL.API_FinancialReport_GetAllAccountBalancesByCategory,
         dataModel
       )
       .subscribe(data => {
@@ -186,7 +186,7 @@ export class BalanceSheetViewComponent implements OnInit {
     this.globalService
       .getListByIdAndDate(
         this.appUrl.getApiUrl() +
-          GLOBAL.API_Code_GetAllAccountBalancesByCategory,
+          GLOBAL.API_FinancialReport_GetAllAccountBalancesByCategory,
         dataModel
       )
       .subscribe(data => {
