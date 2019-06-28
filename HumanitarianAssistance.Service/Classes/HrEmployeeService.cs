@@ -303,7 +303,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var jobhiringdetailslist = _uow.GetDbContext().JobHiringDetails.Where(x => x.IsDeleted == false && x.OfficeId == OfficeId && x.IsActive == true).ToList();
+                var jobhiringdetailslist = await _uow.GetDbContext().JobHiringDetails.Where(x => x.IsDeleted == false && x.OfficeId == OfficeId && x.IsActive == true).ToListAsync();
 
                 List<JobHiringDetailsModel> JobHiringInfo = new List<JobHiringDetailsModel>();
 
@@ -1234,7 +1234,6 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                TimeSpan? OfficeHoursDifference;
                 TimeSpan? totalworkhour;
                 TimeSpan? totalovertime;
                 int? overtime = 0, workingHours = 0;
@@ -2939,7 +2938,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllEmployeeProjects(int EmployeeId)
+        public APIResponse GetAllEmployeeProjects(int EmployeeId)
         {
             APIResponse response = new APIResponse();
             try
@@ -2965,7 +2964,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> AssignEmployeeProjectPercentage(List<EmployeeProjectModel> model, string UserId)
+        public APIResponse AssignEmployeeProjectPercentage(List<EmployeeProjectModel> model, string UserId)
         {
             APIResponse response = new APIResponse();
             try

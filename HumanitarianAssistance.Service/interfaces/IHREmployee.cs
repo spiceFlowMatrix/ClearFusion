@@ -75,8 +75,8 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> EmployeesSalarySummary(EmployeeSummaryModel model);
         Task<APIResponse> EmployeePensionReport(PensionModel model);
-        Task<APIResponse> GetAllEmployeeProjects(int EmployeeId);
-        Task<APIResponse> AssignEmployeeProjectPercentage(List<EmployeeProjectModel> model, string userid);
+        APIResponse GetAllEmployeeProjects(int EmployeeId);
+        APIResponse AssignEmployeeProjectPercentage(List<EmployeeProjectModel> model, string userid);
         Task<APIResponse> GetAllEmployeeContractType();
         Task<APIResponse> SaveContractContent(ContractTypeModel model, string userid);
         Task<APIResponse> GetAllContractTypeContent(int OfficeId, int EmployeeContractTypeId);

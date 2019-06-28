@@ -380,15 +380,14 @@ namespace HumanitarianAssistance.Service.Classes
 			{
 				List<Roles> currentRoles = new List<Roles>();
 				var user = await _userManager.FindByIdAsync(userid);
-				await Task.Run(async () =>
-				{
-					var roles = _roleManager.Roles.Select(x => new Roles
-					{
-						RoleName = x.Name,
-						Id = x.Id
-					}).ToList();
 
-					foreach (var rol in roles)
+                    var roles = await _roleManager.Roles.Select(x => new Roles
+                    {
+                        RoleName = x.Name,
+                        Id = x.Id
+                    }).ToListAsync();
+
+                    foreach (var rol in roles)
 					{
 						var isExist = _userManager.IsInRoleAsync(user, rol.RoleName).Result;
 						if (isExist)
@@ -417,7 +416,6 @@ namespace HumanitarianAssistance.Service.Classes
 					response.data.RoleList = currentRoles;
 					response.StatusCode = StaticResource.successStatusCode;
 					response.Message = "Role List";
-				});
 			}
 			catch (Exception ex)
 			{

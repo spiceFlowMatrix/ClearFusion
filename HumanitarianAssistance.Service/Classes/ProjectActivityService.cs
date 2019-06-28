@@ -709,7 +709,7 @@ namespace HumanitarianAssistance.Service.Classes
         /// <param name="userId"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
-        public async Task<APIResponse> UploadFileDemo(IFormFile filesData, string userId, string userName)
+        public APIResponse UploadFileDemo(IFormFile filesData, string userId, string userName)
         {
             APIResponse apiResponse = new APIResponse();
             try

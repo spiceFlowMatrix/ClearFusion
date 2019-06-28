@@ -1422,7 +1422,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var ProjectCommunicationModel = _uow.GetDbContext().ProjectCommunication.Where(x => !x.IsDeleted.Value && x.ProjectId == ProjectId).Select(y => new ProjectCommunicationModel()
+                var ProjectCommunicationModel = await _uow.GetDbContext().ProjectCommunication.Where(x => !x.IsDeleted.Value && x.ProjectId == ProjectId).Select(y => new ProjectCommunicationModel()
                 {
                     ProjectDescription = y.ProjectDescription,
                     CreatedByName = _uow.GetDbContext().UserDetails.Where(z => z.AspNetUserId == y.CreatedById).Select(p => p.FirstName + " " + p.LastName).FirstOrDefault(),
@@ -1430,7 +1430,8 @@ namespace HumanitarianAssistance.Service.Classes
                     CreatedDate = y.CreatedDate.Value.ToString("dd MMMM yyyy h:mm tt"),
                     CreatedById = y.CreatedById,
                     PCId = y.PCId,
-                }).ToList();
+                }).ToListAsync();
+
                 var resp = (from obj in ProjectCommunicationModel
                             join role in _uow.GetDbContext().Roles on obj.RoleId equals role.Id
                             select new ProjectCommunicationModel
@@ -5357,7 +5358,6 @@ namespace HumanitarianAssistance.Service.Classes
         #region "Project Cash Flow"
         public async Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowFilterModel model)
         {
-            int index = 0;
             APIResponse response = new APIResponse();
             List<VoucherTransactions> transList = new List<VoucherTransactions>();
 
@@ -5470,7 +5470,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         public async Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineBreakdownFilterModel model)
         {
-            int index = 0;
             APIResponse response = new APIResponse();
 
             try
@@ -5634,7 +5633,7 @@ namespace HumanitarianAssistance.Service.Classes
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
 
@@ -6140,10 +6139,12 @@ namespace HumanitarianAssistance.Service.Classes
                                         else if (item.BudgetCode != null && item.ProjectJobCode != null)
                                         {
                                             //Note: check string format for budget code and project code
-                                            var ifBudgetCodeFormtCorrect = await CheckBudgetCodeFormat(item.BudgetCode);
+                                            bool ifBudgetCodeFormtCorrect = CheckBudgetCodeFormat(item.BudgetCode);
+
                                             // Note: check for project job code status
-                                            var ifProjectCodeFormatCorrect = await CheckProjectCodeFormat(item.ProjectJobCode);
-                                            if (ifBudgetCodeFormtCorrect == true && ifProjectCodeFormatCorrect == true)
+                                            bool ifProjectCodeFormatCorrect = CheckProjectCodeFormat(item.ProjectJobCode);
+
+                                            if (ifBudgetCodeFormtCorrect && ifProjectCodeFormatCorrect)
                                             {
                                                 //var ifJobExist = await IfExistProjectJob(item.ProjectJobName);
                                                 var ifjobExist = await _uow.GetDbContext().ProjectJobDetail
@@ -6393,35 +6394,36 @@ namespace HumanitarianAssistance.Service.Classes
         #endregion
 
         #region check string format
-        public async Task<bool> CheckBudgetCodeFormat(string budgetCode)
+        public bool CheckBudgetCodeFormat(string budgetCode)
         {
+            bool isFormatCorrect = false;
             if (!string.IsNullOrEmpty(budgetCode))
             {
                 string budgetFirstIndex = budgetCode.Substring(0, 1);
                 if (budgetFirstIndex == "P")
                 {
-                    var stringnew = budgetCode.Split('-')[1].Contains('B');
-
+                    isFormatCorrect = budgetCode.Split('-')[1].Contains('B');
                 }
             }
-            return true;
+            return isFormatCorrect;
         }
         #endregion
 
         #region"CheckProjectCodeFormat"
-        public async Task<bool> CheckProjectCodeFormat(string jobCode)
+        public bool CheckProjectCodeFormat(string jobCode)
         {
+            bool isProjectCodeCorrect = false;
+
             if (!string.IsNullOrEmpty(jobCode))
             {
                 string jobCodeFirstIndex = jobCode.Substring(0, 1);
 
                 if (jobCodeFirstIndex == "P")
                 {
-                    var stringnew = jobCode.Split('-')[1].Contains('J');
-
+                    isProjectCodeCorrect = jobCode.Split('-')[1].Contains('J');
                 }
             }
-            return true;
+            return isProjectCodeCorrect;
         }
         #endregion
     }

@@ -1738,7 +1738,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
 
             return "OK";
@@ -1797,7 +1797,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             catch (Exception xException)
             {
-
+                Console.WriteLine(xException.Message);
             }
 
             _uow.GetDbContext().PayrollMonthlyHourDetail.AddRange(xPayrollMonthlyHourDetailList);

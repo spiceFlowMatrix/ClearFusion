@@ -42,7 +42,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
     public async Task<APIResponse> CreatePDF([FromBody]int JobId)
     {
       APIResponse apiRespone = null;
-      byte[] pdf = null;
       apiRespone = await _iJobDetailService.CreatePDF(JobId);
       return apiRespone;
 

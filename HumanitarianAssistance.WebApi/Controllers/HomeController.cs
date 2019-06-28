@@ -20,11 +20,7 @@ namespace HumanitarianAssistance.Controllers
   {
    
 
-    [HttpGet("~/ilovewebapi")]
-    public async Task<string> GetIdByUser()
-    {
-      return "Hello";
-    }
+    
 
   }
 }

@@ -38,7 +38,7 @@ namespace HumanitarianAssistance.Service.Classes
             this._userManager = userManager;
         }
 
-        public async Task<APIResponse> GetBalanceSheet()
+        public APIResponse GetBalanceSheet()
         {
             APIResponse response = new APIResponse();
 
