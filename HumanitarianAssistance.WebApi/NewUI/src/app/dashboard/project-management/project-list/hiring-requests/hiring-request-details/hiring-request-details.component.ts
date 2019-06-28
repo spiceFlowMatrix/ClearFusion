@@ -46,34 +46,38 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   @Input() officeList: IOfficeListModel;
   @Input() jobGradeList: IJobGradeModel;
   @Input() professionList: IProfessionList;
+  @Output() UpdatedHRListRefresh = new EventEmitter<any[]>();
+  //#endregion
 
+  // Model:
   employeeList: IEmployeeListModel[] = [];
   attendanceGroupList: IAttendaneGroupModel[] = [];
   candidateList: IReuestedCandidateDetailModel[] = [];
   employeeContractist: IEmployeeContractList[] = [];
   interviewCandidatModel: IitervireCandidateModel;
 
-  @Output() UpdatedHRListRefresh = new EventEmitter<any[]>();
-  //#endregion
   //#region "variables"
+
+  // variables:
+  hiringRequestForm: FormGroup;
+  SelctedHiringRequestId: number;
+  projectId: number;
+
+  // flag:
   hiringReuestDetailLoader = false;
   addCandidateInterviewLoader = false;
   interviewCompleteCheckFlag = false;
   isShotlistedCandidateFlag = false;
+  getCandidateDetailLoader = false;
+  isCompletedFlag = false;
+  isshortlistedLoaderFlag = false;
+  isCompleted = false;
+
   // screen scroll
   screenHeight: number;
   screenWidth: number;
   scrollStyles: any;
-  SelctedHiringRequestId: number;
-  projectId: number;
-  filledVacancy: number;
-  totalVacancy: number;
-  isCompleted = false;
-  //#endregion
 
-  hiringRequestForm: FormGroup;
-  // Flag:
-  isCompletedFlag = false;
   // Employeetype from enum
   employeeType = {
     Active: EmployeeType.Active,
@@ -81,8 +85,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     Terminated: EmployeeType.Terminated
   };
 
-  // candidate status:
-  CandidateStatus = false;
+  //#endregion
 
   constructor(
     private fb: FormBuilder,
@@ -100,11 +103,9 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     this.GetAllEmployeeList();
     this.GetAllEmployeeContractTypelist();
     this.GetAllAttendanceGrouplist();
-    console.log(this.hiringRequestId);
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-    //  this.interviewCompleteCheckFlag = this.hiringRequestDetail.IsInterViewed;
   }
 
   ngOnChanges() {
@@ -115,8 +116,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     ) {
       this.onChanges();
       this.GetSelectedEmployeeDetail(this.hiringRequestDetail.HiringRequestId);
-       this.isCompleted = this.hiringRequestDetail.IsCompleted;
-       console.log(this.isCompleted);
+      this.isCompleted = this.hiringRequestDetail.IsCompleted;
     }
   }
 
@@ -125,7 +125,6 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
-
     this.scrollStyles = {
       'overflow-y': 'auto',
       height: this.screenHeight - 170 + 'px',
@@ -176,6 +175,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       IsCompleted: [this.hiringRequestDetail.IsCompleted]
     });
   }
+
   //#region "onAddNewRequestClicked"
   onEditHiringRequestClicked() {
     this.openHiringRequestDialog();
@@ -266,6 +266,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "GetSelectedEmployeeDetail"
   GetSelectedEmployeeDetail(data: number) {
+    this.getCandidateDetailLoader = true;
     if (data != null) {
       this.candidateList = [];
       const candidateDetail: IReuestedCandidateDetailModel = {
@@ -293,11 +294,11 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             } else {
               this.toastr.error(response.message);
             }
-            // this.addHiringRequestLoader = false;
+            this.getCandidateDetailLoader = false;
           },
           error => {
             this.toastr.error('Someting went wrong');
-            // this.addHiringRequestLoader = false;
+            this.getCandidateDetailLoader = false;
           }
         );
     }
@@ -305,6 +306,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#endregion
   OnShortListClick(data: IHiringReuestCandidateModel) {
     if (data != null) {
+      this.isshortlistedLoaderFlag = true;
       const candidateDetail: IHiringReuestCandidateModel = {
         EmployeeID: data.EmployeeID,
         HiringRequestId: this.hiringRequestForm.get('HiringRequestId').value,
@@ -320,11 +322,11 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             } else {
               this.toastr.error(response.message);
             }
-            // this.candidateloaderFlag = false;
+            this.isshortlistedLoaderFlag = false;
           },
           error => {
             this.toastr.error('Someting went wrong');
-            // this.candidateloaderFlag = false;
+            this.isshortlistedLoaderFlag = false;
           }
         );
     }
@@ -344,7 +346,9 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           });
         }
       },
-      error => {}
+      error => {
+        this.toastr.error('Something went wrong. Please try again...');
+      }
     );
   }
   //#endregion
@@ -369,12 +373,10 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region  "onSelectedCandidate"
   onSelectedCandidate(data: any) {
-    debugger;
-    // this.hiringRequestForm.valueChanges();
     // Note Check for is filled vacancies exceed total vacancies.
-    this.filledVacancy = this.hiringRequestForm.get('FilledVacancies').value;
-    this.totalVacancy = this.hiringRequestForm.get('TotalVacancies').value;
-    if ( this.filledVacancy <=  this.totalVacancy) {
+    const filledVacancy = this.hiringRequestForm.get('FilledVacancies').value;
+    const totalVacancy = this.hiringRequestForm.get('TotalVacancies').value;
+    if (filledVacancy <= totalVacancy) {
       if (data != null) {
         if (data.EmployeeTypeId === this.employeeType.Candidate) {
           const dialogRef = this.dialog.open(
@@ -411,7 +413,6 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "EditselectedCandidate" common function
   EditselectedCandidate(data: any) {
-    debugger;
     // note enable loader when we select candidate
     const obj = this.candidateList.find(x => x.EmployeeID === data.EmployeeID);
     const indexOfCandidate = this.candidateList.indexOf(obj);
@@ -486,7 +487,6 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "onCompleteHiringRequestClicked"
   onCompleteHiringRequestClicked() {
-    debugger;
     this.isCompletedFlag = true;
     this.SelctedHiringRequestId = this.hiringRequestForm.get(
       'HiringRequestId'

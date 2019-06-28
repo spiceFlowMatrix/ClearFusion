@@ -4,20 +4,20 @@
       <span class="font_x_large">Hiring Request Details</span> &nbsp;
     </div>
     <div class="col-sm-6">
-      <button *ngIf="isCompleted" mat-raised-button color="accent" pTooltip="Request Completed"
-        tooltipPosition="top" aria-label="Request Completed">
+      <button *ngIf="isCompleted" mat-raised-button color="accent" pTooltip="Request Completed" tooltipPosition="top"
+        aria-label="Request Completed">
         <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">done</mat-icon>
         Request Completed
       </button> &nbsp;
-      <button *ngIf="!isCompleted" mat-stroked-button pTooltip="Complete Request"
-        tooltipPosition="top" aria-label="Complete Request" (click)="onCompleteHiringRequestClicked()">
-        <span  *ngIf="!isCompletedFlag; else completedLoderTemplate" >
-            Complete Request
-        </span>
+      <button *ngIf="!isCompleted" mat-stroked-button pTooltip="Complete Request" tooltipPosition="top"
+        aria-label="Complete Request" (click)="onCompleteHiringRequestClicked()">
+        <mat-icon *ngIf="!isCompletedFlag; else completedLoderTemplate" aria-label="icon-button done icon"
+          class="margin_left_minus_5">done</mat-icon>
+        Complete Request
         <ng-template #completedLoderTemplate>
-            <div class="pull-left">
-                <mat-spinner class="spinner_center" [diameter]="20"> </mat-spinner>
-              </div>
+          <div class="pull-left">
+            <mat-spinner class="spinner_center" [diameter]="20"> </mat-spinner>
+          </div>
         </ng-template>
       </button> &nbsp;
 
@@ -114,8 +114,8 @@
             <button mat-raised-button color="primary" (click)="onAddCandidateClicked()">
               Add Candidate
             </button>
-
-            <div class="col-sm-12 responsive_table-responsive">
+            <div class="col-sm-12 responsive_table-responsive"
+             *ngIf="!getCandidateDetailLoader; else candidateListLoaderTemplate">
               <table class="table table-bordered">
                 <tbody>
                   <tr>
@@ -136,12 +136,12 @@
                     <td width="15%">{{ item.EmployeeID }}/{{ item.EmployeeCode }} </td>
                     <td width="20%">{{ item.EmployeeName }}</td>
                     <td width="20%">{{ item.Gender }} </td>
-                    <td width="15%"> <span
+                    <td width="25%"> <span
                         *ngIf="item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == false">None</span>
                       <a *ngIf="(item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate"
                         (click)="seeCandidateDetail('dashboard/hr/interview-form')">See Interview Details</a>
                     </td>
-                    <td width="15%">{{ item.EmployeeTypeName }}
+                    <td width="25%">{{ item.EmployeeTypeName }}
                       <a *ngIf="item.EmployeeTypeId == employeeType.Candidate &&
                       !((item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate) &&
                       !(item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == true || interviewCompleteCheckFlag == true)"
@@ -152,7 +152,15 @@
                         *ngIf="(!item.IsShortListed && !item.IsSelected && item.EmployeeTypeId == employeeType.Candidate && item.IsInterViewed)"
                         mat-raised-button color="accent" pTooltip="Short List" tooltipPosition="top"
                         aria-label="ShortList" (click)="OnShortListClick(item)">
-                        ShortList
+                        <span *ngIf="!isshortlistedLoaderFlag; else loaderTemplate">
+                          ShortList
+                        </span>
+                        <ng-template #loaderTemplate>
+                          <div class="spinner_center padding_top_5 padding_bottom_5">
+                            <mat-spinner [diameter]="25"> </mat-spinner>
+                          </div>
+                        </ng-template>
+
                       </button>
 
                       <button mat-stroked-button mat-raised-button
@@ -229,9 +237,11 @@
                   </tr>
                 </tbody>
               </table>
-
-
             </div>
+            <ng-template #candidateListLoaderTemplate>
+                <br />
+                <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+              </ng-template>
             <br />
           </div>
         </div>
