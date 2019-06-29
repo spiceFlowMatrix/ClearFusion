@@ -4,7 +4,7 @@ import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { map } from 'rxjs/operators';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { IHiringRequestDetailModel, ProjectHiringRequestFilterModel, IHiringReuestCandidateModel, IReuestedCandidateDetailModel, IitervireCandidateModel, ISelectedCandidateModel } from './models/hiring-requests-model';
+import { IHiringRequestDetailModel, ProjectHiringRequestFilterModel, IHiringReuestCandidateModel, IReuestedCandidateDetailModel, IitervireCandidateModel, ISelectedCandidateModel, CandidateDetailModel } from './models/hiring-requests-model';
 
 @Injectable({
   providedIn: 'root'
@@ -140,6 +140,25 @@ export class HiringRequestsService {
     );
 }
 //#endregion
+ //#region "EditHiringRequestDetail"
+ EditCandidateDetail(data: CandidateDetailModel) {
+  return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_HREmployee_EditEmployeeProfessionalDetail,
+      data
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
 
   //#region "GetProjectActivityAdvanceFilterList"
   GetProjectHiringRequestFilterList(data: ProjectHiringRequestFilterModel): any {
@@ -171,6 +190,39 @@ GetAllEmployeeList(): any {
       map(x => {
         const responseData: IResponseData = {
           data: x.data.EmployeeDetailListData,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
+//#region "GetAllEmployeeList"
+GetAllAttendanceGroupList(): any {
+  return this.globalService
+    .getList(this.appurl.getApiUrl() + GLOBAL.API_Code_GetAttendanceGroupst)
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.AttendanceGroupMasterList,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
+
+//#region "GetAllEmloyeeContractList"
+GetAllEmloyeeContractList(): any {
+  return this.globalService
+    .getList(this.appurl.getApiUrl() + GLOBAL.API_HREmployee_GetAllEmployeeContractType)
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.EmployeeContractTypeList,
           statusCode: x.StatusCode,
           message: x.Message
         };
@@ -228,7 +280,7 @@ EditSelectedCandidateDEtail(data: ISelectedCandidateModel){
   .pipe(
     map(x => {
       const responseData: IResponseData = {
-        data: x,
+        data: x.ResponseData,
         statusCode: x.StatusCode,
         message: x.Message
       };
@@ -287,7 +339,7 @@ IsCompltedeHrDEtail(hiringRequestId: number ){
   .pipe(
     map(x => {
       const responseData: IResponseData = {
-        data: x,
+        data: x.ResponseData,
         statusCode: x.StatusCode,
         message: x.Message
       };

@@ -8,7 +8,6 @@ import {
   OnChanges,
   HostListener
 } from '@angular/core';
-// tslint:disable-next-line:max-line-length
 import {
   TimeCategoryModel,
   MediumModel,
@@ -24,30 +23,26 @@ import {
 import { ContractsService } from '../service/contracts.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
-import { Router } from '@angular/router';
 import {
   FormGroup,
   Validators,
   FormControl,
   FormBuilder
 } from '@angular/forms';
-import { AutoComplete, OverlayPanel, SelectItem } from 'primeng/primeng';
 import {
   ClientDetailsModel,
   ClientNameModel
 } from '../../clients/model/client.model';
 import { UnitRateModel } from '../../master-pages/model/mastrer-pages.model';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { debug } from 'util';
-import { MatAutocomplete, MatDialog } from '@angular/material';
 import { ToastrService } from 'ngx-toastr';
-import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
 import { ApplicationPages } from 'src/app/shared/applicationpagesenum';
 import { ContractApprovalComponent } from '../contract-approval/contract-approval.component';
 import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
 import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { Observable } from 'rxjs/internal/Observable';
+import { MatDialog } from '@angular/material/dialog';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-contract-details',
@@ -147,7 +142,6 @@ export class ContractDetailsComponent implements OnInit, OnChanges {
   pageId = ApplicationPages.Assets;
   cId: any;
   id: string;
-  // clientName = new FormControl('', [Validators.required]);
   filteredOptions: Observable<any[]>;
 
   @Input() contractId: any;
@@ -160,14 +154,11 @@ export class ContractDetailsComponent implements OnInit, OnChanges {
   @ViewChild(MatAutocomplete) matAutocomplete: MatAutocomplete;
 
   constructor(
-    private commonLoaderService: CommonLoaderService,
     public dialog: MatDialog,
     private localStorageService: LocalStorageService,
     private toastr: ToastrService,
-    private fb: FormBuilder,
     private contractService: ContractsService,
     private appurl: AppUrlService,
-    private router: Router
   ) {
     this.getScreenSize();
   }

@@ -48,7 +48,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                if (model.PolicyId == 0 || model.PolicyId == null)
+                if (model.PolicyId == 0)
                 {
                     var policy = _uow.GetDbContext().PolicyDetails.Where(x => x.PolicyName == model.PolicyName && x.IsDeleted == false).FirstOrDefault();
                     if (policy == null)
@@ -377,12 +377,6 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
-            return response;
-        }
-
-        public async Task<APIResponse> GetPolicyScheduleById(int model, string UserId)
-        {
-            APIResponse response = new APIResponse();
             return response;
         }
 

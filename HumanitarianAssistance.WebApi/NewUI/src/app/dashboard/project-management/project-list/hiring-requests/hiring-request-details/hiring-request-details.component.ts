@@ -18,8 +18,8 @@ import {
   IProfessionList,
   IitervireCandidateModel,
   IHiringReuestCandidateModel,
-  ISelectedCandidateModel,
-  IHiringRequestDetailModel
+  IAttendaneGroupModel,
+  IEmployeeContractList
 } from '../models/hiring-requests-model';
 import { MatDialog } from '@angular/material';
 import { AddHiringRequestsComponent } from '../add-hiring-requests/add-hiring-requests.component';
@@ -29,8 +29,8 @@ import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/stat
 import { ToastrService } from 'ngx-toastr';
 import { EmployeeType } from 'src/app/shared/enum';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
-import { isNgTemplate } from '@angular/compiler';
 import { ActivatedRoute } from '@angular/router';
+import { EditCandidateDetailDialogComponent } from '../edit-candidate-detail-dialog/edit-candidate-detail-dialog.component';
 
 @Component({
   selector: 'app-hiring-request-details',
@@ -46,29 +46,38 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   @Input() officeList: IOfficeListModel;
   @Input() jobGradeList: IJobGradeModel;
   @Input() professionList: IProfessionList;
-
-  employeeList: IEmployeeListModel[] = [];
-  candidateList: IReuestedCandidateDetailModel[] = [];
-  interviewCandidatModel: IitervireCandidateModel;
-
   @Output() UpdatedHRListRefresh = new EventEmitter<any[]>();
   //#endregion
+
+  // Model:
+  employeeList: IEmployeeListModel[] = [];
+  attendanceGroupList: IAttendaneGroupModel[] = [];
+  candidateList: IReuestedCandidateDetailModel[] = [];
+  employeeContractist: IEmployeeContractList[] = [];
+  interviewCandidatModel: IitervireCandidateModel;
+
   //#region "variables"
+
+  // variables:
+  hiringRequestForm: FormGroup;
+  SelctedHiringRequestId: number;
+  projectId: number;
+
+  // flag:
   hiringReuestDetailLoader = false;
   addCandidateInterviewLoader = false;
   interviewCompleteCheckFlag = false;
   isShotlistedCandidateFlag = false;
+  getCandidateDetailLoader = false;
+  isCompletedFlag = false;
+  isshortlistedLoaderFlag = false;
+  isCompleted = false;
+
   // screen scroll
   screenHeight: number;
   screenWidth: number;
   scrollStyles: any;
-  SelctedHiringRequestId: number;
-  projectId: number;
-  //#endregion
 
-  hiringRequestForm: FormGroup;
-  // Flag:
-  selectedCandidateFlag = false;
   // Employeetype from enum
   employeeType = {
     Active: EmployeeType.Active,
@@ -76,8 +85,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     Terminated: EmployeeType.Terminated
   };
 
-  // candidate status:
-  CandidateStatus = false;
+  //#endregion
 
   constructor(
     private fb: FormBuilder,
@@ -93,12 +101,11 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.initForm();
     this.GetAllEmployeeList();
-    console.log(this.hiringRequestId);
+    this.GetAllEmployeeContractTypelist();
+    this.GetAllAttendanceGrouplist();
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
-    }
-    )
-    //  this.interviewCompleteCheckFlag = this.hiringRequestDetail.IsInterViewed;
+    });
   }
 
   ngOnChanges() {
@@ -109,6 +116,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     ) {
       this.onChanges();
       this.GetSelectedEmployeeDetail(this.hiringRequestDetail.HiringRequestId);
+      this.isCompleted = this.hiringRequestDetail.IsCompleted;
     }
   }
 
@@ -117,7 +125,6 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
-
     this.scrollStyles = {
       'overflow-y': 'auto',
       height: this.screenHeight - 170 + 'px',
@@ -128,8 +135,6 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "initForm"
   initForm() {
-    const valu = this.hiringRequestDetail;
-    console.log(valu);
     this.hiringRequestForm = this.fb.group({
       Description: ['', Validators.required],
       Position: ['', [Validators.required]],
@@ -142,7 +147,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       OfficeId: [null, Validators.required],
       GradeId: [null, Validators.required],
       RequestedBy: [null],
-      ProjectId: [null]
+      ProjectId: [null],
+      IsCompleted: [null]
     });
   }
   //#endregion
@@ -163,14 +169,17 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       EmployeeID: [this.hiringRequestDetail.EmployeeID],
       GradeId: [this.hiringRequestDetail.GradeId],
       ProjectId: [this.hiringRequestDetail.ProjectId],
-      RequestedBy: [this.hiringRequestDetail.RequestedBy]
+      RequestedBy: [this.hiringRequestDetail.RequestedBy],
+      IsCompleted: [this.hiringRequestDetail.IsCompleted]
     });
   }
+
   //#region "onAddNewRequestClicked"
   onEditHiringRequestClicked() {
     this.openHiringRequestDialog();
   }
   //#endregion
+
   //#region "openHiringRequestDialog"
   openHiringRequestDialog(): void {
     // NOTE: It passed the data into the Add Activity Model
@@ -219,7 +228,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#region "onAddEmployeeClicked"
   onAddCandidateClicked() {
     const dialogRef = this.dialog.open(AddCandidateDaialogComponent, {
-      width: '400px',
+      width: '420px',
       autoFocus: false,
       data: {
         EmployeeList: this.employeeList,
@@ -255,6 +264,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "GetSelectedEmployeeDetail"
   GetSelectedEmployeeDetail(data: number) {
+    this.getCandidateDetailLoader = true;
     if (data != null) {
       this.candidateList = [];
       const candidateDetail: IReuestedCandidateDetailModel = {
@@ -275,17 +285,18 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
                   EmployeeTypeId: element.EmployeeTypeId,
                   IsInterViewed: element.IsInterViewed,
                   IsShortListed: element.IsShortListed,
-                  IsSelected: element.IsSelected
+                  IsSelected: element.IsSelected,
+                  IsSelectedFlag: false
                 });
               });
             } else {
               this.toastr.error(response.message);
             }
-            // this.addHiringRequestLoader = false;
+            this.getCandidateDetailLoader = false;
           },
           error => {
             this.toastr.error('Someting went wrong');
-            // this.addHiringRequestLoader = false;
+            this.getCandidateDetailLoader = false;
           }
         );
     }
@@ -293,6 +304,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#endregion
   OnShortListClick(data: IHiringReuestCandidateModel) {
     if (data != null) {
+      this.isshortlistedLoaderFlag = true;
       const candidateDetail: IHiringReuestCandidateModel = {
         EmployeeID: data.EmployeeID,
         HiringRequestId: this.hiringRequestForm.get('HiringRequestId').value,
@@ -308,46 +320,129 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             } else {
               this.toastr.error(response.message);
             }
-            // this.candidateloaderFlag = false;
+            this.isshortlistedLoaderFlag = false;
           },
           error => {
             this.toastr.error('Someting went wrong');
-            // this.candidateloaderFlag = false;
+            this.isshortlistedLoaderFlag = false;
           }
         );
     }
   }
+  //#region  "GetAllAttendanceGrouplist"
+  GetAllAttendanceGrouplist() {
+    this.hiringRequestService.GetAllAttendanceGroupList().subscribe(
+      (response: IResponseData) => {
+        this.attendanceGroupList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.attendanceGroupList.push({
+              Id: element.Id,
+              Name: element.Name,
+              Description: element.Description
+            });
+          });
+        }
+      },
+      error => {
+        this.toastr.error('Something went wrong. Please try again...');
+      }
+    );
+  }
+  //#endregion
+  //#region  "GetAllEmployeeContractTypelist"
+  GetAllEmployeeContractTypelist() {
+    this.hiringRequestService.GetAllEmloyeeContractList().subscribe(
+      (response: IResponseData) => {
+        this.employeeContractist = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.employeeContractist.push({
+              EmployeeContractTypeId: element.EmployeeContractTypeId,
+              EmployeeContractTypeName: element.EmployeeContractTypeName
+            });
+          });
+        }
+      },
+      error => {}
+    );
+  }
+  //#endregion
 
   //#region  "onSelectedCandidate"
   onSelectedCandidate(data: any) {
-    if (data != null) {
-      const candidateDetail: any = {
-        EmployeeId: data.EmployeeID,
-        HiringRequestId: this.hiringRequestForm.get('HiringRequestId').value,
-        IsSelected: !data.IsSelected,
-        BudgetLineId: this.hiringRequestForm.get('BudgetLineId').value,
-        ProjectId: this.projectId
-      };
-
-      this.hiringRequestService
-        .EditSelectedCandidateDEtail(candidateDetail)
-        .subscribe(
-          (response: IResponseData) => {
-            if (response.statusCode === 200) {
-              data.IsSelected = !data.IsSelected;
-              data.EmployeeTypeId = this.employeeType.Active;
-              data.EmployeeTypeName = 'Active';
-            } else {
-              this.toastr.error(response.message);
+    // Note Check for is filled vacancies exceed total vacancies.
+    const filledVacancy = this.hiringRequestForm.get('FilledVacancies').value;
+    const totalVacancy = this.hiringRequestForm.get('TotalVacancies').value;
+    if (filledVacancy <= totalVacancy) {
+      if (data != null) {
+        if (data.EmployeeTypeId === this.employeeType.Candidate) {
+          const dialogRef = this.dialog.open(
+            EditCandidateDetailDialogComponent,
+            {
+              width: '550px',
+              autoFocus: false,
+              data: {
+                HiringRequestDetail: this.hiringRequestDetail,
+                AttendanceGroupList: this.attendanceGroupList,
+                EmployeeId: data.EmployeeID,
+                EmployeeContractist: this.employeeContractist
+              }
             }
-            // this.candidateloaderFlag = false;
-          },
-          error => {
-            this.toastr.error('Someting went wrong');
-            // this.candidateloaderFlag = false;
-          }
-        );
+          );
+          dialogRef.componentInstance.employeeTypeDetial.subscribe(
+            (obj: any) => {
+              if (obj === this.employeeType.Active) {
+                // Note: to update selected candidate detail
+                this.EditselectedCandidate(data);
+              }
+            }
+          );
+          dialogRef.afterClosed().subscribe(result => {});
+        } else {
+          this.EditselectedCandidate(data);
+        }
+      }
+    } else {
+      this.toastr.warning('No vacancies left');
     }
+  }
+  //#endregion
+
+  //#region "EditselectedCandidate" common function
+  EditselectedCandidate(data: any) {
+    // note:  enable loader when we click on select candidate
+    const obj = this.candidateList.find(x => x.EmployeeID === data.EmployeeID);
+    const indexOfCandidate = this.candidateList.indexOf(obj);
+    this.candidateList[indexOfCandidate].IsSelectedFlag = true;
+
+    const candidateDetail: any = {
+      EmployeeId: data.EmployeeID,
+      HiringRequestId: this.hiringRequestForm.get('HiringRequestId').value,
+      IsSelected: !data.IsSelected,
+      BudgetLineId: this.hiringRequestForm.get('BudgetLineId').value,
+      ProjectId: this.projectId
+    };
+
+    this.hiringRequestService
+      .EditSelectedCandidateDEtail(candidateDetail)
+      .subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200) {
+            data.IsSelected = !data.IsSelected;
+            data.EmployeeTypeId = this.employeeType.Active;
+            data.EmployeeTypeName = 'Active';
+            this.hiringRequestForm.controls['FilledVacancies'].setValue(
+              response.data.FilledVacancies
+            );
+          } else {
+            this.toastr.error(response.message);
+          }
+        },
+        error => {
+          this.toastr.error('Someting went wrong');
+        }
+      );
   }
   //#endregion
 
@@ -365,9 +460,6 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           (response: IResponseData) => {
             if (response.statusCode === 200) {
               event.IsInterViewed = !event.IsInterViewed;
-
-              // this.interviewCompleteCheckFlag = true;
-              // this.hiringRequestListRefresh();
               this.toastr.success(
                 'Candidate Interview is created successfully'
               );
@@ -393,21 +485,24 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "onCompleteHiringRequestClicked"
   onCompleteHiringRequestClicked() {
+    this.isCompletedFlag = true;
     this.SelctedHiringRequestId = this.hiringRequestForm.get(
-      'HiringRequestId').value;
+      'HiringRequestId'
+    ).value;
     this.hiringRequestService
       .IsCompltedeHrDEtail(this.SelctedHiringRequestId)
       .subscribe(
         (response: IResponseData) => {
           if (response.statusCode === 200) {
+            this.isCompleted = response.data.IsCompleted;
           } else {
             this.toastr.error(response.message);
           }
-          // this.candidateloaderFlag = false;
+          this.isCompletedFlag = false;
         },
         error => {
           this.toastr.error('Someting went wrong');
-          // this.candidateloaderFlag = false;
+          this.isCompletedFlag = false;
         }
       );
     //#endregion

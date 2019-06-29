@@ -67,52 +67,52 @@ export class PayrollMonthlyHoursComponent implements OnInit {
   }
 
   //#region "getPayrollMonthlyHoursList"
-  getPayrollMonthlyHoursList() {
-    this.hrservice
-      .GetAllDropdown(
-        this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllPayrollMonthlyHourDetail
-      )
-      .subscribe(
-        data => {
-          this.monthlyhoursDatasource = [];
-          data.data.PayrollMonthlyHourList.forEach(element => {
-            this.monthlyhoursDatasource.push({
-              PayrollMonthlyHourID: element.PayrollMonthlyHourID,
-              OfficeId: element.OfficeId,
-              OfficeName: element.OfficeName,
-              PayrollMonth: element.PayrollMonth,
-              PayrollYear: element.PayrollYear,
-              WorkingTime: element.WorkingTime,
-              PayrollMonthYear: new Date(
-                element.PayrollYear,
-                element.PayrollMonth,
-                0
-              ),
-              Hours: element.Hours,
-              InTime: new Date(
-                new Date(element.InTime).getTime() -
-                  new Date().getTimezoneOffset() * 60000
-              ),
-              OutTime: new Date(
-                new Date(element.OutTime).getTime() -
-                  new Date().getTimezoneOffset() * 60000
-              )
-            });
-          });
-          this.commonService.setLoader(false);
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          } else {
-          }
-        }
-      );
-  }
+  //getPayrollMonthlyHoursList() {
+  //  this.hrservice
+  //    .GetAllDropdown(
+  //      this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllPayrollMonthlyHourDetail
+  //    )
+  //    .subscribe(
+  //      data => {
+  //        this.monthlyhoursDatasource = [];
+  //        data.data.PayrollMonthlyHourList.forEach(element => {
+  //          this.monthlyhoursDatasource.push({
+  //            PayrollMonthlyHourID: element.PayrollMonthlyHourID,
+  //            OfficeId: element.OfficeId,
+  //            OfficeName: element.OfficeName,
+  //            PayrollMonth: element.PayrollMonth,
+  //            PayrollYear: element.PayrollYear,
+  //            WorkingTime: element.WorkingTime,
+  //            PayrollMonthYear: new Date(
+  //              element.PayrollYear,
+  //              element.PayrollMonth,
+  //              0
+  //            ),
+  //            Hours: element.Hours,
+  //            InTime: new Date(
+  //              new Date(element.InTime).getTime() -
+  //                new Date().getTimezoneOffset() * 60000
+  //            ),
+  //            OutTime: new Date(
+  //              new Date(element.OutTime).getTime() -
+  //                new Date().getTimezoneOffset() * 60000
+  //            )
+  //          });
+  //        });
+  //        this.commonService.setLoader(false);
+  //      },
+  //      error => {
+  //        if (error.StatusCode === 500) {
+  //          this.toastr.error('Internal Server Error....');
+  //        } else if (error.StatusCode === 401) {
+  //          this.toastr.error('Unauthorized Access Error....');
+  //        } else if (error.StatusCode === 403) {
+  //          this.toastr.error('Forbidden Error....');
+  //        } else {
+  //        }
+  //      }
+  //    );
+  //}
   //#endregion
 
   //#region "getPayrollHoursList"
@@ -250,7 +250,7 @@ export class PayrollMonthlyHoursComponent implements OnInit {
 
     this.hrservice
       .AddEditPayrollMonthlyHour(
-        this.setting.getBaseUrl() + GLOBAL.API_HR_AddPayrollMonthlyHourDetail,
+        this.setting.getBaseUrl() + GLOBAL.API_EmployeeHR_AddPayrollMonthlyHourDetail,
         dataModel
       )
       .subscribe(
@@ -309,7 +309,7 @@ export class PayrollMonthlyHoursComponent implements OnInit {
   //#endregion
 
   //#region "onEditFormSubmit"
-  onEditFormSubmit(model) {
+    onEditFormSubmit(model) {
     this.showHideEditPayrollMonthlyPopupLoading();
     const dataModel = {
       PayrollMonthlyHourID: model.PayrollMonthlyHourID,
@@ -353,53 +353,6 @@ export class PayrollMonthlyHoursComponent implements OnInit {
             this.toastr.error('Forbidden Error....');
           }
           this.showHideEditPayrollMonthlyPopupLoading();
-        }
-      );
-  }
-  //#endregion
-
-  //#region "logEvent"
-  logEvent(eventName: string, obj) {
-    if (eventName === 'onRowUpdating') {
-      const value = Object.assign(obj.oldData, obj.newData); // Merge old data with new Data
-      this.editPayrollMonthlyHoursList(value);
-    }
-  }
-  //#endregion
-
-  //#region "Edit Payroll Monthly Hours List"
-  editPayrollMonthlyHoursList(value) {
-    const payrollEditList = {
-      PayrollMonthlyHourID: value.PayrollMonthlyHourID,
-      OfficeId: value.OfficeId,
-      PayrollMonth: value.PayrollMonthYear.getMonth() + 1,
-      PayrollYear: value.PayrollMonthYear.getFullYear(),
-      InTime: new Date(value.InTime),
-      OutTime: new Date(value.OutTime)
-    };
-    this.hrservice
-      .AddEditPayrollMonthlyHour(
-        this.setting.getBaseUrl() + GLOBAL.API_HR_EditPayrollMonthlyHourDetail,
-        payrollEditList
-      )
-      .subscribe(
-        data => {
-          if (data.StatusCode === 200) {
-            this.toastr.success('Updated Successfully!!!');
-          // tslint:disable-next-line:curly
-          } else if (data.StatusCode === 400)
-            this.toastr.error('Something went wrong!');
-
-          this.getPayrollMonthlyHoursList();
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
         }
       );
   }

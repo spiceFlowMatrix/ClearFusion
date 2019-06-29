@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, EventEmitter, OnChanges ,} from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter, OnChanges , } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ToastrService } from 'ngx-toastr';
@@ -64,7 +64,6 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
 
   ngOnInit() {
     this.initForm();
-    console.log("projecxtzid",this.projectId )
     console.log('check', this.hiringRequestDetail);
     if (
       this.hiringRequestDetail != null &&
@@ -74,7 +73,6 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
     }
   }
   ngOnChanges() {
-    debugger
     console.log('openvalue', this.hiringRequestDetail);
     this.initForm();
   }
@@ -85,7 +83,7 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
       Position: ['', [Validators.required]],
       ProfessionId: ['', Validators.required],
       TotalVacancies: [null, Validators.required],
-      FilledVacancies: [null, Validators.required],
+      FilledVacancies: [null],
       BasicPay: [null, Validators.required],
       CurrencyId: [null, Validators.required],
       BudgetLineId: [null, Validators.required],

@@ -1238,10 +1238,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 var payrollmonthlyinfo = await _uow.PayrollMonthlyHourDetailRepository
                                      .FindAsync(x => x.IsDeleted == false &&
-                                                     x.OfficeId == model.OfficeId &&
-                                                     x.PayrollMonth == model.PayrollMonth &&
-                                                     x.PayrollYear == model.PayrollYear &&
-                                                     x.AttendanceGroupId== model.AttendanceGroupId
+                                                     x.PayrollMonthlyHourID == model.PayrollMonthlyHourID
                                                 );
                 if (payrollmonthlyinfo != null)
                 {
@@ -1258,11 +1255,16 @@ namespace HumanitarianAssistance.Service.Classes
                     payrollmonthlyinfo.ModifiedById = model.ModifiedById;
                     payrollmonthlyinfo.ModifiedDate = model.ModifiedDate;
                     payrollmonthlyinfo.IsDeleted = false;
+                    payrollmonthlyinfo.AttendanceGroupId = model.AttendanceGroupId;
 
                     await _uow.PayrollMonthlyHourDetailRepository.UpdateAsyn(payrollmonthlyinfo);
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
+                }
+                else
+                {
+                    throw new Exception("Record not found to update");
                 }
             }
             catch (Exception ex)
@@ -1736,7 +1738,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
 
             return "OK";
@@ -1795,7 +1797,7 @@ namespace HumanitarianAssistance.Service.Classes
             }
             catch (Exception xException)
             {
-
+                Console.WriteLine(xException.Message);
             }
 
             _uow.GetDbContext().PayrollMonthlyHourDetail.AddRange(xPayrollMonthlyHourDetailList);

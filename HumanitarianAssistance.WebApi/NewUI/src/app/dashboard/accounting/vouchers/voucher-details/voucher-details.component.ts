@@ -217,12 +217,8 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
         } else if (response.statusCode === 400 && response.data === null) {
           this.toastr.warning(response.message);
         }
-        // this.voucherDetailLoader = false;
-        // this.commonLoader.hideLoader();
       },
       error => {
-        // this.commonLoader.hideLoader();
-        // this.voucherDetailLoader = false;
       }
     );
   }
@@ -291,32 +287,6 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       }
     );
   }
-  //#endregion
-
-  //#region "addTransactionList"
-  // addTransactionList(data: IEditTransactionModel[]) {
-  //       this.checkTransactionFlag = true;
-
-  //       this.voucherService.AddTransactionList(data).subscribe(
-  //         (response: IResponseData) => {
-  //           // this.voucherDetail = null;
-  //             if (response.statusCode === 200) {
-  //               this.toastr.success('Transaction Added Successfully');
-  //               this.getTransactionByVoucherId(this.voucherId);
-
-  //             } else if (response.statusCode === 400) {
-  //               this.toastr.warning(response.message);
-  //             }
-  //             this.commonLoader.hideLoader();
-
-  //             this.checkTransactionFlag = false;
-  //         },
-  //         (error) => {
-  //           this.commonLoader.hideLoader();
-  //           this.toastr.error('Someting went wrong');
-  //           this.checkTransactionFlag = false;
-  //         });
-  // }
   //#endregion
 
   //#region "addEditTransactionList"
@@ -392,87 +362,6 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       error => {
         this.toastr.error('Someting went wrong');
         this.checkTransactionFlag = false;
-      }
-    );
-  }
-  //#endregion
-
-  //#region "editTransactionDetail"
-  editTransactionDetail(data: IEditTransactionModel) {
-    if (data.AccountNo !== 0 && data.AccountNo !== null) {
-      if (this.totalCredits === this.totalDebits) {
-        this.checkTransactionFlag = true;
-
-        const transactinData: IEditTransactionModel = {
-          TransactionId: data.TransactionId,
-          AccountNo: data.AccountNo,
-          Description: data.Description,
-          ProjectId: data.ProjectId,
-          BudgetLineId: data.BudgetLineId,
-          Credit: data.Credit,
-          Debit: data.Debit
-        };
-
-        // this.commonLoader.showLoader();
-
-        this.voucherService.EditTransactionDetail(transactinData)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(
-          (response: IResponseData) => {
-            // this.voucherDetail = null;
-            if (response.statusCode === 200) {
-            } else if (response.statusCode === 400) {
-              this.toastr.warning(response.message);
-            }
-            this.checkTransactionFlag = false;
-            // this.commonLoader.hideLoader();
-            // this.voucherDetailLoader = false;
-          },
-          error => {
-            this.checkTransactionFlag = false;
-            // this.commonLoader.hideLoader();
-            this.toastr.error('Someting went wrong');
-            // this.voucherDetailLoader = false;
-          }
-        );
-      } else {
-        this.toastr.error('Transaction is unbalanced');
-      }
-    }
-  }
-  //#endregion
-
-  //#region "deleteTransactionDetailById"
-  deleteTransactionDetailById(id: number, isCredit: boolean, data: any) {
-    this.commonLoader.showLoader();
-
-    this.voucherService.DeleteTransactionDetailById(id)
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(
-      (response: IResponseData) => {
-        // this.voucherDetail = null;
-        if (response.statusCode === 200) {
-          if (isCredit) {
-            const index = this.transactionCreditList.indexOf(data);
-            if (index > -1) {
-              this.transactionCreditList.splice(index, 1);
-            }
-          } else {
-            const index = this.transactionDebitList.indexOf(data);
-            if (index > -1) {
-              this.transactionDebitList.splice(index, 1);
-            }
-          }
-
-          this.toastr.success('Transaction Deleted Successfully');
-        } else if (response.statusCode === 400) {
-          this.toastr.warning(response.message);
-        }
-        this.commonLoader.hideLoader();
-      },
-      error => {
-        this.commonLoader.hideLoader();
-        this.toastr.error('Someting went wrong');
       }
     );
   }

@@ -52,7 +52,7 @@ export class ProjectActivitiesService {
   //#region "GetVoucherList"
   GetVoucherList(data: any) {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_AccountNew_GetAllVoucherList,
+      this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllVoucherList,
       data
     );
   }
@@ -204,7 +204,7 @@ export class ProjectActivitiesService {
     return this.globalService
       .getListById(
         this.appurl.getApiUrl() +
-          GLOBAL.API_AccountNew_GetVoucherDetailByVoucherNo,
+          GLOBAL.API_VoucherTransaction_GetVoucherDetailByVoucherNo,
         id
       )
       .pipe(

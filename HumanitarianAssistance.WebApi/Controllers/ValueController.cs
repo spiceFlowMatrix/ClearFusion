@@ -5,7 +5,7 @@ namespace HumanitarianAssistance.Controllers {
     [Route("api/Value/[Action]")]
     public class ValueController : Controller {
         [HttpGet]
-        public async Task<string> Get () {
+        public string Get () {
             return "Value";
         }
 

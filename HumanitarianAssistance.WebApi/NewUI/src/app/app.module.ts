@@ -9,10 +9,9 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DataInterceptor } from './shared/services/data-interceptor';
 import { GlobalService } from './shared/services/global-services.service';
 import { AppUrlService } from './shared/services/app-url.service';
-import { AuthGuard } from './shared/auth/AuthGuard';
+import { AuthGuard } from './shared/auth/auth-guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LibraryModule } from '../../projects/library/src/lib/library.module';
-import { MatNativeDateModule, MatSidenavModule, MAT_DATE_LOCALE } from '@angular/material';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -26,13 +25,15 @@ import { CommonLoaderService } from './shared/common-loader/common-loader.servic
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { DbstyleGuideComponent } from './shared/dbstyle-guide/dbstyle-guide.component';
-import {RoleGuardService} from './shared/services/role-guard';
-import {LocalStorageService} from './shared/services/localstorage.service';
+import { RoleGuardService } from './shared/services/role-guard';
+import { LocalStorageService } from './shared/services/localstorage.service';
 import { LoginService } from './login/login.service';
 import { GlobalSharedService } from './shared/services/global-shared.service';
 import { DatePipe } from '@angular/common';
 import { AngularSplitModule } from 'angular-split';
 import { SignalRService } from './shared/services/signal-r.service';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,7 @@ import { SignalRService } from './shared/services/signal-r.service';
       useClass: DataInterceptor,
       multi: true,
     },
-    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'}, // use to format date : dd/MM/yyyy
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, // use to format date : dd/MM/yyyy
     RoleGuardService,
     DatePipe,
     SignalRService

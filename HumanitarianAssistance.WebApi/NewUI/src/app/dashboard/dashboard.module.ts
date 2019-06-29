@@ -2,12 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule, MatSidenavModule, MatToolbarModule, MatCardModule, MatButtonModule, } from '@angular/material';
 import { DbsidebarComponent } from '../shared/dbsidebar/dbsidebar.component';
 import { DbheaderComponent } from '../shared/dbheader/dbheader.component';
 import { DbfooterComponent } from '../shared/dbfooter/dbfooter.component';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   imports: [
@@ -18,8 +21,6 @@ import { DbfooterComponent } from '../shared/dbfooter/dbfooter.component';
     MatMenuModule,
     MatIconModule,
     MatSidenavModule,
-    MatListModule,
-    MatToolbarModule,
     MatCardModule,
     MatButtonModule,
   ],

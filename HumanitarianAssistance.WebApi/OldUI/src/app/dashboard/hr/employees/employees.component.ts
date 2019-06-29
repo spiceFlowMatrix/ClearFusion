@@ -636,6 +636,7 @@ export class EmployeesComponent implements OnInit {
             data.StatusCode === 200 &&
             data.data.OfficeDetailsList.length > 0
           ) {
+              debugger;
             data.data.OfficeDetailsList.forEach(element => {
               this.officecodelist.push({
                 Office: element.OfficeId,
@@ -675,8 +676,7 @@ export class EmployeesComponent implements OnInit {
                   : this.selectedOffice;
             } else {
               this.selectedOffice = parseInt(
-                localStorage.getItem('EMPLOYEEOFFICEID'),
-                32
+                localStorage.getItem('EMPLOYEEOFFICEID')
               );
             }
 
@@ -1594,7 +1594,13 @@ export class EmployeesComponent implements OnInit {
   //#endregion
 
   saveEmployeeLeave() {
-    this.addEmployeePopupLoading = true;
+      this.addEmployeePopupLoading = true;
+
+      if (this.selectedLeaveList == undefined) {
+          this.toastr.warning('Select leaves to save');
+          this.addEmployeePopupLoading = false;
+          return;
+      }
 
     this.selectedLeaveList.forEach(
       x => (x.employeeId = this.assignLeaveToEmployee)

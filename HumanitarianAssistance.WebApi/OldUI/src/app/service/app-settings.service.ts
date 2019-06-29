@@ -7,13 +7,18 @@ export class AppSettingsService {
 
 
     public getBaseUrl(): string {
-        return this.baseUrl + 'api/';
+        return this.getApiURL(this.baseUrl) + 'api/';
     }
     public getDocUrl(): string {
-        return this.baseUrl + 'Docs/';
+        return this.getApiURL(this.baseUrl) + 'Docs/';
     }
     public getHubUrl(): string {
-        return this.baseUrl + 'chathub/';
+        return this.getApiURL(this.baseUrl) + 'chathub/';
+    }
+
+    private getApiURL(baseURL): string {
+
+        return (baseURL.substring(baseURL.lastIndexOf('/')))
     }
 }
 

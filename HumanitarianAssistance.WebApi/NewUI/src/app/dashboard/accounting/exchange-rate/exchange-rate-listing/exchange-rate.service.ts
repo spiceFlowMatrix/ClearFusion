@@ -17,7 +17,7 @@ export class ExchangeRateService {
 //#region "GetExchangeRateList"
     GetExchangeRateList(data: IExchangeRateFilterModel) {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_AccountNew_GetAllVoucherList,
+      this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllVoucherList,
       data
     );
   }
@@ -27,7 +27,7 @@ export class ExchangeRateService {
   AddExchangeRate(data: any[]) {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_AccountNew_SaveSystemGeneratedExchangeRates,
+        this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_SaveSystemGeneratedExchangeRates,
         data
       )
       .pipe(
@@ -47,7 +47,7 @@ export class ExchangeRateService {
   SaveExchangeRatesForAllOffices(data: IOfficeExchangeRateModels) {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_AccountNew_SaveExchangeRatesForAllOffices,
+        this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_SaveExchangeRatesForAllOffices,
         data
       )
       .pipe(
@@ -101,7 +101,7 @@ export class ExchangeRateService {
   GetSavedExchangeRates( data: any): any {
     return this.globalService
     .post(
-      this.appurl.getApiUrl() + GLOBAL.API_AccountNew_GetSavedExchangeRates,
+      this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_GetSavedExchangeRates,
       data
     ).pipe(
         map(x => {
@@ -127,7 +127,7 @@ export class ExchangeRateService {
 
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_AccountNew_GetExchangeRatesDetail,
+        this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_GetExchangeRatesDetail,
         data
       )
       .pipe(
@@ -149,7 +149,7 @@ export class ExchangeRateService {
 
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_AccountNew_VerifyExchangeRates,
+        this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_VerifyExchangeRates,
         ExchangeRateDate
       )
       .pipe(
@@ -169,7 +169,7 @@ export class ExchangeRateService {
   DeleteExchangeRates(ExchangeRateDate: any) {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_AccountNew_DeleteExchangeRates,
+        this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_DeleteExchangeRates,
         ExchangeRateDate
       )
       .pipe(

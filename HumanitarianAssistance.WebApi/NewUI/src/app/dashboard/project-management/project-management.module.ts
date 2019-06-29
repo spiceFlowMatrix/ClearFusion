@@ -78,6 +78,7 @@ import { AddHiringRequestsComponent } from './project-list/hiring-requests/add-h
 import { HiringRequestDetailsComponent } from './project-list/hiring-requests/hiring-request-details/hiring-request-details.component';
 import { HiringRequestsListingComponent } from './project-list/hiring-requests/hiring-requests-listing/hiring-requests-listing.component';
 import { AddCandidateDaialogComponent } from './project-list/hiring-requests/add-candidate-daialog/add-candidate-daialog.component';
+import { EditCandidateDetailDialogComponent } from './project-list/hiring-requests/edit-candidate-detail-dialog/edit-candidate-detail-dialog.component';
 
 @NgModule({
   imports: [
@@ -157,7 +158,8 @@ import { AddCandidateDaialogComponent } from './project-list/hiring-requests/add
     AddHiringRequestsComponent,
     HiringRequestDetailsComponent,
     HiringRequestsListingComponent,
-    AddCandidateDaialogComponent
+    AddCandidateDaialogComponent,
+    EditCandidateDetailDialogComponent
 
   ],
   providers: [
@@ -179,7 +181,8 @@ import { AddCandidateDaialogComponent } from './project-list/hiring-requests/add
     AddExtensionsComponent,
     BudgetLineImportPopupLoaderComponent,
     AddHiringRequestsComponent,
-    AddCandidateDaialogComponent
+    AddCandidateDaialogComponent,
+    EditCandidateDetailDialogComponent
   ]
 })
 export class ProjectManagementModule {}

@@ -30,6 +30,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public data data { get; set; }
+        public Object ResponseData { get; set; }
         public LoggerDetailsModel LoggerDetailsModel { get; set; }
         public ItemAmount ItemAmount { get; set; }
         public CommonId CommonId { get; set; }

@@ -391,7 +391,7 @@ export class EmployeeSalaryComponent implements OnInit {
         this.employeeSalaryService
           .ApproveEmployeeMonthlyPayrollList(
             this.setting.getBaseUrl() +
-              GLOBAL.API_Hr_EmployeePaymentTypeReportForSaveOnly,
+              GLOBAL.API_EmployeeHr_EmployeePaymentTypeReportForSaveOnly,
             tempList
           )
           .subscribe(
@@ -426,56 +426,56 @@ export class EmployeeSalaryComponent implements OnInit {
   //#endregion
 
   //#region "on Delete List"
-  onDeleteList(e: any) {
-    if (e.Date != null && e.CurrencyId != null) {
-      const model = {
-        // tslint:disable-next-line:radix
-        OfficeId: this.selectedOffice,
-        FinancialYearDate: new Date(
-          new Date(e.Date).getFullYear(),
-          new Date(e.Date).getMonth(),
-          new Date(e.Date).getDate(),
-          new Date().getHours(),
-          new Date().getMinutes()
-        ),
-        PaymentType: 2 // hourly
-        // PaymentType: this.empSalaryForm.PaymentType
-      };
-      this.employeeSalaryService
-        .RemoveApprovedList(
-          this.setting.getBaseUrl() + GLOBAL.API_HR_RemoveApprovedList,
-          model
-        )
-        .subscribe(
-          data => {
-            if (data.StatusCode === 200) {
-              this.toastr.success('Successfully Removed!');
-            // tslint:disable-next-line:curly
-            } else if (data.StatusCode === 400)
-              this.toastr.error('Something went wrong !');
+  //onDeleteList(e: any) {
+  //  if (e.Date != null && e.CurrencyId != null) {
+  //    const model = {
+  //      // tslint:disable-next-line:radix
+  //      OfficeId: this.selectedOffice,
+  //      FinancialYearDate: new Date(
+  //        new Date(e.Date).getFullYear(),
+  //        new Date(e.Date).getMonth(),
+  //        new Date(e.Date).getDate(),
+  //        new Date().getHours(),
+  //        new Date().getMinutes()
+  //      ),
+  //      PaymentType: 2 // hourly
+  //      // PaymentType: this.empSalaryForm.PaymentType
+  //    };
+  //    this.employeeSalaryService
+  //      .RemoveApprovedList(
+  //        this.setting.getBaseUrl() + GLOBAL.API_HR_RemoveApprovedList,
+  //        model
+  //      )
+  //      .subscribe(
+  //        data => {
+  //          if (data.StatusCode === 200) {
+  //            this.toastr.success('Successfully Removed!');
+  //          // tslint:disable-next-line:curly
+  //          } else if (data.StatusCode === 400)
+  //            this.toastr.error('Something went wrong !');
 
-            // Refresh list
-            const modelData = {
-              CurrencyId: this.selectedCurrencyId,
-              Date: this.selectedDate,
-              Month: new Date(this.selectedDate).getMonth(),
-              Year: new Date(this.selectedDate).getFullYear(),
-              SelectedPaymentType: this.selectedPaymentType
-            };
-            this.onEmployeePayrollFilter(modelData);
-          },
-          error => {
-            if (error.StatusCode === 500) {
-              this.toastr.error('Internal Server Error....');
-            } else if (error.StatusCode === 401) {
-              this.toastr.error('Unauthorized Access Error....');
-            } else if (error.StatusCode === 403) {
-              this.toastr.error('Forbidden Error....');
-            }
-          }
-        );
-    }
-  }
+  //          // Refresh list
+  //          const modelData = {
+  //            CurrencyId: this.selectedCurrencyId,
+  //            Date: this.selectedDate,
+  //            Month: new Date(this.selectedDate).getMonth(),
+  //            Year: new Date(this.selectedDate).getFullYear(),
+  //            SelectedPaymentType: this.selectedPaymentType
+  //          };
+  //          this.onEmployeePayrollFilter(modelData);
+  //        },
+  //        error => {
+  //          if (error.StatusCode === 500) {
+  //            this.toastr.error('Internal Server Error....');
+  //          } else if (error.StatusCode === 401) {
+  //            this.toastr.error('Unauthorized Access Error....');
+  //          } else if (error.StatusCode === 403) {
+  //            this.toastr.error('Forbidden Error....');
+  //          }
+  //        }
+  //      );
+  //  }
+  //}
   //#endregion
 
   //#region "ApproveEmployeeMonthlyPayrollList"
@@ -854,73 +854,73 @@ export class EmployeeSalaryComponent implements OnInit {
   //#endregion
 
   // tslint:disable-next-line:member-ordering
-  conversionRate: any;
-  getExchangeRate(ToCurrencyId, FromCurrencyId) {
-    const model = {
-      FromCurrency: FromCurrencyId,
-      ToCurrency: ToCurrencyId
-    };
-    this.codeService
-      .getExchangeRate(
-        this.setting.getBaseUrl() + GLOBAL.API_Hr_GetExchangeRate,
-        model
-      )
-      .subscribe(data => {
-        this.payrollRegisterLoading = false;
-        this.conversionRate = data.data.ExchangeRateLists.Rate;
-        this.empSalaryForm.PaymentType === 1
-          ? this.EditPayrollDetails(1, this.fixedBasedSetPayrollList)
-          : this.EditPayrollDetails(2, this.fixedBasedSetPayrollList);
-      });
-  }
+  //conversionRate: any;
+  //getExchangeRate(ToCurrencyId, FromCurrencyId) {
+  //  const model = {
+  //    FromCurrency: FromCurrencyId,
+  //    ToCurrency: ToCurrencyId
+  //  };
+  //  this.codeService
+  //    .getExchangeRate(
+  //      this.setting.getBaseUrl() + GLOBAL.API_Hr_GetExchangeRate,
+  //      model
+  //    )
+  //    .subscribe(data => {
+  //      this.payrollRegisterLoading = false;
+  //      this.conversionRate = data.data.ExchangeRateLists.Rate;
+  //      this.empSalaryForm.PaymentType === 1
+  //        ? this.EditPayrollDetails(1, this.fixedBasedSetPayrollList)
+  //        : this.EditPayrollDetails(2, this.fixedBasedSetPayrollList);
+  //    });
+  //}
   //#endregion
 
   //#region "getEmployeeSalaryDetails"
-  getEmployeeSalaryDetails(salarySlipData: SelectSalarySlipDateModel) {
-    this.showEmployeeSalaryLoader();
-    this.empSalaryLoading = true;
+  //getEmployeeSalaryDetails(salarySlipData: SelectSalarySlipDateModel) {
+  //  this.showEmployeeSalaryLoader();
+  //  this.empSalaryLoading = true;
 
-    this.hrService
-      .GetEmployeeSalaryDetails(
-        this.setting.getBaseUrl() + GLOBAL.API_Hr_GetEmployeeSalaryDetails,
-        salarySlipData.OfficeId,
-        salarySlipData.Year,
-        salarySlipData.Month,
-        salarySlipData.EmployeeId
-      )
-      .subscribe(
-        data => {
-          this.employeeSalarySlipList = [];
-          if (
-            data.StatusCode === 200 &&
-            data.data.EmployeeSalarySlipModelList != null &&
-            data.data.EmployeeSalarySlipModelList.length > 0
-          ) {
-            this.selectSalarySlipDateForm = salarySlipData;
-            this.employeeSalarySlipList = data.data.EmployeeSalarySlipModelList;
-            this.showSalarySlipDetails();
-          } else {
-            if (
-              data.data.EmployeeSalarySlipModelList == null ||
-              data.data.EmployeeSalarySlipModelList.length === 0
-            ) {
-              this.toastr.warning('Salary Slip Can\'t Be Generate.');
-            }
-          }
-          this.hideEmployeeSalaryLoader();
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
-          this.hideEmployeeSalaryLoader();
-        }
-      );
-  }
+  //  this.hrService
+  //    .GetEmployeeSalaryDetails(
+  //      this.setting.getBaseUrl() + GLOBAL.API_Hr_GetEmployeeSalaryDetails,
+  //      salarySlipData.OfficeId,
+  //      salarySlipData.Year,
+  //      salarySlipData.Month,
+  //      salarySlipData.EmployeeId
+  //    )
+  //    .subscribe(
+  //      data => {
+  //        this.employeeSalarySlipList = [];
+  //        if (
+  //          data.StatusCode === 200 &&
+  //          data.data.EmployeeSalarySlipModelList != null &&
+  //          data.data.EmployeeSalarySlipModelList.length > 0
+  //        ) {
+  //          this.selectSalarySlipDateForm = salarySlipData;
+  //          this.employeeSalarySlipList = data.data.EmployeeSalarySlipModelList;
+  //          this.showSalarySlipDetails();
+  //        } else {
+  //          if (
+  //            data.data.EmployeeSalarySlipModelList == null ||
+  //            data.data.EmployeeSalarySlipModelList.length === 0
+  //          ) {
+  //            this.toastr.warning('Salary Slip Can\'t Be Generate.');
+  //          }
+  //        }
+  //        this.hideEmployeeSalaryLoader();
+  //      },
+  //      error => {
+  //        if (error.StatusCode === 500) {
+  //          this.toastr.error('Internal Server Error....');
+  //        } else if (error.StatusCode === 401) {
+  //          this.toastr.error('Unauthorized Access Error....');
+  //        } else if (error.StatusCode === 403) {
+  //          this.toastr.error('Forbidden Error....');
+  //        }
+  //        this.hideEmployeeSalaryLoader();
+  //      }
+  //    );
+  //}
   //#endregion
 
   //#region "generatePdf"
@@ -938,26 +938,26 @@ export class EmployeeSalaryComponent implements OnInit {
   //#endregion
 
   //#region "onClickSalarySlip"
-  onClickSalarySlip(data: any) {
-    if (data != null) {
-      this.selectSalarySlipDateForm = {
-        Date: new Date(
-          new Date(this.employeeePayrollFilterData.Date).getFullYear(),
-          new Date(this.employeeePayrollFilterData.Date).getMonth(),
-          new Date(this.employeeePayrollFilterData.Date).getDate(),
-          new Date().getHours(),
-          new Date().getMinutes(),
-          new Date().getSeconds()
-        ),
-        Year: new Date(this.employeeePayrollFilterData.Date).getFullYear(),
-        Month: new Date(this.employeeePayrollFilterData.Date).getMonth() + 1,
-        EmployeeId: data.EmployeeId,
-        // tslint:disable-next-line:radix
-        OfficeId: this.selectedOffice
-      };
-      this.getEmployeeSalaryDetails(this.selectSalarySlipDateForm);
-    }
-  }
+  //onClickSalarySlip(data: any) {
+  //  if (data != null) {
+  //    this.selectSalarySlipDateForm = {
+  //      Date: new Date(
+  //        new Date(this.employeeePayrollFilterData.Date).getFullYear(),
+  //        new Date(this.employeeePayrollFilterData.Date).getMonth(),
+  //        new Date(this.employeeePayrollFilterData.Date).getDate(),
+  //        new Date().getHours(),
+  //        new Date().getMinutes(),
+  //        new Date().getSeconds()
+  //      ),
+  //      Year: new Date(this.employeeePayrollFilterData.Date).getFullYear(),
+  //      Month: new Date(this.employeeePayrollFilterData.Date).getMonth() + 1,
+  //      EmployeeId: data.EmployeeId,
+  //      // tslint:disable-next-line:radix
+  //      OfficeId: this.selectedOffice
+  //    };
+  //    this.getEmployeeSalaryDetails(this.selectSalarySlipDateForm);
+  //  }
+  //}
   //#endregion
 
   //#region "onEmpSalaryFormSubmit"

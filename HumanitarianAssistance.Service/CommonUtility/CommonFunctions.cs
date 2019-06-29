@@ -60,7 +60,7 @@ namespace HumanitarianAssistance.Service.CommonUtility
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
 
             return accountsLevelFourth;

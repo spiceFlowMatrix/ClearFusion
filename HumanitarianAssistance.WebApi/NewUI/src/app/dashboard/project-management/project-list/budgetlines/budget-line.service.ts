@@ -22,7 +22,7 @@ export class BudgetLineService {
   //#region "GetVoucherList"
   GetVoucherList(data: IBudgetLineModel) {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_AccountNew_GetAllVoucherList,
+      this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllVoucherList,
       data
     );
   }

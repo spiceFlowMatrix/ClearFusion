@@ -69,8 +69,7 @@ export class GLOBAL {
   public static API_Accounting_AddVouchersTransaction = 'Account/AddVoucherTransactionDetail';
   public static API_Accounting_EditVouchersTransaction = 'Account/EditVoucherTransactionDetail';
   public static API_Accounting_GetAllJournalDetails = 'Account/GetJouranlVoucherDetails';
-  public static API_Accounting_GetAllLedgerDetails = 'Account/GetAllLedgerDetails';
-  public static API_Accounting_GetAllTrailBalanceDetails = 'Account/GetTrailBlanceDetailsByCondition';
+
   public static API_Accounting_GetAllBudgetLineDetails = 'ProjectPipeLining/GetAllProjectBudgetLineByProjectId';
   public static API_BudgetLine_GetProjectBudgetTransactions = 'Account/GetAllVoucherTransactionDetailByBudgetLine';
   public static API_Accounting_GetProjectAndBudgetLine = 'Account/GetProjectAndBudgetLine';
@@ -104,7 +103,7 @@ export class GLOBAL {
   public static API_Hr_DeleteEmployeeHistoryDetail = 'HREmployee/DeleteEmployeeHistoryDetail';
   public static API_HR_GetAllPayrollMonthlyHourDetail = 'HREmployee/GetAllPayrollMonthlyHourDetail';
   public static API_HR_GetAllPayrollMonthlyHourDetailFilter = 'EmployeeHR/GetAllPayrollMonthlyHourDetail'; // new EmployeeHR
-  public static API_HR_AddPayrollMonthlyHourDetail = 'EmployeeHR/AddPayrollMonthlyHourDetail';
+  public static API_EmployeeHR_AddPayrollMonthlyHourDetail = 'EmployeeHR/AddPayrollMonthlyHourDetail';
   // public static API_HR_AddPayrollMonthlyHourDetail = 'HREmployee/AddPayrollMonthlyHourDetail';
   public static API_HR_AssignLeaveToEmployeeDetail = 'HREmployee/AssignLeaveToEmployeeDetail';
   public static API_HR_GetAllEmployeeAssignLeave = 'HREmployee/GetAllEmployeeAssignLeave';
@@ -302,7 +301,7 @@ export class GLOBAL {
   public static API_Hr_GetEmployeeContractType = 'HREmployee/GetAllEmployeeContractType';
   public static API_Code_SaveContractContent = 'HREmployee/SaveContractContent';
   public static API_Code_GetAllContractTypeContent = 'HREmployee/GetAllContractTypeContent';
-  public static API_Code_GetSelectedEmployeeContract = 'HREmployee/GetSelectedEmployeeContract';
+  // public static API_Code_GetSelectedEmployeeContract = 'HREmployee/GetSelectedEmployeeContract';
 
   public static API_Hr_GetEmployeeSalaryDetails = 'HREmployee/GetEmployeeSalaryDetails';
   public static API_Hr_EmployeeTaxCalculation = 'HREmployee/EmployeeTaxCalculation';
@@ -344,8 +343,6 @@ export class GLOBAL {
   public static API_Hr_GetAllInterviewDetails = 'HREmployee/GetAllInterviewDetails';
   public static API_Hr_AddInterviewDetails = 'HREmployee/AddInterviewDetails';
   public static API_Hr_EditInterviewDetails = 'HREmployee/EditInterviewDetails';
-
-  public static API_Accounting_GetJouranlVoucherDetailsByCondition = 'Account/GetJouranlVoucherDetailsByCondition';
 
   public static API_Code_ApproveEmployeeAppraisalRequest = 'Code/ApproveEmployeeAppraisalRequest';
   public static API_Code_RejectEmployeeAppraisalRequest = 'Code/RejectEmployeeAppraisalRequest';
@@ -432,7 +429,7 @@ export class GLOBAL {
   public static API_EmployeeHr_GetAllEmployeeMonthlyPayrollListApproved = 'EmployeeHR/GetAllEmployeeMonthlyPayrollListApproved';
 
   // public static API_Hr_EmployeePaymentTypeReportForSaveOnly = 'HREmployee/EmployeePaymentTypeReportForSaveOnly'; //old
-  public static API_Hr_EmployeePaymentTypeReportForSaveOnly = 'EmployeeHR/EmployeePaymentTypeReportForSaveOnly'; // new
+    public static API_EmployeeHr_EmployeePaymentTypeReportForSaveOnly = 'EmployeeHR/EmployeePaymentTypeReportForSaveOnly'; // new
 
   // public static API_Hr_EmployeeSalaryTaxDetails = 'HREmployee/EmployeeSalaryTaxDetails';
   public static API_Hr_EmployeeSalaryTaxDetails = 'EmployeeHR/EmployeeSalaryTaxDetails';
@@ -526,6 +523,17 @@ export class GLOBAL {
   public static API_Accounting_GetAllVoucherByJouranlId = 'Account/GetAllVoucherByJouranlId';
   public static API_EmployeeHR_AddEmployeeLeaveDetails = 'EmployeeHR/AddEmployeeLeaveDetails';
   public static API_Code_GetApplicationPages = 'Code/GetApplicationPages';
+
+  // Reports
+  public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
+  public static API_AccountReports_GetAllTrailBalanceDetails = 'AccountReports/GetTrailBlanceDetailsByCondition';
+  public static API_AccountReports_GetJournalVoucherDetailsByCondition= 'AccountReports/GetJournalVoucherDetailsByCondition';
+
+
+
+
+
+
 
 
   // public static API_Store_GetAllItemSpecificationDetails = 'Store/GetAllItemSpecificationDetails';
