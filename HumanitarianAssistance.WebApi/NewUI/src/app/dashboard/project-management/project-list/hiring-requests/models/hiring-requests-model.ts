@@ -85,7 +85,7 @@ export interface IHiringReuestCandidateModel {
   ProjectId?: number;
 }
 export interface IReuestedCandidateDetailModel {
-  CandidateId: number;
+  CandidateId?: number;
   EmployeeID?: number;
   EmployeeCode?: number;
   EmployeeName?: string;
