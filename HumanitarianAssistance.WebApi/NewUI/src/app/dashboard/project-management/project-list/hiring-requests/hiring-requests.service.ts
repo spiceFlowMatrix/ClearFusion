@@ -348,4 +348,24 @@ IsCompltedeHrDEtail(hiringRequestId: number ){
   );
 }
 //#endregion
+
+//#region "DeleteCandidateDetailDetail"
+DeleteCandidateDetailDetail(model: IHiringReuestCandidateModel) {
+  return this.globalService
+  .post(
+    this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_DeleteCandidatDetail,
+    model
+  )
+  .pipe(
+    map(x => {
+      const responseData: IResponseData = {
+        data: x.ResponseData,
+        statusCode: x.StatusCode,
+        message: x.Message
+      };
+      return responseData;
+    })
+  );
+}
+//#endregion
 }

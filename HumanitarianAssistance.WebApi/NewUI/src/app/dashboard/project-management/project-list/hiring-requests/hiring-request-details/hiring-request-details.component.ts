@@ -27,10 +27,11 @@ import { AddCandidateDaialogComponent } from '../add-candidate-daialog/add-candi
 import { HiringRequestsService } from '../hiring-requests.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ToastrService } from 'ngx-toastr';
-import { EmployeeType } from 'src/app/shared/enum';
+import { EmployeeType, Delete_Confirmation_Texts } from 'src/app/shared/enum';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { ActivatedRoute } from '@angular/router';
 import { EditCandidateDetailDialogComponent } from '../edit-candidate-detail-dialog/edit-candidate-detail-dialog.component';
+import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'app-hiring-request-details',
@@ -277,6 +278,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             if (response.statusCode === 200 && response.data != null) {
               response.data.forEach(element => {
                 this.candidateList.push({
+                  CandidateId: element.CandidateId,
                   EmployeeID: element.EmployeeID,
                   EmployeeCode: element.EmployeeCode,
                   EmployeeName: element.EmployeeName,
@@ -505,6 +507,71 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           this.isCompletedFlag = false;
         }
       );
-    //#endregion
   }
+  //#endregion
+
+  //#region delete donar datail
+  onCandidateDetailDelete(item: any) {
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      width: '300px',
+      height: '250px',
+      data: 'delete',
+      disableClose: false
+    });
+
+    dialogRef.componentInstance.confirmMessage =
+      Delete_Confirmation_Texts.deleteText1;
+
+    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
+
+    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
+
+    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.componentInstance.confirmDelete.subscribe(
+      res => {
+        dialogRef.componentInstance.isLoading = true;
+        if (
+          item.CandidateId != null &&
+          item.CandidateId !== undefined &&
+          item.CandidateId !== 0
+        ) {
+          const candidateModel: IHiringReuestCandidateModel = {
+            HiringRequestId: this.hiringRequestForm.get('HiringRequestId')
+              .value,
+              CandidateId: item.CandidateId
+          };
+          this.hiringRequestService
+            .DeleteCandidateDetailDetail(candidateModel)
+            .subscribe(
+              response => {
+                if (response.statusCode === 200) {
+                  this.hiringRequestForm.controls['FilledVacancies'].setValue(
+                    response.data.FilledVacancies
+                  );
+                  const findIndex = this.candidateList.findIndex(
+                    x => x.EmployeeID == item.EmployeeID
+                  );
+                  this.candidateList.splice(findIndex, 1);
+                  // this.isCompleted = response.data.IsCompleted;
+                } else {
+                  this.toastr.error(response.message);
+                }
+              dialogRef.componentInstance.onCancelPopup();
+              },
+              error => {
+                this.toastr.error('Someting went wrong');
+              dialogRef.componentInstance.onCancelPopup();
+
+              }
+            );
+        }
+        dialogRef.componentInstance.isLoading = false;
+      },
+      error => {
+        this.toastr.error('Someting went wrong');
+        dialogRef.componentInstance.isLoading = false;
+      }
+    );
+  }
+  //#endregion
 }

@@ -19,6 +19,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
         public bool IsShortListed { get; set; }
         public bool IsSelected { get; set; }
+        public long? CandidateId { get; set; }
 
     }
 

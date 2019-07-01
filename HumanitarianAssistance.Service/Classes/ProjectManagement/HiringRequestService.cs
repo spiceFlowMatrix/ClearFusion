@@ -359,12 +359,13 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             {
                 var EmployeeDetailListData = await _uow.GetDbContext()
                                                                   .HiringRequestCandidates
-                                                                  .Where(x => x.HiringRequestId == model.HiringRequestId)
+                                                                  .Where(x => x.HiringRequestId == model.HiringRequestId && x.IsDeleted ==false)
                                                                   .Include(e => e.EmployeeDetail)
                                                                   .ThenInclude(x=> x.EmployeeProfessionalDetail)
                                                                   .OrderByDescending(i => i.EmployeeID)
                                                                   .Select(x => new ProjectHiringCandidateDetailModel
                                                                   {
+                                                                      CandidateId=x.CandidateId,
                                                                       EmployeeID = x.EmployeeID,
                                                                       EmployeeName = x.EmployeeDetail.EmployeeName,
                                                                       EmployeeCode = x.EmployeeDetail.EmployeeCode,
@@ -449,7 +450,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                 if (model != null)
                 {
 
-                    EmployeeDetail employeeDetail = await _uow.GetDbContext().EmployeeDetail.Include(x=> x.EmployeeProfessionalDetail)
+                    EmployeeDetail employeeDetail = await _uow.GetDbContext().EmployeeDetail
                                                                                                     .FirstOrDefaultAsync(x => x.IsDeleted == false
                                                                                                     && x.EmployeeID == model.EmployeeId);
 
@@ -474,7 +475,8 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                         hiringRequestCandidates.IsSelected = true;
                         hiringRequestCandidates.ModifiedById = userId;
                         hiringRequestCandidates.ModifiedDate = DateTime.UtcNow;
-                      
+                        hiringRequestCandidates.IsDeleted = false;
+
 
                         _uow.GetDbContext().HiringRequestCandidates.Update(hiringRequestCandidates);
                         await _uow.GetDbContext().SaveChangesAsync();
@@ -560,5 +562,62 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
 
         #endregion
 
+        #region "DeleteCandidateDetail"
+        public async Task<APIResponse> DeleteCandidateDetail(ProjectHiringCandidateDetailModel model, string userId)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                HiringRequestCandidates projectCandidateDetail = new HiringRequestCandidates();
+                ProjectHiringRequestDetail hrDetail = new ProjectHiringRequestDetail();
+                if (model.HiringRequestId != 0)
+                {
+                    projectCandidateDetail = await _uow.GetDbContext().HiringRequestCandidates
+                                                                          .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                                    x.HiringRequestId == model.HiringRequestId && x.CandidateId == model.CandidateId);
+
+                    if (projectCandidateDetail != null)
+                    {
+                        projectCandidateDetail.IsDeleted = true;
+                        await _uow.HiringRequestCandidatesRepository.UpdateAsyn(projectCandidateDetail);
+                        await _uow.GetDbContext().SaveChangesAsync();
+
+                        // note: to update filled vacancire in hiring request detail page
+
+                        hrDetail = await _uow.GetDbContext().ProjectHiringRequestDetail
+                                                                                        .FirstOrDefaultAsync(x => x.HiringRequestId == model.HiringRequestId &&
+                                                                                                                 x.IsDeleted == false);
+                        if (hrDetail != null)
+                        {
+                            int count = await _uow.GetDbContext().HiringRequestCandidates.Where(x => x.HiringRequestId == model.HiringRequestId &&
+                                                                                                     x.IsDeleted == false).CountAsync(x => x.IsSelected);
+                            hrDetail.FilledVacancies = count - 1;
+                            await _uow.ProjectHiringRequestRepository.UpdateAsyn(hrDetail);
+                            await _uow.SaveAsync();
+                        }
+                        else
+                        {
+                            throw new Exception("Hiring Job not found");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("No Candidate found");
+
+                    }
+                }
+                response.ResponseData = hrDetail;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+        #endregion
     }
 }
