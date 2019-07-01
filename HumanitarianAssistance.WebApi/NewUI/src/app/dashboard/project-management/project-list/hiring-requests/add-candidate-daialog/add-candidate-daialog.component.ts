@@ -17,6 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 export class AddCandidateDaialogComponent implements OnInit {
   // Input/Output
   selectedEmployeId = new EventEmitter<any>();
+
   // Model
   EmployeeList: IEmployeeListModel[] = [];
   EmployeeModel: IEmployeeListModel;

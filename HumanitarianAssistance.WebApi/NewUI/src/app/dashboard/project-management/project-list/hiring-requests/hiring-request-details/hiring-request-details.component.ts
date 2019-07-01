@@ -56,7 +56,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   candidateList: IReuestedCandidateDetailModel[] = [];
   employeeContractist: IEmployeeContractList[] = [];
   interviewCandidatModel: IitervireCandidateModel;
-
+  filteredEmployeeList: IEmployeeListModel[] = [];
   //#region "variables"
 
   // variables:
@@ -192,7 +192,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
         OfficeList: this.officeList,
         CurrencyList: this.currencyList,
         JobGradeList: this.jobGradeList,
-        HiringRequestDetail: this.hiringRequestDetail,
+        HiringRequestDetail: this.hiringRequestForm.value,
         ProfessionList: this.professionList
       }
     });
@@ -228,11 +228,15 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "onAddEmployeeClicked"
   onAddCandidateClicked() {
+    this.filteredEmployeeList = [];
+
+    this.filteredEmployeeList = this.employeeList.filter((employee) =>
+      this.candidateList.every((candidate) => employee.EmployeeId !== candidate.EmployeeID));
     const dialogRef = this.dialog.open(AddCandidateDaialogComponent, {
       width: '420px',
       autoFocus: false,
       data: {
-        EmployeeList: this.employeeList,
+        EmployeeList: this.filteredEmployeeList,
         HiringRequestId: this.hiringRequestId,
         ProjectId: this.projectId
       }
@@ -439,10 +443,12 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             );
           } else {
             this.toastr.error(response.message);
+            this.candidateList[indexOfCandidate].IsSelectedFlag = false;
           }
         },
         error => {
           this.toastr.error('Someting went wrong');
+          this.candidateList[indexOfCandidate].IsSelectedFlag = false;
         }
       );
   }
@@ -549,7 +555,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
                     response.data.FilledVacancies
                   );
                   const findIndex = this.candidateList.findIndex(
-                    x => x.EmployeeID == item.EmployeeID
+                    x => x.EmployeeID === item.EmployeeID
                   );
                   this.candidateList.splice(findIndex, 1);
                   // this.isCompleted = response.data.IsCompleted;
