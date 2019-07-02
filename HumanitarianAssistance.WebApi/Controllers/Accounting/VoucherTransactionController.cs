@@ -11,19 +11,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HumanitarianAssistance.WebApi.Controllers.Accounting {
-    [Produces ("application/json")]
-    [Route ("api/VoucherTransaction/[Action]/")]
-    [Authorize (AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+namespace HumanitarianAssistance.WebApi.Controllers.Accounting
+{
+    [Produces("application/json")]
+    [Route("api/VoucherTransaction/[Action]/")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
-    public class VoucherTransactionController : Controller {
+    public class VoucherTransactionController : Controller
+    {
         private readonly UserManager<AppUser> _userManager;
         private IVoucherNewService _iVoucherNewService;
 
-        public VoucherTransactionController (
+        public VoucherTransactionController(
             UserManager<AppUser> userManager,
             IVoucherNewService iVoucherNewService
-        ) {
+        )
+        {
             _userManager = userManager;
             _iVoucherNewService = iVoucherNewService;
         }
@@ -95,8 +98,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting {
         /// <response code="200">Get all voucher list successsfull</response>
         /// <returns></returns>
         [HttpPost]
-        public async Task<APIResponse> GetAllVoucherList ([FromBody] VoucherNewFilterModel voucherNewFilterModel) {
-            APIResponse response = await _iVoucherNewService.GetAllNewVoucherList (voucherNewFilterModel);
+        //[ApiExplorerSettings(GroupName = "accounting")]
+        public async Task<APIResponse> GetAllVoucherList([FromBody] VoucherNewFilterModel voucherNewFilterModel)
+        {
+            APIResponse response = await _iVoucherNewService.GetAllNewVoucherList(voucherNewFilterModel);
             return response;
         }
 
@@ -139,8 +144,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting {
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<APIResponse> GetVoucherDetailByVoucherNo ([FromBody] long id) {
-            APIResponse response = await _iVoucherNewService.GetVoucherDetailByVoucherNo (id);
+        //[ApiExplorerSettings(GroupName = "accounting")]
+        public async Task<APIResponse> GetVoucherDetailByVoucherNo([FromBody] long id)
+        {
+            APIResponse response = await _iVoucherNewService.GetVoucherDetailByVoucherNo(id);
             return response;
         }
 
@@ -182,16 +189,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting {
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<APIResponse> AddVoucherDetail ([FromBody] VoucherDetailModel model) {
-            var user = await _userManager.FindByNameAsync (HttpContext.User.FindFirst (ClaimTypes.NameIdentifier).Value);
+        //[ApiExplorerSettings(GroupName = "accounting")]
+        public async Task<APIResponse> AddVoucherDetail([FromBody] VoucherDetailModel model)
+        {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            if (user != null) {
+            if (user != null)
+            {
                 var id = user.Id;
                 model.CreatedById = id;
                 model.IsDeleted = false;
                 model.CreatedDate = DateTime.UtcNow;
             }
-            APIResponse response = await _iVoucherNewService.AddVoucherNewDetail (model);
+            APIResponse response = await _iVoucherNewService.AddVoucherNewDetail(model);
             return response;
         }
 
@@ -233,16 +243,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting {
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<APIResponse> EditVoucherDetail ([FromBody] VoucherDetailModel model) {
-            var user = await _userManager.FindByNameAsync (HttpContext.User.FindFirst (ClaimTypes.NameIdentifier).Value);
+        //[ApiExplorerSettings(GroupName = "accounting")]
+        public async Task<APIResponse> EditVoucherDetail([FromBody] VoucherDetailModel model)
+        {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            if (user != null) {
+            if (user != null)
+            {
                 var id = user.Id;
                 model.CreatedById = id;
                 model.IsDeleted = false;
                 model.CreatedDate = DateTime.UtcNow;
             }
-            APIResponse response = await _iVoucherNewService.EditVoucherNewDetail (model);
+            APIResponse response = await _iVoucherNewService.EditVoucherNewDetail(model);
             return response;
         }
 
@@ -269,9 +282,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting {
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<APIResponse> VerifyVoucher ([FromBody] long id) {
-            var user = await _userManager.FindByNameAsync (HttpContext.User.FindFirst (ClaimTypes.NameIdentifier).Value);
-            APIResponse response = await _iVoucherNewService.VerifyVoucher (id, user.Id);
+        //[ApiExplorerSettings(GroupName = "accounting")]
+        public async Task<APIResponse> VerifyVoucher([FromBody] long id)
+        {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            APIResponse response = await _iVoucherNewService.VerifyVoucher(id, user.Id);
             return response;
         }
 
@@ -283,7 +298,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting {
         /// Get All Voucher Transactions List
         /// </summary>
         /// <remarks>
-        /// Sample output:
+        /// Sample input:
         ///
         ///     POST /GetAllTransactionsByVoucherId
         ///     256
@@ -321,8 +336,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting {
         /// <param name="id"></param>
         /// <returns>voucher transaction list</returns>
         [HttpPost]
-        public async Task<APIResponse> GetAllTransactionsByVoucherId ([FromBody] long id) {
-            APIResponse response = await _iVoucherNewService.GetAllTransactionsByVoucherId (id);
+        //[ApiExplorerSettings(GroupName = "accounting")]
+        public async Task<APIResponse> GetAllTransactionsByVoucherId([FromBody] long id)
+        {
+            APIResponse response = await _iVoucherNewService.GetAllTransactionsByVoucherId(id);
             return response;
         }
 
@@ -357,9 +374,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting {
         /// <param name="voucherTransactions"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<APIResponse> AddEditTransactionList ([FromBody] AddEditTransactionModel voucherTransactions) {
-            var user = await _userManager.FindByNameAsync (HttpContext.User.FindFirst (ClaimTypes.NameIdentifier).Value);
-            APIResponse response = _iVoucherNewService.AddEditTransactionList (voucherTransactions, user.Id);
+        //[ApiExplorerSettings(GroupName = "accounting")]
+        public async Task<APIResponse> AddEditTransactionList([FromBody] AddEditTransactionModel voucherTransactions)
+        {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            APIResponse response = _iVoucherNewService.AddEditTransactionList(voucherTransactions, user.Id);
             return response;
         }
 

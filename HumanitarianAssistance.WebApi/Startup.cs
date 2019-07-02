@@ -252,6 +252,8 @@ namespace HumanitarianAssistance.WebApi
             services.AddSwaggerGen(p =>
             {
                 p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
+                // p.SwaggerDoc("accounting", new Info { Title = "Accounting API's", Description = "VocuherTransaction, Financial Report, ChartOfAccount, ExchangeRate, GainLossReport" });
+                
                 p.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -306,6 +308,7 @@ namespace HumanitarianAssistance.WebApi
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                // c.SwaggerEndpoint("/swagger/accounting/swagger.json", "Accounting API's");
             });
 
             app.UseSignalR(routes =>
