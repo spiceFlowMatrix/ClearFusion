@@ -2433,7 +2433,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetTrailBlanceDetailsByCondition(LedgerModels model)
+        public async Task<APIResponse> GetTrialBalanceDetailsByCondition(LedgerModels model)
         {
             APIResponse response = new APIResponse();
             try
