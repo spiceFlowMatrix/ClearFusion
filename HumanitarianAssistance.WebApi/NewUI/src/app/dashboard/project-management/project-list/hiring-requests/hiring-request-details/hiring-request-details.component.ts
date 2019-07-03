@@ -193,7 +193,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
         CurrencyList: this.currencyList,
         JobGradeList: this.jobGradeList,
         HiringRequestDetail: this.hiringRequestForm.value,
-        ProfessionList: this.professionList
+        ProfessionList: this.professionList,
+        ProjectId: this.projectId
       }
     });
 
@@ -231,7 +232,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     this.filteredEmployeeList = [];
 
     this.filteredEmployeeList = this.employeeList.filter((employee) =>
-      this.candidateList.every((candidate) => employee.EmployeeId !== candidate.EmployeeID));
+    this.candidateList.every((candidate) => employee.EmployeeId !== candidate.EmployeeID));
     const dialogRef = this.dialog.open(AddCandidateDaialogComponent, {
       width: '420px',
       autoFocus: false,
@@ -518,6 +519,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region delete donar datail
   onCandidateDetailDelete(item: any) {
+    debugger;
     const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
       width: '300px',
       height: '250px',
@@ -536,6 +538,12 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     dialogRef.componentInstance.confirmDelete.subscribe(
       res => {
         dialogRef.componentInstance.isLoading = true;
+        // Note : delete candidate from list
+        const findIndex = this.candidateList.findIndex(
+          x => x.EmployeeID === item.EmployeeID
+        );
+        this.candidateList.splice(findIndex, 1);
+        dialogRef.componentInstance.onCancelPopup();
         if (
           item.CandidateId != null &&
           item.CandidateId !== undefined &&
@@ -554,15 +562,9 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
                   this.hiringRequestForm.controls['FilledVacancies'].setValue(
                     response.data.FilledVacancies
                   );
-                  const findIndex = this.candidateList.findIndex(
-                    x => x.EmployeeID === item.EmployeeID
-                  );
-                  this.candidateList.splice(findIndex, 1);
-                  // this.isCompleted = response.data.IsCompleted;
                 } else {
                   this.toastr.error(response.message);
                 }
-              dialogRef.componentInstance.onCancelPopup();
               },
               error => {
                 this.toastr.error('Someting went wrong');

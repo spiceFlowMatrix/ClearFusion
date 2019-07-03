@@ -88,7 +88,8 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
       CurrencyId: [null, Validators.required],
       BudgetLineId: [null, Validators.required],
       OfficeId: [null, Validators.required],
-      GradeId: [null, Validators.required]
+      GradeId: [null, Validators.required],
+      ProjectId: [null]
     });
   }
   //#endregion
@@ -103,6 +104,11 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
 
   //#region "AddHiringRequest"
   AddHiringRequest(data: IHiringRequestDetailModel) {
+    debugger;
+    console.log('projectId'
+    + this.projectId);
+    const project =  this.projectId;
+    console.log(' const' + project);
     if (this.hiringRequestForm.valid) {
       this.addHiringRequestLoader = true;
       const hiringRequestDetail: IHiringRequestDetailModel = {

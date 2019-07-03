@@ -7,39 +7,22 @@
             <div class="top-header clearfix">
               <h4 class="main_heading">
                 CRITERIA EVALUATION
-                <a
-                  class="pull-right"
-                  *ngIf="
+                <a class="pull-right" *ngIf="
                     startCriteriaEvaluationSubmitLoader;
                     else stopCriteriaEvaluationSubmitLoder
-                  "
-                >
+                  ">
                   <mat-spinner [diameter]="20"></mat-spinner>
                 </a>
                 <ng-template #stopCriteriaEvaluationSubmitLoder>
-                  <button
-                    mat-icon-button
-                    *ngIf="!IsSubmitCEform.IsCriteriaEvaluationSubmit"
-                    (click)="OnCriteriaEvaluationSubmitChange('IsCESubmit')"
-                    class="pull-right"
-                    matTooltip="Click Here To Submit For Approval"
-                    matTooltipPosition="left"
-                  >
-                    <mat-icon aria-label="approved" class="grey_color"
-                      >check</mat-icon
-                    >
+                  <button mat-icon-button *ngIf="!IsSubmitCEform.IsCriteriaEvaluationSubmit"
+                    (click)="OnCriteriaEvaluationSubmitChange('IsCESubmit')" class="pull-right"
+                    matTooltip="Click Here To Submit For Approval" matTooltipPosition="left">
+                    <mat-icon aria-label="approved" class="grey_color">check</mat-icon>
                   </button>
-                  <button
-                    mat-icon-button
-                    *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit"
-                    (click)="OnCriteriaEvaluationSubmitChange('IsCESubmit')"
-                    class="pull-right"
-                    matTooltip="Approved"
-                    matTooltipPosition="left"
-                  >
-                    <mat-icon aria-label="approved" class="green"
-                      >check</mat-icon
-                    >
+                  <button mat-icon-button *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit"
+                    (click)="OnCriteriaEvaluationSubmitChange('IsCESubmit')" class="pull-right" matTooltip="Approved"
+                    matTooltipPosition="left">
+                    <mat-icon aria-label="approved" class="green">check</mat-icon>
                   </button>
                 </ng-template>
               </h4>
@@ -73,18 +56,11 @@
                     </div>
                     <div class="col-sm-6">
                       <mat-form-field>
-                        <mat-select
-                          placeholder="Method Of Funding"
-                          name="methodOfFunding"
-                          [value]="donorCEForm.MethodOfFunding"
-                          (selectionChange)="
+                        <mat-select placeholder="Method Of Funding" name="methodOfFunding"
+                          [value]="donorCEForm.MethodOfFunding" (selectionChange)="
                             onMethofOfFundingChange($event.value)
-                          "
-                        >
-                          <mat-option
-                            *ngFor="let item of methodOfFundingList"
-                            [value]="item.Id"
-                          >
+                          ">
+                          <mat-option *ngFor="let item of methodOfFundingList" [value]="item.Id">
                             {{ item.Name }}
                           </mat-option>
                         </mat-select>
@@ -94,10 +70,8 @@
 
                   <div class="proposal-header">
                     PAST FUNDING EXPERIENCE
-                    <mat-slide-toggle
-                      (change)="onPastFundingExperienceChange($event)"
-                      [(ngModel)]="donorCEForm.PastFundingExperience"
-                    ></mat-slide-toggle>
+                    <mat-slide-toggle (change)="onPastFundingExperienceChange($event)"
+                      [(ngModel)]="donorCEForm.PastFundingExperience"></mat-slide-toggle>
                   </div>
                   <div id="fundinngExp" class="funding-box-wrap">
                     <!--
@@ -106,11 +80,8 @@
                     <!-- <div class="opacity"></div> -->
                     <div class="proposal-header">
                       PROPOSAL ACCEPTED
-                      <mat-slide-toggle
-                        (change)="onProposalAcceptChange($event)"
-                        [disabled]="isDisabled"
-                        [(ngModel)]="donorCEForm.ProposalAccepted"
-                      ></mat-slide-toggle>
+                      <mat-slide-toggle (change)="onProposalAcceptChange($event)" [disabled]="isDisabled"
+                        [(ngModel)]="donorCEForm.ProposalAccepted"></mat-slide-toggle>
                     </div>
                     <div class="mar_tp_10"></div>
                     <div class="proposal-header">
@@ -119,95 +90,58 @@
                       <!--
                           <mat-slide-toggle (change)="onProposalExperiemceChange($event)" [disabled]="isDisabled" [(ngModel)]="donorCEForm.ProposalExperience"></mat-slide-toggle>
                         -->
-                      <mat-button-toggle-group
-                        (change)="onProposalExperiemceChange($event)"
-                        [disabled]="isDisabled"
-                        [(ngModel)]="donorCEForm.ProposalExperience"
-                      >
-                        <mat-button-toggle
-                          value="pre"
-                          [ngStyle]="{
+                      <mat-button-toggle-group (change)="onProposalExperiemceChange($event)" [disabled]="isDisabled"
+                        [(ngModel)]="donorCEForm.ProposalExperience">
+                        <mat-button-toggle value="pre" [ngStyle]="{
                             'background-color':
                               donorCEForm.ProposalExperience == true
                                 ? '#4cc9ff'
                                 : ''
-                          }"
-                          >Pre</mat-button-toggle
-                        >
-                        <mat-button-toggle
-                          value="post"
-                          [ngStyle]="{
+                          }">Pre</mat-button-toggle>
+                        <mat-button-toggle value="post" [ngStyle]="{
                             'background-color':
                               donorCEForm.ProposalExperience == false
                                 ? '#4cc9ff'
                                 : ''
-                          }"
-                          >Post</mat-button-toggle
-                        >
+                          }">Post</mat-button-toggle>
                       </mat-button-toggle-group>
                     </div>
                     <div class="funding-method-status-wrap ul">
                       <ul>
                         <li class="clearfix">
                           Professional
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onProfessionalChange($event)"
-                            [disabled]="isDisabled"
-                            [(ngModel)]="donorCEForm.Professional"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onProfessionalChange($event)"
+                            [disabled]="isDisabled" [(ngModel)]="donorCEForm.Professional"></mat-slide-toggle>
                         </li>
                         <li class="clearfix">
                           Funds On Time
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onFundsOnTimeChange($event)"
-                            [disabled]="isDisabled"
-                            [(ngModel)]="donorCEForm.FundsOnTime"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onFundsOnTimeChange($event)"
+                            [disabled]="isDisabled" [(ngModel)]="donorCEForm.FundsOnTime"></mat-slide-toggle>
                         </li>
                         <li class="clearfix">
                           Effective Communication
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onEffectiveCommunicationChange($event)"
-                            [disabled]="isDisabled"
-                            [(ngModel)]="donorCEForm.EffectiveCommunication"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onEffectiveCommunicationChange($event)"
+                            [disabled]="isDisabled" [(ngModel)]="donorCEForm.EffectiveCommunication"></mat-slide-toggle>
                         </li>
                         <li class="clearfix">
                           Disputes
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onDisputesChange($event)"
-                            [disabled]="isDisabled"
-                            [(ngModel)]="donorCEForm.Dispute"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onDisputesChange($event)"
+                            [disabled]="isDisabled" [(ngModel)]="donorCEForm.Dispute"></mat-slide-toggle>
                         </li>
                         <li class="clearfix">
                           Other Deliverables
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onOtherDeliverablesChange($event)"
-                            [disabled]="isDisabled"
-                            [(ngModel)]="donorCEForm.OtherDeliverable"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onOtherDeliverablesChange($event)"
+                            [disabled]="isDisabled" [(ngModel)]="donorCEForm.OtherDeliverable"></mat-slide-toggle>
                         </li>
                         <li class="clearfix">
                           <mat-form-field class="example-full-width">
-                            <textarea
-                              matInput
-                              placeholder=" Type other Deliverable here..."
-                              name="OtherDeliverableType"
-                              [disabled]="isDisabled"
-                              [(ngModel)]="donorCEForm.OtherDeliverableType"
-                              (focusout)="
+                            <textarea matInput placeholder=" Type other Deliverable here..." name="OtherDeliverableType"
+                              [disabled]="isDisabled" [(ngModel)]="donorCEForm.OtherDeliverableType" (focusout)="
                                 onOtherTypeDeliverablesChange(
                                   'OtherDeliverableType',
                                   donorCEForm.OtherDeliverableType
                                 )
-                              "
-                            ></textarea>
+                              "></textarea>
                           </mat-form-field>
                         </li>
                       </ul>
@@ -227,10 +161,8 @@
                 <!-- <div class="funding-box11"> -->
                 <div class="proposal-header">
                   PAST WORK EXPERIENCE
-                  <mat-slide-toggle
-                    (change)="onPastWorkExperienceChange($event)"
-                    [(ngModel)]="donorCEForm.PastWorkingExperience"
-                  >
+                  <mat-slide-toggle (change)="onPastWorkExperienceChange($event)"
+                    [(ngModel)]="donorCEForm.PastWorkingExperience">
                   </mat-slide-toggle>
                 </div>
                 <div class="funding-box-wrap">
@@ -239,52 +171,32 @@
                     <ul>
                       <li class="clearfix">
                         Performance
-                        <mat-slide-toggle
-                          class="pull-right"
-                          (change)="onPerformanceChange($event)"
-                          [disabled]="isDisabledCriticism"
-                          [(ngModel)]="donorCEForm.CriticismPerformance"
-                        >
+                        <mat-slide-toggle class="pull-right" (change)="onPerformanceChange($event)"
+                          [disabled]="isDisabledCriticism" [(ngModel)]="donorCEForm.CriticismPerformance">
                         </mat-slide-toggle>
                       </li>
                       <li class="clearfix">
                         Time Management
-                        <mat-slide-toggle
-                          class="pull-right"
-                          (change)="onTimeManagementChange($event)"
-                          [disabled]="isDisabledCriticism"
-                          [(ngModel)]="donorCEForm.TimeManagement"
-                        >
+                        <mat-slide-toggle class="pull-right" (change)="onTimeManagementChange($event)"
+                          [disabled]="isDisabledCriticism" [(ngModel)]="donorCEForm.TimeManagement">
                         </mat-slide-toggle>
                       </li>
                       <li class="clearfix">
                         Money Allocation
-                        <mat-slide-toggle
-                          class="pull-right"
-                          (change)="onMoneyAllocationChange($event)"
-                          [disabled]="isDisabledCriticism"
-                          [(ngModel)]="donorCEForm.MoneyAllocation"
-                        >
+                        <mat-slide-toggle class="pull-right" (change)="onMoneyAllocationChange($event)"
+                          [disabled]="isDisabledCriticism" [(ngModel)]="donorCEForm.MoneyAllocation">
                         </mat-slide-toggle>
                       </li>
                       <li class="clearfix">
                         Accountability
-                        <mat-slide-toggle
-                          class="pull-right"
-                          (change)="onAccountabilityChange($event)"
-                          [disabled]="isDisabledCriticism"
-                          [(ngModel)]="donorCEForm.Accountability"
-                        >
+                        <mat-slide-toggle class="pull-right" (change)="onAccountabilityChange($event)"
+                          [disabled]="isDisabledCriticism" [(ngModel)]="donorCEForm.Accountability">
                         </mat-slide-toggle>
                       </li>
                       <li class="clearfix">
                         Deliverable Quality
-                        <mat-slide-toggle
-                          class="pull-right"
-                          (change)="onDeliverableQualityChange($event)"
-                          [disabled]="isDisabledCriticism"
-                          [(ngModel)]="donorCEForm.DeliverableQuality"
-                        >
+                        <mat-slide-toggle class="pull-right" (change)="onDeliverableQualityChange($event)"
+                          [disabled]="isDisabledCriticism" [(ngModel)]="donorCEForm.DeliverableQuality">
                         </mat-slide-toggle>
                       </li>
                     </ul>
@@ -299,17 +211,10 @@
                 </div>
 
                 <div class="middle-header">
-                  <mat-radio-group
-                    class="example-radio-group"
-                    name="donorFinancialHistory"
-                    [value]="donorCEForm.DonorFinancingHistory"
-                  >
-                    <mat-radio-button
-                      class="example-radio-button"
-                      *ngFor="let item of financialHistory"
-                      [value]="item.Id"
-                      (change)="onFinancialHistoryChange($event.value)"
-                    >
+                  <mat-radio-group class="example-radio-group" name="donorFinancialHistory"
+                    [value]="donorCEForm.DonorFinancingHistory">
+                    <mat-radio-button class="example-radio-button" *ngFor="let item of financialHistory"
+                      [value]="item.Id" (change)="onFinancialHistoryChange($event.value)">
                       {{ item.Name }}
                     </mat-radio-button>
                   </mat-radio-group>
@@ -319,17 +224,10 @@
                 </div>
 
                 <div class="middle-header">
-                  <mat-radio-group
-                    class="example-radio-group"
-                    name="donorReligiousStanding"
-                    [value]="donorCEForm.ReligiousStanding"
-                  >
-                    <mat-radio-button
-                      class="example-radio-button"
-                      *ngFor="let item of financialHistory"
-                      [value]="item.Id"
-                      (change)="onReligiousStandingChange($event.value)"
-                    >
+                  <mat-radio-group class="example-radio-group" name="donorReligiousStanding"
+                    [value]="donorCEForm.ReligiousStanding">
+                    <mat-radio-button class="example-radio-button" *ngFor="let item of financialHistory"
+                      [value]="item.Id" (change)="onReligiousStandingChange($event.value)">
                       {{ item.Name }}
                     </mat-radio-button>
                   </mat-radio-group>
@@ -340,17 +238,10 @@
                 </div>
 
                 <div class="middle-header">
-                  <mat-radio-group
-                    class="example-radio-group"
-                    name="donorPoliticalStanding"
-                    [value]="donorCEForm.PoliticalStanding"
-                  >
-                    <mat-radio-button
-                      class="example-radio-button"
-                      *ngFor="let item of financialHistory"
-                      [value]="item.Id"
-                      (change)="onPoliticalStandingChange($event.value)"
-                    >
+                  <mat-radio-group class="example-radio-group" name="donorPoliticalStanding"
+                    [value]="donorCEForm.PoliticalStanding">
+                    <mat-radio-button class="example-radio-button" *ngFor="let item of financialHistory"
+                      [value]="item.Id" (change)="onPoliticalStandingChange($event.value)">
                       {{ item.Name }}
                     </mat-radio-button>
                   </mat-radio-group>
@@ -361,10 +252,7 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel
-            (opened)="panelOpenState = true"
-            (closed)="panelOpenState = false"
-          >
+          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 PURPOSE OF INITIATIVE
@@ -384,31 +272,21 @@
                       <mat-button-toggle>{{item.Name}}</mat-button-toggle>
                     </mat-button-toggle-group>
                   -->
-                <button
-                  mat-button
-                  [ngStyle]="{
+                <button mat-button [ngStyle]="{
                     'background-color':
                       productAndServiceForm.Product == true
                         ? '#4cc9ff'
                         : '#f5f2f2'
-                  }"
-                  name="product"
-                  (click)="OnProductChange('product')"
-                >
+                  }" name="product" (click)="OnProductChange('product')">
                   Product
                 </button>
 
-                <button
-                  mat-button
-                  name="service"
-                  [ngStyle]="{
+                <button mat-button name="service" [ngStyle]="{
                     'background-color':
                       productAndServiceForm.Service == true
                         ? '#4cc9ff'
                         : '#f5f2f2'
-                  }"
-                  (click)="OnProductChange('service')"
-                >
+                  }" (click)="OnProductChange('service')">
                   Service
                 </button>
               </div>
@@ -417,141 +295,87 @@
             <div class="funding">
               <div class="row">
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdWomenChange($event)"
-                    [(ngModel)]="productAndServiceForm.Women"
-                    >Women</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdWomenChange($event)" [(ngModel)]="productAndServiceForm.Women">Women
+                  </mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdChildrenChange($event)"
-                    [(ngModel)]="productAndServiceForm.Children"
-                    >Children</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdChildrenChange($event)" [(ngModel)]="productAndServiceForm.Children">
+                    Children</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdAwarenessChange($event)"
-                    [(ngModel)]="productAndServiceForm.Awareness"
-                    >Awareness</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdAwarenessChange($event)" [(ngModel)]="productAndServiceForm.Awareness">
+                    Awareness</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdEducationChange($event)"
-                    [(ngModel)]="productAndServiceForm.Education"
-                    >Education</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdEducationChange($event)" [(ngModel)]="productAndServiceForm.Education">
+                    Education</mat-checkbox>
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onDrugAbuseChange($event)"
-                    [(ngModel)]="productAndServiceForm.DrugAbuses"
-                    >Drug Abuse</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onDrugAbuseChange($event)" [(ngModel)]="productAndServiceForm.DrugAbuses">Drug
+                    Abuse</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdRightsChange($event)"
-                    [(ngModel)]="productAndServiceForm.Right"
-                    >Rights</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdRightsChange($event)" [(ngModel)]="productAndServiceForm.Right">Rights
+                  </mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdCultureChange($event)"
-                    [(ngModel)]="productAndServiceForm.Culture"
-                    >Culture</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdCultureChange($event)" [(ngModel)]="productAndServiceForm.Culture">
+                    Culture</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onMusicChange($event)"
-                    [(ngModel)]="productAndServiceForm.Music"
-                    >Music</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onMusicChange($event)" [(ngModel)]="productAndServiceForm.Music">Music
+                  </mat-checkbox>
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdocumentariesChange($event)"
-                    [(ngModel)]="productAndServiceForm.Documentaries"
-                    >Documentaries</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdocumentariesChange($event)"
+                    [(ngModel)]="productAndServiceForm.Documentaries">Documentaries</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdJournalismChange($event)"
-                    [(ngModel)]="productAndServiceForm.InvestigativeJournalism"
-                    >Investigative Journalism</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdJournalismChange($event)"
+                    [(ngModel)]="productAndServiceForm.InvestigativeJournalism">Investigative Journalism</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdHealthNutritionChange($event)"
-                    [(ngModel)]="productAndServiceForm.HealthAndNutrition"
-                    >Health & Nutrition</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdHealthNutritionChange($event)"
+                    [(ngModel)]="productAndServiceForm.HealthAndNutrition">Health & Nutrition</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdNewsChange($event)"
-                    [(ngModel)]="productAndServiceForm.News"
-                    >News</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdNewsChange($event)" [(ngModel)]="productAndServiceForm.News">News
+                  </mat-checkbox>
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdJSocioPoliticalChange($event)"
-                    [(ngModel)]="productAndServiceForm.SocioPolitiacalDebate"
-                    >Socio-Political Debate</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdJSocioPoliticalChange($event)"
+                    [(ngModel)]="productAndServiceForm.SocioPolitiacalDebate">Socio-Political Debate</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdStudiesChange($event)"
-                    [(ngModel)]="productAndServiceForm.Studies"
-                    >Studies</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdStudiesChange($event)" [(ngModel)]="productAndServiceForm.Studies">
+                    Studies</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onProdReportsChange($event)"
-                    [(ngModel)]="productAndServiceForm.Reports"
-                    >Reports</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onProdReportsChange($event)" [(ngModel)]="productAndServiceForm.Reports">
+                    Reports</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onServiCommunityChange($event)"
-                    [(ngModel)]="productAndServiceForm.CommunityDevelopment"
-                    >Community Development</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onServiCommunityChange($event)"
+                    [(ngModel)]="productAndServiceForm.CommunityDevelopment">Community Development</mat-checkbox>
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onServAggricultureChange($event)"
-                    [(ngModel)]="productAndServiceForm.Aggriculture"
-                    >Aggriculture</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onServAggricultureChange($event)"
+                    [(ngModel)]="productAndServiceForm.Aggriculture">Aggriculture</mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox
-                    (change)="onServDRRChange($event)"
-                    [(ngModel)]="productAndServiceForm.DRR"
-                    >DRR</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onServDRRChange($event)" [(ngModel)]="productAndServiceForm.DRR">DRR
+                  </mat-checkbox>
                 </div>
                 <div class="col-sm-3">
                   <!-- <mat-checkbox (change)="onServEducationChange($event)" [(ngModel)]="productAndServiceForm.ServiceEducation">Education</mat-checkbox> -->
@@ -571,57 +395,37 @@
             <div class="clearfix"></div>
             <div class="row">
               <div class="col-sm-3">
-                <mat-checkbox
-                  (change)="onActivityRadioChange($event)"
-                  [(ngModel)]="productAndServiceForm.RadioProduction"
-                  >Radio Production</mat-checkbox
-                >
+                <mat-checkbox (change)="onActivityRadioChange($event)"
+                  [(ngModel)]="productAndServiceForm.RadioProduction">Radio Production</mat-checkbox>
               </div>
               <div class="col-sm-3">
-                <mat-checkbox
-                  (change)="onActivityTVProgramChange($event)"
-                  [(ngModel)]="productAndServiceForm.TVProgram"
-                  >TV Program</mat-checkbox
-                >
+                <mat-checkbox (change)="onActivityTVProgramChange($event)"
+                  [(ngModel)]="productAndServiceForm.TVProgram">TV Program</mat-checkbox>
               </div>
               <div class="col-sm-3">
-                <mat-checkbox
-                  (change)="onActivityPrtintedMediaChange($event)"
-                  [(ngModel)]="productAndServiceForm.PrintedMedia"
-                  >Printed Media</mat-checkbox
-                >
+                <mat-checkbox (change)="onActivityPrtintedMediaChange($event)"
+                  [(ngModel)]="productAndServiceForm.PrintedMedia">Printed Media</mat-checkbox>
               </div>
               <div class="col-sm-3">
-                <mat-checkbox
-                  (change)="onActivityRoundTableChange($event)"
-                  [(ngModel)]="productAndServiceForm.RoundTable"
-                  >RoundTables</mat-checkbox
-                >
+                <mat-checkbox (change)="onActivityRoundTableChange($event)"
+                  [(ngModel)]="productAndServiceForm.RoundTable">RoundTables</mat-checkbox>
               </div>
             </div>
             <div class="row">
               <div class="col-sm-3 mar_tp_10">
-                <mat-checkbox
-                  (change)="onActivityOthersChange($event)"
-                  [(ngModel)]="productAndServiceForm.Others"
-                  >Others</mat-checkbox
-                >
+                <mat-checkbox (change)="onActivityOthersChange($event)" [(ngModel)]="productAndServiceForm.Others">
+                  Others</mat-checkbox>
               </div>
               <div class="col-sm-3">
                 <mat-form-field class="example-full-width">
-                  <textarea
-                    matInput
-                    placeholder=" Type other Activities here..."
-                    [(ngModel)]="productAndServiceForm.OtherActivity"
-                    [disabled]="isDisableActivity"
-                    name="otherActivity"
-                    (focusout)="
+                  <textarea matInput placeholder=" Type other Activities here..."
+                    [(ngModel)]="productAndServiceForm.OtherActivity" [disabled]="isDisableActivity"
+                    name="otherActivity" (focusout)="
                       onOtherTypeActivityChange(
                         'otherActivity',
                         productAndServiceForm.OtherActivity
                       )
-                    "
-                  ></textarea>
+                    "></textarea>
                 </mat-form-field>
               </div>
             </div>
@@ -631,34 +435,21 @@
             </div>
             <div class="row">
               <div class="col-sm-3">
-                <mat-checkbox
-                  (change)="onTagetBenificiaryWomenChange($event)"
-                  [(ngModel)]="productAndServiceForm.TargetBenificaiaryWomen"
-                  >Women</mat-checkbox
-                >
+                <mat-checkbox (change)="onTagetBenificiaryWomenChange($event)"
+                  [(ngModel)]="productAndServiceForm.TargetBenificaiaryWomen">Women</mat-checkbox>
               </div>
               <div class="col-sm-3">
-                <mat-checkbox
-                  (change)="onTargetBeneficaryMenChange($event)"
-                  [(ngModel)]="productAndServiceForm.TargetBenificiaryMen"
-                  >Men</mat-checkbox
-                >
+                <mat-checkbox (change)="onTargetBeneficaryMenChange($event)"
+                  [(ngModel)]="productAndServiceForm.TargetBenificiaryMen">Men</mat-checkbox>
               </div>
               <div class="col-sm-3">
-                <mat-checkbox
-                  (change)="onTargetBeneficaryAgeGroupChange($event)"
-                  [(ngModel)]="productAndServiceForm.TargetBenificiaryAgeGroup"
-                  >Age Groups</mat-checkbox
-                >
+                <mat-checkbox (change)="onTargetBeneficaryAgeGroupChange($event)"
+                  [(ngModel)]="productAndServiceForm.TargetBenificiaryAgeGroup">Age Groups</mat-checkbox>
               </div>
               <div class="col-sm-3">
-                <mat-checkbox
-                  (change)="onTargetBenificaryOccupationChange($event)"
-                  [(ngModel)]="
+                <mat-checkbox (change)="onTargetBenificaryOccupationChange($event)" [(ngModel)]="
                     productAndServiceForm.TargetBenificiaryaOccupation
-                  "
-                  >Occupations</mat-checkbox
-                >
+                  ">Occupations</mat-checkbox>
               </div>
             </div>
 
@@ -666,14 +457,11 @@
               <div class="row">
                 <div class="col-sm-6 col-sm-offset-3">
                   <div class="row">
-                    <div class="col-sm-11 col-xs-11  text-left">
+                    <div class="col-sm-10 col-xs-10  text-left">
                       <strong>Age Groups</strong>
                     </div>
-                    <div class="col-sm-1 col-xs-1 text-right">
-                      <i
-                        class="material-icons icon_cursor"
-                        (click)="onAddAgeDetail()"
-                      >
+                    <div class="col-sm-2 col-xs-2 ">
+                      <i class="material-icons icon_cursor" (click)="onAddAgeDetail()">
                         add_circle_outline
                       </i>
                     </div>
@@ -684,11 +472,8 @@
               <div class="row">
                 <div class="col-sm-6 col-sm-offset-3">
                   <p *ngFor="let item of ageGroupList">
-                    <lib-inline-edit-delete
-                      [value]="item"
-                      (editAction)="onEditCEAgeDetailEmit($event)"
-                      (deleteAction)="onDeleteCEAgeEmit($event)"
-                    >
+                    <lib-inline-edit-delete [value]="item" (editAction)="onEditCEAgeDetailEmit($event)"
+                      (deleteAction)="onDeleteCEAgeEmit($event)">
                     </lib-inline-edit-delete>
                   </p>
                 </div>
@@ -702,10 +487,7 @@
                       <strong>Occupations</strong>
                     </div>
                     <div class="col-sm-1  col-xs-1  text-right">
-                      <i
-                        class="material-icons icon_cursor"
-                        (click)="onAddOccupationDetail()"
-                      >
+                      <i class="material-icons icon_cursor" (click)="onAddOccupationDetail()">
                         add_circle_outline
                       </i>
                     </div>
@@ -715,11 +497,8 @@
               <div class="row">
                 <div class="col-sm-6 col-sm-offset-3">
                   <p *ngFor="let item of occupatonList">
-                    <lib-inline-edit-delete
-                      [value]="item"
-                      (editAction)="onEditCEOccupationEmit($event)"
-                      (deleteAction)="onDeleteCEOccupationEmit($event)"
-                    >
+                    <lib-inline-edit-delete [value]="item" (editAction)="onEditCEOccupationEmit($event)"
+                      (deleteAction)="onDeleteCEOccupationEmit($event)">
                     </lib-inline-edit-delete>
                   </p>
                 </div>
@@ -727,10 +506,7 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel
-            (opened)="panelOpenState = true"
-            (closed)="panelOpenState = false"
-          >
+          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 ELIGIBILITY
@@ -739,50 +515,34 @@
             <div class="middle-header">
               <h5>
                 DONOR ELIGIBILITY CRITERA MET
-                <mat-slide-toggle
-                  (change)="onDonorEligibiltyCriteraChange($event)"
-                  [(ngModel)]="eligibilityForm.DonorCriteriaMet"
-                ></mat-slide-toggle>
+                <mat-slide-toggle (change)="onDonorEligibiltyCriteraChange($event)"
+                  [(ngModel)]="eligibilityForm.DonorCriteriaMet"></mat-slide-toggle>
               </h5>
-              <div
-                *ngIf="
+              <div *ngIf="
                   eligibilityForm.DonorCriteriaMet == false ||
                   eligibilityForm.DonorCriteriaMet == null
-                "
-              >
-                <span class="note_text"
-                  >"Warning: This is a critical criteria. Project may be
-                  unsuitable"</span
-                >
+                ">
+                <span class="note_text">"Warning: This is a critical criteria. Project may be
+                  unsuitable"</span>
               </div>
             </div>
-            <div
-              id="EligibilityCriteriaMet"
-              class="funding-box-wrap-eligibility"
-            >
+            <div id="EligibilityCriteriaMet" class="funding-box-wrap-eligibility">
               <div class="proposal-header">
                 Can eligibility be posssible until the deadline ?
-                <mat-slide-toggle
-                  (change)="onDonorEligibilityDeadlineChange($event)"
-                  [disabled]="isDisabledEligibilityCriteria"
-                  [(ngModel)]="eligibilityForm.EligibilityDealine"
-                ></mat-slide-toggle>
+                <mat-slide-toggle (change)="onDonorEligibilityDeadlineChange($event)"
+                  [disabled]="isDisabledEligibilityCriteria" [(ngModel)]="eligibilityForm.EligibilityDealine">
+                </mat-slide-toggle>
               </div>
               <div class="proposal-header">
                 Possible co-partnership ?
-                <mat-slide-toggle
-                  (change)="onDonorEligibilityPartnershipChange($event)"
-                  [disabled]="isDisabledEligibilityCriteria"
-                  [(ngModel)]="eligibilityForm.CoPartnership"
-                ></mat-slide-toggle>
+                <mat-slide-toggle (change)="onDonorEligibilityPartnershipChange($event)"
+                  [disabled]="isDisabledEligibilityCriteria" [(ngModel)]="eligibilityForm.CoPartnership">
+                </mat-slide-toggle>
               </div>
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel
-            (opened)="panelOpenState = true"
-            (closed)="panelOpenState = false"
-          >
+          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 FEASIBILITY
@@ -793,10 +553,8 @@
                 <div class="col-sm-6">
                   <div class="proposal-header">
                     CAPACITY AVAILABLE FOR PROJECT
-                    <mat-slide-toggle
-                      (change)="onCapacityAvailabilityChange($event)"
-                      [(ngModel)]="feasibilityForm.CapacityAvailableForProject"
-                    ></mat-slide-toggle>
+                    <mat-slide-toggle (change)="onCapacityAvailabilityChange($event)"
+                      [(ngModel)]="feasibilityForm.CapacityAvailableForProject"></mat-slide-toggle>
                   </div>
 
                   <div class="funding-box-wrap">
@@ -805,39 +563,27 @@
                       <ul>
                         <li>
                           Train Staff
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onCompensationTrainStaffChange($event)"
-                            [disabled]="isDisabledCompensation"
-                            [(ngModel)]="feasibilityForm.TrainedStaff"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onCompensationTrainStaffChange($event)"
+                            [disabled]="isDisabledCompensation" [(ngModel)]="feasibilityForm.TrainedStaff">
+                          </mat-slide-toggle>
                         </li>
                         <li>
                           By Equipment
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onCompensationByEquipmentChange($event)"
-                            [disabled]="isDisabledCompensation"
-                            [(ngModel)]="feasibilityForm.ByEquipment"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onCompensationByEquipmentChange($event)"
+                            [disabled]="isDisabledCompensation" [(ngModel)]="feasibilityForm.ByEquipment">
+                          </mat-slide-toggle>
                         </li>
                         <li>
                           Expand Scope
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="oncompensationExpandScopeChange($event)"
-                            [disabled]="isDisabledCompensation"
-                            [(ngModel)]="feasibilityForm.ExpandScope"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="oncompensationExpandScopeChange($event)"
+                            [disabled]="isDisabledCompensation" [(ngModel)]="feasibilityForm.ExpandScope">
+                          </mat-slide-toggle>
                         </li>
                         <li class="clearfix">
                           Expand Geographical Presence
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onCompensationGeographicalChange($event)"
-                            [disabled]="isDisabledCompensation"
-                            [(ngModel)]="feasibilityForm.GeoGraphicalPresence"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onCompensationGeographicalChange($event)"
+                            [disabled]="isDisabledCompensation" [(ngModel)]="feasibilityForm.GeoGraphicalPresence">
+                          </mat-slide-toggle>
                         </li>
                       </ul>
                     </div>
@@ -845,10 +591,8 @@
                       <div class="clearfix">
                         <h6 class="middle-header">
                           ALLOWED 3RD PARTY CONTRACTING
-                          <mat-slide-toggle
-                            (change)="onallowedthirdPartyChange($event)"
-                            [(ngModel)]="feasibilityForm.ThirdPartyContract"
-                          >
+                          <mat-slide-toggle (change)="onallowedthirdPartyChange($event)"
+                            [(ngModel)]="feasibilityForm.ThirdPartyContract">
                           </mat-slide-toggle>
                         </h6>
                       </div>
@@ -859,23 +603,14 @@
                           <td style="width:50%;">Months</td>
                           <td style="width:50%;">
                             <mat-form-field class="pull-right">
-                              <input
-                                matInput
-                                min="1"
-                                max="12"
-                                [(ngModel)]="
+                              <input matInput min="1" max="12" [(ngModel)]="
                                   feasibilityForm.CostOfCompensationMonth
-                                "
-                                name="CostOfCompensation"
-                                (focusout)="
+                                " name="CostOfCompensation" (focusout)="
                                   onCostOfCompensationChange(
                                     'CostOfCompensation',
                                     feasibilityForm.CostOfCompensationMonth
                                   )
-                                "
-                                type="number"
-                                [formControl]="CostOfCompensation"
-                              />
+                                " type="number" [formControl]="CostOfCompensation" />
                               <!--
                             <md-error>Please enter months value between 1 and 12</md-error>
                           -->
@@ -886,20 +621,14 @@
                           <td style="width:50%;">Money</td>
                           <td style="width:50%;">
                             <mat-form-field class="pull-right">
-                              <input
-                                matInput
-                                [(ngModel)]="
+                              <input matInput [(ngModel)]="
                                   feasibilityForm.CostOfCompensationMoney
-                                "
-                                name="CostOfCompensationMoney"
-                                (focusout)="
+                                " name="CostOfCompensationMoney" (focusout)="
                                   onCostOfCompensationMoneyChange(
                                     'CostOfCompensationMoney',
                                     feasibilityForm.CostOfCompensationMoney
                                   )
-                                "
-                                type="number"
-                              />
+                                " type="number" />
                             </mat-form-field>
                           </td>
                         </tr>
@@ -908,61 +637,45 @@
                   </div>
                   <div class="middle-header mar_tp_10">
                     ANY IN-KIND COMPONENT
-                    <mat-slide-toggle
-                      (change)="onAnyInKindComponentChange($event)"
-                      [(ngModel)]="feasibilityForm.AnyInKindComponent"
-                    ></mat-slide-toggle>
+                    <mat-slide-toggle (change)="onAnyInKindComponentChange($event)"
+                      [(ngModel)]="feasibilityForm.AnyInKindComponent"></mat-slide-toggle>
                   </div>
                   <div class="funding-box-wrap">
                     <div class="capacity-available-compensation ul">
                       <ul>
                         <li>
                           Useable By Organisation
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onUseableByOrganisationChange($event)"
+                          <mat-slide-toggle class="pull-right" (change)="onUseableByOrganisationChange($event)"
                             [disabled]="isDisabledAnyInKindComponent"
-                            [(ngModel)]="feasibilityForm.UseableByOrganisation"
-                          ></mat-slide-toggle>
+                            [(ngModel)]="feasibilityForm.UseableByOrganisation"></mat-slide-toggle>
                         </li>
                         <li>
                           Feasible Experts Deployed
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onFeasibleExpertDeployedChange($event)"
+                          <mat-slide-toggle class="pull-right" (change)="onFeasibleExpertDeployedChange($event)"
                             [disabled]="isDisabledAnyInKindComponent"
-                            [(ngModel)]="feasibilityForm.FeasibleExpertDeploy"
-                          ></mat-slide-toggle>
-                        </li>
-                        <li>
-                          <div
-                            class="middle-header"
-                            *ngIf="isFeasibilityExpert"
-                          >
-                            Experts &nbsp; &nbsp;
-                            <i
-                              class="material-icons icon_cursor"
-                              (click)="onAddFeasibitlityExpertOther()"
-                            >
-                              add_circle_outline
-                            </i>
-                            <tr *ngFor="let item of feasivilityList">
-                              <td>
-                                <lib-inline-edit-delete
-                                  [value]="item"
-                                  (editAction)="
-                                    onEditFeasibilityExpertEmit($event)
-                                  "
-                                  (deleteAction)="onDeleteExpertEmit($event)"
-                                >
-                                </lib-inline-edit-delete>
-                              </td>
-                            </tr>
+                            [(ngModel)]="feasibilityForm.FeasibleExpertDeploy"></mat-slide-toggle>
+                        </li>&nbsp;
+                        <li *ngIf="isFeasibilityExpert">
+                          <div class="row">
+                            <div class="col-sm-10 col-xs-10  text-left">
+                              <span>Experts</span>
+                            </div>
+                            <div class="col-sm-2 col-xs-2  text-right">
+                                <i class="material-icons icon_cursor" (click)="onAddFeasibitlityExpertOther()">
+                                    add_circle_outline
+                                  </i>
+                            </div>
                           </div>
-
-                          <!-- <mat-slide-toggle class="pull-right" (change)="onExpertsChange($event)" [disabled]="isDisabledAnyInKindComponent"
-                        [(ngModel)]="feasibilityForm.FeasibilityExpert">
-                      </mat-slide-toggle> -->
+                          <div class="row" >
+                          <div class="col-sm-12" >
+                              <p *ngFor="let item of feasivilityList">
+                                    <lib-inline-edit-delete [value]="item" (editAction)="
+                                        onEditFeasibilityExpertEmit($event)
+                                      " (deleteAction)="onDeleteExpertEmit($event)">
+                                    </lib-inline-edit-delete>
+                                </p>
+                          </div>
+                          </div>
                         </li>
                       </ul>
                     </div>
@@ -975,95 +688,64 @@
                       <ul>
                         <li>
                           Enough time for quality Work
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onEnoughTimeQualityChange($event)"
-                            [(ngModel)]="feasibilityForm.EnoughTimeForProject"
-                          ></mat-slide-toggle>
-                          <div
-                            *ngIf="
+                          <mat-slide-toggle class="pull-right" (change)="onEnoughTimeQualityChange($event)"
+                            [(ngModel)]="feasibilityForm.EnoughTimeForProject"></mat-slide-toggle>
+                          <div *ngIf="
                               feasibilityForm.EnoughTimeForProject == false ||
                               feasibilityForm.EnoughTimeForProject == null
-                            "
-                          >
-                            <span class="note_text"
-                              >"Warning: ratio of *(time delay) over total time
-                              should be less than 0.33))"</span
-                            >
+                            ">
+                            <span class="note_text">"Warning: ratio of *(time delay) over total time
+                              should be less than 0.33))"</span>
                           </div>
                         </li>
                         <li>
                           Project allowed by law
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onProjectallowedByLawChange($event)"
-                            [(ngModel)]="feasibilityForm.ProjectAllowedBylaw"
-                          ></mat-slide-toggle>
-                          <div
-                            *ngIf="
+                          <mat-slide-toggle class="pull-right" (change)="onProjectallowedByLawChange($event)"
+                            [(ngModel)]="feasibilityForm.ProjectAllowedBylaw"></mat-slide-toggle>
+                          <div *ngIf="
                               feasibilityForm.ProjectAllowedBylaw == false ||
                               feasibilityForm.ProjectAllowedBylaw == null
-                            "
-                          >
-                            <span class="note_text"
-                              >" Warning: Project should be allowed by law
-                              "</span
-                            >
+                            ">
+                            <span class="note_text">" Warning: Project should be allowed by law
+                              "</span>
                           </div>
                         </li>
                         <li>
                           Project allowed by Organization leadership
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" (change)="
                               onProjectAllowedByOrganisationChange($event)
-                            "
-                          ></mat-slide-toggle>
+                            "></mat-slide-toggle>
                         </li>
                         <li>
                           Is project practical
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onIsProjectPracticalChange($event)"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onIsProjectPracticalChange($event)">
+                          </mat-slide-toggle>
                         </li>
                         <li>
                           Presence/Coverage in project location
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onPresenceCoverageinProjectChange($event)"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onPresenceCoverageinProjectChange($event)">
+                          </mat-slide-toggle>
                         </li>
                         <li>
                           Project in line with Organisational focus
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" (change)="
                               onProjectInLineOrganisationalChange($event)
-                            "
-                          ></mat-slide-toggle>
+                            "></mat-slide-toggle>
                         </li>
                         <li>
                           Enough time to prepare proposal
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onENoughTimetoPrepareChange($event)"
+                          <mat-slide-toggle class="pull-right" (change)="onENoughTimetoPrepareChange($event)"
                             [(ngModel)]="
                               feasibilityForm.EnoughTimeToPrepareProposal
-                            "
-                          ></mat-slide-toggle>
-                          <div
-                            *ngIf="
+                            "></mat-slide-toggle>
+                          <div *ngIf="
                               feasibilityForm.EnoughTimeToPrepareProposal ==
                                 false ||
                               feasibilityForm.EnoughTimeToPrepareProposal ==
                                 null
-                            "
-                          >
-                            <span class="note_text"
-                              >"Warning: Minimum time to submit the proposal for
-                              old Project is 2 weeks"</span
-                            >
+                            ">
+                            <span class="note_text">"Warning: Minimum time to submit the proposal for
+                              old Project is 2 weeks"</span>
                           </div>
                         </li>
                       </ul>
@@ -1079,17 +761,12 @@
                       <div class="col-sm-6">Real Cost Of Project</div>
                       <div class="col-sm-6">
                         <mat-form-field class="pull-right">
-                          <input
-                            matInput
-                            [(ngModel)]="feasibilityForm.ProjectRealCost"
-                            name="projectRealCost"
+                          <input matInput [(ngModel)]="feasibilityForm.ProjectRealCost" name="projectRealCost"
                             (focusout)="
                               onProjectRealCostChange(
                                 feasibilityForm.ProjectRealCost
                               )
-                            "
-                            type="number"
-                          />
+                            " type="number" />
                         </mat-form-field>
                       </div>
                     </div>
@@ -1097,10 +774,8 @@
                     <div class="row">
                       <div class="col-sm-10">COST GREATER THAN BUDGET</div>
                       <div class="col-sm-2">
-                        <mat-slide-toggle
-                          (change)="onCostGreaterThanBudgetChange($event)"
-                          [(ngModel)]="feasibilityForm.IsCostGreaterthenBudget"
-                        ></mat-slide-toggle>
+                        <mat-slide-toggle (change)="onCostGreaterThanBudgetChange($event)"
+                          [(ngModel)]="feasibilityForm.IsCostGreaterthenBudget"></mat-slide-toggle>
                       </div>
                     </div>
 
@@ -1108,20 +783,13 @@
                       <div class="col-sm-6">%OF COST GREATER THAN BUDGET</div>
                       <div class="col-sm-6">
                         <mat-form-field class="pull-right">
-                          <input
-                            matInput
-                            [(ngModel)]="
+                          <input matInput [(ngModel)]="
                               feasibilityForm.PerCostGreaterthenBudget
-                            "
-                            name="PerCostGreaterthenBudget"
-                            (focusout)="
+                            " name="PerCostGreaterthenBudget" (focusout)="
                               onCostGreaterBudgetChange(
                                 feasibilityForm.PerCostGreaterthenBudget
                               )
-                            "
-                            [disabled]="isCostGreaterThanBudget"
-                            type="number"
-                          />
+                            " [disabled]="isCostGreaterThanBudget" type="number" />
                         </mat-form-field>
                       </div>
                     </div>
@@ -1131,10 +799,8 @@
                         FINANCIAL CONTRIBUTION FULFILLABLE
                       </div>
                       <div class="col-sm-2">
-                        <mat-slide-toggle
-                          (change)="onFinancialContributionChange($event)"
-                          [(ngModel)]="feasibilityForm.IsFinancialContribution"
-                        ></mat-slide-toggle>
+                        <mat-slide-toggle (change)="onFinancialContributionChange($event)"
+                          [(ngModel)]="feasibilityForm.IsFinancialContribution"></mat-slide-toggle>
                       </div>
                     </div>
                   </div>
@@ -1150,34 +816,22 @@
             <div class="funding-box-wrap">
               <div class="row">
                 <div class="col-sm-4">
-                  <mat-checkbox
-                    (change)="onSecurityChange($event)"
-                    [(ngModel)]="feasibilityForm.IsSecurity"
-                    >Security</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onSecurityChange($event)" [(ngModel)]="feasibilityForm.IsSecurity">Security
+                  </mat-checkbox>
                 </div>
                 <div class="col-sm-4">
-                  <mat-checkbox
-                    (change)="onGeographicalChange($event)"
-                    [(ngModel)]="feasibilityForm.IsGeographical"
-                    >Geographical</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onGeographicalChange($event)" [(ngModel)]="feasibilityForm.IsGeographical">
+                    Geographical</mat-checkbox>
                 </div>
                 <div class="col-sm-4">
-                  <mat-checkbox
-                    (change)="onSeasonalChange($event)"
-                    [(ngModel)]="feasibilityForm.IsSeasonal"
-                    >Seasonal</mat-checkbox
-                  >
+                  <mat-checkbox (change)="onSeasonalChange($event)" [(ngModel)]="feasibilityForm.IsSeasonal">Seasonal
+                  </mat-checkbox>
                 </div>
               </div>
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel
-            (opened)="panelOpenState = true"
-            (closed)="panelOpenState = false"
-          >
+          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 PRIORITY ADDED VALUE
@@ -1192,96 +846,62 @@
                 <div class="col-sm-12">
                   <div class="row">
                     <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onIncreasedReputationChange($event)"
-                        [(ngModel)]="priorityForm.IncreaseReputation"
-                        >Increased Reputation</mat-checkbox
-                      >
+                      <mat-checkbox (change)="onIncreasedReputationChange($event)"
+                        [(ngModel)]="priorityForm.IncreaseReputation">Increased Reputation</mat-checkbox>
                     </div>
                     <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onImprovedDonorRelationChange($event)"
-                        [(ngModel)]="priorityForm.ImproveDonorRelationship"
-                        >Improved Donor Relationaship</mat-checkbox
-                      >
+                      <mat-checkbox (change)="onImprovedDonorRelationChange($event)"
+                        [(ngModel)]="priorityForm.ImproveDonorRelationship">Improved Donor Relationaship</mat-checkbox>
                     </div>
                     <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onGoodCauseChange($event)"
-                        [(ngModel)]="priorityForm.GoodCause"
-                        >Good Cause</mat-checkbox
-                      >
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onImprovedPerformanceChange($event)"
-                        [(ngModel)]="priorityForm.ImprovePerformancecapacity"
-                        >Improved Performance Capacity
-                      </mat-checkbox>
-                    </div>
-                    <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onSkillImprovementChange($event)"
-                        [(ngModel)]="priorityForm.SkillImprove"
-                        >Skill Improvement</mat-checkbox
-                      >
-                    </div>
-                    <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onFillingFundingGapChange($event)"
-                        [(ngModel)]="priorityForm.FillingFundingGap"
-                        >Filling funding gaps</mat-checkbox
-                      >
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onNewSoftwareChange($event)"
-                        [(ngModel)]="priorityForm.NewSoftware"
-                        >New Software</mat-checkbox
-                      >
-                    </div>
-                    <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onNewEquipmentChange($event)"
-                        [(ngModel)]="priorityForm.NewEquipment"
-                        >New Equipment</mat-checkbox
-                      >
-                    </div>
-                    <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onCoverageAreaExpensionChange($event)"
-                        [(ngModel)]="priorityForm.CoverageAreaExpansion"
-                        >Coverage Area Expansion
+                      <mat-checkbox (change)="onGoodCauseChange($event)" [(ngModel)]="priorityForm.GoodCause">Good Cause
                       </mat-checkbox>
                     </div>
                   </div>
 
                   <div class="row">
                     <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onNewTrainingChange($event)"
-                        [(ngModel)]="priorityForm.NewTraining"
-                        >New Training
+                      <mat-checkbox (change)="onImprovedPerformanceChange($event)"
+                        [(ngModel)]="priorityForm.ImprovePerformancecapacity">Improved Performance Capacity
                       </mat-checkbox>
                     </div>
                     <div class="col-sm-4">
-                      <mat-checkbox
-                        (change)="onPriorityOthersChange($event)"
-                        [(ngModel)]="priorityForm.Others"
-                        >Other
+                      <mat-checkbox (change)="onSkillImprovementChange($event)" [(ngModel)]="priorityForm.SkillImprove">
+                        Skill Improvement</mat-checkbox>
+                    </div>
+                    <div class="col-sm-4">
+                      <mat-checkbox (change)="onFillingFundingGapChange($event)"
+                        [(ngModel)]="priorityForm.FillingFundingGap">Filling funding gaps</mat-checkbox>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <mat-checkbox (change)="onNewSoftwareChange($event)" [(ngModel)]="priorityForm.NewSoftware">New
+                        Software</mat-checkbox>
+                    </div>
+                    <div class="col-sm-4">
+                      <mat-checkbox (change)="onNewEquipmentChange($event)" [(ngModel)]="priorityForm.NewEquipment">New
+                        Equipment</mat-checkbox>
+                    </div>
+                    <div class="col-sm-4">
+                      <mat-checkbox (change)="onCoverageAreaExpensionChange($event)"
+                        [(ngModel)]="priorityForm.CoverageAreaExpansion">Coverage Area Expansion
+                      </mat-checkbox>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <mat-checkbox (change)="onNewTrainingChange($event)" [(ngModel)]="priorityForm.NewTraining">New
+                        Training
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-4">
+                      <mat-checkbox (change)="onPriorityOthersChange($event)" [(ngModel)]="priorityForm.Others">Other
                       </mat-checkbox>
                       &nbsp; &nbsp;
-                      <i
-                        *ngIf="isPriorityOther"
-                        class="material-icons icon_cursor"
-                        (click)="onAddPriorityOther()"
-                      >
+                      <i *ngIf="isPriorityOther" class="material-icons icon_cursor" (click)="onAddPriorityOther()">
                         add_circle_outline
                       </i>
                     </div>
@@ -1291,11 +911,8 @@
                   <div class="col-sm-4 col-sm-offset-4" *ngIf="isPriorityOther">
                     <tr *ngFor="let item of priorityOtherList">
                       <td>
-                        <lib-inline-edit-delete
-                          [value]="item"
-                          (editAction)="onEditpriorityOtherEmit($event)"
-                          (deleteAction)="onDeletepriorityOtherEmit($event)"
-                        >
+                        <lib-inline-edit-delete [value]="item" (editAction)="onEditpriorityOtherEmit($event)"
+                          (deleteAction)="onDeletepriorityOtherEmit($event)">
                         </lib-inline-edit-delete>
                       </td>
                     </tr>
@@ -1307,20 +924,13 @@
                   <hr />
                   <div class="col-md-offset-3">
                     PROJECT IN LINE WITH ORGANISATION EXPANSION GOALS
-                    <mat-slide-toggle
-                      (change)="onProjectExpensionGoalChange($event)"
-                      [(ngModel)]="priorityForm.ExpansionGoal"
-                    ></mat-slide-toggle>
-                    <div
-                      *ngIf="
+                    <mat-slide-toggle (change)="onProjectExpensionGoalChange($event)"
+                      [(ngModel)]="priorityForm.ExpansionGoal"></mat-slide-toggle>
+                    <div *ngIf="
                         priorityForm.ExpansionGoal == false ||
                         priorityForm.ExpansionGoal == null
-                      "
-                      class="col-md-offset-3"
-                    >
-                      <span class="note_text"
-                        >"Warning: Out of strategic goal"</span
-                      >
+                      " class="col-md-offset-3">
+                      <span class="note_text">"Warning: Out of strategic goal"</span>
                     </div>
                   </div>
                 </div>
@@ -1330,10 +940,7 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel
-            (opened)="panelOpenState = true"
-            (closed)="panelOpenState = false"
-          >
+          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 FINANCIAL PROFITABILITY (Funds)
@@ -1344,67 +951,44 @@
               <div class="col-sm-3">
                 <!-- <label>Project Activities</label> -->
                 <mat-form-field class="pull-right">
-                  <input
-                    matInput
-                    [(ngModel)]="financialForm.ProjectActivities"
-                    placeholder="Project Activities"
+                  <input matInput [(ngModel)]="financialForm.ProjectActivities" placeholder="Project Activities"
                     (focusout)="
                       onProjectActivityChange(
                         'projectActivity',
                         financialForm.ProjectActivities
                       )
-                    "
-                    type="number"
-                  />
+                    " type="number" />
                 </mat-form-field>
               </div>
               <div class="col-sm-3">
                 <mat-form-field class="pull-right">
-                  <input
-                    matInput
-                    [(ngModel)]="financialForm.Operational"
-                    placeholder="Operational"
-                    (focusout)="
+                  <input matInput [(ngModel)]="financialForm.Operational" placeholder="Operational" (focusout)="
                       onProjectActivityChange(
                         'operational',
                         financialForm.Operational
                       )
-                    "
-                    type="number"
-                  />
+                    " type="number" />
                 </mat-form-field>
               </div>
 
               <div class="col-sm-3">
                 <mat-form-field class="pull-right">
-                  <input
-                    matInput
-                    name="overheadAdmin"
-                    placeholder="Overhead Admin"
-                    [(ngModel)]="financialForm.Overhead_Admin"
-                    (focusout)="
+                  <input matInput name="overheadAdmin" placeholder="Overhead Admin"
+                    [(ngModel)]="financialForm.Overhead_Admin" (focusout)="
                       onProjectActivityChange(
                         'overheadAdmin',
                         financialForm.Overhead_Admin
                       )
-                    "
-                    type="number"
-                  />
+                    " type="number" />
                 </mat-form-field>
               </div>
               <div class="col-sm-3">
                 <!-- <label>Lump Sum (From Organisation)</label> -->
                 <mat-form-field class="pull-right">
-                  <input
-                    matInput
-                    name="lumpsum"
-                    placeholder="Lump Sum (From Organisation)"
-                    [(ngModel)]="financialForm.Lump_Sum"
-                    (focusout)="
+                  <input matInput name="lumpsum" placeholder="Lump Sum (From Organisation)"
+                    [(ngModel)]="financialForm.Lump_Sum" (focusout)="
                       onProjectActivityChange('lumpsum', financialForm.Lump_Sum)
-                    "
-                    type="number"
-                  />
+                    " type="number" />
                 </mat-form-field>
               </div>
             </div>
@@ -1418,15 +1002,13 @@
                     financialForm.Lump_Sum
                 }}
 
-                <div
-                  *ngIf="
+                <div *ngIf="
                     financialForm.ProjectActivities +
                       financialForm.Operational +
                       financialForm.Overhead_Admin +
                       financialForm.Lump_Sum <
                     6000
-                  "
-                >
+                  ">
                   <span class="note_text">
                     Total must be greater than 6000
                   </span>
@@ -1443,10 +1025,7 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel
-            (opened)="panelOpenState = true"
-            (closed)="panelOpenState = false"
-          >
+          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 RISKS
@@ -1457,10 +1036,8 @@
                 <div class="col-sm-6">
                   <div class="proposal-header">
                     SECURITY
-                    <mat-slide-toggle
-                      (change)="onRiskSecurityChange($event)"
-                      [(ngModel)]="riskForm.Security"
-                    ></mat-slide-toggle>
+                    <mat-slide-toggle (change)="onRiskSecurityChange($event)" [(ngModel)]="riskForm.Security">
+                    </mat-slide-toggle>
                   </div>
 
                   <div class="funding-box-wrap">
@@ -1468,82 +1045,51 @@
                       <ul>
                         <li>
                           Staff
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="Staff"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="Staff" (change)="
                               onRiskChildChange('Staff', riskForm.Staff)
-                            "
-                            [disabled]="isDisabledRisk"
-                            [(ngModel)]="riskForm.Staff"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledRisk" [(ngModel)]="riskForm.Staff"></mat-slide-toggle>
                         </li>
                         <li>
                           Project Assets
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="Assets"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="Assets" (change)="
                               onRiskChildChange(
                                 'Assets',
                                 riskForm.ProjectAssets
                               )
-                            "
-                            [disabled]="isDisabledRisk"
-                            [(ngModel)]="riskForm.ProjectAssets"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledRisk" [(ngModel)]="riskForm.ProjectAssets"></mat-slide-toggle>
                         </li>
                         <li>
                           Suppliers
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="Suppliers"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="Suppliers" (change)="
                               onRiskChildChange('Suppliers', riskForm.Suppliers)
-                            "
-                            [disabled]="isDisabledRisk"
-                            [(ngModel)]="riskForm.Suppliers"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledRisk" [(ngModel)]="riskForm.Suppliers"></mat-slide-toggle>
                         </li>
                         <li class="clearfix">
                           Beneficiaries
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="Beneficiaries"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="Beneficiaries" (change)="
                               onRiskChildChange(
                                 'Beneficiaries',
                                 riskForm.Beneficiaries
                               )
-                            "
-                            [disabled]="isDisabledRisk"
-                            [(ngModel)]="riskForm.Beneficiaries"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledRisk" [(ngModel)]="riskForm.Beneficiaries"></mat-slide-toggle>
                         </li>
                         <li class="clearfix">
                           Overall Organization
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="OverallOrganization"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="OverallOrganization" (change)="
                               onRiskChildChange(
                                 'OverallOrganization',
                                 riskForm.OverallOrganization
                               )
-                            "
-                            [disabled]="isDisabledRisk"
-                            [(ngModel)]="riskForm.OverallOrganization"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledRisk" [(ngModel)]="riskForm.OverallOrganization">
+                          </mat-slide-toggle>
                         </li>
                       </ul>
                     </div>
                   </div>
                   <div class="proposal-header mar_tp_10">
                     REPUTATION
-                    <mat-slide-toggle
-                      (change)="onRiskReputationChange($event)"
-                      [(ngModel)]="riskForm.Reputation"
-                    ></mat-slide-toggle>
+                    <mat-slide-toggle (change)="onRiskReputationChange($event)" [(ngModel)]="riskForm.Reputation">
+                    </mat-slide-toggle>
                   </div>
 
                   <div class="funding-box-wrap">
@@ -1552,82 +1098,49 @@
                       <ul>
                         <li>
                           Religious
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="Religious"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="Religious" (change)="
                               onReputationChildChange(
                                 'Religious',
                                 riskForm.Religious
                               )
-                            "
-                            [disabled]="isDisabledReputation"
-                            [(ngModel)]="riskForm.Religious"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Religious"></mat-slide-toggle>
                         </li>
                         <li>
                           Sectarian
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="Sectarian"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="Sectarian" (change)="
                               onReputationChildChange(
                                 'Sectarian',
                                 riskForm.Sectarian
                               )
-                            "
-                            [disabled]="isDisabledReputation"
-                            [(ngModel)]="riskForm.Sectarian"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Sectarian"></mat-slide-toggle>
                         </li>
                         <li>
                           Ethnic
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="Ethnic"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="Ethnic" (change)="
                               onReputationChildChange('Ethnic', riskForm.Ethinc)
-                            "
-                            [disabled]="isDisabledReputation"
-                            [(ngModel)]="riskForm.Ethinc"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Ethinc"></mat-slide-toggle>
                         </li>
                         <li class="clearfix">
                           Social
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="Social"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="Social" (change)="
                               onReputationChildChange('Social', riskForm.Social)
-                            "
-                            [disabled]="isDisabledReputation"
-                            [(ngModel)]="riskForm.Social"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Social"></mat-slide-toggle>
                         </li>
                         <li class="clearfix">
                           Traditional
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="Traditional"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="Traditional" (change)="
                               onReputationChildChange(
                                 'Traditional',
                                 riskForm.Traditional
                               )
-                            "
-                            [disabled]="isDisabledReputation"
-                            [(ngModel)]="riskForm.Traditional"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Traditional"></mat-slide-toggle>
                         </li>
                       </ul>
                     </div>
                     <div class="middle-header">
                       FOCUS DIVERTING RISK
-                      <mat-slide-toggle
-                        (change)="onFocusDivertingRiskChange($event)"
-                        [(ngModel)]="riskForm.FocusDivertingrisk"
-                        [disabled]="isDisabledReputation"
-                      ></mat-slide-toggle>
+                      <mat-slide-toggle (change)="onFocusDivertingRiskChange($event)"
+                        [(ngModel)]="riskForm.FocusDivertingrisk" [disabled]="isDisabledReputation"></mat-slide-toggle>
                     </div>
                   </div>
                 </div>
@@ -1636,60 +1149,42 @@
                 <div class="col-sm-6">
                   <div class="proposal-header">
                     DELIVERY FAILURE
-                    <mat-slide-toggle
-                      (change)="onDeliveryFailureChange($event)"
-                      [(ngModel)]="riskForm.DeliveryFaiLure"
-                    ></mat-slide-toggle>
+                    <mat-slide-toggle (change)="onDeliveryFailureChange($event)" [(ngModel)]="riskForm.DeliveryFaiLure">
+                    </mat-slide-toggle>
                   </div>
                   <div class="funding-box-wrap">
                     <div class="capacity-available-compensation ul">
                       <ul>
                         <li>
                           Premature Seizure
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="PrematureSeizure"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="PrematureSeizure" (change)="
                               onRiskDeliveryFailureChildChange(
                                 'PrematureSeizure',
                                 riskForm.PrematureSeizure
                               )
-                            "
-                            [disabled]="isDisabledDelivery"
-                            [(ngModel)]="riskForm.PrematureSeizure"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledDelivery" [(ngModel)]="riskForm.PrematureSeizure">
+                          </mat-slide-toggle>
                         </li>
                         <li>
                           Government Confiscation
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="GovernmentConfiscation"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="GovernmentConfiscation" (change)="
                               onRiskDeliveryFailureChildChange(
                                 'GovernmentConfiscation',
                                 riskForm.GovernmentConfiscation
                               )
-                            "
-                            [disabled]="isDisabledDelivery"
-                            [(ngModel)]="riskForm.GovernmentConfiscation"
-                          ></mat-slide-toggle>
+                            " [disabled]="isDisabledDelivery" [(ngModel)]="riskForm.GovernmentConfiscation">
+                          </mat-slide-toggle>
                         </li>
                         <li>
                           Distruction by Terrorist Activity
-                          <mat-slide-toggle
-                            class="pull-right"
-                            name="TerroristActivity"
-                            (change)="
+                          <mat-slide-toggle class="pull-right" name="TerroristActivity" (change)="
                               onRiskDeliveryFailureChildChange(
                                 'TerroristActivity',
                                 riskForm.DesctructionByTerroristActivity
                               )
-                            "
-                            [disabled]="isDisabledDelivery"
-                            [(ngModel)]="
+                            " [disabled]="isDisabledDelivery" [(ngModel)]="
                               riskForm.DesctructionByTerroristActivity
-                            "
-                          ></mat-slide-toggle>
+                            "></mat-slide-toggle>
                         </li>
                       </ul>
                     </div>
@@ -1701,41 +1196,26 @@
                       <ul>
                         <li>
                           Financial Losses
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onFinancialLossesChange($event)"
-                            [(ngModel)]="riskForm.Financiallosses"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onFinancialLossesChange($event)"
+                            [(ngModel)]="riskForm.Financiallosses"></mat-slide-toggle>
                         </li>
                         <li>
                           Opportunity Loss
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onOpportunityLossChange($event)"
-                            [(ngModel)]="riskForm.Opportunityloss"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onOpportunityLossChange($event)"
+                            [(ngModel)]="riskForm.Opportunityloss"></mat-slide-toggle>
                         </li>
 
                         <div class="clearfix">
                           <mat-form-field>
-                            <mat-select
-                              placeholder="Multiple Opportunity Project Selection"
-                              [(ngModel)]="riskForm.ProjectSelectionId"
-                              (selectionChange)="
+                            <mat-select placeholder="Multiple Opportunity Project Selection"
+                              [(ngModel)]="riskForm.ProjectSelectionId" (selectionChange)="
                                 onProjectotherDetailsChange(
                                   'projectSelction',
                                   riskForm.ProjectSelectionId
                                 )
-                              "
-                              name="projectSelction"
-                              multiple
-                              [disabled]="isOpportunityLoss"
-                            >
-                              <mat-option
-                                *ngFor="let item of ProjectSelectionList"
-                                [value]="item.value"
-                                >{{ item.label }}</mat-option
-                              >
+                              " name="projectSelction" multiple [disabled]="isOpportunityLoss">
+                              <mat-option *ngFor="let item of ProjectSelectionList" [value]="item.value">
+                                {{ item.label }}</mat-option>
                             </mat-select>
                           </mat-form-field>
                           <!--
@@ -1749,37 +1229,27 @@
                         <li></li>
                         <li class="clearfix">
                           Probably Delay/Cuts in funding
-                          <mat-slide-toggle
-                            class="pull-right"
-                            (change)="onProbabilityDelayChange($event)"
-                            [(ngModel)]="riskForm.Probablydelaysinfunding"
-                          ></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onProbabilityDelayChange($event)"
+                            [(ngModel)]="riskForm.Probablydelaysinfunding"></mat-slide-toggle>
                         </li>
                       </ul>
                     </div>
                   </div>
                   <div class="middle-header mar_tp_10">
                     OTHER ORGANIZATIONAL HARMS
-                    <mat-slide-toggle
-                      (change)="onOtherOrgHarmsChange($event)"
-                      [(ngModel)]="riskForm.OtherOrganizationalHarms"
-                    ></mat-slide-toggle>
+                    <mat-slide-toggle (change)="onOtherOrgHarmsChange($event)"
+                      [(ngModel)]="riskForm.OtherOrganizationalHarms"></mat-slide-toggle>
                   </div>
                   <div class="middle-header">
                     <mat-form-field class="example-full-width">
-                      <textarea
-                        matInput
-                        placeholder=" Describe Organisational harms here..."
-                        [(ngModel)]="riskForm.OrganizationalDescription"
-                        [disabled]="IsOtherOrganizationalHarms"
-                        name="OrganizationalDescription"
-                        (focusout)="
+                      <textarea matInput placeholder=" Describe Organisational harms here..."
+                        [(ngModel)]="riskForm.OrganizationalDescription" [disabled]="IsOtherOrganizationalHarms"
+                        name="OrganizationalDescription" (focusout)="
                           onOrganizationalDescriptionChange(
                             'OrganizationalDescription',
                             riskForm.OrganizationalDescription
                           )
-                        "
-                      ></textarea>
+                        "></textarea>
                     </mat-form-field>
                   </div>
                 </div>
@@ -1788,10 +1258,7 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel
-            (opened)="panelOpenState = true"
-            (closed)="panelOpenState = false"
-          >
+          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 ASSUMPTION
@@ -1805,10 +1272,7 @@
                       <strong>Assumption</strong>
                     </div>
                     <div class="col-sm-1 col-xs-1 text-right">
-                      <i
-                        class="material-icons icon_cursor text-right"
-                        (click)="onAddAssumption()"
-                      >
+                      <i class="material-icons icon_cursor text-right" (click)="onAddAssumption()">
                         add_circle_outline
                       </i>
                     </div>
@@ -1816,11 +1280,8 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <p *ngFor="let item of assumptionList">
-                        <lib-inline-edit-delete
-                          [value]="item"
-                          (editAction)="onEditCEassumptionEmit($event)"
-                          (deleteAction)="onDeleteCEassumptionEmit($event)"
-                        >
+                        <lib-inline-edit-delete [value]="item" (editAction)="onEditCEassumptionEmit($event)"
+                          (deleteAction)="onDeleteCEassumptionEmit($event)">
                         </lib-inline-edit-delete>
                       </p>
                     </div>
@@ -1830,10 +1291,7 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel
-            (opened)="panelOpenState = true"
-            (closed)="panelOpenState = false"
-          >
+          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 DONOR ELIGIBILITY CRITERIA
@@ -1847,10 +1305,7 @@
                       <strong>Criteria</strong>
                     </div>
                     <div class="col-sm-1 col-xs-1  text-right">
-                      <i
-                        class="material-icons icon_cursor"
-                        (click)="onAddDonorEligibilityDetail()"
-                      >
+                      <i class="material-icons icon_cursor" (click)="onAddDonorEligibilityDetail()">
                         add_circle_outline
                       </i>
                     </div>
@@ -1858,13 +1313,10 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <p *ngFor="let item of donorEligibilityList">
-                        <lib-inline-edit-delete
-                          [value]="item"
-                          (editAction)="onEditCEDonorEligibilityEmit($event)"
+                        <lib-inline-edit-delete [value]="item" (editAction)="onEditCEDonorEligibilityEmit($event)"
                           (deleteAction)="
                             onDeleteCEDonorEligibilityEmit($event)
-                          "
-                        >
+                          ">
                         </lib-inline-edit-delete>
                       </p>
                     </div>

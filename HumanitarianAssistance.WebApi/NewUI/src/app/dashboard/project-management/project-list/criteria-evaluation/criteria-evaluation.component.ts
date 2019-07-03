@@ -1200,6 +1200,8 @@ export class CriteriaEvaluationComponent implements OnInit {
       this.isDisabledAnyInKindComponent = false;
       this.anyInKindComponent = criteriaEvaluationScores.anyInKindComponent_Yes;
     } else {
+      // Note: to disable the expert record
+      this.isFeasibilityExpert = false;
       this.isDisabledAnyInKindComponent = true;
       this.feasibilityForm.UseableByOrganisation = false;
       this.feasibilityForm.FeasibleExpertDeploy = false;
@@ -1224,6 +1226,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onFeasibleExpertDeployedChange(value) {
+    debugger;
     if (value.checked === true) {
       this.isFeasibilityExpert = true;
 
@@ -1235,6 +1238,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
   // add plus icon functionationality pending
   onExpertsChange(value) {
+    debugger
     if (value.checked === true) {
       this.fesibilityExpert = criteriaEvaluationScores.feasibilityExpert_Yes;
     } else {
@@ -1811,6 +1815,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region Get Criteria evaluation by ProjectId Donor
   GetCriteraiEvaluationDetailById(ProjectId: number) {
+    debugger;
     // this.OtherProjectList = [];
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
@@ -1991,7 +1996,8 @@ export class CriteriaEvaluationComponent implements OnInit {
               }
               this.feasibilityForm.ThirdPartyContract =
                 data.data.CriteriaEveluationModel.ThirdPartyContract;
-              if (data.data.CriteriaEveluationModel.CostOfCompensationMonth == null || data.data.CriteriaEveluationModel.CostOfCompensationMonth == undefined) {
+              if (data.data.CriteriaEveluationModel.CostOfCompensationMonth == null
+                 || data.data.CriteriaEveluationModel.CostOfCompensationMonth == undefined) {
                 this.feasibilityForm.CostOfCompensationMonth = null;
               } else {
                 this.feasibilityForm.CostOfCompensationMonth =
@@ -2002,20 +2008,21 @@ export class CriteriaEvaluationComponent implements OnInit {
 
               this.feasibilityForm.AnyInKindComponent =
                 data.data.CriteriaEveluationModel.AnyInKindComponent;
-              if (this.feasibilityForm.AnyInKindComponent == true) {
-                this.feasibilityForm.UseableByOrganisation = false;
-                this.feasibilityForm.FeasibleExpertDeploy = false;
-              } else {
+              if (this.feasibilityForm.AnyInKindComponent === true) {
+                 this.isDisabledAnyInKindComponent = false;
+                // this.feasibilityForm.UseableByOrganisation = false;
+                // this.feasibilityForm.FeasibleExpertDeploy = false;
+              }
                 this.feasibilityForm.UseableByOrganisation =
                   data.data.CriteriaEveluationModel.UseableByOrganisation;
                 this.feasibilityForm.FeasibleExpertDeploy =
                   data.data.CriteriaEveluationModel.FeasibleExpertDeploy;
-                if (this.feasibilityForm.FeasibleExpertDeploy == true) {
+                if (this.feasibilityForm.FeasibleExpertDeploy === true) {
                   this.isFeasibilityExpert = true;
                 } else {
                   this.isFeasibilityExpert = false;
                 }
-              }
+
               this.feasibilityForm.FeasibilityExpert =
                 data.data.CriteriaEveluationModel.FeasibilityExpert;
 
@@ -2330,6 +2337,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region add edit feasibility form
   AddEditFeasibilityCEForm(model: any) {
+    debugger;
     if (model != null) {
       const obj: FeasibilityCEModel = {
         FeasibilityId: model.FeasibilityId,
@@ -3164,7 +3172,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region onAddFeasibitlityExpertOther click
   onAddFeasibitlityExpertOther() {
-
+debugger;
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: 0,
       Name: '',
@@ -3181,6 +3189,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   //#region  addFeasibilityExpert
 
   addFeasibilityExpert(data: IFeasibilityExpert) {
+    debugger;
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: data.ExpertOtherDetailId,
       Name: data.Name,
@@ -3197,7 +3206,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           if (response.StatusCode === 200) {
             // add to list
             if (response.CommonId.LongId != null && response.CommonId.LongId != 0) {
-              obj.ExpertOtherDetailId = response.data.LongId;
+              obj.ExpertOtherDetailId = response.CommonId.LongId;
             }
             this.feasivilityList.push(obj);
           } else if (response.StatusCode === 400) {
@@ -3215,13 +3224,13 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region onEditFeasibilityExpertEmit click
   onEditFeasibilityExpertEmit(value: IFeasibilityExpert) {
+    debugger;
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: value.ExpertOtherDetailId,
       Name: value.Name,
       ProjectId: this.ProjectId
     };
 
-    // this.editPriorityOther(obj);
     this.editFeasibilityExpert(obj);
 
   }
@@ -3229,6 +3238,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region editFeasibilityExpert
   editFeasibilityExpert(model: IFeasibilityExpert) {
+    debugger;
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: model.ExpertOtherDetailId,
       Name: model.Name,
