@@ -275,7 +275,7 @@ namespace HumanitarianAssistance.WebApi
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
         {
             // update database
-            // UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+            UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
 
             if (env.IsDevelopment())
             {
