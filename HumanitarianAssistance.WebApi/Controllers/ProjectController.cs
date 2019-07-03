@@ -1623,10 +1623,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    public async Task<APIResponse> AllActivityStatus([FromBody]long projectId)
+    public APIResponse AllActivityStatus([FromBody]long projectId)
     {
       APIResponse response = new APIResponse();
-      response = await _iActivity.AllProjectActivityStatus(projectId);
+      response = _iActivity.AllProjectActivityStatus(projectId);
       return response;
     }
     #endregion

@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<Folder Include="NewUI\" />-->
+    <Folder Include="NewUI\" />
     <Folder Include="OldUI\" />
   </ItemGroup>
 
@@ -90,8 +90,8 @@
 
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm install" />
-    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm run build -- --prod" />
-    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng npm run build -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
