@@ -81,6 +81,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   isPriorityOther = false;
   isFeasibilityExpert = false;
   startCriteriaEvaluationSubmitLoader = false;
+  criteriaEvaluationLoader = false;
 
   donorCEForm: DonorCEModel;
   eligibilityForm: EligibilityCEModel;
@@ -1238,7 +1239,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
   // add plus icon functionationality pending
   onExpertsChange(value) {
-    debugger
+    debugger;
     if (value.checked === true) {
       this.fesibilityExpert = criteriaEvaluationScores.feasibilityExpert_Yes;
     } else {
@@ -1816,7 +1817,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   //#region Get Criteria evaluation by ProjectId Donor
   GetCriteraiEvaluationDetailById(ProjectId: number) {
     debugger;
-    // this.OtherProjectList = [];
+    this.criteriaEvaluationLoader = true;
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetCriteriaEvalDetailsByProjectId(
@@ -1824,7 +1825,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           ProjectId
         )
         .subscribe(data => {
-          if (data != null) {
+          if (data != null && data.StatusCode === 200) {
             if (data.data.CriteriaEveluationModel != null) {
               this.donorCEForm.PastFundingExperience =
                 data.data.CriteriaEveluationModel.PastFundingExperience;
@@ -2205,8 +2206,11 @@ export class CriteriaEvaluationComponent implements OnInit {
 
             }
           }
+    this.criteriaEvaluationLoader = false;
+
         },
         error => {
+    this.criteriaEvaluationLoader = false;
           this.toastr.error('Something Went Wrong..! Please Try Again.');
         });
     }
@@ -2498,8 +2502,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region to calculate total value
   get totalValue() {
-
-    // this.totalScore = 0;
+console.log(this.totalScore);
     this.totalScore =
       (this.donorCEForm.PastFundingExperience === true
         ? criteriaEvaluationScores.pastFundingExperience_Yes
@@ -2719,7 +2722,7 @@ export class CriteriaEvaluationComponent implements OnInit {
       (this.feasibilityForm.EnoughTimeToPrepareProposal === true
         ? criteriaEvaluationScores.enoughTimeToPrepareproposal_Yes
         : criteriaEvaluationScores.enoughTimeToPrepareproposal_No) +
-      // if  don't delete :condition for if the costGreaterThanBudget_Yes value is set to be 0
+      // Note:don't delete:condition for if the costGreaterThanBudget_Yes value is set to be 0
       // ((this.feasibilityForm.IsCostGreaterthenBudget === false && this.feasibilityForm.IsCostGreaterthenBudget != null)
       // ? criteriaEvaluationScores.costGreaterThanBudget_No : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
 

@@ -32,9 +32,17 @@
         <div class="row">
           <div class="col-sm-12">
             <h5 class="main_heading pull-right">
-              Total Score: {{ totalValue }}
-            </h5>
+
+
+              <span *ngIf="!criteriaEvaluationLoader; else criteriaEvaluationLoaderTemplate"> Total Score:{{ totalValue }}</span></h5>
+            <ng-template #criteriaEvaluationLoaderTemplate>
+              <div class="spinner_center padding_top_5 padding_bottom_5">
+                <mat-spinner [diameter]="20"> </mat-spinner>
+              </div>
+            </ng-template>
+
           </div>
+
         </div>
       </div>
 
@@ -483,10 +491,10 @@
               <div class="row">
                 <div class="col-sm-6 col-sm-offset-3">
                   <div class="row">
-                    <div class="col-sm-11 col-xs-11  text-left">
+                    <div class="col-sm-10 col-xs-10  text-left">
                       <strong>Occupations</strong>
                     </div>
-                    <div class="col-sm-1  col-xs-1  text-right">
+                    <div class="col-sm-2  col-xs-2  text-right">
                       <i class="material-icons icon_cursor" (click)="onAddOccupationDetail()">
                         add_circle_outline
                       </i>
@@ -661,20 +669,20 @@
                               <span>Experts</span>
                             </div>
                             <div class="col-sm-2 col-xs-2  text-right">
-                                <i class="material-icons icon_cursor" (click)="onAddFeasibitlityExpertOther()">
-                                    add_circle_outline
-                                  </i>
+                              <i class="material-icons icon_cursor" (click)="onAddFeasibitlityExpertOther()">
+                                add_circle_outline
+                              </i>
                             </div>
                           </div>
-                          <div class="row" >
-                          <div class="col-sm-12" >
+                          <div class="row">
+                            <div class="col-sm-12">
                               <p *ngFor="let item of feasivilityList">
-                                    <lib-inline-edit-delete [value]="item" (editAction)="
+                                <lib-inline-edit-delete [value]="item" (editAction)="
                                         onEditFeasibilityExpertEmit($event)
                                       " (deleteAction)="onDeleteExpertEmit($event)">
-                                    </lib-inline-edit-delete>
-                                </p>
-                          </div>
+                                </lib-inline-edit-delete>
+                              </p>
+                            </div>
                           </div>
                         </li>
                       </ul>
