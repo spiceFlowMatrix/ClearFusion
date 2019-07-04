@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace HumanitarianAssistance.WebAPI.Controllers.Project
 {
@@ -21,18 +20,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HiringRequestController : Controller
     {
-        private readonly JsonSerializerSettings _serializerSettings;
         private readonly UserManager<AppUser> _userManager;
         private readonly IHiringRequestService _hiringRequestService;
         public HiringRequestController(UserManager<AppUser> userManager, IHiringRequestService hiringRequestServ)
         {
             _userManager = userManager;
             _hiringRequestService = hiringRequestServ;
-            _serializerSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                NullValueHandling = NullValueHandling.Ignore
-            };
         }
 
         #region "GetProjectHiringRequestDetail"
@@ -63,7 +56,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
         [HttpPost]
         public async Task<APIResponse> EditHiringRequestDetail([FromBody]ProjectHiringRequestModel Model)
         {
-            APIResponse apiRespone = null;
+            APIResponse apiRespone = new APIResponse();
             var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (user != null)
             {
@@ -89,7 +82,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
         [HttpPost]
         public async Task<APIResponse> AddHiringRequestCandidate([FromBody]HiringRequestCandidateModel Model)
         {
-            APIResponse apiRespone = null;
+            APIResponse apiRespone = new APIResponse();
             var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (user != null)
             {
@@ -104,7 +97,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
         [HttpPost]
         public async Task<APIResponse> EditHiringRequestCandidate([FromBody]ProjectHiringCandidateDetailModel Model)
         {
-            APIResponse apiRespone = null;
+            APIResponse apiRespone = new APIResponse();
             var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (user != null)
             {
@@ -131,7 +124,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
         [HttpPost]
         public async Task<APIResponse> AddCandidateInterviewDetail([FromBody] CandidateInterViewModel model)
         {
-            APIResponse apiRespone = null;
+            APIResponse apiRespone = new APIResponse();
             var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (user != null)
             {
@@ -146,7 +139,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
         [HttpPost]
         public async Task<APIResponse> HiringRequestSelectCandidate([FromBody] HiringSelectCandidateModel model)
         {
-            APIResponse apiRespone = null;
+            APIResponse apiRespone = new APIResponse();
             var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (user != null)
             {
@@ -161,7 +154,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
         [HttpPost]
         public async Task<APIResponse> CompleteHiringRequest([FromBody] long hiringRequestId)
         {
-            APIResponse apiRespone = null;
+            APIResponse apiRespone = new APIResponse();
             var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (user != null)
             {
@@ -176,7 +169,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Project
         [HttpPost]
         public async Task<APIResponse> DeleteCandidatDetail([FromBody] ProjectHiringCandidateDetailModel model)
         {
-            APIResponse apiRespone = null;
+            APIResponse apiRespone = new APIResponse();
             var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (user != null)
             {
