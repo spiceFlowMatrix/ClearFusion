@@ -37,7 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\HumanitarianAssistance.Entities\HumanitarianAssistance.ViewModels.csproj" />
     <ProjectReference Include="..\HumanitarianAssistance.Service\HumanitarianAssistance.Service.csproj" />
   </ItemGroup>
@@ -87,10 +86,6 @@
       </ResolvedFileToPublish>
     </ItemGroup>
 
-  </Target>
-
-
-  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm install" />
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng npm run build -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
