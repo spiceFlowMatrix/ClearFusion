@@ -7,9 +7,4 @@
     <StartupObject />
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Helpers\CommonFunctions.cs" />
-    <Compile Remove="Program.cs" />
-  </ItemGroup>
-
 </Project>

@@ -83,6 +83,8 @@ namespace HumanitarianAssistance.WebApi
 
             Console.WriteLine("Connection string: {0}\n", connectionString);
 
+
+
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
 
@@ -228,6 +230,12 @@ namespace HumanitarianAssistance.WebApi
                 });
             });
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+
+
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             services.AddMvc()
                 .AddJsonOptions(config =>
                 {
@@ -245,8 +253,6 @@ namespace HumanitarianAssistance.WebApi
 
 
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSwaggerGen(p =>
             {
