@@ -232,7 +232,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                StoreInventory storeInventories = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.InventoryId).FirstOrDefaultAsync(x => x.AssetType == Id && x.IsDeleted == false);
+                StoreInventory storeInventories = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.InventoryCode).FirstOrDefaultAsync(x => x.AssetType == Id && x.IsDeleted == false);
 
                 if (storeInventories != null)
                 {
