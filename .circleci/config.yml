@@ -11,11 +11,13 @@ jobs:
 
   build-job:
     docker:
-      - image: circleci/node:9
       - image: microsoft/dotnet:2.2-sdk
     steps:
       - checkout
-      - run: npm install
+      - run: 
+          name: install nodejs
+          command: sudo apt-get install nodejs npm
+      - run: sudo yum install nodejs npm
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       # - run: dotnet build DataAccess/DataAccess.csproj
       # - run: dotnet build HumanitarianAssistance.Service/HumanitarianAssistance.Service.csproj
