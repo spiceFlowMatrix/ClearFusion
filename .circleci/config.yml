@@ -5,6 +5,12 @@ jobs:
       - image: microsoft/dotnet:2.2-sdk
     steps:
       - checkout
+      - run: apt-get install git-core curl build-essential openssl libssl-dev \
+      - run:  git clone https://github.com/nodejs/node.git \
+      - run:  cd node \
+      - run:  ./configure \
+      - run:  make \
+      - run:  sudo make install
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       # - run: dotnet build HumanitarianAssistance.Entities/HumanitarianAssistance.ViewModels.csproj
       # - run: dotnet build HumanitarianAssistance.Common/HumanitarianAssistance.Common.csproj
