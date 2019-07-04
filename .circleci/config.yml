@@ -11,28 +11,28 @@ jobs:
 
   build-job:
 
-    docker:
-      - image: circleci/node:7.10
-    steps:
-      - run: sudo npm cache clean -f
-      - run: sudo npm install -g n
-      - run: sudo n stable
-      - run: node -v
-      - run: npm -v
-      - run: sudo npm install --unsafe-perm -g @angular/cli
-
     # docker:
-    #   - image: microsoft/dotnet:2.2-sdk
+    #   - image: circleci/node:7.10
     # steps:
-    #   - checkout
-    #   # - run: 
-    #   #     name: install nodejs
-    #   #     command: apt-get install nodejs npm
-    #   - run: 
-    #       name: install sudo
-    #       command: apt-get install sudo -y
-    #   - run: sudo apt-get install -y nodejs
-      - run: yum install nodejs npm
+    #   - run: sudo npm cache clean -f
+    #   - run: sudo npm install -g n
+    #   - run: sudo n stable
+    #   - run: node -v
+    #   - run: npm -v
+    #   - run: sudo npm install -g @angular/cli
+
+    docker:
+      - image: microsoft/dotnet:2.2-sdk
+    steps:
+      - checkout
+      # - run: 
+      #     name: install nodejs
+      #     command: apt-get install nodejs npm
+      - run: 
+          name: install sudo
+          command: curl -sL https://deb.nodesource.com/setup_10.x | bash - \ 
+	            && apt update \
+	            && apt install -y nodejs
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
       - run: mkdir HumanitarianAssistance.WebApi/release/Documents
