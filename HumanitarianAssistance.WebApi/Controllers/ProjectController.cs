@@ -853,7 +853,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         string logginUserEmailId = user.Email;
         var id = user.Id;
-        apiRespone = _iProject.AddEditProjectProposalDetail(model, id, logginUserEmailId);
+        apiRespone =await _iProject.AddEditProjectProposalDetail(model, id, logginUserEmailId);
       }
       return apiRespone;
     }
