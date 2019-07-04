@@ -7,12 +7,12 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
     <!--<SpaRoot>NewUI\</SpaRoot>-->
-    
+
     <SpaRootNewUI>NewUI\</SpaRootNewUI>
     <SpaRootOldUI>OldUI\</SpaRootOldUI>
     <!--<SpaRootClientApp>ClientApp\</SpaRootClientApp>-->
-    
-    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRootNewUI)node_modules\**</DefaultItemExcludes>
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
@@ -29,8 +29,8 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRootNewUI)**" />
     <None Include="$(SpaRootNewUI)**" Exclude="$(SpaRootNewUI)node_modules\**" />
-    
-    
+
+
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRootOldUI)**" />
     <None Include="$(SpaRootOldUI)**" Exclude="$(SpaRootOldUI)node_modules\**" />
@@ -47,7 +47,7 @@
     <Folder Include="OldUI\" />
   </ItemGroup>
 
-  
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRootNewUI)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
@@ -57,8 +57,8 @@
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
     <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm install" />
   </Target>
-  
-    
+
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRootOldUI)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
@@ -68,8 +68,8 @@
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm install" />
   </Target>
-  
-  
+
+
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
@@ -86,8 +86,11 @@
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
-  
 
+  </Target>
+
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm install" />
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng npm run build -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
