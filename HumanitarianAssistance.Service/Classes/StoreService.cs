@@ -48,15 +48,14 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         var inventoryAccount =
                            _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ChartOfAccountNewId == model.InventoryDebitAccount).ToList();
-
-                        //if (inventoryAccount.Count == 2)
-                        //{
+                        
                         bool inventoryCode = await _uow.GetDbContext().StoreInventories.AnyAsync(x => x.InventoryCode == model.InventoryCode);
 
                         if (!inventoryCode)
                         {
                             StoreInventory inventory = _mapper.Map<StoreInventory>(model);
                             inventory.IsDeleted = false;
+                            inventory.CreatedDate = DateTime.UtcNow;
 
                             await _uow.StoreInventoryRepository.AddAsyn(inventory);
 
@@ -68,12 +67,6 @@ namespace HumanitarianAssistance.Service.Classes
                             response.StatusCode = StaticResource.failStatusCode;
                             response.Message = StaticResource.InventoryCodeAlreadyExists;
                         }
-                        //}
-                        //else
-                        //{
-                        //    response.StatusCode = StaticResource.failStatusCode;
-                        //    response.Message = StaticResource.AccountNoteNotExists;
-                        //}
                     }
                     else
                     {
@@ -104,11 +97,6 @@ namespace HumanitarianAssistance.Service.Classes
                                         x.ChartOfAccountNewId == model.InventoryDebitAccount).ToList();
                 if (edInv != null)
                 {
-                    //edInv.InventoryCode = model.InventoryCode;
-                    //edInv.InventoryName = model.InventoryName;
-                    //edInv.InventoryDescription = model.InventoryDescription;
-                    //edInv.InventoryChartOfAccount = inventoryAccount.ChartOfAccountCode;
-                    //edInv.AssetType = model.AssetType;
 
                     bool inventoryCode = await _uow.GetDbContext().StoreInventories.AnyAsync(x => x.InventoryCode == model.InventoryCode && x.InventoryId != model.InventoryId);
 
@@ -244,7 +232,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                StoreInventory storeInventories = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.AssetType == Id && x.IsDeleted == false);
+                StoreInventory storeInventories = await _uow.GetDbContext().StoreInventories.OrderByDescending(x => x.InventoryId).FirstOrDefaultAsync(x => x.AssetType == Id && x.IsDeleted == false);
 
                 if (storeInventories != null)
                 {
