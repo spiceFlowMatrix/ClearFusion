@@ -6,6 +6,7 @@ jobs:
     steps:
       - checkout
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
+      - run: dotnet build HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
       - run: mkdir HumanitarianAssistance.WebApi/release/Documents
       - persist_to_workspace:
