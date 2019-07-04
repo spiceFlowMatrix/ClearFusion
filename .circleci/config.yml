@@ -1,22 +1,25 @@
 version: 2.1
 jobs:
-  build-npm:
+  # build:
+  #   docker:
+  #     - image: circleci/node:7.10
+  #   working_directory: ~/repo
+  #   steps:
+  #     - checkout
+  #     - run: npm install
+  #     - run: npm test
+
+  build-job:
     docker:
-      - image: circleci/node:7.10
-    working_directory: ~/repo
+      # - image: microsoft/dotnet:2.2-sdk
+      - image: circleci/node:9
     steps:
       - checkout
       - run: npm install
       - run: npm test
-
-  build-job:
-    docker:
-      - image: microsoft/dotnet:2.2-sdk
-    steps:
-      - checkout
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
-      - run: dotnet build DataAccess/DataAccess.csproj
-      - run: dotnet build HumanitarianAssistance.Service/HumanitarianAssistance.Service.csproj
+      # - run: dotnet build DataAccess/DataAccess.csproj
+      # - run: dotnet build HumanitarianAssistance.Service/HumanitarianAssistance.Service.csproj
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
       - run: mkdir HumanitarianAssistance.WebApi/release/Documents
       - persist_to_workspace:
