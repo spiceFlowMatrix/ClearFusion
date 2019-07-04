@@ -3,7 +3,7 @@ jobs:
   build-job:
     docker:
       - image: mcr.microsoft.com/dotnet/core/sdk:2.2
-     steps:
+    steps:
       - checkout
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
