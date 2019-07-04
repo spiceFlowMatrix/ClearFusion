@@ -104,7 +104,6 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
 
   //#region "AddHiringRequest"
   AddHiringRequest(data: IHiringRequestDetailModel) {
-    debugger;
     console.log('projectId'
     + this.projectId);
     const project =  this.projectId;

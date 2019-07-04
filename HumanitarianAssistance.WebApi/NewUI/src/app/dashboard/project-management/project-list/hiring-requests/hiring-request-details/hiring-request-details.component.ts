@@ -519,7 +519,6 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region delete donar datail
   onCandidateDetailDelete(item: any) {
-    debugger;
     const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
       width: '300px',
       height: '250px',

@@ -1183,6 +1183,7 @@ export class CriteriaEvaluationComponent implements OnInit {
         this.AddEditFeasibilityCEForm(this.feasibilityForm);
       }
     }
+
   }
   onCostOfCompensationMoneyChange(ev, data: any) {
     // if (data != null && data != undefined && data != "" && data >= 5000) {
@@ -1227,7 +1228,6 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onFeasibleExpertDeployedChange(value) {
-    debugger;
     if (value.checked === true) {
       this.isFeasibilityExpert = true;
 
@@ -1239,7 +1239,6 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
   // add plus icon functionationality pending
   onExpertsChange(value) {
-    debugger;
     if (value.checked === true) {
       this.fesibilityExpert = criteriaEvaluationScores.feasibilityExpert_Yes;
     } else {
@@ -1816,7 +1815,6 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region Get Criteria evaluation by ProjectId Donor
   GetCriteraiEvaluationDetailById(ProjectId: number) {
-    debugger;
     this.criteriaEvaluationLoader = true;
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
@@ -2341,7 +2339,6 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region add edit feasibility form
   AddEditFeasibilityCEForm(model: any) {
-    debugger;
     if (model != null) {
       const obj: FeasibilityCEModel = {
         FeasibilityId: model.FeasibilityId,
@@ -2722,13 +2719,14 @@ console.log(this.totalScore);
       (this.feasibilityForm.EnoughTimeToPrepareProposal === true
         ? criteriaEvaluationScores.enoughTimeToPrepareproposal_Yes
         : criteriaEvaluationScores.enoughTimeToPrepareproposal_No) +
-      // Note:don't delete:condition for if the costGreaterThanBudget_Yes value is set to be 0
+      // Note: **don't delete:condition for if the costGreaterThanBudget_Yes value is set to be 0
       // ((this.feasibilityForm.IsCostGreaterthenBudget === false && this.feasibilityForm.IsCostGreaterthenBudget != null)
       // ? criteriaEvaluationScores.costGreaterThanBudget_No : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
 
-      // don't delete :condition for if the costGreaterThanBudget_Yes value is set to be -1
+      // Note: **don't delete :condition for if the costGreaterThanBudget_Yes value is set to be -1
       // (this.feasibilityForm.IsCostGreaterthenBudget === false
-      // ? criteriaEvaluationScores.costGreaterThanBudget_No : this.feasibilityForm.IsCostGreaterthenBudget === null ? 0 : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
+      // ? criteriaEvaluationScores.costGreaterThanBudget_No :
+      // this.feasibilityForm.IsCostGreaterthenBudget === null ? 0 : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
       (this.feasibilityForm.IsCostGreaterthenBudget === true
         ? criteriaEvaluationScores.costGreaterThanBudget_Yes : criteriaEvaluationScores.costGreaterThanBudget_No) +
 
@@ -3175,7 +3173,6 @@ console.log(this.totalScore);
 
   //#region onAddFeasibitlityExpertOther click
   onAddFeasibitlityExpertOther() {
-debugger;
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: 0,
       Name: '',
@@ -3192,7 +3189,6 @@ debugger;
   //#region  addFeasibilityExpert
 
   addFeasibilityExpert(data: IFeasibilityExpert) {
-    debugger;
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: data.ExpertOtherDetailId,
       Name: data.Name,
@@ -3227,7 +3223,6 @@ debugger;
 
   //#region onEditFeasibilityExpertEmit click
   onEditFeasibilityExpertEmit(value: IFeasibilityExpert) {
-    debugger;
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: value.ExpertOtherDetailId,
       Name: value.Name,
@@ -3241,7 +3236,6 @@ debugger;
 
   //#region editFeasibilityExpert
   editFeasibilityExpert(model: IFeasibilityExpert) {
-    debugger;
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: model.ExpertOtherDetailId,
       Name: model.Name,

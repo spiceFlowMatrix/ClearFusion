@@ -619,11 +619,12 @@
                                     feasibilityForm.CostOfCompensationMonth
                                   )
                                 " type="number" [formControl]="CostOfCompensation" />
-                              <!--
-                            <md-error>Please enter months value between 1 and 12</md-error>
-                          -->
+
+                                <mat-error *ngIf="CostOfCompensation.invalid">Please enter month's value between 1 to 12</mat-error>
                             </mat-form-field>
+
                           </td>
+
                         </tr>
                         <tr>
                           <td style="width:50%;">Money</td>
