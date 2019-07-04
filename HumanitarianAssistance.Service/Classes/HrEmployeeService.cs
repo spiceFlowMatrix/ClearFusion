@@ -1406,8 +1406,8 @@ namespace HumanitarianAssistance.Service.Classes
                     //AttendanceTypeId = x.AttendanceTypeId,
                     OverTimeHours = x.HoverTimeHours,
                     text = x.AttendanceTypeId == (int)AttendanceType.P ? "P" : x.AttendanceTypeId == (int)AttendanceType.A ? "A" : x.AttendanceTypeId == (int)AttendanceType.L ? "L" : "",
-                    startDate = x.AttendanceTypeId == (int)AttendanceType.P ? x.InTime?.ToString() : x.InTime.Value.ToShortDateString(),
-                    endDate = x.AttendanceTypeId == (int)AttendanceType.P ? x.OutTime.ToString() : x.OutTime?.ToShortDateString()
+                    startDate = x.AttendanceTypeId == (int)AttendanceType.P ? x.InTime?.ToString() : x.InTime.Value.ToString("MM/dd/yyyy h:mm tt"),
+                    endDate = x.AttendanceTypeId == (int)AttendanceType.P ? x.OutTime.ToString() : x.OutTime?.ToString("MM/dd/yyyy h:mm tt")
                 }).ToList();
 
                 response.data.DisEmployeeAttendanceList = attendancelist;
@@ -1420,8 +1420,8 @@ namespace HumanitarianAssistance.Service.Classes
                     obj.employeeID = employeeFilter.EmployeeId;
                     obj.OverTimeHours = 0;
                     obj.text = "H";
-                    obj.startDate = hlist.Date.ToString();
-                    obj.endDate = hlist.Date.ToString();
+                    obj.startDate = hlist.Date.ToString("MM/dd/yyyy h:mm tt");
+                    obj.endDate = hlist.Date.ToString("MM/dd/yyyy h:mm tt");
                     response.data.DisEmployeeAttendanceList.Add(obj);
                 }
 
@@ -3011,7 +3011,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var recordExists = await _uow.ContractTypeContentRepository.FindAsync(x => x.OfficeId == model.OfficeId && x.EmployeeContractTypeId == model.EmployeeContractTypeId);
+                var recordExists = await _uow.ContractTypeContentRepository.FindAsync(x => x.EmployeeContractTypeId == model.EmployeeContractTypeId);
                 if (recordExists == null)
                 {
                     ContractTypeContent obj = _mapper.Map<ContractTypeContent>(model);
@@ -3041,7 +3041,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                response.data.ContractTypeContentList = await _uow.GetDbContext().ContractTypeContent.Where(x => x.OfficeId == officeId && x.EmployeeContractTypeId == EmployeeContractTypeId).FirstOrDefaultAsync();
+                response.data.ContractTypeContentList = await _uow.GetDbContext().ContractTypeContent.Where(x => x.EmployeeContractTypeId == EmployeeContractTypeId).FirstOrDefaultAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
