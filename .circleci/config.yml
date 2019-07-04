@@ -3,31 +3,19 @@ jobs:
   build-job:
     docker:
       - image: microsoft/dotnet:2.2-sdk
-      # - image: circleci/node:7.10
-      - image: circleci/node:chakracore-8.11-browsers-legacy
+      - image: circleci/node:7.10
     steps:
+      - run: sudo npm cache clean -f
+      - run: sudo npm install -g n
+      - run: sudo n stable
+      - run: node -v
+      - run: npm -v
+      - run: sudo npm install --unsafe-perm -g @angular/cli
+
       - checkout
-      - run: 
-          name: "Update Node.js and npm"
-          command: |
-            curl -sSL "https://nodejs.org/dist/v11.10.0/node-v11.10.0-linux-x64.tar.xz" | 
-            sudo tar --strip-components=2 -xJ -C /usr/local/bin/ node-v11.10.0-linux-x64/bin/node curl https://www.npmjs.com/install.sh | 
-            sudo bash
-      - run:
-          name: Check current version of node
-          command: node -v
-      # - run: apt-get install git-core curl build-essential openssl libssl-dev \
-      # - run:  git clone https://nodejs.org/
-      # - run:  cd node \
-      # - run:  ./configure \
-      # - run:  make \
-      # - run:  sudo make install
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
-      # - run: dotnet build HumanitarianAssistance.Entities/HumanitarianAssistance.ViewModels.csproj
-      # - run: dotnet build HumanitarianAssistance.Common/HumanitarianAssistance.Common.csproj
       - run: dotnet build DataAccess/DataAccess.csproj
       - run: dotnet build HumanitarianAssistance.Service/HumanitarianAssistance.Service.csproj
-      # - run: dotnet build HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
       - run: mkdir HumanitarianAssistance.WebApi/release/Documents
       - persist_to_workspace:
