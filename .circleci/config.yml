@@ -1,17 +1,18 @@
 version: 2.1
 jobs:
-  build-job:
+  build-npm:
     docker:
       - image: circleci/node:7.10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm test
+
+  build-job:
+    docker:
       - image: microsoft/dotnet:2.2-sdk
     steps:
-      - run: npm cache clean -f
-      - run: npm install -g n
-      - run: n stable
-      - run: node -v
-      - run: npm -v
-      - run: npm install --unsafe-perm -g @angular/cli
-
       - checkout
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       - run: dotnet build DataAccess/DataAccess.csproj
