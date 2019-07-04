@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   build-job:
     docker:
-      - image: microsoft/dotnet:2.2-sdk
+      # - image: microsoft/dotnet:2.2-sdk
       - image: circleci/node:7.10
     steps:
       - run: npm cache clean -f
