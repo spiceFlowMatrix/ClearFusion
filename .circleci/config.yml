@@ -4,10 +4,16 @@ jobs:
     docker:
       - image: microsoft/dotnet:2.2-sdk
       - image: circleci/node:7.10
-      - image: trion/ng-cli-karma
     steps:
       - checkout
-      - run: npm install
+      - run: 
+          name: "Update Node.js and npm"
+          command: |
+            curl -sSL "https://nodejs.org/dist/v11.10.0/node-v11.10.0-linux-x64.tar.xz" | sudo tar --strip-components=2 -xJ -C /usr/local/bin/ node-v11.10.0-linux-x64/bin/node
+            curl https://www.npmjs.com/install.sh | sudo bash
+      - run:
+          name: Check current version of node
+          command: node -v
       # - run: apt-get install git-core curl build-essential openssl libssl-dev \
       # - run:  git clone https://nodejs.org/
       # - run:  cd node \
