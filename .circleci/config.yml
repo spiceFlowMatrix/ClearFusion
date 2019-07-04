@@ -14,9 +14,14 @@ jobs:
       - image: microsoft/dotnet:2.2-sdk
     steps:
       - checkout
+      # - run: 
+      #     name: install nodejs
+      #     command: apt-get install nodejs npm
       - run: 
           name: install nodejs
-          command: apt-get install nodejs npm
+          command: |
+              curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+              sudo apt-get install -y nodejs
       - run: yum install nodejs npm
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
