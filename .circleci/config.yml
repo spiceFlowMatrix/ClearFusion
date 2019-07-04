@@ -18,8 +18,8 @@ jobs:
       #     name: install nodejs
       #     command: apt-get install nodejs npm
       - run: 
-          name: install nodejs
-          command: curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+          name: install sudo
+          command: apt-get install sudo -y
       - run: sudo apt-get install -y nodejs
       - run: yum install nodejs npm
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
