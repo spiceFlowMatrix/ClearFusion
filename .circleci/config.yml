@@ -16,11 +16,9 @@ jobs:
       - checkout
       - run: 
           name: install nodejs
-          command: sudo apt-get install nodejs npm
-      - run: sudo yum install nodejs npm
+          command: apt-get install nodejs npm
+      - run: yum install nodejs npm
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
-      # - run: dotnet build DataAccess/DataAccess.csproj
-      # - run: dotnet build HumanitarianAssistance.Service/HumanitarianAssistance.Service.csproj
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
       - run: mkdir HumanitarianAssistance.WebApi/release/Documents
       - persist_to_workspace:
