@@ -21,9 +21,8 @@ jobs:
       #     command: apt-get install nodejs npm
       - run: 
           name: install sudo
-          command: curl -sL https://deb.nodesource.com/setup_10.x | bash - \ 
-	            && apt update \
-	            && apt install -y nodejs
+          command: "curl -sL https://deb.nodesource.com/setup_10.x | bash -  && apt update  && apt install -y nodejs"
+         
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
       - run: mkdir HumanitarianAssistance.WebApi/release/Documents
