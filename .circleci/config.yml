@@ -6,8 +6,8 @@ jobs:
     steps:
       - checkout
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
-      - run: dotnet build HumanitarianAssistance.Entities/HumanitarianAssistance.ViewModels.csproj
-      - run: dotnet build HumanitarianAssistance.Common/HumanitarianAssistance.Common.csproj
+      # - run: dotnet build HumanitarianAssistance.Entities/HumanitarianAssistance.ViewModels.csproj
+      # - run: dotnet build HumanitarianAssistance.Common/HumanitarianAssistance.Common.csproj
       - run: dotnet build DataAccess/DataAccess.csproj
       - run: dotnet build HumanitarianAssistance.Service/HumanitarianAssistance.Service.csproj
       # - run: dotnet build HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
