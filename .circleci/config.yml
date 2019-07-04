@@ -3,14 +3,17 @@ jobs:
   build-job:
     docker:
       - image: microsoft/dotnet:2.2-sdk
+      - image: circleci/node:7.10
     steps:
       - checkout
-      - run: apt-get install git-core curl build-essential openssl libssl-dev \
-      - run:  git clone https://github.com/nodejs/node.git \
-      - run:  cd node \
-      - run:  ./configure \
-      - run:  make \
-      - run:  sudo make install
+      - run: node --version
+      - run: npm install
+      # - run: apt-get install git-core curl build-essential openssl libssl-dev \
+      # - run:  git clone https://nodejs.org/
+      # - run:  cd node \
+      # - run:  ./configure \
+      # - run:  make \
+      # - run:  sudo make install
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       # - run: dotnet build HumanitarianAssistance.Entities/HumanitarianAssistance.ViewModels.csproj
       # - run: dotnet build HumanitarianAssistance.Common/HumanitarianAssistance.Common.csproj
