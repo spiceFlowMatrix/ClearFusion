@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: microsoft/dotnet:2.2-sdk
       - image: circleci/node:7.10
-    working_directory: ~/repo
+      - image: trion/ng-cli-karma
     steps:
       - checkout
       - run: npm install
