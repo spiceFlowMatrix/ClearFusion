@@ -6,7 +6,6 @@ jobs:
       - image: circleci/node:7.10
     steps:
       - checkout
-      - run: node --version
       - run: npm install
       # - run: apt-get install git-core curl build-essential openssl libssl-dev \
       # - run:  git clone https://nodejs.org/
