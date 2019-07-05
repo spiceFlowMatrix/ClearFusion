@@ -22,7 +22,7 @@ using DataAccess;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 
-namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
+namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 {
     [Produces("application/json")]
     [Route("api/Account/[Action]")]

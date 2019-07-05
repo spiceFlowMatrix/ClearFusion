@@ -3,7 +3,7 @@ using DataAccess.DbEntities;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Entities;
 using HumanitarianAssistance.Service.interfaces;
-using HumanitarianAssistance.WebAPI.Extensions;
+using HumanitarianAssistance.WebApi.Extensions;
 using Microsoft.AspNetCore.Identity;
 //using Microsoft.AspNetCore.WebSockets.Internal;
 using Microsoft.Extensions.Options;
@@ -15,7 +15,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace HumanitarianAssistance.WebAPI.Auth
+namespace HumanitarianAssistance.WebApi.Auth
 {
     public class JwtFactory : IJwtFactory
     {

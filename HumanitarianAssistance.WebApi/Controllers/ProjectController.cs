@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace HumanitarianAssistance.WebAPI.Controllers
+namespace HumanitarianAssistance.WebApi.Controllers
 {
   [Produces("application/json")]
   [Route("api/Project/[Action]")]

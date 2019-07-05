@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HumanitarianAssistance.WebAPI.Controllers.Project
+namespace HumanitarianAssistance.WebApi.Controllers.Project
 {
     [Produces("application/json")]
     [Route("api/HiringRequest/[Action]")]
