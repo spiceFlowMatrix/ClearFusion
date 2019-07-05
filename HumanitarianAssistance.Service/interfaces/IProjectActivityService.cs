@@ -20,7 +20,7 @@ namespace HumanitarianAssistance.Service.interfaces
         //Task<APIResponse> EndProjectActivity(long activityId, string UserId);
         //Task<APIResponse> MarkImplementationAsCompleted(long activityId, string UserId);
         //Task<APIResponse> MarkMonitoringAsCompleted(long activityId, string UserId);
-        Task<APIResponse> AllProjectActivityStatus(long projectId);
+        APIResponse AllProjectActivityStatus(long projectId);
         Task<APIResponse> UploadProjectActivityDocumentFile(IFormFile file, string UserId, long activityId, string fileName, string logginUserEmailId, string ext, int statusID, long monitoringId);
         Task<APIResponse> GetUploadedDocument(long activityId);
         Task<APIResponse> GetUploadedDocuments(ProjectActivityDocumentViewModel model);

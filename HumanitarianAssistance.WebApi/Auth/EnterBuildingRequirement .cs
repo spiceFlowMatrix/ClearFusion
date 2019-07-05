@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace HumanitarianAssistance.WebAPI.Auth
+namespace HumanitarianAssistance.WebApi.Auth
 {
   public class EnterBuildingRequirement : IAuthorizationRequirement
   {
