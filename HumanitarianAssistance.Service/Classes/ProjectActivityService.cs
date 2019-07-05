@@ -508,7 +508,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                   .MaxAsync(x => x.PlannedEndDate);
         }
 
-        public async Task<APIResponse> AllProjectActivityStatus(long projectId)
+        public APIResponse AllProjectActivityStatus(long projectId)
         {
             APIResponse response = new APIResponse();
             try

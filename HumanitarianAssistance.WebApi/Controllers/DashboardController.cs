@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using HumanitarianAssistance.Service.APIResponses;
 
-namespace HumanitarianAssistance.WebAPI.Controllers
+namespace HumanitarianAssistance.WebApi.Controllers
 {
   [Produces("application/json")]
   [Route("api/Dashboard/[Action]")]

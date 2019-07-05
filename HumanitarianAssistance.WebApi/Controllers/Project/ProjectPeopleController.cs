@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace HumanitarianAssistance.WebAPI.Controllers.Project
+namespace HumanitarianAssistance.WebApi.Controllers.Project
 {
 
   [Produces("application/json")]

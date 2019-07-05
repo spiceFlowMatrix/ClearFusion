@@ -13,11 +13,11 @@ using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.Service.interfaces.Marketing;
 using HumanitarianAssistance.Service.interfaces.ProjectManagement;
-using HumanitarianAssistance.WebAPI;
-using HumanitarianAssistance.WebAPI.Auth;
-using HumanitarianAssistance.WebAPI.ChaHub;
-using HumanitarianAssistance.WebAPI.Extensions;
-using HumanitarianAssistance.WebAPI.Filter;
+using HumanitarianAssistance.WebApi;
+using HumanitarianAssistance.WebApi.Auth;
+using HumanitarianAssistance.WebApi.ChaHub;
+using HumanitarianAssistance.WebApi.Extensions;
+using HumanitarianAssistance.WebApi.Filter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -83,6 +83,8 @@ namespace HumanitarianAssistance.WebApi
             string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
 
             Console.WriteLine("Connection string: {0}\n", connectionString);
+
+
 
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
@@ -229,6 +231,12 @@ namespace HumanitarianAssistance.WebApi
                 });
             });
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+
+
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             services.AddMvc()
                 .AddJsonOptions(config =>
                 {
@@ -246,8 +254,6 @@ namespace HumanitarianAssistance.WebApi
 
 
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSwaggerGen(p =>
             {

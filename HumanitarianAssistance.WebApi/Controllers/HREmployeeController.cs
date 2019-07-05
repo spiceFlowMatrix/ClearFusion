@@ -17,7 +17,7 @@ using System.Security.Claims;
 using HumanitarianAssistance.ViewModels;
 
 
-namespace HumanitarianAssistance.WebAPI.Controllers
+namespace HumanitarianAssistance.WebApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/HREmployee/[Action]")]

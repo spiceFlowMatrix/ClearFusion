@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace HumanitarianAssistance.WebAPI.Controllers
+namespace HumanitarianAssistance.WebApi.Controllers
 {
   [Produces("application/json")]
   [Route("api/Project/[Action]")]
@@ -853,7 +853,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         string logginUserEmailId = user.Email;
         var id = user.Id;
-        apiRespone = _iProject.AddEditProjectProposalDetail(model, id, logginUserEmailId);
+        apiRespone =await _iProject.AddEditProjectProposalDetail(model, id, logginUserEmailId);
       }
       return apiRespone;
     }
@@ -1623,10 +1623,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    public async Task<APIResponse> AllActivityStatus([FromBody]long projectId)
+    public APIResponse AllActivityStatus([FromBody]long projectId)
     {
       APIResponse response = new APIResponse();
-      response = await _iActivity.AllProjectActivityStatus(projectId);
+      response = _iActivity.AllProjectActivityStatus(projectId);
       return response;
     }
     #endregion

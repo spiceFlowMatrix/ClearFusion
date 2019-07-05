@@ -21,6 +21,7 @@ namespace HumanitarianAssistance.Service.interfaces.ProjectManagement
         Task<APIResponse> EditHiringRequestCandidate(ProjectHiringCandidateDetailModel model, string userId);
         Task<APIResponse> HiringRequestSelectCandidate(HiringSelectCandidateModel model, string userId);
         Task<APIResponse> CompleteHiringRequest(long hiringRequestId, string userId);
+        Task<APIResponse> DeleteCandidateDetail(ProjectHiringCandidateDetailModel model, string userId);
 
 
 

@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
+namespace HumanitarianAssistance.WebApi.Controllers.Marketing
 {
   [Produces("application/json")]
   [Route("api/Producer/[Action]")]

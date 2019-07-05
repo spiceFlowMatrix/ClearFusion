@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
+namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 {
     [Produces("application/json")]
     [Route("api/AccountReports/[Action]")]

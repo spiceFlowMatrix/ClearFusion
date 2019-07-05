@@ -125,9 +125,13 @@
                     <td width="15%">Code/Id</td>
                     <td width="20%">Full Name</td>
                     <td width="15%">Gender</td>
-                    <td width="20%">Interview </td>
-                    <td width="15%">Current Status</td>
-                    <td width="15%" class="text-right"></td>
+                    <td width="25%">Interview </td>
+                    <td width="25%">Current Status</td>
+                    <td width="20%" class="text-right"></td>
+                    <td width="12%" class="text-center"></td>
+
+                    <td width="1%" class="text-center"></td>
+
                   </tr>
                   <tr *ngFor="let item of candidateList">
                     <td width="1%">
@@ -135,7 +139,7 @@
                     </td>
                     <td width="15%">{{ item.EmployeeID }}/{{ item.EmployeeCode }} </td>
                     <td width="20%">{{ item.EmployeeName }}</td>
-                    <td width="20%">{{ item.Gender }} </td>
+                    <td width="15%">{{ item.Gender }} </td>
                     <td width="25%"> <span
                         *ngIf="item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == false">None</span>
                       <a *ngIf="(item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate"
@@ -234,6 +238,15 @@
   </ng-template>-->
 
                     </td>
+
+                    <td width="12%" class="text-center" text-align="left">
+                        <button mat-icon-button (click)="onCandidateDetailDelete(item)"
+                          >
+                          <mat-icon aria-label="delete">delete</mat-icon>
+                        </button>
+                      </td>
+
+                      <td width="1%" class="text-center"></td>
                   </tr>
                 </tbody>
               </table>
