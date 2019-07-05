@@ -1,17 +1,6 @@
 version: 2.1
 jobs:
   build-job:
-
-    # docker:
-    #   - image: circleci/node:7.10
-    # steps:
-    #   - run: sudo npm cache clean -f
-    #   - run: sudo npm install -g n
-    #   - run: sudo n stable
-    #   - run: node -v
-    #   - run: npm -v
-    #   - run: sudo npm install -g @angular/cli
-
     docker:
       - image: microsoft/dotnet:2.2-sdk
     steps:
