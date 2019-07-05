@@ -189,7 +189,7 @@ export class EmployeesComponent implements OnInit {
     this.addNewDocument = {
       DocumentName: '',
       DocumentFilePath: '',
-      DocumentDate: '', 
+      DocumentDate: '',
       DocumentType: ''
     };
 
