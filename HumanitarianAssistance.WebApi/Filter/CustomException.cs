@@ -12,7 +12,7 @@ using System;
 using System.Net;
 using System.Security.Claims;
 
-namespace HumanitarianAssistance.WebAPI.Filter
+namespace HumanitarianAssistance.WebApi.Filter
 {
   
   public class CustomException : IExceptionFilter

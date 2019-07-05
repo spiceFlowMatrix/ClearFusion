@@ -10,7 +10,7 @@ using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 using HumanitarianAssistance.ViewModels.Models;
 
-namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
+namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 {
     [Produces("application/json")]
     [Route("api/AccountReports/[Action]")]
