@@ -16,12 +16,18 @@
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
+
+    <!--swagger doc-->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.7" />
+
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 
@@ -54,6 +60,7 @@
     </Exec>
     <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm install" />
   </Target>
 
 
@@ -64,13 +71,17 @@
     </Exec>
     <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm install" />
   </Target>
 
 
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-  
+    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm run build -- --prod" />
+    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="$(SpaRootNewUI)dist\**; $(SpaRootNewUI)dist-server\**" />
@@ -82,7 +93,10 @@
     </ItemGroup>
 
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-   
+    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng npm run build -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="$(SpaRootOldUI)dist\**; $(SpaRootOldUI)dist-server\**" />

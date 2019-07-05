@@ -2959,27 +2959,29 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
 
-        public APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId)
+        public async Task<APIResponse> AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId)
         {
             APIResponse response = new APIResponse();
             ProjectProposalDetail details = new ProjectProposalDetail();
             try
             {
-                details = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                details = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
 
                 if (details == null)
                 {
-                    details = new ProjectProposalDetail();
-                    details.ProposalDueDate = model.ProposalDueDate;
-                    details.ProjectAssignTo = model.UserId;
-                    details.IsProposalAccept = model.IsProposalAccept;
-                    details.ProjectId = model.ProjectId.Value;
-                    details.CurrencyId = model.CurrencyId;
-                    details.UserId = model.UserId;
-                    details.IsDeleted = false;
-                    details.CreatedById = UserId;
-                    details.CreatedDate = DateTime.UtcNow;
-                    _uow.ProjectProposalDetailRepository.Add(details);
+                    details = new ProjectProposalDetail
+                    {
+                        ProposalDueDate = model.ProposalDueDate,
+                        ProjectAssignTo = model.UserId,
+                        IsProposalAccept = model.IsProposalAccept,
+                        ProjectId = model.ProjectId.Value,
+                        CurrencyId = model.CurrencyId,
+                        UserId = model.UserId,
+                        IsDeleted = false,
+                        CreatedById = UserId,
+                        CreatedDate = DateTime.UtcNow
+                    };
+                   await _uow.ProjectProposalDetailRepository.AddAsyn(details);
                 }
                 else
                 {
@@ -2992,20 +2994,20 @@ namespace HumanitarianAssistance.Service.Classes
                     details.UserId = model.UserId;
                     details.ModifiedById = UserId;
                     details.ModifiedDate = DateTime.UtcNow;
-                    _uow.ProjectProposalDetailRepository.Update(details, details.ProjectProposaldetailId);
-                    _uow.GetDbContext().SaveChanges();
+                   await _uow.ProjectProposalDetailRepository.UpdateAsyn(details, details.ProjectProposaldetailId);
+                    await _uow.GetDbContext().SaveChangesAsync();
 
 
-                    //check proposal accept then false is approved
+                    // Note: check proposal is accepted then make false entry for isApproved
                     if (details.IsProposalAccept == true)
                     {
-                        ApproveProjectDetails obj = _uow.GetDbContext().ApproveProjectDetails.FirstOrDefault(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                        ApproveProjectDetails obj = await _uow.GetDbContext().ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId && 
+                                                                                                                            x.IsDeleted == false);
                         if (obj != null)
                         {
                             obj.IsApproved = obj.IsApproved == false ? null : obj.IsApproved;
                             _uow.GetDbContext().ApproveProjectDetails.Update(obj);
-                            _uow.GetDbContext().SaveChanges();
-
+                           await _uow.GetDbContext().SaveChangesAsync();
                         }
 
                     }

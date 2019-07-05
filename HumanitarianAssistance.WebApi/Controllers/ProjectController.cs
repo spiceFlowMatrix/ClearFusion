@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace HumanitarianAssistance.WebAPI.Controllers
+namespace HumanitarianAssistance.WebApi.Controllers
 {
   [Produces("application/json")]
   [Route("api/Project/[Action]")]
@@ -334,12 +334,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiRespone;
     }
-    /// <summary>
-    /// Delete Created Project 
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
+        /// <summary>
+        /// Delete Created Project 
+        /// </summary>
+        /// <param name="ProjectId"></param>
+        /// <returns></returns>
+        [HttpPost]
     public async Task<APIResponse> DeleteProjectDetail([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
@@ -853,7 +853,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         string logginUserEmailId = user.Email;
         var id = user.Id;
-        apiRespone = _iProject.AddEditProjectProposalDetail(model, id, logginUserEmailId);
+        apiRespone =await _iProject.AddEditProjectProposalDetail(model, id, logginUserEmailId);
       }
       return apiRespone;
     }
@@ -1392,12 +1392,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
-    /// <summary>
-    /// delete selected projectJob
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
+        /// <summary>
+        /// delete selected projectJob
+        /// </summary>
+        /// <param name="jobId"></param>
+        /// <returns></returns>
+        [HttpPost]
     public async Task<APIResponse> DeleteProjectJob([FromBody]long jobId)
     {
       APIResponse apiRespone = null;

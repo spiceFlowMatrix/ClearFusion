@@ -10,15 +10,10 @@
                   <mat-spinner [diameter]="20"></mat-spinner>
                 </a>
                 <ng-template #stopSubmitProposalLoder>
-                  <!-- <a mat-href matTooltip="Please Start Proposal" class="grey_color pull-right"
-                  *ngIf="!IsproposalStart">
-                  <i class="fa fa-check  pull-right"></i>
-                </a> -->
                   <button mat-icon-button *ngIf="!IsproposalStart; else proposalStartedTemplate" class="pull-right"
                     matTooltip="Please Start Proposal" matTooltipPosition="left">
                     <mat-icon aria-label="approve" class="grey_color">check</mat-icon>
                   </button>
-
                   <ng-template #proposalStartedTemplate>
                     <button mat-icon-button *ngIf="IsProposalSubmit == null; else proposalSubmitedTemplate"
                       class="pull-right" (click)="ProposalDetailsChange('proposalAccept',true)"

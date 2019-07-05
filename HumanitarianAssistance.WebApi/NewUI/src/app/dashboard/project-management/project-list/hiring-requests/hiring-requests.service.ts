@@ -4,7 +4,9 @@ import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { map } from 'rxjs/operators';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { IHiringRequestDetailModel, ProjectHiringRequestFilterModel, IHiringReuestCandidateModel, IReuestedCandidateDetailModel, IitervireCandidateModel, ISelectedCandidateModel, CandidateDetailModel } from './models/hiring-requests-model';
+import { IHiringRequestDetailModel, ProjectHiringRequestFilterModel, IHiringReuestCandidateModel,
+IReuestedCandidateDetailModel, IitervireCandidateModel,
+ ISelectedCandidateModel, CandidateDetailModel } from './models/hiring-requests-model';
 
 @Injectable({
   providedIn: 'root'
@@ -253,7 +255,7 @@ GetAllEmloyeeContractList(): any {
 //#endregion
 
 
-EditHirinigRequestCandidateDEtail(data: IHiringReuestCandidateModel){
+EditHirinigRequestCandidateDEtail(data: IHiringReuestCandidateModel) {
   return this.globalService
   .post(
     this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_EditHiringRequestCandidate,
@@ -271,7 +273,7 @@ EditHirinigRequestCandidateDEtail(data: IHiringReuestCandidateModel){
   );
 }
 //#region edit selected candidate detail
-EditSelectedCandidateDEtail(data: ISelectedCandidateModel){
+EditSelectedCandidateDEtail(data: ISelectedCandidateModel) {
   return this.globalService
   .post(
     this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_HiringRequestSelectCandidate,
@@ -330,7 +332,7 @@ AddInterViewCandidateDetail(data: IitervireCandidateModel) {
 }
 //#endregion
 //#region edit selected candidate detail
-IsCompltedeHrDEtail(hiringRequestId: number ){
+IsCompltedeHrDEtail(hiringRequestId: number ) {
   return this.globalService
   .post(
     this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_CompleteHiringRequest,

@@ -263,7 +263,7 @@ export class TrailBalanceComponent implements OnInit {
     this.accountservice
       .GetAllTrailBalance(
         this.setting.getBaseUrl() +
-          GLOBAL.API_AccountReports_GetAllTrailBalanceDetails,
+          GLOBAL.API_AccountReports_GetTrialBalanceReport,
         trialBalanceFilter
       )
       .subscribe(
@@ -272,10 +272,10 @@ export class TrailBalanceComponent implements OnInit {
 
           if (
             data.StatusCode === 200 &&
-            data.data.TrailBlanceList != null &&
-            data.data.TrailBlanceList.length > 0
+            data.data.TrialBalanceList != null &&
+            data.data.TrialBalanceList.length > 0
           ) {
-            data.data.TrailBlanceList.forEach(element => {
+            data.data.TrialBalanceList.forEach(element => {
               this.trailBalanceData.push(element);
             });
 
