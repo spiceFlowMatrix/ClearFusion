@@ -180,7 +180,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
             }
             catch (Exception exception)
             {
-
+                Console.WriteLine(exception.Message);
             }
             return identityResult.Succeeded;
         }
@@ -610,7 +610,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
             catch (Exception ex)
             {
                 response.StatusCode = 500;
-                response.Message = "There is server error";
+                response.Message = "There is server error "+ ex.Message;
             }
             return response;
         }
@@ -879,15 +879,6 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
                 var userid = user.Id;
                 response = await _ivoucherDetail.DeleteVoucherTransactions(Id, userid);
             }
-            return response;
-        }
-
-
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<APIResponse> GetAllVoucherTransactionDetailByBudgetLine(long projectId, long budgetLineId)
-        {
-            APIResponse response = await _ivoucherDetail.GetAllVoucherTransactionDetailByBudgetLine(projectId, budgetLineId);
             return response;
         }
 

@@ -48,7 +48,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<APIResponse> GetSignedURL([FromBody] DownloadObjectGCBucketModel model)
+    public APIResponse GetSignedURL([FromBody] DownloadObjectGCBucketModel model)
     {
       APIResponse apiresponse = new APIResponse();
       apiresponse = _iFileManagement.GetSignedURL(model);

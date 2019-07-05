@@ -208,11 +208,14 @@ export class GLOBAL {
   public static API_GainLossReport_AddExchangeGainLossVoucher = 'GainLossReport/AddExchangeGainLossVoucher';
   public static API_GainLossReport_DeleteGainLossVoucherTransaction = 'GainLossReport/DeleteGainLossVoucherTransaction';
 
+  // Financial Report
+  public static API_FinancialReport_GetExchangeGainLossReport = 'FinancialReport/GetExchangeGainLossReport';
+  public static API_FinancialReport_SaveGainLossAccountList = 'FinancialReport/SaveGainLossAccountList';
+  public static API_FinancialReport_GetDetailOfNotes = 'FinancialReport/GetDetailOfNotes';
 
-
-
-
-
+  // Voucher Summary Report
+  public static API_AccountReports_GetVoucherSummaryReportList = 'AccountReports/GetVoucherSummaryReportList';
+  public static API_AccountReports_GetVoucherTransactionList = 'AccountReports/GetVoucherTransactionList';
 
   public static API_Account_GetAllAccountFilter = 'Account/GetAllAccountFilter';
   public static API_Account_GetAllVoucherType = 'Account/GetAllVoucherType';
@@ -328,16 +331,6 @@ export class GLOBAL {
 
   //#endregion
 
-  //#region "FinancailReport"
-  public static API_FinancialReport_GetExchangeGainLossReport = 'FinancialReport/GetExchangeGainLossReport';
-  public static API_FinancialReport_SaveGainLossAccountList = 'FinancialReport/SaveGainLossAccountList';
-  public static API_FinancialReport_GetDetailOfNotes = 'FinancialReport/GetDetailOfNotes';
-  //#endregion
-
-  //#region "VoucherSummaryReport"
-  public static API_AccountReports_GetVoucherSummaryReportList = 'AccountReports/GetVoucherSummaryReportList';
-  public static API_AccountReports_GetVoucherTransactionList = 'AccountReports/GetVoucherTransactionList';
-  //#endregion
 
   //#region "ProjectCashFlow"
   public static API_Project_FilterProjectCashFlow = 'Project/FilterProjectCashFlow';

@@ -358,9 +358,8 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             {
                 var EmployeeDetailListData = await _uow.GetDbContext()
                                                                   .HiringRequestCandidates
-                                                                  .Where(x => x.HiringRequestId == model.HiringRequestId && x.IsDeleted == false)
-                                                                  .Include(e => e.EmployeeDetail)
-                                                                  .ThenInclude(x => x.EmployeeProfessionalDetail)
+                                                                  .Where(x => x.HiringRequestId == model.HiringRequestId && x.IsDeleted ==false)
+                                                                  //.Include(e => e.EmployeeDetail)
                                                                   .OrderByDescending(i => i.EmployeeID)
                                                                   .Select(x => new ProjectHiringCandidateDetailModel
                                                                   {

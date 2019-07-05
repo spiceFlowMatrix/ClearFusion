@@ -622,7 +622,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
             var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (user != null)
             {
-                response = await _iHREmployee.GetAllEmployeeProjects(employeeid);
+                response = _iHREmployee.GetAllEmployeeProjects(employeeid);
             }
             return response;
         }
@@ -634,7 +634,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
             var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (user != null)
             {
-                response = await _iHREmployee.AssignEmployeeProjectPercentage(model, user.Id);
+                response = _iHREmployee.AssignEmployeeProjectPercentage(model, user.Id);
             }
             return response;
         }

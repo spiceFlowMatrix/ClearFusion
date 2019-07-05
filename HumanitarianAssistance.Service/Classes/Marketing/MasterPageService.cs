@@ -958,7 +958,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                 var list = _uow.GetDbContext().UnitRates.Where(x => x.IsDeleted == false).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
                 response.data.UnitRates = list;
                 response.StatusCode = 200;
-                var unitRateList = (from ur in _uow.GetDbContext().UnitRates
+                var unitRateList = await (from ur in _uow.GetDbContext().UnitRates
                                     join at in _uow.GetDbContext().ActivityTypes on ur.ActivityTypeId equals at.ActivityTypeId
                                     where !ur.IsDeleted.Value && !at.IsDeleted.Value
                                     select (new UnitRateDetailsModel
@@ -973,7 +973,8 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                         QualityId = ur.QualityId,
                                         TimeCategoryId = ur.TimeCategoryId,
                                         MediaCategoryId = ur.MediaCategoryId
-                                    })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+                                    })).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToListAsync();
+
                 response.data.TotalCount = unitRateList.Count(x => x.IsDeleted == false);
                 response.Message = "Success";
             }
@@ -996,7 +997,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var unitRateDetails = (from ur in _uow.GetDbContext().UnitRates
+                var unitRateDetails = await (from ur in _uow.GetDbContext().UnitRates
                                        join at in _uow.GetDbContext().ActivityTypes on ur.ActivityTypeId equals at.ActivityTypeId
                                        where !ur.IsDeleted.Value && !at.IsDeleted.Value && ur.UnitRateId == id
                                        select (new UnitRateDetailsModel
@@ -1011,7 +1012,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
                                            QualityId = ur.QualityId,
                                            TimeCategoryId = ur.TimeCategoryId,
                                            MediaCategoryId = ur.MediaCategoryId
-                                       })).FirstOrDefault();
+                                       })).FirstOrDefaultAsync();
 
                 response.data.rateDetailsById = unitRateDetails;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -1487,7 +1488,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                    if (model.ChannelId == 0 || model.ChannelId == null)
+                    if (model.ChannelId == 0)
                     {
                         if (model.MediumId == null || model.MediumId == 0)
                         {

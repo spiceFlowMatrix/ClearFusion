@@ -30,9 +30,9 @@ namespace HumanitarianAssistance.WebAPI.Controllers.Accounting
         }
 
         [HttpGet]
-        public async Task<APIResponse> GetBalanceSheetReport()
+        public APIResponse GetBalanceSheetReport()
         {
-            APIResponse response = await _iaccountRecords.GetBalanceSheet();
+            APIResponse response = _iaccountRecords.GetBalanceSheet();
             return response;
         }
 

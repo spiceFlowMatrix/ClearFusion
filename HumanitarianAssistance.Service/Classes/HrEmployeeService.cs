@@ -303,7 +303,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var jobhiringdetailslist = _uow.GetDbContext().JobHiringDetails.Where(x => x.IsDeleted == false && x.OfficeId == OfficeId && x.IsActive == true).ToList();
+                var jobhiringdetailslist = await _uow.GetDbContext().JobHiringDetails.Where(x => x.IsDeleted == false && x.OfficeId == OfficeId && x.IsActive == true).ToListAsync();
 
                 List<JobHiringDetailsModel> JobHiringInfo = new List<JobHiringDetailsModel>();
 
@@ -1234,7 +1234,6 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                TimeSpan? OfficeHoursDifference;
                 TimeSpan? totalworkhour;
                 TimeSpan? totalovertime;
                 int? overtime = 0, workingHours = 0;
@@ -2300,28 +2299,6 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public double SalaryCalculate(double grossSalary, double exchangeRate)
-        {
-            double salaryTax = 0;
-            if (grossSalary < 5000)
-            {
-                salaryTax = 0;
-            }
-            else if (grossSalary >= 5000 && grossSalary < 12500)
-            {
-                salaryTax = (grossSalary * exchangeRate - 5000) * 2 / 100;
-            }
-            else if (grossSalary >= 12500 && grossSalary < 100000)
-            {
-                salaryTax = (((grossSalary * exchangeRate - 12500) * 10 / 100) + 150) / exchangeRate;
-            }
-            else
-            {
-                salaryTax = ((((grossSalary * exchangeRate) - 100000) * 20 / 100) + 8900) / exchangeRate;
-            }
-            return salaryTax;
-        }
-
         public async Task<APIResponse> AddHolidayDetails(HolidayDetailsModel model)
         {
             APIResponse response = new APIResponse();
@@ -2961,7 +2938,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllEmployeeProjects(int EmployeeId)
+        public APIResponse GetAllEmployeeProjects(int EmployeeId)
         {
             APIResponse response = new APIResponse();
             try
@@ -2987,7 +2964,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> AssignEmployeeProjectPercentage(List<EmployeeProjectModel> model, string UserId)
+        public APIResponse AssignEmployeeProjectPercentage(List<EmployeeProjectModel> model, string UserId)
         {
             APIResponse response = new APIResponse();
             try

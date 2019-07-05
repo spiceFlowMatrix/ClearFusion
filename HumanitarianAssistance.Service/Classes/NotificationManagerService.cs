@@ -60,7 +60,9 @@ namespace HumanitarianAssistance.Service.Classes
         {
             APIResponse response = new APIResponse();
 
-            response.data.notificationIsReadCount = _uow.LoggerDetailsRepository.FindAll(x => x.IsRead == false).Count;
+            var item = await _uow.LoggerDetailsRepository.FindAllAsync(x => x.IsRead == false);
+
+            response.data.notificationIsReadCount = item.Count;
             response.StatusCode = StaticResource.successStatusCode;
             response.Message = "Success";
 

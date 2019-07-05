@@ -632,7 +632,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetSavedExchangeRates(ExchangeRateVerificationFilter filter)
+        public APIResponse GetSavedExchangeRates(ExchangeRateVerificationFilter filter)
         {
             APIResponse response = new APIResponse();
 

@@ -1720,7 +1720,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         string logginUserEmailId = user.Email;
         var userId = user.Id;
-        apiResponse = await _iActivity.UploadFileDemo(fileData, userId, logginUserEmailId);
+        apiResponse =  _iActivity.UploadFileDemo(fileData, userId, logginUserEmailId);
       }
       return apiResponse;
     }

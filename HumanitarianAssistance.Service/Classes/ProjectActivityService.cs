@@ -709,7 +709,7 @@ namespace HumanitarianAssistance.Service.Classes
         /// <param name="userId"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
-        public async Task<APIResponse> UploadFileDemo(IFormFile filesData, string userId, string userName)
+        public APIResponse UploadFileDemo(IFormFile filesData, string userId, string userName)
         {
             APIResponse apiResponse = new APIResponse();
             try
@@ -1348,47 +1348,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
-
-        public async Task<APIResponse> GetProjectActivityDetailList(int parentId)
-
-        {
-
-            APIResponse response = new APIResponse();
-            try
-            {
-                var projectActivityDetails = await _uow.GetDbContext().ProjectActivityDetail
-                                          .Include(p => p.ProjectSubActivityList)
-                                          .FirstOrDefaultAsync(v => v.IsDeleted == false &&
-                                                      v.ActivityId == parentId
-                                          );
-
-                List<ProjectSubActivityListModel> activityDetaillist = new List<ProjectSubActivityListModel>();
-
-                activityDetaillist = projectActivityDetails.ProjectSubActivityList.Select(b => new ProjectSubActivityListModel
-                {
-                    ActivityId = b.ActivityId,
-                    BudgetLineId = b.BudgetLineId,
-                    EmployeeID = b.EmployeeID,
-                    PlannedStartDate = b.PlannedStartDate,
-                    PlannedEndDate = b.PlannedEndDate,
-                    Recurring = b.Recurring,
-                    RecurrinTypeId = b.RecurrinTypeId,
-                    IsCompleted = b.IsCompleted
-                }).OrderByDescending(x => x.ActivityId)
-                  .ToList();
-                response.data.ProjectSubActivityListModel = activityDetaillist;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-
-
-        }
 
         #region "Project SubActivity Details "
 

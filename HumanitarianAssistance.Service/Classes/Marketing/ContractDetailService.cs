@@ -32,15 +32,16 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var contracts = (from j in _uow.GetDbContext().ContractDetails
+                var contracts =  (from j in _uow.GetDbContext().ContractDetails
                                  join jp in _uow.GetDbContext().ClientDetails on j.ClientId equals jp.ClientId
                                  where !j.IsDeleted.Value && !jp.IsDeleted.Value && j.ClientId == model
-                                 select (new ContractByClient
+                                 select new ContractByClient
                                  {
                                      ClientId = jp.ClientId,
                                      ClientName = jp.ClientName,
                                      ContractId = j.ContractId
-                                 })).ToList();
+                                 }).ToList();
+
                 response.data.ContractByClientList = contracts;
                 response.StatusCode = 200;
                 response.Message = "Success";
@@ -253,9 +254,10 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
         public async Task<APIResponse> GetContractsPaginatedList(ContractPaginationModel model, string UserId)
         {
             APIResponse response = new APIResponse();
+
             try
             {
-                var list = _uow.GetDbContext().ContractDetails.Where(x => x.IsDeleted == false).Skip((model.pageSize * model.pageIndex)).Take(model.pageSize).ToList();
+                var list = _uow.GetDbContext().ContractDetails.Where(x => x.IsDeleted == false).Skip(model.pageSize * model.pageIndex).Take(model.pageSize).ToList();
                 response.data.ContractDetails = list;
                 response.StatusCode = 200;
                 response.data.jobListTotalCount = _uow.GetDbContext().ContractDetails.Count(x => x.IsDeleted == false);
@@ -468,7 +470,7 @@ namespace HumanitarianAssistance.Service.Classes.Marketing
             APIResponse response = new APIResponse();
             try
             {
-                var contractList = _uow.GetDbContext().ContractDetails.Where(x => x.IsDeleted == false).ToList();
+                var contractList = await _uow.ContractDetailsRepository.FindAllAsync(x => x.IsDeleted == false); 
                 List<ContractDetails> filteredList = new List<ContractDetails>();
                 if (model != null)
                 {

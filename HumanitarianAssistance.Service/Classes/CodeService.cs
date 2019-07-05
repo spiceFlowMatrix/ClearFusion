@@ -583,7 +583,7 @@ namespace HumanitarianAssistance.Service.Classes
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = "Success";
+                response.Message = ex.Message;
             }
             return response;
         }
@@ -2177,7 +2177,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                List<DistrictDetail> districtlist = _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted == false && ProvinceId.Contains(x.ProvinceID)).ToList();
+                List<DistrictDetail> districtlist = await _uow.GetDbContext().DistrictDetail.Where(x => x.IsDeleted == false && ProvinceId.Contains(x.ProvinceID)).ToListAsync();
                 response.data.Districtlist = districtlist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
