@@ -1,5 +1,4 @@
 ﻿using HumanitarianAssistance.Entities;
-using HumanitarianAssistance.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

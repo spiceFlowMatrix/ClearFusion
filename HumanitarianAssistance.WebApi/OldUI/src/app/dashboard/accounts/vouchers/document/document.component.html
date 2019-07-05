@@ -1,0 +1,83 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="main-heading">
+            <!-- <h3 class="page-heading">Voucher No {{VoucherNo}} </h3> -->
+        </div>
+        <div class="doc-iframe-outer">
+            <iframe [src]="docpath" style="text-align: center;" height="500px" width="400px"></iframe>
+        </div>
+    </div>
+    <div class="doc-popftr">
+        <div class="doc-popftr-inside">
+            <div class="doc-popup-dwnload-icon">
+                <a [href]="docpath" target="_blank" [download]="filePathUrl">
+                    <i class="fa fa-download"></i>
+                </a>
+            </div>
+            <div class="doc-popup-select-drop">
+                <dx-select-box (onValueChanged)="selectDoc($event)" [dataSource]="voucherDocumentDetails" valueExpr="DocumentGUID" displayExpr="DocumentName"
+                    value="DocumentGUID" [value]="selectedDropdown">
+                </dx-select-box>
+            </div>
+            <div class="doc-popup-ad-btn">
+                <a href="javascript:void(0);" (click)="addDocument()">
+                    <i aria-hidden="true" class="fa fa-plus-circle"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Add Document Popup -->
+<div class="addDocumentModal">
+
+    <dx-popup class="popup" [width]="800" [height]="370" [showTitle]="true" title="Add Document" [dragEnabled]="false" [closeOnOutsideClick]="true"
+        [(visible)]="popupVisible">
+        <div *dxTemplate="let data of 'content'">
+            <dx-scroll-view [height]="550" showScrollbar="always" direction="both">
+                <form action="your-action" (submit)="onFormSubmit(addNewDocument)">
+                    <dx-form id="form" [formData]="addNewDocument" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                        validationGroup="customerData">
+
+                        <dxi-item dataField="DocumentDate" editorType="dxDateBox" [editorOptions]="{ type: 'date'}">
+
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                            <dxo-label text="Document Date"> </dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="DocumentName" caption="Document Name">
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="DocumentFilePath" caption="File Path">
+                            <dxo-label text="File Path">
+                            </dxo-label>
+                            <dx-file-uploader selectButtonText="Select File" labelText="" accept="image/*,application/pdf" [multiple]="true" uploadMode="useForm"
+                                (onValueChanged)="onImageSelect($event)" reset="resetUploader">
+                            </dx-file-uploader>
+                        </dxi-item>
+
+                    </dx-form>
+                    <br />
+                    <div class="btn-grp-wrap">
+                        <dx-button text="Add" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+                        </dx-button>
+                        <dx-button text="Cancel" (onClick)="cancelDeleteVoucher()">
+                        </dx-button>
+                    </div>
+                </form>
+                <ngx-loading [show]="addDocPopupLoading"></ngx-loading>
+            </dx-scroll-view>
+        </div>
+    </dx-popup>
+</div>
+
+<div class="addDocumentModal ">
+
+    <dx-popup class="popup" [width]="800" [height]="550" [showTitle]="true" title="Add Document" [dragEnabled]="false" [closeOnOutsideClick]="true"
+        [(visible)]="docPopupVisible">
+        <div *dxTemplate="let data of 'content'" class="voucher-doc-view">
+        </div>
+    </dx-popup>
+</div>

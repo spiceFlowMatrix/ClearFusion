@@ -1,0 +1,256 @@
+<div class="project-activity-filter-main">
+  <div class="row">
+    <div class="col-sm-6">
+      <mat-form-field>
+        <input
+          matInput
+          #activityStartDate
+          [matDatepicker]="filterPlanningStartDatepicker"
+          placeholder="Planned Start Date"
+          [(ngModel)]="advanceFilter.PlannedStartDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="filterPlanningStartDatepicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker
+          color="primary"
+          #filterPlanningStartDatepicker
+        ></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-6">
+      <mat-form-field>
+        <input
+          matInput
+          [min]="activityStartDate.value"
+          [matDatepicker]="filterPlanningEndDatepicker"
+          placeholder="Planned End Date"
+          [(ngModel)]="advanceFilter.PlannedEndDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="filterPlanningEndDatepicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker
+          color="primary"
+          #filterPlanningEndDatepicker
+        ></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-6">
+      <mat-form-field>
+        <input
+          matInput
+          #filterActualStartDate
+          [matDatepicker]="filterActualStartDatepicker"
+          placeholder="Actual Start Date"
+          [(ngModel)]="advanceFilter.ActualStartDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="filterActualStartDatepicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker
+          color="primary"
+          #filterActualStartDatepicker
+        ></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-6">
+      <mat-form-field>
+        <input
+          matInput
+          [min]="filterActualStartDate.value"
+          [matDatepicker]="implementationEndDatepicker"
+          placeholder="Actual End Date"
+          [(ngModel)]="advanceFilter.ActualEndDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="implementationEndDatepicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker
+          color="primary"
+          #implementationEndDatepicker
+        ></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="col-sm-4">
+      <mat-form-field class="example-full-width">
+        <mat-select
+          placeholder="Budget Line"
+          [(ngModel)]="advanceFilter.BudgetLineId"
+          multiple
+        >
+          <mat-option
+            *ngFor="let item of budgetLineList"
+            [value]="item.BudgetLineId"
+          >
+            {{ item.BudgetName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-sm-4">
+      <mat-form-field class="example-full-width">
+        <mat-select
+          placeholder="Assignee"
+          [(ngModel)]="advanceFilter.AssigneeId"
+          multiple
+        >
+          <mat-option
+            *ngFor="let item of employeeList"
+            [value]="item.EmployeeId"
+          >
+            {{ item.EmployeeName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <mat-checkbox class="example-margin" [(ngModel)]="advanceFilter.Planning"
+        >Planning</mat-checkbox
+      >
+    </div>
+
+    <div class="col-sm-4">
+      <mat-checkbox
+        class="example-margin"
+        [(ngModel)]="advanceFilter.Implementation"
+        >Implementation</mat-checkbox
+      >
+    </div>
+
+    <div class="col-sm-4">
+      <mat-checkbox
+        class="example-margin"
+        [(ngModel)]="advanceFilter.Completed"
+        >Completed</mat-checkbox
+      >
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-sm-6">
+      <span>Progress Range</span>
+      <ng5-slider
+        value="0"
+        highValue="0"
+        [options]="options"
+        [(ngModel)]="advanceFilter.ProgressRange"
+      ></ng5-slider>
+    </div>
+    <div class="col-sm-6">
+      <span>Slippage Range</span>
+
+      <mat-form-field class="example-full-width">
+        <input
+          appNumberOnly="true"
+          matInput
+          placeholder="Min"
+          [(ngModel)]="advanceFilter.SleepageMin"
+          />
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <input
+          appNumberOnly="true"
+          matInput
+          placeholder="Max"
+          [(ngModel)]="advanceFilter.SleepageMax"
+          />
+      </mat-form-field>
+
+      <!-- <ng5-slider
+        value="0"
+        highValue="0"
+        [options]="options"
+        [(ngModel)]="advanceFilter.SleepageRange"
+      ></ng5-slider> -->
+    </div>
+    <div class="col-sm-6">
+      <br />
+      <span>Duration Range</span>
+
+      <mat-form-field class="example-full-width">
+        <input
+          appNumberOnly="true"
+          matInput
+          placeholder="Min"
+          [(ngModel)]="advanceFilter.DurationMin"
+          />
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <input
+          appNumberOnly="true"
+          matInput
+          placeholder="Max"
+          [(ngModel)]="advanceFilter.DurationMax"
+          />
+      </mat-form-field>
+
+      <!-- <ng5-slider
+        value="0"
+        highValue="0"
+        [options]="options"
+        [(ngModel)]="advanceFilter.DurationRange"
+      ></ng5-slider> -->
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-sm-12">
+      <section class="example-section">
+        <mat-checkbox
+          class="example-margin"
+          [(ngModel)]="advanceFilter.LateStart"
+          >Late Start</mat-checkbox
+        >
+        &nbsp; &nbsp;
+        <mat-checkbox class="example-margin" [(ngModel)]="advanceFilter.LateEnd"
+          >Late End</mat-checkbox
+        >
+        &nbsp; &nbsp;
+        <mat-checkbox
+          class="example-margin"
+          [(ngModel)]="advanceFilter.OnSchedule"
+          >On Schedule</mat-checkbox
+        >
+        &nbsp; &nbsp;
+      </section>
+    </div>
+  </div>
+
+  <div class="row text-center">
+    <div class="col-sm-12">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onAdvanceFilterClicked()"
+        [disabled]="filterLoaderFlag"
+      >
+        <span
+          class="pull-left spinner_center margin_top_10"
+          *ngIf="filterLoaderFlag"
+        >
+          <mat-spinner [diameter]="15"></mat-spinner>
+        </span>
+        Apply Filter
+      </button>
+
+      &nbsp; ;
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onAdvanceResetClicked()"
+      >
+        Reset
+      </button>
+    </div>
+  </div>
+</div>

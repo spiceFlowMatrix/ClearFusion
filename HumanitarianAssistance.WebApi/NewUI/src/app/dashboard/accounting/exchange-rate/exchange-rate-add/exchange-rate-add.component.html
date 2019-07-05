@@ -1,0 +1,153 @@
+<div>
+  <h1 mat-dialog-title>
+    New Exchange Rate
+    <button mat-icon-button [mat-dialog-close]="data" class="pull-right">
+      <mat-icon aria-label="clear">clear</mat-icon>
+    </button>
+  </h1>
+  <div mat-dialog-content>
+    <div class="row">
+      <div class="col-sm-12">
+        <mat-horizontal-stepper
+          linear
+          #stepper
+          (selectionChange)="ExchangeRateGenerationStepChanged($event)"
+        >
+          <mat-step [stepControl]="exchangeRateAddModel">
+            <br />
+            <p>
+              Select currency and date you want to initiate exchange rates for
+            </p>
+            <br />
+            <form [formGroup]="exchangeRateAddModel">
+              <ng-template matStepLabel>Fill Currency</ng-template>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <mat-form-field class="example-full-width">
+                        <mat-select
+                          placeholder="Currency"
+                          name="CurrencyId"
+                          formControlName="CurrencyId"
+                        >
+                          <mat-option
+                            *ngFor="let item of data.currencyList"
+                            [value]="item.CurrencyId"
+                          >
+                            {{ item.CurrencyName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field>
+                        <input
+                          matInput
+                          [matDatepicker]="dateFilterPicker"
+                          name="Date"
+                          formControlName="Date"
+                          placeholder="Date"
+                        />
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="dateFilterPicker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #dateFilterPicker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button mat-raised-button matStepperNext>Next</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="exchangeRateGenerateModel">
+            <br />
+            <p>
+              Please set the exchange rates from your selected currency to the
+              displayed currencies
+            </p>
+            <br />
+            <form
+              [formGroup]="exchangeRateGenerateModel"
+              (ngSubmit)="SaveSelectedCurrencyExchangeRates()"
+            >
+              <ng-template matStepLabel>Generate Exchange Rate</ng-template>
+              <!-- <mat-form-field>
+                    <input matInput placeholder="Address" formControlName="secondCtrl" required>
+                  </mat-form-field> -->
+              <div class="row">
+                <div class="col-sm-6">
+                  FROM <strong>{{ selectedCurrencyName }}</strong> TO
+                </div>
+                <div class="col-sm-6" formArrayName="Currencies">
+                  <div
+                    *ngFor="
+                      let currency of exchangeRateGenerateModel.get(
+                        'Currencies'
+                      )['controls'];
+                      let i = index
+                    "
+                  >
+                    <div class="row" [formGroupName]="i">
+                      <div class="col-sm-6">
+                        <label>{{ currency.value.CurrencyName }}</label>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-form-field>
+                          <input
+                            type="number"
+                            formControlName="Rate"
+                            matInput
+                            placeholder="Rate"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button
+                  mat-raised-button
+                  matStepperPrevious
+                  [disabled]="addExchangeRateLoader"
+                >
+                  Back
+                </button>
+                &nbsp;
+                <!-- <button mat-raised-button (click)='SaveSelectedCurrencyExchangeRates()' type="submit" [disabled]="addExchangeRateLoader">
+                          <span class="pull-left spinner_center" *ngIf="addExchangeRateLoader"><mat-spinner [diameter]="15"></mat-spinner></span>Save</button> -->
+
+                <button
+                  mat-raised-button
+                  color="accent"
+                  [disabled]="!exchangeRateGenerateModel.valid || addExchangeRateLoader"
+                  (click)="SaveSelectedCurrencyExchangeRates()"
+                  type="submit" style="
+                  position: absolute;"
+                >
+                  <span
+                    *ngIf="
+                      !addExchangeRateLoader;
+                      else exchangeRateAddLoaderTemplate
+                    "
+                    >Save</span
+                  >
+                  <ng-template #exchangeRateAddLoaderTemplate>
+                    <div class="spinner_center padding_top_5 padding_bottom_5">
+                      <mat-spinner [diameter]="25"></mat-spinner>
+                    </div>
+                  </ng-template>
+                </button>
+              </div>
+            </form>
+          </mat-step>
+        </mat-horizontal-stepper>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions class="pull-right"></div>
+</div>

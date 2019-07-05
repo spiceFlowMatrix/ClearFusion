@@ -1,0 +1,184 @@
+
+<div class="body-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <mat-card [ngStyle]="scrollStyles">
+          <div class="project-details row">
+            <div class="col-sm-1">
+              <h4 class="main_heading bdr_heading">Jobs</h4>
+            </div>
+            <div class="col-sm-2">
+              <button
+                mat-raised-button
+                color="accent"
+                (click)="openAddJobDialog()"
+                *ngIf="isEditingAllowed"
+              >
+                Add Job
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <mat-form-field class="example-form-field">
+                <input
+                  matInput
+                  placeholder="Search"
+                  [(ngModel)]="jobFiltersForm.searchValues"
+                  (keydown.enter)="handleKeyboardEvent($event)"
+                />
+              </mat-form-field>
+              <!-- Apply -->
+              &nbsp;
+              <button
+                mat-raised-button
+                color="accent"
+                class="margin_left_10"
+                [disabled]="
+                  jobFiltersForm.searchValues === '' || jobFilterLoader
+                "
+                (click)="onFilterSubmit($event)"
+              >
+                <span class="pull-left spinner_center" *ngIf="jobFilterLoader"
+                  ><mat-spinner [diameter]="15"></mat-spinner
+                ></span>
+                Apply
+              </button>
+              &nbsp;
+              <!-- Reset -->
+              <button mat-raised-button (click)="ResetJobFilters()">
+                Reset
+              </button>
+
+              <!-- Filter -->
+              <button
+                mat-icon-button
+                class="margin_left_10"
+                [matMenuTriggerFor]="menu"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="$event.stopPropagation()">
+                  <mat-checkbox [(ngModel)]="jobFiltersForm.JobId"
+                    >Job Id</mat-checkbox
+                  >
+                </button>
+                <button mat-menu-item (click)="$event.stopPropagation()">
+                  <mat-checkbox [(ngModel)]="jobFiltersForm.JobName"
+                    >Job Name</mat-checkbox
+                  >
+                </button>
+                <button mat-menu-item (click)="$event.stopPropagation()">
+                  <mat-checkbox [(ngModel)]="jobFiltersForm.FinalPrice"
+                    >Final Price</mat-checkbox
+                  >
+                </button>
+                <button mat-menu-item (click)="$event.stopPropagation()">
+                  <mat-checkbox [(ngModel)]="jobFiltersForm.Approved"
+                    >Approved</mat-checkbox
+                  >
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+
+          <div class="row">
+            <div
+              *ngIf="jobListLoaderFlag; else jobListTemplate"
+              class="col-sm-12"
+            >
+              <br /><br /><br />
+              <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+            </div>
+            <ng-template #jobListTemplate>
+              <div class="col-sm-12">
+                <div class="responsive_table-responsive">
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td width="1%"><p class="width_8"></p></td>
+                        <td width="5%">
+                          <b> Code/Id</b>
+                        </td>
+
+                        <td width="40%"><b>Job Name</b></td>
+                        <td width="20%"><b>Total Price</b></td>
+                        <td width="20%"></td>
+                        <td width="5%"></td>
+                        <td width="1%"></td>
+                      </tr>
+                      <tr *ngFor="let db of jobsList">
+                        <td width="1%"><p class="width_8"></p></td>
+                        <td class="grey-text" width="5%">
+                          {{ db.JobCode }}/{{ db.JobId }}
+                        </td>
+                        <td width="40%" text-align="left">
+                          <p class="diamond">
+                            <a [routerLink]="['/marketing/jobs', db.JobId]">{{
+                              db.JobName
+                            }}</a>
+                          </p>
+                        </td>
+                        <td width="20%">{{ db.TotalPrice }}</td>
+                        <td class="text-right" width="20%">
+
+                          <button
+                            *ngIf="isApproveRejectAllowed"
+                            [disabled]="db.IsApproved || db._IsLoading"
+                            mat-button
+                            (click)="ApproveJob(db.JobId)">
+                            {{db.IsApproved===true ? 'Approved' : 'Approve'}}
+                          </button>
+
+
+                          <!-- <button
+                          *ngIf="!db.IsApproved"
+                            mat-button
+                            (click)="ApproveJob(db.JobId)">
+                            Approve
+                          </button> -->
+                          <!-- <p class="diamond">{{db.Medium}}</p> -->
+                        </td>
+                        <td class="" width="7" *ngIf="isEditingAllowed">
+                          <mat-spinner
+                            *ngIf="db._IsLoading"
+                            class="center_loader"
+                            diameter="25"
+                          ></mat-spinner>
+
+                          <button
+                            pTooltip="Archive"
+                            tooltipPosition="top"
+                            mat-icon-button
+                            color="warn"
+                            (click)="DeleteJob(db.JobId)"
+                            *ngIf="!db._IsLoading"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                          <!-- <a class="blue-circle "><i class="far fa-bell"></i></a> -->
+                        </td>
+                        <td width="1%" class="text-center"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <mat-paginator
+                    [length]="length"
+                    [pageSize]="pageSize"
+                    [pageSizeOptions]="pageSizeOptions"
+                    [pageIndex]="pageIndex"
+                    (page)="Pagination($event)"
+                  >
+                  </mat-paginator>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

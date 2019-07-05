@@ -1,0 +1,389 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title text-left">Payroll</h3>
+      </div>
+       <dx-tabs #apiTabs [dataSource]="tabs" [selectedIndex]="0" [width]="300" [height]="50" (onItemClick)="selectTab($event)"></dx-tabs>
+       <div class="dx-fieldset">
+          <div *ngIf="salaryHeadTabFlag == true; else payrollSalaryHeadTabFlag">
+              <div class="dx-field">
+                  <div class="panel-body">
+
+                      <form action="your-action" (submit)="onPayrollFormSubmit(payrollForm)">
+                        <div class="text-right" *ngIf="isEditingAllowed">
+                          <dx-button text="Save" *ngIf="!isSalaryHeadSaved" type="success" validationGroup="payrollValidationDetails" [useSubmitBehavior]="true" 
+                          ></dx-button>
+                          <br>
+                          <br>
+                        </div>
+                        <dx-form id="form" [formData]="payrollForm" [readOnly]="false" [showColonAfterLabel]="true" validationGroup="payrollValidationDetails"
+                          [showValidationSummary]="true" (onFieldDataChanged)="onSalaryHeadDataChanged($event)">
+              
+                          <dxi-item itemType="group" [colSpan]="2" [colCount]="2">
+              
+                            <dxi-item dataField="CurrencyValue" editorType="dxSelectBox" [editorOptions]="{ value: payrollForm.CurrencyValue, dataSource: currencyModel, displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId', searchEnabled: true, placeholder: 'Select Currency'}">
+                              <dxo-label text="Currency"></dxo-label>
+                              <dxi-validation-rule type="required"> </dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="PaymentType" editorType="dxSelectBox" [disabled]="true" [editorOptions]="{ value: payrollForm.PaymentType, dataSource: salaryTypeModel, displayExpr: 'Type', valueExpr: 'Id', searchEnabled: true, placeholder: 'Select Salary Type', readOnly: true}">
+                              <dxo-label text="Salary Type"></dxo-label>
+                              <dxi-validation-rule type="required"> </dxi-validation-rule>
+                            </dxi-item>
+              
+                          </dxi-item>
+              
+                          <dxi-item itemType="group" [colSpan]="2" [colCount]="2">
+                            <dx-data-grid id="gridContainer" [dataSource]="employeePayrollList" [allowColumnReordering]="true"
+                              [allowColumnResizing]="true" [showRowLines]="true" (onRowUpdating)="logEventSalaryHead('RowUpdating',$event)">
+              
+                              <dxo-editing [allowAdding]="false" [allowUpdating]="true" mode="cell" 
+                              *ngIf="isEditingAllowed"></dxo-editing>
+              
+                              <dxi-column dataField="SalaryHeadType" [width]="160" [editorOptions]="{disabled: true}"></dxi-column>
+                              <dxi-column dataField="SalaryHead" [width]="200" [editorOptions]="{disabled: true}"></dxi-column>
+                              <dxi-column dataField="MonthlyAmount" caption="Amount" [width]="150"></dxi-column>
+                              <dxi-column dataField="AccountNo" caption="Account" [width]="250">
+                                <dxo-lookup [dataSource]="AccountsArr" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                              </dxi-column>
+                              <dxi-column dataField="TransactionTypeId" caption="Transaction Type" [width]="200" [editorOptions]="{disabled: true}">
+                                <dxo-lookup [dataSource]="transactionTypeDropdown" displayExpr="TransactionTypeName" valueExpr="TransactionTypeId"></dxo-lookup>
+                              </dxi-column>
+                              <dxo-paging [pageSize]="15"></dxo-paging>
+                            </dx-data-grid>
+                          </dxi-item>
+                        </dx-form>
+                      </form>
+                    </div>
+              </div>
+            </div>
+            <ng-template #payrollSalaryHeadTabFlag>
+                <div class="dx-field">
+                    <div class="panel-body">
+  
+                        <form action="your-action" (submit)="onPayrollAccountFormSubmit(payrollAccountForm)">
+                          <div class="text-right" *ngIf="isEditingAllowed">
+                            <dx-button text="Save" *ngIf="!isPayrollHeadSaved" type="success" validationGroup="payrollValidationDetails" [useSubmitBehavior]="true" ></dx-button>
+                            <br>
+                            <br>
+                          </div>
+                          <dx-form id="form" [formData]="payrollAccountForm" [readOnly]="false" [showColonAfterLabel]="true" validationGroup="payrollValidationDetails"
+                            [showValidationSummary]="true">
+                
+                            <dxi-item itemType="group" [colSpan]="2" [colCount]="2">
+                              <dx-data-grid id="gridContainer" [dataSource]="employeeAccountHeadList" [allowColumnReordering]="true"
+                                [allowColumnResizing]="true" [showRowLines]="true" (onRowUpdating)="logEventPayrollHead('RowUpdating',$event)">
+                                <dxo-editing [allowAdding]="false" [allowUpdating]="true" mode="cell"></dxo-editing>
+                                <dxi-column dataField="PayrollHeadId" [visible]="false" [width]="160" [editorOptions]="{disabled: true}"></dxi-column>
+                                <dxi-column dataField="SalaryHeadType" [width]="160" [editorOptions]="{disabled: true}"></dxi-column>
+                                <dxi-column dataField="PayrollHeadName" [editorOptions]="{disabled: true}"></dxi-column>
+                                <dxi-column dataField="AccountNo" caption="Account" [width]="350">
+                                  <dxo-lookup [dataSource]="AccountsArr" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                                </dxi-column>
+                                <dxi-column dataField="TransactionTypeId" caption="Transaction Type" [width]="150" [editorOptions]="{disabled: true}">
+                                  <dxo-lookup [dataSource]="transactionTypeDropdown" displayExpr="TransactionTypeName" valueExpr="TransactionTypeId"></dxo-lookup>
+                                </dxi-column>
+                                <dxo-paging [pageSize]="15"></dxo-paging>
+                              </dx-data-grid>
+                            </dxi-item>
+                          </dx-form>
+                        </form>
+                      </div>
+                </div>
+              </ng-template>
+       </div>
+    </div>
+  </div>
+
+
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title text-left">Project Budget Line</h3>
+      </div>
+      <div class="panel-body">
+
+        <dx-data-grid id="gridContainer" [dataSource]="employeeProjectList" [allowColumnReordering]="true"
+          [allowColumnResizing]="true" [showRowLines]="true" (onContentReady)="onContentReadyProject($event)"
+          (onRowUpdating)="onRowUpdatingEventProject($event)">
+          <dxo-editing [allowAdding]="false" [allowUpdating]="true" mode="batch" *ngIf="isEditingAllowed"></dxo-editing>
+          <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+
+          <dxi-column dataField="EmployeeId" [visible]="false"></dxi-column>
+          <dxi-column dataField="ProjectId" [visible]="false"></dxi-column>
+          <dxi-column dataField="ProjectName" [editorOptions]="{disabled: true}"></dxi-column>
+          <dxi-column dataField="BudgetLineId" [visible]="false"></dxi-column>
+          <dxi-column dataField="BudgetLineName" [editorOptions]="{disabled: true}"></dxi-column>
+          <dxi-column dataField="ProjectPercentage" caption="Salary Percentage"></dxi-column>
+
+          <dxi-column caption="Contract" cellTemplate="CellTemplateContract"></dxi-column>
+          <div *dxTemplate="let data of 'CellTemplateContract'">
+            <a href="javascript:void(0);" (click)="getEmployeeContractReport(data.data)">View Contract</a>
+          </div>
+
+          <dxo-paging [pageSize]="10"></dxo-paging>
+        </dx-data-grid>
+      </div>
+    </div>
+  </div>
+
+  <ngx-loading [show]="payrollInfoLoading"></ngx-loading>
+
+</div>
+
+
+
+<!-- Employee Contract Popup -->
+<dx-popup class="popup doc-popup-content" [width]="980" [height]="900" [showTitle]="true" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="contractEmployeePopup" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
+  <div *dxTemplate="let data of 'content'" style="overflow-y: scroll;max-height: 600px; padding-left:30px; padding-right:30px; width: 100%">
+    <dx-button (click)="generatePdf()" text="Export Pdf"></dx-button>
+    <div id="contractReportPdf" style="background-color: #fff;">
+      <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td>
+            <table class="table-responsive" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" id="parent_tbl">
+              <tr>
+                <td>
+                  <table width="100%" align="left" cellpadding="0;" cellspacing="0" id="child_tbl" style=" background:#fff;">
+                    <tr>
+                      <td style="color:#333; font-family: Times New Roman;font-size:18px; text-align:left;">
+                        <img src="assets/images/reportLogo.png" width="100" height="100">
+                      </td>
+                      <td style="text-align:center;padding:10px 0;font-size: 20px;" translate>Coordination of
+                        Humanitarian
+                        Assistance
+                        <br>
+                        <span style="color:#333; font-family: Times New Roman;font-size:28px;text-transform: capitalize;">
+                          <strong>Coordination of Humanitarian Assistance</strong>
+                        </span>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr> </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <table class="pdf" border="0" cellpadding="0" style="text-align:left;" cellspacing="0" width="100%">
+        <tbody>
+          <tr>
+            <td style="font-size: 20px;color: #302d2d; padding:2px  0; padding-left:20px; ">Employment Contract</td>
+          </tr>
+          <tr>
+            <td style="font-size: 20px;color: #302d2d; padding:2px  0; padding-left:50px;" translate>Employment
+              Contract</td>
+          </tr>
+          <tr>
+            <td style="font-size: 16px;color: #302d2d;padding:12px  0 2px;">
+              <p style="margin-bottom:0px;">This contract is between Coordination of Humanitarian Assistance (CHA) and
+                employees
+                for specific task, the details of the contract are as follow:</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-size: 16px;color: #302d2d;padding:2px  0; padding-top:12px; text-align:right; padding-right:20px;">
+              <p translate>This contract is between Coordination of Humanitarian Assistance (CHA) and employees for
+                specific
+                task, the details of the contract are as follow:</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%" style="padding-top:30px;">
+        <tbody>
+          <tr>
+            <td style="width:90%; text-align:left; padding-right:20px;">
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td style="width:40%; vertical-align:top; font-weight:600; line-height:34px;">Employee's Name /
+                      <span style="padding-left:20px;" translate>Employee's Name</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.EmployeeName}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{employeeNameDari}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Father Name /
+                      <span style="padding-left:20px;" translate>Father Name</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.FatherName}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{fatherNameDari}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Employee Code /
+                      <span style="padding-left:20px;" translate>Employee Code</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.EmployeeCode}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.EmployeeCode}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Designation /
+                      <span style="padding-left:20px;" translate>Designation</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.Designation}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.Designation}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Contract Start Date /
+                      <span style="padding-left:20px;" translate>Contract Start Date</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.ContractStartDate |
+                      date}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.ContractStartDate
+                      | date}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Contract End Date /
+                      <span style="padding-left:20px;" translate>Contract End Date</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.ContractEndDate |
+                      date}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.ContractEndDate
+                      | date}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Duration Of Contract
+                      /
+                      <span style="padding-left:20px;" translate>Duration Of Contract</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.DurationOfContract}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.DurationOfContract}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Salary /
+                      <span style="padding-left:20px;" translate>Salary</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.Salary}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.Salary}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Grade /
+                      <span style="padding-left:20px;" translate>Grade</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.Grade}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.Grade}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Project Name /
+                      <span style="padding-left:20px;" translate>Project Name</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.ProjectName}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.ProjectName}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Project Code /
+                      <span style="padding-left:20px;" translate>Project Code</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.ProjectCode}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.ProjectCode}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Duty Station /
+                      <span style="padding-left:20px;" translate>Duty Station</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.DutyStation}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.DutyStation}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Province /
+                      <span style="padding-left:20px;" translate>Province</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.Province}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.Province}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Budget Line /
+                      <span style="padding-left:20px;" translate>Budget Line</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.BudgetLine}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.BudgetLine}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Job /
+                      <span style="padding-left:20px;" translate>Job</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.JobId}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.JobId}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Work Time /
+                      <span style="padding-left:20px;" translate>Work Time</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.WorkTime}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.WorkTime}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Work Day (Hours) /
+                      <span style="padding-left:20px;" translate>Work Day(Hours)</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.WorkDayHours}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.WorkDayHours}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td style="width:10% ; padding-right:20px; vertical-align:top;">
+              <img src="{{selectedEmployeesReportData.EmployeeImage == null || selectedEmployeesReportData.EmployeeImage == '' ? defaultImagePath : contractPhoto}}"
+                style="width: 130px;float: right;">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 20px; text-align:left;">
+        <tr>
+          <td style="width:50%; vertical-align: top; border-right: 1px solid #000; padding-right: 20px; text-align:left;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td style="font-size:16px; font-weight:600;"> Conditions: </td>
+              </tr>
+              <tr>
+                <td style="font-size:16px; font-weight:600;"></td>
+              </tr>
+              <tr>
+                <td style="font-size:14">
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                      <td colspan="4" style="font-size:14; line-height: 22px; text-align:left;">
+                        <span [innerHTML]="selectedEmployeesReportData.ContentEnglish"></span>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+            </table>
+          </td>
+          <td style="width:50%; vertical-align: top;padding-left:20px; text-align:right;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td style="font-size:14px; font-weight:600; padding-right:20px;">
+                  <span [innerHTML]="selectedEmployeesReportData.ContentDari"></span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</dx-popup>

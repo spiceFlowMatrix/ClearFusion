@@ -1,0 +1,15 @@
+<label class="btn-floating btn-lg pink lighten-1 mt-0 float-left">
+  <!-- <mat-icon class="icon_cursor padding_top_5" aria-label="icon-button done icon" pTooltip="Excel Format"
+    tooltipPosition="top">attach_file</mat-icon> -->
+   <a (click) ="DownloadExcelFormat()" target="_blank" pTooltip  = "Click here to Download Sample format of Import Excel"> <i class="material-icons">
+    get_app
+    </i>
+    </a>
+
+</label>
+<label class="btn-floating btn-lg pink lighten-1 mt-0 float-left">
+  <mat-icon class="icon_cursor padding_top_5" aria-label="icon-button done icon" pTooltip="Import Excel"
+    tooltipPosition="top">attach_file</mat-icon>
+  <input type="file" #fileInput id="file" (click)="fileInput.value = null" value="" style="display: none;"
+    (change)="handleFileInput($event.target.files)">
+</label>

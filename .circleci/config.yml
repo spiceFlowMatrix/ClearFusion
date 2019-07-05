@@ -2,16 +2,27 @@ version: 2.1
 jobs:
   build-job:
     docker:
-      - image: microsoft/dotnet:2.1-sdk
+      - image: microsoft/dotnet:2.2-sdk
     steps:
+      - run: 
+          name: install node
+          command: "curl -sL https://deb.nodesource.com/setup_10.x | bash -  && apt update  && apt install -y nodejs"
+      - run: npm cache clean -f
+      - run: npm install -g n
+      - run: n stable
+      - run: node -v
+      - run: npm -v
+      - run: npm install -g @angular/cli
+      
       - checkout
-      - run: dotnet restore HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj
-      - run: dotnet publish HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj -c Release -o release
-      - run: mkdir HumanitarianAssistance/release/Documents
+      - run: dotnet --info
+      - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
+      - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
+      - run: mkdir HumanitarianAssistance.WebApi/release/Documents
       - persist_to_workspace:
           root: .
           paths: 
-            - HumanitarianAssistance/release
+            - HumanitarianAssistance.WebApi/release
             - Dockerfile
             - .dockerignore
   push-container:
@@ -55,25 +66,6 @@ jobs:
           command: |
             kubectl patch deployment ${KUBDEPLOYMENT_EDGSTAGINGAPI_STAGING} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
             kubectl rollout status deployment/${KUBDEPLOYMENT_EDGSTAGINGAPI_STAGING}
-            kubectl get pods
-  deploy-staging:
-    docker:
-      - image: google/cloud-sdk
-    steps:
-      - run:
-          name: Set up Google cloud SDK. Important to set up cluster based on deployment
-          command: |
-            echo $GCLOUD_SERVICE_KEY > gcloud-service-key.json
-            gcloud auth activate-service-account --key-file gcloud-service-key.json
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-            gcloud --quiet container clusters get-credentials ${GOOGLE_STAGING_CLUSTER_NAME}
-      - setup_remote_docker
-      - run:
-          name: Patch K8 deployment with new container
-          command: |
-            kubectl patch deployment ${KUBDEPLOYMENT_API_STAGING} -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$APPLICATION_NAME"'","image":"eu.gcr.io/'"$GOOGLE_PROJECT_ID"'/'"$APPLICATION_NAME"':'"$CIRCLE_SHA1"'"}]}}}}'
-            kubectl rollout status deployment/${KUBDEPLOYMENT_API_STAGING}
             kubectl get pods
   deploy-bmount-prod:
     docker:
@@ -181,12 +173,6 @@ workflows:
       - deploy-staging-edg:
           requires:
           - push-container
-      - deploy-staging:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
       - deploy-bmount-prod:
           filters:
             tags:

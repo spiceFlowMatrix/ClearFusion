@@ -1,0 +1,22 @@
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" opened="true">
+    <app-dbsidebar></app-dbsidebar>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-card class="header header_mat_card">
+   <div class="container-fluid">
+      <div class="row">
+          <!-- <div class=" toggle_btn col-sm-1 col-xs-3 ">
+            <button mat-button (click)="sidenav.toggle()"><i class="material-icons">
+                menu
+                </i></button>
+          </div> -->
+          <div class="col-sm-12 col-xs-12"><app-dbheader></app-dbheader></div>
+        </div>
+   </div>
+    </mat-card>
+
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

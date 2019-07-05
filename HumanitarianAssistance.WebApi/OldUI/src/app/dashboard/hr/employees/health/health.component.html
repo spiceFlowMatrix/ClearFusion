@@ -1,0 +1,158 @@
+<div class="main-health">
+
+  <div class="row">
+    <div class="col-sm-12 container">
+      <br>
+
+
+      <form action="your-action" (submit)="onHealthFormSubmit(healthForm)">
+        <dx-form id="form" [formData]="healthForm" [colCount]="1" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="healthInfoValidationDetails">
+
+
+          <dxi-item itemType="group" caption="Health Details" [colCount]="2">
+            <dxi-item dataField="PhysicanName">
+              <dxi-validation-rule type="required" message="Physican Name is required">
+              </dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="HospitalName">
+              <dxo-label text="Institute/Hospital Name"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="HospitalAddress" [colSpan]="2" editorType="dxTextArea" [editorOptions]="{height: 90}">
+              <dxo-label text="Institute/Hospital Address"></dxo-label>
+            </dxi-item>
+
+          </dxi-item>
+
+          <dxi-item itemType="group" caption="Physical Exam" [colCount]="1">
+            <dxi-item dataField="Height" editorType="dxNumberBox">
+              <dxo-label text="Height (cm)"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="Weight" editorType="dxNumberBox">
+              <dxo-label text="Weight (kg)"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="BloodPressure" editorType="dxNumberBox">
+              <dxo-label text="Blood Pressure (mmHg)"></dxo-label>
+            </dxi-item>
+          </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2">
+            <dxi-item dataField="VisualWithoutGlassesR" editorType="dxNumberBox">
+              <dxo-label text="Visual acuity (without glasses) R"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="VisualWithoutGlassesL" editorType="dxNumberBox">
+              <dxo-label text="L"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="VisualWithGlassesR" editorType="dxNumberBox">
+              <dxo-label text="Visual acuity (with glasses or Contact lenses) R"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="VisualWithGlassesL" editorType="dxNumberBox">
+              <dxo-label text="L"></dxo-label>
+            </dxi-item>
+          </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2">
+            <dxi-item dataField="HearingR" editorType="dxNumberBox">
+              <dxo-label text="Hearing (R)"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="HearingRType" editorType="dxSelectBox" [editorOptions]="{ value: healthForm.HearingRType, dataSource : rateDS , displayExpr: 'RateName', valueExpr: 'rateId' }">
+              <dxo-label text="Type"></dxo-label>
+            </dxi-item>
+          </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2">
+            <dxi-item dataField="HearingL" editorType="dxNumberBox">
+              <dxo-label text="Hearing (L)"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="HearingLType" editorType="dxSelectBox" [editorOptions]="{ value: healthForm.HearingLType,  dataSource : rateDS , displayExpr: 'RateName', valueExpr: 'rateId' }">
+              <dxo-label text="Type"></dxo-label>
+            </dxi-item>
+          </dxi-item>
+
+          <dxi-item itemType="group" [colCount]="2">
+
+            <dxi-item dataField="HistoryOfPastIllness" editorType="dxTextArea" [colSpan]="2" [editorOptions]="{height: 90}">
+            </dxi-item>
+
+            <dxi-item dataField="HealthPresentCondition" editorType="dxTextArea" [colSpan]="2" [editorOptions]="{height: 90}">
+              <dxo-label text="Present Condition of health"></dxo-label>
+            </dxi-item>
+
+            <dxi-item dataField="ResultOfChestXRay" editorType="dxTextArea" [colSpan]="2" [editorOptions]="{height: 90}">
+              <dxo-label text="Result Of Chest X-Ray"></dxo-label>
+            </dxi-item>
+          </dxi-item>
+
+          <dxi-item itemType="group" caption="Laboratory Tests" [colCount]="2">
+
+            <dxi-item dataField="BloodGroup" editorType="dxSelectBox" [editorOptions]="{ dataSource : bloodGroupSource , displayExpr: 'BloodGroup', valueExpr: 'BloodGroup' }">
+            </dxi-item>
+
+            <dxi-item dataField="Hbs" editorType="dxSelectBox" [editorOptions]="{ dataSource : rateDS , displayExpr: 'RateName', valueExpr: 'rateId' }">
+            </dxi-item>
+
+            <dxi-item dataField="Hcv" editorType="dxSelectBox" [editorOptions]="{ dataSource : rateDS , displayExpr: 'RateName', valueExpr: 'rateId' }">
+            </dxi-item>
+
+            <dxi-item dataField="OverallHealthCondition" editorType="dxSelectBox" [editorOptions]="{ dataSource : rateDS , displayExpr: 'RateName', valueExpr: 'rateId' }">
+            </dxi-item>
+
+          </dxi-item>
+
+
+        </dx-form>
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" [useSubmitBehavior]="true" validationGroup="healthInfoValidationDetails" *ngIf="isEditingAllowed"></dx-button>
+          <!-- <dx-button text="Cancel" (click)="hideHealthPopup()"></dx-button> -->
+        </div>
+      </form>
+
+    </div>
+<br>
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title text-left">Health Questions</h3>
+          </div>
+          <div class="panel-body">
+            <dx-data-grid id="gridContainer" [dataSource]="healthQuestionDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+              [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+              (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+              (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+  
+              <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"></dxo-editing>
+  
+              <dxi-column dataField="Question" caption="Question" alignment="right">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-column>
+  
+              <dxi-column dataField="Answer" caption="Answer" alignment="right">
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-column>
+  
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+
+  </div>
+
+  <br>
+
+
+  <ngx-loading [show]="healthLoading"></ngx-loading>
+
+</div>

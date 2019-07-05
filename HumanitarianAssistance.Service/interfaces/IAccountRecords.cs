@@ -10,7 +10,7 @@ namespace HumanitarianAssistance.Service.interfaces
    public interface IAccountRecords
     {
 
-        Task<APIResponse> GetBalanceSheet();
+        //APIResponse GetBalanceSheet();
         Task<APIResponse> GetVoucherSummaryList(VoucherSummaryFilterModel voucherSummaryFilter);
         Task<APIResponse> GetVoucherTransactionList(TransactionFilterModel model);
     }

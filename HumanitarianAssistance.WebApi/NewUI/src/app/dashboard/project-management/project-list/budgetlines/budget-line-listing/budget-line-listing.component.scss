@@ -1,0 +1,7 @@
+.table.table-bordered  tr.txtColor td{color:#de4646 !important }
+.diamonds{position:relative ;fill: red}
+.diamonds:before{background:url(/assets/img/diamond.png) no-repeat;width:20px;height:20px;position:absolute;content:''; top:9px; left:-10px; fill: red !important}
+:host /deep/ .icon-file-attach {
+  float:right;
+  .btn-floating { padding:0;margin-right:10px;margin-bottom:0;margin-top: 4px}
+}

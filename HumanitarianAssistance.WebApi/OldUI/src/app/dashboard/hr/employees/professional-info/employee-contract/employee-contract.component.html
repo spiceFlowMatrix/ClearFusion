@@ -1,0 +1,406 @@
+<!-- <br>
+<div class="row">
+  <div class="col-sm-12">
+
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="headingThree">
+        <h4 class="panel-title">
+        
+
+
+          <div class="row">
+            <div class="col-sm-9">
+              <h3 class="panel-title text-left">Employee Contract</h3>
+
+            </div>
+
+            <div class="col-sm-3 text-right">
+
+              <span class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false"
+                aria-controls="collapseThree">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+              </span>
+              &nbsp;
+              <span class="badge badge-primary" (click)="onViewEmployeeContract()">View Contract</span>
+            </div>
+
+          </div>
+
+        </h4>
+      </div>
+
+      <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+        <div class="panel-body">
+
+          <form action="your-action" (submit)="onEmployeeContractFormSubmit(employeeContractForm)">
+            <div class="text-right">
+
+            </div>
+            <dx-form id="form" [formData]="employeeContractForm" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" validationGroup="payrollValidationDetails"
+              [showValidationSummary]="true" (onFieldDataChanged)="onFieldDataChanged($event)">
+
+              <dxi-item itemType="group" [colSpan]="2" [colCount]="2">
+
+                <dxi-item dataField="EmployeeId" editorType="dxSelectBox" [editorOptions]="{readOnly: true, value: employeeContractForm.EmployeeId, dataSource: employeeListDataSource, displayExpr: 'CodeEmployeeName', valueExpr: 'EmployeeId', searchEnabled: true}">
+                  <dxo-label text="Employee"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="FatherName" [editorOptions]="{ readOnly: true}">
+                  <dxo-label text="Father Name"></dxo-label>
+                </dxi-item>
+
+                <dxi-item dataField="EmployeeCode" [editorOptions]="{ readOnly: true}">
+                  <dxo-label text="Employee Code"></dxo-label>
+                </dxi-item>
+
+                <dxi-item dataField="Designation" editorType="dxSelectBox" [editorOptions]="{dataSource: designationDropdown, displayExpr: 'Designation', valueExpr: 'DesignationId', searchEnabled: true}">
+                  <dxo-label text="Designation"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="ContractStartDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', max: employeeContractForm.ContractStartDate, showClearButton: true }">
+                  <dxo-label text="Contract Start Date"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="ContractEndDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', min: employeeContractForm.ContractStartDate,  showClearButton: true }">
+                  <dxo-label text="Contract End Date"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="DurationOfContract" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.DurationOfContract , showSpinButtons: true}">
+                  <dxo-label text="Duration Of Contract"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="Salary" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.Salary , showSpinButtons: true}">
+                  <dxo-label text="Salary"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="Grade" editorType="dxSelectBox" [editorOptions]="{dataSource: gradeDropDown, displayExpr: 'GradeName', valueExpr: 'GradeId', searchEnabled: true}">
+                  <dxo-label text="Grade"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+
+                <dxi-item dataField="DutyStation" editorType="dxSelectBox" [editorOptions]="{dataSource: officeListDataSource, displayExpr: 'OfficeName', valueExpr: 'OfficeId', searchEnabled: true}">
+                  <dxo-label text="Duty Station"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="Country" editorType="dxSelectBox" [editorOptions]="{dataSource: countryDropdown, displayExpr: 'CountryName', valueExpr: 'CountryId', searchEnabled: true}">
+                  <dxo-label text="Country"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="Province" editorType="dxSelectBox" [editorOptions]="{dataSource: stateDropdown, displayExpr: 'ProvinceName', valueExpr: 'ProvinceId', searchEnabled: true}">
+                  <dxo-label text="Province"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="Project" editorType="dxSelectBox" [editorOptions]="{dataSource: projectDataSource, displayExpr: 'ProjectName', valueExpr: 'ProjectId', searchEnabled: true}">
+                  <dxo-label text="Project Name"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="BudgetLine" editorType="dxSelectBox" [editorOptions]="{dataSource: projectBudgetLineDataSource, displayExpr: 'Description', valueExpr: 'BudgetLineId', searchEnabled: true}">
+                  <dxo-label text="Budget Line"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="Job">
+                  <dxo-label text="Job"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="WorkTime" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.WorkTime, showSpinButtons: true}">
+                  <dxo-label text="Work Time"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="WorkDayHours" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.WorkDayHours, showSpinButtons: true}">
+                  <dxo-label text="Work Day (Hours)"></dxo-label>
+                  <dxi-validation-rule type="required"> </dxi-validation-rule>
+                </dxi-item>
+
+
+              </dxi-item>
+
+
+
+            </dx-form>
+            <br>
+            <div class="text-center">
+              <dx-button text="Save" type="success" validationGroup="payrollValidationDetails" [useSubmitBehavior]="true"></dx-button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+
+  </div>
+</div>
+
+<ngx-loading [show]="employeeContractLoading"></ngx-loading>
+
+
+<dx-popup class="popup doc-popup-content" [height]="550" [showTitle]="true" [dragEnabled]="false" [closeOnOutsideClick]="false"
+  [(visible)]="contractEmployeePopup" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
+      <div *dxTemplate="let data of 'content'" >
+   
+     <dx-scroll-view #scrollView id="scrollview" [height]="500" [showScrollbar]="false" [scrollByContent]="true" [scrollByThumb]="true"
+          [showScrollbar]="onHover" [bounceEnabled]="false">
+    
+   <br>
+    <dx-button (click)="generatePdf()" text="Export Pdf"></dx-button>
+    <div id="contractReportPdf" style="background-color: #fff;">
+      <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td>
+            <table class="table-responsive" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" id="parent_tbl">
+              <tr>
+                <td>
+                  <table width="100%" align="left" cellpadding="0;" cellspacing="0" id="child_tbl" style=" background:#fff;">
+                    <tr>
+                      <td style="color:#333; font-family: Times New Roman;font-size:18px; text-align:left;">
+                        <img src="assets/images/reportLogo.png" width="100" height="100">
+                      </td>
+                      <td style="text-align:center;padding:10px 0;font-size: 20px;" translate>Coordination of Humanitarian Assistance
+                        <br>
+                        <span style="color:#333; font-family: Times New Roman;font-size:28px;text-transform: capitalize;">
+                          <strong>Coordination of Humanitarian Assistance</strong>
+                        </span>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr> </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <table class="pdf" border="0" cellpadding="0" style="text-align:left;" cellspacing="0" width="100%">
+        <tbody>
+          <tr>
+            <td style="font-size: 20px;color: #302d2d; padding:2px  0; padding-left:20px; ">Employment Contract</td>
+          </tr>
+          <tr>
+            <td style="font-size: 20px;color: #302d2d; padding:2px  0; padding-left:50px;" translate>Employment Contract</td>
+          </tr>
+          <tr>
+            <td style="font-size: 16px;color: #302d2d;padding:12px  0 2px;">
+              <p style="margin-bottom:0px;">This contract is between Coordination of Humanitarian Assistance (CHA) and employees for specific task, the
+                details of the contract are as follow:</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-size: 16px;color: #302d2d;padding:2px  0; padding-top:12px; text-align:right; padding-right:20px;">
+              <p translate>This contract is between Coordination of Humanitarian Assistance (CHA) and employees for specific task, the details of the contract are as follow:</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%" style="padding-top:30px;">
+        <tbody>
+          <tr>
+            <td style="width:90%; text-align:left; padding-right:20px;">
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td style="width:40%; vertical-align:top; font-weight:600; line-height:34px;">Employee's Name /
+                      <span style="padding-left:20px;" translate>Employee's Name</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.EmployeeName}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{employeeNameDari}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Father Name /
+                      <span style="padding-left:20px;" translate>Father Name</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.FatherName}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{fatherNameDari}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Employee Code /
+                      <span style="padding-left:20px;" translate>Employee Code</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.EmployeeCode}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.EmployeeCode}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Designation /
+                      <span style="padding-left:20px;" translate>Designation</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.Designation}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.Designation}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Contract Start Date /
+                      <span style="padding-left:20px;" translate>Contract Start Date</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.ContractStartDate | date}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.ContractStartDate | date}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Contract End Date /
+                      <span style="padding-left:20px;" translate>Contract End Date</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.ContractEndDate | date}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.ContractEndDate | date}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Duration Of Contract /
+                      <span style="padding-left:20px;" translate>Duration Of Contract</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.DurationOfContract}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.DurationOfContract}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Salary /
+                      <span style="padding-left:20px;" translate>Salary</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.Salary}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.Salary}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Grade /
+                      <span style="padding-left:20px;" translate>Grade</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.Grade}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.Grade}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Project Name /
+                      <span style="padding-left:20px;" translate>Project Name</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.ProjectName}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.ProjectName}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Project Code /
+                      <span style="padding-left:20px;" translate>Project Code</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.ProjectCode}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.ProjectCode}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Duty Station /
+                      <span style="padding-left:20px;" translate>Duty Station</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.DutyStation}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.DutyStation}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Province /
+                      <span style="padding-left:20px;" translate>Province</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.Province}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.Province}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Budget Line /
+                      <span style="padding-left:20px;" translate>Budget Line</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.BudgetLine}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.BudgetLine}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Job /
+                      <span style="padding-left:20px;" translate>Job</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.JobId}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.JobId}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Work Time /
+                      <span style="padding-left:20px;" translate>Work Time</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.WorkTime}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.WorkTime}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Work Day (Hours) /
+                      <span style="padding-left:20px;" translate>Work Day (Hours)</span>
+                    </td>
+                    <td style="width:30%;border-bottom:1px solid">{{contractDetails.WorkDayHours}}</td>
+                    <td style="width:5%">&nbsp;</td>
+                    <td style="width:30%;border-bottom:1px solid; text-align:right;">{{contractDetails.WorkDayHours}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td style="width:10% ; padding-right:20px; vertical-align:top;">
+              <img src="{{contractDetails.EmployeeImage == null || contractDetails.EmployeeImage == '' ? defaultImagePath : contractDetails.EmployeeImage}}"
+                style="width: 130px;float: right;">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 20px; text-align:left;">
+        <tr>
+          <td style="width:50%; vertical-align: top; border-right: 1px solid #000; padding-right: 20px; text-align:left;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td style="font-size:16px; font-weight:600;"> Conditions: </td>
+              </tr>
+              <tr>
+                <td style="font-size:16px; font-weight:600;"></td>
+              </tr>
+              <tr>
+                <td style="font-size:14">
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                      <td colspan="4" style="font-size:14; line-height: 22px; text-align:left;">
+                            <span [innerHTML]="englishContent"></span>
+
+
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+            </table>
+          </td>
+          <td style="width:50%; vertical-align: top;padding-left:20px; text-align:right;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td style="font-size:14px; font-weight:600; padding-right:20px;">
+                      <span [innerHTML]="contractDetails.ContentDari"></span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </dx-scroll-view>
+
+  </div>
+</dx-popup> -->

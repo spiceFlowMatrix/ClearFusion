@@ -16,7 +16,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetExchangeGainOrLossAmount(ExchangeGainOrLossFilterModel model);
         Task<APIResponse> GetExchangeGainOrLossTransactionAmount(ExchangeGainOrLossTransactionFilterModel model);
         Task<APIResponse> GenerateExchangeRates(List<GenerateExchangeRateViewModel> GenerateExchangeRateModel, string userId);
-        Task<APIResponse> GetSavedExchangeRates(ExchangeRateVerificationFilter filter);
+        APIResponse GetSavedExchangeRates(ExchangeRateVerificationFilter filter);
         Task<APIResponse> GetExchangeRatesDetail(ExchangeRateDetailModel exchangeRateDetailModel);
         Task<APIResponse> SaveExchangeRatesForOffice(OfficeExchangeRateViewModel officeExchangeRateViewModel, string userId);
         Task<APIResponse> VerifyExchangeRates(DateTime ExchangeRateDate, string userId);

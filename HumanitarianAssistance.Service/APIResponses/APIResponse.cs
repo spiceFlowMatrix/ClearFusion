@@ -30,6 +30,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public data data { get; set; }
+        public Object ResponseData { get; set; }
         public LoggerDetailsModel LoggerDetailsModel { get; set; }
         public ItemAmount ItemAmount { get; set; }
         public CommonId CommonId { get; set; }
@@ -148,6 +149,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<OfficeDetailModel> OfficeDetailsList { get; set; }
         public IList<DepartmentModel> Departments { get; set; }
         public IList<UserDetailsModel> UserDetailsList { get; set; }
+        public ICollection<UserDetails> UserDetailList { get; set; }
         public UserDetailsModel UserDetails { get; set; }
         public IList<PermissionsInRolesModel> PermissionsInRolesList { get; set; }
         public IList<PermissionsModel> PermissionsList { get; set; }
@@ -169,7 +171,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<VoucherTransactionModel> VoucherTransactionList { get; set; }
         public IList<LedgerModel> LedgerList { get; set; }
         public IList<LedgerReportViewModel> ledgerReportFinal { get; set; }
-        public IList<LedgerModel> TrailBlanceList { get; set; }
+        public IList<LedgerModel> TrialBalanceList { get; set; }
 
         public IList<ExchangeRateModel> ExchangeRateList { get; set; }
         public IList<ExchangeRateDetail> ExchangeRateDetailList { get; set; }
@@ -356,13 +358,18 @@ namespace HumanitarianAssistance.Service.APIResponses
         public List<ExchangeRateDetailViewModel> ExchangeRateDetailViewModelList { get; set; }
         public ActivityDocumentsDetailModel activityDocumnentDetail { get; set; }
         public List<ActivityDocumentDetailModel> ActivityDocumentDetailModel { get; set; }
-
+        public List<AttendanceGroupMasterModel> AttendanceGroupMasterList { get; set; }
 
         public ProjectCashFlowModel ProjectCashFlowModel { get; set; }
         public List<BudgetLineBreakdownListModel> BudgetLineBreakdownList { get; set; }
         public BudgetLineBreakdownModel BudgetLineBreakdownModel { get; set; }
         public ProjectIndicatorViewModel ProjectIndicator { get; set; }
         public List<IndicatorQuestions> Questions { get; set; }
+        public IList<ProjectHiringRequestModel> ProjectHiringRequestModel { get; set; }
+        
+        public IList<ProjectHiringCandidateDetailModel> ProjectHiringCandidateDetailModel { get; set; }
+
+
 
         #region Marketing    
         public PolicyTimeSchedule policyTimeScheduleDetails { get; set; }

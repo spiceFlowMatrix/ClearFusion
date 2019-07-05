@@ -1,0 +1,837 @@
+<div class="main-pension">
+  <br>
+  <div class="dx-field-pension">
+    <div class="btn-grp-wrap">
+      <dx-button (click)="showClosePensionReport()" class="report-download" text="View Report"></dx-button>
+      <!-- <dx-select-box [dataSource]="financialYearList" class="pension-report-buttons" displayExpr="FinancialYearName" valueExpr="FinancialYearId"
+        [value]="financialId" (onValueChanged)="onFinancialYearSelect($event)"></dx-select-box> -->
+    </div>
+  </div>
+  <br>
+
+<!-- start -->
+  <div class="row">
+    <div class="col-md-12 dxagninptblk">
+
+      <form action="your-action" (submit)="onApplyingFilter(pensionFilter)">
+        <dx-form id="form" [(formData)]="pensionFilter" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="pensionFilterValidation">
+          <dxi-item dataField="CurrencyId" editorType="dxSelectBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: currencycodeList, displayExpr: 'CurrencyName', valueExpr: 'CurrencyId', multiline: false, maxDisplayedTags: 1, showClearButton:'true', placeholder: 'Select Currency', showSelectionControls: true,  searchEnabled: true }">
+            <dxo-label text="Currency"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="FinancialYearId" editorType="dxTagBox" showCheckBoxesMode="checkBoxesMode" mode="multiple" [editorOptions]="{ dataSource: financialYearList, displayExpr: 'FinancialYearName', valueExpr: 'FinancialYearId', multiline: false, maxDisplayedTags: 1, showClearButton:'true',  multiSelectEnabled:true, placeholder: 'Select Year', showSelectionControls: true,  searchEnabled: true}">
+              <dxo-label text="Financial year"></dxo-label>
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+          
+        </dx-form>
+        <br>
+        <div class="row">
+          <div class="col-md-offset-2 col-md-8 text-center">
+            <dx-button text="Update Filter" type="success" validationGroup="pensionFilterValidation" [useSubmitBehavior]="true"></dx-button>
+          </div>
+        </div>
+        
+
+      </form>
+    </div>
+  </div> 
+  <!-- end -->
+
+  <div *ngIf="employeePensionReportFlag; else pensionReport">
+
+    <div class="row">
+      <div class="col-md-12">
+        <br>
+        <br>
+        <h3 class="page-heading-report empProject pension-heading">Pension</h3>
+        <dx-data-grid id="gridContainer" [dataSource]="pensionList" [allowColumnReordering]="true" [allowColumnResizing]="true" [showRowLines]="true">
+
+          <!-- <dxo-export enabled="true" fileName="Employees" printingEnabled="false"></dxo-export> -->
+
+
+          <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+          <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+          <dxo-header-filter [visible]="true">
+          </dxo-header-filter>
+          <dxo-filter-row [visible]="true">
+          </dxo-filter-row>
+
+          <dxi-column dataField="Date" dataType="date" format="dd/MM/yyyy" [width]="130"></dxi-column>
+          <dxi-column dataField="GrossSalary"></dxi-column>
+          <dxi-column dataField="PensionRate"> </dxi-column>
+          <dxi-column dataField="PensionDeduction"></dxi-column>
+          <dxi-column dataField="Profit"></dxi-column>
+          <dxi-column dataField="Total"></dxi-column>
+
+          <dxo-paging [pageSize]="10"></dxo-paging>
+
+          <!-- <ngx-loading [show]="pensionInfoLoading"></ngx-loading> -->
+        </dx-data-grid>
+        <br>
+        <br>
+        <br>
+        
+      </div>
+
+      <div class="col-md-12">
+        <h3 class="page-heading-report empProject pension-heading">Salary Tax</h3>
+        <dx-data-grid id="gridContainer" [dataSource]="salaryTaxDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true" [showRowLines]="true"
+          (onExporting)="onExporting($event)" (onExported)="onExported($event)" (onFileSaving)="onFileSaving($event)">
+
+          <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+          <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+          <dxo-header-filter [visible]="true">
+          </dxo-header-filter>
+          <dxo-filter-row [visible]="true">
+          </dxo-filter-row>
+
+          <dxi-column dataField="Date" dataType="date" format="dd/MM/yyyy"></dxi-column>
+          <dxi-column dataField="Currency"></dxi-column>
+          <dxi-column dataField="Office"> </dxi-column>
+          <dxi-column dataField="TotalTax"></dxi-column> 
+
+          <dxo-paging [pageSize]="10"></dxo-paging>
+        </dx-data-grid>
+        <ngx-loading [show]="salaryTaxReportloading"></ngx-loading>
+      </div>
+    </div>
+
+  </div>
+  <ng-template #pensionReport>
+    <br>
+    <div class="row">
+      <div class="col-sm-12 text-right">
+        <div class="emp-close-btn">
+          <i class="fa fa-times-circle" aria-hidden="true" (click)="showClosePensionReport()"></i>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <ul class="nav nav-tabs">
+        <li class="active">
+          <a data-toggle="tab" href="#employeePensionReport">Pension Report</a>
+        </li>
+        <li>
+          <a data-toggle="tab" href="#employeeSalaryTaxReport">Salary Tax Report</a>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+
+        <!-- PensionReport -->
+        <div id="employeePensionReport" class="tab-pane fade in active">
+          <br>
+          <div class="row">
+            <div class="col-sm-6 text-left">
+              <dx-button (click)="generatePensionPdf()" text="Export Pdf"></dx-button>
+              <dx-button (click)="generateExcel($event)" text="Export EXCEL"></dx-button>
+            </div>
+          </div>
+          <br>
+          <!-- pdf -->
+          <div id="pensionReportPdf" style="background-color: #fff;">
+
+
+
+
+            <div class="header">
+              <div class="headingPart1">
+                <div style="text-align: left; display: inline-table; text-indent: 45px;">
+                  <img src="assets/images/reportLogo.png" width="100" height="100" />
+                </div>
+                <div style="display: inline-table; text-align: center; text-indent: 80px;">
+                  <h3> Coordination of Humanitarian Assistance (CHA)</h3>
+                  <h4> Pension Payment Form</h4>
+                </div>
+              </div>
+              <br>
+              <div class="headingPart2">
+                <table style="width: 100%">
+                  <tr style="height: 50px;">
+                    <td style="text-align: left; padding-left: 50px;">
+                      <span style="font-weight: bold;">Employee Code: </span>
+                      <span style="border-bottom: 1px solid; padding-bottom: 5px;">{{employeeId}}</span>
+                    </td>
+                    <td style="text-align: right; padding-right: 50px;">
+                      <span style="font-weight: bold;">Employee Name: </span>
+                      <span style="border-bottom: 1px solid; padding-bottom: 5px;">{{selectedEmployeeName != null ? selectedEmployeeName : 'xxxxx'}}</span>
+                    </td>
+                  </tr>
+                  <tr style="height: 50px;">
+                    <td style="text-align: left; padding-left: 50px;">
+                      <span style="font-weight: bold;">Currency: </span>
+                      <span style="border-bottom: 1px solid; padding-bottom: 5px;">{{currencyData.CurrencyCode != null ? currencyData.CurrencyCode : 'AFG'}} ({{currencyData.CurrencyCode
+                        != null ? currencyData.CurrencyName : 'AFG'}})</span>
+                    </td>
+                  </tr>
+                </table>
+
+              </div>
+
+              <br>
+
+              <div class="mainTable" style="text-align: center;padding-left: 30px; padding-right: 30px; padding-top: 10px;">
+
+                <table style="text-align: center; width: 100%; border-collapse: collapse;" border="1">
+                  <tr>
+                    <th style="text-align: center; width: 50px;">
+                      Sr. No.
+                    </th>
+                    <th style="text-align: center; width: 50px;">
+                      Year
+                    </th>
+                    <th style="text-align: center; width: 100px;">
+                      Month
+                    </th>
+                    <th style="text-align: center;">
+                      Gross Salary
+                    </th>
+                    <th style="text-align: center;">
+                      Pension Deduction
+                    </th>
+                    <th style="text-align: center; width: 100px;">
+                      Pension Rate
+                    </th>
+                    <th style="text-align: center;">
+                      Profit
+                    </th>
+                    <th style="text-align: center;">
+                      Total
+                    </th>
+                  </tr>
+
+                  <tr>
+                    <td colSpan="4" style="text-align: left">Opening Balance carry forwarded from 2017</td>
+                    <td>{{previousPensionDeduction}}</td>
+                    <td>{{previousPensionRate}}</td>
+                    <td>{{previousProfit}}</td>
+                    <td>{{previousTotal}}</td>
+                  </tr>
+
+                  <tr *ngFor="let item of pensionList; let i = index">
+                    <td>{{i + 1}}</td>
+                    <td>{{item.Date | date: 'yyyy'}}</td>
+                    <td>{{item.Date | date: 'MMM'}}</td>
+                    <td>{{item.GrossSalary}}</td>
+                    <td>{{item.PensionDeduction}}</td>
+                    <td>{{item.PensionRate}}</td>
+                    <td>{{item.Profit}}</td>
+                    <td>{{item.Total}}</td>
+                  </tr>
+
+                  <tr style="font-weight: bold;">
+                    <td colSpan="4">Total</td>
+                    <td>{{pensionDeductionTotal}}</td>
+                    <td></td>
+                    <td>{{pensionProfitTotal}}</td>
+                    <td>{{pensionTotal}}</td>
+                  </tr>
+
+                </table>
+              </div>
+
+            </div>
+
+
+
+
+          </div>
+
+          <!-- excel -->
+          <div id="pensionReportExcel" style="background-color: #fff" style="visibility: collapse;">
+
+            <table>
+              <tr>
+                <td colSpan="2" rowspan="5" height="100" width="100">
+                  <img src="{{humanitarianReportLogoPath}}" width="100" height="100" />
+                </td>
+                <td colSpan="5" width="600" style="text-align: center;">
+                  <span style="font-size: 20px; font-weight: bold;"> Coordination of Humanitarian Assistance (CHA)</span>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="5" style="text-align: center;">
+                  <span style="font-size: 15px;"> Pension Payment Form</span>
+                </td>
+              </tr>
+              <tr></tr>
+            </table>
+
+            <table>
+              <tr width="500">
+                <td colSpan="4">
+                  <span style="font-weight: bold;">Employee Code: </span>
+                  <span>{{employeeId}}</span>
+                </td>
+                <td colSpan="4" style="text-align: right;">
+                  <span style="font-weight: bold;">Employee Name: </span>
+                  <span style="border-bottom: 1px solid; padding-bottom: 5px;">{{selectedEmployeeName != null ? selectedEmployeeName : 'xxxxx'}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="4">
+                  <span style="font-weight: bold;">Currency: </span>
+                  <span>{{currencyData.CurrencyCode != null ? currencyData.CurrencyCode : 'AFG'}} ({{currencyData.CurrencyCode
+                    != null ? currencyData.CurrencyName : 'AFG'}})</span>
+                </td>
+              </tr>
+              <tr></tr>
+            </table>
+
+            <table border="1">
+              <tr>
+                <th style="text-align: center; width: 50px;">
+                  Sr. No.
+                </th>
+                <th style="text-align: center; width: 50px;">
+                  Year
+                </th>
+                <th style="text-align: center; width: 100px;">
+                  Month
+                </th>
+                <th style="text-align: center;">
+                  Gross Salary
+                </th>
+                <th style="text-align: center;">
+                  Pension Deduction
+                </th>
+                <th style="text-align: center; width: 100px;">
+                  Pension Rate
+                </th>
+                <th style="text-align: center;">
+                  Profit
+                </th>
+                <th style="text-align: center;">
+                  Total
+                </th>
+              </tr>
+
+              <tr>
+                <td colSpan="4" style="text-align: left">Opening Balance carry forwarded from 2017</td>
+                <td>{{previousPensionDeduction}}</td>
+                <td>{{previousPensionRate}}</td>
+                <td>{{previousProfit}}</td>
+                <td>{{previousTotal}}</td>
+              </tr>
+
+              <tr *ngFor="let item of pensionList; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{item.Date | date: 'yyyy'}}</td>
+                <td>{{item.Date | date: 'MMM'}}</td>
+                <td>{{item.GrossSalary}}</td>
+                <td>{{item.PensionDeduction}}</td>
+                <td>{{item.PensionRate}}</td>
+                <td>{{item.Profit}}</td>
+                <td>{{item.Total}}</td>
+              </tr>
+
+              <tr style="font-weight: bold;">
+                <td colSpan="4">Total</td>
+                <td>{{pensionDeductionTotal}}</td>
+                <td></td>
+                <td>{{pensionProfitTotal}}</td>
+                <td>{{pensionTotal}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- SalaryTax -->
+        <div id="employeeSalaryTaxReport" class="tab-pane fade">
+          <br>
+          <dx-button (click)="generateSalaryTaxPdf()" text="Export Pdf"></dx-button>
+          <br>
+          <br>
+
+
+
+
+
+
+          <div id="salaryTaxPdf" style="width:100%; margin:0 auto; font-family:times new roman; font-size:12px; padding-left: 15px;padding-right: 15px;padding-top: 20px">
+            <table cellpadding="0" width="100%" cellspacing="0" style="padding:20px 60px; border:2px solid #aaa;">
+              <tr>
+                <td style="border:2px solid #ddd;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td>
+                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:10px; color:#222;">
+                          <tr>
+                            <td width="40%" style="padding-left: 10px;">
+                              <p style="font-size:16px; font-weight:600; margin-top:0px;">Islamic Republic of Afghanistan</p>
+                              <p style="font-size:16px; font-weight:600; margin-top:0px;">Ministry of Finance</p>
+                              <p style="font-size:16px; font-weight:600; margin-top:0px; margin-bottom:0px;">Afghanistan Revenue Department</p>
+                            </td>
+                            <td align="center">
+                              <img src="assets/images/taxlogo.jpg" width="100" height="100" />
+                            </td>
+                            <td width="40%" style="padding-right: 10px;">
+                              <p style="font-size:16px; text-align:right; font-weight:600; margin-top:0px;" translate>Islamic Republic of Afghanistan</p>
+                              <p style="font-size:16px;text-align:right; font-weight:600; margin-top:0px;" translate>Ministry of Finance</p>
+                              <p style="font-size:16px; text-align:right;font-weight:600; margin-top:0px; margin-bottom:0px;" translate>Afghanistan Revenue Department</p>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td style="border-top:2px solid #ddd; padding:10px 10px; color:#222; font-size:14px;font-weight:600;">
+                              Annual Wage and Tax Withholding statement
+                            </td>
+                            <td style="border-top:2px solid #ddd;color:#222; padding:10px 10px;font-size:14px; text-align:right;font-weight:600; margin-top:0px;"
+                              translate>
+                              Annual Wage and Tax Withholding statement
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <th style="border-top:2px solid #ddd; text-align:left; padding:10px 10px; color:#222; font-size:18px;font-weight:600;">
+                              Section 1: Employer Information
+                            </th>
+                            <th style="border-top:2px solid #ddd;color:#222; padding:10px 10px;font-size:14px; text-align:right;font-weight:600; margin-top:0px;">
+                            </th>
+                            <th style="border-top:2px solid #ddd; text-align:right; padding:10px 10px; color:#222; font-size:18px;font-weight:600;" translate>
+                              Section 1: Employer Information
+                            </th>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">1</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Employer Taxpayer Identification Number (Employer Organisation)
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:right;font-weight:600; margin-top:0px;">
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Employer Taxpayer Identification Number (Employer Organisation)
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">1</td>
+                          </tr>
+                          <!-- /REPEAT -->
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">2</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Name of Business
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.NameOfBusiness : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Name of Business
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">2</td>
+                          </tr>
+                          <!-- /REPEAT -->
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">3</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Address of Business
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.AddressOfBusiness : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Address of Business
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">3</td>
+                          </tr>
+                          <!-- /REPEAT -->
+
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">4</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Telephone Number
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.TelephoneNumber : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Telephone Number
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">4</td>
+                          </tr>
+                          <!-- /REPEAT -->
+
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">5</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Email Address
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.EmailAddressEmployer : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Email Address
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">5</td>
+                          </tr>
+                          <!-- /REPEAT -->
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <th style="border-top:2px solid #ddd; text-align:left; padding:10px 10px; color:#222; font-size:18px;font-weight:600;">
+                              Section 2: Employee Information
+                            </th>
+                            <th style="border-top:2px solid #ddd;color:#222; padding:10px 10px;font-size:16px; text-align:right;font-weight:600; margin-top:0px;">
+                            </th>
+                            <th style="border-top:2px solid #ddd; text-align:right; padding:10px 10px; color:#222; font-size:18px;font-weight:600;" translate>
+                              Section 2: Employee Information
+                            </th>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">6</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Name of Employee
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.EmployeeName : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Name of Employee
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">6</td>
+                          </tr>
+                          <!-- /REPEAT -->
+                          <!-- REPEAT -->
+                          <tr>
+                            <td style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;"
+                              width="10">7</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Employee Taxpayer Identification
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.EmployeeTaxpayerIdentification : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Employee Taxpayer Identification
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">7</td>
+                          </tr>
+                          <!-- /REPEAT -->
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">8</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Employee Address
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.EmployeeAddress : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Employee Address
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">8</td>
+                          </tr>
+                          <!-- /REPEAT -->
+
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">9</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Telephone Number
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.TelephoneNumberEmployee : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Telephone Number
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">9</td>
+                          </tr>
+                          <!-- /REPEAT -->
+
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">10</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Email Address
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.EmailAddressEmployee : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Email Address
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">10</td>
+                          </tr>
+                          <!-- /REPEAT -->
+                        </table>
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                      <td>
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <th style="border-top:2px solid #ddd; text-align:left; padding:10px 10px; color:#222; font-size:18px;font-weight:600;">
+                              Section 3: Wages and Tax Information
+                            </th>
+                            <th style="border-top:2px solid #ddd;color:#222; padding:10px 10px;font-size:16px; text-align:right;font-weight:600; margin-top:0px;">
+                            </th>
+                            <th style="border-top:2px solid #ddd; text-align:right; padding:10px 10px; color:#222; font-size:18px;font-weight:600;" translate>
+                              Section 3: Wages and Tax Information
+                            </th>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">11</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Annual Tax Period (Calendar Year)
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.AnnualTaxPeriod : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Annual Tax Period (Calendar Year)
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">11</td>
+                          </tr>
+                          <!-- /REPEAT -->
+                          <!-- REPEAT -->
+                          <tr>
+                            <td style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;"
+                              width="10">12</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Dates of Employement within Year
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.DatesOfEmployeement : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Dates of Employement within Year
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">12</td>
+                          </tr>
+                          <!-- /REPEAT -->
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">13</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Total Wages for the Year
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.TotalWages : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Total Wages for the Year
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">13</td>
+                          </tr>
+                          <!-- /REPEAT -->
+
+                          <!-- REPEAT -->
+                          <tr>
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;">14</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Total taxes withheld for the year
+                            </td>
+                            <td width="33%" style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;">
+                              {{employeeTaxReportData != null ? employeeTaxReportData.TotalTax : ""}}
+                            </td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                              translate>
+                              Total taxes withheld for the year
+                            </td>
+                            <td width="10" style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">14</td>
+                          </tr>
+                          <!-- /REPEAT -->
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">It's not mandatory to use the actual four parts printed 'Annual and tax withholding statement'. Employers
+                        with computerized system may wish to print out information from payroll database. Any computerized
+                        print out must have the same 14 fields.</td>
+                    </tr>
+                    <tr>
+                      <td style="border-top:2px solid #ddd; border-bottom:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                        translate>It's not mandatory to use the actual four parts printed 'Annual and tax withholding statement'. Employers with computerized system may wish to print out information from payroll database. Any computerized print out must have the same 14 fields.</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table width="100%" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td style="padding:10px 15px; text-align:center;">
+                              <p style="margin-top:0px;" translate>Employee Tax Return</p>
+                              <p style="margin-bottom:40px;" translate>White</p>
+                              <p style="margin-bottom:0px;">Employee Tax Return</p>
+                              <p style="margin:0px;">White</p>
+                            </td>
+                            <td style="padding:10px 15px; text-align:center;">
+                              <p style="margin-top:0px;" translate>Employee Keep for the Record</p>
+                              <p style="margin-bottom:40px;" translate>Green</p>
+                              <p style="margin-bottom:0px;">Employee Keep for the Record</p>
+                              <p style="margin:0px;">Green</p>
+                            </td>
+                            <td style="padding:10px 15px; text-align:center;">
+                              <p style="margin-top:0px;" translate>Employee send to ministry of finance</p>
+                              <p style="margin-bottom:40px;" translate>Yellow</p>
+                              <p style="margin-bottom:0px;">Employee send to ministry of finance</p>
+                              <p style="margin:0px;">Yellow</p>
+                            </td>
+                            <td style="padding:10px 15px; text-align:center;">
+                              <p style="margin-top:0px;" translate>Organisation keep for record</p>
+                              <p style="margin-bottom:40px;" translate>Blue</p>
+                              <p style="margin-bottom:0px;">Organisation keep for record</p>
+                              <p style="margin:0px;">Blue</p>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table width="100%" cellspacing="0" cellpadding="0">
+                          <!-- REPEAT -->
+                          <tbody>
+                            <tr>
+                              <td style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;"
+                                width="10"></td>
+                              <td style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;" width="30%">
+                                Employer of authorized officer name
+                              </td>
+                              <td style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;"
+                                width="33%">
+                                <!-- {{employeeTaxReportData != null ? employeeTaxReportData.OfficerName : ""}} -->
+                                {{salaryTaxReportForm != null ? salaryTaxReportForm.EmployerAuthorizedOfficerName : ""}}
+                              </td>
+                              <td style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;" width="30%"
+                                translate>
+                                Employer of authorized officer name
+                              </td>
+                              <td style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;"
+                                width="10"></td>
+                            </tr>
+                            <!-- /REPEAT -->
+                            <!-- REPEAT -->
+                            <tr>
+                              <td style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;"
+                                width="10"></td>
+                              <td style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;" width="30%">
+                                Position of authorized officer
+                              </td>
+                              <td style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;"
+                                width="33%">
+                                <!-- {{employeeTaxReportData != null ? employeeTaxReportData.Position : ""}} -->
+                                {{salaryTaxReportForm != null ? salaryTaxReportForm.PositionAuthorizedOfficer : ""}}
+                              </td>
+                              <td style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;" width="30%"
+                                translate>
+                                Position of authorized officer
+                              </td>
+                              <td style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;"
+                                width="10"></td>
+                            </tr>
+                            <!-- /REPEAT -->
+                            <!-- REPEAT -->
+                            <tr>
+                              <td style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;"
+                                width="10"></td>
+                              <td style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;" width="30%">
+                                Signature of authorized officer
+                              </td>
+                              <td style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;"
+                                width="33%">
+
+                              </td>
+                              <td style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;" width="30%"
+                                translate>
+                                Signature of authorized officer
+                              </td>
+                              <td style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;"
+                                width="10"></td>
+                            </tr>
+                            <!-- /REPEAT -->
+
+                            <!-- REPEAT -->
+                            <tr>
+                              <td style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:14px;font-weight:600;"
+                                width="10"></td>
+                              <td style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;" width="30%">
+                                Date
+                              </td>
+                              <td style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;"
+                                width="33%">
+                                {{employeeTaxReportData != null ? (employeeTaxReportData.Date | date: 'dd/MM/yyyy'): ""}}
+                              </td>
+                              <td style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;" width="30%"
+                                translate>
+                                Date
+                              </td>
+                              <td style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;"
+                                width="10"></td>
+                            </tr>
+                            <!-- /REPEAT -->
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+
+
+
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </ng-template>
+  <ngx-loading [show]="pensionInfoLoading"></ngx-loading>
+</div>

@@ -1,0 +1,50 @@
+<div class="main-item-specification-master">
+  <div class="row">
+
+    <div class="col-xs-6 col-sm-3">
+      <div class="dx-field-value">
+        <dx-select-box [dataSource]="itemTypeMasterDataSource" displayExpr="TypeName" valueExpr="ItemType" placeholder="Select Item Type"
+          [showClearButton]="true" (onValueChanged)="selectedItemType($event.value)"></dx-select-box>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-3">
+        <dx-select-box [dataSource]="officeDropdownList" placeholder="Choose Office" (onItemClick)="onOfficeSelected($event.itemData.OfficeId)"
+        displayExpr="OfficeName" valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
+    </dx-select-box>
+    </div>
+
+    <div class="col-sm-12">
+
+      <dx-data-grid id="gridContainer" [dataSource]="itemSpecificationDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+        (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+        (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+        <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="false" *ngIf="isEditingAllowed"> </dxo-editing>
+
+        <!-- <dxi-column dataField="ItemSpecificationMasterId" [visible]="false">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column> -->
+        <dxi-column dataField="ItemSpecificationField" caption="Specification Name">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column>
+        <!-- <dxi-column dataField="OfficeId" [visible]="false">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="ItemTypeId" [visible]="false">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column> -->
+
+      </dx-data-grid>
+
+
+
+    </div>
+  </div>
+</div>
+
+<ngx-loading [show]="itemSpecificationPopupLoading"></ngx-loading>

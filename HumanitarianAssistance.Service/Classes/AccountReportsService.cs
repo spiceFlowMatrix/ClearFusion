@@ -25,68 +25,15 @@ using HumanitarianAssistance.ViewModels.Models.AccountingNew;
 
 namespace HumanitarianAssistance.Service.Classes
 {
-    public class AccountReportsService: IAccountRecords
+    public class AccountReportsService : IAccountRecords
     {
         IUnitOfWork _uow;
-        IMapper _mapper;
         UserManager<AppUser> _userManager;
 
-        public AccountReportsService(IUnitOfWork uow, IMapper mapper, UserManager<AppUser> userManager)
+        public AccountReportsService(IUnitOfWork uow, UserManager<AppUser> userManager)
         {
             this._uow = uow;
-            this._mapper = mapper;
             this._userManager = userManager;
-        }
-
-        public async Task<APIResponse> GetBalanceSheet()
-        {
-            APIResponse response = new APIResponse();
-
-            try
-            {
-                ////get level 1 Account
-                //List<ChartAccountDetail> AccountLevel1 = await _uow.GetDbContext().ChartAccountDetail.Where(x => x.IsDeleted == false && x.AccountLevelId == 1).ToListAsync();
-
-                //foreach (ChartAccountDetail Account1 in AccountLevel1)
-                //{
-                //    //get level 2 Account
-                //    List<ChartAccountDetail> AccountLevel2 = await _uow.GetDbContext().ChartAccountDetail.Where(x => x.IsDeleted == false && x.AccountLevelId == 2 && x.ParentID== Account1.AccountCode).ToListAsync();
-
-                //    foreach (ChartAccountDetail Account2 in AccountLevel2)
-                //    {
-                //        //get level 3 Account
-                //        List<ChartAccountDetail> AccountLevel3 = await _uow.GetDbContext().ChartAccountDetail.Where(x => x.IsDeleted == false && x.AccountLevelId == 3 && x.ParentID == Account2.AccountCode).ToListAsync();
-
-                //        foreach (ChartAccountDetail Account3 in AccountLevel3)
-                //        {
-                //            //get level 4 Account
-                //            List<ChartAccountDetail> AccountLevel4 = await _uow.GetDbContext().ChartAccountDetail.Where(x => x.IsDeleted == false && x.AccountLevelId == 3 && x.ParentID == Account2.AccountCode).ToListAsync();
-
-                //        }
-                //    }
-                //}
-
-                BalanceSheetReportModel balanceSheetReportModel = new BalanceSheetReportModel();
-
-                var accountDetails = _uow.GetDbContext().ChartOfAccountNew.Where(x => x.IsDeleted == false && x.AccountLevelId == 1).GroupBy(x => x.ChartOfAccountNewId);
-
-                foreach(var obj in accountDetails)
-                {
-                    balanceSheetReportModel.ChartOfAccountNewId = obj.Key;
-
-
-                }
-
-                //response.data.ChartAccountList = chartaccountlist;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
         }
 
         public async Task<APIResponse> GetVoucherSummaryList(VoucherSummaryFilterModel voucherSummaryFilter)
@@ -131,7 +78,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 var data = await _uow.GetDbContext().VoucherDetail
                                                     .Include(x => x.VoucherTransactionDetails)
-                                                    .ThenInclude(y=> y.ChartOfAccountDetail)
+                                                    .ThenInclude(y => y.ChartOfAccountDetail)
                                                     .Include(x => x.CurrencyDetail)
                                                     .FirstOrDefaultAsync(x => x.IsDeleted == false && x.VoucherNo == model.VoucherNo);
 
@@ -180,7 +127,7 @@ namespace HumanitarianAssistance.Service.Classes
                                     }
                                     else
                                     {
-                                        voucherSummaryTransactionModel.Amount = Math.Round((double)(item.Debit * (double)exchangeRateDetail.Rate),2);
+                                        voucherSummaryTransactionModel.Amount = Math.Round((double)(item.Debit * (double)exchangeRateDetail.Rate), 2);
                                         voucherSummaryTransactionModel.TransactionType = "Debit";
                                     }
                                 }
@@ -197,7 +144,7 @@ namespace HumanitarianAssistance.Service.Classes
                                         voucherSummaryTransactionModel.TransactionType = "Debit";
                                     }
                                 }
-                                
+
                                 voucherSummaryTransactionModel.AccountCode = item.ChartOfAccountDetail.ChartOfAccountNewCode;
                                 voucherSummaryTransactionModel.AccountName = item.ChartOfAccountDetail.AccountName;
                                 voucherSummaryTransactionModel.CurrencyName = data.CurrencyDetail.CurrencyName;

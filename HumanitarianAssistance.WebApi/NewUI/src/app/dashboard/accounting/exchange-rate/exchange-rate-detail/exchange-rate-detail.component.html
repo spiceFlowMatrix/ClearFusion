@@ -1,0 +1,134 @@
+<div class="row">
+  <!-- <div class="col-sm-12" *ngIf="exchangeRateLoader">
+      <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+  </div> -->
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="col-sm-10 font_x_large">
+          {{exchangeRateDate | date: "d, MMM, yyyy"}}
+      </div>
+      <div class="col-sm-2">
+          <!-- <button mat-raised-button (click)="verifyExchangeRate()" [disabled]="isVerified || verifyExchangeRateLoader || verified">
+              <span class="pull-left spinner_center" *ngIf="verifyExchangeRateLoader"><mat-spinner [diameter]="15"></mat-spinner></span>Verify</button> -->
+
+              <button
+          mat-raised-button
+          color="accent"
+          [disabled]="isVerified || verifyExchangeRateLoader"
+          (click)="verifyExchangeRate()"
+        *ngIf="isEditingAllowed">
+          <span *ngIf="!verifyExchangeRateLoader; else exchangeRateVerificationLoaderTemplate"
+            >Verify</span
+          >
+          <ng-template #exchangeRateVerificationLoaderTemplate>
+            <div class="spinner_center padding_top_5 padding_bottom_5">
+              <mat-spinner [diameter]="25"> </mat-spinner>
+            </div>
+          </ng-template>
+        </button>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <div class="row">
+    <div class="col-sm12">
+      <p style="padding-left:30px; padding-right:30px; text-align:'left'">All of the below exchange rates were generated as a result of all the currencies
+        we maintain and the exchange rates provided at the creation form. In certain cases,
+        the machine calculations for the exchange rates may not reflect real life exchange rates.<br>
+        Please <strong>check and verify</strong> that all the provided exchange rates are correct for all currencies.<br><br>
+        <b>Note:</b> Each office has unique set of exchange rates for each currency.<br><br>
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="col-sm-5">
+        <mat-form-field class="example-full-width">
+            <mat-select
+              placeholder="Office"
+              name="OfficeId"
+              [(ngModel)]="selectedOffice"
+              (selectionChange)='getExchangeRates()'
+            >
+              <mat-option
+                *ngFor="let item of officeList"
+                [value]="item.OfficeId"
+              >
+                {{ item.OfficeName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-5" *ngIf="isEditingAllowed">
+            <!-- <button mat-raised-button (click)="saveExchangeRatesForOffice(true)"  [disabled]="isVerified"></button> -->
+            <button
+          mat-raised-button
+          color="accent"
+          [disabled]="isVerified || exchangeRateLoader"
+          (click)="saveExchangeRatesForOffice(true)"
+        >
+          <span *ngIf="!exchangeRateLoader; else exchangeRateOfficeAddLoaderTemplate"
+            >Copy & Save for All Office</span
+          >
+          <ng-template #exchangeRateOfficeAddLoaderTemplate>
+            <div class="spinner_center padding_top_5 padding_bottom_5">
+              <mat-spinner [diameter]="25"> </mat-spinner>
+            </div>
+          </ng-template>
+        </button>
+        </div>
+        <div class="col-sm-2" *ngIf="isEditingAllowed">
+            <!-- <button mat-raised-button   [disabled]="isVerified">Save</button> -->
+            <button
+            mat-raised-button
+            color="accent"
+            [disabled]="isVerified || exchangeRateLoader"
+            (click)="saveExchangeRatesForOffice(false)"
+          >
+            <span *ngIf="!exchangeRateLoader; else exchangeRateAddLoaderTemplate"
+              >Save</span
+            >
+            <ng-template #exchangeRateAddLoaderTemplate>
+              <div class="spinner_center padding_top_5 padding_bottom_5">
+                <mat-spinner [diameter]="25"> </mat-spinner>
+              </div>
+            </ng-template>
+          </button>
+        </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+        <div class="responsive_table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr class="text-center">
+              <td><strong>From Currency</strong></td>
+              <td><strong>To Currency</strong></td>
+              <td><strong>Rate</strong></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of exchangeRateList"  class="text-center">
+              <td class="text-center" text-align="left">{{item.FromCurrency}}</td>
+              <td class="text-center" text-align="left">{{item.ToCurrency}}</td>
+              <td class="text-center" text-align="left" *ngIf="!isVerified && isEditingAllowed">
+                <mat-form-field>
+                  <input type="number" [(ngModel)]="item.Rate" matInput placeholder="Rate">
+                </mat-form-field>
+              </td>
+              <td class="text-center" text-align="left" *ngIf="isVerified || !isEditingAllowed">
+                {{item.Rate}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+

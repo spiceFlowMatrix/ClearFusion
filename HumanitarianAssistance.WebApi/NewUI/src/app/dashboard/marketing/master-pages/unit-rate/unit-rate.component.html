@@ -1,0 +1,231 @@
+<div class="row">
+    <div *ngIf="unitRateDetailsLoader; else unitRateDetailsTemplate"
+              class="col-sm-12"
+            ><br/>
+              <mat-spinner
+                class="center_loader"
+                diameter="50"
+              ></mat-spinner>
+            </div>
+ <ng-template #unitRateDetailsTemplate>
+    <div class="col-sm-12">
+        <mat-card [ngStyle]="scrollStyles">
+          <div class="row">
+            <div class="col-sm-6">
+              <!-- <span (click)="onHideDetailPanel()"><i title="Back to List" class="fas fa-arrow-left"></i></span> -->
+            </div>
+            <div *ngIf="isEditingAllowed">
+            <div *ngIf="archiveUnitRate" class="col-sm -6 pull-right">
+              <button pTooltip="Archive"
+              tooltipPosition="top"
+                (click)="DeleteUnitRate(routeId)"
+                color="warn"
+                mat-icon-button
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <!-- <a class="pull-right" (click)="DeleteUnitRate(routeId)">Archive</a> -->
+            </div>
+          </div>
+          </div>
+          <div>
+            <form [formGroup]="unitRateForm">
+              <mat-form-field class="example-full-width">
+                <mat-select
+                  formControlName="activity"
+                  placeholder="Activity"
+                  #activity
+                  name="activity"
+                  (selectionChange)="ValidateFields('activity', $event.value)"
+                [disableControl]="!isEditingAllowed">
+                  <mat-option
+                    *ngFor="let contract of activities"
+                    [value]="contract.ActivityTypeId"
+                  >
+                    {{ contract.ActivityName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <span class="validationError" *ngIf="formErrors.activity">{{
+                formErrors.activity
+              }}</span>
+
+              <div class="row">
+                <div class="col-sm-5">
+                  <!-- <label>Quality</label> -->
+                  <mat-form-field class="example-full-width">
+                    <mat-select
+                      formControlName="quality"
+                      #quality
+                      placeholder="Quality"
+                      name="quality"
+                      (selectionChange)="ValidateFields('quality', $event.value)"
+                      [disableControl]="!isEditingAllowed">
+                      <mat-option
+                        *ngFor="let contract of qualities"
+                        [value]="contract.QualityId"
+                      >
+                        {{ contract.QualityName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <span class="validationError" *ngIf="formErrors.quality">{{
+                    formErrors.quality
+                  }}</span>
+                </div>
+
+                <div class="col-sm-5">
+                  <!-- <label>Job Nature</label> -->
+                  <mat-form-field class="example-full-width">
+                    <mat-select
+                      formControlName="nature"
+                      placeholder="Job Nature"
+                      #nature
+                      name="nature"
+                      (selectionChange)="ValidateFields('nature', $event.value)"
+                      [disableControl]="!isEditingAllowed">
+                      <mat-option
+                        *ngFor="let contract of natures"
+                        [value]="contract.NatureId"
+                      >
+                        {{ contract.NatureName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <span class="validationError" *ngIf="formErrors.nature">{{
+                    formErrors.nature
+                  }}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-5">
+                  <!-- <label>Time Category</label> -->
+                  <mat-form-field class="example-full-width">
+                    <mat-select
+                      formControlName="timeCategory"
+                      placeholder="Time Category"
+                      #timeCategory
+                      name="timeCategory"
+                      (selectionChange)="
+                        ValidateFields('timeCategory', $event.value)
+                      "
+                      [disableControl]="!isEditingAllowed">
+                      <mat-option
+                        *ngFor="let contract of timecategories"
+                        [value]="contract.TimeCategoryId"
+                      >
+                        {{ contract.TimeCategoryName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <span class="validationError" *ngIf="formErrors.timeCategory">{{
+                    formErrors.timeCategory
+                  }}</span>
+                </div>
+                <div class="col-sm-5">
+                  <!-- <label>Medium</label> -->
+                  <mat-form-field class="example-full-width">
+                    <mat-select
+                      formControlName="medium"
+                      placeholder="Medium"
+                      #medium
+                      name="medium"
+                      (selectionChange)="ValidateFields('medium', $event.value)"
+                      [disableControl]="!isEditingAllowed">
+                      <mat-option
+                        *ngFor="let contract of mediums"
+                        [value]="contract.MediumId"
+                      >
+                        {{ contract.MediumName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <span class="validationError" *ngIf="formErrors.medium">{{
+                    formErrors.medium
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-5">
+                  <!-- <label>Currency</label> -->
+                  <mat-form-field class="example-full-width">
+                    <mat-select
+                      formControlName="currency"
+                      placeholder="Currency"
+                      #currency
+                      name="currency"
+                      (selectionChange)="ValidateFields('currency', $event.value)"
+                      [disableControl]="!isEditingAllowed">
+                      <mat-option
+                        *ngFor="let contract of currencies"
+                        [value]="contract.CurrencyId"
+                      >
+                        {{ contract.CurrencyCode }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <span class="validationError" *ngIf="formErrors.currency">{{
+                    formErrors.currency
+                  }}</span>
+                </div>
+                <div class="col-sm-5">
+                  <!-- <label>Media Category</label> -->
+                  <mat-form-field class="example-full-width">
+                    <mat-select
+                      formControlName="mediaCategory"
+                      placeholder="Media Category"
+                      #mediaCategory
+                      name="mediaCategory"
+                      (selectionChange)="
+                        ValidateFields('mediaCategory', $event.value)
+                      "
+                      [disableControl]="!isEditingAllowed">
+                      <mat-option
+                        *ngFor="let contract of mediaCategories"
+                        [value]="contract.MediaCategoryId"
+                      >
+                        {{ contract.CategoryName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div style="display: none">
+                  <!-- <label>Unit Rate Id</label> &nbsp;&nbsp; -->
+                  <!-- <input myNumberOnly name="min" placeholder="Enter Value" > -->
+                  <input
+                    type="text"
+                    matInput
+                    formControlName="unitRateId"
+                    #unitRateId
+                    class="textbox"
+                    placeholder="Unit Rate Id"
+                    [disableControl]="!isEditingAllowed"/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <!-- <label>Unit Rate</label> &nbsp;&nbsp; -->
+                  <mat-form-field class="example-full-width">
+                    <input
+                      (change)="ValidateFields('unitRate', unitRate.value)"
+                      appNumberOnly="true"
+                      formControlName="unitRate"
+                      matInput
+                      type="text"
+                      #unitRate
+                      class="textbox"
+                      placeholder="Unit Rate"
+                      [disableControl]="!isEditingAllowed"/>
+                    <span class="validationError" *ngIf="formErrors.unitRate">{{
+                      formErrors.unitRate
+                    }}</span>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </div>
+        </mat-card>
+      </div>
+ </ng-template>
+</div>

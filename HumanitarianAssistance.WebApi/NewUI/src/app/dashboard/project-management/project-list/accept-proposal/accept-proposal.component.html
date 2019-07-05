@@ -1,0 +1,206 @@
+<div class="tab-content">
+  <div id="details" class="tab-pane fade in active">
+    <div class="project-details mar_tp_20 ">
+      <div class="">
+        <div *ngIf="!winProjectFlag && winProjectFlag!=null" class="">
+          <form [formGroup]="approvalForm">
+            <div class="row">
+              <div class="col-sm-12 text-center">
+                <div class="action button">
+                  <button [disabled]="buttonDisabled()" mat-raised-button color="primary"
+                    (click)="isApproved(approvalForm.value)">
+                    <!-- <a *ngIf="approveLoaderFlag; else IsApproveLoader;" class="text-center">
+                      <mat-spinner [diameter]="20"></mat-spinner>
+                    </a>
+                    <ng-template #IsApproveLoader> -->
+
+                    <i class="material-icons"> done </i>
+                    <!-- </ng-template> -->
+                    <!-- <span class="pull-left spinner_center" *ngIf="approveLoaderFlag; else IsApproveLoader;">
+                      <mat-spinner [diameter]="15"></mat-spinner>
+                    </span>
+                    <ng-template #IsApproveLoader>
+                      <i class="material-icons"> done </i>
+                    </ng-template>  -->
+                    Approve
+                  </button>
+
+
+                  <button [disabled]="buttonDisabled()" mat-raised-button (click)="isRejected(approvalForm.value)">
+                    <!-- <a *ngIf="rejectLoaderFlag; else IsRejectLoader;" class="text-center">
+                      <mat-spinner [diameter]="20"></mat-spinner>
+                    </a>
+                    <ng-template #IsRejectLoader> -->
+                    <i class="material-icons"> clear </i>
+                    <!-- </ng-template> -->
+                    Reject
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2 col-sm-offset-5">
+              <mat-spinner class="mat-spiner-mrg-lft" *ngIf="commonLoaderFlag" [diameter]="25"></mat-spinner>
+            </div>
+
+
+            <div class="row"></div>
+            <div class="">
+              <div class="col-sm-6 col-sm-offset-3">
+                <div class="">
+                  <textarea class="form-control rounded-0 custom_text" id="approveRejectCommentText" rows="3"
+                    placeholder="Type Here.." formControlName="CommentText">
+                  </textarea>
+                  <a [href]="imageUrl">
+                    <file-drop *ngIf="FileName==null" class="custom_drop" headertext="Drop file here"
+                      (onFileDrop)="UploadReviewDragAndDropFile($event)" (onFileOver)="fileOver($event)"
+                      (onFileLeave)="fileLeave($event)">
+                      <i class="material-icons">
+                        add_circle_outline
+                      </i>
+                    </file-drop>
+                  </a>
+                  <div class="custom_drop_value text-center" *ngIf="FileName!=null">
+                      <strong>{{FileName}}</strong>
+                      <i class="icon_cursor" (click)="DeleteFile(FileName)" class="material-icons">
+                        cancel
+                      </i>
+                  </div>
+
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="bdr_btm pad_btm_25"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+
+        <!-- template for win project detail************ -->
+        <div *ngIf="winProjectFlag" class="">
+
+          <div class="row">
+            <div class="col-sm-12 text-center">
+              <div class="action button">
+                <button [disabled]="winlossButtonDisabled()" mat-raised-button color="primary" (click)="isWin()">
+                  <!-- <a *ngIf="winLoaderFlag; else IswinLoader;" class="text-center">
+                    <mat-spinner [diameter]="20"></mat-spinner>
+                  </a>
+                  <ng-template #IswinLoader>
+                    <i class="material-icons"> done </i>
+                  </ng-template> -->
+                  Win
+                </button>
+                <button [disabled]="winlossButtonDisabled()" mat-raised-button (click)="isLoss()">
+                  <!-- <a *ngIf="lossLoaderFlag; else IslossLoader;" class="text-center">
+                    <mat-spinner [diameter]="20"></mat-spinner>
+                  </a>
+                  <ng-template #IslossLoader>
+                    <i class="material-icons"> clear </i>
+                  </ng-template> -->
+                  Loss
+                </button>
+              </div>
+            </div>
+            <div class="col-sm-6"></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2 col-sm-offset-5">
+              <mat-spinner class="mat-spiner-mrg-lft" *ngIf="commonWinLossFlag" [diameter]="20"></mat-spinner>
+            </div>
+
+          </div>
+
+          <div class="">
+            <div class="col-sm-6 col-sm-offset-3">
+              <div class="">
+
+                <textarea class="form-control rounded-0 custom_text" rows="3" placeholder="Type Here.."
+                  [(ngModel)]="winLossMessage">
+                </textarea>
+
+                <file-drop *ngIf="winLossFileName == ''" class="custom_drop" headertext="Drop file here"
+                  (onFileDrop)="UploadWinLossDragAndDropFile($event)" (onFileOver)="winLossfileOver($event)"
+                  (onFileLeave)="winLossFileLeave($event)">
+                  <i class="material-icons">
+                    add_circle_outline
+                  </i>
+                </file-drop>
+
+                <div class="custom_drop_value text-center" *ngIf="winLossFileName != ''">
+                  <strong>{{winLossFileName}}</strong>
+                  <i class="icon_cursor" (click)="winLossDeleteFile()" class="material-icons">
+                    cancel_outline
+                  </i>
+                </div>
+
+                <!-- <file-drop class="custom_drop" headertext="Drop file here" (onFileDrop)="dropped($event)"
+                    (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+                    <i class="material-icons">
+                      add_circle_outline
+                    </i>
+                  </file-drop> -->
+                <!-- <strong>{{FileName}}</strong> -->
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="bdr_btm pad_btm_25"></div>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <!-- <form [formGroup]="approvalForm">
+            <div class="row">
+              <div class="col-sm-12 text-center">
+                <div class="action button">
+
+                  <div class="action button">
+                    <button mat-raised-button class="approve" [disabled]="!approvalForm.valid" (click)="isWin(approvalForm.value, true, data)">
+                      <i class="material-icons"> done </i>Win
+                    </button>
+
+                    <button mat-raised-button class="Reject" [disabled]="!approvalForm.valid" (click)="isLoss(approvalForm.value, false, data)">
+                      <i class="material-icons"> clear </i> Loss
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6"></div>
+            </div>
+            <div class="row"></div>
+            <div class="col-sm-12">
+
+              <div class="bdr_btm pad_btm_25">
+                <textarea class="form-control rounded-0 custom_text" id="winLossCommentText" rows="3" placeholder="Type Here.."
+                  formControlName="CommentText" required>
+                </textarea>
+
+                <file-drop class="custom_drop" headertext="Drop file here" (onFileDrop)="dropped($event)"
+                    (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+                    <i class="material-icons">
+                      add_circle_outline
+                    </i>
+                  </file-drop>
+              </div>
+
+            </div>
+
+          </form> -->
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

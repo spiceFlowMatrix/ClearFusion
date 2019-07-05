@@ -4,15 +4,30 @@
    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
    "version": "0.2.0",
    "configurations": [
+       {
+           "type": "chrome",
+           "request": "launch",
+           "name": "Launch Chrome",
+           "url": "http://localhost:8080",
+           "webRoot": "${workspaceFolder}"
+       },
+       {
+           "type": "chrome",
+           "request": "attach",
+           "name": "Attach to Chrome",
+           "port": 9222,
+           "webRoot": "${workspaceFolder}"
+       },
+
         {
             "name": ".NET Core Launch (console)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/DataAccess/bin/Debug/netcoreapp2.1/DataAccess.dll",
+            "program": "${workspaceFolder}/HumanitarianAssistance.WebApi/bin/Debug/netcoreapp2.1/HumanitarianAssistance.WebApi.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/DataAccess",
+            "cwd": "${workspaceFolder}/HumanitarianAssistance.WebApi",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
             "console": "internalConsole",
             "stopAtEntry": false,

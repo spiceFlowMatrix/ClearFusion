@@ -1,0 +1,42 @@
+<div class="people-main">
+  <div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+      <mat-card [ngStyle]="scrollStyles">
+        <div class="row">
+          <div class="col-sm-12">
+            <h4>Project People</h4>
+            <hr />
+          </div>
+          <div class="col-sm-12">
+            <app-opportunity-control
+              [userList]="userList"
+              [roleList]="opportunityRoleList"
+              (invokePeoplePermissionChange)="invokePeoplePermissionChange()"
+            ></app-opportunity-control>
+          </div>
+          <div class="col-sm-12">
+            <app-logistics-control
+              [userList]="userList"
+              [roleList]="logisticsRoleList"
+              (invokePeoplePermissionChange)="invokePeoplePermissionChange()"
+            ></app-logistics-control>
+          </div>
+          <div class="col-sm-12">
+            <app-activities-control
+              [userList]="userList"
+              [roleList]="activitiesRoleList"
+              (invokePeoplePermissionChange)="invokePeoplePermissionChange()"
+            ></app-activities-control>
+          </div>
+          <div class="col-sm-12">
+            <app-hiring-control
+              [userList]="userList"
+              [roleList]="hiringRoleList"
+              (invokePeoplePermissionChange)="invokePeoplePermissionChange()"
+            ></app-hiring-control>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

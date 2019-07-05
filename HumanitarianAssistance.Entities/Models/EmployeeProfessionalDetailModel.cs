@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.ViewModels.Models
 {
     public class EmployeeProfessionalDetailModel : BaseModel
     {
-        public long EmployeeProfessionalId { get; set; }
+        public long? EmployeeProfessionalId { get; set; }
         public int? EmployeeId { get; set; }
         public int? EmployeeTypeId { get; set; }
         public string EmployeeTypeName { get; set; }
@@ -30,5 +30,7 @@ namespace HumanitarianAssistance.ViewModels.Models
         public string PassportNo { get; set; }
         public int? ProfessionId { get; set; }
         public string TinNumber { get; set; }
+        public long? AttendanceGroupId { get; set; }
+        public string AttendanceGroupName { get; set; }
     }
 }

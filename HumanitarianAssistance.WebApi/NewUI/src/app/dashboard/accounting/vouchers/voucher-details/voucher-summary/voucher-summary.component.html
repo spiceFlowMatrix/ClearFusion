@@ -1,0 +1,22 @@
+<div class="voucher-summary-main">
+  <div class="row">
+    <div class="col-sm-4">
+      <mat-card>
+        <h6>Current Debit</h6>
+        <div class="font_size_smaller">{{currentDebit | number: "1.2-2"}}</div>
+      </mat-card>
+    </div>
+    <div class="col-sm-4">
+      <mat-card >
+        <h6>Current Credit</h6>
+        <div class="font_size_smaller">{{currentCredit | number: "1.2-2"}}</div></mat-card
+      >
+    </div>
+    <div class="col-sm-4">
+      <mat-card>
+        <h6>Balance</h6>
+        <div class="font_size_smaller">{{currentDebit - currentCredit | number: "1.2-2"}}</div></mat-card
+      >
+    </div>
+  </div>
+</div>

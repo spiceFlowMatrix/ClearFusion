@@ -1,0 +1,10 @@
+input, input:focus {
+    border: transparent; 
+    box-shadow: none;
+    border-bottom: 1px solid;
+}
+input:focus {
+    border: transparent; 
+    box-shadow: none;
+    border-bottom: 1px solid transparent;
+}

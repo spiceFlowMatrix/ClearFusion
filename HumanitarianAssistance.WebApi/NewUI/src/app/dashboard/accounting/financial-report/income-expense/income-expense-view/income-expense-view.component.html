@@ -1,0 +1,232 @@
+<div class="body-content">
+  <div class="balance-sheet-main">
+    <div class="container-fluid">
+      <div class="row pull-right">
+        <div class="col-sm-1">
+          <mat-spinner
+            [diameter]="25"
+            *ngIf="detailOfNoteFlag; else downloadNotePdf"
+          ></mat-spinner>
+
+          <ng-template #downloadNotePdf>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="onDetailOfNotesPdf()"
+              pTooltip="Export Note Pdf"
+              tooltipPosition="top"
+            >
+              View Note
+            </button>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+          <mat-card [ngStyle]="scrollStyles">
+            <div class="row border_bottom">
+              <div class="col-sm-9">
+                <h1 class="main_heading">
+                  Income/Expense Report
+                  <span class="font_smallcaps_12"
+                    >as of {{ asOfDate }} up to {{ upToDate }}</span
+                  >
+                </h1>
+              </div>
+              <div class="col-sm-1"></div>
+              <div class="col-sm-1">
+                <button
+                  mat-icon-button
+                  class="pull-right"
+                  (click)="onExportPdf()"
+                  pTooltip="Export Pdf"
+                  tooltipPosition="top"
+                >
+                  <mat-icon aria-label="Export pdf"
+                    >vertical_align_bottom</mat-icon
+                  >
+                </button>
+              </div>
+              <div class="col-sm-1">
+                <button
+                  mat-icon-button
+                  class="pull-right"
+                  [routerLink]="'../../../../'"
+                >
+                  <mat-icon>settings</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="row" class="col-12-sm">
+              <table class="collapsed table table-bordered">
+                <tr
+                  *ngFor="let item of incomeList"
+                  class="col-12-sm"
+                  let
+                  ia="index"
+                >
+                  <table class="collapsed table table-bordered">
+                    <tr>
+                      <td
+                        class="font_caps_12"
+                        style="width:100%"
+                        (click)="showa = !showa"
+                      >
+                        {{ item.NoteName }}
+                        <img
+                          src="src/assets/img/elipses.png"
+                          style="height:6px; padding-left:10px;"
+                        />
+                      </td>
+                      <td
+                        class="font_caps_12 right_align"
+                        (click)="showa = !showa"
+                      >
+                        {{
+                          item.NoteBalance.toLocaleString(undefined, {
+                            minimumFractionDigits: 2
+                          })
+                        }}
+                      </td>
+                    </tr>
+                    <tr *ngFor="let balance of item.AccountBalances">
+                      <td
+                        class="font_caps_10 "
+                        style="width:100%"
+                        *ngIf="showa"
+                      >
+                        {{ balance.AccountName }}
+                      </td>
+                      <td class="font_caps_10 right_align" *ngIf="showa">
+                        {{
+                          balance.Balance.toLocaleString(undefined, {
+                            minimumFractionDigits: 2
+                          })
+                        }}
+                      </td>
+                    </tr>
+                  </table>
+                </tr>
+              </table>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <table style="    width: 100%;">
+                  <tr>
+                    <td class="font_caps_12_bold ">
+                      TOTAL INCOME
+                    </td>
+                    <td class="font_caps_12_bold right_align">
+                      {{
+                        totalIncome.toLocaleString(undefined, {
+                          minimumFractionDigits: 2
+                        })
+                      }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="margin_top_50">
+              <h4 class="main_heading bdr_heading">Expenses</h4>
+            </div>
+            <div class="row" class="col-12-sm">
+              <table class="collapsed table table-bordered">
+                <tr
+                  *ngFor="let item of expenseList"
+                  class="col-12-sm"
+                  let
+                  ia="index"
+                >
+                  <table class="collapsed table table-bordered">
+                    <tr>
+                      <td
+                        class="font_caps_12"
+                        style="width:100%"
+                        (click)="showa = !showa"
+                      >
+                        {{ item.NoteName }}
+                        <img
+                          src="src/assets/img/elipses.png"
+                          style="height:6px; padding-left:10px;"
+                        />
+                      </td>
+                      <td
+                        class="font_caps_12 right_align"
+                        (click)="showa = !showa"
+                      >
+                        {{
+                          item.NoteBalance.toLocaleString(undefined, {
+                            minimumFractionDigits: 2
+                          })
+                        }}
+                      </td>
+                    </tr>
+                    <tr *ngFor="let balance of item.AccountBalances">
+                      <td
+                        class="font_caps_10 "
+                        style="width:100%"
+                        *ngIf="showa"
+                      >
+                        {{ balance.AccountName }}
+                      </td>
+                      <td class="font_caps_10 right_align" *ngIf="showa">
+                        {{
+                          balance.Balance.toLocaleString(undefined, {
+                            minimumFractionDigits: 2
+                          })
+                        }}
+                      </td>
+                    </tr>
+                  </table>
+                </tr>
+              </table>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <table style="    width: 100%;">
+                  <tr>
+                    <td class="font_caps_12_bold ">
+                      TOTAL EXPENSES
+                    </td>
+                    <td class="font_caps_12_bold right_align">
+                      {{
+                        totalExpenses.toLocaleString(undefined, {
+                          minimumFractionDigits: 2
+                        })
+                      }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="margin_top_50">
+              <h4 class="main_heading bdr_heading">NETT INCOME - EXPENSES</h4>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <table style="width: 100%;">
+                  <tr>
+                    <td class="font_caps_12_bold ">
+                      NETT
+                    </td>
+                    <td class="font_caps_12_bold right_align">
+                      {{
+                        totalNett.toLocaleString(undefined, {
+                          minimumFractionDigits: 2
+                        })
+                      }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

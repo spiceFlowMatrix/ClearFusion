@@ -1,0 +1,376 @@
+<div class="project-cash-flow-main">
+  <div class="body-content">
+    <div class="container-fluid" [ngStyle]="scrollStylesSearch">
+      <div class="row">
+        <div class="col-sm-9">
+          <mat-card class="min_height_400px">
+            <h4>
+              PROJECT CASH FLOW
+            </h4>
+            <div
+              class="spinner_center"
+              *ngIf="projectCashFlowLoader; else cashFlowTemplate"
+            >
+              <mat-spinner [diameter]="25"> </mat-spinner>
+            </div>
+            <ng-template #cashFlowTemplate>
+              <p-toast [style]="{ marginTop: '80px' }"></p-toast>
+              <p-chart
+                type="line"
+                [data]="projectCashFlowList"
+                [options]="options"
+                width="400"
+                height="350"
+                (onDataSelect)="selectData($event)"
+              ></p-chart>
+            </ng-template>
+          </mat-card>
+        </div>
+        <div class="col-sm-3">
+          <mat-card>
+            <h4>
+              FILTER
+            </h4>
+            <form
+              class="example-form"
+              [formGroup]="projectCashFlowForm"
+              (ngSubmit)="onCashFlowFormSubmit(projectCashFlowForm.value)"
+            >
+              <div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-lg-6 col-sm-6">
+                        <!-- <mat-form-field class="example-full-width">
+                          <mat-select
+                            placeholder="Project"
+                            formControlName="ProjectId"
+                          >
+                            <ngx-mat-select-search
+                              [formControl]="projectFilterCtrl"
+                              [placeholderLabel]="'Find Project'"
+                              [noEntriesFoundLabel]="
+                                'No matching project found'
+                              "
+                            ></ngx-mat-select-search>
+                            <mat-option
+                              *ngFor="let item of (filteredProject | async)"
+                              [value]="item.ProjectId"
+                            >
+                              {{ item.ProjectName }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field> -->
+
+                        <lib-search-dropdown
+                          placeholder="Projects"
+                          [multiSelect]="true"
+                          placeholderSearchLabel="Find Project..."
+                          noEntriesFoundLabel="No matching project found"
+                          [dataSource]="multiProjectList"
+                          [selectedValue]="projectIds"
+                          (openedChange)="
+                            onOpenedProjectMultiSelectChange($event)
+                          "
+                        >
+                        </lib-search-dropdown>
+                      </div>
+
+                      <div class="col-lg-6 col-sm-6">
+                        <mat-form-field class="example-full-width">
+                          <mat-select
+                            placeholder="Currency"
+                            formControlName="CurrencyId"
+                          >
+                            <ngx-mat-select-search
+                              [formControl]="currencyFilterCtrl"
+                              [placeholderLabel]="'Find Currency'"
+                              [noEntriesFoundLabel]="
+                                'No matching currency found'
+                              "
+                            ></ngx-mat-select-search>
+                            <mat-option
+                              *ngFor="let item of (filteredCurrency | async)"
+                              [value]="item.CurrencyId"
+                            >
+                              {{ item.CurrencyName }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-lg-12 col-sm-12">
+                        <mat-form-field>
+                          <input
+                            matInput
+                            formControlName="ProjectCashFlowStartDate"
+                            [matDatepicker]="projectCashFlowStartDatepicker"
+                            placeholder="Start Date"
+                          />
+                          <mat-datepicker-toggle
+                            matSuffix
+                            [for]="projectCashFlowStartDatepicker"
+                          >
+                          </mat-datepicker-toggle>
+                          <mat-datepicker
+                            color="primary"
+                            #projectCashFlowStartDatepicker
+                          ></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-lg-12 col-sm-12">
+                        <mat-form-field>
+                          <input
+                            matInput
+                            [min]="projectStartDate"
+                            formControlName="ProjectCashFlowEndDate"
+                            [matDatepicker]="projectCashFlowEndDatepicker"
+                            placeholder="End Date"
+                          />
+                          <mat-datepicker-toggle
+                            matSuffix
+                            [for]="projectCashFlowEndDatepicker"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker
+                            color="primary"
+                            #projectCashFlowEndDatepicker
+                          ></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-lg-6 col-sm-6">
+                        <mat-form-field class="example-full-width">
+                          <mat-select
+                            placeholder="Donors"
+                            formControlName="DonorID"
+                          >
+                            <ngx-mat-select-search
+                              [formControl]="donorFilterCtrl"
+                              [placeholderLabel]="'Find Donor'"
+                              [noEntriesFoundLabel]="'No matching donor found'"
+                            ></ngx-mat-select-search>
+                            <mat-option
+                              *ngFor="let item of (filteredDonor | async)"
+                              [value]="item.DonorId"
+                            >
+                              {{ item.Name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 pull-right">
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      type="submit"
+                      [disabled]="projectCashFlowLoader"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </mat-card>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-9">
+          <mat-card class="min_height_400px">
+            <h4>
+              BUDGET LINE BREAKDOWN
+            </h4>
+
+            <div
+              class="spinner_center"
+              *ngIf="
+                budgetLineBreakdownFlowLoader;
+                else budgetLineBreakdownTemplate
+              "
+            >
+              <mat-spinner [diameter]="25"> </mat-spinner>
+            </div>
+            <ng-template #budgetLineBreakdownTemplate>
+              <p-toast [style]="{ marginTop: '80px' }"></p-toast>
+
+              <p-chart
+                type="line"
+                [data]="budgetLineCashFlowList"
+                [options]="options"
+                width="400"
+                height="350"
+                (onDataSelect)="selectBudgetLineData($event)"
+              ></p-chart>
+            </ng-template>
+          </mat-card>
+        </div>
+
+        <div class="col-sm-3">
+          <mat-card>
+            <h4>
+              FILTER
+            </h4>
+            <form
+              class="example-form"
+              [formGroup]="budgetLineBreakdownFlowForm"
+              (ngSubmit)="
+                onBudgetBreakdownFormSubmit(budgetLineBreakdownFlowForm.value)
+              "
+            >
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                      <mat-form-field class="example-full-width">
+                        <mat-select
+                          placeholder="Project"
+                          formControlName="ProjectId"
+                          (selectionChange)="
+                            onBreakdownProjectIdChanged($event)
+                          "
+                        >
+                          <ngx-mat-select-search
+                            [formControl]="projectFilterCtrl"
+                            [placeholderLabel]="'Find Project'"
+                            [noEntriesFoundLabel]="'No matching project found'"
+                          ></ngx-mat-select-search>
+                          <mat-option
+                            *ngFor="let item of (filteredProject | async)"
+                            [value]="item.ProjectId"
+                          >
+                            {{ item.ProjectName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                      <!-- <mat-form-field class="example-full-width">
+                        <mat-select
+                          placeholder="Budget"
+                          formControlName="BudgetLineId"
+                          multiple
+                        >
+                          <ngx-mat-select-search
+                            [formControl]="budgetLineFilterCtrl"
+                            [placeholderLabel]="'Find BudgetLine'"
+                            [noEntriesFoundLabel]="
+                              'No matching budget line found'
+                            "
+                          ></ngx-mat-select-search>
+                          <mat-option
+                            #budgetLineAllSelected
+                            (click)="selectAllBudgetLine()"
+                            [value]="0"
+                          >
+                            Select All</mat-option
+                          >
+                          <mat-option
+                            *ngFor="let item of (filteredBudgetLine | async)"
+                            [value]="item.BudgetLineId"
+                            (click)="
+                              onTossleBudgetLine(
+                                budgetLineAllSelected.viewValue
+                              )
+                            "
+                          >
+                            {{ item.BudgetName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
+
+                      <lib-search-dropdown placeholder='BudgetLine'
+                      [multiSelect]="true"
+                      placeholderSearchLabel="Find BudgetLine..."
+                      noEntriesFoundLabel="No matching budgetline found"
+                      [dataSource]="multiBudgetlineList"
+                      [selectedValue]="budgetLineFilter"
+                      (openedChange)="onOpenedBudgetLineMultiSelectChange($event)"
+                      >
+                      </lib-search-dropdown>
+
+                    </div>
+                    <div class="col-lg-12 col-sm-12">
+                      <mat-form-field class="example-full-width">
+                        <mat-select
+                          placeholder="Currency"
+                          formControlName="CurrencyId"
+                        >
+                          <ngx-mat-select-search
+                            [formControl]="currencyFilterCtrl"
+                            [placeholderLabel]="'Find Currency'"
+                            [noEntriesFoundLabel]="'No matching currency found'"
+                          ></ngx-mat-select-search>
+                          <mat-option
+                            *ngFor="let item of (filteredCurrency | async)"
+                            [value]="item.CurrencyId"
+                          >
+                            {{ item.CurrencyName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-lg-12 col-sm-12">
+                      <mat-form-field>
+                        <input
+                          matInput
+                          formControlName="BudgetLineStartDate"
+                          [matDatepicker]="budgetLineStartDatepicker"
+                          placeholder="Start Date"
+                        />
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="budgetLineStartDatepicker"
+                        >
+                        </mat-datepicker-toggle>
+                        <mat-datepicker
+                          color="primary"
+                          #budgetLineStartDatepicker
+                        ></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-lg-12 col-sm-12">
+                      <mat-form-field>
+                        <input
+                          matInput
+                          [min]="budgetLineStartDate"
+                          formControlName="BudgetLineEndDate"
+                          [matDatepicker]="budgetLineEndDatepicker"
+                          placeholder="End Date"
+                        />
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="budgetLineEndDatepicker"
+                        >
+                        </mat-datepicker-toggle>
+                        <mat-datepicker
+                          color="primary"
+                          #budgetLineEndDatepicker
+                        ></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 pull-right">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    type="submit"
+                    [disabled]="!budgetLineBreakdownFlowForm.valid"
+                  >
+                    Apply
+                  </button>
+                </div>
+              </div>
+            </form>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

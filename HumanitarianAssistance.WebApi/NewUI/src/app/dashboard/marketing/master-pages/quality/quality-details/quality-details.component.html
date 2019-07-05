@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="col-sm-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-sm-6">
+          </div>
+          <div class="col-sm-6">
+            <div *ngIf="archiveButton" class="col-sm -6 pull-right">
+                <button pTooltip="Archive"
+                tooltipPosition="top"
+                  (click)="DeleteQuality(qualityId)"
+                  color="warn"
+                  mat-icon-button
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+          </div>
+        </div>
+        <form [formGroup]="qualityDetailsForm">
+          <div class="row">
+              <div
+              *ngIf="qualityDetailsLoaderFlag; else qualityDetailsTemplate"
+              class="col-sm-12"
+            ><br/>
+              <mat-spinner
+                class="center_loader"
+                diameter="50"
+              ></mat-spinner>
+            </div>
+           <ng-template #qualityDetailsTemplate>
+              <div class="col-sm-12">
+                  <div class="col-sm-6">
+                    <mat-form-field class="example-full-width">
+                    <input (change)="onChange(qualityName.value)" #qualityName formControlName="qualityName" matInput name="qualityName"
+                      placeholder="Quality" />
+                      </mat-form-field>
+                  </div>
+                </div>
+           </ng-template>
+          </div>
+        </form>
+      </mat-card>
+    </div>
+  </div>

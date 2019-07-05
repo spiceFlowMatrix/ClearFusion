@@ -1,0 +1,77 @@
+
+<div class="row">
+      <div class="col-sm-12">
+          <div class="main-heading clearfix">
+                  <h3 class="page-heading">PMU Implementation</h3>
+                  <dx-button
+                  class="button-info btn btn-default btn-green"
+                  text="Back"
+                  (onClick)="addProjectPMU()" [routerLink]="['../projects']" >
+                  </dx-button>     
+          </div>        
+          <dx-data-grid 
+              id="gridContainer" 
+              [dataSource]="pmuProjects"
+              [allowColumnReordering]="true"
+              [allowColumnResizing]="true"
+              [columnAutoWidth]="true">
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-column-chooser [enabled]="true" ></dxo-column-chooser>    
+
+              <dxo-paging [pageSize]="7"></dxo-paging>
+              <dxo-pager [allowedPageSizes]="[5, 8, 15, 30]" [showInfo]="true" [showNavigationButtons]="true" [showPageSizeSelector]="true"
+                    [visible]="true">
+              </dxo-pager>
+              
+              <!-- <dxo-pager
+              [allowedPageSizes]="[5, 8, 15, 30]"
+              [showInfo]="true"
+              [showNavigationButtons]="true"
+              [showPageSizeSelector]="true"
+              [visible]="true">
+              </dxo-pager>  -->
+              <dxo-filter-row 
+                  [visible]="true">
+              </dxo-filter-row>
+              <dxo-header-filter 
+                  [visible]="true"></dxo-header-filter>
+              <dxo-search-panel 
+                  [visible]="true" 
+                  [width]="240" 
+                  placeholder="Search..."></dxo-search-panel>
+              <dxi-column 
+                  dataField="Sector"                 
+                  caption="Sector ">          
+              </dxi-column>
+              <dxi-column 
+                  dataField="ProjectCode" 
+                  caption="Project Code">          
+              </dxi-column>      
+              <dxi-column 
+                  dataField="ProjectName"
+                  caption="Project Name">
+              </dxi-column>
+              <dxi-column 
+                  dataField="ProjectBudget" 
+                  caption="Project Budget">
+              </dxi-column>
+              <dxi-column 
+                  dataField="Donor"
+                  caption="Donor">
+              </dxi-column>  
+          
+              <dxi-column [fixed]="true" fixedPosition="right" dataField = "editId" caption="Action" cellTemplate="CellTemplateOpen"></dxi-column>
+              <!-- <dxi-column dataField = "deleteId" caption="Delete" alignment="right" cellTemplate="CellTemplateDelete"></dxi-column> -->
+              <div *dxTemplate="let data of 'CellTemplateOpen'">         
+                      <a [routerLink]="['../beneficiaries']" title="Beneficiaries"><i class="fa fa-info-circle fa-lg" aria-hidden="true"></i></a>
+                      <span style="color:#acacac;">&nbsp;|&nbsp;</span>
+                      <a [routerLink]="['../project-activities']" title="Project Activities"><i class="fa fa-tasks fa-lg" aria-hidden="true"></i></a>
+                      <span style="color:#acacac;">&nbsp;|&nbsp;</span>
+                      <a [routerLink]="['../edit']" title="Edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a>
+              </div>    
+              
+          </dx-data-grid>
+      </div>
+  </div>
+  
+  <router-outlet></router-outlet>

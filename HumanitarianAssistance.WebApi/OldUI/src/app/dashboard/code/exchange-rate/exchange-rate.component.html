@@ -1,0 +1,95 @@
+<div class="main-exchange-rate">
+
+    <div class="col-sm-2">
+        <dx-button style="margin-top: 20px; width: -webkit-fill-available" text="Add Exchange Rate" type="success"
+            (click)="onShowAddExchangeRateForm()"></dx-button>
+    </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-heading">Exchange Rate</h3>
+      </div>
+      <dx-data-grid id="gridContainer" [dataSource]="exchangeRateDetails" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+        (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+        (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)" [showRowLines]="true">
+        <dxo-editing mode="popup" [allowUpdating]="true" [form]="{
+                            items: ['Date','FromCurrency','ToCurrency','Rate', 'OfficeId']
+                        }" *ngIf="isEditingAllowed">
+          <dxo-popup title="Add/Edit Exchange Rate" [closeOnOutsideClick]="true" [showTitle]="true" [width]="700" [height]="300" [position]="{ my: 'center', at: 'center', of: windows }"></dxo-popup>
+        </dxo-editing>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+
+        <dxi-column dataField="Date" caption="Date" alignment="right" dataType="date" >
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column dataField="FromCurrency" caption="From Currency" alignment="right" >
+          <dxo-lookup [dataSource]="currencycodedt" displayExpr="CurrencyCode" valueExpr="FromCurrency"></dxo-lookup>
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column dataField="ToCurrency" caption="To Currency" alignment="right">
+          <dxo-lookup [dataSource]="currencycodedt" displayExpr="CurrencyCode" valueExpr="ToCurrency"></dxo-lookup>
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column dataField="Rate" caption="Rate" alignment="right">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+
+        <dxi-column dataField="OfficeId" caption="Office Name" [width]="160">
+          <dxo-lookup [dataSource]="officeDropdown" valueExpr="OfficeId" displayExpr="OfficeName">
+          </dxo-lookup>
+        </dxi-column>
+    
+      </dx-data-grid>
+    </div>
+  </div>
+  <ngx-loading [show]="exchangeRateLoading"></ngx-loading>
+
+</div>
+
+<dx-popup class="popup" [width]="600" [height]="300" [showTitle]="true" title="Add Exchange Rate" [dragEnabled]="false"
+    [closeOnOutsideClick]="true" [(visible)]="addExchangeRate">
+    <div *dxTemplate="let data of 'content'">
+        <form action="your-action" (submit)="onExchangeRateAdd(exchangeRateForm)">
+            <dx-form id="form" [formData]="exchangeRateForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                validationGroup="exchangeRateData" colCount="2">
+
+                      <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{type: 'date',  width: '100%', placeholder:'Select Date', showClearButton: 'true' }">
+                          <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-item>
+                  
+                      <dxi-item dataField="FromCurrency" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencycodedt, displayExpr: 'CurrencyCode', valueExpr: 'FromCurrency', showClearButton:'true' , placeholder: 'Select Currency' }">
+                          <dxi-validation-rule type="required" message="From Currency is required">
+                          </dxi-validation-rule>
+                      </dxi-item>
+                
+                
+                    <dxi-item dataField="ToCurrency" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencycodedt, displayExpr: 'CurrencyCode', valueExpr: 'FromCurrency', showClearButton:'true' , placeholder: 'Select Currency' }">
+                        <dxi-validation-rule type="required" message="To Currency is required">
+                        </dxi-validation-rule>
+                    </dxi-item>
+                    <dxi-item dataField="Rate" class="col-sm-6">
+                        <dxi-validation-rule type="required" message="Rate is required">
+                          </dxi-validation-rule>
+                    </dxi-item>
+                
+                <dxi-item dataField="OfficeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: officeDropdown, displayExpr: 'OfficeName', valueExpr: 'OfficeId', showClearButton:'true' , placeholder: 'Select Office' }">
+                    <dxi-validation-rule type="required" message="Office is required">
+                      </dxi-validation-rule>
+                </dxi-item>
+            </dx-form>
+            <br />
+            <div class="btn-grp-wrap">
+                <dx-button text="Save" type="success" validationGroup="exchangeRateData" [useSubmitBehavior]="true"></dx-button>
+                <dx-button text="Cancel" (onClick)="HidePopup()"></dx-button>
+            </div>
+        </form>
+        <ngx-loading [show]="exchangeRateLoading"></ngx-loading>
+
+    </div>
+</dx-popup>

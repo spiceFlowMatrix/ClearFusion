@@ -4,8 +4,9 @@ using System.Text;
 
 namespace HumanitarianAssistance.ViewModels.Models.Project
 {
-    public class ProjectJobFilterModel
+   public class ProjectJobFilterModel
     {
+            
         public string FilterValue { get; set; }
         public bool? ProjectJobNameFlag { get; set; }
         public bool? DateFlag { get; set; }

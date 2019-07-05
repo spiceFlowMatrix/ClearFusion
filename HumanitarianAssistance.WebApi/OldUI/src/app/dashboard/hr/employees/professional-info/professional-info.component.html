@@ -1,0 +1,164 @@
+<div>
+  <div>
+
+    <div class="btn-grp-wrap">
+      <div *ngIf="tabEventValue != 3">
+        <dx-button text="Edit" type="success" (click)="showProfEditForm(professionalDetails)" *ngIf="isEditingAllowed"></dx-button>
+      </div>
+    </div>
+    <div class="porject-des-listing">
+      <ul>
+        <li>
+          <h4>Employee Type:</h4>
+          <span>{{professionalDetails.EmployeeTypeName == null ? "" : professionalDetails.EmployeeTypeName}}</span>
+        </li>
+        <li>
+          <h4>Office:</h4>
+          <span>{{professionalDetails.OfficeName == null ? "" : professionalDetails.OfficeName}}</span>
+        </li>
+
+        <li>
+          <h4>Designation:</h4>
+          <span>{{professionalDetails.DesignationName == null ? "" : professionalDetails.DesignationName}}</span>
+        </li>
+
+
+        <li>
+          <h4>Department:</h4>
+          <span>{{professionalDetails.DepartmentName == null ? "" : professionalDetails.DepartmentName}}</span>
+        </li>
+
+        <li>
+          <h4>Hired On:</h4>
+          <span>{{professionalDetails.HiredOn == null ? "" : professionalDetails.HiredOn | date}}</span>
+        </li>
+
+        <li>
+            <h4>Attendance Group:</h4>
+            <span>{{professionalDetails.AttendanceGroupName == null ? "" : professionalDetails.AttendanceGroupName}}</span>
+          </li>
+  
+
+        <li>
+          <h4>Fired On:</h4>
+          <span>{{professionalDetails.FiredOn == null ? "" : professionalDetails.FiredOn | date}}</span>
+        </li>
+        <li>
+          <h4>Fired Reason:</h4>
+          <span>{{professionalDetails.FiredReason == null ? "" : professionalDetails.FiredReason}}</span>
+        </li>
+
+        <li>
+          <h4>Resignation On:</h4>
+          <span>{{professionalDetails.ResignationOn == null ? "" : professionalDetails.ResignationOn|date}}</span>
+        </li>
+        <li>
+          <h4>Resignation Reason:</h4>
+          <span>{{professionalDetails.ResignationReason == null ? "" : professionalDetails.ResignationReason}}</span>
+        </li>
+
+        <li>
+          <h4>Job Description:</h4>
+          <span>{{professionalDetails.JobDescription == null ? "" : professionalDetails.JobDescription}}</span>
+        </li>
+        <li>
+          <h4>Training/Benefits:</h4>
+          <span>{{professionalDetails.TrainingBenefits == null ? "" : professionalDetails.TrainingBenefits}}</span>
+        </li>
+
+      </ul>
+      <ngx-loading [show]="professionalInfoLoading"></ngx-loading>
+
+    </div>
+  </div>
+
+  <br>
+  <div *ngIf="tabEventValue == 2">
+
+    <!-- <app-employee-contract></app-employee-contract> -->
+    <app-professional-more-info [isEditingAllowed]="isEditingAllowed"></app-professional-more-info>
+  </div>
+
+
+</div>
+
+<!-- Edit Professional Info Model -->
+<dx-popup class="popup" [width]="800" [minHeight]="500" [showTitle]="true" title="Professional info" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="popupProfesionalinfoVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view showScrollbar="always" direction="both">
+      <form action="your-action" (submit)="OnFormSubmit(editpProfessionalDetails)">
+        <dx-form id="form" [formData]="editpProfessionalDetails" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="professionalDetails" (onFieldDataChanged)="onFieldDataChanged($event)">
+
+          <dxi-item dataField="EmployeeTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeTypeDropdown,
+           displayExpr: 'EmployeeTypeName', 
+           valueExpr: 'EmployeeTypeId'
+          }">
+            <dxo-label text="Employee Type"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="OfficeId">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+            <dxo-label text="Office"></dxo-label>
+            <dx-select-box (onValueChanged)="getDepartmentType($event.value)" [dataSource]="officeTypeDropdown" valueExpr="OfficeId"
+              displayExpr="OfficeName" [(value)]="OfficeId">
+            </dx-select-box>
+          </dxi-item>
+
+          <dxi-item dataField="DepartmentId" editorType="dxSelectBox" [editorOptions]="{ dataSource: departmentTypeDropdown, displayExpr: 'DepartmentName', valueExpr: 'DepartmentId'  }">
+            <dxo-label text="Department"></dxo-label>
+          </dxi-item>
+
+          <dxi-item dataField="DesignationId" editorType="dxSelectBox" [editorOptions]="{ dataSource: designationDropdown, displayExpr: 'Designation', valueExpr: 'DesignationId'  }">
+            <dxo-label text="Designation"></dxo-label>
+          </dxi-item>
+
+          <dxi-item dataField="EmployeeContractTypeId" editorType="dxSelectBox" [editorOptions]="{ disabled: hiredOnFlag, dataSource: employeeContractType, displayExpr: 'EmployeeContractTypeName', valueExpr: 'EmployeeContractTypeId'  }">
+            <dxo-label text="Employee Contract Type"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="HiredOn" editorType="dxDateBox" [editorOptions]="{ disabled: hiredOnFlag, max : currentDate , displayFormat: 'dd/MM/yyyy'}">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="AttendanceGroupId" editorType="dxSelectBox" [editorOptions]="{
+            dataSource: attendanceGroupList, 
+            displayExpr: 'Name',
+            valueExpr: 'Id'}">
+                <dxo-label text="Attendance Group">
+                </dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+            </dxi-item>
+
+          <dxi-item dataField="FiredOn" editorType="dxDateBox" [editorOptions]="{ disabled: firedOnFlag, max : currentDate, displayFormat: 'dd/MM/yyyy'}">
+          </dxi-item>
+
+          <dxi-item dataField="FiredReason" [editorOptions]="{ disabled: firedOnFlag }">
+          </dxi-item>
+
+          <dxi-item dataField="ResignationOn" editorType="dxDateBox" [editorOptions]="{ disabled: resignationOnFlag, max : currentDate, displayFormat: 'dd/MM/yyyy' }">
+          </dxi-item>
+
+          <dxi-item dataField="TrainingBenefits" [colSpan]="2">
+            <dxo-label text="Training / Benefits"></dxo-label>
+          </dxi-item>
+
+          <dxi-item dataField="JobDescription" [colSpan]="2" editorType="dxTextArea" [editorOptions]="{ height: 80 }"></dxi-item>
+
+          <dxi-item dataField="ResignationReason" [colSpan]="2" editorType="dxTextArea" [editorOptions]="{ disabled: resignationOnFlag, height: 80 }"></dxi-item>
+
+        </dx-form>
+        <div class="btn-grp-wrap">
+          <dx-button text="Save" type="success" validationGroup="professionalDetails" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Cancel" (click)="closeProfForm()"></dx-button>
+        </div>
+      </form>
+    </dx-scroll-view>
+    <ngx-loading [show]="editProfessionalInfoPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+
+  </div>
+</dx-popup>

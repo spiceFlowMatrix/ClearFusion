@@ -1,0 +1,690 @@
+<div class="main-employee-appraisal">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Employee Appraisal Details</h3>
+
+        <div *ngIf="backButtonFlag">
+          <dx-button class="button-info btn btn-default btn-green" text="Back" (onClick)="onBackButtonClick()" 
+          *ngIf="isEditingAllowed"></dx-button>
+        </div>
+
+      </div>
+
+
+    </div>
+
+    <div class="col-sm-12 container">
+      <div class="row" *ngIf="employeeAppraisalListFlag">
+
+        <div class="col-sm-12 ">
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Employee Appraisal Details</h3>
+            </div>
+            <div class="panel-body">
+
+
+              <div class="row">
+                <div *ngIf="employeeAppraisalListFlag == true" class="col-sm-12 container" style="padding-bottom: 10px;">
+                  <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showAddEmployeeAppraisalForm()" *ngIf="isEditingAllowed"></dx-button>
+                </div>
+              </div>
+
+              <dx-data-grid id="gridContainer" [dataSource]="employeeAppraisalListDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" [showRowLines]="true">
+                <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch" 
+                *ngIf="isEditingAllowed"></dxo-editing>
+                <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+                <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+                <dxo-header-filter [visible]="true"> </dxo-header-filter>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+                <dxi-column dataField="EmployeeCode" [visible]="false"></dxi-column>
+                <dxi-column dataField="EmployeeName" [width]="200"></dxi-column>
+                <dxi-column dataField="FatherName" [visible]="false"></dxi-column>
+                <dxi-column dataField="Position"></dxi-column>
+                <dxi-column dataField="Department"></dxi-column>
+                <dxi-column dataField="Qualification"></dxi-column>
+                <dxi-column dataField="DutyStation" [visible]="false"></dxi-column>
+                <dxi-column dataField="RecruitmentDate" dataType="date" format="dd/MM/yyyy"></dxi-column>
+                <dxi-column dataField="AppraisalPeriod" [visible]="false"></dxi-column>
+                <dxi-column dataField="CurrentAppraisalDate" caption="Evaluation Date" dataType="date" format="dd/MM/yyyy"></dxi-column>
+                <dxi-column dataField="OfficeId" caption="Office" [visible]="false"></dxi-column>
+                <dxi-column dataField="TotalScore"></dxi-column>
+
+                <dxi-column caption="Action" alignment="center" cellTemplate="CellTemplateEdit" [width]="100" *ngIf="isEditingAllowed"></dxi-column>
+                <div *dxTemplate="let data of 'CellTemplateEdit'">
+                  <a href="javascript:void(0)" (click)="onEditEmpAppraisalDetailShowForm(data.key, 1)">Edit</a>
+                </div>
+
+                <dxi-column dataField="AppraisalStatus" caption="Forward for Evaluation" alignment="center" cellTemplate="CellTemplateRadio"
+                  [width]="250"></dxi-column>
+                <div *dxTemplate="let cell of 'CellTemplateRadio'">
+                  <dx-radio-group [items]="evaluationStatusRadioGroup" layout="horizontal" (onValueChanged)="onIsApprovedValueChanged(cell, $event)">
+                  </dx-radio-group>
+                </div>
+
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+              </dx-data-grid>
+
+            </div>
+          </div>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="col-sm-12 ">
+          <br>
+
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Employee Evaluation</h3>
+            </div>
+            <div class="panel-body">
+
+              <dx-data-grid id="gridContainer" [dataSource]="employeeMoreDetailListDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" [showRowLines]="true">
+                <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+                <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+                <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+                <dxo-header-filter [visible]="true"> </dxo-header-filter>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+                <dxi-column dataField="EmployeeEvaluationId" [visible]="false">
+                </dxi-column>
+
+                <dxi-column dataField="EmployeeId" caption="Employee Name">
+                  <dxo-lookup [dataSource]="employeeListDataSource" valueExpr="EmployeeId" displayExpr="CodeEmployeeName">
+                  </dxo-lookup>
+                </dxi-column>
+
+                <dxi-column dataField="CurrentAppraisalDate" caption="Evaluation Date" dataType="date" format="dd/MM/yyyy">
+                </dxi-column>
+
+                <dxi-column caption="Appraisal Request" cellTemplate="ActionAppraisalRequestCellTemplateEdit"></dxi-column>
+                <div *dxTemplate="let data of 'ActionAppraisalRequestCellTemplateEdit'">
+                  <a href="javascript:void(0)" (click)="getEmployeeAppraisalRequest(data.key)">Preview</a>
+                </div>
+
+                <dxi-column caption="Action" cellTemplate="ActionEvaluationCellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
+                <div *dxTemplate="let data of 'ActionEvaluationCellTemplateEdit'">
+                  <a href="javascript:void(0)" (click)="onEditEmpAppraisalMoreDetailShowForm(data)">Evaluate</a>
+                </div>
+
+                <dxi-column dataField="EvaluationStatus" [width]="200" caption="Approve" cellTemplate="StatusCellTemplateApproveEvaluation"></dxi-column>
+                <div *dxTemplate="let cell of 'StatusCellTemplateApproveEvaluation'">
+
+                  <div *ngIf="cell.value == null">
+                    <dx-radio-group [items]="evaluationStatusRadioGroup" layout="horizontal" (onValueChanged)="onIsEvaluationApprovedValueChanged(cell, $event)">
+                    </dx-radio-group>
+                  </div>
+                  <div *ngIf="cell.value == 'reject'">
+                    Rejected
+                  </div>
+                  <div *ngIf="cell.value == 'approved'">
+                    Approved
+                  </div>
+                </div>
+
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+              </dx-data-grid>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <ngx-loading [show]="empAppraisalLoader"></ngx-loading>
+</div>
+
+
+
+
+<!-- Add -->
+<div *ngIf="addAppraisalDetailsFlag">
+  <div class="row">
+
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title text-left">Add Appraisal Details</h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-6">
+              <div style="max-width: 30rem;">
+                <dx-select-box [dataSource]="employeeListDataSource" placeholder="Select Employee" (onValueChanged)="onEmployeeSelectedValue($event)"
+                  displayExpr="CodeEmployeeName" searchEnabled="true" valueExpr="EmployeeId">
+                </dx-select-box>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row" style="padding: 20px;">
+            <div class="col-sm-12">
+
+              <form action="your-action" (submit)="onAddFormSubmit(employeeAppraisalQuestionForm)">
+
+                <div class="row">
+                  <div class="col-sm-12">
+
+                    <dx-form id="form" [formData]="employeeAppraisalQuestionForm" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true"
+                      [showValidationSummary]="true" validationGroup="leaveInfoValidationDetails">
+
+                      <dxi-item itemType="group" caption=" Employee Details" [colSpan]="2" [colCount]="2">
+
+                        <dxi-item dataField="EmployeeName" disabled="true" [colSpan]="1">
+                          <dxo-label text="Employee Name"></dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="Position" disabled="true" [colSpan]="1">
+                          <dxo-label text="Position"></dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="Department" disabled="true" [colSpan]="1">
+                          <dxo-label text="Department"></dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="Qualification" disabled="true" [colSpan]="1">
+                          <dxo-label text="Qualification"></dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="RecruitmentDate" disabled="true" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
+                          <dxo-label text="Recruitment Date"></dxo-label>
+                        </dxi-item>
+
+                        <dxi-item dataField="AppraisalPeriod" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeAppraisalPeriod, value: employeeAppraisalQuestionForm.AppraisalPeriod, displayExpr: 'PeriodDuration', valueExpr: 'PeriodId', showClearButton:'true'  }">
+                          <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="CurrentAppraisalDate" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
+                          <dxo-label text="Current Appraisal Date"></dxo-label>
+                          <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-item>
+                      </dxi-item>
+
+                      <dxi-item itemType="group" caption="General / Profession Indicators" [colSpan]="2" [colCount]="2">
+                        <dx-data-grid id="gridContainer" [dataSource]="questionSourceData" wordWrapEnabled="true" [allowColumnReordering]="true"
+                          [allowColumnResizing]="true" [showRowLines]="true">
+                          <dxo-editing [allowAdding]="false" [allowUpdating]="true" mode="batch"></dxo-editing>
+
+                          <dxi-column dataField="AppraisalGeneralQuestionsId" [visible]="false" [allowEditing]="false"></dxi-column>
+                          <dxi-column dataField="SequenceNo" [width]="100" [allowEditing]="false"></dxi-column>
+                          <dxi-column dataField="QuestionEnglish" [allowEditing]="false"></dxi-column>
+                          <dxi-column dataField="Score" caption="Score">
+                            <dxo-lookup [dataSource]="remarksList" valueExpr="RemarkId" displayExpr="RemarkName">
+                            </dxo-lookup>
+                          </dxi-column>
+                          <dxi-column dataField="Remarks"></dxi-column>
+
+                          <dxo-summary>
+                            <dxi-total-item column="Score" summaryType="sum">
+                            </dxi-total-item>
+                          </dxo-summary>
+
+
+                          <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                        </dx-data-grid>
+                      </dxi-item>
+
+                    </dx-form>
+
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12 text-center">
+                    <dx-button text="Save" type="success" validationGroup="leaveInfoValidationDetails" [useSubmitBehavior]="true"></dx-button>
+                  </div>
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit -->
+<div *ngIf="editAppraisalDetailsFlag">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title text-left">Edit Appraisal Details</h3>
+        </div>
+        <div class="panel-body">
+
+          <form action="your-action" (submit)="onEditFormSubmit(employeeAppraisalQuestionForm)">
+
+            <div class="row">
+              <div class="col-sm-12">
+                <dx-form id="form" [formData]="employeeAppraisalQuestionForm" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true"
+                  [showValidationSummary]="true" validationGroup="empAppValidationDetails">
+
+                  <dxi-item itemType="group" caption="Employee Details" [colSpan]="2" [colCount]="2">
+                    <dxi-item dataField="EmployeeName" disabled="true" [colSpan]="1">
+                      <dxo-label text="Employee Name"></dxo-label>
+                    </dxi-item>
+
+                    <!-- <dxi-item dataField="EmployeeName" disabled="true" [colSpan]="1">
+                      <dxo-label text="Employee Name"></dxo-label>
+                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item> -->
+
+                    <dxi-item dataField="Position" disabled="true" [colSpan]="1">
+                      <dxo-label text="Position"></dxo-label>
+                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="Department" disabled="true" [colSpan]="1">
+                      <dxo-label text="Department"></dxo-label>
+                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="Qualification" disabled="true" [colSpan]="1">
+                      <dxo-label text="Qualification"></dxo-label>
+                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="RecruitmentDate" disabled="true" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
+                      <dxo-label text="Recruitment Date"></dxo-label>
+                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="AppraisalPeriod" disabled="true" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeAppraisalPeriod, value: employeeAppraisalQuestionForm.AppraisalPeriod , displayExpr: 'PeriodDuration', valueExpr: 'PeriodId', showClearButton:'true'  }">
+                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="CurrentAppraisalDate" disabled="true" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
+                      <dxo-label text="Current Appraisal Date"></dxo-label>
+                      <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+                  </dxi-item>
+
+                  <dxi-item itemType="group" caption="General / Profession Indicators" [colSpan]="2" [colCount]="2">
+
+                    <dx-data-grid id="gridContainer" [dataSource]="questionSourceData" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                      [showRowLines]="true" (onEditorPreparing)="onRowPreparedEvent($event)">
+                      <dxo-editing [(allowUpdating)]="updatingFlag" mode="batch"></dxo-editing>
+                      <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+
+                      <dxi-column dataField="AppraisalGeneralQuestionsId" [visible]="false" [allowEditing]="false"></dxi-column>
+                      <dxi-column dataField="SequenceNo" [width]="100" [allowEditing]="false"></dxi-column>
+                      <dxi-column dataField="QuestionEnglish" [allowEditing]="false"></dxi-column>
+                      <dxi-column dataField="Score" caption="Score">
+                        <dxo-lookup [dataSource]="remarksList" valueExpr="RemarkId" displayExpr="RemarkName">
+                        </dxo-lookup>
+                      </dxi-column>
+                      <dxi-column dataField="Remarks"></dxi-column>
+
+                      <dxo-summary>
+                        <dxi-total-item column="Score" summaryType="sum">
+                        </dxi-total-item>
+                      </dxo-summary>
+
+                      <dxo-paging [pageSize]="10"></dxo-paging>
+                      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                    </dx-data-grid>
+                  </dxi-item>
+
+                </dx-form>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-center" *ngIf="updatingFlag == true">
+                <dx-button text="Save" type="success" validationGroup="leaveInfoValidationDetails" [useSubmitBehavior]="true"></dx-button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add More Details -->
+<div *ngIf="addAppraisalMoreDetailsFlag">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title text-left">Add Employee Appraisal More Details</h3>
+        </div>
+        <div class="panel-body">
+
+          <div class="col-sm-6">
+            <div style="max-width: 30rem;">
+              <dx-select-box [dataSource]="employeeListDataSource" placeholder="Select Employee" (onValueChanged)="onEmployeeMoreDetailSelectedValue($event)"
+                displayExpr="CodeEmployeeName" valueExpr="EmployeeId">
+              </dx-select-box>
+            </div>
+          </div>
+          <div class="col-sm-12 container">
+
+            <div id="form-container">
+              <form action="your-action" (submit)="onAddAppraisalMoreDetailFormSubmit(pointsOfEmployeesForm)">
+
+                <dx-form id="form" [formData]="pointsOfEmployeesForm" [colCount]="2" showColonAfterLabel="false" labelLocation="top" validationGroup="empApprMoreValidationDetails">
+
+                  <dxi-item itemType="group" [colSpan]="2">
+                    <dx-data-grid id="gridContainer" [dataSource]="employeeEvaluationDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                      [showRowLines]="true" [allowColumnReordering]="true" (onRowInserting)="onEvaluationAdding($event)" (onRowUpdating)="onEvaluationUpdating($event)"
+                      (onRowRemoving)="onEvaluationRemoving($event)">
+                      <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+
+                      <dxi-column dataField="TrainingProgram" caption="Training Program Based On"></dxi-column>
+                      <dxi-column dataField="Program"></dxi-column>
+                      <dxi-column dataField="Participated"></dxi-column>
+                      <dxi-column dataField="CatchLevel" [width]="200"></dxi-column>
+                      <dxi-column dataField="RefresherTrm"></dxi-column>
+                      <dxi-column dataField="OthRecommendation" caption="Other Recommended Training"></dxi-column>
+
+                      <dxo-paging [pageSize]="10"></dxo-paging>
+                      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+                    </dx-data-grid>
+                  </dxi-item>
+
+                  <dxi-item itemType="group">
+                    <dxi-item itemType="tabbed" [tabPanelOptions]="{ deferRendering: false }">
+                      <dxi-tab title="Strong Points">
+
+                        <dx-data-grid id="gridContainer" [dataSource]="strongPointsSourceData" wordWrapEnabled="true" [allowColumnReordering]="true"
+                          [allowColumnResizing]="true" [showRowLines]="true">
+                          <dxo-editing [allowAdding]="true" [allowDeleting]="true" [allowUpdating]="true" mode="batch"></dxo-editing>
+
+                          <dxi-column dataField="StrongPoints"></dxi-column>
+
+                          <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                        </dx-data-grid>
+
+                      </dxi-tab>
+                      <dxi-tab title="Weak Points">
+
+                        <dx-data-grid id="gridContainer" [dataSource]="weakPointsSourceData" wordWrapEnabled="true" [allowColumnReordering]="true"
+                          [allowColumnResizing]="true" [showRowLines]="true">
+                          <dxo-editing [allowAdding]="true" [allowDeleting]="true" [allowUpdating]="true" mode="batch"></dxo-editing>
+
+                          <dxi-column dataField="WeakPoints"></dxi-column>
+
+                          <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                        </dx-data-grid>
+
+                      </dxi-tab>
+
+                    </dxi-item>
+                  </dxi-item>
+
+                  <dxi-item itemType="group">
+                    <dxi-item itemType="tabbed" [tabPanelOptions]="{ deferRendering: false }">
+                      <dxi-tab title="Appraisal Evaluation Team Members">
+
+                        <dxi-item dataField="DirectSupervisor" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeListDataSource, displayExpr: 'CodeEmployeeName', valueExpr: 'EmployeeId', showClearButton: true, searchEnabled: true, searchExpr: 'EmployeeName' }">
+                          <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dx-data-grid id="gridContainer" [dataSource]="AppraisalTeamMember" wordWrapEnabled="true" [allowColumnReordering]="true"
+                          [allowColumnResizing]="true" [showRowLines]="true">
+                          <dxo-editing [allowAdding]="true" [allowDeleting]="true" [allowUpdating]="true" mode="batch"></dxo-editing>
+
+                          <dxi-column dataField="AppraisalTeamMemberData">
+                            <dxo-lookup [dataSource]="employeeListDataSource" valueExpr="EmployeeId" displayExpr="CodeEmployeeName">
+                            </dxo-lookup>
+                          </dxi-column>
+
+                          <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                        </dx-data-grid>
+
+
+
+                      </dxi-tab>
+                      <dxi-tab title="Comments by Employee">
+                        <dxi-item dataField="CommentsByEmployee" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="2"></dxi-item>
+                      </dxi-tab>
+                    </dxi-item>
+                  </dxi-item>
+
+                  <dxi-item itemType="group" caption="Final Result" [colSpan]="2">
+                    <dxi-item dataField="FinalResultQues1" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="2">
+                      <dxo-label text="Is there is need to change employee's ToR? If yes. How?"></dxo-label>
+                    </dxi-item>
+                    <dxi-item dataField="FinalResultQues2" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+                      <dxo-label text="What allowances are recommended for employee?"></dxo-label>
+                    </dxi-item>
+                    <dxi-item dataField="FinalResultQues3" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+                      <dxo-label text="What training courses are recommended to rise the employee's level of knowledge and skills?"></dxo-label>
+                    </dxi-item>
+                    <dxi-item dataField="FinalResultQues4" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+                      <dxo-label text="Is there a need to consider warning for the employee? If yes. How?"></dxo-label>
+                    </dxi-item>
+                    <dxi-item dataField="FinalResultQues5" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+                      <dxo-label text="Is there a need to assign the employee to another position or withdraw contract with him/her?"></dxo-label>
+                    </dxi-item>
+                  </dxi-item>
+                </dx-form>
+
+
+                <div class="row">
+                  <div class="col-sm-12 text-center">
+                    <dx-button text="Save" type="success" validationGroup="empApprMoreValidationDetails" [useSubmitBehavior]="true"></dx-button>
+                  </div>
+                </div>
+
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit More Details -->
+<div *ngIf="editAppraisalMoreDetailsFlag">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title text-left">Edit Employee Appraisal More Details</h3>
+        </div>
+        <div class="panel-body">
+
+          <div class="col-sm-12 container">
+
+            <div id="form-container">
+              <form action="your-action" (submit)="onEditAppraisalMoreDetailFormSubmit(pointsOfEmployeesForm)">
+
+
+                <dx-form id="form" [formData]="pointsOfEmployeesForm" [colCount]="2" showColonAfterLabel="false" labelLocation="top" validationGroup="empApprMoreValidationDetails">
+
+                  <dxi-item itemType="group" [colSpan]="2">
+                    <dx-data-grid id="gridContainer" [dataSource]="employeeEvaluationDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                      [showRowLines]="true" [allowColumnReordering]="true" (onRowInserting)="onEvaluationAdding($event)" (onRowUpdating)="onEvaluationUpdating($event)"
+                      (onRowRemoving)="onEvaluationRemoving($event)">
+                      <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+
+                      <dxi-column dataField="TrainingProgram" caption="Training Program Based On">
+                        <dxo-lookup [dataSource]="trainingProgram">
+                        </dxo-lookup>
+                      </dxi-column>
+                      <dxi-column dataField="Program"></dxi-column>
+                      <dxi-column dataField="Participated">
+                        <dxo-lookup [dataSource]="yesNoItem"></dxo-lookup>
+
+                      </dxi-column>
+                      <dxi-column dataField="CatchLevel" [width]="200">
+                        <dxo-lookup [dataSource]="catchLevelItem"></dxo-lookup>
+                      </dxi-column>
+                      <dxi-column dataField="RefresherTrm">
+                        <dxo-lookup [dataSource]="yesNoItem"></dxo-lookup>
+                      </dxi-column>
+                      <dxi-column dataField="OthRecommendation" caption="Other Recommended Training"></dxi-column>
+
+                      <dxo-paging [pageSize]="10"></dxo-paging>
+                      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                    </dx-data-grid>
+                  </dxi-item>
+
+                  <dxi-item itemType="group">
+                    <dxi-item itemType="tabbed" [tabPanelOptions]="{ deferRendering: false }">
+                      <dxi-tab title="Strong Points">
+
+                        <dx-data-grid id="gridContainer" [dataSource]="strongPointsSourceData" wordWrapEnabled="true" [allowColumnReordering]="true"
+                          [allowColumnResizing]="true" [showRowLines]="true">
+                          <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+
+                          <dxi-column dataField="StrongPoints"></dxi-column>
+
+                          <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                        </dx-data-grid>
+
+                      </dxi-tab>
+                      <dxi-tab title="Weak Points">
+
+                        <dx-data-grid id="gridContainer" [dataSource]="weakPointsSourceData" wordWrapEnabled="true" [allowColumnReordering]="true"
+                          [allowColumnResizing]="true" [showRowLines]="true">
+                          <dxo-editing mode="batch" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+
+                          <dxi-column dataField="WeakPoints"></dxi-column>
+
+                          <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                        </dx-data-grid>
+
+                      </dxi-tab>
+
+                    </dxi-item>
+                  </dxi-item>
+
+                  <dxi-item itemType="group">
+                    <dxi-item itemType="tabbed" [tabPanelOptions]="{ deferRendering: false }">
+                      <dxi-tab title="Appraisal Evaluation Team Members">
+
+                        <dxi-item dataField="DirectSupervisor" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeListDataSource, displayExpr: 'CodeEmployeeName', valueExpr: 'EmployeeId', showClearButton:'true', searchEnabled: true, searchExpr: 'EmployeeName'  }">
+                          <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item itemType="group">
+                          <dx-data-grid id="gridContainer" [dataSource]="appraisalTeamMemberDataSource" wordWrapEnabled="true" [allowColumnReordering]="true"
+                            [allowColumnResizing]="true" [showRowLines]="true">
+                            <dxo-editing [allowAdding]="true" [allowDeleting]="true" [allowUpdating]="true" mode="batch"></dxo-editing>
+
+                            <dxi-column dataField="EmployeeId" caption="Appraisal Team Members">
+                              <dxi-validation-rule type="required"></dxi-validation-rule>
+                              <dxo-lookup [dataSource]="employeeListDataSource" valueExpr="EmployeeId" displayExpr="CodeEmployeeName">
+                              </dxo-lookup>
+                            </dxi-column>
+
+                            <dxo-paging [pageSize]="10"></dxo-paging>
+                            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+                          </dx-data-grid>
+                        </dxi-item>
+
+                      </dxi-tab>
+                      <dxi-tab title="Comments by Employee">
+                        <dxi-item dataField="CommentsByEmployee" [editorOptions]="{ height: 90 }" [colSpan]="2"></dxi-item>
+                      </dxi-tab>
+                    </dxi-item>
+                  </dxi-item>
+
+                  <dxi-item itemType="group" caption="Final Result" [colSpan]="2">
+                    <dxi-item dataField="FinalResultQues1" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="2">
+                      <dxo-label text="Is there is need to change employee's ToR? If yes. How?"></dxo-label>
+                    </dxi-item>
+                    <dxi-item dataField="FinalResultQues2" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+                      <dxo-label text="What allowances are recommended for employee?"></dxo-label>
+                    </dxi-item>
+                    <dxi-item dataField="FinalResultQues3" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+                      <dxo-label text="What training courses are recommended to rise the employee's level of knowledge and skills?"></dxo-label>
+                    </dxi-item>
+                    <dxi-item dataField="FinalResultQues4" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+                      <dxo-label text="Is there a need to consider warning for the employee? If yes. How?"></dxo-label>
+                    </dxi-item>
+                    <dxi-item dataField="FinalResultQues5" editorType="dxTextArea" [editorOptions]="{ height: 90 }">
+                      <dxo-label text="Is there a need to assign the employee to another position or withdraw contract with him/her?"></dxo-label>
+                    </dxi-item>
+                  </dxi-item>
+                </dx-form>
+
+                <div class="row">
+                  <div class="col-sm-12 text-center">
+
+                    <div *ngIf="currentAppraisalStatus == true">
+                      <dx-button text="Save" type="success" validationGroup="empApprMoreValidationDetails" [useSubmitBehavior]="true"></dx-button>
+                    </div>
+
+                  </div>
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Details  popup-->
+<dx-popup class="popup" [width]="350" [height]="120" [showTitle]="true" title="Confirmation" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="popupAppraisalFormConfVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="text-center">
+      <dx-button text="Confirm" (onClick)="onApproveAppraisalConfirmClick()">
+      </dx-button>
+      <dx-button text="Cancel" (onClick)="hideAppraisalApprovalConfirmation()">
+      </dx-button>
+    </div>
+  </div>
+</dx-popup>
+
+<!-- Confirmation More Details popup -->
+<dx-popup class="popup" [width]="350" [height]="500" [showTitle]="true" title="Confirmation" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="popupEvaluationFormConfVisible">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="text-center">
+      <dx-button text="Confirm" (onClick)="onApprovalEvaluationConfirmClick()">
+      </dx-button>
+      <dx-button text="Cancel" (onClick)="hideEvaluateApprovalConfirmation()">
+      </dx-button>
+    </div>
+  </div>
+</dx-popup>

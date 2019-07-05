@@ -5,7 +5,6 @@ using DataAccess.DbEntities.Marketing;
 using DataAccess.DbEntities.OnlyForDT;
 using DataAccess.DbEntities.Project;
 using DataAccess.DbEntities.Store;
-using HumanitarianAssistance.Entities.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,7 +27,6 @@ namespace HumanitarianAssistance.Entities
 
 
 
-        public DbSet<AccountNoteDetail> AccountNoteDetail { get; set; }
 
         public DbSet<Permissions> Permissions { get; set; }
 
@@ -197,6 +195,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ExchangeRateVerification> ExchangeRateVerifications { get; set; }
         public DbSet<Errorlog> errorlog { get; set; }
         public DbSet<DocumentFileDetail> DocumentFileDetail { get; set; }
+        public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
 
 
         #region Project
@@ -260,6 +259,9 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectLogisticsControl> ProjectLogisticsControl { get; set; }
         public DbSet<ProjectActivitiesControl> ProjectActivitiesControl { get; set; }
         public DbSet<ProjectHiringControl> ProjectHiringControl { get; set; }
+       
+        public DbSet<ProjectHiringRequestDetail> ProjectHiringRequestDetail { get; set; }
+        public DbSet<HiringRequestCandidates> HiringRequestCandidates { get; set; }
 
 
         #endregion
@@ -697,8 +699,11 @@ namespace HumanitarianAssistance.Entities
                 new ApplicationPages { IsDeleted = false, PageId = 81, PageName = "BroadCastPolicy", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 82, PageName = "ProposalReport", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 83, PageName = "ProjectIndicators", ModuleId = 8, ModuleName = "Projects" },
-                new ApplicationPages { IsDeleted = false, PageId = 84, PageName = "ProjectPeople", ModuleId = 8, ModuleName = "Projects" }
-
+                new ApplicationPages { IsDeleted = false, PageId = 84, PageName = "ProjectPeople", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 85, PageName = "VoucherSummaryReport", ModuleId = 7, ModuleName = "AccountingNew" },
+                new ApplicationPages { IsDeleted = false, PageId = 86, PageName = "HiringRequests", ModuleId = 8, ModuleName = "Projects" },
+                new ApplicationPages { IsDeleted = false, PageId = 87, PageName = "PensionDebitAccount", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 88, PageName = "AttendanceGroupMaster", ModuleId = 2, ModuleName = "Code" }
             );
 
             modelBuilder.Entity<FinancialYearDetail>().HasData(

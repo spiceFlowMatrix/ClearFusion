@@ -1,0 +1,266 @@
+<div class="hirimg-request-detail-main">
+  <div class="row">
+    <div class="col-sm-6">
+      <span class="font_x_large">Hiring Request Details</span> &nbsp;
+    </div>
+    <div class="col-sm-6">
+      <button *ngIf="isCompleted" mat-raised-button color="accent" pTooltip="Request Completed" tooltipPosition="top"
+        aria-label="Request Completed">
+        <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">done</mat-icon>
+        Request Completed
+      </button> &nbsp;
+      <button *ngIf="!isCompleted" mat-stroked-button pTooltip="Complete Request" tooltipPosition="top"
+        aria-label="Complete Request" (click)="onCompleteHiringRequestClicked()">
+        <mat-icon *ngIf="!isCompletedFlag; else completedLoderTemplate" aria-label="icon-button done icon"
+          class="margin_left_minus_5">done</mat-icon>
+        Complete Request
+        <ng-template #completedLoderTemplate>
+          <div class="pull-left">
+            <mat-spinner class="spinner_center" [diameter]="20"> </mat-spinner>
+          </div>
+        </ng-template>
+      </button> &nbsp;
+
+      <button mat-raised-button color="primary" (click)="onEditHiringRequestClicked()">
+        Edit
+      </button>
+      <br />
+      <br />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12" *ngIf="hiringReuestDetailLoader; else hiringRequestTemplate">
+      <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+    </div>
+    <ng-template #hiringRequestTemplate>
+      <mat-card [ngStyle]="scrollStyles">
+        <form class="example-form" [formGroup]="hiringRequestForm">
+          <div mat-dialog-content>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-lg-12 col-sm-12">
+                    <!-- {{ hiringRequestDetail.HiringRequestId/hiringRequestDetail.HiringRequestCode}} -->
+                  </div>
+                  <div class="col-lg-12 col-sm-12">
+                    <mat-form-field class="example-full-width">
+                      <textarea matInput name="Description" formControlName="Description" placeholder="Description"
+                        matTextareaAutosize matAutosizeMinRows="5" matAutosizeMaxRows="7" readonly="true"></textarea>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <input matInput formControlName="Position" placeholder="Position" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Profession" formControlName="ProfessionId">
+                        <mat-option *ngFor="let item of professionList" [value]="item.ProfessionId">
+                          {{ item.ProfessionName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Budget Line" formControlName="BudgetLineId" readonly>
+                        <mat-option *ngFor="let item of budgetLineList" [value]="item.BudgetLineId">
+                          {{ item.BudgetName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <input matInput formControlName="TotalVacancies" placeholder="Total Vacancies" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Office" formControlName="OfficeId" readonly>
+                        <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
+                          {{ item.OfficeName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <input matInput formControlName="FilledVacancies" placeholder="Filled Vacancies" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <input matInput formControlName="BasicPay" placeholder="BasicPay" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-6 col-sm-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-select placeholder="Job Grade" formControlName="GradeId" readonly>
+                        <mat-option *ngFor="let item of jobGradeList" [value]="item.GradeId">
+                          {{ item.GradeName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-sm-12">
+            <button mat-raised-button color="primary" (click)="onAddCandidateClicked()">
+              Add Candidate
+            </button>
+            <div class="col-sm-12 responsive_table-responsive"
+             *ngIf="!getCandidateDetailLoader; else candidateListLoaderTemplate">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td width="1%">
+                      <p class="width_8"></p>
+                    </td>
+                    <td width="15%">Code/Id</td>
+                    <td width="20%">Full Name</td>
+                    <td width="15%">Gender</td>
+                    <td width="25%">Interview </td>
+                    <td width="25%">Current Status</td>
+                    <td width="20%" class="text-right"></td>
+                    <td width="12%" class="text-center"></td>
+
+                    <td width="1%" class="text-center"></td>
+
+                  </tr>
+                  <tr *ngFor="let item of candidateList">
+                    <td width="1%">
+                      <p class="width_8"></p>
+                    </td>
+                    <td width="15%">{{ item.EmployeeID }}/{{ item.EmployeeCode }} </td>
+                    <td width="20%">{{ item.EmployeeName }}</td>
+                    <td width="15%">{{ item.Gender }} </td>
+                    <td width="25%"> <span
+                        *ngIf="item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == false">None</span>
+                      <a *ngIf="(item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate"
+                        (click)="seeCandidateDetail('dashboard/hr/interview-form')">See Interview Details</a>
+                    </td>
+                    <td width="25%">{{ item.EmployeeTypeName }}
+                      <a *ngIf="item.EmployeeTypeId == employeeType.Candidate &&
+                      !((item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate) &&
+                      !(item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == true || interviewCompleteCheckFlag == true)"
+                        (click)="onAddInterviewCandidate(item)"> Interview Candidate</a>
+                    </td>
+                    <td width="20%" class="text-right">
+                      <button
+                        *ngIf="(!item.IsShortListed && !item.IsSelected && item.EmployeeTypeId == employeeType.Candidate && item.IsInterViewed)"
+                        mat-raised-button color="accent" pTooltip="Short List" tooltipPosition="top"
+                        aria-label="ShortList" (click)="OnShortListClick(item)">
+                        <span *ngIf="!isshortlistedLoaderFlag; else loaderTemplate">
+                          ShortList
+                        </span>
+                        <ng-template #loaderTemplate>
+                          <div class="spinner_center padding_top_5 padding_bottom_5">
+                            <mat-spinner [diameter]="25"> </mat-spinner>
+                          </div>
+                        </ng-template>
+
+                      </button>
+
+                      <button mat-stroked-button mat-raised-button
+                        *ngIf="(!item.IsSelected && item.IsShortListed && item.EmployeeTypeId==employeeType.Candidate) || (item.EmployeeTypeId==employeeType.Active && !item.IsSelected)"
+                        (click)="onSelectedCandidate(item)" [disabled]="item.IsSelectedFlag">
+                        <mat-icon aria-label="done" *ngIf="!item.IsSelectedFlag; else onSelectedCandidateFlagTemplate">
+                          done
+                        </mat-icon>
+                        Select
+                        <ng-template #onSelectedCandidateFlagTemplate>
+                          <div class="pull-left">
+                            <mat-spinner class="spinner_center" [diameter]="20"> </mat-spinner>
+                          </div>
+                        </ng-template>
+                      </button>
+
+                      <button mat-stroked-button mat-raised-button color="accent" *ngIf="item.IsSelected">
+                        <mat-icon aria-label="done">
+                          done
+                        </mat-icon>
+                        Selected
+                      </button>
+
+                      <!--<span *ngIf="item.EmployeeTypeId !== employeeType.Active; else forActiveEmployeeTemplate">
+    <span *ngIf="item.IsInterViewed">
+      <button *ngIf="!item.IsShortListed; else selectedCandidateTemplate" mat-raised-button
+        color="accent" pTooltip="Short List" tooltipPosition="top" aria-label="ShortList"
+        (click)="OnShortListClick(item)">ShortList
+      </button>
+      <ng-template #selectedCandidateTemplate>
+        <button mat-stroked-button
+         *ngIf="!item.IsSelected; else selectedTemplatebutton" (click)="onSelectedCandidate(item)">
+          <mat-icon aria-label="done">
+            done
+          </mat-icon>
+          Select
+        </button>
+        <ng-template #selectedTemplatebutton>
+            <button  mat-stroked-button mat-raised-button
+            color="accent">
+                <mat-icon aria-label="done" >
+                  done
+                </mat-icon>
+                Selected
+              </button>
+        </ng-template>
+
+      </ng-template>
+    </span>
+  </span>
+
+  <ng-template #forActiveEmployeeTemplate>
+    <button *ngIf="!item.IsShortListed; else selectedCandidateTemplate"
+    mat-stroked-button (click)="onSelectedCandidate(item)">
+      <mat-icon aria-label="done">
+        done
+      </mat-icon>
+      Select
+    </button>
+    <ng-template #selectedTemplatebutton>
+        <button  mat-stroked-button mat-raised-button
+        color="accent">
+            <mat-icon aria-label="done" >
+              done
+            </mat-icon>
+            Selected
+          </button>
+    </ng-template>
+
+
+  </ng-template>-->
+
+                    </td>
+
+                    <td width="12%" class="text-center" text-align="left">
+                        <button mat-icon-button (click)="onCandidateDetailDelete(item)"
+                          >
+                          <mat-icon aria-label="delete">delete</mat-icon>
+                        </button>
+                      </td>
+
+                      <td width="1%" class="text-center"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <ng-template #candidateListLoaderTemplate>
+                <br />
+                <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+              </ng-template>
+            <br />
+          </div>
+        </div>
+      </mat-card>
+
+    </ng-template>
+  </div>
+
+</div>

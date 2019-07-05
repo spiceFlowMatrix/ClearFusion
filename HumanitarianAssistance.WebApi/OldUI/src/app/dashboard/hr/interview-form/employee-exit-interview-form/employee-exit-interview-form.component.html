@@ -1,0 +1,380 @@
+<div class="main-employee-exit-interview-form">
+  <div class="row">
+
+    <div class="col-sm-12" *ngIf="isEditingAllowed">
+
+      <div *ngIf="empExitInterviewFormListFlag == true ; else backButtonExitInterview">
+        <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showAddEmpExitInterviewForm()"></dx-button>
+      </div>
+
+      <ng-template #backButtonExitInterview>
+        <dx-button class="button-info btn btn-default btn-green" text="Back" (onClick)="onBackButtonClick()"></dx-button>
+      </ng-template>
+
+    </div>
+
+    <div class="col-sm-12">
+
+      <div *ngIf="empExitInterviewFormListFlag">
+        <div class="col-sm-12">
+          <br>
+          <dx-data-grid id="gridContainer" [dataSource]="exitInterviewDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="true" [showRowLines]="true">
+            <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch" *ngIf="isEditingAllowed"></dxo-editing>
+            <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+            <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+            <dxo-header-filter [visible]="true"> </dxo-header-filter>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+            <dxi-column dataField="EmployeeId" [visible]="false"></dxi-column>
+            <dxi-column dataField="EmployeeCode" [visible]="false"></dxi-column>
+            <dxi-column dataField="EmployeeName"></dxi-column>
+            <dxi-column dataField="Position"></dxi-column>
+            <dxi-column dataField="Department"></dxi-column>
+            <dxi-column dataField="TenureWithCHA"></dxi-column>
+            <dxi-column dataField="Gender"></dxi-column>
+
+            <dxi-column caption="Action" alignment="center" cellTemplate="CellTemplateEdit" 
+            *ngIf="isEditingAllowed"></dxi-column>
+            <div *dxTemplate="let data of 'CellTemplateEdit'">
+              <a href="javascript:void(0)" (click)="onEditEmpExitInterviewShowForm(data, false)">Edit</a> |
+              <a href="javascript:void(0)" (click)="onEditEmpExitInterviewShowForm(data, true)">View</a>|
+              <a href="javascript:void(0)" (click)="onDeleteEmpExitInterviewShowPopup(data)">Delete</a>
+            </div>
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+          </dx-data-grid>
+
+        </div>
+      </div>
+
+      <!-- Add -->
+      <div *ngIf="addEmpExitInterviewDetailsFlag">
+        <div class="row">
+          <div class="col-sm-12">
+            <br>
+            <div class="row">
+              <div class="col-sm-12">
+
+                <form action="your-action" (submit)="onExitInterviewFormSubmit(empExitInterviewFormMainForm)">
+
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h3 class="panel-title text-left">Exit Interview Form</h3>
+                        </div>
+                        <div class="panel-body">
+
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <div style="max-width: 30rem;">
+                                <dx-select-box [dataSource]="employeeListDataSource" placeholder="Select Employee" (onValueChanged)="onEmployeeSelectedValue($event)"
+                                  displayExpr="CodeEmployeeName" valueExpr="EmployeeId" [readOnly]="isExitInterviewViewOnly" [(value)]="employeeSelectedValue" searchEnabled="true">
+                                </dx-select-box>
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <dx-form id="form" [formData]="empExitInterviewFormMainForm" [colCount]="2" [readOnly]="isExitInterviewViewOnly" [showColonAfterLabel]="true"
+                            [showValidationSummary]="true" validationGroup="interviewFormValidationDetails">
+
+                            <dxi-item itemType="tabbed" [colSpan]="2">
+                              <dxi-tab title="Feeling About Employee Aspects">
+
+                                <dxi-item dataField="DutiesOfJob" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Duties of the Job"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="TrainingAndDevelopmentPrograms" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Training And Development Programs"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="OpportunityAdvancement" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Opportunity for Advancement"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="SalaryTreatment" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Salary Treatment"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="BenefitProgram" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Benefit Program"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="WorkingConditions" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Working Conditions"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="WorkingHours" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Working Hours"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="CoWorkers" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Co Workers"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="Supervisors" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Supervisors"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="GenderFriendlyEnvironment" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Gender Friendly Environment"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="OverallJobSatisfaction" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: empAspectsFeedbackRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Overall Job Satisfaction"></dxo-label>
+                                </dxi-item>
+
+
+
+
+                              </dxi-tab>
+
+                              <!-- Reason Of Leaving -->
+                              <dxi-tab title="Reason Of Leaving">
+
+                                <dxi-item dataField="Benefits" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.Benefits }">
+                                  <dxo-label text="Benefits"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="BetterJobOpportunity" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.BetterJobOpportunity }">
+                                  <dxo-label text="Better Job Opportunity"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="FamilyReasons" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.FamilyReasons }">
+                                  <dxo-label text="Family Reasons"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="NotChallenged" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.NotChallenged }">
+                                  <dxo-label text="Not Challenged"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="Pay" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.Pay }">
+                                  <dxo-label text="Pay"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="PersonalReasons" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.PersonalReasons }">
+                                  <dxo-label text="Personal Reasons"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="Relocation" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.Relocation }">
+                                  <dxo-label text="Relocation/Move"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="ReturnToSchool" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.ReturnToSchool }">
+                                  <dxo-label text="Return To School"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="ConflictWithSuoervisors" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.ConflictWithSuoervisors }">
+                                  <dxo-label text="Conflict with Suoervisors"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="ConflictWithOther" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.ConflictWithOther }">
+                                  <dxo-label text="Conflict with other Employees"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="WorkRelationship" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.WorkRelationship }">
+                                  <dxo-label text="Work Relationship"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="CompanyInstability" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.CompanyInstability }">
+                                  <dxo-label text="Company Instability"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="CareerChange" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.CareerChange }">
+                                  <dxo-label text="Career Change"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="HealthIssue" [colSpan]="2" editorType="dxCheckBox" [editorOptions]="{ value: empExitInterviewFormMainForm.HealthIssue }">
+                                  <dxo-label text="Health Issue"></dxo-label>
+                                </dxi-item>
+
+
+
+
+                              </dxi-tab>
+
+                              <!-- The Department -->
+                              <dxi-tab title="The Department">
+
+                                <dxi-item dataField="HadGoodSynergy" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Had Good Synergy"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="HadAdequateEquipment" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Had Adequate Equipment"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="WasAdequatelyStaffed" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Was Adequately Staffed"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="WasEfficient" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Was Efficient"></dxo-label>
+                                </dxi-item>
+
+
+                              </dxi-tab>
+
+                              <!-- The Job Itself -->
+                              <dxi-tab title="The Job Itself">
+
+                                <dxi-item dataField="JobWasChallenging" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Job Was Challenging"></dxo-label>
+                                </dxi-item>
+
+
+                                <dxi-item dataField="SkillsEffectivelyUsed" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Skills were Effectively Used"></dxo-label>
+                                </dxi-item>
+
+
+                                <dxi-item dataField="JobOrientation" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Job Orientation was effective"></dxo-label>
+                                </dxi-item>
+
+
+                                <dxi-item dataField="WorkLoadReasonable" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Work Load was Reasonable"></dxo-label>
+                                </dxi-item>
+
+
+                                <dxi-item dataField="SufficientResources" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Sufficient Resources were available"></dxo-label>
+                                </dxi-item>
+
+
+                                <dxi-item dataField="WorkEnvironment" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Work Environment was safe"></dxo-label>
+                                </dxi-item>
+
+
+                                <dxi-item dataField="ComfortableAppropriately" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Comfortable and Appropriately"></dxo-label>
+                                </dxi-item>
+
+
+                                <dxi-item dataField="Equipped" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Equipped"></dxo-label>
+                                </dxi-item>
+
+
+
+                              </dxi-tab>
+
+                              <!-- My Supervisor -->
+                              <dxi-tab title="My Supervisor">
+
+                                <dxi-item dataField="HadKnowledgeOfJob" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Had Knowledge Of the Job"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="HadKnowledgeSupervision" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Had Knowledge of Supervision"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="WasOpenSuggestions" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Was Open to Suggestions"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="RecognizedEmployeesContribution" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Recognized Employees Contribution"></dxo-label>
+                                </dxi-item>
+
+
+
+                              </dxi-tab>
+
+                              <!-- The Management -->
+                              <dxi-tab title="The Management">
+
+                                <dxi-item dataField="GaveFairTreatment" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Gave Fair ande Equal Treatment"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="WasAvailableToDiscuss" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Was Available To Discuss job relatd issues"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="WelcomedSuggestions" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Welcomed Suggestions and Encouraged Feedback"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="MaintainedConsistent" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Maintained Consistent policies and practices"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="ProvidedRecognition" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Provided Recognition for Achievements"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="EncouragedCooperation" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Encouraged Cooperation/collegiality"></dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="ProvidedDevelopment" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: viewsRadioGroup, layout: 'horizontal' }">
+                                  <dxo-label text="Provided Development Opportunities"></dxo-label>
+                                </dxi-item>
+
+
+
+
+                              </dxi-tab>
+
+                            </dxi-item>
+
+                            <dxi-item dataField="Question" [colSpan]="2" editorType="dxRadioGroup" [editorOptions]="{items: yesNoRadioGroup, layout: 'horizontal' }">
+                              <dxo-label text="Are there any other unresolved issues or additional comments?"></dxo-label>
+                            </dxi-item>
+
+                            <dxi-item dataField="Explain" [colSpan]="2" editorType="dxTextArea" [editorOptions]="{ height: 80 }">
+                              <dxo-label text="If answer is 'yes' , Explain fully"></dxo-label>
+                            </dxi-item>
+
+                          </dx-form>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="text-center" *ngIf="!isExitInterviewViewOnly">
+                        <dx-button text="Save" type="success" validationGroup="interviewFormValidationDetails" [useSubmitBehavior]="true"></dx-button>
+                        <dx-button text="Cancel" (onClick)="hideAddEmpExitInterviewForm()" 
+                        *ngIf="isEditingAllowed"></dx-button>
+                      </div>
+                    </div>
+                  </div>
+
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <ngx-loading [show]="empInterviewExitFormLoader"></ngx-loading>
+</div>
+
+
+<dx-popup class="popup" [width]="350" [height]="120" [showTitle]="true" title="Confirmation" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="deleteConfVisiblePopup">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="text-center">
+      <dx-button text="Confirm" (onClick)="onDeleteConfirmationClick()">
+      </dx-button>
+      <dx-button text="Cancel" (onClick)="hideDeleteConfVisiblePopup()">
+      </dx-button>
+    </div>
+  </div>
+</dx-popup>

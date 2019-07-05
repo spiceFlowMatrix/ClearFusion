@@ -819,54 +819,6 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllVoucherTransactionDetailByBudgetLine(long projectId, long budgetLineId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                //var transactionlist = await _uow.GetDbContext().VoucherTransactionDetails
-                //	.Include(x => x.CreditAccountDetails)
-                //	//.Include(x => x.DebitAccountDetails)          
-                //	.Include(x => x.VoucherDetails)
-                //	.Include(x => x.VoucherDetails.ProjectBudgetLine)
-                //	.Where(x => x.VoucherDetails.ProjectBudgetLine.ProjectId == projectId && x.VoucherDetails.ProjectBudgetLine.BudgetLineId == budgetLineId && x.IsDeleted == false).ToListAsync();
-
-                //IList<VoucherTransactionModel> tranlist = new List<VoucherTransactionModel>();
-                //foreach (var debit in transactionlist)
-                //{
-                //	VoucherTransactionModel obj = new VoucherTransactionModel();
-                //	obj.TransactionId = debit.TransactionId;
-                //	obj.TransactionDate = debit.TransactionDate;
-                //	obj.VoucherNo = debit.VoucherNo;
-                //	obj.Description = debit.Description;
-                //	obj.AccountName = debit.DebitAccountDetails.AccountName;
-                //	obj.DebitAmount = debit.Amount;
-                //	obj.DebitAccount = debit.DebitAccount;
-                //	obj.Amount = debit.Amount;
-                //	tranlist.Add(obj);
-                //	VoucherTransactionModel obj1 = new VoucherTransactionModel();
-                //	obj1.TransactionId = debit.TransactionId;
-                //	obj1.TransactionDate = debit.TransactionDate;
-                //	obj1.VoucherNo = debit.VoucherNo;
-                //	obj1.Description = debit.Description;
-                //	obj1.AccountName = debit.CreditAccountDetails.AccountName;
-                //	obj1.CreditAmount = debit.Amount;
-                //	obj1.CreditAccount = debit.CreditAccount;
-                //	obj1.Amount = debit.Amount;
-                //	tranlist.Add(obj1);
-                //}
-                //response.data.VoucherTransactionList = tranlist;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
-        }
-
         public async Task<APIResponse> GetAllVoucherTransactionDetailByVoucherNo(int VoucherNo)
         {
             APIResponse response = new APIResponse();
@@ -2481,7 +2433,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetTrailBlanceDetailsByCondition(LedgerModels model)
+        public async Task<APIResponse> GetTrialBalanceDetailsByCondition(LedgerModels model)
         {
             APIResponse response = new APIResponse();
             try
@@ -2717,13 +2669,13 @@ namespace HumanitarianAssistance.Service.Classes
                         }
                     }
 
-                    response.data.TrailBlanceList = finalTrialBalanceList;
+                    response.data.TrialBalanceList = finalTrialBalanceList;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
                 else
                 {
-                    response.data.TrailBlanceList = null;
+                    response.data.TrialBalanceList = null;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "No data Found";
                 }

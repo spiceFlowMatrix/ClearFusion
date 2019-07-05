@@ -214,8 +214,8 @@ namespace HumanitarianAssistance.Service.Classes
                             rolePermissions.PageId = item.PageId;
                             rolePermissions.RoleId = RoleId;
                             rolePermissions.ModuleId = item.ModuleId;
-                            _uow.GetDbContext().RolePermissions.Add(rolePermissions);
-                            _uow.GetDbContext().SaveChanges();
+                            await _uow.GetDbContext().RolePermissions.AddAsync(rolePermissions);
+                            await  _uow.GetDbContext().SaveChangesAsync();
                             _uow.GetDbContext().Entry<RolePermissions>(rolePermissions).State = EntityState.Detached;
                         }
                         if(item.Approve == true || item.Reject == true)
@@ -227,8 +227,8 @@ namespace HumanitarianAssistance.Service.Classes
                             rolePermission.IsDeleted = false;
                             rolePermission.PageId = item.PageId;
                             rolePermission.RoleId = RoleId;
-                            _uow.GetDbContext().ApproveRejectPermission.Add(rolePermission);
-                            _uow.GetDbContext().SaveChanges();
+                            await _uow.GetDbContext().ApproveRejectPermission.AddAsync(rolePermission);
+                            await _uow.GetDbContext().SaveChangesAsync();
                             _uow.GetDbContext().Entry<ApproveRejectPermission>(rolePermission).State = EntityState.Detached;
                         }
                         if (item.Agree == true || item.Disagree == true)
@@ -240,8 +240,8 @@ namespace HumanitarianAssistance.Service.Classes
                             rolePermission.IsDeleted = false;
                             rolePermission.PageId = item.PageId;
                             rolePermission.RoleId = RoleId;
-                            _uow.GetDbContext().AgreeDisagreePermission.Add(rolePermission);
-                            _uow.GetDbContext().SaveChanges();
+                            await _uow.GetDbContext().AgreeDisagreePermission.AddAsync(rolePermission);
+                            await _uow.GetDbContext().SaveChangesAsync();
                             _uow.GetDbContext().Entry<AgreeDisagreePermission>(rolePermission).State = EntityState.Detached;
                         }
                         if (item.OrderSchedule == true)
@@ -252,8 +252,8 @@ namespace HumanitarianAssistance.Service.Classes
                             rolePermission.IsDeleted = false;
                             rolePermission.PageId = item.PageId;
                             rolePermission.RoleId = RoleId;
-                            _uow.GetDbContext().OrderSchedulePermission.Add(rolePermission);
-                            _uow.GetDbContext().SaveChanges();
+                            await _uow.GetDbContext().OrderSchedulePermission.AddAsync(rolePermission);
+                            await _uow.GetDbContext().SaveChangesAsync();
                             _uow.GetDbContext().Entry<OrderSchedulePermission>(rolePermission).State = EntityState.Detached;
                         }
                     }

@@ -1,0 +1,678 @@
+<div class="body-content">
+  <div class="income-main">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+          <mat-card [ngStyle]="scrollStyles">
+            <div class="row">
+              <div class="col-sm-11"><h3>Liabilities</h3></div>
+              <div class="col-sm-1">
+                <button
+                  mat-icon-button
+                  pTooltip="Add new Main Category"
+                  tooltipPosition="top"
+                  (click)="onAddMainLevelAccountDialog()"
+                  *ngIf="isEditingAllowed"
+                >
+                  <mat-icon aria-label="Add"> add</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <!-- main level -->
+                <div *ngFor="let mainLevelData of chartOfAccountList">
+                  <div
+                    class="panel-heading blue_bg"
+                    role="tab"
+                    [id]="'heading' + mainLevelData.ChartOfAccountNewId"
+                  >
+                    <div class="row">
+                      <div class="col-sm-1">
+                        <div
+                          *ngIf="
+                            mainLevelData._IsLoading && !mainLevelData._IsError
+                          "
+                        >
+                          <mat-spinner [diameter]="15"></mat-spinner>
+                        </div>
+                        <div *ngIf="mainLevelData._IsError">
+                          <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div
+                          *ngIf="
+                            !mainLevelData._IsLoading && !mainLevelData._IsError
+                          "
+                        >
+                          <a
+                            (click)="onMainLevelClicked(mainLevelData)"
+                            class="counts_list"
+                            role="button"
+                            data-toggle="collapse"
+                            data-parent="#accordion"
+                            [href]="
+                              '#collapse' + mainLevelData.ChartOfAccountNewId
+                            "
+                            aria-expanded="true"
+                            [attr.aria-controls]="
+                              'collapse' + mainLevelData.ChartOfAccountNewId
+                            "
+                          >
+                            {{ mainLevelData.ChartOfAccountNewCode }}
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-sm-11">
+                        <div class="example-form-field accordian_content">
+                          <input
+                            matInput
+                            type="text"
+                            maxlength="150"
+                            [disabled]="
+                              mainLevelData._IsLoading || !isEditingAllowed
+                            "
+                            [value]="mainLevelData.AccountName"
+                            [name]="
+                              'mainLevelDataAccountName' +
+                              mainLevelData.ChartOfAccountNewId
+                            "
+                            (change)="
+                              onBlurEditMainLevelAccountName(
+                                mainLevelData,
+                                $event.target.value
+                              )
+                            "
+                          />
+                          &nbsp;
+                          <i
+                            class="fas fa-trash icon_cursor"
+                            color="warn"
+                            (click)="onDeleteMainLevel(mainLevelData)"
+                          ></i>
+                        </div>
+
+                        <span class="border-arrow">
+                          <a
+                            [hidden]="mainLevelData._IsLoading"
+                            (click)="onMainLevelClicked(mainLevelData)"
+                            class="arrow_accord"
+                            role="button"
+                            data-toggle="collapse"
+                            data-parent="#accordion"
+                            [href]="
+                              '#collapse' + mainLevelData.ChartOfAccountNewId
+                            "
+                            aria-expanded="true"
+                            [attr.aria-controls]="
+                              'collapse' + mainLevelData.ChartOfAccountNewId
+                            "
+                          >
+                          </a>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Control level -->
+                  <div
+                    [id]="'collapse' + mainLevelData.ChartOfAccountNewId"
+                    class="panel-collapse collapse"
+                    role="tabpanel"
+                    [attr.aria-labelledby]="
+                      'heading' + mainLevelData.ChartOfAccountNewId
+                    "
+                  >
+                    <div class="panel-body padding_0">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="panel-heading">
+                            <div class="row">
+                              <div class="col-sm-1"></div>
+                              <div class="col-sm-11">
+                                <a
+                                  (click)="
+                                  onAddControlLevelAccountDialog(mainLevelData)"
+                                  class="add_new"
+                                  *ngIf="isEditingAllowed"
+                                >
+                                  Add New...
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div
+                            *ngFor="
+                              let controlLevelData of mainLevelData.Children
+                            "
+                          >
+                            <div
+                              class="panel-heading child_div"
+                              role="tab"
+                              [id]="
+                                'heading' + controlLevelData.ChartOfAccountNewId
+                              "
+                            >
+                              <div class="row">
+                                <div class="col-sm-1">
+                                  <div
+                                    *ngIf="
+                                      controlLevelData._IsLoading &&
+                                      !controlLevelData._IsError
+                                    "
+                                  >
+                                    <mat-spinner [diameter]="15"></mat-spinner>
+                                  </div>
+                                  <div *ngIf="controlLevelData._IsError">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                  </div>
+                                  <div
+                                    *ngIf="
+                                      !controlLevelData._IsLoading &&
+                                      !controlLevelData._IsError
+                                    "
+                                  >
+                                    <a
+                                      (click)="
+                                        onControlLevelClicked(
+                                          mainLevelData,
+                                          controlLevelData
+                                        )
+                                      "
+                                      role="button"
+                                      data-toggle="collapse"
+                                      data-parent="#accordion"
+                                      [href]="
+                                        '#collapse' +
+                                        controlLevelData.ChartOfAccountNewId
+                                      "
+                                      class="counts_list second_div"
+                                      aria-expanded="true"
+                                      [attr.aria-controls]="
+                                        'collapse' +
+                                        controlLevelData.ChartOfAccountNewId
+                                      "
+                                    >
+                                      {{
+                                        controlLevelData.ChartOfAccountNewCode
+                                      }}
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="col-sm-11">
+                                  <div
+                                    class="example-form-field accordian_content"
+                                  >
+                                    <input
+                                      matInput
+                                      type="text"
+                                      maxlength="150"
+                                      [disabled]="
+                                        controlLevelData._IsLoading ||
+                                        !isEditingAllowed
+                                      "
+                                      [value]="controlLevelData.AccountName"
+                                      [name]="
+                                        'controlAccountName' +
+                                        controlLevelData.ChartOfAccountNewId
+                                      "
+                                      (change)="
+                                        onBlurEditControlLevelAccountName(
+                                          mainLevelData,
+                                          controlLevelData,
+                                          $event.target.value
+                                        )
+                                      "
+                                    />
+                                    &nbsp;
+                                    <i
+                                      class="fas fa-trash icon_cursor"
+                                      color="warn"
+                                      (click)="
+                                        onDeleteControlLevel(
+                                          mainLevelData,
+                                          controlLevelData
+                                        )
+                                      "
+                                    ></i>
+                                  </div>
+
+                                  <a
+                                    [hidden]="controlLevelData._IsLoading"
+                                    (click)="
+                                      onControlLevelClicked(
+                                        mainLevelData,
+                                        controlLevelData
+                                      )
+                                    "
+                                    class="arrow_accord"
+                                    role="button"
+                                    data-toggle="collapse"
+                                    data-parent="#accordion"
+                                    [href]="
+                                      '#collapse' +
+                                      controlLevelData.ChartOfAccountNewId
+                                    "
+                                    aria-expanded="true"
+                                    [attr.aria-controls]="
+                                      'collapse' +
+                                      controlLevelData.ChartOfAccountNewId
+                                    "
+                                  >
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Sub level -->
+                            <div
+                              [id]="
+                                'collapse' +
+                                controlLevelData.ChartOfAccountNewId
+                              "
+                              class="panel-collapse collapse"
+                              role="tabpanel"
+                              [attr.aria-labelledby]="
+                                'heading' + controlLevelData.ChartOfAccountNewId
+                              "
+                            >
+                              <div class="panel-body padding_0">
+                                <div class="row">
+                                  <div class="col-sm-1"></div>
+                                  <div class="col-sm-10">
+                                    <div class="panel-heading">
+                                      <div class="row">
+                                        <div class="col-sm-10">
+                                          <a
+                                            (click)="
+                                            onAddSubLevelAccountDialog(
+                                                mainLevelData,
+                                                controlLevelData
+                                              )
+                                            "
+                                            class="add_new"
+                                            *ngIf="isEditingAllowed"
+                                          >
+                                            Add New...
+                                          </a>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div
+                                      *ngFor="
+                                        let subLevelData of controlLevelData.Children
+                                      "
+                                    >
+                                      <div
+                                        class="panel-heading child_div tertiarry_level"
+                                        role="tab"
+                                        [id]="
+                                          'heading' +
+                                          subLevelData.ChartOfAccountNewId
+                                        "
+                                      >
+                                        <div class="row">
+                                          <div class="col-sm-1">
+                                            <div
+                                              *ngIf="
+                                                subLevelData._IsLoading &&
+                                                !subLevelData._IsError
+                                              "
+                                            >
+                                              <mat-spinner
+                                                [diameter]="15"
+                                              ></mat-spinner>
+                                            </div>
+                                            <div *ngIf="subLevelData._IsError">
+                                              <i
+                                                class="fas fa-exclamation-triangle"
+                                              ></i>
+                                            </div>
+                                            <div
+                                              *ngIf="
+                                                !subLevelData._IsLoading &&
+                                                !subLevelData._IsError
+                                              "
+                                            >
+                                              <a
+                                                class="counts_list count_3"
+                                                (click)="
+                                                  onSubLevelClicked(
+                                                    mainLevelData,
+                                                    controlLevelData,
+                                                    subLevelData
+                                                  )
+                                                "
+                                                role="button"
+                                                data-toggle="collapse"
+                                                data-parent="#accordion"
+                                                [href]="
+                                                  '#collapse' +
+                                                  subLevelData.ChartOfAccountNewId
+                                                "
+                                                aria-expanded="true"
+                                                [attr.aria-controls]="
+                                                  'collapse' +
+                                                  mainLevelData.ChartOfAccountNewId
+                                                "
+                                              >
+                                                {{
+                                                  subLevelData.ChartOfAccountNewCode
+                                                }}
+                                              </a>
+                                            </div>
+                                          </div>
+                                          <div class="col-sm-3">
+                                            <div
+                                              class="example-form-field accordian_content"
+                                            >
+                                              <!-- <mat-form-field class="example-form-field"> -->
+                                              <input
+                                                matInput
+                                                type="text"
+                                                maxlength="150"
+                                                [disabled]="
+                                                  subLevelData._IsLoading ||
+                                                  !isEditingAllowed
+                                                "
+                                                [value]="
+                                                  subLevelData.AccountName
+                                                "
+                                                [name]="
+                                                  'subLevelAccountName' +
+                                                  subLevelData.ChartOfAccountNewId
+                                                "
+                                                (change)="
+                                                  onBlurEditSubLevelAccountName(
+                                                    mainLevelData,
+                                                    controlLevelData,
+                                                    subLevelData,
+                                                    $event.target.value
+                                                  )
+                                                "
+                                              />
+                                              <!-- </mat-form-field> -->
+                                            </div>
+                                          </div>
+                                          <div class="col-sm-3">
+                                            <div
+                                              class="example-form-field accordian_content"
+                                            >
+                                              <!-- <mat-form-field class="example-form-field"> -->
+                                              <mat-select
+                                                [disabled]="
+                                                  subLevelData._IsLoading ||
+                                                  !isEditingAllowed
+                                                "
+                                                [value]="
+                                                  subLevelData.AccountFilterTypeId
+                                                "
+                                                (selectionChange)="
+                                                  onBlurEditSubLevelAccountFilterType(
+                                                    mainLevelData,
+                                                    controlLevelData,
+                                                    subLevelData,
+                                                    $event.value
+                                                  )
+                                                "
+                                              >
+                                                <mat-option
+                                                  *ngFor="
+                                                    let item of accountFilterTypeList
+                                                  "
+                                                  [value]="
+                                                    item.AccountFilterTypeId
+                                                  "
+                                                >
+                                                  {{
+                                                    item.AccountFilterTypeName
+                                                  }}
+                                                </mat-option>
+                                              </mat-select>
+                                              <!-- </mat-form-field> -->
+                                            </div>
+                                          </div>
+                                          <div class="col-sm-3">
+                                            <div
+                                              class="example-form-field accordian_content"
+                                            >
+                                              <!-- <mat-form-field class="example-form-field"> -->
+                                              <mat-select
+                                                [disabled]="
+                                                  subLevelData._IsLoading ||
+                                                  !isEditingAllowed
+                                                "
+                                                [value]="
+                                                  subLevelData.AccountTypeId
+                                                "
+                                                (selectionChange)="
+                                                  onBlurEditSubLevelAccountType(
+                                                    mainLevelData,
+                                                    controlLevelData,
+                                                    subLevelData,
+                                                    $event.value
+                                                  )
+                                                "
+                                              >
+                                                <mat-option
+                                                  *ngFor="
+                                                    let item of accountTypeList
+                                                  "
+                                                  [value]="item.AccountTypeId"
+                                                >
+                                                  {{ item.AccountTypeName }}
+                                                </mat-option>
+                                              </mat-select>
+                                              <!-- </mat-form-field> -->
+                                            </div>
+                                          </div>
+                                          <div class="col-sm-1">
+                                            <i
+                                              class="fas fa-trash icon_cursor"
+                                              color="warn"
+                                              (click)="
+                                                onDeleteSubLevel(
+                                                  mainLevelData,
+                                                  controlLevelData,
+                                                  subLevelData
+                                                )
+                                              "
+                                            ></i>
+                                          </div>
+                                          <div class="col-sm-1">
+                                            <a
+                                              [hidden]="subLevelData._IsLoading"
+                                              (click)="
+                                                onSubLevelClicked(
+                                                  mainLevelData,
+                                                  controlLevelData,
+                                                  subLevelData
+                                                )
+                                              "
+                                              class="arrow_accord"
+                                              role="button"
+                                              data-toggle="collapse"
+                                              data-parent="#accordion"
+                                              [href]="
+                                                '#collapse' +
+                                                subLevelData.ChartOfAccountNewId
+                                              "
+                                              aria-expanded="true"
+                                              [attr.aria-controls]="
+                                                'collapse' +
+                                                mainLevelData.ChartOfAccountNewId
+                                              "
+                                            >
+                                            </a>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <!-- Input level -->
+                                      <div
+                                        [id]="
+                                          'collapse' +
+                                          subLevelData.ChartOfAccountNewId
+                                        "
+                                        class="panel-collapse collapse"
+                                        role="tabpanel"
+                                        [attr.aria-labelledby]="
+                                          'heading' +
+                                          subLevelData.ChartOfAccountNewId
+                                        "
+                                      >
+                                        <div class="panel-body padding_0">
+                                          <div class="">
+                                            <div class="">
+                                              <div
+                                                class="panel-heading clearfix"
+                                              >
+                                                <div class="row">
+                                                  <div class="col-sm-1"></div>
+                                                  <div class="col-sm-9">
+                                                    <a
+                                                      class="add_new"
+                                                      (click)="
+                                                      onAddInputLevelAccountDialog(
+                                                        mainLevelData,
+                                                        controlLevelData,
+                                                        subLevelData
+                                                      )
+                                                      "
+                                                      *ngIf="isEditingAllowed"
+                                                    >
+                                                      Add New...
+                                                    </a>
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <div
+                                                *ngFor="
+                                                  let inputLevelData of subLevelData.Children
+                                                "
+                                              >
+                                                <div
+                                                  class="panel-heading child_div fourth_level"
+                                                  [id]="
+                                                    'heading' +
+                                                    inputLevelData.ChartOfAccountNewId
+                                                  "
+                                                >
+                                                  <div class="row">
+                                                    <div class="col-sm-1">
+                                                      <div
+                                                        *ngIf="
+                                                          inputLevelData._IsLoading &&
+                                                          !inputLevelData._IsError
+                                                        "
+                                                      >
+                                                        <mat-spinner
+                                                          [diameter]="15"
+                                                        ></mat-spinner>
+                                                      </div>
+                                                      <div
+                                                        *ngIf="
+                                                          inputLevelData._IsError
+                                                        "
+                                                      >
+                                                        <i
+                                                          class="fas fa-exclamation-triangle"
+                                                        ></i>
+                                                      </div>
+                                                      <div
+                                                        *ngIf="
+                                                          !inputLevelData._IsLoading &&
+                                                          !inputLevelData._IsError
+                                                        "
+                                                      >
+                                                        <a
+                                                          class="counts_list count_4"
+                                                          role="button"
+                                                          data-toggle="collapse"
+                                                          [href]="
+                                                            '#collapse' +
+                                                            inputLevelData.ChartOfAccountNewId
+                                                          "
+                                                        >
+                                                          {{
+                                                            inputLevelData.ChartOfAccountNewCode
+                                                          }}
+                                                        </a>
+                                                      </div>
+                                                    </div>
+                                                    <div class="col-sm-11">
+                                                      <div
+                                                        class="example-form-field accordian_content"
+                                                      >
+                                                        <!-- <mat-form-field class="example-form-field"> -->
+                                                        <input
+                                                          matInput
+                                                          type="text"
+                                                          maxlength="150"
+                                                          [disabled]="
+                                                            inputLevelData._IsLoading ||
+                                                            !isEditingAllowed
+                                                          "
+                                                          [value]="
+                                                            inputLevelData.AccountName
+                                                          "
+                                                          [name]="
+                                                            'inputLevel' +
+                                                            inputLevelData.ChartOfAccountNewId
+                                                          "
+                                                          (change)="
+                                                            onBlurEditInputLevelAccountName(
+                                                              mainLevelData,
+                                                              controlLevelData,
+                                                              subLevelData,
+                                                              inputLevelData,
+                                                              $event.target
+                                                                .value
+                                                            )
+                                                          "
+                                                        />
+                                                        <!-- </mat-form-field>      -->
+                                                        &nbsp;
+                                                        <i
+                                                          class="fas fa-trash icon_cursor"
+                                                          color="warn"
+                                                          (click)="
+                                                            onDeleteInputLevel(
+                                                              mainLevelData,
+                                                              controlLevelData,
+                                                              subLevelData,
+                                                              inputLevelData
+                                                            )
+                                                          "
+                                                        ></i>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

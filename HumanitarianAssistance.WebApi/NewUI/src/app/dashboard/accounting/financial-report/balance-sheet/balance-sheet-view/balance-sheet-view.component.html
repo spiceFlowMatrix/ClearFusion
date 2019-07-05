@@ -1,0 +1,160 @@
+<div class="body-content">
+  <div class="balance-sheet-main">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+          <mat-card [ngStyle]="scrollStyles">
+            <div class="row border_bottom">
+              <div class="col-sm-10">
+                <h1 class="main_heading">
+                  Balance Sheet
+                  <span class="font_smallcaps_12">as of {{ asOfDate }} </span>
+                </h1>
+              </div>
+              <div class="col-sm-1">
+                <button
+                  mat-icon-button
+                  class="pull-right"
+                  (click)="onExportPdf()"
+                  pTooltip="Export Pdf"
+                  tooltipPosition="top"
+                >
+                  <mat-icon aria-label="Export pdf"
+                    >vertical_align_bottom</mat-icon
+                  >
+                </button>
+              </div>
+              <div class="col-sm-1">
+                <button
+                  mat-icon-button
+                  class="pull-right"
+                  [routerLink]="'../../../'"
+                >
+                  <mat-icon>settings</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="margin_top_50">
+              <h4 class="main_heading bdr_heading">
+                Assets <span class="font_smallcaps_12">Property & Capital</span>
+              </h4>
+            </div>
+            <div class="row" class="col-12-sm">
+              <table class="collapsed table table-bordered">
+                <tr
+                  *ngFor="let item of assetsList"
+                  class="col-12-sm"
+                  let
+                  ia="index"
+                >
+                  <table class="collapsed table table-bordered">
+                    <tr>
+                      <td
+                        class="font_caps_12"
+                        style="width:100%"
+                        (click)="showa = !showa"
+                      >
+                        {{ item.NoteName }}
+                        <img
+                          src="src/assets/img/elipses.png"
+                          style="height:6px; padding-left:10px;"
+                        />
+                      </td>
+                      <td
+                        class="font_caps_12 right_align"
+                        (click)="showa = !showa"
+                      >
+                        {{ item.NoteBalance | number: "5.2-3" }}
+                      </td>
+                    </tr>
+                    <tr *ngFor="let balance of item.AccountBalances">
+                      <td
+                        class="font_caps_10 "
+                        style="width:100%"
+                        *ngIf="showa"
+                      >
+                        {{ balance.AccountName }}
+                      </td>
+                      <td class="font_caps_10 right_align" *ngIf="showa">
+                        {{ balance.Balance | number: "5.2-3" }}
+                      </td>
+                    </tr>
+                  </table>
+                </tr>
+              </table>
+            </div>
+
+            <div class="margin_top_50">
+              <h4 class="main_heading bdr_heading">Liabilities</h4>
+            </div>
+            <div class="row" class="col-12-sm">
+              <table class="collapsed table table-bordered">
+                <tr
+                  *ngFor="let item of liabilitiesList"
+                  class="col-12-sm"
+                  let
+                  ib="index"
+                >
+                  <table class="collapsed table table-bordered">
+                    <tr>
+                      <td class="font_caps_12" style="width:100%">
+                        {{ item.NoteName }}
+                        <a (click)="showb = !showb"
+                          ><img
+                            src="src/assets/img/elipses.png"
+                            style="height:6px; padding-left:10px;"
+                        /></a>
+                      </td>
+                      <td class="font_caps_12 right_align">
+                        {{ item.NoteBalance | number: "5.2-3" }}
+                      </td>
+                    </tr>
+                    <tr *ngFor="let balance of item.AccountBalances">
+                      <td
+                        class="font_caps_10 "
+                        style="width:100%"
+                        *ngIf="showb"
+                      >
+                        {{ balance.AccountName }}
+                      </td>
+                      <td class="font_caps_10 right_align" *ngIf="showb">
+                        {{ balance.Balance | number: "5.2-3" }}
+                      </td>
+                    </tr>
+                  </table>
+                </tr>
+              </table>
+            </div>
+            <div class="project-details margin_top_50">
+              <h4 class="main_heading bdr_heading"></h4>
+            </div>
+            <div>
+              <table style="width:100%;text-align:center;">
+                <tr class="font_caps_12_bold">
+                  <td>
+                    {{ totalLiabities | number: "5.2-3" }}
+                  </td>
+                  <td></td>
+                  <td>
+                    {{ totalNett | number: "5.2-3" }}
+                  </td>
+                  <td></td>
+                  <td>
+                    {{ totalAssets | number: "5.2-3" }}
+                  </td>
+                </tr>
+                <tr class="font_smallcaps_12">
+                  <td style="width:33.3%">Liabilities</td>
+                  <td>+</td>
+                  <td style="width:33.3%">Nett</td>
+                  <td>=</td>
+                  <td style="width:33.3%">Assets</td>
+                </tr>
+              </table>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

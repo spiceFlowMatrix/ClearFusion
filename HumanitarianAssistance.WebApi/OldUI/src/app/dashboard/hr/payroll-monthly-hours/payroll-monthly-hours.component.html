@@ -1,0 +1,210 @@
+<div class="row">
+    <div class="col-sm-12 ">
+        <div class="main-heading clearfix">
+            <h3 class="page-headin">Payroll Daily Hours</h3>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <form action="your-action" (submit)="onPayrollHoursFilter()">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <dx-form id="form" [formData]="setPayrollHoursFilter" [colCount]="3" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                                validationGroup="customerData">
+
+                                <dxi-item dataField="Year" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'MMM, yyyy', maxZoomLevel: 'decade' ,showClearButton: 'true' }">
+                                </dxi-item>
+
+                                <dxi-item dataField="OfficeId" editorType="dxSelectBox" [editorOptions]="{
+                                dataSource: officelistdt, 
+                                displayExpr: 'OfficeName',
+                                valueExpr: 'OfficeId'}">
+                                    <dxo-label text="Office">
+                                    </dxo-label>
+                                </dxi-item>
+
+                                <dxi-item dataField="AttendanceGroupId" editorType="dxSelectBox" [editorOptions]="{
+                                    dataSource: attendanceGroupList, 
+                                    displayExpr: 'Name',
+                                    valueExpr: 'Id'}">
+                                        <dxo-label text="Attendance Group">
+                                        </dxo-label>
+                                    </dxi-item>
+                            </dx-form>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="text-left">
+                                <dx-button text="Filter" type="success" validationGroup="customerData" (onClick)="onPayrollHoursFilter()"></dx-button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showHidePopup()" *ngIf="isEditingAllowed"></dx-button>
+            </div>
+        </div>
+        <br>
+
+        <div>
+
+            <dx-data-grid id="gridContainer" [dataSource]="monthlyhoursDatasource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" [showRowLines]="true">
+                <dxo-editing mode="popup" [allowAdding]="false" [allowUpdating]="false"></dxo-editing>
+
+                <dxo-header-filter [visible]="true"> </dxo-header-filter>
+                <dxo-filter-row [visible]="showFilterRow"> </dxo-filter-row>
+
+                <dxi-column dataField="OfficeId" caption="Office">
+                    <dxo-lookup [dataSource]="officelistdt" valueExpr="OfficeId" displayExpr="OfficeName">
+                    </dxo-lookup>
+                </dxi-column>
+
+                <dxi-column dataField="AttendanceGroupId" caption="Attendance Group">
+                        <dxo-lookup [dataSource]="attendanceGroupList" valueExpr="Id" displayExpr="Name">
+                        </dxo-lookup>
+                    </dxi-column>
+
+                <dxi-column dataField="PayrollMonth"> </dxi-column>
+
+                <dxi-column dataField="PayrollYear"> </dxi-column>
+
+
+
+                <dxi-column dataField="InTime" [width]="150" dataType="datetime" format="HH:mm a" editorType="dxDateBox" [editorOptions]="{ type: 'time', pickerType : 'rollers' }">
+                </dxi-column>
+
+                <dxi-column dataField="OutTime" [width]="150" dataType="datetime" format="HH:mm a" editorType="dxDateBox" [editorOptions]="{ type: 'time', pickerType : 'rollers' }">
+                </dxi-column>
+
+                <dxi-column dataField="Hours" [width]="150" caption="Hours"> </dxi-column>
+              
+                <dxi-column dataField="WorkingTime" caption="Total Working Hours"> </dxi-column>
+
+                <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit"></dxi-column>
+
+                <div *dxTemplate="let data of 'CellTemplateEdit'">
+                    <a href="javascript:void(0)" (click)="onEditMonthlyhoursClick(data.data)">Edit</a>
+                </div>
+
+                <dxo-paging [pageSize]="12"></dxo-paging>
+            </dx-data-grid>
+        </div>
+    </div>
+
+    <ngx-loading [show]="payrollMonthlyHourLoader"></ngx-loading>
+
+</div>
+
+<dx-popup class="popup" [width]="600" [height]="400" [showTitle]="true" title="Daily Hours" [dragEnabled]="false" [closeOnOutsideClick]="true"
+    [(visible)]="addPayrollMonthlyHoursPopupVisible">
+    <div *dxTemplate="let data of 'content'">
+        <dx-scroll-view [height]="400" showScrollbar="always" direction="both">
+
+            <form action="your-action" (submit)="onFormSubmit(monthlyhoursdata, false)">
+                <dx-form id="form" [formData]="monthlyhoursdata" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                    validationGroup="customerData">
+                    <dxi-item dataField="OfficeId" editorType="dxSelectBox" [editorOptions]="{
+                    dataSource: officelistdt, 
+                    displayExpr: 'OfficeName',
+                    valueExpr: 'OfficeId'}">
+                        <dxo-label text="Office">
+                        </dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'MMM , yyyy', maxZoomLevel: 'year', showClearButton: 'true' }">
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="InTime" editorType="dxDateBox" [editorOptions]="{ type: 'time' , pickerType : 'rollers'  }">
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="OutTime" editorType="dxDateBox" format="HH:mm a" dataType="datetime" [editorOptions]="{value: todaySetTime, type: 'time' , pickerType : 'rollers'  }">
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="WorkingTime" editorType="dxNumberBox">
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+                    
+                    <dxi-item dataField="AttendanceGroupId" editorType="dxSelectBox" [editorOptions]="{
+                        dataSource: attendanceGroupList, 
+                        displayExpr: 'Name',
+                        valueExpr: 'Id'}">
+                            <dxo-label text="Attendance Group">
+                            </dxo-label>
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-item>
+
+                </dx-form>
+                <br />
+                <div class="btn-grp-wrap">
+                    <dx-button text="Save For All Office" type="success" validationGroup="customerData" (onClick)= "onFormSubmit(monthlyhoursdata, true)"></dx-button>
+                    <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                    <dx-button text="Cancel" (onClick)="showHidePopup()"></dx-button>
+                </div>
+            </form>
+
+            <ngx-loading [show]="addPayrollMonthlyPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+        </dx-scroll-view>
+    </div>
+</dx-popup>
+
+
+<dx-popup class="popup" [width]="600" [height]="400" [showTitle]="true" title="Daily Hours" [dragEnabled]="false" [closeOnOutsideClick]="true"
+    [(visible)]="editPayrollMonthlyHoursPopupVisible">
+    <div *dxTemplate="let data of 'content'">
+        <dx-scroll-view [height]="350" showScrollbar="always" direction="both">
+            <form action="your-action" (submit)="onEditFormSubmit(monthlyhoursdata)">
+                <dx-form id="form" [formData]="monthlyhoursdata" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                    validationGroup="customerEditData">
+
+
+                    <dxi-item dataField="OfficeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: officelistdt, displayExpr: 'OfficeName', valueExpr: 'OfficeId'}">
+                        <dxo-label text="Office"> </dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'MMM , yyyy', maxZoomLevel: 'year', showClearButton: 'true' }">
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="InTime" editorType="dxDateBox" [editorOptions]="{ type: 'time' , pickerType : 'rollers'  }">
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="OutTime" editorType="dxDateBox" [editorOptions]="{ type: 'time' , pickerType : 'rollers'  }">
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="WorkingTime" editorType="dxNumberBox">
+                        <dxo-label text="Total Working Hours"></dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="AttendanceGroupId" editorType="dxSelectBox" [editorOptions]="{
+                        dataSource: attendanceGroupList, 
+                        displayExpr: 'Name',
+                        valueExpr: 'Id'}">
+                            <dxo-label text="Attendance Group">
+                            </dxo-label>
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-item>
+
+                </dx-form>
+                <br />
+                <div class="btn-grp-wrap">
+                    <dx-button text="Save" type="success" validationGroup="customerEditData" [useSubmitBehavior]="true"></dx-button>
+                    <dx-button text="Cancel" (onClick)="showHideEditPopup()"></dx-button>
+                </div>
+            </form>
+
+            <ngx-loading [show]="editPayrollMonthlyPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+        </dx-scroll-view>
+    </div>
+</dx-popup>

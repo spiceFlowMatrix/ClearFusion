@@ -1,0 +1,91 @@
+<div>
+  <form [formGroup]="policyDetailsForm" (ngSubmit)="onSubmit(policyDetailsForm)" role="form" action="POST">
+<h1 mat-dialog-title>
+Create Policy
+  <button mat-icon-button [mat-dialog-close]="data.data" class="pull-right">
+      <mat-icon aria-label="cancel">clear</mat-icon>
+  </button>
+</h1>
+<div mat-dialog-content>
+<div class="row">
+    <div
+    *ngIf="addPolicyLoaderFlag; else addPolicyTemplate"
+    class="col-sm-12">
+    <mat-spinner
+      class="center_loader"
+      diameter="20"
+    ></mat-spinner>
+  </div>
+ <ng-template #addPolicyTemplate> <div class="col-sm-12">
+    <div class="row">
+        <div class="col-sm-6">
+            <mat-form-field class="example-full-width">
+                <input formControlName="policyName" matInput #policyName placeholder="Policy Name" name="policyName"/>
+             </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+            <mat-form-field class="example-full-width">
+                <mat-select placeholder="Language" name="languagename" formControlName="languagename">
+                  <mat-option *ngFor="let details of languages" [value]="details.LanguageId">
+                    {{ details.LanguageName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+          <mat-form-field class="example-full-width">
+              <mat-select placeholder="Medium" name="mediumname" formControlName="mediumname">
+                <mat-option *ngFor="let details of mediums" [value]="details.MediumId">
+                  {{ details.MediumName }}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field class="example-full-width">
+          <mat-select placeholder="Media Category" name="categoryname" formControlName="categoryname">
+            <mat-option *ngFor="let details of mediaCategories" [value]="details.MediaCategoryId">
+              {{ details.CategoryName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- <div class="row">
+      <div class="cols-sm-12">
+          <textarea placeholder="Description" name="description" formControlName="description" type="text" class="md-textarea form-control" rows="3"></textarea>
+         <textarea placeholder="Description" name="description" formControlName="description"></textarea>
+      </div>
+    </div> -->
+
+    <div class="row">
+      <div class="col-sm-6">
+          <mat-form-field class="example-full-width">
+              <mat-select placeholder="Producer" name="producername" formControlName="producername">
+                <mat-option *ngFor="let details of producers" [value]="details.ProducerId">
+                  {{ details.ProducerName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+          <mat-form-field class="example-full-width">
+          <textarea matInput placeholder="Description" name="description" formControlName="description" type="text" class="md-textarea" rows="2"></textarea>
+          </mat-form-field>
+      </div>
+    </div>
+  </div></ng-template>
+</div>
+</div>
+<div mat-dialog-actions class="pull-right">
+<button mat-raised-button [mat-dialog-close]="data.data">Cancel</button>
+
+<button mat-raised-button color="accent" type="submit" [disabled]="!policyDetailsForm.valid || addPolicyLoader" cdkFocusInitial>
+    <span class="pull-left spinner_center margin_top_10" *ngIf="addPolicyLoader"><mat-spinner [diameter]="15"></mat-spinner></span>
+  Create
+</button>
+</div>
+</form>
+</div>

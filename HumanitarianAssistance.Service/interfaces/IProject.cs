@@ -86,6 +86,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> WinApprovalDetail(WinApprovalProjectModel model, string UserId);
         Task<APIResponse> GetProjectJobDetailByBudgetLineId(long budgetLineId);
 
+        Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
+
         #endregion
 
         Task<APIResponse> GetProjectWinLossStatus(long ProjectId);
@@ -113,7 +115,7 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse AddEditProjectotherDetail(ProjectOtherDetailModel otherDetail, string UserId);
         //APIResponse UploadOtherProposalFile(IFormFile file, string UserId);
         Task<APIResponse> UploadOtherDocuments(IFormFile file, string UserId, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
-        APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId);
+        Task<APIResponse> AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId);
         APIResponse GetOtherProjectListById(long ProjectId);
         APIResponse AddEditDonorCriteria(DonorCriteriaModel model, string UserId);
         APIResponse AddEditPurposeofInitiativeCriteria(PurposeofInitiativeCriteriaModel model, string UserId);
@@ -191,7 +193,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetAllProjectJobDetail(long prejectId);
 
         Task<APIResponse> GetAllProjectJobByProjectId(long ProjectId);
-        Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
+        //Task<APIResponse> GetAllProjectJobsFilterList(ProjectJobFilterModel projectJobFilterModel);
         Task<APIResponse> AddEditProjectBudgetLineDetail(ProjectBudgetLineDetailModel model, string UserId);
         Task<APIResponse> GetallBudgetLineDetail();
         Task<APIResponse> GetallBudgetLineDetail(long projectId);
@@ -230,7 +232,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetProjectIndicatorQuestionsById(long id);
         //void GetExcelFile(IFormFile fileKey, string UserId);
         Task<APIResponse> GetExcelFile(Stream file, string UserId,long projectId);
-
 
     }
 }

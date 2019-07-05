@@ -1,0 +1,109 @@
+<div class="row">
+  <div *ngIf="clientDetailsLoader; else clientDetailsTemplate" class="col-sm-12"><br /><br /><br />
+    <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+  </div>
+  <ng-template #clientDetailsTemplate>
+    <div class="col-sm-12">
+      <mat-card style="height: 500px; overflow-y:auto;">
+        <div class="project-details">
+          <div class="row">
+            <div class="col-sm-6">
+              <h4 class="main_heading_client">CLIENT DETAILS</h4>
+            </div>
+            <div *ngIf="isEditingAllowed">
+              <div *ngIf="archiveButton" class="col-sm -6 pull-right">
+                <button pTooltip="Archive" tooltipPosition="top" (click)="DeleteClient(selectedclientId)"
+                  mat-icon-button color="warn">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <form [formGroup]="clientDetailsForm" (ngSubmit)="EditClient()">
+          <div class="row">
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <input #clientName (change)="onChange('clientName', clientName.value)" formControlName="clientName"
+                  matInput placeholder="Client Name" name="clientName" [disableControl]="!isEditingAllowed" />
+              </mat-form-field>
+              <!-- <span class="validationError" *ngIf="formErrors.clientName">{{
+                    formErrors.clientName
+                  }}</span> -->
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <input #focalPoint formControlName="focalPoint" (change)="onChange('focalPoint', focalPoint.value)"
+                  matInput placeholder="Focal Point" [disableControl]="!isEditingAllowed" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <input #position formControlName="position" (change)="onChange('position', position.value)" matInput
+                  placeholder="Position" [disableControl]="!isEditingAllowed" />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <input #phone formControlName="phone" (change)="onChange('phone', phone.value)" appNumberOnly="true"
+                  matInput placeholder="Phone" [disableControl]="!isEditingAllowed" />
+              </mat-form-field>
+              <!-- <span class="validationError" *ngIf="formErrors.phone">{{
+                      formErrors.phone
+                    }}</span> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <input type="email" #email formControlName="email" (change)="onChange('email', email.value)" matInput
+                  placeholder="Email" [disableControl]="!isEditingAllowed" />
+              </mat-form-field>
+              <!-- <span class="validationError" *ngIf="formErrors.email">{{
+                      formErrors.email
+                    }}</span> -->
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <mat-select #category formControlName="category" placeholder="Category"
+                  (selectionChange)="onChange('category', $event.value)" [disableControl]="!isEditingAllowed">
+                  <mat-option *ngFor="let contract of categories" [value]="contract.CategoryId">
+                    {{ contract.CategoryName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <mat-form-field class="example-full-width">
+                <input #history formControlName="history" (change)="onChange('history', history.value)" matInput
+                  placeholder="History" [disableControl]="!isEditingAllowed" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <mat-form-field class="example-full-width">
+                <input #physicialAddress formControlName="physicialAddress"
+                  (change)="onChange('physicialAddress', physicialAddress.value)" matInput
+                  placeholder="Physicial Address" [disableControl]="!isEditingAllowed" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <mat-form-field class="example-full-width">
+                <input #clientBackground formControlName="clientBackground"
+                  (change)="onChange('clientBackground', clientBackground.value)" matInput
+                  placeholder="Client Background" [disableControl]="!isEditingAllowed" />
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </mat-card>
+    </div>
+  </ng-template>
+</div>

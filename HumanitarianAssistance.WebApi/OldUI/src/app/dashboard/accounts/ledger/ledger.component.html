@@ -1,0 +1,225 @@
+<div class="main-ledger">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="main-heading clearfix">
+                <h3 class="page-headin">Ledger Statement</h3>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12 bxinptflt">
+
+            <form action="your-action" (submit)="onApplyingFilter(ledgerFilter)">
+                <dx-form id="form" [(formData)]="ledgerFilter" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                    validationGroup="customerData">
+
+                    <dxi-item dataField="OfficeIdList" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: officeDropdown, displayExpr: 'OfficeName', valueExpr: 'OfficeId', multiline: false, maxDisplayedTags: 1, showClearButton:'true', placeholder: 'Select Office', selectAllMode: 'allPages', showSelectionControls: true, value: selectedOffices,  searchEnabled: true  }">
+                            <dxo-label text="Office"></dxo-label>
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                          </dxi-item>
+
+                    <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyDropdown, value: selectedCurrency, displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId', showClearButton:'true', placeholder: 'Select Currency', searchEnabled: true }">
+                        <dxo-label text="Currency"></dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="RecordType" editorType="dxSelectBox" [editorOptions]="{ dataSource: recordTypeDropdown, displayExpr: 'Name', valueExpr: 'Id', showClearButton:'true', placeholder: 'Select RecordType'   }">
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="accountLists" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: accountDropdown, displayExpr: 'AccountName', valueExpr: 'AccountCode', multiline: false, maxDisplayedTags: 0, showClearButton:'true' , placeholder: 'Select Accounts', selectAllMode: 'allPages', showSelectionControls: true, value: selectedAccounts, searchEnabled: true }">
+                        <dxo-label text="Accounts"></dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="Date" class="dsplcal cal-custom-outer">
+                        <div class="cal-custom-in">
+                            <dxi-validation-rule type="required"> </dxi-validation-rule>
+                            <p-calendar name="ledgerDateRange" placeholder="Date Range" [(ngModel)]="ledgerDateRange" dateFormat="dd/mm/yy" selectionMode="range"
+                                showIcon="true" [style]="{'position': 'relative', 'overflow': 'visible', 'z-index': '999'}"></p-calendar>
+                        </div>
+                    </dxi-item>
+
+                </dx-form>
+                <div class="row">
+                    <div class="col-md-offset-2 col-md-8 text-center">
+                        <dx-button text="Update Filter" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                    </div>
+                </div>
+                <br>
+            </form>
+        </div>
+    </div>
+
+    <div class="row balanceSummary">
+        <div class="col-sm-12">
+            <div class="thumbnail card">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row text-center">
+                            <div class="col-sm-12">
+                                <h3>Opening Balance</h3>
+                            </div>
+                            <div class="col-sm-12">{{openingBalance}}</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row text-center">
+                            <div class="col-sm-12">
+                                <h3>Closing Balance</h3>
+                            </div>
+                            <div class="col-sm-12">{{closingBalance}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="viewPdfFlag; else ledgerPdfView">
+
+        <div class="col-sm-12 text-right">
+            <dx-button text="View Pdf" (onClick)="showLedgerPdf()"></dx-button>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="col-sm-12">
+            <dx-data-grid id="gridContainer" [dataSource]="dataSource" [allowColumnReordering]="true" [allowColumnResizing]="true" [columnAutoWidth]="true">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                
+                <dxi-column dataField="TransactionDate" caption="Date" dataType="date" format="dd/MM/yyyy" caption="Transaction Date" alignment="right"
+                    [width]="150">
+                </dxi-column>
+
+                <dxi-column dataField="VoucherNo" [visible]="false" caption="Voucher"  alignment="right"></dxi-column>
+                <dxi-column dataField="VoucherReferenceNo" caption="Voucher"  alignment="right"></dxi-column>
+
+                <dxi-column dataField="Description" caption="Description" alignment="right"></dxi-column>
+
+
+                <dxi-column dataField="CurrencyName" caption="Currency"></dxi-column>
+
+                <dxi-column dataField="ChartOfAccountNewCode" caption="AccountNo"></dxi-column>
+
+                <dxi-column dataField="ChartOfAccountNewId" caption="Account Name">
+                    <dxo-lookup [dataSource]="accountDropdown" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                </dxi-column>
+
+                <dxi-column dataField="DebitAmount" caption="Debit" alignment="right"></dxi-column>
+
+                <dxi-column dataField="CreditAmount" caption="Credit" alignment="right"></dxi-column>
+
+                <dxo-summary>
+                    <dxi-total-item column="CreditAmount" summaryType="sum" [customizeText]="customizeValue">
+                    </dxi-total-item>
+                    <dxi-total-item column="DebitAmount" summaryType="sum" [customizeText]="customizeValue">
+                    </dxi-total-item>
+                </dxo-summary>
+
+            </dx-data-grid>
+        </div>
+    </div>
+
+    <ng-template #ledgerPdfView>
+        <br>
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <div class="emp-close-btn">
+                    <i class="fa fa-times-circle" aria-hidden="true" (click)="hideLedgerPdf()"></i>
+                </div>
+            </div>
+        </div>
+
+
+        <dx-button text="Print" class="button-info btn btn-default btn-green" (click)="printLedgerReport()"></dx-button>
+
+
+        <div class="row" id="print-content-ledger-report">
+            <div class="col-sm-12">
+
+                <div class="header">
+                    <div class="headingPart1">
+
+                        <div style="text-align: center;">
+                            <h3> Coordination of Humanitarian Assistance (CHA)</h3>
+                            <h4> Group Analytical Report</h4>
+                        </div>
+
+                    </div>
+                    <br>
+
+                    <div class="mainTable" style="text-align: center;padding-left: 30px; padding-right: 30px; padding-top: 10px;">
+
+                        <table style="text-align: center; width: 100%; border-collapse: collapse;" border="1">
+                            <tr>
+                                <th style="text-align: center;">
+                                    Group
+                                </th>
+                                <th style="text-align: center;">
+                                    TransactionDate
+                                </th>
+                                <th style="text-align: center;">
+                                    Voucher
+                                </th>
+                                <th style="text-align: center;">
+                                    Description
+                                </th>
+                                <th style="text-align: center;">
+                                    Currency
+                                </th>
+                                <th style="text-align: center;">
+                                    Debit
+                                </th>
+                                <th style="text-align: center;">
+                                    Credit
+                                </th>
+                                <th style="text-align: center;">
+                                    Balance
+                                </th>
+                            </tr>
+
+                            <ng-container *ngFor="let account of ledgerReportFinal">
+                                <tr *ngFor="let item of account?.LedgerList ; let i=index">
+                                    <td>{{ item?.AccountCode }}</td>
+                                    <td>{{ item?.TransactionDate | date: 'dd/MM/yyyy'}}</td>
+                                    <td>{{ item?.VoucherNo }}</td>
+                                    <td>{{ item?.Description }}</td>
+                                    <td>{{ item?.CurrencyName }}</td>
+                                    <td>{{ item?.DebitAmount }}</td>
+                                    <td>{{ item?.CreditAmount }}</td>
+                                    <td>{{ item?.Balance }}</td>
+                                </tr>
+                                <tr style="font-weight: bold;">
+                                    <td colspan="5">Account Name: {{ account.AccountName}}</td>
+                                    <td>{{ account.DebitAmount}}</td>
+                                    <td>{{ account.CreditAmount}}</td>
+                                    <td>{{ account.Balance}}</td>
+                                </tr>
+                            </ng-container>
+
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <br>
+        <br>
+
+    </ng-template>
+
+
+
+    <ngx-loading [show]="ledgerLoading"></ngx-loading>
+
+</div>

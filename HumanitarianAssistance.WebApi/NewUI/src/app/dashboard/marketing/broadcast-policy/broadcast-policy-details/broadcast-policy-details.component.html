@@ -1,0 +1,162 @@
+<div class="container-fluid">
+  <div class="row">
+        <div class="col-sm-12 mat-detail">
+            <div class="row">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <mat-card [ngStyle]="scrollStyles">
+                      <div *ngIf="policyDetailLoaderFlag; else policyDetailTemplate" class="col-sm-12">
+                        <br/><br/><br/>
+                          <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+                      </div>
+                    </mat-card>
+                    <ng-template #policyDetailTemplate>
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <mat-form-field style="width:100%;float:right;">
+                            <input [disabled]="updatePolicyLoaderFlag || disableControlPermission" (change)="selectionChanged()" [(ngModel)]="policyDetailsForm.policyName" #policyNames matInput placeholder="Policy Name">
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                         <div class="row">
+                            <div class="col-sm-8">
+                                <mat-button-toggle-group [disabled]="updatePolicyLoaderFlag || disableControlPermission" [(ngModel)]="policyDetailsForm.mediumId"  #group="matButtonToggleGroup" >
+                                  <mat-button-toggle (change)="selectionChanged()" *ngFor="let item of mediums;" [value]="item.MediumId">
+                                    {{item.MediumName}}
+                                  </mat-button-toggle>
+                                </mat-button-toggle-group>
+                              </div>
+                              <div class="col-sm-4">
+                                  <mat-spinner class="center_loader" *ngIf="updatePolicyLoaderFlag" diameter="15"></mat-spinner>
+                              </div>
+                         </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <mat-form-field class="example-full-width">
+                            <mat-select [disabled]="updatePolicyLoaderFlag || disableControlPermission" (selectionChange)="selectionChanged()" placeholder="Language" [(ngModel)]="policyDetailsForm.languageId">
+                              <mat-option *ngFor="let item of languages;" [value]="item.LanguageId">
+                                {{item.LanguageName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-3">
+                          <mat-form-field class="example-full-width">
+                            <mat-select [disabled]="updatePolicyLoaderFlag || disableControlPermission" (selectionChange)="selectionChanged()" placeholder="Category" [(ngModel)]="policyDetailsForm.categoryId">
+                              <mat-option *ngFor="let item of mediaCategories;" [value]="item.MediaCategoryId">
+                                {{item.CategoryName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="comment-text ">
+                            <div class="user_name">
+                              <img src="../../../../../assets/img/user_img.png" alt="">
+                            </div>
+                            <div class="user_text">
+                              <p class="relative_p">
+                                <mat-form-field class="example-full-width">
+                                  <mat-select [disabled]="updatePolicyLoaderFlag || disableControlPermission" (selectionChange)="selectionChanged()" placeholder="Producer" [(ngModel)]="policyDetailsForm.producerId">
+                                    <mat-option *ngFor="let item of producers;" [value]="item.ProducerId">
+                                      {{item.ProducerName}}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="example-full-width">
+                                <textarea [disabled]="updatePolicyLoaderFlag || disableControlPermission" (change)="selectionChanged()" placeholder="Description" matInput type="text" class="md-textarea" rows="2" [(ngModel)]="policyDetailsForm.description"></textarea>
+                            </mat-form-field>
+
+                        </div>
+                      </div>
+                      <br/>
+                      <div class="row">
+                         <div class="col-sm-2"></div>
+                         <div class="col-sm-8">
+                          <div [ngSwitch]="view">
+                            <mwl-calendar-day-view
+                            *ngSwitchCase="CalendarView.Day"
+                            [viewDate]="viewDate"
+                            (hourSegmentClicked)="openAddTimeDialog()"
+                            (eventTimesChanged)="eventTimesChanged($event)"
+                            [events]="events"
+                            [refresh]="refresh"
+                            (eventClicked)="handleEvent('Clicked', $event.event)"
+                            (eventTimesChanged)="eventTimesChanged($event)"
+                          >
+                          </mwl-calendar-day-view>
+                          </div>
+                         </div>
+                         <div class="col-sm-2"></div>
+                      </div>
+                      <div align="center">
+                          <div *ngIf="repeatDaysLoaderFlag; else repeatDaysTemplate" class="col-sm-12">
+                              <br/>
+                                <mat-spinner class="center_loader" diameter="15"></mat-spinner>
+                          </div>
+                          <ng-template #repeatDaysTemplate>
+                              <h5>REPEAT</h5>
+                          </ng-template>
+
+                      </div>
+                      <div class="row">
+                        <div class="example-button-row" align="center">
+                          <button [disabled]="disableDayBtn" [style.background]="item.status?'LightGray':'White'" mat-fab *ngFor="let item of days" (click)="selectDays(item.Value)" class="dot">
+                            <span >{{item.Value}}</span>
+
+                          </button>
+                          <span >
+
+                          </span>
+                        </div>
+                      </div><br/>
+                      <div>
+                        <h5>SCHEDULING REQUEST</h5>
+                      </div>
+                      <div class="row" align="center">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-8">
+                              <div class="col-sm-6">
+                                  <mat-form-field style="width:100%;float:left;">
+                                    <input [(ngModel)]="orderScheduleForm.startDate"
+                                       matInput [matDatepicker]="picker" placeholder="Start Date">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                  </mat-form-field>
+                              </div>
+                              <div class="col-sm-6">
+                                  <mat-form-field style="width:100%;float:right;">
+                                      <input [(ngModel)]="orderScheduleForm.endDate"
+                                        matInput [matDatepicker]="picker1" placeholder="End Date" >
+                                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                      <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+                              </div>
+                        </div>
+                        <div class="col-sm-2"></div>
+                      </div>
+                      <div align="center">
+                        <button pTooltip="Confirm Order Scheduling"
+                        tooltipPosition="top" *ngIf="isOrderScheduleAllowed" mat-icon-button (click)="RequestOrderSchedule()">
+                          <mat-icon class="green_color">
+                            done
+                          </mat-icon>
+                        </button>
+                        <p>REQUEST SCHEDULING</p>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+            </div>
+        </div>
+  </div>
+</div>

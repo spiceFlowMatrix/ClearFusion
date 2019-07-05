@@ -1,0 +1,39 @@
+<div class="main-store-master">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Store Master</h3>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-12">
+
+      <dx-tabs #apiTabs [dataSource]="storeMasterTabs" [selectedIndex]="0" [width]="600" [height]="50" (onItemClick)="selectStoreMasterTab($event)"></dx-tabs>
+      <div class="dx-fieldset">
+
+        <!-- <div *ngIf="storeMasterSelectedTab == 1">
+          <app-inventory-master></app-inventory-master>
+        </div>
+        <div *ngIf="storeMasterSelectedTab == 2">
+          <app-inventory-item-master></app-inventory-item-master>
+        </div> -->
+        <div *ngIf="storeMasterSelectedTab == 3">
+          <app-item-type-master [isEditingAllowed]="isEditingAllowed"></app-item-type-master>
+        </div>
+        <div *ngIf="storeMasterSelectedTab == 4">
+          <app-unit-type-master [isEditingAllowed]="isEditingAllowed"></app-unit-type-master>
+        </div>
+        <div *ngIf="storeMasterSelectedTab == 5">
+          <app-item-specification-master [isEditingAllowed]="isEditingAllowed"></app-item-specification-master>
+        </div>
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>

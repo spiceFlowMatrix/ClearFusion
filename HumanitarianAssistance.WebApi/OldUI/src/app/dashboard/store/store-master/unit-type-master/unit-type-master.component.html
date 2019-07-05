@@ -1,0 +1,27 @@
+<div class="main-unit-type-master">
+  <div class="row">
+    <div class="col-sm-12">
+
+
+      <dx-data-grid id="gridContainer" [dataSource]="unitTypeMasterDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+        [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+        (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)" (onRowUpdating)="logEvent('RowUpdating',$event)"
+        (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+        <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" *ngIf="isEditingAllowed"> </dxo-editing>
+
+        <dxi-column dataField="UnitTypeId" caption="Unit Type" [visible]="false"></dxi-column>
+
+        <dxi-column dataField="UnitTypeName" caption="Unit Type Name">
+          <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-column>
+
+      </dx-data-grid>
+    </div>
+  </div>
+  <ngx-loading [show]="unitTypeMasterLoading"></ngx-loading>
+</div>

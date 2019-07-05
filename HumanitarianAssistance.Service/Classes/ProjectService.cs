@@ -1422,7 +1422,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var ProjectCommunicationModel = _uow.GetDbContext().ProjectCommunication.Where(x => !x.IsDeleted.Value && x.ProjectId == ProjectId).Select(y => new ProjectCommunicationModel()
+                var ProjectCommunicationModel = await _uow.GetDbContext().ProjectCommunication.Where(x => !x.IsDeleted.Value && x.ProjectId == ProjectId).Select(y => new ProjectCommunicationModel()
                 {
                     ProjectDescription = y.ProjectDescription,
                     CreatedByName = _uow.GetDbContext().UserDetails.Where(z => z.AspNetUserId == y.CreatedById).Select(p => p.FirstName + " " + p.LastName).FirstOrDefault(),
@@ -1430,7 +1430,8 @@ namespace HumanitarianAssistance.Service.Classes
                     CreatedDate = y.CreatedDate.Value.ToString("dd MMMM yyyy h:mm tt"),
                     CreatedById = y.CreatedById,
                     PCId = y.PCId,
-                }).ToList();
+                }).ToListAsync();
+
                 var resp = (from obj in ProjectCommunicationModel
                             join role in _uow.GetDbContext().Roles on obj.RoleId equals role.Id
                             select new ProjectCommunicationModel
@@ -1483,7 +1484,6 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
-
 
         #region Master Page
         /// <summary>
@@ -2959,48 +2959,32 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
 
-        public APIResponse AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId)
+        public async Task<APIResponse> AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId)
         {
             APIResponse response = new APIResponse();
             ProjectProposalDetail details = new ProjectProposalDetail();
             try
             {
-                //var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "GoogleCredentials/" + "credentials.json");
-                details = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
-                //var GoogleCredentialsFile = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
-                //GoogleCredential Credential = new GoogleCredential();
-
-                //using (StreamReader files = File.OpenText(GoogleCredentialsFile))
-                //using (JsonTextReader reader = new JsonTextReader(files))
-                //{
-                //    JObject o2 = (JObject)JToken.ReadFrom(reader);
-
-                //    Credential = o2["GoogleCredential"].ToObject<GoogleCredential>();
-                //}
+                details = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
 
                 if (details == null)
                 {
-                    details = new ProjectProposalDetail();
-                    //details.ProposalStartDate = DateTime.UtcNow;
-
-                    //details.ProposalBudget = model.ProposalBudget;
-                    details.ProposalDueDate = model.ProposalDueDate;
-                    details.ProjectAssignTo = model.UserId;
-                    details.IsProposalAccept = model.IsProposalAccept;
-
-                    details.ProjectId = model.ProjectId.Value;
-                    details.CurrencyId = model.CurrencyId;
-                    details.UserId = model.UserId;
-                    details.IsDeleted = false;
-                    details.CreatedById = UserId;
-                    details.CreatedDate = DateTime.UtcNow;
-                    _uow.ProjectProposalDetailRepository.Add(details);
-
-
+                    details = new ProjectProposalDetail
+                    {
+                        ProposalDueDate = model.ProposalDueDate,
+                        ProjectAssignTo = model.UserId,
+                        IsProposalAccept = model.IsProposalAccept,
+                        ProjectId = model.ProjectId.Value,
+                        CurrencyId = model.CurrencyId,
+                        UserId = model.UserId,
+                        IsDeleted = false,
+                        CreatedById = UserId,
+                        CreatedDate = DateTime.UtcNow
+                    };
+                   await _uow.ProjectProposalDetailRepository.AddAsyn(details);
                 }
                 else
                 {
-                    //details.ProposalStartDate = DateTime.UtcNow;
                     details.ProposalBudget = model.ProposalBudget;
                     details.ProposalDueDate = model.ProposalDueDate;
                     details.ProjectAssignTo = model.UserId;
@@ -3010,20 +2994,20 @@ namespace HumanitarianAssistance.Service.Classes
                     details.UserId = model.UserId;
                     details.ModifiedById = UserId;
                     details.ModifiedDate = DateTime.UtcNow;
-                    _uow.ProjectProposalDetailRepository.Update(details, details.ProjectProposaldetailId);
-                    _uow.GetDbContext().SaveChanges();
+                   await _uow.ProjectProposalDetailRepository.UpdateAsyn(details, details.ProjectProposaldetailId);
+                    await _uow.GetDbContext().SaveChangesAsync();
 
 
-                    //check proposal accept then false is approved
+                    // Note: check proposal is accepted then make false entry for isApproved
                     if (details.IsProposalAccept == true)
                     {
-                        ApproveProjectDetails obj = _uow.GetDbContext().ApproveProjectDetails.FirstOrDefault(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                        ApproveProjectDetails obj = await _uow.GetDbContext().ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId && 
+                                                                                                                            x.IsDeleted == false);
                         if (obj != null)
                         {
                             obj.IsApproved = obj.IsApproved == false ? null : obj.IsApproved;
                             _uow.GetDbContext().ApproveProjectDetails.Update(obj);
-                            _uow.GetDbContext().SaveChanges();
-
+                           await _uow.GetDbContext().SaveChangesAsync();
                         }
 
                     }
@@ -3041,7 +3025,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
-        #region Criteria
+        #region Criteria evaluation form
         public APIResponse AddEditDonorCriteria(DonorCriteriaModel model, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -4629,7 +4613,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
-
         #region ProjectJobDetail
 
         public async Task<string> GetProjectJobCode(ProjectJobDetail model)
@@ -4907,7 +4890,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 ProjectBudgetLineDetail obj = _mapper.Map<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>(model);
 
-                if (model.BudgetLineId == 0)
+                if (model.BudgetLineId == null)
                 {
                     obj.CreatedDate = DateTime.UtcNow;
                     obj.IsDeleted = false;
@@ -5131,17 +5114,20 @@ namespace HumanitarianAssistance.Service.Classes
                                       .CountAsync();
 
                 var budgetLineList = await _uow.GetDbContext().ProjectBudgetLineDetail
-                                      .Where(v => v.ProjectId == budgeLineFilterModel.ProjectId && v.IsDeleted == false &&
-                                                !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
-                                                  v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
-                                                  v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
-                                                  v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
-                                                  v.ProjectJobId.ToString().Contains(projectJobIdValue) ||
-                                                  v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
-                                                  v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
-                                                  v.CreatedDate.ToString().Trim().ToLower().Contains(dateValue)
-                                                  ) : v.ProjectId == budgeLineFilterModel.ProjectId
-                                       )
+                                              .Include(x=> x.VoucherTransactions)
+                                              .ThenInclude(x=> x.VoucherDetails)
+                                              .ThenInclude(x=> x.CurrencyDetail)
+                                              .Where(v => v.ProjectId == budgeLineFilterModel.ProjectId && v.IsDeleted == false && 
+                                                        !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
+                                                          v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
+                                                          v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
+                                                          v.BudgetName.Trim().ToLower().Contains(budgetNameNoValue) ||
+                                                          v.ProjectJobId.ToString().Contains(projectJobIdValue) ||
+                                                          v.ProjectJobDetail.ProjectJobName.Trim().ToLower().Contains(projectJobName) ||
+                                                          v.InitialBudget.ToString().Contains(initialbudgetNovalue) ||
+                                                          v.CreatedDate.ToString().Trim().ToLower().Contains(dateValue)
+                                                          ) : v.ProjectId == budgeLineFilterModel.ProjectId
+                                               )
                                       .OrderByDescending(x => x.CreatedDate)
                                       .Select(x => new ProjectBudgetLineDetailModel
                                       {
@@ -5156,28 +5142,30 @@ namespace HumanitarianAssistance.Service.Classes
                                           ProjectJobId = x.ProjectJobId,
                                           ProjectJobName = x.ProjectJobDetail.ProjectJobName,
                                           CreatedDate = x.CreatedDate,
+                                          DebitPercentage= ((x.VoucherTransactions.Where(y => y.IsDeleted == false &&
+                                                                             y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s=> s.Debit)) / x.InitialBudget) * 100
                                       })
                                       .Skip(budgeLineFilterModel.pageSize.Value * budgeLineFilterModel.pageIndex.Value)
                                       .Take(budgeLineFilterModel.pageSize.Value)
                                       .ToListAsync();
-                if (budgetLineList.Count > 0)
-                {
-                    foreach (var item in budgetLineList)
-                    {
-                        var TransList = await _uow.GetDbContext().VoucherTransactions
-                                                                 .Include(c => c.CurrencyDetails)
-                                                                 .Where(x => x.IsDeleted == false &&
-                                                                             x.VoucherDetails.CurrencyId == item.CurrencyId &&
-                                                                             x.BudgetLineId == item.BudgetLineId)
-                                                                 .OrderByDescending(x => x.Debit)
-                                                                 .ToListAsync();
+                //if (budgetLineList.Count > 0)
+                //{
+                //    foreach (var item in budgetLineList)
+                //    {
+                //        var TransList = await _uow.GetDbContext().VoucherTransactions
+                //                                                 .Include(c => c.CurrencyDetails)
+                //                                                 .Where(x => x.IsDeleted == false &&
+                //                                                             x.VoucherDetails.CurrencyId == item.CurrencyId &&
+                //                                                             x.BudgetLineId == item.BudgetLineId)
+                //                                                 .OrderByDescending(x => x.Debit)
+                //                                                 .ToListAsync();
 
-                        var debitSum = TransList.Sum(x => x.Debit);
-                        var debitPercentage = (debitSum / item.InitialBudget) * 100;
-                        item.DebitPercentage = debitPercentage;
-                    }
+                //        var debitSum = TransList.Sum(x => x.Debit);
+                //        var debitPercentage = (debitSum / item.InitialBudget) * 100;
+                //        item.DebitPercentage = debitPercentage;
+                //    }
 
-                }
+                //}
                 response.data.ProjectBudgetLineList = budgetLineList.OrderByDescending(x=>x.DebitPercentage).ToList();
                 response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5372,7 +5360,6 @@ namespace HumanitarianAssistance.Service.Classes
         #region "Project Cash Flow"
         public async Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowFilterModel model)
         {
-            int index = 0;
             APIResponse response = new APIResponse();
             List<VoucherTransactions> transList = new List<VoucherTransactions>();
 
@@ -5485,7 +5472,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         public async Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineBreakdownFilterModel model)
         {
-            int index = 0;
             APIResponse response = new APIResponse();
 
             try
@@ -5613,7 +5599,6 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
-
         #region "Project Proposal report"
         public async Task<APIResponse> GetProjectProposalReport(ProjectProposalReportFilterModel model)
         {
@@ -5640,7 +5625,7 @@ namespace HumanitarianAssistance.Service.Classes
                                       .WithSqlParam("islate", model.IsLate)
                                       .ExecuteStoredProc<SPProjectProposalReportModel>();
 
-                var total = await _uow.GetDbContext().ProjectDetail.Where(x => x.IsDeleted == false).CountAsync();
+                var total = spProposalReport.Count();
 
                 response.data.TotalCount = total;
                 response.data.ProjectProposalReportList = spProposalReport.Skip(model.PageIndex.Value * model.PageSize.Value).Take(model.PageSize.Value).ToList();
@@ -5650,12 +5635,15 @@ namespace HumanitarianAssistance.Service.Classes
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
 
         }
         #endregion
+       
+        #region "GetProgress"
+
         public float GetProgress(DateTime? dueDate, DateTime? startDate)
         {
             float percentage = 0;
@@ -5670,7 +5658,9 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return percentage;
         }
+        #endregion
 
+        #region "GetProjectProposalAmountSummary"
         public async Task<APIResponse> GetProjectProposalAmountSummary(ProjectProposalReportFilterModel model)
         {
             APIResponse response = new APIResponse();
@@ -5739,6 +5729,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
+        #endregion
 
         #region "ProjectIndicators"
         public async Task<APIResponse> GetAllProjectIndicators(PagingModel paging)
@@ -5989,7 +5980,7 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
-
+        #region "GetExcelFile"
         public async Task<APIResponse> GetExcelFile(Stream file, string userId, long projectId)
         {
             APIResponse response = new APIResponse();
@@ -6008,25 +5999,19 @@ namespace HumanitarianAssistance.Service.Classes
 
                         for (int i = 2; i <= totalRows; i++)
                         {
-                            //var t = workSheet.Cells[i, 2].Value;
-                            //long ProjectJobId = Convert.ToInt64(workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString());
-
-
-                            //Console.WriteLine("the value t",ProjectJobId);
-                            //string code = workSheet.Cells[i, 3].Value == null ? null : workSheet.Cells[i, 3].Value.ToString();
                             DataList.Add(new ProjectBudgetLineDetailModel
                             {
                                 ProjectId = Convert.ToInt64(workSheet.Cells[i, 1].Value == null ? null : workSheet.Cells[i, 1].Value.ToString()),
-                                ProjectJobId = Convert.ToInt64(workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString()),
-                                ProjectJobCode = workSheet.Cells[i, 3].Value == null ? null : workSheet.Cells[i, 3].Value.ToString(),
-                                ProjectJobName = workSheet.Cells[i, 4].Value == null ? null : workSheet.Cells[i, 4].Value.ToString(),
-                                BudgetLineId = Convert.ToInt64(workSheet.Cells[i, 5].Value == null ? null : workSheet.Cells[i, 5].Value.ToString()),
-                                BudgetCode = workSheet.Cells[i, 6].Value == null ? null : workSheet.Cells[i, 6].Value.ToString(),
-                                BudgetName = workSheet.Cells[i, 7].Value == null ? null : workSheet.Cells[i, 7].Value.ToString(),
-                                InitialBudget = Convert.ToInt64(workSheet.Cells[i, 8].Value == null ? null : workSheet.Cells[i, 8].Value.ToString()),
-                                CurrencyId = Convert.ToInt32(workSheet.Cells[i, 9].Value == null ? null : workSheet.Cells[i, 9].Value.ToString()),
-                                CurrencyName = workSheet.Cells[i, 10].Value == null ? null : workSheet.Cells[i, 10].Value.ToString(),
-                                CreatedDate = Convert.ToDateTime(workSheet.Cells[i, 11].Value == null ? null : workSheet.Cells[i, 11].Value.ToString()),
+                                //ProjectJobId = Convert.ToInt64(workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString()),
+                                ProjectJobCode = workSheet.Cells[i, 2].Value == null ? null : workSheet.Cells[i, 2].Value.ToString(),
+                                ProjectJobName = workSheet.Cells[i, 3].Value == null ? null : workSheet.Cells[i, 3].Value.ToString(),
+                                //BudgetLineId = Convert.ToInt64(workSheet.Cells[i, 5].Value == null ? null : workSheet.Cells[i, 5].Value.ToString()),
+                                BudgetCode = workSheet.Cells[i, 4].Value == null ? null : workSheet.Cells[i, 4].Value.ToString(),
+                                BudgetName = workSheet.Cells[i, 5].Value == null ? null : workSheet.Cells[i, 5].Value.ToString(),
+                                InitialBudget = Convert.ToInt64(workSheet.Cells[i, 6].Value == null ? null : workSheet.Cells[i, 6].Value.ToString()),
+                                CurrencyId = Convert.ToInt32(workSheet.Cells[i, 7].Value == null ? null : workSheet.Cells[i, 7].Value.ToString()),
+                                CurrencyName = workSheet.Cells[i, 8].Value == null ? null : workSheet.Cells[i, 8].Value.ToString(),
+                                //CreatedDate = Convert.ToDateTime(workSheet.Cells[i, 11].Value == null ? null : workSheet.Cells[i, 11].Value.ToString()),
                             });
                             //Console.WriteLine("code", code);
                         }
@@ -6156,10 +6141,12 @@ namespace HumanitarianAssistance.Service.Classes
                                         else if (item.BudgetCode != null && item.ProjectJobCode != null)
                                         {
                                             //Note: check string format for budget code and project code
-                                            var ifBudgetCodeFormtCorrect = await CheckBudgetCodeFormat(item.BudgetCode);
+                                            bool ifBudgetCodeFormtCorrect = CheckBudgetCodeFormat(item.BudgetCode);
+
                                             // Note: check for project job code status
-                                            var ifProjectCodeFormatCorrect = await CheckProjectCodeFormat(item.ProjectJobCode);
-                                            if (ifBudgetCodeFormtCorrect == true && ifProjectCodeFormatCorrect == true)
+                                            bool ifProjectCodeFormatCorrect = CheckProjectCodeFormat(item.ProjectJobCode);
+
+                                            if (ifBudgetCodeFormtCorrect && ifProjectCodeFormatCorrect)
                                             {
                                                 //var ifJobExist = await IfExistProjectJob(item.ProjectJobName);
                                                 var ifjobExist = await _uow.GetDbContext().ProjectJobDetail
@@ -6284,11 +6271,11 @@ namespace HumanitarianAssistance.Service.Classes
            
 
         }
-
+        #endregion
 
         #region "getBudgetLineByProjectId for excel"
 
-        public  List<ProjectBudgetLineDetailModel> GetBudgetLineByProjectId(List<ProjectBudgetLineDetailModel> data, long projectId)
+        public List<ProjectBudgetLineDetailModel> GetBudgetLineByProjectId(List<ProjectBudgetLineDetailModel> data, long projectId)
         {
 
             List<ProjectBudgetLineDetailModel> newobj = new List<ProjectBudgetLineDetailModel>();
@@ -6313,7 +6300,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
-
         #region "ifexistBudgetLine fro excel"
         public async Task<ProjectBudgetLineDetail> IfexistBudgetLine(string item)
         {
@@ -6337,7 +6323,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
         #endregion
-
 
         #region "add project job for excel"
         public async Task<ProjectJobDetail> AddProjectJob(long projectId, string projectJobName, string userId)
@@ -6370,7 +6355,6 @@ namespace HumanitarianAssistance.Service.Classes
 
 
         #endregion
-
 
         #region "Add edit project budget line for excel sheet"
         public async Task<ProjectBudgetLineDetail> AddEditProjectBudgetLine(ProjectBudgetLineDetailModel item, long projectJobId, string userId)
@@ -6412,35 +6396,36 @@ namespace HumanitarianAssistance.Service.Classes
         #endregion
 
         #region check string format
-        public async Task<bool> CheckBudgetCodeFormat(string budgetCode)
+        public bool CheckBudgetCodeFormat(string budgetCode)
         {
+            bool isFormatCorrect = false;
             if (!string.IsNullOrEmpty(budgetCode))
             {
                 string budgetFirstIndex = budgetCode.Substring(0, 1);
                 if (budgetFirstIndex == "P")
                 {
-                    var stringnew = budgetCode.Split('-')[1].Contains('B');
-
+                    isFormatCorrect = budgetCode.Split('-')[1].Contains('B');
                 }
             }
-            return true;
+            return isFormatCorrect;
         }
         #endregion
 
         #region"CheckProjectCodeFormat"
-        public async Task<bool> CheckProjectCodeFormat(string jobCode)
+        public bool CheckProjectCodeFormat(string jobCode)
         {
+            bool isProjectCodeCorrect = false;
+
             if (!string.IsNullOrEmpty(jobCode))
             {
                 string jobCodeFirstIndex = jobCode.Substring(0, 1);
 
                 if (jobCodeFirstIndex == "P")
                 {
-                    var stringnew = jobCode.Split('-')[1].Contains('J');
-
+                    isProjectCodeCorrect = jobCode.Split('-')[1].Contains('J');
                 }
             }
-            return true;
+            return isProjectCodeCorrect;
         }
         #endregion
     }
