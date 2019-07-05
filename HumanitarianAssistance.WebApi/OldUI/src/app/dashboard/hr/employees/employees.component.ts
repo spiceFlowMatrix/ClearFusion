@@ -68,6 +68,7 @@ export class EmployeesComponent implements OnInit {
   // hiredOnDate: any;
 
   // for edit form (two way binding)
+  
   CountryId: number;
   ProvinceId: number;
   SexId: number;
@@ -188,7 +189,7 @@ export class EmployeesComponent implements OnInit {
     this.addNewDocument = {
       DocumentName: '',
       DocumentFilePath: '',
-      DocumentDate: '', 
+      DocumentDate: '',
       DocumentType: ''
     };
 
@@ -636,7 +637,6 @@ export class EmployeesComponent implements OnInit {
             data.StatusCode === 200 &&
             data.data.OfficeDetailsList.length > 0
           ) {
-              debugger;
             data.data.OfficeDetailsList.forEach(element => {
               this.officecodelist.push({
                 Office: element.OfficeId,

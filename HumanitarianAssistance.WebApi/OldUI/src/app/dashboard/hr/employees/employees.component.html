@@ -40,7 +40,7 @@
                             <br>
                             <div class="emp-left-listing-height">
                                 <div class="emp-listing">
-                                    <dx-list #list1 [dataSource]="activeEmployeeInfo" [height]="610"
+                                    <dx-list #list1 [dataSource]="activeEmployeeInfo" [height]="610" selectionMode="single" 
                                         [searchEnabled]="true" [searchExpr]="['EmployeeName', 'EmployeeCode']"
                                         searchMode="contains">
                                         <div *dxTemplate="let data of 'item'" class="user-left-listing"
@@ -74,7 +74,7 @@
                             <div class="emp-left-listing-height">
                                 <div class="emp-listing">
 
-                                    <dx-list #list2 [dataSource]="prospectiveEmployeeInfo" [height]="610"
+                                    <dx-list #list2 [dataSource]="prospectiveEmployeeInfo" [height]="610" selectionMode="single"
                                         [searchEnabled]="true" [searchExpr]="['EmployeeName', 'EmployeeCode']"
                                         searchMode="contains">
                                         <div *dxTemplate="let data of 'item'"
@@ -108,7 +108,7 @@
                             <br>
                             <div class="emp-left-listing-height">
                                 <div class="emp-listing">
-                                    <dx-list #list3 [dataSource]="terminatedEmployeeInfo" [height]="610"
+                                    <dx-list #list3 [dataSource]="terminatedEmployeeInfo" [height]="610" selectionMode="single"
                                         [searchEnabled]="true" [searchExpr]="['EmployeeName', 'EmployeeCode']"
                                         searchMode="contains">
                                         <div *dxTemplate="let data of 'item'"

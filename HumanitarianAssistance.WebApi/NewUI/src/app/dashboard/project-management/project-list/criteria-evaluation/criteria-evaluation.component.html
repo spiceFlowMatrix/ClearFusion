@@ -721,25 +721,26 @@
                         </li>
                         <li>
                           Project allowed by Organization leadership
-                          <mat-slide-toggle class="pull-right" (change)="
-                              onProjectAllowedByOrganisationChange($event)
-                            "></mat-slide-toggle>
+                          <mat-slide-toggle class="pull-right" (change)="onProjectAllowedByOrganisationChange($event)"
+                               [(ngModel)]="feasibilityForm.ProjectByLeadership" ></mat-slide-toggle>
                         </li>
                         <li>
                           Is project practical
-                          <mat-slide-toggle class="pull-right" (change)="onIsProjectPracticalChange($event)">
+                          <mat-slide-toggle class="pull-right" (change)="onIsProjectPracticalChange($event)" [(ngModel)]="feasibilityForm.IsProjectPractical">
                           </mat-slide-toggle>
                         </li>
                         <li>
                           Presence/Coverage in project location
-                          <mat-slide-toggle class="pull-right" (change)="onPresenceCoverageinProjectChange($event)">
+                          <mat-slide-toggle class="pull-right" (change)="onPresenceCoverageinProjectChange($event)" [(ngModel)]="feasibilityForm.PresenceCoverageInProject"
+                          >
                           </mat-slide-toggle>
                         </li>
                         <li>
                           Project in line with Organisational focus
                           <mat-slide-toggle class="pull-right" (change)="
                               onProjectInLineOrganisationalChange($event)
-                            "></mat-slide-toggle>
+                            " [(ngModel)]="feasibilityForm.ProjectInLineWithOrgFocus"
+                            ></mat-slide-toggle>
                         </li>
                         <li>
                           Enough time to prepare proposal

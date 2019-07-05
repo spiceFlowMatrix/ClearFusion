@@ -252,7 +252,6 @@ export class OfficeCodeComponent implements OnInit {
 
   onFieldDataChanged(e) {
     if (e.dataField === 'PhoneNo') {
-      debugger;
       const phone = e.value.toString();
 
       if (phone !== '') {
