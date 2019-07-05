@@ -13,8 +13,6 @@ namespace HumanitarianAssistance.ViewModels.Models
         public List<int> OfficesList { get; set; }
 		public int RecordType { get; set; }
 		public List<int> JournalCode { get; set; }
-        public long? Project { get; set; }
-        public string BudgetLine { get; set; }
         public List<long> AccountLists { get; set; }
     }
 }

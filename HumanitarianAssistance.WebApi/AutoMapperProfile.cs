@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HumanitarianAssistance.WebAPI
+namespace HumanitarianAssistance.WebApi
 {
   public class AutoMapperProfile : Profile
   {

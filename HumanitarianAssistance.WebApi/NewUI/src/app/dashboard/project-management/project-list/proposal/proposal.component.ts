@@ -591,10 +591,14 @@ export class ProposalComponent implements OnInit, OnDestroy {
           GLOBAL.API_Project_AddEditProjectProposalDetail,
         proposalDocModel
       )
-      .pipe(takeUntil(this.destroyed$))
+      .pipe()
       .subscribe(
         response => {
           if (response.StatusCode === 200) {
+            this.startSubmitProposalLoader = false;
+            this.assignUserDetailLoader = false;
+            this.currencyDetailLoader = false;
+            this.budgetDetailLoader = false;
             if (response.data.ProjectProposalDetail != null) {
               this._cdr.detectChanges();
               proposalDocModel.ProposalStartDate =
@@ -610,10 +614,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
             this.proposalApprovedChange.emit(model.ProjectId);
           }
           this._cdr.detectChanges();
-          this.startSubmitProposalLoader = false;
-          this.assignUserDetailLoader = false;
-          this.currencyDetailLoader = false;
-          this.budgetDetailLoader = false;
+
         },
         error => {
           this.startSubmitProposalLoader = false;
@@ -649,7 +650,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(
         data => {
-          if (data != null) {
+          if (data != null && data.StatusCode === 200) {
             if (data.data.CurrencyList != null) {
               data.data.CurrencyList.forEach(element => {
                 this.CurrencyList.push({
@@ -659,6 +660,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
               });
             }
           }
+          this._cdr.detectChanges();
           this.currencyDetailLoader = false;
         },
         error => {

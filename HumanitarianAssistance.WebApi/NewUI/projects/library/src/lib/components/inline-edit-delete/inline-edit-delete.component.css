@@ -10,9 +10,9 @@
   cursor: pointer;
 }
 .small_icon {
-  font-size: 18px;
+  font-size: 22px;
 }
-.spinner_abs{position: absolute; top: 15px; left: -20px;}
+.spinner_abs{position: absolute; top: 15px; margin-left: 22px;}
 .example-form-field.inline_content_show_edit{
   position: relative;
 }
