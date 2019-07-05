@@ -108,7 +108,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   }
 
   // ngOnChanges() {
-  //   debugger;
   //   this.getAllProvinceList();
   // }
   // public sendMessage(): void {

@@ -134,7 +134,6 @@ export class ProjectListComponent implements OnInit {
 
   ngOnInit() {
     this.initProjectFilter();
-    // this.getAllProjectList();
     this.getAllProjectFilterList();
     this.isEditingAllowed = this.localStorageService.IsEditingAllowed(
       this.pageId
@@ -172,21 +171,21 @@ export class ProjectListComponent implements OnInit {
       .subscribe(
         res => {
           this.projectList = [];
-
+          if (res.StatusCode === 200) {
             this.projectFilterModel.totalCount =
-              res.data.TotalCount != null ? res.data.TotalCount : 0;
+            res.data.TotalCount != null ? res.data.TotalCount : 0;
             res.data.ProjectDetailModel.forEach(element => {
-              this.projectList.push({
-                ProjectId: element.ProjectId,
-                ProjectName: element.ProjectName,
-                ProjectPhase: element.ProjectPhase,
-                TotalDaysinHours: element.TotalDaysinHours,
-                ProjectCode: element.ProjectCode,
-                ProjectDescription: element.ProjectDescription,
-                IsWin: element.IsWin
-              });
+            this.projectList.push({
+              ProjectId: element.ProjectId,
+              ProjectName: element.ProjectName,
+              ProjectPhase: element.ProjectPhase,
+              TotalDaysinHours: element.TotalDaysinHours,
+              ProjectCode: element.ProjectCode,
+              ProjectDescription: element.ProjectDescription,
+              IsWin: element.IsWin
             });
-
+          });
+          }
             this.projectListLoaderFlag = false;
         },
         error => {
@@ -197,51 +196,12 @@ export class ProjectListComponent implements OnInit {
   }
   //#endregion
 
-  //#region "getAllProjectList"
-  getAllProjectList() {
-    // this.commonLoaderService.showLoader();
-    // this.projectList = [];
-    // this.projectListService
-    //   .GetProjectDetails(
-    //     this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectList
-    //   )
-    //   .subscribe(
-    //     data => {
-    //       if (
-    //         data.data.ProjectDetailModel.length > 0 &&
-    //         data.StatusCode === 200
-    //       ) {
-    //         this.projectFilterModel.totalCount =
-    //           data.data.ProjectDetailModel.length;
-    //         data.data.ProjectDetailModel.forEach(element => {
-    //           this.projectList.push({
-    //             ProjectId: element.ProjectId,
-    //             ProjectName: element.ProjectName,
-    //             ProjectPhase: element.ProjectPhase,
-    //             TotalDaysinHours: element.TotalDaysinHours,
-    //             ProjectCode: element.ProjectCode,
-    //             ProjectDescription: element.ProjectDescription,
-    //             IsWin: element.IsWin
-    //           });
-    //         });
-    //       }
-    //       this.commonLoaderService.hideLoader();
-    //     },
-    //     error => {
-    //       this.commonLoaderService.hideLoader();
-    //     }
-    //   );
-    // // this.projectList = this.store.select(state => state.projectList);
-  }
-  //#endregion
-
   //#endregion "addNewProject"
   addNewProject() {
     const projectDetail = {
       ProjectId: 0,
       ProjectName: ''
     };
-
     this.commonLoaderService.showLoader();
 
     this.projectListService
@@ -254,7 +214,6 @@ export class ProjectListComponent implements OnInit {
           if (response.StatusCode === 200) {
             if (response.data.ProjectDetail != null) {
               const responseData = response.data.ProjectDetail;
-
               const projectData = {
                 ProjectId: responseData.ProjectId,
                 ProjectCode: responseData.ProjectCode,
@@ -263,7 +222,6 @@ export class ProjectListComponent implements OnInit {
                 TotalDaysinHours: responseData.TotalDaysinHours,
                 ProjectDescription: responseData.ProjectDescription
               };
-              // this.getAllProjectList();
               this.projectList.push(projectData);
               this.projectList.sort(function(a, b) {
                 return b.ProjectId - a.ProjectId;
@@ -271,8 +229,6 @@ export class ProjectListComponent implements OnInit {
 
               this.router.navigate(['/project/my-project', projectData.ProjectId]);
             }
-
-            // this.GetProjectDetail(this.projectDetail.ProjectId);
           }
           this.commonLoaderService.hideLoader();
         },

@@ -81,6 +81,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   isPriorityOther = false;
   isFeasibilityExpert = false;
   startCriteriaEvaluationSubmitLoader = false;
+  criteriaEvaluationLoader = false;
 
   donorCEForm: DonorCEModel;
   eligibilityForm: EligibilityCEModel;
@@ -1182,6 +1183,7 @@ export class CriteriaEvaluationComponent implements OnInit {
         this.AddEditFeasibilityCEForm(this.feasibilityForm);
       }
     }
+
   }
   onCostOfCompensationMoneyChange(ev, data: any) {
     // if (data != null && data != undefined && data != "" && data >= 5000) {
@@ -1200,6 +1202,8 @@ export class CriteriaEvaluationComponent implements OnInit {
       this.isDisabledAnyInKindComponent = false;
       this.anyInKindComponent = criteriaEvaluationScores.anyInKindComponent_Yes;
     } else {
+      // Note: to disable the expert record
+      this.isFeasibilityExpert = false;
       this.isDisabledAnyInKindComponent = true;
       this.feasibilityForm.UseableByOrganisation = false;
       this.feasibilityForm.FeasibleExpertDeploy = false;
@@ -1811,7 +1815,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region Get Criteria evaluation by ProjectId Donor
   GetCriteraiEvaluationDetailById(ProjectId: number) {
-    // this.OtherProjectList = [];
+    this.criteriaEvaluationLoader = true;
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetCriteriaEvalDetailsByProjectId(
@@ -1819,7 +1823,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           ProjectId
         )
         .subscribe(data => {
-          if (data != null) {
+          if (data != null && data.StatusCode === 200) {
             if (data.data.CriteriaEveluationModel != null) {
               this.donorCEForm.PastFundingExperience =
                 data.data.CriteriaEveluationModel.PastFundingExperience;
@@ -1991,7 +1995,8 @@ export class CriteriaEvaluationComponent implements OnInit {
               }
               this.feasibilityForm.ThirdPartyContract =
                 data.data.CriteriaEveluationModel.ThirdPartyContract;
-              if (data.data.CriteriaEveluationModel.CostOfCompensationMonth == null || data.data.CriteriaEveluationModel.CostOfCompensationMonth == undefined) {
+              if (data.data.CriteriaEveluationModel.CostOfCompensationMonth == null
+                 || data.data.CriteriaEveluationModel.CostOfCompensationMonth == undefined) {
                 this.feasibilityForm.CostOfCompensationMonth = null;
               } else {
                 this.feasibilityForm.CostOfCompensationMonth =
@@ -2002,20 +2007,21 @@ export class CriteriaEvaluationComponent implements OnInit {
 
               this.feasibilityForm.AnyInKindComponent =
                 data.data.CriteriaEveluationModel.AnyInKindComponent;
-              if (this.feasibilityForm.AnyInKindComponent == true) {
-                this.feasibilityForm.UseableByOrganisation = false;
-                this.feasibilityForm.FeasibleExpertDeploy = false;
-              } else {
+              if (this.feasibilityForm.AnyInKindComponent === true) {
+                 this.isDisabledAnyInKindComponent = false;
+                // this.feasibilityForm.UseableByOrganisation = false;
+                // this.feasibilityForm.FeasibleExpertDeploy = false;
+              }
                 this.feasibilityForm.UseableByOrganisation =
                   data.data.CriteriaEveluationModel.UseableByOrganisation;
                 this.feasibilityForm.FeasibleExpertDeploy =
                   data.data.CriteriaEveluationModel.FeasibleExpertDeploy;
-                if (this.feasibilityForm.FeasibleExpertDeploy == true) {
+                if (this.feasibilityForm.FeasibleExpertDeploy === true) {
                   this.isFeasibilityExpert = true;
                 } else {
                   this.isFeasibilityExpert = false;
                 }
-              }
+
               this.feasibilityForm.FeasibilityExpert =
                 data.data.CriteriaEveluationModel.FeasibilityExpert;
 
@@ -2198,8 +2204,11 @@ export class CriteriaEvaluationComponent implements OnInit {
 
             }
           }
+    this.criteriaEvaluationLoader = false;
+
         },
         error => {
+    this.criteriaEvaluationLoader = false;
           this.toastr.error('Something Went Wrong..! Please Try Again.');
         });
     }
@@ -2490,8 +2499,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region to calculate total value
   get totalValue() {
-
-    // this.totalScore = 0;
+console.log(this.totalScore);
     this.totalScore =
       (this.donorCEForm.PastFundingExperience === true
         ? criteriaEvaluationScores.pastFundingExperience_Yes
@@ -2711,13 +2719,14 @@ export class CriteriaEvaluationComponent implements OnInit {
       (this.feasibilityForm.EnoughTimeToPrepareProposal === true
         ? criteriaEvaluationScores.enoughTimeToPrepareproposal_Yes
         : criteriaEvaluationScores.enoughTimeToPrepareproposal_No) +
-      // if  don't delete :condition for if the costGreaterThanBudget_Yes value is set to be 0
+      // Note: **don't delete:condition for if the costGreaterThanBudget_Yes value is set to be 0
       // ((this.feasibilityForm.IsCostGreaterthenBudget === false && this.feasibilityForm.IsCostGreaterthenBudget != null)
       // ? criteriaEvaluationScores.costGreaterThanBudget_No : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
 
-      // don't delete :condition for if the costGreaterThanBudget_Yes value is set to be -1
+      // Note: **don't delete :condition for if the costGreaterThanBudget_Yes value is set to be -1
       // (this.feasibilityForm.IsCostGreaterthenBudget === false
-      // ? criteriaEvaluationScores.costGreaterThanBudget_No : this.feasibilityForm.IsCostGreaterthenBudget === null ? 0 : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
+      // ? criteriaEvaluationScores.costGreaterThanBudget_No :
+      // this.feasibilityForm.IsCostGreaterthenBudget === null ? 0 : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
       (this.feasibilityForm.IsCostGreaterthenBudget === true
         ? criteriaEvaluationScores.costGreaterThanBudget_Yes : criteriaEvaluationScores.costGreaterThanBudget_No) +
 
@@ -3164,7 +3173,6 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region onAddFeasibitlityExpertOther click
   onAddFeasibitlityExpertOther() {
-
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: 0,
       Name: '',
@@ -3197,7 +3205,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           if (response.StatusCode === 200) {
             // add to list
             if (response.CommonId.LongId != null && response.CommonId.LongId != 0) {
-              obj.ExpertOtherDetailId = response.data.LongId;
+              obj.ExpertOtherDetailId = response.CommonId.LongId;
             }
             this.feasivilityList.push(obj);
           } else if (response.StatusCode === 400) {
@@ -3221,7 +3229,6 @@ export class CriteriaEvaluationComponent implements OnInit {
       ProjectId: this.ProjectId
     };
 
-    // this.editPriorityOther(obj);
     this.editFeasibilityExpert(obj);
 
   }
