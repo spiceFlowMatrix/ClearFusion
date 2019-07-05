@@ -52,6 +52,10 @@ export interface IHiringRequestDetailModel {
 }
 export interface ProjectHiringRequestFilterModel {
   FilterValue: string;
+  pageIndex?: number;
+  pageSize?: number;
+  totalCount?: number;
+
   HiringRequestId?: number;
   HiringRequestCode: string;
   Description: string;

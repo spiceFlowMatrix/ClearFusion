@@ -32,19 +32,22 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             _userManager = userManager;
         }
 
-        public async Task<APIResponse> GetallHiringRequestDetail()
+        public async Task<APIResponse> GetallHiringRequestDetail(ProjectHiringRequestModel model)
         {
             APIResponse response = new APIResponse();
             try
             {
+                int totalCount = await _uow.GetDbContext().ProjectHiringRequestDetail.CountAsync(x => x.IsDeleted == false && x.ProjectId == model.ProjectId);
+                 
+
                 var requestDetail = await _uow.GetDbContext().ProjectHiringRequestDetail
+                                                              .Where(x => x.IsDeleted == false && x.ProjectId == model.ProjectId)           
                                                               .Include(c => c.CurrencyDetails)
                                                               .Include(b => b.ProjectBudgetLineDetail)
                                                               .Include(o => o.OfficeDetails)
                                                               .Include(c => c.JobGrade)
                                                               .Include(e => e.EmployeeDetail)
                                                               .Include(f => f.ProfessionDetails)
-                                                              .Where(x => x.IsDeleted == false)
                                                               .ToListAsync();
                 var hiringRequestList = requestDetail.Select(x => new ProjectHiringRequestModel
                 {
@@ -76,7 +79,11 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
                         z.IsDeleted
                     }).FirstOrDefault(u => u.AspNetUserId == x.CreatedById && u.IsDeleted == false).FullName
 
-                }).ToList();
+                })
+                .Skip(model.pageSize.Value * model.pageIndex.Value)
+                .Take(model.pageSize.Value)
+                .ToList();
+                response.data.TotalCount = totalCount;
                 response.data.ProjectHiringRequestModel = hiringRequestList.OrderByDescending(x => x.HiringRequestId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
