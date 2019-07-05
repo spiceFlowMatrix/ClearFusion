@@ -334,12 +334,12 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
       return apiRespone;
     }
-    /// <summary>
-    /// Delete Created Project 
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
+        /// <summary>
+        /// Delete Created Project 
+        /// </summary>
+        /// <param name="ProjectId"></param>
+        /// <returns></returns>
+        [HttpPost]
     public async Task<APIResponse> DeleteProjectDetail([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
@@ -1392,12 +1392,12 @@ namespace HumanitarianAssistance.WebApi.Controllers
       return apiRespone;
     }
 
-    /// <summary>
-    /// delete selected projectJob
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
+        /// <summary>
+        /// delete selected projectJob
+        /// </summary>
+        /// <param name="jobId"></param>
+        /// <returns></returns>
+        [HttpPost]
     public async Task<APIResponse> DeleteProjectJob([FromBody]long jobId)
     {
       APIResponse apiRespone = null;

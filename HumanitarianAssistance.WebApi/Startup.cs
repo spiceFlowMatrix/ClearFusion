@@ -36,6 +36,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -257,6 +258,8 @@ namespace HumanitarianAssistance.WebApi
             services.AddSwaggerGen(p =>
             {
                 p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
+                // p.SwaggerDoc("accounting", new Info { Title = "Accounting API's", Description = "VocuherTransaction, Financial Report, ChartOfAccount, ExchangeRate, GainLossReport" });
+                
                 p.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -264,6 +267,11 @@ namespace HumanitarianAssistance.WebApi
                     In = "header",
                     Type = "apiKey"
                 });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                p.IncludeXmlComments(xmlPath);
             });
 
             // In production, the Angular files will be served from this directory
@@ -306,6 +314,7 @@ namespace HumanitarianAssistance.WebApi
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                // c.SwaggerEndpoint("/swagger/accounting/swagger.json", "Accounting API's");
             });
 
             app.UseSignalR(routes =>
