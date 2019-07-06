@@ -1,19 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-  
-    <OutputType>Exe</OutputType>
-
     <TargetFramework>netcoreapp2.2</TargetFramework>
-
-    <ApplicationIcon />
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Google.Cloud.Storage.V1" Version="2.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
-  <!--<ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4" />
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />
-  </ItemGroup>-->
 </Project>
