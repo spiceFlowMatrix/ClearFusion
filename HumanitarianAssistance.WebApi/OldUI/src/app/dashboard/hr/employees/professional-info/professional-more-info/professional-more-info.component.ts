@@ -801,7 +801,6 @@ export class ProfessionalMoreInfoComponent implements OnInit {
 
   //#region "logEventCloseRelatives"
     logEventCloseRelatives(eventName: string, obj) {
-        debugger;
     // tslint:disable-next-line:radix
     const employeeId = parseInt(localStorage.getItem('SelectedEmployee'));
 
