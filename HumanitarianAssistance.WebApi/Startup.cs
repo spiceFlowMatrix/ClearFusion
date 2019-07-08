@@ -329,55 +329,23 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpaStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
-            });
+            // app.UseSpaStaticFiles(new StaticFileOptions
+            // {
+            //     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
+            // });
 
-            app.Map("/newui", client =>
+              app.UseSpa(spa =>
             {
-                client.UseSpa(spa =>
+
+                spa.Options.SourcePath = "NewUI";
+
+                if (env.IsDevelopment())
                 {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "NewUI";
-
-                    if (env.IsDevelopment())
-                    {
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-
-                });
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
 
-            app.Map("/oldui", admin =>
-            {
-                admin.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "OldUI";
-
-                    if (env.IsDevelopment())
-                    {
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-
-                });
-            });
-
-            //app.Map("/clientapp", admin =>
-            //{
-            //    admin.UseSpa(spa =>
-            //    {
-            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-            //        spa.Options.SourcePath = "ClientApp";
-
-            //        if (env.IsDevelopment())
-            //        {
-            //            spa.UseAngularCliServer(npmScript: "start");
-            //        }
-
-            //    });
-            //});
+        
         }
 
         //2011
