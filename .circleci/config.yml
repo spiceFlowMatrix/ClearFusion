@@ -4,21 +4,22 @@ jobs:
     docker:
       - image: microsoft/dotnet:2.2-sdk
     steps:
-      # - run: 
-      #     name: install node
-      #     command: "curl -sL https://deb.nodesource.com/setup_10.x | bash -  && apt update  && apt install -y nodejs"
-      # - run: npm cache clean -f
-      # - run: npm install -g n
-      # - run: n stable
-      # - run: node -v
-      # - run: npm -v
-      # - run: npm install -g @angular/cli
+      - run: 
+          name: install node
+          command: "curl -sL https://deb.nodesource.com/setup_10.x | bash -  && apt update  && apt install -y nodejs"
+      - run: npm cache clean -f
+      - run: npm install -g n
+      - run: n stable
+      - run: node -v
+      - run: npm -v
+      - run: npm install -g @angular/cli
       
       - checkout
       - run: dotnet --info
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       - run: dotnet clean
-      - run: dotnet build DataAccess/DataAccess.csproj
+      - run: dotnet publish HumanitarianAssistance.Service/HumanitarianAssistance.Service.csproj -c Release -o release
+      # - run: dotnet build DataAccess/DataAccess.csproj
       - run: dotnet build
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
       - run: mkdir HumanitarianAssistance.WebApi/release/Documents
