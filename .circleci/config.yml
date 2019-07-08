@@ -18,8 +18,6 @@ jobs:
       - run: dotnet --info
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
       - run: dotnet clean
-      - run: dotnet publish HumanitarianAssistance.Service/HumanitarianAssistance.Service.csproj -c Release -o release
-      # - run: dotnet build DataAccess/DataAccess.csproj
       - run: dotnet build
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
       - run: mkdir HumanitarianAssistance.WebApi/release/Documents
