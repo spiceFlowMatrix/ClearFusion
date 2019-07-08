@@ -4,6 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Google.Cloud.Storage.V1" Version="2.2.1" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
   </ItemGroup>
 </Project>
