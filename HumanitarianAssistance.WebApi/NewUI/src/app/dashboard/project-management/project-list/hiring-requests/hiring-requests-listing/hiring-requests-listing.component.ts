@@ -119,7 +119,6 @@ export class HiringRequestsListingComponent implements OnInit {
 
 //#region  paginatorEvent
 pageEvent(e) {
-  debugger;
   this.hiringRequestModel.pageIndex = e.pageIndex;
   this.hiringRequestModel.pageSize = e.pageSize;
 
@@ -285,7 +284,6 @@ onFilterApplied() {
 
   //#region "getAllProjectActivityList"
   getAllHiringRequestFilterList() {
-debugger;
     this.hiringRequestModel.totalCount = 0;
     this.hiringRequestModel.ProjectId = this.projectId;
 
