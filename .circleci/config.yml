@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build-job:
+  build:
     docker:
       - image: mcr.microsoft.com/dotnet/core/sdk:2.2
       # - image: microsoft/dotnet:2.2-sdk
