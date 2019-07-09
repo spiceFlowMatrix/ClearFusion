@@ -117,12 +117,12 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> UploadOtherDocuments(IFormFile file, string UserId, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
         Task<APIResponse> AddEditProjectProposalDetail(ProposalDocModel model, string UserId, string logginUserEmailId);
         APIResponse GetOtherProjectListById(long ProjectId);
-        APIResponse AddEditDonorCriteria(DonorCriteriaModel model, string UserId);
-        APIResponse AddEditPurposeofInitiativeCriteria(PurposeofInitiativeCriteriaModel model, string UserId);
+        Task<APIResponse> AddEditDonorCriteria(DonorCriteriaModel model, string UserId);
+        Task<APIResponse> AddEditPurposeofInitiativeCriteria(PurposeofInitiativeCriteriaModel model, string UserId);
         APIResponse AddEditEligibilityCriteriaDetail(EligibilityCriteriaDetailModel model, string UserId);
         APIResponse AddEditFeasibilityCriteria(FeasibilityCriteriaModel model, string UserId);
         APIResponse GetAllCriteriaEvaluationDetalByProjectId(long projectId);
-        APIResponse AddEditPriorityCriteria(PriorityCriteriaModel model, string UserId);
+       Task<APIResponse> AddEditPriorityCriteria(PriorityCriteriaModel model, string UserId);
         APIResponse AddEditFinancialCriteria(FinancialCriteriaModel model, string UserId);
         APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId);
         APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId);
@@ -171,7 +171,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteAgeGroupDetails(long Id, string userId);
         Task<APIResponse> DeleteOccupationDetails(long Id, string userId);
         Task<APIResponse> DeleteAssumptionDetails(long Id, string userId);
-        Task<APIResponse> DeleteDOnorEligibilityCriteriaOtherDetails(long Id, string userId);
+        Task<APIResponse> DeleteDonorEligibilityCriteriaOtherDetails(long Id, string userId);
 
         Task<APIResponse> AddEditCriteriaEvalutionSubmitDetail(ProjectDetailNewModel model);
 

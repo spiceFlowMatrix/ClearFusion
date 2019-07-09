@@ -10,7 +10,7 @@ namespace HumanitarianAssistance.Service.interfaces.ProjectManagement
    public interface IHiringRequestService
     {
         Task<APIResponse> AddProjectHiringRequest(ProjectHiringRequestModel model, string userId);
-        Task<APIResponse> GetallHiringRequestDetail();
+        Task<APIResponse> GetallHiringRequestDetail(ProjectHiringRequestModel model);
         Task<APIResponse> EditProjectHiringRequest(ProjectHiringRequestModel model, string userId);
         Task<APIResponse> GetAllEmployeeList();
 

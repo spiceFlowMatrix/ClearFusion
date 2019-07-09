@@ -73,21 +73,25 @@ export class HiringRequestsListingComponent implements OnInit {
   }
   //#endregion
   ngOnInit() {
+    this.initForm();
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-    this.getAllHiringRequestList();
+    this.getAllHiringRequestFilterList();
     this.getCurrencyList();
     this.getBudgetLineList();
     this.getOfficeList();
     this.getJobGradeList();
     this.getProfessionlist();
-    this.initForm();
   }
 
   //#region  "initForm"
   initForm() {
     this.hiringRequestModel = {
+      pageIndex: 0,
+      pageSize: 10,
+      totalCount: 0,
+
       FilterValue: '',
       Description: null,
       Position: null,
@@ -108,10 +112,26 @@ export class HiringRequestsListingComponent implements OnInit {
       CurrencyName: null,
       EmployeeName: null,
       GradeName: null,
-      RequestedBy: null
+      RequestedBy: null,
     };
   }
   //#endregion
+
+//#region  paginatorEvent
+pageEvent(e) {
+  this.hiringRequestModel.pageIndex = e.pageIndex;
+  this.hiringRequestModel.pageSize = e.pageSize;
+
+  this.onFilterApplied();
+}
+//#endregion
+
+//#region "onFilterApplied"
+onFilterApplied() {
+  this.getAllHiringRequestFilterList();
+}
+//#endregion
+
   //#region "onItemClick"
   onItemClick(item: any) {
     console.log(item);
@@ -155,7 +175,7 @@ export class HiringRequestsListingComponent implements OnInit {
     // refresh the list after new request created
     dialogRef.componentInstance.onHiringRequestListRefresh.subscribe(() => {
       // do something
-      this.getAllHiringRequestList();
+      this.getAllHiringRequestFilterList();
     });
 
     dialogRef.afterClosed().subscribe(result => {});
@@ -263,18 +283,18 @@ export class HiringRequestsListingComponent implements OnInit {
   //#endregion
 
   //#region "getAllProjectActivityList"
-  getAllHiringRequestList() {
-    const filterData: any = {
-      ProjectId: this.projectId
-      //  ActivityDescription: this.projectHiringRequestFilter.FilterValue
-    };
+  getAllHiringRequestFilterList() {
+    this.hiringRequestModel.totalCount = 0;
+    this.hiringRequestModel.ProjectId = this.projectId;
+
     this.hiringRequestListLoader = true;
     this.hiringRequestService
-      .GetProjectHiringRequestFilterList(filterData)
+      .GetProjectHiringRequestFilterList(this.hiringRequestModel)
       .subscribe(
         (response: IResponseData) => {
           if (response.statusCode === 200 && response.data !== null) {
-            // this.totalCount = response.total;
+            this.hiringRequestModel.totalCount =
+            response.total != null ? response.total : 0;
             this.setHiringrequestList(response.data);
           }
           this.hiringRequestListLoader = false;

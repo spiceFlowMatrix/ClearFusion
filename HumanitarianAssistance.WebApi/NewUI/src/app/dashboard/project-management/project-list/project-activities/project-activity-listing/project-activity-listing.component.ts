@@ -17,6 +17,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
 @Component({
   selector: 'app-project-activity-listing',
   templateUrl: './project-activity-listing.component.html',
@@ -410,6 +412,27 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   //#region "deleteProjectActivity"
   deleteProjectActivity(activityId: number) {
+
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      width: '300px',
+      height: '250px',
+      data: 'delete',
+      disableClose: false
+    });
+
+    dialogRef.componentInstance.confirmMessage =
+      Delete_Confirmation_Texts.deleteText1;
+
+    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
+
+    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
+
+    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.componentInstance.confirmDelete.subscribe(
+      res => {
+        dialogRef.componentInstance.isLoading = true;
+
+
     const index = this.projectActivityList.findIndex(
       x => x.ActivityId === activityId
     );
@@ -426,6 +449,8 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
         .subscribe(
           (response: IResponseData) => {
             if (response.statusCode === 200) {
+              this.totalCount = this.totalCount - 1;
+              this.GetRefreshedActivityList(index);
               this.projectActivityList.splice(index, 1);
             } else {
               this.projectActivityList.map(x => {
@@ -435,16 +460,39 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
                 }
               });
             }
+            dialogRef.componentInstance.isLoading = false;
+            dialogRef.componentInstance.onCancelPopup();
           },
           error => {
             this.projectActivityList.map(x => {
               if (x.ActivityId === activityId) {
                 x.IsLoading = false;
                 x.IsError = true;
+                dialogRef.componentInstance.isLoading = false;
+                dialogRef.componentInstance.onCancelPopup();
               }
             });
           }
         );
+    }
+  });
+}
+  //#endregion
+
+  //#region GetRefreshedActivityList
+  GetRefreshedActivityList(index) {
+// Note: If list is empty display activity listing page
+    if (this.totalCount === 0) {
+      this.showProjectActivityDetail = false;
+      this.colsm6 = 'col-sm-10 col-sm-offset-1';
+    } else if (this.totalCount === index) {
+      // Note: if delete last item of list
+      const activityId = this.projectActivityList[0].ActivityId;
+      this.getAllProjectActivityDetailByActivityId(activityId);
+    } else {
+     // Note : Display next item on deletion of any item
+    const activityId = this.projectActivityList[index + 1].ActivityId;
+    this.getAllProjectActivityDetailByActivityId(activityId);
     }
   }
   //#endregion

@@ -869,7 +869,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = _iProject.AddEditDonorCriteria(Model, id);
+        apiRespone = await _iProject.AddEditDonorCriteria(Model, id);
       }
       return apiRespone;
     }
@@ -882,7 +882,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = _iProject.AddEditPurposeofInitiativeCriteria(Model, id);
+        apiRespone = await _iProject.AddEditPurposeofInitiativeCriteria(Model, id);
       }
       return apiRespone;
     }
@@ -928,7 +928,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = _iProject.AddEditPriorityCriteria(Model, id);
+        apiRespone = await _iProject.AddEditPriorityCriteria(Model, id);
       }
       return apiRespone;
     }
@@ -1320,7 +1320,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
       {
         var id = user.Id;
 
-        apiRespone = await _iProject.DeleteDOnorEligibilityCriteriaOtherDetails(donorEligibilityDetailId, id);
+        apiRespone = await _iProject.DeleteDonorEligibilityCriteriaOtherDetails(donorEligibilityDetailId, id);
       }
       return apiRespone;
     }
