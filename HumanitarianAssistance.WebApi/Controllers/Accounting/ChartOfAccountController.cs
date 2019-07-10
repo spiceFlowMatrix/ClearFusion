@@ -30,7 +30,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<APIResponse> GetMainLevelAccount([FromBody]long id)
         {
             APIResponse response = await _iChartOfAccountNewService.GetMainLevelAccount(id);
@@ -39,7 +38,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<APIResponse> GetAllAccountsByParentId([FromBody]int id)
         {
             APIResponse response = await _iChartOfAccountNewService.GetAllAccountsByParentId(id);
@@ -47,7 +45,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<object> AddChartOfAccount([FromBody]ChartOfAccountNewModel model)
         {
             APIResponse response = new APIResponse();
@@ -64,7 +61,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<APIResponse> EditChartOfAccount([FromBody]ChartOfAccountNewModel model)
         {
             APIResponse response = new APIResponse();
@@ -81,7 +77,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<APIResponse> DeleteChartOfAccount([FromBody]long accountId)
         {
             APIResponse response = new APIResponse();

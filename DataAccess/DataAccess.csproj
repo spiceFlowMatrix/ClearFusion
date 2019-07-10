@@ -1,32 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <ApplicationIcon />
-    <StartupObject />
   </PropertyGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="Google.Cloud.Storage.V1" Version="2.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4" />
+    <!-- <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" /> -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
-
-    <!--<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />-->
 
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
-  </ItemGroup>
 
-  <!--<ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
-    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
-  </ItemGroup>-->
-
-  <ItemGroup>
     <ProjectReference Include="..\HumanitarianAssistance.Common\HumanitarianAssistance.Common.csproj" />
   </ItemGroup>
 

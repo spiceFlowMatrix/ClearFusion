@@ -171,7 +171,7 @@ namespace HumanitarianAssistance.Service.APIResponses
         public IList<VoucherTransactionModel> VoucherTransactionList { get; set; }
         public IList<LedgerModel> LedgerList { get; set; }
         public IList<LedgerReportViewModel> ledgerReportFinal { get; set; }
-        public IList<LedgerModel> TrailBlanceList { get; set; }
+        public IList<LedgerModel> TrialBalanceList { get; set; }
 
         public IList<ExchangeRateModel> ExchangeRateList { get; set; }
         public IList<ExchangeRateDetail> ExchangeRateDetailList { get; set; }

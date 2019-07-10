@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HumanitarianAssistance.WebAPI.Controllers
+namespace HumanitarianAssistance.WebApi.Controllers
 {
   [Produces("application/json")]
   [Route("api/Notification/[Action]")]

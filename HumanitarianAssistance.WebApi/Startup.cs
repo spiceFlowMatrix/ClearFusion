@@ -13,11 +13,11 @@ using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.Service.interfaces.Marketing;
 using HumanitarianAssistance.Service.interfaces.ProjectManagement;
-using HumanitarianAssistance.WebAPI;
-using HumanitarianAssistance.WebAPI.Auth;
-using HumanitarianAssistance.WebAPI.ChaHub;
-using HumanitarianAssistance.WebAPI.Extensions;
-using HumanitarianAssistance.WebAPI.Filter;
+using HumanitarianAssistance.WebApi;
+using HumanitarianAssistance.WebApi.Auth;
+using HumanitarianAssistance.WebApi.ChaHub;
+using HumanitarianAssistance.WebApi.Extensions;
+using HumanitarianAssistance.WebApi.Filter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +36,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -82,6 +83,8 @@ namespace HumanitarianAssistance.WebApi
             string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
 
             Console.WriteLine("Connection string: {0}\n", connectionString);
+
+
 
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
@@ -228,6 +231,12 @@ namespace HumanitarianAssistance.WebApi
                 });
             });
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+
+
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             services.AddMvc()
                 .AddJsonOptions(config =>
                 {
@@ -246,11 +255,11 @@ namespace HumanitarianAssistance.WebApi
 
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
             services.AddSwaggerGen(p =>
             {
                 p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
+                // p.SwaggerDoc("accounting", new Info { Title = "Accounting API's", Description = "VocuherTransaction, Financial Report, ChartOfAccount, ExchangeRate, GainLossReport" });
+                
                 p.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -258,6 +267,11 @@ namespace HumanitarianAssistance.WebApi
                     In = "header",
                     Type = "apiKey"
                 });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                p.IncludeXmlComments(xmlPath);
             });
 
             // In production, the Angular files will be served from this directory
@@ -300,6 +314,7 @@ namespace HumanitarianAssistance.WebApi
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                // c.SwaggerEndpoint("/swagger/accounting/swagger.json", "Accounting API's");
             });
 
             app.UseSignalR(routes =>
@@ -314,55 +329,23 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpaStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
-            });
+            // app.UseSpaStaticFiles(new StaticFileOptions
+            // {
+            //     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
+            // });
 
-            app.Map("/newui", client =>
+              app.UseSpa(spa =>
             {
-                client.UseSpa(spa =>
+
+                spa.Options.SourcePath = "NewUI";
+
+                if (env.IsDevelopment())
                 {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "NewUI";
-
-                    if (env.IsDevelopment())
-                    {
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-
-                });
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
 
-            app.Map("/oldui", admin =>
-            {
-                admin.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "OldUI";
-
-                    if (env.IsDevelopment())
-                    {
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-
-                });
-            });
-
-            //app.Map("/clientapp", admin =>
-            //{
-            //    admin.UseSpa(spa =>
-            //    {
-            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-            //        spa.Options.SourcePath = "ClientApp";
-
-            //        if (env.IsDevelopment())
-            //        {
-            //            spa.UseAngularCliServer(npmScript: "start");
-            //        }
-
-            //    });
-            //});
+        
         }
 
         //2011

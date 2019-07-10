@@ -2433,7 +2433,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetTrailBlanceDetailsByCondition(LedgerModels model)
+        public async Task<APIResponse> GetTrialBalanceDetailsByCondition(LedgerModels model)
         {
             APIResponse response = new APIResponse();
             try
@@ -2669,13 +2669,13 @@ namespace HumanitarianAssistance.Service.Classes
                         }
                     }
 
-                    response.data.TrailBlanceList = finalTrialBalanceList;
+                    response.data.TrialBalanceList = finalTrialBalanceList;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
                 else
                 {
-                    response.data.TrailBlanceList = null;
+                    response.data.TrialBalanceList = null;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "No data Found";
                 }
