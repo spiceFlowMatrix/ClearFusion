@@ -17,6 +17,6 @@ jobs:
       
       - checkout
 
-      - run: dotnet restore HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj
-      - run: dotnet publish HumanitarianAssistance/HumanitarianAssistance.WebAPI.csproj -c Release -o release
+      - run: dotnet restore
+      - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
   
