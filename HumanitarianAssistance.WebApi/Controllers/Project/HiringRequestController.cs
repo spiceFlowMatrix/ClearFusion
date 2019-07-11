@@ -30,9 +30,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
 
         #region "GetProjectHiringRequestDetail"
         [HttpPost]
-        public async Task<APIResponse> GetProjectHiringRequestDetail()
+        public async Task<APIResponse> GetProjectHiringRequestDetail([FromBody] ProjectHiringRequestModel model)
         {
-            APIResponse response = await _hiringRequestService.GetallHiringRequestDetail();
+            APIResponse response = await _hiringRequestService.GetallHiringRequestDetail(model);
             return response;
         }
         #endregion

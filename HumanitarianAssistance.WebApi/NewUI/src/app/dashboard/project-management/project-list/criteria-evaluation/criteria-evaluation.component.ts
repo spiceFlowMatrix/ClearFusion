@@ -17,7 +17,8 @@ import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { FormControl, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { ToastrService } from 'ngx-toastr';
-import { IPriorityOtherModel, IFeasibilityExpert, ICEAssumptionModel, ICEAgeDEtailModel, ICEOccupationModel, ICEDonorEligibilityModel, ICEisCESubmitModel } from './criteria-evaluation.model';
+import { IPriorityOtherModel, IFeasibilityExpert, ICEAssumptionModel, ICEAgeDEtailModel,ICEOccupationModel,
+   ICEDonorEligibilityModel, ICEisCESubmitModel } from './criteria-evaluation.model';
 import { ActivatedRoute } from '@angular/router';
 import { TargetBeneficiaryTypes_Enum, criteriaEvaluationScores } from 'src/app/shared/enum';
 
@@ -2499,7 +2500,6 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region to calculate total value
   get totalValue() {
-console.log(this.totalScore);
     this.totalScore =
       (this.donorCEForm.PastFundingExperience === true
         ? criteriaEvaluationScores.pastFundingExperience_Yes

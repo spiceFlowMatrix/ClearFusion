@@ -193,14 +193,14 @@ namespace HumanitarianAssistance.Service.Classes
                     inventoryList = await Task.Run(() =>
                        _uow.GetDbContext().StoreInventories
                            .Where(c => c.IsDeleted == false && c.AssetType == AssetType)
-                           .OrderByDescending(c => c.CreatedDate).ToList());
+                           .OrderByDescending(c => c.InventoryCode).ToList());
                 }
                 else
                 {
                     inventoryList = await Task.Run(() =>
                        _uow.GetDbContext().StoreInventories
                            .Where(c => c.IsDeleted == false)
-                           .OrderByDescending(c => c.CreatedDate).ToList());
+                           .OrderByDescending(c => c.InventoryCode).ToList());
                 }
 
                 List<StoreInventoryModel> invModelList = inventoryList.Select(v => new StoreInventoryModel
