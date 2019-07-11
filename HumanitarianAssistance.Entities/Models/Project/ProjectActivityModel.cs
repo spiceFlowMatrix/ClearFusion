@@ -42,6 +42,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public double? Progress { get; set; }
         public double? Slippage { get; set; }
         public string SubActivityTitle { get; set; }
+        public bool? IsDeleted { get; set; }
 
 
     }

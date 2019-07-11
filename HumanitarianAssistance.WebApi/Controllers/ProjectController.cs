@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace HumanitarianAssistance.WebAPI.Controllers
+namespace HumanitarianAssistance.WebApi.Controllers
 {
   [Produces("application/json")]
   [Route("api/Project/[Action]")]
@@ -334,12 +334,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
       return apiRespone;
     }
-    /// <summary>
-    /// Delete Created Project 
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
+        /// <summary>
+        /// Delete Created Project 
+        /// </summary>
+        /// <param name="ProjectId"></param>
+        /// <returns></returns>
+        [HttpPost]
     public async Task<APIResponse> DeleteProjectDetail([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
@@ -869,7 +869,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = _iProject.AddEditDonorCriteria(Model, id);
+        apiRespone = await _iProject.AddEditDonorCriteria(Model, id);
       }
       return apiRespone;
     }
@@ -882,7 +882,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = _iProject.AddEditPurposeofInitiativeCriteria(Model, id);
+        apiRespone = await _iProject.AddEditPurposeofInitiativeCriteria(Model, id);
       }
       return apiRespone;
     }
@@ -928,7 +928,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       if (user != null)
       {
         var id = user.Id;
-        apiRespone = _iProject.AddEditPriorityCriteria(Model, id);
+        apiRespone = await _iProject.AddEditPriorityCriteria(Model, id);
       }
       return apiRespone;
     }
@@ -1320,7 +1320,7 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       {
         var id = user.Id;
 
-        apiRespone = await _iProject.DeleteDOnorEligibilityCriteriaOtherDetails(donorEligibilityDetailId, id);
+        apiRespone = await _iProject.DeleteDonorEligibilityCriteriaOtherDetails(donorEligibilityDetailId, id);
       }
       return apiRespone;
     }
@@ -1392,12 +1392,12 @@ namespace HumanitarianAssistance.WebAPI.Controllers
       return apiRespone;
     }
 
-    /// <summary>
-    /// delete selected projectJob
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
+        /// <summary>
+        /// delete selected projectJob
+        /// </summary>
+        /// <param name="jobId"></param>
+        /// <returns></returns>
+        [HttpPost]
     public async Task<APIResponse> DeleteProjectJob([FromBody]long jobId)
     {
       APIResponse apiRespone = null;
@@ -1623,10 +1623,10 @@ namespace HumanitarianAssistance.WebAPI.Controllers
 
 
     [HttpPost]
-    public async Task<APIResponse> AllActivityStatus([FromBody]long projectId)
+    public APIResponse AllActivityStatus([FromBody]long projectId)
     {
       APIResponse response = new APIResponse();
-      response = await _iActivity.AllProjectActivityStatus(projectId);
+      response = _iActivity.AllProjectActivityStatus(projectId);
       return response;
     }
     #endregion

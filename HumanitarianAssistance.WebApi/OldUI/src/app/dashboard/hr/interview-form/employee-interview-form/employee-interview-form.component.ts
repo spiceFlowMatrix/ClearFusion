@@ -468,7 +468,6 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
   //#region "on Edit Exit Interview Form Submit"
     onEditInterviewFormSubmit(model: any) {
-        debugger;
         
     const interviewFormModel: EmpInterviewFormModel = {
       InterviewDetailsId: model.InterviewDetailsId,
@@ -559,7 +558,6 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
   //#region "onEditEmpInterviewShowForm"
     onEditEmpInterviewShowForm(model: EmpInterviewFormModel, viewOnly: boolean) {
-        debugger;
     if (model != null) {
       this.disableSelectEmpDropdownFlag();
       this.interviewFormViewOnly = viewOnly;

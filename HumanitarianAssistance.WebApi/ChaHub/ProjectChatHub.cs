@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HumanitarianAssistance.WebAPI.ChaHub
+namespace HumanitarianAssistance.WebApi.ChaHub
 {
   public class ProjectChatHub : Hub
   {

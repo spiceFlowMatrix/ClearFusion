@@ -508,7 +508,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                                   .MaxAsync(x => x.PlannedEndDate);
         }
 
-        public async Task<APIResponse> AllProjectActivityStatus(long projectId)
+        public APIResponse AllProjectActivityStatus(long projectId)
         {
             APIResponse response = new APIResponse();
             try
@@ -860,6 +860,7 @@ namespace HumanitarianAssistance.Service.Classes
                     Recurring = x.Recurring,
                     RecurringCount = x.RecurringCount,
                     RecurrinTypeId = x.RecurrinTypeId,
+                    
                     Progress = Math.Round(x.Progress, 2),
                     Slippage = x.Sleepage
                 }).ToList();

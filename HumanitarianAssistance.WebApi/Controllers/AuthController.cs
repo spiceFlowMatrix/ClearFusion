@@ -6,11 +6,11 @@ using Newtonsoft.Json;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using DataAccess.DbEntities;
-using HumanitarianAssistance.WebAPI.Auth;
-using HumanitarianAssistance.WebAPI.Extensions;
+using HumanitarianAssistance.WebApi.Auth;
+using HumanitarianAssistance.WebApi.Extensions;
 using Microsoft.Extensions.Options;
 
-namespace HumanitarianAssistance.WebAPI.Controllers
+namespace HumanitarianAssistance.WebApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/Auth/[Action]/")]

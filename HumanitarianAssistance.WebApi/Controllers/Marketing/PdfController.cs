@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SelectPdf;
 
-namespace HumanitarianAssistance.WebAPI.Controllers.Marketing
+namespace HumanitarianAssistance.WebApi.Controllers.Marketing
 {
   [Produces("application/json")]
   [Route("api/Pdf/[Action]")]

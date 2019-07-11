@@ -526,7 +526,7 @@ export class GLOBAL {
 
   // Reports
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
-  public static API_AccountReports_GetAllTrailBalanceDetails = 'AccountReports/GetTrailBlanceDetailsByCondition';
+  public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
   public static API_AccountReports_GetJournalVoucherDetailsByCondition= 'AccountReports/GetJournalVoucherDetailsByCondition';
 
 
