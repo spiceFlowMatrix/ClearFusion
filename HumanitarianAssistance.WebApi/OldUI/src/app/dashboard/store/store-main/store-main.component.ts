@@ -169,7 +169,8 @@ export class StoreMainComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region "getAllInventoryDetails"
-  getAllInventoryDetails(assetType: number) {
+    getAllInventoryDetails(assetType: number) {
+        debugger;
     this.showHideStoreMainLoading(true);
 
     this.initializeForm();
@@ -188,6 +189,7 @@ export class StoreMainComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         data => {
+            debugger;
           // datasource
           this.inventoryList = [];
           this.itemGroupDataSource = [];
@@ -200,11 +202,14 @@ export class StoreMainComponent implements OnInit, OnDestroy {
               data.data.InventoryList = data.data.InventoryList.sort((n1, n2) =>  n2.InventoryId - n1.InventoryId);
               data.data.InventoryList.forEach(element => {
                 this.inventoryList.push(element);
-              });
-              this.selectedInventoryId = this.selectedInventoryId === undefined ? this.inventoryList[0].InventoryId
-                                                                  : this.selectedInventoryId;
+                });
 
-              this.getAllItemGroupList(this.selectedInventoryId);
+                if (this.inventoryList != null && this.inventoryList != undefined) {
+                    this.selectedInventoryId= this.inventoryList[0].InventoryId
+                }
+
+                this.getAllItemGroupList(this.selectedInventoryId);
+
             }
           }
 
@@ -237,9 +242,13 @@ export class StoreMainComponent implements OnInit, OnDestroy {
                 this.itemGroupDataSource.push(element);
               });
 
-              this.itemGroupDataSource = this.itemGroupDataSource.sort((a, b) => b.ItemGroupId - a.ItemGroupId);
-              this.selectedItemGroupId = this.selectedItemGroupId === undefined ? this.itemGroupDataSource[0].ItemGroupId
-                                                                      : this.selectedItemGroupId;
+                this.itemGroupDataSource = this.itemGroupDataSource.sort((a, b) => b.ItemGroupId - a.ItemGroupId);
+
+                if (this.itemGroupDataSource != null && this.itemGroupDataSource != undefined) {
+                    this.selectedItemGroupId = this.itemGroupDataSource[0].ItemGroupId;
+                }
+                
+                                                                     
               this.getAllInventoryItemList(
                 this.selectedItemGroupId
               );
@@ -711,7 +720,8 @@ export class StoreMainComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region "onAddEditItemGroup"
-  onAddEditItemGroup(data: ItemGroupModel) {
+    onAddEditItemGroup(data: ItemGroupModel) {
+        debugger;
     if (data != null) {
       if (data.ItemGroupId == null) {
         const addInventoryItem: ItemGroupModel = {
