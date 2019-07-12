@@ -1,6 +1,6 @@
 namespace ClearFusion.Domain.Entities.Project
 {
-    public class Donor
+    public class Donor : IBaseEntity
     {
         
     }
