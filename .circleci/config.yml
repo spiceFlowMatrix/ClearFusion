@@ -17,8 +17,6 @@ jobs:
       - checkout
       - run: dotnet --info
       - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
-      - run: dotnet clean
-      - run: dotnet build
       - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
       - run: mkdir HumanitarianAssistance.WebApi/release/Documents
       - persist_to_workspace:
@@ -205,3 +203,4 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
+  

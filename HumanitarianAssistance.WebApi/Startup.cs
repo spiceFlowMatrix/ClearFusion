@@ -34,6 +34,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -235,7 +236,7 @@ namespace HumanitarianAssistance.WebApi
 
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddMvc()
                 .AddJsonOptions(config =>
@@ -252,27 +253,51 @@ namespace HumanitarianAssistance.WebApi
             services.AddSignalR();
 
 
-
-
-
-            services.AddSwaggerGen(p =>
+            services.AddSwaggerGen(c =>
             {
-                p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
-                // p.SwaggerDoc("accounting", new Info { Title = "Accounting API's", Description = "VocuherTransaction, Financial Report, ChartOfAccount, ExchangeRate, GainLossReport" });
-                
-                p.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                c.SwaggerDoc("v1.0", new Info { Title = "Humanitarian Assistance  API v1.0", Version = "v1.0" });
+
+                // Swagger 2.+ support
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[] { }},
+                };
+
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = "header",
                     Type = "apiKey"
                 });
+                c.AddSecurityRequirement(security);
 
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                p.IncludeXmlComments(xmlPath);
+                c.IncludeXmlComments(xmlPath);
+                //});
             });
+
+
+            //services.AddSwaggerGen(p =>
+            //{
+            //    p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
+            //    // p.SwaggerDoc("accounting", new Info { Title = "Accounting API's", Description = "VocuherTransaction, Financial Report, ChartOfAccount, ExchangeRate, GainLossReport" });
+
+            //    p.AddSecurityDefinition("Bearer", new ApiKeyScheme
+            //    {
+            //        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+            //        Name = "Authorization",
+            //        In = "header",
+            //        Type = "apiKey"
+            //    });
+
+            //    // Set the comments path for the Swagger JSON and UI.
+            //    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            //    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            //    p.IncludeXmlComments(xmlPath);
+            //});
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -313,7 +338,7 @@ namespace HumanitarianAssistance.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "My API V1.0");
                 // c.SwaggerEndpoint("/swagger/accounting/swagger.json", "Accounting API's");
             });
 
@@ -329,55 +354,23 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpaStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
-            });
+            // app.UseSpaStaticFiles(new StaticFileOptions
+            // {
+            //     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
+            // });
 
-            app.Map("/newui", client =>
+              app.UseSpa(spa =>
             {
-                client.UseSpa(spa =>
+
+                spa.Options.SourcePath = "NewUI";
+
+                if (env.IsDevelopment())
                 {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "NewUI";
-
-                    if (env.IsDevelopment())
-                    {
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-
-                });
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
 
-            app.Map("/oldui", admin =>
-            {
-                admin.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "OldUI";
-
-                    if (env.IsDevelopment())
-                    {
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-
-                });
-            });
-
-            //app.Map("/clientapp", admin =>
-            //{
-            //    admin.UseSpa(spa =>
-            //    {
-            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-            //        spa.Options.SourcePath = "ClientApp";
-
-            //        if (env.IsDevelopment())
-            //        {
-            //            spa.UseAngularCliServer(npmScript: "start");
-            //        }
-
-            //    });
-            //});
+        
         }
 
         //2011
