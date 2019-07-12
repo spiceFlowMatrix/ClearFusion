@@ -170,7 +170,6 @@ export class StoreMainComponent implements OnInit, OnDestroy {
 
   //#region "getAllInventoryDetails"
     getAllInventoryDetails(assetType: number) {
-        debugger;
     this.showHideStoreMainLoading(true);
 
     this.initializeForm();
@@ -189,7 +188,6 @@ export class StoreMainComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         data => {
-            debugger;
           // datasource
           this.inventoryList = [];
           this.itemGroupDataSource = [];
@@ -721,7 +719,6 @@ export class StoreMainComponent implements OnInit, OnDestroy {
 
   //#region "onAddEditItemGroup"
     onAddEditItemGroup(data: ItemGroupModel) {
-        debugger;
     if (data != null) {
       if (data.ItemGroupId == null) {
         const addInventoryItem: ItemGroupModel = {
