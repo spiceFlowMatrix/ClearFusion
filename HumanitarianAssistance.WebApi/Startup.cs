@@ -307,8 +307,8 @@ namespace HumanitarianAssistance.WebApi
             }
 
             app.UseHttpsRedirection();
-            //app.UseStaticFiles();
-            //app.UseSpaStaticFiles();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
 
             //app.UseCookiePolicy();
             app.UseCors(DefaultCorsPolicyName);
@@ -338,41 +338,26 @@ namespace HumanitarianAssistance.WebApi
             //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
             //});
 
-            app.Map("/newui", client =>
-            {
-                client.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "NewUI";
+            //app.Map("/newui", client =>
+            //{
+            //    client.UseSpa(spa =>
+            //    {
+            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+            //        spa.Options.SourcePath = "NewUI";
 
-                    if (env.IsDevelopment())
-                    {
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-                });
-            });
+            //        if (env.IsDevelopment())
+            //        {
+            //            spa.UseAngularCliServer(npmScript: "start");
+            //        }
+            //    });
+            //});
 
-            app.Map("/oldui", admin =>
-            {
-                admin.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "OldUI";
-
-                    if (env.IsDevelopment())
-                    {
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-
-                });
-            });
-
-            //app.Map("/clientapp", admin =>
+            //app.Map("/oldui", admin =>
             //{
             //    admin.UseSpa(spa =>
             //    {
             //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-            //        spa.Options.SourcePath = "ClientApp";
+            //        spa.Options.SourcePath = "OldUI";
 
             //        if (env.IsDevelopment())
             //        {
@@ -381,6 +366,19 @@ namespace HumanitarianAssistance.WebApi
 
             //    });
             //});
+
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+                spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                spa.Options.SourcePath = "NewUI";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+            });
         }
 
         //2011
