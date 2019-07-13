@@ -252,7 +252,11 @@ namespace HumanitarianAssistance.WebApi
             services.AddRouting();
             services.AddSignalR();
 
-
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "NewUI/dist";
+            });
 
 
 
@@ -303,8 +307,8 @@ namespace HumanitarianAssistance.WebApi
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            //app.UseStaticFiles();
+            //app.UseSpaStaticFiles();
 
             //app.UseCookiePolicy();
             app.UseCors(DefaultCorsPolicyName);
@@ -329,10 +333,10 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpaStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
-            });
+            //app.UseSpaStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
+            //});
 
             app.Map("/newui", client =>
             {
@@ -345,7 +349,6 @@ namespace HumanitarianAssistance.WebApi
                     {
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-
                 });
             });
 
