@@ -252,6 +252,13 @@ namespace HumanitarianAssistance.WebApi
             services.AddRouting();
             services.AddSignalR();
 
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "NewUI/dist";
+            });
+
+
 
             services.AddSwaggerGen(c =>
             {
@@ -277,34 +284,6 @@ namespace HumanitarianAssistance.WebApi
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
                 //});
-            });
-
-
-            //services.AddSwaggerGen(p =>
-            //{
-            //    p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
-            //    // p.SwaggerDoc("accounting", new Info { Title = "Accounting API's", Description = "VocuherTransaction, Financial Report, ChartOfAccount, ExchangeRate, GainLossReport" });
-
-            //    p.AddSecurityDefinition("Bearer", new ApiKeyScheme
-            //    {
-            //        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-            //        Name = "Authorization",
-            //        In = "header",
-            //        Type = "apiKey"
-            //    });
-
-            //    // Set the comments path for the Swagger JSON and UI.
-            //    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            //    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            //    p.IncludeXmlComments(xmlPath);
-            //});
-
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                //configuration.RootPath = "ClientApp/dist";
-                configuration.RootPath = "NewUI/dist";
-                //configuration.RootPath = "OldUI/dist";
             });
 
 
@@ -338,7 +317,7 @@ namespace HumanitarianAssistance.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "My API V1.0");
+                c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "My API V1");
                 // c.SwaggerEndpoint("/swagger/accounting/swagger.json", "Accounting API's");
             });
 
@@ -354,14 +333,45 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            // app.UseSpaStaticFiles(new StaticFileOptions
-            // {
-            //     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
-            // });
+            //app.UseSpaStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
+            //});
 
-              app.UseSpa(spa =>
+            //app.Map("/newui", client =>
+            //{
+            //    client.UseSpa(spa =>
+            //    {
+            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+            //        spa.Options.SourcePath = "NewUI";
+
+            //        if (env.IsDevelopment())
+            //        {
+            //            spa.UseAngularCliServer(npmScript: "start");
+            //        }
+            //    });
+            //});
+
+            //app.Map("/oldui", admin =>
+            //{
+            //    admin.UseSpa(spa =>
+            //    {
+            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+            //        spa.Options.SourcePath = "OldUI";
+
+            //        if (env.IsDevelopment())
+            //        {
+            //            spa.UseAngularCliServer(npmScript: "start");
+            //        }
+
+            //    });
+            //});
+
+            app.UseSpa(spa =>
             {
-
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+                spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
                 spa.Options.SourcePath = "NewUI";
 
                 if (env.IsDevelopment())
@@ -369,8 +379,6 @@ namespace HumanitarianAssistance.WebApi
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
-
-        
         }
 
         //2011

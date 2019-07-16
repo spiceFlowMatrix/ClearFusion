@@ -165,13 +165,10 @@ export class ProjectListComponent implements OnInit {
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectFilterList,
         this.projectFilterModel
       )
-      .pipe(
-        takeWhile(res => res.data.ProjectDetailModel.length > 0 && res.StatusCode === 200)
-      )
       .subscribe(
         res => {
           this.projectList = [];
-          if (res.StatusCode === 200) {
+          if (res.data.ProjectDetailModel.length > 0 && res.StatusCode === 200) {
             this.projectFilterModel.totalCount =
             res.data.TotalCount != null ? res.data.TotalCount : 0;
             res.data.ProjectDetailModel.forEach(element => {
