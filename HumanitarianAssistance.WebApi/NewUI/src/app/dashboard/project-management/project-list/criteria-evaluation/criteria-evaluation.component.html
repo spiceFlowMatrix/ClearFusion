@@ -34,7 +34,8 @@
             <h5 class="main_heading pull-right">
 
 
-              <span *ngIf="!criteriaEvaluationLoader; else criteriaEvaluationLoaderTemplate"> Total Score:{{ totalValue }}</span></h5>
+              <span *ngIf="!criteriaEvaluationLoader; else criteriaEvaluationLoaderTemplate"> Total
+                Score:{{ totalValue }}</span></h5>
             <ng-template #criteriaEvaluationLoaderTemplate>
               <div class="spinner_center padding_top_5 padding_bottom_5">
                 <mat-spinner [diameter]="20"> </mat-spinner>
@@ -267,20 +268,308 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <div class="purpose">
+            <div >
               <div class="middle-header">
                 <h5>
                   SECTOR AND THEMES
                 </h5>
               </div>
-              <div class="middle-header">
-                <!--
-                    <mat-button-toggle-group name="sectorAndThemes" aria-label="Font Style" *ngFor="let item of sectorAndThemes"
-                      [value]="item.Id" (change)="onValChange($event.value)">
-                      <mat-button-toggle>{{item.Name}}</mat-button-toggle>
-                    </mat-button-toggle-group>
-                  -->
-                <button mat-button [ngStyle]="{
+              <div >
+                <mat-tab-group>
+                  <mat-tab label="Rural Development and Social Protection">
+                        <div class="example-large-box mat-elevation-z4">
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Awareness</mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Infrastructure
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Capacity Building
+                        </mat-checkbox>
+                      </div>
+
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Income Generation
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Mobilization
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Capacity Building
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Social Protection
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Sustainable Livelihood
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Advocacy
+                        </mat-checkbox>
+                      </div>
+
+
+
+                  </div></mat-tab>
+                  <mat-tab label="Education">
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Literacy
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Capacity Building
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          School Upgrading
+                        </mat-checkbox>
+                      </div>
+
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Education in Emergency
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Online Education
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Community Based Education
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Accelerated Learning Program
+                        </mat-checkbox>
+                      </div>
+
+
+                  </mat-tab>
+                  <mat-tab label="Health and Nutrition">
+
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Primary Health Services
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Reproductive Health
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Immunization
+                        </mat-checkbox>
+                      </div>
+
+
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Nutrition
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Communicable Disease
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Hygiene
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Environmental Health
+                        </mat-checkbox>
+                      </div>
+
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Capacity Building
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-3">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Telemedicine
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                          <mat-checkbox (change)="onProdAwarenessChange($event)"
+                            [(ngModel)]="productAndServiceForm.Awareness">
+                            Infant and Young Child Feeding
+                          </mat-checkbox>
+                        </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox (change)="onProdAwarenessChange($event)"
+                          [(ngModel)]="productAndServiceForm.Awareness">
+                          Mental Health and Disability Service
+                        </mat-checkbox>
+                      </div>
+                  </mat-tab>
+                  <mat-tab label="Disaster Risk Reduction">
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Mitigation Projects
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Water Supply
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Sanitation
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Hygiene
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Capacity Building
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Emergency Response
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Renewable Energy
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Shelter
+                      </mat-checkbox>
+                    </div>
+                  </mat-tab>
+                  <mat-tab label="Agriculture and Livestock">
+
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Natural Resource Management
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Capacity Building
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Livestock Management
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Food Security
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Research and Publication
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Horticulture
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Irrigation
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Livelihood
+                      </mat-checkbox>
+                    </div>
+                    <div class="col-sm-3">
+                      <mat-checkbox (change)="onProdAwarenessChange($event)"
+                        [(ngModel)]="productAndServiceForm.Awareness">
+                        Value Chain
+                      </mat-checkbox>
+                    </div>
+                  </mat-tab>
+                </mat-tab-group>
+
+                <br>
+                <br>
+
+                <!-- comment by pk 16/07/19-->
+
+                <!-- <button mat-button [ngStyle]="{
                     'background-color':
                       productAndServiceForm.Product == true
                         ? '#4cc9ff'
@@ -296,7 +585,7 @@
                         : '#f5f2f2'
                   }" (click)="OnProductChange('service')">
                   Service
-                </button>
+                </button> -->
               </div>
             </div>
 
@@ -310,10 +599,7 @@
                   <mat-checkbox (change)="onProdChildrenChange($event)" [(ngModel)]="productAndServiceForm.Children">
                     Children</mat-checkbox>
                 </div>
-                <div class="col-sm-3">
-                  <mat-checkbox (change)="onProdAwarenessChange($event)" [(ngModel)]="productAndServiceForm.Awareness">
-                    Awareness</mat-checkbox>
-                </div>
+
                 <div class="col-sm-3">
                   <mat-checkbox (change)="onProdEducationChange($event)" [(ngModel)]="productAndServiceForm.Education">
                     Education</mat-checkbox>
@@ -395,7 +681,7 @@
               </div>
             </div>
 
-            <br />
+            <!-- <br />
             <br />
             <div class="middle-header">
               <h5>ACTIVITIES</h5>
@@ -436,7 +722,7 @@
                     "></textarea>
                 </mat-form-field>
               </div>
-            </div>
+            </div> -->
 
             <div class="middle-header">
               <h5>TARGET BENEFICIARY</h5>
@@ -620,7 +906,8 @@
                                   )
                                 " type="number" [formControl]="CostOfCompensation" />
 
-                                <mat-error *ngIf="CostOfCompensation.invalid">Please enter month's value between 1 to 12</mat-error>
+                              <mat-error *ngIf="CostOfCompensation.invalid">Please enter month's value between 1 to 12
+                              </mat-error>
                             </mat-form-field>
 
                           </td>
@@ -722,25 +1009,25 @@
                         <li>
                           Project allowed by Organization leadership
                           <mat-slide-toggle class="pull-right" (change)="onProjectAllowedByOrganisationChange($event)"
-                               [(ngModel)]="feasibilityForm.ProjectByLeadership" ></mat-slide-toggle>
+                            [(ngModel)]="feasibilityForm.ProjectByLeadership"></mat-slide-toggle>
                         </li>
                         <li>
                           Is project practical
-                          <mat-slide-toggle class="pull-right" (change)="onIsProjectPracticalChange($event)" [(ngModel)]="feasibilityForm.IsProjectPractical">
+                          <mat-slide-toggle class="pull-right" (change)="onIsProjectPracticalChange($event)"
+                            [(ngModel)]="feasibilityForm.IsProjectPractical">
                           </mat-slide-toggle>
                         </li>
                         <li>
                           Presence/Coverage in project location
-                          <mat-slide-toggle class="pull-right" (change)="onPresenceCoverageinProjectChange($event)" [(ngModel)]="feasibilityForm.PresenceCoverageInProject"
-                          >
+                          <mat-slide-toggle class="pull-right" (change)="onPresenceCoverageinProjectChange($event)"
+                            [(ngModel)]="feasibilityForm.PresenceCoverageInProject">
                           </mat-slide-toggle>
                         </li>
                         <li>
                           Project in line with Organisational focus
                           <mat-slide-toggle class="pull-right" (change)="
                               onProjectInLineOrganisationalChange($event)
-                            " [(ngModel)]="feasibilityForm.ProjectInLineWithOrgFocus"
-                            ></mat-slide-toggle>
+                            " [(ngModel)]="feasibilityForm.ProjectInLineWithOrgFocus"></mat-slide-toggle>
                         </li>
                         <li>
                           Enough time to prepare proposal
