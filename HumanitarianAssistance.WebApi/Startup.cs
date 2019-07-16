@@ -344,6 +344,7 @@ namespace HumanitarianAssistance.WebApi
                {
                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
                    spa.Options.SourcePath = "NewUI";
+                   spa.Options.DefaultPage = $"/NewUI/index.html";
 
                    if (env.IsDevelopment())
                    {
@@ -358,6 +359,7 @@ namespace HumanitarianAssistance.WebApi
                {
                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
                    spa.Options.SourcePath = "OldUI";
+                   spa.Options.DefaultPage = $"/OldUI/index.html";
 
                    if (env.IsDevelopment())
                    {
