@@ -258,12 +258,6 @@ namespace HumanitarianAssistance.WebApi
                 configuration.RootPath = Directory.GetCurrentDirectory();
             });
 
-            Console.WriteLine(Directory.GetCurrentDirectory());
-            Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory()));
-            Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory(), "Release"));
-
-
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1.0", new Info { Title = "Humanitarian Assistance  API v1.0", Version = "v1.0" });
