@@ -361,7 +361,7 @@ namespace HumanitarianAssistance.WebApi
             {
                 oldui.UseSpaStaticFiles(new StaticFileOptions
                 {
-                    RequestPath = "OldUI/dist"
+                    RequestPath = "/OldUI/dist"
                 });
                 oldui.UseSpa(spa =>
                 {
