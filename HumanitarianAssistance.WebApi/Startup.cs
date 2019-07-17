@@ -255,7 +255,8 @@ namespace HumanitarianAssistance.WebApi
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = Directory.GetCurrentDirectory();
+                configuration.RootPath = "OldUI/dist";
+                // configuration.RootPath = Directory.GetCurrentDirectory();
             });
 
             services.AddSwaggerGen(c =>
@@ -332,10 +333,10 @@ namespace HumanitarianAssistance.WebApi
             });
 
 
-            // app.UseSpaStaticFiles(new StaticFileOptions
-            // {
-            //     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Release"))
-            // });
+            app.UseSpaStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory())
+            });
 
             app.Map("/newui", client =>
             {
@@ -348,10 +349,10 @@ namespace HumanitarianAssistance.WebApi
                         spa.Options.SourcePath = "NewUI";
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-                    // else
-                    // {
-                    //     spa.Options.SourcePath = "NewUI/dist";
-                    // }
+                    else
+                    {
+                        spa.Options.SourcePath = "NewUI";
+                    }
                 });
             });
 
@@ -366,10 +367,10 @@ namespace HumanitarianAssistance.WebApi
                     {
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-                    // else
-                    // {
-                    //     spa.Options.SourcePath = "OldUI/dist";
-                    // }
+                    else
+                    {
+                        spa.Options.SourcePath = "OldUI";
+                    }
 
                 });
             });
