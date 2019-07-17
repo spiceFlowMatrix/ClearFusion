@@ -255,7 +255,7 @@ namespace HumanitarianAssistance.WebApi
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = Path.Combine(Directory.GetCurrentDirectory(), "Release");
+                configuration.RootPath = Directory.GetCurrentDirectory();
             });
 
             Console.WriteLine(Directory.GetCurrentDirectory());
@@ -337,7 +337,7 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-          
+
             // app.UseSpaStaticFiles(new StaticFileOptions
             // {
             //     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Release"))
@@ -348,11 +348,15 @@ namespace HumanitarianAssistance.WebApi
                 client.UseSpa(spa =>
                 {
                     spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "NewUI";
 
                     if (env.IsDevelopment())
                     {
+                        spa.Options.SourcePath = "NewUI";
                         spa.UseAngularCliServer(npmScript: "start");
+                    }
+                    else
+                    {
+                        spa.Options.SourcePath = "NewUI/dist";
                     }
                 });
             });
@@ -367,6 +371,10 @@ namespace HumanitarianAssistance.WebApi
                     if (env.IsDevelopment())
                     {
                         spa.UseAngularCliServer(npmScript: "start");
+                    }
+                    else
+                    {
+                        spa.Options.SourcePath = "OldUI/dist";
                     }
 
                 });
