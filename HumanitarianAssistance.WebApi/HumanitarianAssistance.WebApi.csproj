@@ -8,9 +8,9 @@
     <IsPackable>false</IsPackable>
     <!--<SpaRoot>NewUI\</SpaRoot>-->
 
-    <SpaRootNewUI>ClientApp\</SpaRootNewUI>
 
     <SpaRootOldUI>OldUI\</SpaRootOldUI>
+
     <!--<SpaRootOldUI>ClientApp\</SpaRootOldUI>-->
 
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRootOldUI)node_modules\**</DefaultItemExcludes>
@@ -46,7 +46,6 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\" />
-    <Folder Include="OldUI\" />
   </ItemGroup>
 
 

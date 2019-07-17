@@ -348,10 +348,11 @@ namespace HumanitarianAssistance.WebApi
                         spa.Options.SourcePath = "NewUI";
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-                    // else
-                    // {
-                    //     spa.Options.SourcePath = "NewUI/dist";
-                    // }
+                    else
+                    {
+                        spa.Options.SourcePath = "NewUI";
+                    }
+
                 });
             });
 
@@ -366,11 +367,29 @@ namespace HumanitarianAssistance.WebApi
                     {
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-                    // else
-                    // {
-                    //     spa.Options.SourcePath = "OldUI/dist";
-                    // }
 
+                    else
+                    {
+                        spa.Options.SourcePath = "OldUI";
+                    }
+                });
+            });
+
+            app.Map("/clientapp", client =>
+            {
+                client.UseSpa(spa =>
+                {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+
+                    if (env.IsDevelopment())
+                    {
+                        spa.Options.SourcePath = "ClientApp";
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+                    else
+                    {
+                        spa.Options.SourcePath = "ClientApp";
+                    }
                 });
             });
 
