@@ -27,8 +27,8 @@ export class AuthGuard implements CanActivate {
     return false;
   }
 
-  autoLogOut(route) {
-    this.previousUrl = route;
-    return true;
-  }
+  // autoLogOut(route) {
+  //   this.previousUrl = route;
+  //   return true;
+  // }
 }
