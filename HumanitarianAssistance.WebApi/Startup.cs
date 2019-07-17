@@ -253,11 +253,11 @@ namespace HumanitarianAssistance.WebApi
             services.AddSignalR();
 
             // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "OldUI/dist";
-                // configuration.RootPath = Directory.GetCurrentDirectory();
-            });
+            //services.AddSpaStaticFiles(configuration =>
+            //{
+            //    configuration.RootPath = "OldUI/dist";
+            //    // configuration.RootPath = Directory.GetCurrentDirectory();
+            //});
 
             services.AddSwaggerGen(c =>
             {
@@ -299,7 +299,8 @@ namespace HumanitarianAssistance.WebApi
                 app.UseDeveloperExceptionPage();
             }
             else
-            {
+            { 
+
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
@@ -368,6 +369,12 @@ namespace HumanitarianAssistance.WebApi
                     spa.Options.SourcePath = "OldUI";
                     //spa.Options.DefaultPage = "index.html";
                     //spa.Options.DefaultPageStaticFileOptions =";
+
+                    spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "OldUI"))
+                    };
+                    spa.Options.SourcePath = "OldUI";
 
                     if (env.IsDevelopment())
                     {
