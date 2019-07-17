@@ -253,14 +253,14 @@ namespace HumanitarianAssistance.WebApi
             services.AddSignalR();
 
             // In production, the Angular files will be served from this directory
-            //services.AddSpaStaticFiles(configuration =>
-            //{
-            //    configuration.RootPath = Path.Combine(Directory.GetCurrentDirectory(), "Release");
-            //});
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = Path.Combine(Directory.GetCurrentDirectory(), "Release");
+            });
 
-            //Console.WriteLine(Directory.GetCurrentDirectory());
-            //Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory()));
-            //Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory(), "Release"));
+            Console.WriteLine(Directory.GetCurrentDirectory());
+            Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory()));
+            Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory(), "Release"));
 
 
 
@@ -312,7 +312,7 @@ namespace HumanitarianAssistance.WebApi
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            //app.UseSpaStaticFiles();
+            app.UseSpaStaticFiles();
 
             //app.UseCookiePolicy();
             app.UseCors(DefaultCorsPolicyName);
@@ -343,34 +343,34 @@ namespace HumanitarianAssistance.WebApi
             //     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Release"))
             // });
 
-            //app.Map("/newui", client =>
-            //{
-            //    client.UseSpa(spa =>
-            //    {
-            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-            //        spa.Options.SourcePath = "NewUI";
+            app.Map("/newui", client =>
+            {
+                client.UseSpa(spa =>
+                {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.SourcePath = "NewUI";
 
-            //        if (env.IsDevelopment())
-            //        {
-            //            spa.UseAngularCliServer(npmScript: "start");
-            //        }
-            //    });
-            //});
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+                });
+            });
 
-            //app.Map("/oldui", admin =>
-            //{
-            //    admin.UseSpa(spa =>
-            //    {
-            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-            //        spa.Options.SourcePath = "OldUI";
+            app.Map("/oldui", admin =>
+            {
+                admin.UseSpa(spa =>
+                {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.SourcePath = "OldUI";
 
-            //        if (env.IsDevelopment())
-            //        {
-            //            spa.UseAngularCliServer(npmScript: "start");
-            //        }
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
 
-            //    });
-            //});
+                });
+            });
 
             // app.UseSpa(spa =>
             // {
