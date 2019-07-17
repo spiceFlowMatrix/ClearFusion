@@ -255,14 +255,8 @@ namespace HumanitarianAssistance.WebApi
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = Path.Combine(Directory.GetCurrentDirectory(), "Release");
+                configuration.RootPath = Directory.GetCurrentDirectory();
             });
-
-            Console.WriteLine(Directory.GetCurrentDirectory());
-            Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory()));
-            Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory(), "Release"));
-
-
 
             services.AddSwaggerGen(c =>
             {
