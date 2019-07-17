@@ -346,7 +346,7 @@ namespace HumanitarianAssistance.WebApi
                     spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
                     spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
                     {
-                        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "NewUI/dist"))
+                        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "NewUI"))
                     };
                     if (env.IsDevelopment())
                     {
@@ -368,7 +368,7 @@ namespace HumanitarianAssistance.WebApi
 
                     spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
                     {
-                        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "OldUI/dist"))
+                        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "OldUI"))
                     };
                     spa.Options.SourcePath = "OldUI";
 
