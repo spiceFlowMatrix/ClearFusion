@@ -297,12 +297,12 @@ namespace HumanitarianAssistance.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            // else
-            // {
-            //     app.UseExceptionHandler("/Error");
-            //     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //     app.UseHsts();
-            // }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -348,10 +348,10 @@ namespace HumanitarianAssistance.WebApi
                         spa.Options.SourcePath = "NewUI";
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-                    else
-                    {
-                        spa.Options.SourcePath = "NewUI/dist";
-                    }
+                    // else
+                    // {
+                    //     spa.Options.SourcePath = "NewUI/dist";
+                    // }
                 });
             });
 
@@ -366,10 +366,10 @@ namespace HumanitarianAssistance.WebApi
                     {
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-                    else
-                    {
-                        spa.Options.SourcePath = "OldUI/dist";
-                    }
+                    // else
+                    // {
+                    //     spa.Options.SourcePath = "OldUI/dist";
+                    // }
 
                 });
             });
