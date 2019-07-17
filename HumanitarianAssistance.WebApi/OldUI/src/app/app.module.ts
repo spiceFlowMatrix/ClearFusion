@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
-import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
@@ -34,7 +33,6 @@ import { AuthGuard } from './auths/authentications';
       secondaryColour: '#000',
       tertiaryColour: '#a129'
     }),
-    NgIdleKeepaliveModule.forRoot()
     // NgxPermissionsModule.forRoot()
   ],
   providers: [

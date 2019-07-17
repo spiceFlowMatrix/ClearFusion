@@ -7,18 +7,23 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
     <!--<SpaRoot>NewUI\</SpaRoot>-->
-    
+
     <SpaRootNewUI>NewUI\</SpaRootNewUI>
     <SpaRootOldUI>OldUI\</SpaRootOldUI>
-    <!--<SpaRootClientApp>ClientApp\</SpaRootClientApp>-->
-    
-    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <!--<SpaRootOldUI>ClientApp\</SpaRootOldUI>-->
+
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRootNewUI)node_modules\**</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRootOldUI)node_modules\**</DefaultItemExcludes>
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
-  <!--swagger doc-->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
+    <EnvironmentName>Development</EnvironmentName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' != '' AND '$(Configuration)' != 'Debug' ">
+    <EnvironmentName>Production</EnvironmentName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,15 +37,14 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRootNewUI)**" />
     <None Include="$(SpaRootNewUI)**" Exclude="$(SpaRootNewUI)node_modules\**" />
-    
-    
+
+
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRootOldUI)**" />
     <None Include="$(SpaRootOldUI)**" Exclude="$(SpaRootOldUI)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\HumanitarianAssistance.Entities\HumanitarianAssistance.ViewModels.csproj" />
     <ProjectReference Include="..\HumanitarianAssistance.Service\HumanitarianAssistance.Service.csproj" />
   </ItemGroup>
@@ -50,7 +54,7 @@
     <Folder Include="OldUI\" />
   </ItemGroup>
 
-  
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRootNewUI)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
@@ -60,8 +64,8 @@
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
     <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm install" />
   </Target>
-  
-    
+
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRootOldUI)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
@@ -71,8 +75,8 @@
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm install" />
   </Target>
-  
-  
+
+
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
@@ -89,12 +93,11 @@
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
-  
 
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm install" />
-    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng npm run build -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
-    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm run build -- --prod" />
+    <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
