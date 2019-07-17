@@ -11,7 +11,7 @@ import {
   CurrencyModel,
   securityConsiderationMultiSelectModel,
   ProvinceMultiSelectModel,
-  DistrictMultiSelectModel
+  DistrictMultiSelectModel,
 } from './../models/project-details.model';
 import { Validators } from '@angular/forms';
 import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
@@ -140,6 +140,7 @@ export class ProgramAreaSectorComponent implements OnInit {
   GenderConsiderationName: string;
 
   ProvinceSelectionList: SelectItem[];
+  CountrySelectionList: SelectItem[];
   SecurityConsiderationList: SelectItem[];
   securityConsiderationMultiselect: securityConsiderationMultiSelectModel;
   provinceMultiSelectModel: ProvinceMultiSelectModel;
@@ -152,6 +153,7 @@ export class ProgramAreaSectorComponent implements OnInit {
   //#region flag
   provinceSelectedFlag = true;
   provinceDistrictFlag = false;
+  countryDistrictFlag = false;
   programListFlag = false;
   areaListFlag = false;
   sectorListFlag = false;
@@ -194,7 +196,6 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.GetAllProgramList();
     this.GetAllAreaList();
     this.GetAllSectorList();
-
     this.getAllProvinceList();
     this.GetAllCurrency();
     this.GetAllStrengthConsiderationDetails();
@@ -259,7 +260,6 @@ export class ProgramAreaSectorComponent implements OnInit {
       ProjectId: null
     };
   }
-
   initProvinceMultiSelectModel() {
     this.provinceMultiSelectModel = {
       ProvinceMultiSelectId: null,
@@ -490,13 +490,11 @@ export class ProgramAreaSectorComponent implements OnInit {
               this.programListFlag = false;
             }
           );
-      }
-      else {
+      } else {
         this.programListFlag = false;
         this.toastr.warning('Please check Program name');
       }
-    }
-    else {
+    } else {
       this.toastr.warning('Please add new Program');
       this.programListFlag = false;
     }
