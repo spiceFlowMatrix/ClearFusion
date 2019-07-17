@@ -308,7 +308,7 @@ namespace HumanitarianAssistance.WebApi
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            //app.UseCookiePolicy();
+            app.UseCookiePolicy();
             app.UseCors(DefaultCorsPolicyName);
             app.UseAuthentication();
 
@@ -352,6 +352,7 @@ namespace HumanitarianAssistance.WebApi
                     {
                         spa.Options.SourcePath = "NewUI";
                     }
+
                 });
             });
 
@@ -366,11 +367,11 @@ namespace HumanitarianAssistance.WebApi
                     {
                         spa.UseAngularCliServer(npmScript: "start");
                     }
+
                     else
                     {
                         spa.Options.SourcePath = "OldUI";
                     }
-
                 });
             });
 
