@@ -299,7 +299,7 @@ namespace HumanitarianAssistance.WebApi
                 app.UseDeveloperExceptionPage();
             }
             else
-            { 
+            {
 
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -357,36 +357,77 @@ namespace HumanitarianAssistance.WebApi
             //     });
             // });
 
-            app.Map("/oldui", oldui =>
+
+
+
+
+
+            app.Map("/oldui", appLevel1 =>
             {
-                oldui.UseSpaStaticFiles(new StaticFileOptions
-                {
-                    RequestPath = "/OldUI/dist"
-                });
-                oldui.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "OldUI";
-                    //spa.Options.DefaultPage = "index.html";
-                    //spa.Options.DefaultPageStaticFileOptions =";
+                StaticFileOptions options = new StaticFileOptions();
+                options.FileProvider = new PhysicalFileProvider("/OldUI/dist");
 
-                    spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
-                    {
-                        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "OldUI"))
-                    };
-                    spa.Options.SourcePath = "OldUI";
 
+                appLevel1.UseSpaStaticFiles(options);
+                appLevel1.UseMiddleware<SPAAuthenticationMiddleware>();
+                appLevel1.UseSpa(spa =>
+                {
                     if (env.IsDevelopment())
                     {
-                        spa.UseAngularCliServer(npmScript: "start");
+                        spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                     }
                     else
                     {
-                        // spa.Options.SourcePath = "OldUI/dist";
+                        spa.Options.DefaultPageStaticFileOptions = options; // THIS IS IMPORTANT LINE
                     }
-
                 });
             });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // app.Map("/oldui", oldui =>
+            // {
+            //     // oldui.UseSpaStaticFiles(new StaticFileOptions
+            //     // {
+            //     //     RequestPath = "/OldUI/dist"
+            //     // });
+            //     oldui.UseSpa(spa =>
+            //     {
+            //         spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+            //         spa.Options.SourcePath = "OldUI";
+            //         //spa.Options.DefaultPage = "index.html";
+            //         //spa.Options.DefaultPageStaticFileOptions =";
+
+            //         spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
+            //         {
+            //             FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "OldUI"))
+            //         };
+            //         spa.Options.SourcePath = "OldUI";
+
+            //         if (env.IsDevelopment())
+            //         {
+            //             spa.UseAngularCliServer(npmScript: "start");
+            //         }
+            //         else
+            //         {
+            //             // spa.Options.SourcePath = "OldUI/dist";
+            //         }
+
+            //     });
+            // });
 
             //   app.UseSpa(spa =>
             //     {
@@ -404,7 +445,7 @@ namespace HumanitarianAssistance.WebApi
 
             //     });
 
-            
+
 
         }
 
