@@ -371,7 +371,24 @@ namespace HumanitarianAssistance.WebApi
                     {
                         spa.Options.SourcePath = "OldUI";
                     }
+                });
+            });
 
+            app.Map("/clientapp", client =>
+            {
+                client.UseSpa(spa =>
+                {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+
+                    if (env.IsDevelopment())
+                    {
+                        spa.Options.SourcePath = "ClientApp";
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+                    else
+                    {
+                        spa.Options.SourcePath = "ClientApp";
+                    }
                 });
             });
 

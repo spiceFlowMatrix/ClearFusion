@@ -9,8 +9,8 @@
     <!--<SpaRoot>NewUI\</SpaRoot>-->
 
     <SpaRootNewUI>NewUI\</SpaRootNewUI>
-
     <SpaRootOldUI>OldUI\</SpaRootOldUI>
+
     <!--<SpaRootOldUI>ClientApp\</SpaRootOldUI>-->
 
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRootOldUI)node_modules\**</DefaultItemExcludes>
