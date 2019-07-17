@@ -308,7 +308,7 @@ namespace HumanitarianAssistance.WebApi
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            //app.UseSpaStaticFiles();
 
             app.UseCookiePolicy();
             app.UseCors(DefaultCorsPolicyName);
@@ -362,26 +362,25 @@ namespace HumanitarianAssistance.WebApi
 
 
 
-            app.Map("/oldui", appLevel1 =>
-            {
-                StaticFileOptions options = new StaticFileOptions();
-                options.FileProvider = new PhysicalFileProvider("/OldUI/dist");
+            //app.Map("/oldui", appLevel1 =>
+            //{
+            //    StaticFileOptions options = new StaticFileOptions();
+            //    options.FileProvider = new PhysicalFileProvider("/OldUI/dist");
 
 
-                appLevel1.UseSpaStaticFiles(options);
-                appLevel1.UseMiddleware<SPAAuthenticationMiddleware>();
-                appLevel1.UseSpa(spa =>
-                {
-                    if (env.IsDevelopment())
-                    {
-                        spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-                    }
-                    else
-                    {
-                        spa.Options.DefaultPageStaticFileOptions = options; // THIS IS IMPORTANT LINE
-                    }
-                });
-            });
+            //    appLevel1.UseSpaStaticFiles(options);
+            //    appLevel1.UseSpa(spa =>
+            //    {
+            //        if (env.IsDevelopment())
+            //        {
+            //            spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+            //        }
+            //        else
+            //        {
+            //            spa.Options.DefaultPageStaticFileOptions = options; // THIS IS IMPORTANT LINE
+            //        }
+            //    });
+            //});
 
 
 
@@ -445,6 +444,7 @@ namespace HumanitarianAssistance.WebApi
 
             //     });
 
+            
 
 
         }
