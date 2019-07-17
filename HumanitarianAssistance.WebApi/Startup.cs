@@ -343,7 +343,10 @@ namespace HumanitarianAssistance.WebApi
                 client.UseSpa(spa =>
                 {
                     spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-
+                    spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "NewUI"))
+                    };
                     if (env.IsDevelopment())
                     {
                         spa.Options.SourcePath = "NewUI";
@@ -361,15 +364,15 @@ namespace HumanitarianAssistance.WebApi
                 admin.UseSpa(spa =>
                 {
                     spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "OldUI"))
+                    };
                     spa.Options.SourcePath = "OldUI";
 
                     if (env.IsDevelopment())
                     {
                         spa.UseAngularCliServer(npmScript: "start");
-                    }
-                    else
-                    {
-                        spa.Options.SourcePath = "OldUI";
                     }
                 });
             });
