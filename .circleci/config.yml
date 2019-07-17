@@ -18,12 +18,12 @@ jobs:
       - run: dotnet --info
       - run: dotnet restore
       - run: dotnet clean
-      - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
-      - run: mkdir HumanitarianAssistance.WebApi/release/Documents
+      - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c testrelease -o release
+      - run: mkdir HumanitarianAssistance.WebApi/testrelease/Documents
       - persist_to_workspace:
           root: .
           paths: 
-            - HumanitarianAssistance.WebApi/release
+            - HumanitarianAssistance.WebApi/testrelease
             - Dockerfile
             - .dockerignore
   push-container:

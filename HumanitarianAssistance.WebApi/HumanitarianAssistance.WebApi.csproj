@@ -8,7 +8,7 @@
     <IsPackable>false</IsPackable>
     <!--<SpaRoot>NewUI\</SpaRoot>-->
 
-    <SpaRootNewUI>NewUI\</SpaRootNewUI>
+    <SpaRootNewUI>ClientApp\</SpaRootNewUI>
     <SpaRootOldUI>OldUI\</SpaRootOldUI>
     <!--<SpaRootOldUI>ClientApp\</SpaRootOldUI>-->
 
@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="NewUI\" />
+    <Folder Include="ClientApp\" />
     <Folder Include="OldUI\" />
   </ItemGroup>
 
