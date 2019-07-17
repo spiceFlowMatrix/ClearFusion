@@ -2626,21 +2626,21 @@ export class CriteriaEvaluationComponent implements OnInit {
       (this.productAndServiceForm.ServiceHealthAndNutrition === true
         ? criteriaEvaluationScores.servEducationHealthandNutrition_Yes
         : criteriaEvaluationScores.servEducationHealthandNutrition_No) +
-      (this.productAndServiceForm.RadioProduction === true
-        ? criteriaEvaluationScores.activityRadioProduction_Yes
-        : criteriaEvaluationScores.activityRadioProduction_No) +
-      (this.productAndServiceForm.TVProgram === true
-        ? criteriaEvaluationScores.activityTVprogram_Yes
-        : criteriaEvaluationScores.activityTVprogram_No) +
-      (this.productAndServiceForm.PrintedMedia === true
-        ? criteriaEvaluationScores.activityPrintedMedia_Yes
-        : criteriaEvaluationScores.activityPrintedMedia_No) +
-      (this.productAndServiceForm.RoundTable === true
-        ? criteriaEvaluationScores.activityRoundTables_Yes
-        : criteriaEvaluationScores.activityRoundTables_No) +
-      (this.productAndServiceForm.Others === true
-        ? criteriaEvaluationScores.activityOther_Yes
-        : criteriaEvaluationScores.activityOther_No) +
+      // (this.productAndServiceForm.RadioProduction === true
+      //   ? criteriaEvaluationScores.activityRadioProduction_Yes
+      //   : criteriaEvaluationScores.activityRadioProduction_No) +
+      // (this.productAndServiceForm.TVProgram === true
+      //   ? criteriaEvaluationScores.activityTVprogram_Yes
+      //   : criteriaEvaluationScores.activityTVprogram_No) +
+      // (this.productAndServiceForm.PrintedMedia === true
+      //   ? criteriaEvaluationScores.activityPrintedMedia_Yes
+      //   : criteriaEvaluationScores.activityPrintedMedia_No) +
+      // (this.productAndServiceForm.RoundTable === true
+      //   ? criteriaEvaluationScores.activityRoundTables_Yes
+      //   : criteriaEvaluationScores.activityRoundTables_No) +
+      // (this.productAndServiceForm.Others === true
+      //   ? criteriaEvaluationScores.activityOther_Yes
+      //   : criteriaEvaluationScores.activityOther_No) +
       (this.productAndServiceForm.TargetBenificaiaryWomen === true
         ? criteriaEvaluationScores.tagetbeneficiaryWomen_Yes
         : criteriaEvaluationScores.tagetbeneficiaryWomen_No) +
