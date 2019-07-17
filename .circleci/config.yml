@@ -25,7 +25,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: 
-            - HumanitarianAssistance.WebApi/testrelease
+            - HumanitarianAssistance.WebApi/releasefolder
             - Dockerfile
             - .dockerignore
   push-container:
