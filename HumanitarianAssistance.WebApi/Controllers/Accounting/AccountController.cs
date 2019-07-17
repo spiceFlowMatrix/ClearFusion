@@ -74,117 +74,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 
         }
 
-
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<object> AddUserInRole([FromBody] LoginViewModel model)
-        {
-            var user = await _userManager.FindByEmailAsync(model.UserName);
-            if (user != null)
-            {
-
-                await _userManager.AddToRoleAsync(user, "SuperAdmin");
-            }
-            return Ok("cxvxc");
-        }
-
-
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public string EmployeeList()
-        {
-            return "Product List ";
-        }
-
-
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<object> AddPermissions([FromBody] PermissionsModel model)
-        {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            if (user != null)
-            {
-                var id = user.Id;
-                model.CreatedById = id;
-                model.IsDeleted = false;
-                model.CreatedDate = DateTime.UtcNow;
-            }
-
-            APIResponse response = await _ipermissions.AddPermission(model);
-
-            return response;
-
-        }
-        [HttpPost]
-        //    [Authorize(AuthenticationSchemes=JwtBearerDefaults.AuthenticationScheme,Policy = "Trust")]
-        public async Task<object> AddUserClaim([FromBody]LoginViewModel model)
-        {
-            //var user=await _userManager.GetUserAsync(User);
-            var user = await _userManager.FindByEmailAsync(model.UserName);
-
-            if (user == null) return BadRequest("could not apply claim: invalid user name");
-            var result = await _userManager.CheckPasswordAsync(user, model.Password);
-            if (!result) return BadRequest("could not apply claim : invalid password");
-            var claimresult = await _userManager.AddClaimAsync(user, new Claim("OfficeCode", ""));
-            return Ok("Claim Created");
-            //AppUser user = new AppUser
-            //{
-
-            //  UserName=model.UserName,
-            //  FirstName = "naval",
-            //  Email=model.UserName,
-            //  LastName="bhatt"
-
-            //};
-            //if (ModelState.IsValid)
-            //{
-            //  var result = await _signInManager.PasswordSignInAsync(model.UserName,
-            //     model.Password, model.IsRememberMe,false);
-
-            //  if (result.Succeeded)
-            //  {
-            //    //if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
-            //    //{
-            //    //  return Redirect(model.ReturnUrl);
-            //    //}
-            //    //else
-            //    //{
-            //    //  return RedirectToAction("Index", "Home");
-            //    //}
-
-            //    //await _signInManager.SignInAsync(user, false);
-            //    //return await GenerateJwtToken(model.UserName, user);
-            //  }
-
-            //}
-
-        }
-
-        [HttpPost]
-        public async Task<bool> AddRole(string RoleName)
-        {
-
-            IdentityResult identityResult = null;
-
-            try
-            {
-                var roleExists = await _roleManager.FindByNameAsync(RoleName);
-
-                if (roleExists == null)
-                {
-                    var role = new IdentityRole();
-                    role.Name = RoleName;
-                    identityResult = await _roleManager.CreateAsync(role);
-                }
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-            }
-            return identityResult.Succeeded;
-        }
-
         [HttpPost]
         [AllowAnonymous]
         public async Task<object> Login([FromBody]LoginUserModel model)
@@ -468,6 +357,117 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<object> AddUserInRole([FromBody] LoginViewModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.UserName);
+            if (user != null)
+            {
+
+                await _userManager.AddToRoleAsync(user, "SuperAdmin");
+            }
+            return Ok("cxvxc");
+        }
+
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public string EmployeeList()
+        {
+            return "Product List ";
+        }
+
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<object> AddPermissions([FromBody] PermissionsModel model)
+        {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user != null)
+            {
+                var id = user.Id;
+                model.CreatedById = id;
+                model.IsDeleted = false;
+                model.CreatedDate = DateTime.UtcNow;
+            }
+
+            APIResponse response = await _ipermissions.AddPermission(model);
+
+            return response;
+
+        }
+        [HttpPost]
+        //    [Authorize(AuthenticationSchemes=JwtBearerDefaults.AuthenticationScheme,Policy = "Trust")]
+        public async Task<object> AddUserClaim([FromBody]LoginViewModel model)
+        {
+            //var user=await _userManager.GetUserAsync(User);
+            var user = await _userManager.FindByEmailAsync(model.UserName);
+
+            if (user == null) return BadRequest("could not apply claim: invalid user name");
+            var result = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (!result) return BadRequest("could not apply claim : invalid password");
+            var claimresult = await _userManager.AddClaimAsync(user, new Claim("OfficeCode", ""));
+            return Ok("Claim Created");
+            //AppUser user = new AppUser
+            //{
+
+            //  UserName=model.UserName,
+            //  FirstName = "naval",
+            //  Email=model.UserName,
+            //  LastName="bhatt"
+
+            //};
+            //if (ModelState.IsValid)
+            //{
+            //  var result = await _signInManager.PasswordSignInAsync(model.UserName,
+            //     model.Password, model.IsRememberMe,false);
+
+            //  if (result.Succeeded)
+            //  {
+            //    //if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+            //    //{
+            //    //  return Redirect(model.ReturnUrl);
+            //    //}
+            //    //else
+            //    //{
+            //    //  return RedirectToAction("Index", "Home");
+            //    //}
+
+            //    //await _signInManager.SignInAsync(user, false);
+            //    //return await GenerateJwtToken(model.UserName, user);
+            //  }
+
+            //}
+
+        }
+
+        [HttpPost]
+        public async Task<bool> AddRole(string RoleName)
+        {
+
+            IdentityResult identityResult = null;
+
+            try
+            {
+                var roleExists = await _roleManager.FindByNameAsync(RoleName);
+
+                if (roleExists == null)
+                {
+                    var role = new IdentityRole();
+                    role.Name = RoleName;
+                    identityResult = await _roleManager.CreateAsync(role);
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
+            return identityResult.Succeeded;
+        }
+
+
+        [HttpPost]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme )]
         public async Task<object> AddUsers([FromBody]UserDetailsModel users)
         {
@@ -610,7 +610,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             catch (Exception ex)
             {
                 response.StatusCode = 500;
-                response.Message = "There is server error "+ ex.Message;
+                response.Message = "There is server error " + ex.Message;
             }
             return response;
         }
@@ -715,14 +715,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 
         }
 
-        //[HttpGet]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //public async Task<object> GetAllVoucherDetails()
-        //{
-        //  APIResponse response = await _ivoucherDetail.GetAllVoucherDetails();
-        //  return response;
-        //}
-
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -748,53 +740,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             return response;
         }
 
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<object> AddVoucherDetail([FromBody] VoucherDetailModel model)
-        {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            if (user != null)
-            {
-                var id = user.Id;
-                model.CreatedById = id;
-                model.IsDeleted = false;
-                model.CreatedDate = DateTime.UtcNow;
-            }
-            APIResponse response = await _ivoucherDetail.AddVoucherDetail(model);
-            return response;
-        }
-
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<object> EditVoucherDetail([FromBody] VoucherDetailModel model)
-        {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            if (user != null)
-            {
-                var id = user.Id;
-                model.CreatedById = id;
-                model.IsDeleted = false;
-                model.CreatedDate = DateTime.UtcNow;
-            }
-            APIResponse response = await _ivoucherDetail.EditVoucherDetail(model);
-            return response;
-        }
-
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<object> DeleteVoucherDetail(int VoucherNo)
-        {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            string ModifiedById = "";
-            if (user != null)
-            {
-                ModifiedById = user.Id;
-            }
-            APIResponse response = await _ivoucherDetail.DeleteVoucherDetail(VoucherNo, ModifiedById);
-            return response;
-        }
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -820,107 +765,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             return response;
         }
 
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<object> AddVoucherTransactionDetail([FromBody] List<VoucherTransactionModel> model)
-        {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            string id = string.Empty;
-
-            if (user != null)
-            {
-                id = user.Id;
-            }
-            APIResponse response = await _ivoucherDetail.AddVoucherTransactionDetail(model, id);
-            return response;
-        }
-
-
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<object> EditVoucherTransactionDetail([FromBody] VoucherTransactionModel model)
-        {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            if (user != null)
-            {
-                var id = user.Id;
-                model.CreatedById = id;
-                model.IsDeleted = false;
-                model.CreatedDate = DateTime.UtcNow;
-            }
-            APIResponse response = await _ivoucherDetail.EditVoucherTransactionDetail(model);
-            return response;
-        }
-
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<APIResponse> DeleteVoucherTransactionDetail(int Id)
-        {
-            APIResponse response = null;
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                var userid = user.Id;
-                response = await _ivoucherDetail.DeleteVoucherTransactionDetail(Id, userid);
-            }
-            return response;
-        }
-
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<APIResponse> DeleteVoucherTransactions(int Id)
-        {
-            APIResponse response = null;
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                var userid = user.Id;
-                response = await _ivoucherDetail.DeleteVoucherTransactions(Id, userid);
-            }
-            return response;
-        }
-
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<APIResponse> AddNotesDetails([FromBody] NotesMasterModel model)
-        {
-            APIResponse respone = null;
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                model.CreatedById = user.Id;
-                model.CreatedDate = DateTime.UtcNow;
-                model.IsDeleted = false;
-                respone = await _ivoucherDetail.AddNotesDetails(model);
-            }
-            return respone;
-        }
-
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<APIResponse> EditNotesDetails([FromBody] NotesMasterModel model)
-        {
-            APIResponse response = null;
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                model.ModifiedById = user.Id;
-                model.ModifiedDate = DateTime.UtcNow;
-                model.IsDeleted = false;
-                response = await _ivoucherDetail.EditNotesDetails(model);
-            }
-            return response;
-        }
-
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<APIResponse> GetAllNotesDetails()
-        {
-            APIResponse response = await _ivoucherDetail.GetAllNotesDetails();
-            return response;
-        }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -930,54 +774,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             return response;
         }
 
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<APIResponse> AddCategoryPopulator([FromBody] CategoryPopulatorModel model)
-        {
-            APIResponse respone = null;
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                respone = await _ivoucherDetail.AddCategoryPopulator(model, user.Id);
-            }
-            return respone;
-        }
-
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<APIResponse> EditCategoryPopulator([FromBody] CategoryPopulatorModel model)
-        {
-            APIResponse response = null;
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                response = await _ivoucherDetail.EditCategoryPopulator(model, user.Id);
-            }
-            return response;
-        }
-
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<object> DeleteCategoryPopulator(int categoryPopulatorId)
-        {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            string ModifiedById = "";
-            if (user != null)
-            {
-                ModifiedById = user.Id;
-            }
-            APIResponse response = await _ivoucherDetail.DeleteCategoryPopulator(categoryPopulatorId, ModifiedById);
-            return response;
-        }
-
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<APIResponse> GetAllCategoryPopulator()
-        {
-            APIResponse response = await _ivoucherDetail.GetAllCategoryPopulator();
-            return response;
-        }
-
+    
+     
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<APIResponse> GetAllUserNotifications(string userid)
