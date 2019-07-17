@@ -354,6 +354,7 @@ namespace HumanitarianAssistance.WebApi
                     }
                     else
                     {
+                        spa.Options.DefaultPage = $"/NewUI/src/index.html";
                         spa.Options.SourcePath = "NewUI";
                     }
                 });
@@ -364,6 +365,7 @@ namespace HumanitarianAssistance.WebApi
                 admin.UseSpa(spa =>
                 {
                     spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+
                     spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
                     {
                         FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "OldUI"))
@@ -372,8 +374,11 @@ namespace HumanitarianAssistance.WebApi
 
                     if (env.IsDevelopment())
                     {
+                        spa.Options.SourcePath = "OldUI";
+                        // spa.Options.ExcludeUrls = new[] { "/sockjs-node" };
                         spa.UseAngularCliServer(npmScript: "start");
                     }
+
                 });
             });
 
@@ -383,15 +388,13 @@ namespace HumanitarianAssistance.WebApi
                 {
                     spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
 
-                    if (env.IsDevelopment())
-                    {
-                        spa.Options.SourcePath = "ClientApp";
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
                     else
                     {
-                        spa.Options.SourcePath = "ClientApp";
+                        spa.Options.DefaultPage = $"/OldUI/src/index.html";
+                        spa.Options.SourcePath = "OldUI";
                     }
+
+
                 });
             });
 
