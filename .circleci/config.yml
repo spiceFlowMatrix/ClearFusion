@@ -19,7 +19,7 @@ jobs:
 
       - run: dotnet restore
       - run: dotnet clean
-      - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj /p:Configuration=Release /p:EnvironmentName=Staging -o releasefolder
+      - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj /p:Configuration=Release /p:EnvironmentName=Production -o releasefolder
       - run: mkdir HumanitarianAssistance.WebApi/releasefolder/Documents
 
       - persist_to_workspace:
