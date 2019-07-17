@@ -299,7 +299,8 @@ namespace HumanitarianAssistance.WebApi
                 app.UseDeveloperExceptionPage();
             }
             else
-            {
+            { 
+
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
@@ -378,22 +379,6 @@ namespace HumanitarianAssistance.WebApi
                         // spa.Options.ExcludeUrls = new[] { "/sockjs-node" };
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-
-                });
-            });
-
-            app.Map("/clientapp", client =>
-            {
-                client.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-
-                    else
-                    {
-                        spa.Options.DefaultPage = $"/OldUI/src/index.html";
-                        spa.Options.SourcePath = "OldUI";
-                    }
-
 
                 });
             });
