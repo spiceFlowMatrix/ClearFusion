@@ -383,22 +383,6 @@ namespace HumanitarianAssistance.WebApi
                 });
             });
 
-            app.Map("/clientapp", client =>
-            {
-                client.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-
-                    else
-                    {
-                        spa.Options.DefaultPage = $"/OldUI/src/index.html";
-                        spa.Options.SourcePath = "OldUI";
-                    }
-
-
-                });
-            });
-
             // app.UseSpa(spa =>
             // {
             //     // To learn more about options for serving an Angular SPA from ASP.NET Core,
