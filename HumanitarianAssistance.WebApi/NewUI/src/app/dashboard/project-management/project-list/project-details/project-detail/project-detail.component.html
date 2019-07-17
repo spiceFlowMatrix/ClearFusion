@@ -2,7 +2,7 @@
     <mat-card [ngStyle]="scrollStyles">
       <div class="project-details mar_tp_20 bdr_btm pad_btm_25">
         <div class="row">
-          <div class="col-sm-7">
+          <div class="col-sm-6">
             <div class="form-group">
               <input
                 matInput
@@ -177,20 +177,20 @@
               </ng-template>
             </ng-template>
           </div>
-          <div class="col-sm-1">
-            <h4 class="main_heading">
+          <div class="col-sm-2">
               <mat-spinner
                 *ngIf="detailsLoaderFlag"
                 [diameter]="20"
               ></mat-spinner>
-              <a
-                mat-href
-                *ngIf="!detailsLoaderFlag"
-                (click)="openFormModal(0)"
-                matTooltip="Click here to fill other Project details"
-                ><i class="fa fa-cog black_icon pull-right"></i
-              ></a>
-            </h4>
+              <button
+              mat-raised-button
+              *ngIf="!detailsLoaderFlag"
+              color="accent"
+              class="main_heading"
+              (click)="openFormModal(0)"
+              matTooltip="Click here to fill other Project details">
+              Add Details
+            </button>
           </div>
         </div>
 

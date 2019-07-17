@@ -125,6 +125,32 @@
             </div>
             <br>
             <div class="row">
+              <div class="col-sm-12">
+                <mat-form-field>
+                  <mat-select class="example-full-width" placeholder="Select County"
+                    [(ngModel)]="countryMultiSelectModel.CountryId " (selectionChange)="
+                                   onCountryDetailsChange(
+                                  'countrySelction',
+                                  countryMultiSelectModel.CountryId
+                                )
+                              " name="countrySelction"
+                    [disabled]="CountrySelectionList.length<0 || !isEditingAllowed" multiple>
+                    <mat-option *ngFor="let item of CountrySelectionList" [value]="item.value">{{ item.label }}
+                    </mat-option>
+                  </mat-select>
+
+                  <mat-spinner class="center_loader custom_load" *ngIf="countryDistrictFlag;" diameter="20">
+                  </mat-spinner>
+                </mat-form-field>
+
+
+              </div>
+            </div>
+            <br>
+
+
+
+            <div class="row">
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select class="example-full-width" placeholder="Select Province"
@@ -259,15 +285,14 @@
             <div class="col-sm-6">
               <div class="form-group  ">
                 <mat-form-field class="example-full-width">
-                  <input matInput #ProjectGoalID type="text" [(ngModel)]="projectotherDetail.projectGoal"
+                  <textarea rows="4" matInput #ProjectGoalID type="text"  [(ngModel)]="projectotherDetail.projectGoal"
                     maxlength="150" placeholder="Project Goal" name="projectGoal" [formControl]="projectGoal"
                     (focusout)="
                         onProjectotherDetailsChange(
                           'projectGoal',
                           ProjectGoalID.value
                         )
-                      " [disableControl]="!isEditingAllowed" />
-
+                      " [disableControl]="!isEditingAllowed"></textarea>
                   <mat-error *ngIf="projectGoal.hasError('required')">
                     Project Goal is <strong>required</strong>
                   </mat-error>
@@ -277,14 +302,14 @@
             <div class="col-sm-6">
               <div class="form-group ">
                 <mat-form-field class="example-full-width">
-                  <input matInput #ProjectObjectiveID type="text" [(ngModel)]="projectotherDetail.projectObjective"
+                  <textarea  rows="4" matInput #ProjectObjectiveID  type="text" [(ngModel)]="projectotherDetail.projectObjective"
                     maxlength="150" placeholder="Project Objective" name="projectObjective"
                     [formControl]="projectObjective" (focusout)="
                       onProjectotherDetailsChange(
                         'projectObjective',
                         ProjectObjectiveID.value
                       )
-                    " [disableControl]="!isEditingAllowed" />
+                    " [disableControl]="!isEditingAllowed" ></textarea>
 
                   <mat-error *ngIf="projectObjective.hasError('required')">
                     Project Objective is <strong>required</strong>
@@ -486,7 +511,7 @@
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let item of GenderConsiderationvaluelist" [value]="item.GenderConsiderationName"
                   (onSelectionChange)="
-                    onProjectotherDetailsChange(
+              onProjectotherDetailsChange(
                       'genderConsideration',
                       item.GenderConsiderationName
                     )
