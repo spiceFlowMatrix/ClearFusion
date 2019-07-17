@@ -7,16 +7,16 @@ export class AppSettingsService {
 
 
     public getBaseUrl(): string {
-       // return this.getApiURL(this.baseUrl) + 'api/';
-        return this.baseUrl + 'api/';
+        return this.getApiURL(this.baseUrl) + 'api/';
+        //return this.baseUrl + 'api/';
     }
     public getDocUrl(): string {
-        // return this.getApiURL(this.baseUrl) + 'Docs/';
-        return this.baseUrl + 'Docs/';
+         return this.getApiURL(this.baseUrl) + 'Docs/';
+        //return this.baseUrl + 'Docs/';
     }
     public getHubUrl(): string {
-        // return this.getApiURL(this.baseUrl) + 'chathub/';
-        return this.baseUrl + 'chathub/';
+         return this.getApiURL(this.baseUrl) + 'chathub/';
+        //return this.baseUrl + 'chathub/';
     }
 
     private getApiURL(baseURL): string {
