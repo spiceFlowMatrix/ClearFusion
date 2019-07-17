@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -7,6 +7,9 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
     <!--<SpaRoot>NewUI\</SpaRoot>-->
+
+    <SpaRootNewUI>ClientApp\</SpaRootNewUI>
+
     <SpaRootOldUI>OldUI\</SpaRootOldUI>
     <!--<SpaRootOldUI>ClientApp\</SpaRootOldUI>-->
 
@@ -42,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="NewUI\" />
+    <Folder Include="ClientApp\" />
     <Folder Include="OldUI\" />
   </ItemGroup>
 
