@@ -7,7 +7,7 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
     <!--<SpaRoot>NewUI\</SpaRoot>-->
-    <SpaRootOldUI>OldUI\</SpaRootOldUI>
+    <SpaRootOldUI>ClientApp\</SpaRootOldUI>
     <!--<SpaRootOldUI>ClientApp\</SpaRootOldUI>-->
 
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRootOldUI)node_modules\**</DefaultItemExcludes>
@@ -42,8 +42,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="NewUI\" />
-    <Folder Include="OldUI\" />
+    <!--<Folder Include="NewUI\" />-->
+    <Folder Include="ClientApp\" />
   </ItemGroup>
 
 
