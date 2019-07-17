@@ -333,10 +333,10 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            //app.UseSpaStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
-            //});
+            app.UseSpaStaticFiles(new StaticFileOptions
+            {
+               FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
+            });
 
             app.Map("/newui", client =>
             {
