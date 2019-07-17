@@ -255,8 +255,12 @@ namespace HumanitarianAssistance.WebApi
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "NewUI/dist";
+                configuration.RootPath = Path.Combine(Directory.GetCurrentDirectory(), "Release");
             });
+
+            Console.WriteLine(Directory.GetCurrentDirectory());
+            Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory()));
+            Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory(), "Release"));
 
 
 
@@ -333,38 +337,39 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpaStaticFiles(new StaticFileOptions
-            {
-               FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
-            });
+          
+            // app.UseSpaStaticFiles(new StaticFileOptions
+            // {
+            //     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Release"))
+            // });
 
             app.Map("/newui", client =>
             {
-               client.UseSpa(spa =>
-               {
-                   spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                   spa.Options.SourcePath = "NewUI";
+                client.UseSpa(spa =>
+                {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.SourcePath = "NewUI";
 
-                   if (env.IsDevelopment())
-                   {
-                       spa.UseAngularCliServer(npmScript: "start");
-                   }
-               });
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+                });
             });
 
             app.Map("/oldui", admin =>
             {
-               admin.UseSpa(spa =>
-               {
-                   spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                   spa.Options.SourcePath = "OldUI";
+                admin.UseSpa(spa =>
+                {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.SourcePath = "OldUI";
 
-                   if (env.IsDevelopment())
-                   {
-                       spa.UseAngularCliServer(npmScript: "start");
-                   }
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
 
-               });
+                });
             });
 
             // app.UseSpa(spa =>
@@ -440,7 +445,7 @@ namespace HumanitarianAssistance.WebApi
             //             });
             //         });
 
-              }
+        }
 
         //2011
         private static async Task UpdateDatabase(IApplicationBuilder app, UserManager<AppUser> um, RoleManager<IdentityRole> rm, ILogger<DbInitializer> logger)
