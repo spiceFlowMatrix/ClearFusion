@@ -138,6 +138,7 @@ export class GLOBAL {
   // public static API_Project_AddApprovalProjectDetail = 'Project/AddApprovalProjectDetail';
   public static API_Project_WinApprovalProjectDetail = 'Project/WinApprovalProjectDetail';
   public static API_Project_GetAllProvinceDetails = 'Project/GetAllProvinceDetails';
+  public static API_Project_GetAllCountryDetails = 'Project/GetAllCountryDetails';
   public static API_Project_GetAllStrengthConsiderationDetails = 'Project/GetAllStrengthConsiderationDetails';
   public static API_Project_GetAllGenderConsiderationDetails = 'Project/GetAllGenderConsiderationDetails';
   public static API_Project_GetAllSecurityDetails = 'Project/GetAllSecurityDetails';

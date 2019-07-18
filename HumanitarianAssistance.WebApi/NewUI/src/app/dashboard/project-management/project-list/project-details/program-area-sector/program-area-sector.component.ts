@@ -138,9 +138,8 @@ export class ProgramAreaSectorComponent implements OnInit {
   OfficeName: string;
   OtherProjectList: any[];
   GenderConsiderationName: string;
-
-  ProvinceSelectionList: SelectItem[];
   CountrySelectionList: SelectItem[];
+  ProvinceSelectionList: SelectItem[];
   SecurityConsiderationList: SelectItem[];
   securityConsiderationMultiselect: securityConsiderationMultiSelectModel;
   provinceMultiSelectModel: ProvinceMultiSelectModel;
@@ -876,6 +875,36 @@ export class ProgramAreaSectorComponent implements OnInit {
         }
       );
   }
+
+  getAllCountryList() {
+    // this.Province = [];
+    this.countryDistrictFlag = true;
+    this.CountrySelectionList = [];
+    this.projectListService
+      .getAllCountryList(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllCountryDetails
+      )
+      .subscribe(
+        data => {
+          if (data.StatusCode === 200 && data != null) {
+            if (data.data.ProvinceDetailsList != null) {
+              data.data.ProvinceDetailsList.forEach(element => {
+                this.CountrySelectionList.push({
+                  value: element.CountryId,
+                  label: element.CountryName
+                });
+              });
+              // this.GetOtherProjectDetailById(this.ProjectId);
+            }
+            this.countryDistrictFlag = false;
+          }
+        },
+        error => {
+          this.countryDistrictFlag = false;
+        }
+      );
+  }
+
 
   //#region displaySelectedSector from sector List selection
   displaySelectedSector(obj?: SectorModel): string | undefined {

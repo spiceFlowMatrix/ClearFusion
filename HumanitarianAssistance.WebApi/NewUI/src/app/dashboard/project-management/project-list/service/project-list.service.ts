@@ -266,6 +266,11 @@ export class ProjectListService {
     return this.globalService.getList(url);
   }
   //#endregion
+    //#region "getAllProvinceList"
+    getAllCountryList(url: string) {
+      return this.globalService.getList(url);
+    }
+    //#endregion
   //#region "GetAllStrengthConsiderationDetails"
   GetAllStrengthConsiderationDetails(url: string) {
     return this.globalService.getList(url);
