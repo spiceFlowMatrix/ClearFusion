@@ -11,6 +11,7 @@
       "ng2-bs3-modal": "node_modules/ng2-bs3-modal",
       "root": "src",
       "outDir": "dist",
+      "baseHref": "/oldui",
       "assets": [
         "assets",
         "favicon.ico"

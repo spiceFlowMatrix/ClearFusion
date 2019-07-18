@@ -253,11 +253,11 @@ namespace HumanitarianAssistance.WebApi
             services.AddSignalR();
 
             // In production, the Angular files will be served from this directory
-            //services.AddSpaStaticFiles(configuration =>
-            //{
-            //    configuration.RootPath = "OldUI/dist";
-            //    // configuration.RootPath = Directory.GetCurrentDirectory();
-            //});
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "OldUI/dist";
+                // configuration.RootPath = Directory.GetCurrentDirectory();
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -332,6 +332,29 @@ namespace HumanitarianAssistance.WebApi
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
+
+
+
+
+            app.Map("/oldui", frontendApp =>
+            {
+                frontendApp.UseSpaStaticFiles(new StaticFileOptions
+                {
+                    RequestPath = "/oldui"
+                });
+                frontendApp.UseSpa(spa =>
+                {
+                    //spa.Options.DefaultPageStaticFileOptions.RequestPath = ??;
+                    spa.Options.SourcePath = "/OldUI";
+                });
+            });
+
+
+
+
+
+
+
 
 
             // app.UseSpaStaticFiles(new StaticFileOptions
@@ -444,7 +467,7 @@ namespace HumanitarianAssistance.WebApi
 
             //     });
 
-            
+
 
 
         }
