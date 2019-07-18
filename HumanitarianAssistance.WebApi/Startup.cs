@@ -554,7 +554,7 @@ namespace HumanitarianAssistance.WebApi
             app.UseSpa(spa =>
               {
                   spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                  spa.Options.SourcePath = "OldUI";
+                //   spa.Options.SourcePath = "OldUI";
 
                   if (env.IsDevelopment())
                   {
