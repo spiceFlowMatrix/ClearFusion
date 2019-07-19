@@ -7,22 +7,21 @@ export class AppSettingsService {
 
 
     public getBaseUrl(): string {
-       // return this.getApiURL(this.baseUrl) + 'api/';
-        return this.baseUrl + 'api/';
+        return '/api/';
+        // return this.baseUrl + 'api/';
     }
     public getDocUrl(): string {
-        // return this.getApiURL(this.baseUrl) + 'Docs/';
-        return this.baseUrl + 'Docs/';
+        return '/Docs/';
+        // return this.baseUrl + 'Docs/';
     }
     public getHubUrl(): string {
-        // return this.getApiURL(this.baseUrl) + 'chathub/';
-        return this.baseUrl+ 'chathub/';
+        return '/chathub/';
+        // return this.baseUrl+ 'chathub/';
     }
 
-    private getApiURL(baseURL): string {
-
-        return (baseURL.substring(baseURL.lastIndexOf('/')))
-    }
+    // private getApiURL(baseURL): string {
+    //     return (baseURL.substring(baseURL.lastIndexOf('/')))
+    // }
 }
 
 export const SETTINGS_PROVIDERS = [

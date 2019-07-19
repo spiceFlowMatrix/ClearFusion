@@ -284,8 +284,8 @@ namespace HumanitarianAssistance.WebApi
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                // configuration.RootPath = "OldUI/dist";
-                configuration.RootPath = "ClientApp";
+                configuration.RootPath = "OldUI/dist";
+                // configuration.RootPath = "ClientApp";
                 // configuration.RootPath = Directory.GetCurrentDirectory();
             });
 
@@ -343,28 +343,51 @@ namespace HumanitarianAssistance.WebApi
 
 
 
+            app.Map("/newui", appSearch => appSearch.UseSpa(spa =>
+            {
+                spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                spa.Options.SourcePath = "NewUI";
+                // spa.Options.DefaultPage = "/newui/index.html";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+
+            }));
+
+
             app.Map("/oldui", appSearch => appSearch.UseSpa(spa =>
             {
                 spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                spa.Options.SourcePath = "ClientApp";
-                spa.Options.DefaultPage = "/oldui/index.html";
+                spa.Options.SourcePath = "OldUI";
+                // spa.Options.DefaultPage = "/oldui/index.html";
 
-                // if (env.IsDevelopment())
-                // {
-                //     spa.UseAngularCliServer(npmScript: "start");
-                // }
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start"); //  --servePath / --baseHref /newui/ 
+                }
+
             }));
 
             app.Map("/clientapp", appSearch => appSearch.UseSpa(spa =>
             {
                 spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
                 spa.Options.SourcePath = "ClientApp";
-                spa.Options.DefaultPage = "/clientapp/index.html";
+                // spa.Options.DefaultPage = "/clientapp/index.html";
 
-                // if (env.IsDevelopment())
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start"); //  --servePath / --baseHref /clientapp/
+                }
+
+                // spa.ApplicationBuilder.UseSpaStaticFiles
+
+                //    Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory(), "ClientApp", "clientapp"));
+                // spa.ApplicationBuilder.UseSpaStaticFiles(new StaticFileOptions
                 // {
-                //     spa.UseAngularCliServer(npmScript: "start");
-                // }
+                //     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "ClientApp", "clientapp"))
+                // });
             }));
 
 
