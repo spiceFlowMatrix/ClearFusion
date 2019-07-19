@@ -1519,15 +1519,35 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+        public APIResponse GetCountryMultiSelectByProjectId(long ProjectId)  
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var CountryDetailsList = _uow.GetDbContext().CountryDetails.Where(x => x.IsDeleted == false).ToList();
+                //var NewList = CountryDetailsList.Where(x => CountryId.Any(y => x.CountryId == y)).ToList();
+
+                response.data.CountryDetailsList = CountryDetailsList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
+        }
 
         public APIResponse GetProvinceMultiSelectByCountryId(int[] CountryId)   
         {
             APIResponse response = new APIResponse();
             try
             {
-                var ProvinceDetailsList = _uow.GetDbContext().ProvinceDetails.Where(x => x.IsDeleted == false).ToList();
+                // var ProvinceDetailsList = _uow.GetDbContext().ProvinceDetails.Where(x => x.IsDeleted == false).ToList();
+                List<int> SelectedProvinceList = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).Select(x => x.ProvinceId).ToList();
                 var NewList = ProvinceDetailsList.Where(x => CountryId.Any(y => x.CountryId == y)).ToList();
-                //List<int> SelectedProvinceList = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).Select(x => x.ProvinceId).ToList();
+                
 
                 //details.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
                 //List<int> selectedProvinceList = NewList.Select(x => x.ProvinceId).ToList();
@@ -1603,12 +1623,6 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-
-
-
-
-
-
         public APIResponse AddEditCountryMultiSelectDetail(CountryMultiSelectModel model, string UserId)
         {
             APIResponse response = new APIResponse();
@@ -1675,24 +1689,6 @@ namespace HumanitarianAssistance.Service.Classes
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
         public APIResponse GetDistrictMultiSelectByProjectId(long ProjectId)
         {
             APIResponse response = new APIResponse();
@@ -1714,6 +1710,8 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+
         public APIResponse AddEditDistrictMultiSelectDetail(DistrictMultiSelectModel model, string UserId)
         {
             APIResponse response = new APIResponse();

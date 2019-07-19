@@ -211,7 +211,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.initProjectOtherDetail();
     this.initMultiselctSecurityModel();
     this.GetSecurityConsiderationByProjectId(this.ProjectId);
-   // this.GetCountryByProjectId(this.ProjectId);
+    this.GetCountryByProjectId(this.ProjectId);
     this.initCountryMultiSelectModel();
     this.initProvinceMultiSelectModel();
     this.initDistrictMultiSelectModel();
@@ -955,6 +955,30 @@ export class ProgramAreaSectorComponent implements OnInit {
         );
     }
   }
+
+  GetCountryByProjectId(ProjectId: number) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
+      this.projectListService
+        .GetOtherSecurityConsiByProjectId(
+          this.appurl.getApiUrl() + GLOBAL.API_GetCountryByProjectId,
+          ProjectId
+        )
+        .subscribe(data => {
+          if (data != null) {
+            if (data.data.ProvinceMultiSelectById != null) {
+              this.provinceMultiSelectModel.ProvinceId =
+                data.data.ProvinceMultiSelectById;
+              this.GetAllDistrictvalueByProvinceId(
+                this.provinceMultiSelectModel.ProvinceId
+              );
+              // this.GetDistrictByProjectId(this.ProjectId);
+            }
+          }
+        });
+    }
+  }
+
+
 
   GetProvinceByCountryId(model: any) {
     const id = model;

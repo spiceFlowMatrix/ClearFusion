@@ -274,6 +274,7 @@ export class GLOBAL {
   public static API_Project_AddEditMultiSelectProvince = 'Project/AddEditProvinceMultiselect';
   public static API_Project_AddEditMultiSelectCountry = 'Project/AddEditCountryMultiselect';
   public static API_GetProvinceByCountryId = 'Project/GetProvinceMultiSelectByCountryId';
+  public static API_GetCountryByProjectId = 'Project/GetCountryMultiSelectByProjectId';
 
   public static API_GetDistrictByProjectId = 'Project/GetDistrictMultiSelectByProjectId';
   public static API_Project_AddEditMultiSelectDistrict = 'Project/AddEditDistrictMultiselect';
