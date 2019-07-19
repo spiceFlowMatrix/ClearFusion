@@ -5,6 +5,7 @@
     <!-- <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch> -->
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <AspNetCoreHostingModelV2>InProcess</AspNetCoreHostingModelV2>
     <IsPackable>false</IsPackable>
 
     <SpaRootOldUI>OldUI\</SpaRootOldUI>
