@@ -76,12 +76,12 @@ namespace HumanitarianAssistance.WebApi
             //get and set environment variable at run time
             string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
             string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
-            
+
             DefaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
             string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
             string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
-            
+
             string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
 
             Console.WriteLine("Connection string: {0}\n", connectionString);
@@ -405,45 +405,6 @@ namespace HumanitarianAssistance.WebApi
                 }
             });
 
-            // for each angular client we want to host. 
-            app.Map(new PathString("/clientapp"), client =>
-            {
-                // Each map gets its own physical path
-                // for it to map the static files to. 
-                StaticFileOptions clientappDist = new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(
-                            Path.Combine(
-                                Directory.GetCurrentDirectory(),
-                                @"ClientApp\dist"
-                            )
-                        )
-                };
-
-                // Each map its own static files otherwise
-                // it will only ever serve index.html no matter the filename 
-                client.UseSpaStaticFiles(clientappDist);
-
-                // Each map will call its own UseSpa where
-                // we give its own sourcepath
-                client.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "ClientApp";
-                    spa.Options.DefaultPageStaticFileOptions = clientappDist;
-                });
-
-                if (env.IsDevelopment())
-                {
-                    app.UseSpa(spa =>
-                    {
-                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                        spa.Options.SourcePath = "ClientApp";
-                        // this is calling the start found in package.json
-                        spa.UseAngularCliServer(npmScript: "start");
-                    });
-                }
-            });
         }
 
         //2011
