@@ -125,8 +125,8 @@
 
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm install" />
-    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm run build" />
-    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm run build:ssr" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm run build -- --prod" />
+    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
@@ -141,8 +141,8 @@
 
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRootClientApp)" Command="npm install" />
-    <Exec WorkingDirectory="$(SpaRootClientApp)" Command="npm run build" />
-    <Exec WorkingDirectory="$(SpaRootClientApp)" Command="npm run build:ssr" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+    <Exec WorkingDirectory="$(SpaRootClientApp)" Command="npm run build -- --prod" />
+    <Exec WorkingDirectory="$(SpaRootClientApp)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
