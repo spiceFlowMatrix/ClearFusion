@@ -16,14 +16,16 @@ jobs:
       
       - checkout
       - run: dotnet --info
+
+      - run: dotnet restore
       - run: dotnet clean
-      - run: dotnet restore HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj
-      - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj -c Release -o release
-      - run: mkdir HumanitarianAssistance.WebApi/release/Documents
+      - run: dotnet publish HumanitarianAssistance.WebApi/HumanitarianAssistance.WebApi.csproj /p:Configuration=Release /p:EnvironmentName=Production -o releasefolder
+      - run: mkdir HumanitarianAssistance.WebApi/releasefolder/Documents
+
       - persist_to_workspace:
           root: .
           paths: 
-            - HumanitarianAssistance.WebApi/release
+            - HumanitarianAssistance.WebApi/releasefolder
             - Dockerfile
             - .dockerignore
   push-container:
@@ -204,3 +206,4 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
+  
