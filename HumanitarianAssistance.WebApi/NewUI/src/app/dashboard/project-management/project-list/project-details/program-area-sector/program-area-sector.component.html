@@ -124,24 +124,22 @@
               </div>
             </div>
             <br>
-
-
             <div class="row">
               <div class="col-sm-6">
                 <mat-form-field>
-                  <mat-select class="example-full-width" placeholder="Select Province"
-                    [(ngModel)]="provinceMultiSelectModel.ProvinceId " (selectionChange)="
-                                   onProvinceDetailsChange(
-                                  'provinceSelction',
-                                  provinceMultiSelectModel.ProvinceId
+                  <mat-select class="example-full-width" placeholder="Select Country"
+                    [(ngModel)]="countryMultiSelectModel.CountryId " (selectionChange)="
+                                   onCountryDetailsChange(
+                                  'countrySelction',
+                                  countryMultiSelectModel.CountryId
                                 )
-                              " name="provinceSelction"
-                    [disabled]="ProvinceSelectionList.length<0 || !isEditingAllowed" multiple>
-                    <mat-option *ngFor="let item of ProvinceSelectionList" [value]="item.value">{{ item.label }}
+                              " name="countrySelction"
+                              [disabled]="CountrySelectionList.length<0 || !isEditingAllowed" multiple>
+                    <mat-option *ngFor="let item of CountrySelectionList" [value]="item.value">{{ item.label }}
                     </mat-option>
                   </mat-select>
 
-                  <mat-spinner class="center_loader custom_load" *ngIf="provinceDistrictFlag;" diameter="20">
+                  <mat-spinner class="center_loader custom_load" *ngIf="countryDistrictFlag;" diameter="20">
                   </mat-spinner>
                 </mat-form-field>
 
@@ -153,7 +151,7 @@
 
 
             <div class="row">
-              <div class="col-sm-6">
+              <!-- <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select class="example-full-width" placeholder="Select Province"
                     [(ngModel)]="provinceMultiSelectModel.ProvinceId " (selectionChange)="
@@ -162,7 +160,7 @@
                                   provinceMultiSelectModel.ProvinceId
                                 )
                               " name="provinceSelction"
-                    [disabled]="ProvinceSelectionList.length<0 || !isEditingAllowed" multiple>
+                    multiple>
                     <mat-option *ngFor="let item of ProvinceSelectionList" [value]="item.value">{{ item.label }}
                     </mat-option>
                   </mat-select>
@@ -170,13 +168,33 @@
                   <mat-spinner class="center_loader custom_load" *ngIf="provinceDistrictFlag;" diameter="20">
                   </mat-spinner>
                 </mat-form-field>
+              </div> -->
 
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-select placeholder="Select Province" [(ngModel)]="provinceMultiSelectModel.ProvinceId"
+                    [disabled]="provinceSelectedFlag || !isEditingAllowed" (selectionChange)="
+                    onProvinceDetailsChange(
+                              'provinceSelction',
+                              provinceMultiSelectModel.ProvinceId
+                            )
+                          " name="provinceSelction" [disabled]="CountrySelectionList.length<0 || !isEditingAllowed" multiple>
+                    <mat-option *ngFor="let item of ProvinceSelectionList" [value]="item.value">{{ item.label }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-spinner class="center_loader custom_load" *ngIf="countryDistrictFlag || districtFlag;" diameter="20">
+                  </mat-spinner>
+                </mat-form-field>
 
               </div>
+
+
+
+
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select placeholder="Select District" [(ngModel)]="districtMultiSelctModel.DistrictID"
-                    [disabled]="provinceSelectedFlag || !isEditingAllowed" (selectionChange)="
+                    [disabled]="districtSelectedFlag || !isEditingAllowed" (selectionChange)="
                       onDistrictDetailsChange(
                               'districtSelction',
                               districtMultiSelctModel.DistrictID

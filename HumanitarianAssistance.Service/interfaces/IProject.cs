@@ -172,16 +172,13 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteOccupationDetails(long Id, string userId);
         Task<APIResponse> DeleteAssumptionDetails(long Id, string userId);
         Task<APIResponse> DeleteDonorEligibilityCriteriaOtherDetails(long Id, string userId);
-
         Task<APIResponse> AddEditCriteriaEvalutionSubmitDetail(ProjectDetailNewModel model);
-
-
         APIResponse AddEditSecurityConsidMultiDetail(SecurityConsiderationMultiSelectModel model, string UserId);
         APIResponse AddEditProvinceMultiSelectDetail(ProvinceMultiSelectModel model, string UserId);
-
-
+        APIResponse AddEditCountryMultiSelectDetail(CountryMultiSelectModel model, string UserId);
+     
         APIResponse GetSecurityConsiMultiSelectByProjectId(long ProjectId);
-        APIResponse GetProvinceMultiSelectByProjectId(long ProjectId);
+        APIResponse GetProvinceMultiSelectByCountryId(int[] CountryId); 
         APIResponse GetDistrictMultiSelectByProjectId(long ProjectId);
         APIResponse AddEditDistrictMultiSelectDetail(DistrictMultiSelectModel model, string UserId);
         // APIResponse SaveErrorlog(Errorlog obj, string UserId);

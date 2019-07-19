@@ -138,7 +138,7 @@ export class GLOBAL {
   // public static API_Project_AddApprovalProjectDetail = 'Project/AddApprovalProjectDetail';
   public static API_Project_WinApprovalProjectDetail = 'Project/WinApprovalProjectDetail';
   public static API_Project_GetAllProvinceDetails = 'Project/GetAllProvinceDetails';
-  public static API_Project_GetAllCountryDetails = 'Project/GetAllCountryDetails';
+  public static API_Project_GetAllCountryDetails = 'Code/GetAllCountry';
   public static API_Project_GetAllStrengthConsiderationDetails = 'Project/GetAllStrengthConsiderationDetails';
   public static API_Project_GetAllGenderConsiderationDetails = 'Project/GetAllGenderConsiderationDetails';
   public static API_Project_GetAllSecurityDetails = 'Project/GetAllSecurityDetails';
@@ -190,7 +190,7 @@ export class GLOBAL {
   public static API_VoucherTransaction_GetAllVoucherList = 'VoucherTransaction/GetAllVoucherList';
   public static API_VoucherTransaction_GetVoucherDetailByVoucherNo = 'VoucherTransaction/GetVoucherDetailByVoucherNo';
   public static API_VoucherTransaction_AddVoucherDetail = 'VoucherTransaction/AddVoucherDetail';
-  public static API_VoucherTransaction_EditVoucherDetail= 'VoucherTransaction/EditVoucherDetail';
+  public static API_VoucherTransaction_EditVoucherDetail = 'VoucherTransaction/EditVoucherDetail';
   public static API_VoucherTransaction_VerifyVoucher = 'VoucherTransaction/VerifyVoucher';
   public static API_VoucherTransaction_GetAllTransactionsByVoucherId = 'VoucherTransaction/GetAllTransactionsByVoucherId';
   public static API_VoucherTransaction_AddEditTransactionList = 'VoucherTransaction/AddEditTransactionList';
@@ -272,7 +272,8 @@ export class GLOBAL {
   public static API_Project_AddEditMultiSelectSecurityConsideration = 'Project/AddEditSecurityConsiMultiselect';
   public static API_GetSecurityConsiderationById = 'Project/GetSecurityConsiMultiSelectByProjectId';
   public static API_Project_AddEditMultiSelectProvince = 'Project/AddEditProvinceMultiselect';
-  public static API_GetProvinceByProjectId = 'Project/GetProvinceMultiSelectByProjectId';
+  public static API_Project_AddEditMultiSelectCountry = 'Project/AddEditCountryMultiselect';
+  public static API_GetProvinceByCountryId = 'Project/GetProvinceMultiSelectByCountryId';
 
   public static API_GetDistrictByProjectId = 'Project/GetDistrictMultiSelectByProjectId';
   public static API_Project_AddEditMultiSelectDistrict = 'Project/AddEditDistrictMultiselect';

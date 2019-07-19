@@ -14,7 +14,8 @@ import {
   ProposalDocModel,
   securityConsiderationMultiSelectModel,
   ProvinceMultiSelectModel,
-  DistrictMultiSelectModel
+  DistrictMultiSelectModel,
+  CountryMultiSelectModel
 } from '../project-details/models/project-details.model';
 import { IProjectFilterModel } from '../models/projectList.model';
 import { ProjectJobsFilterModel } from '../project-jobs/project-jobsmodel';
@@ -322,7 +323,11 @@ export class ProjectListService {
     return this.globalService.getListById(url, id);
   }
   //#endregion
-
+ //#region GetotherprojectlistById
+ GetProvinceByCountryId(url: string, id: any) {
+  return this.globalService.getListById(url, id);
+}
+//#endregion
   //#region "AddProjectDetail"
   GetAllOfficeList(url: string) {
     return this.globalService.getList(url);
@@ -386,7 +391,11 @@ export class ProjectListService {
     return this.globalService.post(url, data);
   }
   //#endregion
-
+  //#region "AddProjectDetail other details"
+  AddEditCountryMultiSelect(url: string, data: CountryMultiSelectModel) {
+    return this.globalService.post(url, data);
+  }
+  //#endregion
   //#region "AddProjectDetail other details"
   AddEditDistricteMultiSelect(url: string, data: DistrictMultiSelectModel) {
     return this.globalService.post(url, data);

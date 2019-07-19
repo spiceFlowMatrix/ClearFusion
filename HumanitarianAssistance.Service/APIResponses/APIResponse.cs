@@ -294,6 +294,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         //public ICollection<DistrictDetail> DistrictDetail { get; }
         public int TotalCount { get; set; }
         public List<DistrictDetail> Districtlist { get; set; }
+        public List<ProvinceDetails> Provincelist { get; set; }
+        public List<CountryDetails> Countrylist { get; set; }
         public ICollection<StrengthConsiderationDetail> StrengthConsiderationDetail { get; set; }
         public ICollection<GenderConsiderationDetail> GenderConsiderationDetail { get; set; }
         public ICollection<SecurityDetail> SecurityDetail { get; set; }
