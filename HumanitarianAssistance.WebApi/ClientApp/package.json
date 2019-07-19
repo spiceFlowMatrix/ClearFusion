@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --servePath /clientapp/ --baseHref /clientapp/",
+    "start": "ng serve --servePath / --baseHref /clientapp/",
     "build": "ng build --baseHref /clientapp/",
     "build:ssr": "npm run build --baseHref /clientapp/ -- --app=ssr --output-hashing=media",
     "test": "ng test",

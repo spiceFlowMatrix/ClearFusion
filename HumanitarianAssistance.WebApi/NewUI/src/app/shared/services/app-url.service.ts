@@ -7,17 +7,16 @@ export class AppUrlService {
   constructor(@Inject('BASE_URL') private baseUrl: string) { }
 
   public getApiUrl(): string {
-
-    //return this.getApiURL(this.baseUrl) + 'api/';
-    return this.baseUrl + 'api/';
+    return '/api/';
+    // return this.baseUrl + 'api/';
   }
   public getDocUrl(): string {
-    //return this.getApiURL(this.baseUrl)  + 'Docs/';
-    return this.baseUrl + 'Docs/';
+    return '/Docs/';
+    // return this.baseUrl + 'Docs/';
   }
   public getHubUrl(): string {
-    //return this.getApiURL(this.baseUrl)  + 'chathub/';
-    return this.baseUrl + 'chathub/';
+    return '/chathub/';
+    // return this.baseUrl + 'chathub/';
   }
   public getOldUiUrl(): string {
     return environment.oldUiUrl;
@@ -26,9 +25,9 @@ export class AppUrlService {
     return environment.uploadUrl;
   }
 
-  private getApiURL(baseURL):string {
+  // private getApiURL(baseURL):string {
 
-   return (baseURL.substring(baseURL.lastIndexOf('/')))
-  }
+  //  return (baseURL.substring(baseURL.lastIndexOf('/')))
+  // }
 
 }

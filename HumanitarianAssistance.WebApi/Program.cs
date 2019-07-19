@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using DataAccess.Data;
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Entities;
@@ -15,7 +16,8 @@ namespace HumanitarianAssistance.WebApi
     {
         public static void Main(string[] args)
         {
-            var host = CreateWebHostBuilder(args).Build();
+            var host = CreateWebHostBuilder(args)
+                            .Build();
 
             using (var scope = host.Services.CreateScope())
             {
@@ -37,10 +39,12 @@ namespace HumanitarianAssistance.WebApi
             host.Run();
         }
 
-
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                    .UseKestrel()
+                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    // .UseIISIntegration()
+                    .UseStartup<Startup>();
         //.UseUrls("http://*:5004");
     }
 }
