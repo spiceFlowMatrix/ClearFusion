@@ -81,6 +81,8 @@ namespace HumanitarianAssistance.WebApi
 
             string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
             string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
+            
+            string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
 
             Console.WriteLine("Connection string: {0}\n", connectionString);
 
