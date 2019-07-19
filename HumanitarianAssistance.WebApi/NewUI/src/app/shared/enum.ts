@@ -44,8 +44,8 @@ export enum AccountLevelLimits {
 }
 
 export enum Activities {
-  Broadcasting = 'Broadcasting',
-  Production = 'Production'
+  Broadcasting = "Broadcasting",
+  Production = "Production"
 }
 
 //#region "Criteria Evaluation"
@@ -60,8 +60,8 @@ export enum criteriaEvaluationScores {
   proposalAccepted_Yes = 1,
   proposalAccepted_No = 0,
 
-  pre_ProposalExperience = 'pre',
-  post_ProposalExperience = 'Post',
+  pre_ProposalExperience = "pre",
+  post_ProposalExperience = "Post",
 
   proposalExp_Professional_Yes = 1,
   proposalExp_Professional_No = 0,
@@ -108,99 +108,168 @@ export enum criteriaEvaluationScores {
   politicalStanding_Neutral = 0,
   politicalStanding_Bad = -1,
 
-  // services
-  serviceEducation_Yes = 1,
-  serviceEducation_No = 0,
+  // Products && services
 
-  servEducationHealthandNutrition_Yes = 1,
-  servEducationHealthandNutrition_No = 0,
-
-  servCommunityDevelop_Yes = 1,
-  servCommunityDevelop_No = 0,
-
-  servAggriculture_Yes = 1,
-  servAggriculture_No = 0,
-
-  serDRR_Yes = 1,
-  serDRR_No = 0,
-
-  // Products
 
   prodAwareness_Yes = 1,
   prodAwareness_No = 0,
 
-  prodhildren_Yes = 1,
-  prodhildren_No = 0,
+  prodInfrastructure_Yes = 1,
+  prodInfrastructure_No = 0,
 
-  prodWomen_Yes = 1,
-  prodWomen_No = 0,
+  prodCapacityBuilding_Yes = 1,
+  prodCapacityBuilding_No = 0,
 
-  prodEducation_Yes = 1,
-  prodEducation_No = 0,
+  prodIncomeGeneration_Yes = 1,
+  prodIncomeGeneration_No = 0,
 
-  prodDrugAndAbuse_Yes = 1,
-  prodDrugAndAbuse_No = 0,
+  prodMobilization_Yes = 1,
+  prodMobilization_No = 0,
 
-  prodRights_Yes = 1,
-  prodRights_No = 0,
+  prodPeaceBuilding_Yes = 1,
+  prodPeaceBuilding_No = 0,
 
-  prodCulture_Yes = 1,
-  prodCulture_No = 0,
+  prodSocialProtection_Yes = 1,
+  prodSocialProtection_No = 0,
 
-  prodMusic_Yes = 1,
-  prodMusic_No = 0,
+  prodSustainableLivelihood_Yes = 1,
+  prodSustainableLivelihood_No = 0,
 
-  prodDocumentaries_Yes = 1,
-  prodDocumentaries_No = 0,
+  prodAdvocacy_Yes = 1,
+  prodAdvocacy_No = 0,
 
-  prodInvestigativeJournlism_Yes = 1,
-  prodInvestigativeJournlism_No = 0,
+  prodLiteracy_Yes = 1,
+  prodLiteracy_No = 0,
 
-  prodHealthAndNutrition_Yes = 1,
-  prodHealthAndNutrition_No = 0,
+  prodEducationCapacityBuilding_Yes = 1,
+  prodEducationCapacityBuilding_No = 0,
 
-  prodNews_Yes = 1,
-  prodNews_No = 0,
+  prodSchoolUpgrading_Yes = 1,
+  prodSchoolUpgrading_No = 0,
 
-  prodSocioPoliticalDebate_Yes = 1,
-  prodSocioPoliticalDebate_No = 0,
+  prodEducationInEmergency_Yes = 1,
+  prodEducationInEmergency_No = 0,
 
-  prodStudies_Yes = 1,
-  prodStudies_No = 0,
+  prodOnlineEducation_Yes = 1,
+  prodOnlineEducation_No = 0,
 
-  prodReport_Yes = 1,
-  prodReport_No = 0,
+  prodCommunityBasedEducation_Yes = 1,
+  prodCommunityBasedEducation_No = 0,
 
-  // Activities
+  AcceleratedLearningProgram_Yes = 1,
+  AcceleratedLearningProgram_No = 0,
 
-  activityRadioProduction_Yes = 1,
-  activityRadioProduction_No = 0,
+  PrimaryHealthServices_Yes = 1,
+  PrimaryHealthServices_No = 0,
 
-  activityTVprogram_Yes = 1,
-  activityTVprogram_No = 0,
+  ReproductiveHealth_Yes = 1,
+  ReproductiveHealth_No = 0,
 
-  activityPrintedMedia_Yes = 1,
-  activityPrintedMedia_No = 0,
+  Immunization_Yes = 1,
+  Immunization_No = 0,
 
-  activityRoundTables_Yes = 1,
-  activityRoundTables_No = 0,
+  InfantandYoungChildFeeding_Yes = 1,
+  InfantandYoungChildFeeding_No = 0,
 
-  activityOther_Yes = 1,
-  activityOther_No = 0,
+  Nutrition_Yes = 1,
+  Nutrition_No = 0,
 
-  // target Beneficiaries
+  CommunicableDisease_Yes = 1,
+  CommunicableDisease_No = 0,
 
-  tagetbeneficiaryWomen_Yes = 1,
-  tagetbeneficiaryWomen_No = 0,
+  Hygiene_Yes = 1,
+  Hygiene_No = 0,
 
-  targetBeneficiaryMen_Yes = 1,
-  targetBeneficiaryMen_No = 0,
+  EnvironmentalHealth_Yes = 1,
+  EnvironmentalHealth_No = 0,
 
-  tagetBenificiaryAgeGroup_Yes = 1,
-  tagetBenificiaryAgeGroup_No = 0,
+  MentalHealthandDisabilityService_Yes = 1,
+  MentalHealthandDisabilityService_No = 0,
 
-  targetbenficiaryOccupation_Yes = 1,
-  targetbenficiaryOccupation_No = 0,
+  HealthCapacityBuilding_Yes = 1,
+  HealthCapacityBuilding_No = 0,
+
+  Telemedicine_Yes = 1,
+  Telemedicine_No = 0,
+
+  MitigationProjects_Yes = 1,
+  MitigationProjects_No = 0,
+
+  WaterSupply_Yes = 1,
+  WaterSupply_No = 0,
+
+  Sanitation_Yes = 1,
+  Sanitation_No = 0,
+
+  DisasterRiskHygiene_Yes = 1,
+  DisasterRiskHygiene_No = 0,
+
+  DisasterCapacityBuilding_Yes = 1,
+  DisasterCapacityBuilding_No = 0,
+
+  EmergencyResponse_Yes = 1,
+  EmergencyResponse_No = 0,
+
+  RenewableEnergy_Yes = 1,
+  RenewableEnergy_No = 0,
+
+  Shelter_Yes = 1,
+  Shelter_No = 0,
+
+  NaturalResourceManagement_Yes = 1,
+  NaturalResourceManagement_No = 0,
+
+  AggriculutreCapacityBuilding_Yes = 1,
+  AggriculutreCapacityBuilding_No = 0,
+
+  LivestockManagement_Yes = 1,
+  LivestockManagement_No = 0,
+
+  FoodSecurity_Yes = 1,
+  FoodSecurity_No = 0,
+
+  ResearchandPublication_Yes = 1,
+  ResearchandPublication_No = 0,
+
+  Horticulture_Yes = 1,
+  Horticulture_No = 0,
+
+  Irrigation_Yes = 1,
+  Irrigation_No = 0,
+
+  Livelihood_Yes = 1,
+  Livelihood_No = 0,
+
+  ValueChain_Yes = 1,
+  ValueChain_No = 0,
+
+  Women_Yes = 1,
+  Women_No = 0,
+
+  Men_Yes = 1,
+  Men_No = 0,
+
+  Youth_Yes = 1,
+  Youth_No = 0,
+
+  Children_Yes = 2,
+  Children_No = 0,
+
+  Disabled_Yes = 2 ,
+  Disabled_No = 0,
+
+  IDPs_Yes = 1,
+  IDPs_No = 0,
+
+  Returnees_Yes = 1,
+  Returnees_No = 0,
+
+  Kuchis_Yes = 2,
+  Kuchis_No = 0,
+
+  Widows_Yes = 2,
+  Widows_No = 0,
+
 
   // donor Eligibility criteria
   onDonorELegibilityCrteria_Yes = 1,
@@ -213,7 +282,7 @@ export enum criteriaEvaluationScores {
   donorELigibilityPartnership_No = 0,
 
   // feasibility
-  feasibilityCapacityForProject_Yes = 1,
+  feasibilityCapacityForProject_Yes = 4,
   feasibilityCapacityForProject_No = 0,
 
   compensationTrainedStaff_Yes = -1,
@@ -370,19 +439,19 @@ export enum TargetBeneficiaryTypes_Enum {
 
 //#region "ProposalDocument_Enum"
 export enum ProposalDocument_Enum {
-  proposal = 'Proposal',
-  edifile = 'EOI',
-  budgetfile = 'BUDGET',
-  conceptfile = 'CONCEPT',
-  presentationfile = 'PRESENTATION'
+  proposal = "Proposal",
+  edifile = "EOI",
+  budgetfile = "BUDGET",
+  conceptfile = "CONCEPT",
+  presentationfile = "PRESENTATION"
 }
 //#endregion
 
 //#region "Delete_Confirmation_Texts"
 export enum Delete_Confirmation_Texts {
-  deleteText1 = 'Are you sure ?',
-  yesText = 'Confirm',
-  noText = 'cancel'
+  deleteText1 = "Are you sure ?",
+  yesText = "Confirm",
+  noText = "cancel"
 }
 //#endregion
 
@@ -411,16 +480,16 @@ export enum ProjectActivityPhases {
 //#endregion
 
 //#region "FileSourceEntityTypes"
- export enum FileSourceEntityTypes {
-    Voucher = 1,
-    Account = 2,
-    ProjectDetail = 3,
-    ProjectProposal = 4,
-    ProjectProposalSupportingDoc = 5,
-    ProjectActivityImplementation = 6,
-    ProjectActivityMonitoring = 7,
-    ProjectActivityPlanning = 8,
-    DonorDetail = 9,
+export enum FileSourceEntityTypes {
+  Voucher = 1,
+  Account = 2,
+  ProjectDetail = 3,
+  ProjectProposal = 4,
+  ProjectProposalSupportingDoc = 5,
+  ProjectActivityImplementation = 6,
+  ProjectActivityMonitoring = 7,
+  ProjectActivityPlanning = 8,
+  DonorDetail = 9
 }
 //#endregion
 //#region "EmployeeType"

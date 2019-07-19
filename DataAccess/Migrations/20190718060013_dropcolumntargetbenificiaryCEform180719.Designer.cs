@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190718060013_dropcolumntargetbenificiaryCEform180719")]
+    partial class dropcolumntargetbenificiaryCEform180719
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7993,8 +7995,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("CapacityBuilding");
 
-                    b.Property<bool?>("Children");
-
                     b.Property<bool?>("CommunicableDisease");
 
                     b.Property<bool?>("CommunityBasedEducation");
@@ -8002,8 +8002,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("Disabled");
 
                     b.Property<bool?>("DisasterCapacityBuilding");
 
@@ -8025,8 +8023,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("Hygiene");
 
-                    b.Property<bool?>("IDPs");
-
                     b.Property<bool?>("Immunization");
 
                     b.Property<bool?>("IncomeGeneration");
@@ -8039,15 +8035,11 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("IsDeleted");
 
-                    b.Property<bool?>("Kuchis");
-
                     b.Property<bool?>("Literacy");
 
                     b.Property<bool?>("Livelihood");
 
                     b.Property<bool?>("LivestockManagement");
-
-                    b.Property<bool?>("Men");
 
                     b.Property<bool?>("MentalHealthandDisabilityService");
 
@@ -8077,8 +8069,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("ResearchandPublication");
 
-                    b.Property<bool?>("Returnees");
-
                     b.Property<bool?>("Sanitation");
 
                     b.Property<bool?>("SchoolUpgrading");
@@ -8094,12 +8084,6 @@ namespace DataAccess.Migrations
                     b.Property<bool?>("ValueChain");
 
                     b.Property<bool?>("WaterSupply");
-
-                    b.Property<bool?>("Widows");
-
-                    b.Property<bool?>("Women");
-
-                    b.Property<bool?>("Youth");
 
                     b.HasKey("ProductServiceId");
 

@@ -39,7 +39,7 @@
     "jspdf": "^1.3.5",
     "msgpack5": "4.0.2",
     "ng2-bs3-modal": "^0.13.0",
-    "ng2-ckeditor": "^1.1.9",
+    "ng2-ckeditor": "1.1.9",
     "ng2-pdf-viewer": "^3.0.2",
     "ngx-bootstrap": "^2.0.0-beta.8",
     "ngx-loading": "^1.0.8",

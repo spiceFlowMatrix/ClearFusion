@@ -1563,7 +1563,9 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
                             _uow.GetDbContext().SaveChanges();
+
                         }
+
                     }
 
                     _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
@@ -2981,7 +2983,7 @@ namespace HumanitarianAssistance.Service.Classes
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow
                     };
-                   await _uow.ProjectProposalDetailRepository.AddAsyn(details);
+                    await _uow.ProjectProposalDetailRepository.AddAsyn(details);
                 }
                 else
                 {
@@ -2994,20 +2996,20 @@ namespace HumanitarianAssistance.Service.Classes
                     details.UserId = model.UserId;
                     details.ModifiedById = UserId;
                     details.ModifiedDate = DateTime.UtcNow;
-                   await _uow.ProjectProposalDetailRepository.UpdateAsyn(details, details.ProjectProposaldetailId);
+                    await _uow.ProjectProposalDetailRepository.UpdateAsyn(details, details.ProjectProposaldetailId);
                     await _uow.GetDbContext().SaveChangesAsync();
 
 
                     // Note: check proposal is accepted then make false entry for isApproved
                     if (details.IsProposalAccept == true)
                     {
-                        ApproveProjectDetails obj = await _uow.GetDbContext().ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId && 
+                        ApproveProjectDetails obj = await _uow.GetDbContext().ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
                                                                                                                             x.IsDeleted == false);
                         if (obj != null)
                         {
                             obj.IsApproved = obj.IsApproved == false ? null : obj.IsApproved;
                             _uow.GetDbContext().ApproveProjectDetails.Update(obj);
-                           await _uow.GetDbContext().SaveChangesAsync();
+                            await _uow.GetDbContext().SaveChangesAsync();
                         }
 
                     }
@@ -3062,7 +3064,7 @@ namespace HumanitarianAssistance.Service.Classes
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow
                     };
-                   await _uow.DonorCriteriaDetailsRepository.AddAsyn(_detail);
+                    await _uow.DonorCriteriaDetailsRepository.AddAsyn(_detail);
                 }
                 else
                 {
@@ -3088,8 +3090,8 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.UtcNow;
-                   await _uow.DonorCriteriaDetailsRepository.UpdateAsyn(_detail);
-                   await  _uow.GetDbContext().SaveChangesAsync();
+                    await _uow.DonorCriteriaDetailsRepository.UpdateAsyn(_detail);
+                    await _uow.GetDbContext().SaveChangesAsync();
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -3110,90 +3112,134 @@ namespace HumanitarianAssistance.Service.Classes
             PurposeofInitiativeCriteria _detail = new PurposeofInitiativeCriteria();
             try
             {
-                _detail = await _uow.GetDbContext().PurposeofInitiativeCriteria.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId && 
+                _detail = await _uow.GetDbContext().PurposeofInitiativeCriteria.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
                                                                                                          x.IsDeleted == false);
                 if (_detail == null)
                 {
                     _detail = new PurposeofInitiativeCriteria
                     {
-                        Women = model.Women,
-                        Children = model.Children,
+
                         Awareness = model.Awareness,
-                        Education = model.Education,
-                        DrugAbuses = model.DrugAbuses,
-                        Right = model.Right,
-                        Culture = model.Culture,
-                        Music = model.Music,
-                        Documentaries = model.Documentaries,
-                        InvestigativeJournalism = model.InvestigativeJournalism,
-                        HealthAndNutrition = model.HealthAndNutrition,
-                        News = model.News,
-                        SocioPolitiacalDebate = model.SocioPolitiacalDebate,
-                        Studies = model.Studies,
-                        Reports = model.Reports,
-                        CommunityDevelopment = model.CommunityDevelopment,
-                        Aggriculture = model.Aggriculture,
-                        DRR = model.DRR,
-                        ServiceEducation = model.ServiceEducation,
-                        ServiceHealthAndNutrition = model.ServiceHealthAndNutrition,
-                        RadioProduction = model.RadioProduction,
-                        TVProgram = model.TVProgram,
-                        PrintedMedia = model.PrintedMedia,
-                        RoundTable = model.RoundTable,
-                        Others = model.Others,
-                        OtherActivity = model.OtherActivity,
-                        TargetBenificaiaryWomen = model.TargetBenificaiaryWomen,
-                        TargetBenificiaryMen = model.TargetBenificiaryMen,
-                        TargetBenificiaryAgeGroup = model.TargetBenificiaryAgeGroup,
-                        TargetBenificiaryaOccupation = model.TargetBenificiaryaOccupation,
+                        Infrastructure = model.Infrastructure,
+                        CapacityBuilding = model.CapacityBuilding,
+                        IncomeGeneration = model.IncomeGeneration,
+                        Mobilization = model.Mobilization,
+                        PeaceBuilding = model.PeaceBuilding,
+                        SocialProtection = model.SocialProtection,
+                        SustainableLivelihood = model.SustainableLivelihood,
+                        Advocacy = model.Advocacy,
+                        Literacy = model.Literacy,
+                        EducationCapacityBuilding = model.EducationCapacityBuilding,
+                        SchoolUpgrading = model.SchoolUpgrading,
+                        EducationInEmergency = model.EducationInEmergency,
+                        OnlineEducation = model.OnlineEducation,
+                        CommunityBasedEducation = model.CommunityBasedEducation,
+                        AcceleratedLearningProgram = model.AcceleratedLearningProgram,
+                        PrimaryHealthServices = model.PrimaryHealthServices,
+                        ReproductiveHealth = model.ReproductiveHealth,
+                        Immunization = model.Immunization,
+                        InfantandYoungChildFeeding = model.InfantandYoungChildFeeding,
+                        Nutrition = model.Nutrition,
+                        CommunicableDisease = model.CommunityBasedEducation,
+                        Hygiene = model.Hygiene,
+                        EnvironmentalHealth = model.EnvironmentalHealth,
+                        MentalHealthandDisabilityService = model.MentalHealthandDisabilityService,
+                        HealthCapacityBuilding = model.HealthCapacityBuilding,
+                        Telemedicine = model.Telemedicine,
+                        MitigationProjects = model.MitigationProjects,
+                        WaterSupply = model.WaterSupply,
+                        Sanitation = model.Sanitation,
+                        DisasterRiskHygiene = model.DisasterRiskHygiene,
+                        DisasterCapacityBuilding = model.DisasterCapacityBuilding,
+                        EmergencyResponse = model.EmergencyResponse,
+                        RenewableEnergy = model.RenewableEnergy,
+                        Shelter = model.Shelter,
+                        NaturalResourceManagement = model.NaturalResourceManagement,
+                        AggriculutreCapacityBuilding = model.AggriculutreCapacityBuilding,
+                        LivestockManagement = model.LivestockManagement,
+                        FoodSecurity = model.FoodSecurity,
+                        ResearchandPublication = model.ResearchandPublication,
+                        Horticulture = model.Horticulture,
+                        Irrigation = model.Irrigation,
+                        Livelihood = model.Livelihood,
+                        ValueChain = model.ValueChain,
+                        Children = model.Children,
+                        Disabled = model.Disabled,
+                        IDPs = model.IDPs,
+                        Returnees = model.Returnees,
+                        Kuchis = model.Kuchis,
+                        Widows = model.Widows,
+                        Women = model.Women,
+                        Youth = model.Youth,
+                        Men = model.Men,
                         ProjectId = model.ProjectId,
                         IsDeleted = false,
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow,
-                        Product = model.Product,
-                        Service = model.Service
                     };
-                   await _uow.PurposeofInitiativeCriteriaRepository.AddAsyn(_detail);
+                    await _uow.PurposeofInitiativeCriteriaRepository.AddAsyn(_detail);
                 }
                 else
                 {
-                    _detail.Women = model.Women;
-                    _detail.Children = model.Children;
+
                     _detail.Awareness = model.Awareness;
-                    _detail.Education = model.Education;
-                    _detail.DrugAbuses = model.DrugAbuses;
-                    _detail.Right = model.Right;
-                    _detail.Culture = model.Culture;
-                    _detail.Music = model.Music;
-                    _detail.Documentaries = model.Documentaries;
-                    _detail.InvestigativeJournalism = model.InvestigativeJournalism;
-                    _detail.HealthAndNutrition = model.HealthAndNutrition;
-                    _detail.News = model.News;
-                    _detail.SocioPolitiacalDebate = model.SocioPolitiacalDebate;
-                    _detail.Studies = model.Studies;
-                    _detail.Reports = model.Reports;
-                    _detail.CommunityDevelopment = model.CommunityDevelopment;
-                    _detail.Aggriculture = model.Aggriculture;
-                    _detail.DRR = model.DRR;
-                    _detail.ServiceEducation = model.ServiceEducation;
-                    _detail.ServiceHealthAndNutrition = model.ServiceHealthAndNutrition;
-                    _detail.RadioProduction = model.RadioProduction;
-                    _detail.TVProgram = model.TVProgram;
-                    _detail.PrintedMedia = model.PrintedMedia;
-                    _detail.RoundTable = model.RoundTable;
-                    _detail.Others = model.Others;
-                    _detail.OtherActivity = model.OtherActivity;
-                    _detail.TargetBenificaiaryWomen = model.TargetBenificaiaryWomen;
-                    _detail.TargetBenificiaryMen = model.TargetBenificiaryMen;
-                    _detail.TargetBenificiaryAgeGroup = model.TargetBenificiaryAgeGroup;
-                    _detail.TargetBenificiaryaOccupation = model.TargetBenificiaryaOccupation;
+                    _detail.Infrastructure = model.Infrastructure;
+                    _detail.CapacityBuilding = model.CapacityBuilding;
+                    _detail.IncomeGeneration = model.IncomeGeneration;
+                    _detail.Mobilization = model.Mobilization;
+                    _detail.PeaceBuilding = model.PeaceBuilding;
+                    _detail.SocialProtection = model.SocialProtection;
+                    _detail.SustainableLivelihood = model.SustainableLivelihood;
+                    _detail.Advocacy = model.Advocacy;
+                    _detail.Literacy = model.Literacy;
+                    _detail.EducationCapacityBuilding = model.EducationCapacityBuilding;
+                    _detail.SchoolUpgrading = model.SchoolUpgrading;
+                    _detail.EducationInEmergency = model.EducationInEmergency;
+                    _detail.OnlineEducation = model.OnlineEducation;
+                    _detail.CommunityBasedEducation = model.CommunityBasedEducation;
+                    _detail.AcceleratedLearningProgram = model.AcceleratedLearningProgram;
+                    _detail.PrimaryHealthServices = model.PrimaryHealthServices;
+                    _detail.ReproductiveHealth = model.ReproductiveHealth;
+                    _detail.Immunization = model.Immunization;
+                    _detail.InfantandYoungChildFeeding = model.InfantandYoungChildFeeding;
+                    _detail.Nutrition = model.Nutrition;
+                    _detail.CommunicableDisease = model.CommunityBasedEducation;
+                    _detail.Hygiene = model.Hygiene;
+                    _detail.EnvironmentalHealth = model.EnvironmentalHealth;
+                    _detail.MentalHealthandDisabilityService = model.MentalHealthandDisabilityService;
+                    _detail.HealthCapacityBuilding = model.HealthCapacityBuilding;
+                    _detail.Telemedicine = model.Telemedicine;
+                    _detail.MitigationProjects = model.MitigationProjects;
+                    _detail.WaterSupply = model.WaterSupply;
+                    _detail.Sanitation = model.Sanitation;
+                    _detail.DisasterRiskHygiene = model.DisasterRiskHygiene;
+                    _detail.DisasterCapacityBuilding = model.DisasterCapacityBuilding;
+                    _detail.EmergencyResponse = model.EmergencyResponse;
+                    _detail.RenewableEnergy = model.RenewableEnergy;
+                    _detail.Shelter = model.Shelter;
+                    _detail.NaturalResourceManagement = model.NaturalResourceManagement;
+                    _detail.AggriculutreCapacityBuilding = model.AggriculutreCapacityBuilding;
+                    _detail.LivestockManagement = model.LivestockManagement;
+                    _detail.FoodSecurity = model.FoodSecurity;
+                    _detail.ResearchandPublication = model.ResearchandPublication;
+                    _detail.Horticulture = model.Horticulture;
+                    _detail.Irrigation = model.Irrigation;
+                    _detail.Livelihood = model.Livelihood;
+                    _detail.ValueChain = model.ValueChain;
+                    _detail.Children = model.Children;
+                    _detail.Disabled = model.Disabled;
+                    _detail.IDPs = model.IDPs;
+                    _detail.Returnees = model.Returnees;
+                    _detail.Kuchis = model.Kuchis;
+                    _detail.Widows = model.Widows;
+                    _detail.Women = model.Women;
+                    _detail.Youth = model.Youth;
+                    _detail.Men = model.Men;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.UtcNow;
-                    _detail.Product = model.Product;
-                    _detail.Service = model.Service;
                     await _uow.PurposeofInitiativeCriteriaRepository.UpdateAsyn(_detail);
-                   await _uow.GetDbContext().SaveChangesAsync();
+                    await _uow.GetDbContext().SaveChangesAsync();
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -3212,7 +3258,7 @@ namespace HumanitarianAssistance.Service.Classes
             EligibilityCriteriaDetail _detail = new EligibilityCriteriaDetail();
             try
             {
-                _detail = _uow.GetDbContext().EligibilityCriteriaDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && 
+                _detail = _uow.GetDbContext().EligibilityCriteriaDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId &&
                                                                                             x.IsDeleted == false);
                 if (_detail == null)
                 {
@@ -3343,7 +3389,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public APIResponse GetAllCriteriaEvaluationDetalByProjectId(long ProjectId)
+        public async Task<APIResponse> GetAllCriteriaEvaluationDetalByProjectId(long ProjectId)
         {
             APIResponse response = new APIResponse();
 
@@ -3365,8 +3411,7 @@ namespace HumanitarianAssistance.Service.Classes
                      from financial in fi.DefaultIfEmpty()
                      join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri
                      from risk in ri.DefaultIfEmpty()
-                         //join selected in _uow.GetDbContext().FinancialProjectDetail on obj.ProjectId equals selected.ProjectId into sp
-                         //from selected in sp.DefaultIfEmpty()
+                        
                      select new CriteriaEveluationModel
                      {
                          ProjectId = obj.ProjectId,
@@ -3392,38 +3437,59 @@ namespace HumanitarianAssistance.Service.Classes
                          ReligiousStanding = donor.ReligiousStanding,
                          PoliticalStanding = donor.PoliticalStanding,
                          ProductServiceId = purpose != null ? purpose.ProductServiceId : 0,
-                         Women = purpose.Women,
-                         Children = purpose.Children,
                          Awareness = purpose.Awareness,
-                         Education = purpose.Education,
-                         DrugAbuses = purpose.DrugAbuses,
-                         Right = purpose.Right,
-                         Culture = purpose.Culture,
-                         Music = purpose.Music,
-                         Documentaries = purpose.Documentaries,
-                         InvestigativeJournalism = purpose.InvestigativeJournalism,
-                         HealthAndNutrition = purpose.HealthAndNutrition,
-                         News = purpose.News,
-                         SocioPolitiacalDebate = purpose.SocioPolitiacalDebate,
-                         Studies = purpose.Studies,
-                         Reports = purpose.Reports,
-                         CommunityDevelopment = purpose.CommunityDevelopment,
-                         Aggriculture = purpose.Aggriculture,
-                         DRR = purpose.DRR,
-                         ServiceEducation = purpose.ServiceEducation,
-                         ServiceHealthAndNutrition = purpose.ServiceHealthAndNutrition,
-                         RadioProduction = purpose.RadioProduction,
-                         TVProgram = purpose.TVProgram,
-                         PrintedMedia = purpose.PrintedMedia,
-                         RoundTable = purpose.RoundTable,
-                         Others = purpose.Others,
-                         OtherActivity = purpose.OtherActivity,
-                         TargetBenificaiaryWomen = purpose.TargetBenificaiaryWomen,
-                         TargetBenificiaryMen = purpose.TargetBenificiaryMen,
-                         TargetBenificiaryAgeGroup = purpose.TargetBenificiaryAgeGroup,
-                         TargetBenificiaryaOccupation = purpose.TargetBenificiaryaOccupation,
-                         Product = purpose.Product,
-                         Service = purpose.Service,
+                         Infrastructure = purpose.Infrastructure,
+                         CapacityBuilding = purpose.CapacityBuilding,
+                         IncomeGeneration = purpose.IncomeGeneration,
+                         Mobilization = purpose.Mobilization,
+                         PeaceBuilding = purpose.PeaceBuilding,
+                         SocialProtection = purpose.SocialProtection,
+                         SustainableLivelihood = purpose.SustainableLivelihood,
+                         Advocacy = purpose.Advocacy,
+                         Literacy = purpose.Literacy,
+                         EducationCapacityBuilding = purpose.EducationCapacityBuilding,
+                         SchoolUpgrading = purpose.SchoolUpgrading,
+                         EducationInEmergency = purpose.EducationInEmergency,
+                         OnlineEducation = purpose.OnlineEducation,
+                         CommunityBasedEducation = purpose.CommunityBasedEducation,
+                         AcceleratedLearningProgram = purpose.AcceleratedLearningProgram,
+                         PrimaryHealthServices = purpose.PrimaryHealthServices,
+                         ReproductiveHealth = purpose.ReproductiveHealth,
+                         Immunization = purpose.Immunization,
+                         InfantandYoungChildFeeding = purpose.InfantandYoungChildFeeding,
+                         Nutrition = purpose.Nutrition,
+                         CommunicableDisease = purpose.CommunityBasedEducation,
+                         Hygiene = purpose.Hygiene,
+                         EnvironmentalHealth = purpose.EnvironmentalHealth,
+                         MentalHealthandDisabilityService = purpose.MentalHealthandDisabilityService,
+                         HealthCapacityBuilding = purpose.HealthCapacityBuilding,
+                         Telemedicine = purpose.Telemedicine,
+                         MitigationProjects = purpose.MitigationProjects,
+                         WaterSupply = purpose.WaterSupply,
+                         Sanitation = purpose.Sanitation,
+                         DisasterRiskHygiene = purpose.DisasterRiskHygiene,
+                         DisasterCapacityBuilding = purpose.DisasterCapacityBuilding,
+                         EmergencyResponse = purpose.EmergencyResponse,
+                         RenewableEnergy = purpose.RenewableEnergy,
+                         Shelter = purpose.Shelter,
+                         NaturalResourceManagement = purpose.NaturalResourceManagement,
+                         AggriculutreCapacityBuilding = purpose.AggriculutreCapacityBuilding,
+                         LivestockManagement = purpose.LivestockManagement,
+                         FoodSecurity = purpose.FoodSecurity,
+                         ResearchandPublication = purpose.ResearchandPublication,
+                         Horticulture = purpose.Horticulture,
+                         Irrigation = purpose.Irrigation,
+                         Livelihood = purpose.Livelihood,
+                         ValueChain = purpose.ValueChain,
+                         Women = purpose.Women,
+                         Youth = purpose.Youth,
+                         Men=purpose.Men,
+                         Children = purpose.Children,
+                         Disabled = purpose.Disabled,
+                         IDPs = purpose.IDPs,
+                         Returnees = purpose.Returnees,
+                         Kuchis = purpose.Kuchis,
+                         Widows = purpose.Widows,
                          DonorCriteriaMet = eligibility.DonorCriteriaMet,
                          EligibilityDealine = eligibility.EligibilityDealine,
                          CoPartnership = eligibility.CoPartnership,
@@ -3497,10 +3563,10 @@ namespace HumanitarianAssistance.Service.Classes
                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
 
 
-                List<long?> selectedProjects = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId && 
+                List<long?> selectedProjects = await  _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId &&
                                                                                                      x.IsDeleted == false
                                                                                                 ).Select(x => x.ProjectSelectionId).
-                                                                                                  ToList();
+                                                                                                  ToListAsync();
 
                 details.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
 
@@ -3522,8 +3588,8 @@ namespace HumanitarianAssistance.Service.Classes
             PriorityCriteriaDetail _detail = new PriorityCriteriaDetail();
             try
             {
-                _detail =  await _uow.GetDbContext().PriorityCriteriaDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
-                                                                                         x.IsDeleted == false);
+                _detail = await _uow.GetDbContext().PriorityCriteriaDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
+                                                                                        x.IsDeleted == false);
                 if (_detail == null)
                 {
                     _detail = new PriorityCriteriaDetail
@@ -3545,7 +3611,7 @@ namespace HumanitarianAssistance.Service.Classes
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow
                     };
-                   await _uow.PriorityCriteriaDetailRepository.AddAsyn(_detail);
+                    await _uow.PriorityCriteriaDetailRepository.AddAsyn(_detail);
                 }
                 else
                 {
@@ -3565,8 +3631,8 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.UtcNow;
-                  await  _uow.PriorityCriteriaDetailRepository.UpdateAsyn(_detail);
-                  await  _uow.GetDbContext().SaveChangesAsync();
+                    await _uow.PriorityCriteriaDetailRepository.UpdateAsyn(_detail);
+                    await _uow.GetDbContext().SaveChangesAsync();
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -3585,7 +3651,7 @@ namespace HumanitarianAssistance.Service.Classes
             FinancialCriteriaDetail _detail = new FinancialCriteriaDetail();
             try
             {
-                _detail = _uow.GetDbContext().FinancialCriteriaDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && 
+                _detail = _uow.GetDbContext().FinancialCriteriaDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId &&
                                                                                           x.IsDeleted == false);
                 if (_detail == null)
                 {
@@ -3632,7 +3698,7 @@ namespace HumanitarianAssistance.Service.Classes
             RiskCriteriaDetail _detail = new RiskCriteriaDetail();
             try
             {
-                _detail = _uow.GetDbContext().RiskCriteriaDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && 
+                _detail = _uow.GetDbContext().RiskCriteriaDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId &&
                                                                                      x.IsDeleted == false);
                 if (_detail == null)
                 {
@@ -3712,13 +3778,13 @@ namespace HumanitarianAssistance.Service.Classes
                 if (model.ProjectSelectionId != null)
                 {
                     //check is project exists
-                    bool projectPresent = _uow.GetDbContext().FinancialProjectDetail.Any(x => x.ProjectId == model.ProjectId && 
+                    bool projectPresent = _uow.GetDbContext().FinancialProjectDetail.Any(x => x.ProjectId == model.ProjectId &&
                                                                                               x.IsDeleted == false);
 
                     //if exist then remove
                     if (projectPresent)
                     {
-                        var projectExist = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == model.ProjectId && 
+                        var projectExist = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == model.ProjectId &&
                                                                                                  x.IsDeleted == false);
 
                         // if exist then remove it
@@ -3763,8 +3829,8 @@ namespace HumanitarianAssistance.Service.Classes
             TargetBeneficiaryDetail _detail = new TargetBeneficiaryDetail();
             try
             {
-                _detail = _uow.GetDbContext().TargetBeneficiaryDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId && 
-                                                                                          x.TargetId == model.TargetId && 
+                _detail = _uow.GetDbContext().TargetBeneficiaryDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId &&
+                                                                                          x.TargetId == model.TargetId &&
                                                                                           x.IsDeleted == false);
                 if (_detail == null)
                 {
@@ -3810,7 +3876,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 _detail = _uow.GetDbContext().FinancialProjectDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId &&
-                                                                                         x.FinancialProjectDetailId == model.FinancialProjectDetailId && 
+                                                                                         x.FinancialProjectDetailId == model.FinancialProjectDetailId &&
                                                                                          x.IsDeleted == false);
                 if (_detail == null)
                 {
@@ -3877,7 +3943,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var list = await _uow.GetDbContext().PriorityOtherDetail.Where(x => x.IsDeleted == false && 
+                var list = await _uow.GetDbContext().PriorityOtherDetail.Where(x => x.IsDeleted == false &&
                                                                                     x.ProjectId == projectId)
                                                                                 .OrderByDescending(x => x.PriorityOtherDetailId)
                                                                                 .ToListAsync();
@@ -4052,7 +4118,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                CEFeasibilityExpertOtherDetail _detail = await _uow.GetDbContext().CEFeasibilityExpertOtherDetail.FirstOrDefaultAsync(x => x.ExpertOtherDetailId == model.ExpertOtherDetailId 
+                CEFeasibilityExpertOtherDetail _detail = await _uow.GetDbContext().CEFeasibilityExpertOtherDetail.FirstOrDefaultAsync(x => x.ExpertOtherDetailId == model.ExpertOtherDetailId
                                                                                                                                         && x.IsDeleted == false);
                 if (_detail != null)
                 {
@@ -4080,8 +4146,8 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                CEFeasibilityExpertOtherDetail expertInfo = await _uow.CEFeasibilityExpertOtherDetail.FindAsync(c => c.ExpertOtherDetailId == expertOtherDetailId && 
-                                                                                                                     c.IsDeleted==false);
+                CEFeasibilityExpertOtherDetail expertInfo = await _uow.CEFeasibilityExpertOtherDetail.FindAsync(c => c.ExpertOtherDetailId == expertOtherDetailId &&
+                                                                                                                     c.IsDeleted == false);
 
                 expertInfo.IsDeleted = true;
                 expertInfo.ModifiedById = userId;
@@ -4181,7 +4247,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 CEAgeGroupDetail _detail = await _uow.GetDbContext().CEAgeGroupDetail.FirstOrDefaultAsync(x => x.AgeGroupOtherDetailId == model.AgeGroupOtherDetailId &&
                                                                                                                x.IsDeleted == false);
-                if (_detail != null)                
+                if (_detail != null)
                 {
                     _detail.Name = model.Name;
                     _detail.IsDeleted = false;
@@ -4207,16 +4273,16 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                CEAgeGroupDetail expertInfo = await _uow.CEAgeGroupDetail.FindAsync(c => c.AgeGroupOtherDetailId == ageGroupOtherDetailId && 
+                CEAgeGroupDetail expertInfo = await _uow.CEAgeGroupDetail.FindAsync(c => c.AgeGroupOtherDetailId == ageGroupOtherDetailId &&
                                                                                          c.IsDeleted == false);
-                if (expertInfo!=null)
+                if (expertInfo != null)
                 {
                     expertInfo.IsDeleted = true;
                     expertInfo.ModifiedById = userId;
                     expertInfo.ModifiedDate = DateTime.UtcNow;
                     await _uow.CEAgeGroupDetail.UpdateAsyn(expertInfo);
                 }
-             
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -4261,7 +4327,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var list = await _uow.GetDbContext().CEOccupationDetail.Where(x => x.IsDeleted == false && 
+                var list = await _uow.GetDbContext().CEOccupationDetail.Where(x => x.IsDeleted == false &&
                                                                                    x.ProjectId == projectId)
                                                                               .OrderByDescending(x => x.OccupationOtherDetailId)
                                                                               .ToListAsync();
@@ -4313,7 +4379,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                CEOccupationDetail _detail = await _uow.GetDbContext().CEOccupationDetail.FirstOrDefaultAsync(x => x.OccupationOtherDetailId == model.OccupationOtherDetailId && 
+                CEOccupationDetail _detail = await _uow.GetDbContext().CEOccupationDetail.FirstOrDefaultAsync(x => x.OccupationOtherDetailId == model.OccupationOtherDetailId &&
                                                                                                                    x.IsDeleted == false);
                 if (_detail != null)
                 {
@@ -4341,9 +4407,9 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                CEOccupationDetail expertInfo = await _uow.CEOccupationDetail.FindAsync(c => c.OccupationOtherDetailId == occupationOtherDetailId && 
+                CEOccupationDetail expertInfo = await _uow.CEOccupationDetail.FindAsync(c => c.OccupationOtherDetailId == occupationOtherDetailId &&
                                                                                              c.IsDeleted == false);
-                if (expertInfo!=null)
+                if (expertInfo != null)
                 {
                     expertInfo.IsDeleted = true;
                     expertInfo.ModifiedById = userId;
@@ -4392,7 +4458,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var list = await _uow.GetDbContext().CEAssumptionDetail.Where(x => x.IsDeleted == false && 
+                var list = await _uow.GetDbContext().CEAssumptionDetail.Where(x => x.IsDeleted == false &&
                                                                                    x.ProjectId == projectId)
                                                                                 .OrderByDescending(x => x.AssumptionDetailId)
                                                                                 .ToListAsync();
@@ -4470,9 +4536,9 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                CEAssumptionDetail expertInfo = await _uow.CEAssumptionDetail.FindAsync(c => c.AssumptionDetailId == assumptionDetailId && 
-                                                                                             c.IsDeleted== false);
-                if (expertInfo!=null)
+                CEAssumptionDetail expertInfo = await _uow.CEAssumptionDetail.FindAsync(c => c.AssumptionDetailId == assumptionDetailId &&
+                                                                                             c.IsDeleted == false);
+                if (expertInfo != null)
                 {
                     expertInfo.IsDeleted = true;
                     expertInfo.ModifiedById = userId;
@@ -4522,7 +4588,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                var list = await _uow.GetDbContext().DonorEligibilityCriteria.Where(x => x.IsDeleted == false && 
+                var list = await _uow.GetDbContext().DonorEligibilityCriteria.Where(x => x.IsDeleted == false &&
                                                                                          x.ProjectId == projectId)
                                                                                      .OrderByDescending(x => x.DonorEligibilityDetailId)
                                                                                      .ToListAsync();
@@ -4573,7 +4639,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
             try
             {
-                DonorEligibilityCriteria _detail = await _uow.GetDbContext().DonorEligibilityCriteria.FirstOrDefaultAsync(x => x.DonorEligibilityDetailId == model.DonorEligibilityDetailId && 
+                DonorEligibilityCriteria _detail = await _uow.GetDbContext().DonorEligibilityCriteria.FirstOrDefaultAsync(x => x.DonorEligibilityDetailId == model.DonorEligibilityDetailId &&
                                                                                                                                x.IsDeleted == false);
                 if (_detail != null)
                 {
@@ -4633,9 +4699,9 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 ProjectDetail projectDetail = _uow.GetDbContext().ProjectDetail
-                                                   .FirstOrDefault(x => x.ProjectId == model.ProjectId && 
+                                                   .FirstOrDefault(x => x.ProjectId == model.ProjectId &&
                                                                         x.IsDeleted == false);
-                                                   
+
                 if (projectDetail != null)
                 {
                     projectDetail.IsCriteriaEvaluationSubmit = model.IsCriteriaEvaluationSubmit;
@@ -4689,7 +4755,7 @@ namespace HumanitarianAssistance.Service.Classes
         {
             ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
                                                                                                            x.IsDeleted == false);
-            long projectjobCount = await _uow.GetDbContext().ProjectJobDetail.LongCountAsync(x => x.ProjectId == model.ProjectId && 
+            long projectjobCount = await _uow.GetDbContext().ProjectJobDetail.LongCountAsync(x => x.ProjectId == model.ProjectId &&
                                                                                                   x.IsDeleted == false);
 
             return ProjectUtility.GenerateProjectJobCode(projectDetail.ProjectCode, projectjobCount++);
@@ -4723,7 +4789,7 @@ namespace HumanitarianAssistance.Service.Classes
                     }
                     else
                     {
-                        ProjectJobDetail projectJobDetail = await _uow.GetDbContext().ProjectJobDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && 
+                        ProjectJobDetail projectJobDetail = await _uow.GetDbContext().ProjectJobDetail.FirstOrDefaultAsync(x => x.IsDeleted == false &&
                                                                                                                                 x.ProjectJobId == model.ProjectJobId);
                         if (projectJobDetail != null)
                         {
@@ -4738,7 +4804,7 @@ namespace HumanitarianAssistance.Service.Classes
                             await _uow.ProjectJobDetailRepository.UpdateAsyn(projectJobDetail);
                         }
                     }
-                       
+
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
@@ -4809,7 +4875,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
 
-                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false && 
+                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false &&
                                                                                  x.ProjectId == projectId)
                                                                             .OrderByDescending(x => x.ProjectJobName)
                                                                             .ToListAsync();
@@ -4868,11 +4934,11 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
 
-                int totalCount = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false && 
+                int totalCount = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false &&
                                                                                        x.ProjectId == projectJobFilterModel.ProjectId)
                                                                                  .CountAsync();
 
-                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted== false &&
+                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false &&
                                                                                  x.ProjectId == projectJobFilterModel.ProjectId)
                                                                      .OrderByDescending(x => x.ProjectJobId)
                                                                      .Skip(projectJobFilterModel.PageSize.Value * projectJobFilterModel.PageIndex.Value)
@@ -4897,8 +4963,8 @@ namespace HumanitarianAssistance.Service.Classes
         {
             APIResponse response = new APIResponse();
             try
-            { 
-                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false && 
+            {
+                var list = await _uow.GetDbContext().ProjectJobDetail.Where(x => x.IsDeleted == false &&
                                                                                  projectIds.Contains(x.ProjectId))
                                                                      .OrderByDescending(x => x.ProjectJobName)
                                                                      .ToListAsync();
@@ -4940,7 +5006,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                 ProjectBudgetLineDetail projectBudgetLineDetail = await _uow.GetDbContext().ProjectBudgetLineDetail
                                                                                            .Include(x => x.ProjectJobDetail)
-                                                                                           .FirstOrDefaultAsync(x => x.IsDeleted == false && 
+                                                                                           .FirstOrDefaultAsync(x => x.IsDeleted == false &&
                                                                                                                      x.BudgetLineId == budgetLineId);
 
                 ProjectJobDetailModel model = new ProjectJobDetailModel();
@@ -5202,10 +5268,10 @@ namespace HumanitarianAssistance.Service.Classes
                                       .CountAsync();
 
                 var budgetLineList = await _uow.GetDbContext().ProjectBudgetLineDetail
-                                              .Include(x=> x.VoucherTransactions)
-                                              .ThenInclude(x=> x.VoucherDetails)
-                                              .ThenInclude(x=> x.CurrencyDetail)
-                                              .Where(v => v.ProjectId == budgeLineFilterModel.ProjectId && v.IsDeleted == false && 
+                                              .Include(x => x.VoucherTransactions)
+                                              .ThenInclude(x => x.VoucherDetails)
+                                              .ThenInclude(x => x.CurrencyDetail)
+                                              .Where(v => v.ProjectId == budgeLineFilterModel.ProjectId && v.IsDeleted == false &&
                                                         !string.IsNullOrEmpty(budgeLineFilterModel.FilterValue) ? (
                                                           v.BudgetLineId.ToString().Trim().Contains(budgetLineIdNoValue) ||
                                                           v.BudgetCode.Trim().ToLower().Contains(budgetCodeNoValue) ||
@@ -5230,8 +5296,8 @@ namespace HumanitarianAssistance.Service.Classes
                                           ProjectJobId = x.ProjectJobId,
                                           ProjectJobName = x.ProjectJobDetail.ProjectJobName,
                                           CreatedDate = x.CreatedDate,
-                                          DebitPercentage= ((x.VoucherTransactions.Where(y => y.IsDeleted == false &&
-                                                                             y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s=> s.Debit)) / x.InitialBudget) * 100
+                                          DebitPercentage = ((x.VoucherTransactions.Where(y => y.IsDeleted == false &&
+                                                                              y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s => s.Debit)) / x.InitialBudget) * 100
                                       })
                                       .Skip(budgeLineFilterModel.pageSize.Value * budgeLineFilterModel.pageIndex.Value)
                                       .Take(budgeLineFilterModel.pageSize.Value)
@@ -5254,7 +5320,7 @@ namespace HumanitarianAssistance.Service.Classes
                 //    }
 
                 //}
-                response.data.ProjectBudgetLineList = budgetLineList.OrderByDescending(x=>x.DebitPercentage).ToList();
+                response.data.ProjectBudgetLineList = budgetLineList.OrderByDescending(x => x.DebitPercentage).ToList();
                 response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -5354,15 +5420,16 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 var list = await _uow.GetDbContext().ProjectBudgetLineDetail.Where(x => x.IsDeleted == false && projectJobIds.Contains(x.ProjectJobId))
-                                                                      .Select(x=> new ProjectBudgetLineDetailModel {
-                                                                      BudgetCode= x.BudgetCode,
-                                                                      BudgetCodeName= x.BudgetCode + "-" + x.BudgetName,
-                                                                      BudgetLineId= x.BudgetLineId,
-                                                                      BudgetName= x.BudgetName,
-                                                                      CurrencyId= x.CurrencyId,
-                                                                      InitialBudget= x.InitialBudget,
-                                                                      ProjectId= x.ProjectId,
-                                                                      ProjectJobId= x.ProjectJobId,
+                                                                      .Select(x => new ProjectBudgetLineDetailModel
+                                                                      {
+                                                                          BudgetCode = x.BudgetCode,
+                                                                          BudgetCodeName = x.BudgetCode + "-" + x.BudgetName,
+                                                                          BudgetLineId = x.BudgetLineId,
+                                                                          BudgetName = x.BudgetName,
+                                                                          CurrencyId = x.CurrencyId,
+                                                                          InitialBudget = x.InitialBudget,
+                                                                          ProjectId = x.ProjectId,
+                                                                          ProjectJobId = x.ProjectJobId,
                                                                       }).ToListAsync();
                 response.data.ProjectBudgetLineDetailList = list;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -5664,7 +5731,7 @@ namespace HumanitarianAssistance.Service.Classes
 
         }
         #endregion
-       
+
         #region "GetProgress"
 
         public float GetProgress(DateTime? dueDate, DateTime? startDate)
@@ -6044,7 +6111,7 @@ namespace HumanitarianAssistance.Service.Classes
 
                         if (projectListdata.Count > 0)
                         {
-                          //  ProjectBudgetLineDetail budgetLineDetailExist;
+                            //  ProjectBudgetLineDetail budgetLineDetailExist;
 
                             foreach (var item in projectListdata)
                             {
@@ -6222,7 +6289,7 @@ namespace HumanitarianAssistance.Service.Classes
                                         }
 
                                         //  response.data.TransactionBudgetModelList = budgetLineDetailExist;
-                                        
+
                                     }
                                 }
                                 //Note : if budget code and job code are empty check for new budget line on the bases of name
@@ -6277,11 +6344,12 @@ namespace HumanitarianAssistance.Service.Classes
                             }
                         }
 
-                       else {
+                        else
+                        {
                             response.StatusCode = StaticResource.notFoundCode;
                         }
                     }
-                  
+
 
                 }
             }
@@ -6291,7 +6359,7 @@ namespace HumanitarianAssistance.Service.Classes
                 response.Message = StaticResource.SomethingWrong + ex;
             }
             return response;
-           
+
 
         }
         #endregion
@@ -6393,9 +6461,9 @@ namespace HumanitarianAssistance.Service.Classes
                 CreatedDate = DateTime.UtcNow,
                 IsDeleted = false,
                 CreatedById = userId,
-                BudgetCode=item.BudgetCode
+                BudgetCode = item.BudgetCode
             };
-           var objdetail = await _uow.ProjectBudgetLineDetailRepository.AddAsyn(budgetLineObj);
+            var objdetail = await _uow.ProjectBudgetLineDetailRepository.AddAsyn(budgetLineObj);
             await _uow.GetDbContext().SaveChangesAsync();
 
 
@@ -6403,7 +6471,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 objdetail.BudgetCode = await GetProjectBudgetLineCode(objdetail);
                 //Note : update using repository not working thats why update using entity. 
-                 _uow.GetDbContext().ProjectBudgetLineDetail.Update(objdetail);
+                _uow.GetDbContext().ProjectBudgetLineDetail.Update(objdetail);
                 await _uow.GetDbContext().SaveChangesAsync();
 
 

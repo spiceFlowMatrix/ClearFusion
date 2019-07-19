@@ -912,11 +912,11 @@ namespace HumanitarianAssistance.WebApi.Controllers
     }
 
     [HttpPost]
-    public APIResponse GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
+    public async Task<APIResponse> GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
     {
       APIResponse apiRespone = null;
 
-      apiRespone = _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
+      apiRespone =await _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
 
       return apiRespone;
     }
