@@ -26,9 +26,9 @@ export class AppUrlService {
     return environment.uploadUrl;
   }
 
-  private getApiURL(baseURL):string {
+  //private getApiURL(baseURL):string {
 
-   return (baseURL.substring(baseURL.lastIndexOf('/')))
-  }
+  // return (baseURL.substring(baseURL.lastIndexOf('/')))
+  //}
 
 }

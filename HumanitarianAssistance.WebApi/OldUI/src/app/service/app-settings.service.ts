@@ -19,10 +19,9 @@ export class AppSettingsService {
         return this.baseUrl+ 'chathub/';
     }
 
-    private getApiURL(baseURL): string {
-
-        return (baseURL.substring(baseURL.lastIndexOf('/')))
-    }
+   // private getApiURL(baseURL): string {
+    //    return (baseURL.substring(baseURL.lastIndexOf('/')))
+   // }
 }
 
 export const SETTINGS_PROVIDERS = [
