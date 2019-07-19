@@ -334,7 +334,7 @@ namespace HumanitarianAssistance.WebApi
                     FileProvider = new PhysicalFileProvider(
                             Path.Combine(
                                 Directory.GetCurrentDirectory(),
-                                @"NewUI\dist"
+                                @"NewUI/dist"
                             )
                         )
                 };
@@ -375,7 +375,7 @@ namespace HumanitarianAssistance.WebApi
                     FileProvider = new PhysicalFileProvider(
                             Path.Combine(
                                 Directory.GetCurrentDirectory(),
-                                @"OldUI\dist"
+                                @"OldUI/dist"
                             )
                         )
                 };
