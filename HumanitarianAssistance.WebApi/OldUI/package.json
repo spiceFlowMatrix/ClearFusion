@@ -4,8 +4,9 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --servePath /oldui/ --baseHref /oldui/",
+    "start": "ng serve --servePath / --baseHref /oldui/",
     "build": "ng build --baseHref /oldui/",
+    "build:ssr": "npm run build --baseHref /oldui/ -- --app=ssr --output-hashing=media",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

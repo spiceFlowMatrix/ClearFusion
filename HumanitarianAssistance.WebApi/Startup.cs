@@ -73,20 +73,27 @@ namespace HumanitarianAssistance.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             //get and set environment variable at run time
             string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
-
             string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
+
             DefaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
             string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
             string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
+
             string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
 
             Console.WriteLine("Connection string: {0}\n", connectionString);
 
+            // use it to host on IIS
+            // services.Configure<IISOptions>(options =>
+            // {
+            //     options.AutomaticAuthentication = false;
+            // });
+
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+
 
             // ===== Add Identity ========
             services.AddIdentity<AppUser, IdentityRole>(o =>
@@ -231,9 +238,6 @@ namespace HumanitarianAssistance.WebApi
             });
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-
-
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddMvc()
@@ -249,13 +253,6 @@ namespace HumanitarianAssistance.WebApi
 
             services.AddRouting();
             services.AddSignalR();
-
-            // In production, the Angular files will be served from this directory
-            //services.AddSpaStaticFiles(configuration =>
-            //{
-            //    configuration.RootPath = "OldUI/dist";
-            //    // configuration.RootPath = Directory.GetCurrentDirectory();
-            //});
 
             services.AddSwaggerGen(c =>
             {
@@ -282,8 +279,6 @@ namespace HumanitarianAssistance.WebApi
                 c.IncludeXmlComments(xmlPath);
                 //});
             });
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -297,8 +292,7 @@ namespace HumanitarianAssistance.WebApi
                 app.UseDeveloperExceptionPage();
             }
             else
-            { 
-
+            {
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
@@ -306,7 +300,6 @@ namespace HumanitarianAssistance.WebApi
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            //app.UseSpaStaticFiles();
 
             app.UseCookiePolicy();
             app.UseCors(DefaultCorsPolicyName);
@@ -318,7 +311,7 @@ namespace HumanitarianAssistance.WebApi
                 c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "My API V1");
                 // c.SwaggerEndpoint("/swagger/accounting/swagger.json", "Accounting API's");
             });
-             
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ProjectChatHub>("/chathub");
@@ -331,154 +324,76 @@ namespace HumanitarianAssistance.WebApi
                     template: "{controller}/{action=Index}/{id?}");
             });
 
+            // for each angular client we want to host. 
+            app.Map(new PathString("/newui"), client =>
+            {
 
-            //app.UseSpaStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory())
-            //});
+                string oldUiPath = env.IsDevelopment() ? "NewUI" : @"NewUI/dist";
 
-            //app.Map("/newui", client =>
-            //{
-            //    client.UseSpa(spa =>
-            //    {
-            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-            //        spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
-            //        {
-            //            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"))
-            //        };
-            //        if (env.IsDevelopment())
-            //        {
-            //            spa.Options.SourcePath = "ClientApp";
-            //            spa.UseAngularCliServer(npmScript: "start");
-            //        }
-            //        else
-            //        {
-            //            spa.Options.SourcePath = "ClientApp";
-            //        }
-            //    });
-            //});
-
-            //app.Map("/oldui", admin =>
-            //{
-            //    admin.UseSpa(spa =>
-            //    {
-            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-
-            //        spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
-            //        {
-            //            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "OldUI"))
-            //        };
-
-            //        spa.Options.SourcePath = "OldUI";
-
-            //        if (env.IsDevelopment())
-            //        {
-            //            spa.Options.SourcePath = "OldUI";
-            //            // spa.Options.ExcludeUrls = new[] { "/sockjs-node" };
-            //            spa.UseAngularCliServer(npmScript: "start");
-            //        }
-
-            //    });
-            //});
-
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseSpaStaticFiles();
-            //    app.UseSpa(spa =>
-            //    {
-            //        spa.Options.SourcePath = "NewUI";
-            //        // this is calling the start found in package.json
-            //        spa.UseAngularCliServer(npmScript: "start");
-            //    });
-            //}
-            //else
-            //{
-                // how you had it, we will create a map 
-                // for each angular client we want to host. 
-                app.Map(new PathString("/newui"), client =>
+                // Each map gets its own physical path
+                // for it to map the static files to. 
+                StaticFileOptions olduiDist = new StaticFileOptions()
                 {
-                    // Each map gets its own physical path
-                    // for it to map the static files to. 
-                    StaticFileOptions newuiDist = new StaticFileOptions()
-                    {
-                        FileProvider = new PhysicalFileProvider(
-                                Path.Combine(
-                                    Directory.GetCurrentDirectory(),
-                                    @"NewUI\dist"
-                                )
-                            )
-                    };
+                    FileProvider = new PhysicalFileProvider(
+                            Path.Combine(Directory.GetCurrentDirectory(), oldUiPath)
+                        )
+                };
 
-                    // Each map its own static files otherwise
-                    // it will only ever serve index.html no matter the filename 
-                    client.UseSpaStaticFiles(newuiDist);
+                // Each map its own static files otherwise
+                // it will only ever serve index.html no matter the filename 
+                client.UseSpaStaticFiles(olduiDist);
 
-                    // Each map will call its own UseSpa where
-                    // we give its own sourcepath
-                    client.UseSpa(spa =>
-                    {
-                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                        spa.Options.SourcePath = "NewUI";
-                        spa.Options.DefaultPageStaticFileOptions = newuiDist;
-                    });
+                client.UseSpa(spa =>
+                {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.SourcePath = "NewUI";
 
                     if (env.IsDevelopment())
                     {
-                        //app.UseSpaStaticFiles();
-                        app.UseSpa(spa =>
-                        {
-                            spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                            spa.Options.SourcePath = "NewUI";
-                            // this is calling the start found in package.json
-                            spa.UseAngularCliServer(npmScript: "start");
-                        });
+                        // it will use package.json & will search for start command to run
+                        spa.UseAngularCliServer(npmScript: "start");
                     }
-                });
-
-                // how you had it, we will create a map 
-                // for each angular client we want to host. 
-                app.Map(new PathString("/oldui"), client =>
-                {
-                    // Each map gets its own physical path
-                    // for it to map the static files to. 
-                    StaticFileOptions olduiDist = new StaticFileOptions()
+                    else
                     {
-                        FileProvider = new PhysicalFileProvider(
-                                Path.Combine(
-                                    Directory.GetCurrentDirectory(),
-                                    @"OldUI\dist"
-                                )
-                            )
-                    };
-
-                    // Each map its own static files otherwise
-                    // it will only ever serve index.html no matter the filename 
-                    client.UseSpaStaticFiles(olduiDist);
-
-                    // Each map will call its own UseSpa where
-                    // we give its own sourcepath
-                    client.UseSpa(spa =>
-                    {
-                        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                        spa.Options.SourcePath = "OldUI";
                         spa.Options.DefaultPageStaticFileOptions = olduiDist;
-                    });
+                    }
+                });
+            });
+
+            // for each angular client we want to host. 
+            app.Map(new PathString("/oldui"), client =>
+            {
+                string oldUiPath = env.IsDevelopment() ? "OldUI" : @"OldUI/dist";
+
+                // Each map gets its own physical path for it to map the static files to. 
+                StaticFileOptions olduiDist = new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(
+                            Path.Combine(Directory.GetCurrentDirectory(), oldUiPath)
+                        )
+                };
+
+                // Each map its own static files otherwise it will only ever serve index.html no matter the filename 
+                client.UseSpaStaticFiles(olduiDist);
+
+                client.UseSpa(spa =>
+                {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                    spa.Options.SourcePath = "OldUI";
 
                     if (env.IsDevelopment())
                     {
-                        //app.UseSpaStaticFiles();
-                        app.UseSpa(spa =>
-                        {
-                            spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                            spa.Options.SourcePath = "OldUI";
-                            // this is calling the start found in package.json
-                            spa.UseAngularCliServer(npmScript: "start");
-                        });
+                        // it will use package.json & will search for start command to run
+                        spa.UseAngularCliServer(npmScript: "start");
+                    }
+                    else
+                    {
+                        spa.Options.DefaultPageStaticFileOptions = olduiDist;
                     }
                 });
-            }
+            });
 
-       // }
+        }
 
         //2011
         private static async Task UpdateDatabase(IApplicationBuilder app, UserManager<AppUser> um, RoleManager<IdentityRole> rm, ILogger<DbInitializer> logger)
