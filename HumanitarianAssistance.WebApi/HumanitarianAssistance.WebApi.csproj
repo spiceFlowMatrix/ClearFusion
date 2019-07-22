@@ -85,6 +85,23 @@
 
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+  
+    <!-- newui -->
+    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm run build -- --prod" />
+    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="$(SpaRootNewUI)dist\**; $(SpaRootNewUI)dist-server\**" />
+      <DistFiles Include="$(SpaRootNewUI)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+
     <!-- oldui -->
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm install" />
@@ -101,21 +118,5 @@
       </ResolvedFileToPublish>
     </ItemGroup>
 
-
-    <!-- newui -->
-    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm install" />
-    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm run build -- --prod" />
-    <Exec WorkingDirectory="$(SpaRootNewUI)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
-
-    <!-- Include the newly-built files in the publish output -->
-    <ItemGroup>
-      <DistFiles Include="$(SpaRootNewUI)dist\**; $(SpaRootNewUI)dist-server\**" />
-      <DistFiles Include="$(SpaRootNewUI)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
-      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-        <RelativePath>%(DistFiles.Identity)</RelativePath>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </ResolvedFileToPublish>
-    </ItemGroup>
   </Target>
 </Project>
