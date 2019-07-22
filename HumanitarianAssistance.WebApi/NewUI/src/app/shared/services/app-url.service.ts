@@ -7,20 +7,21 @@ export class AppUrlService {
   constructor(@Inject('BASE_URL') private baseUrl: string) { }
 
   public getApiUrl(): string {
-    return '/api/';
-    // return this.baseUrl + 'api/';
+    return environment.apiUrl;
   }
+
   public getDocUrl(): string {
-    return '/Docs/';
-    // return this.baseUrl + 'Docs/';
+    return environment.docUrl;
   }
+
   public getHubUrl(): string {
-    return '/chathub/';
-    // return this.baseUrl + 'chathub/';
+    return environment.hubUrl;
   }
+
   public getOldUiUrl(): string {
     return environment.oldUiUrl;
   }
+
   public getUploadDocUrl(): string {
     return environment.uploadUrl;
   }
