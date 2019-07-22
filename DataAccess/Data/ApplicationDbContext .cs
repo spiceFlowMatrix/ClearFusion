@@ -196,7 +196,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<Errorlog> errorlog { get; set; }
         public DbSet<DocumentFileDetail> DocumentFileDetail { get; set; }
         public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
-
+        public DbSet<ChatDetail> ChatDetail { get; set; }
 
         #region Project
         public DbSet<DonorDetail> DonorDetail { get; set; }

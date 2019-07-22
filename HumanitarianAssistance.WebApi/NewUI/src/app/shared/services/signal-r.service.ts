@@ -13,6 +13,7 @@ export class SignalRService {
 
 
   public activityPermission$ = new BehaviorSubject<any[]>([]);
+  public DemoMessage$ = new BehaviorSubject<any[]>([]);
 
   constructor(private appUrlService: AppUrlService) { }
 
@@ -62,5 +63,15 @@ export class SignalRService {
     });
   }
 
+//#region "activityPermissionChanged - invoke"
+public AddMessageInvoke(data: any): void {
+  debugger;
+  this.hubConnection.invoke('AddMessage', data);
 
+  this.hubConnection.on('ReceiveMessage', x => {
+    console.log(x);
+    this.DemoMessage$.next(data);
+  });
+}
+//#endregion
 }

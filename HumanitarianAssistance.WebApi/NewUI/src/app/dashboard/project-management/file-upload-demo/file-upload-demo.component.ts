@@ -5,6 +5,8 @@ import { ProjectActivitiesService } from '../project-list/project-activities/ser
 import { IResponseData } from '../../accounting/vouchers/models/status-code.model';
 import { ToastrService } from 'ngx-toastr';
 import * as jsPDF from 'jspdf';
+import { SignalRService } from 'src/app/shared/services/signal-r.service';
+import { FileSourceEntityTypes } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-file-upload-demo',
@@ -14,10 +16,15 @@ import * as jsPDF from 'jspdf';
 export class FileUploadDemoComponent implements OnInit, OnDestroy {
   uploadActivitySubscribe: Subscription;
 
+  Messages: string[];
+  sampleMessage: string;
+  ChatModel: IChatModel;
+
   constructor(
     private commonLoader: CommonLoaderService,
     private activitiesService: ProjectActivitiesService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private signalRService: SignalRService
   ) {}
 
   ngOnInit() {}
@@ -203,4 +210,27 @@ export class FileUploadDemoComponent implements OnInit, OnDestroy {
 
   }
 
+  sendChat() {
+
+    this.ChatModel = {
+      EntityId: 1,
+      Message: this.sampleMessage,
+      SourceEntityTypeId: FileSourceEntityTypes.ProjectDetail
+    };
+
+    this.signalRService.AddMessageInvoke(this.ChatModel);
+ debugger;
+    this.signalRService.DemoMessage$.subscribe((x: any) => {
+      console.log(x);
+    });
+  }
+
+
+
+}
+
+interface IChatModel {
+SourceEntityTypeId: number;
+EntityId: number;
+Message: string;
 }

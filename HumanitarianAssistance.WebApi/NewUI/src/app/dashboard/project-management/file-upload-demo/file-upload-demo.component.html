@@ -32,4 +32,23 @@
       </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <input type="text" [(ngModel)]="sampleMessage" />
+    </div>
+
+    <br />
+    <div class="col-sm-12">
+      <span *ngFor="let message of Messages">
+        {{message}}
+      </span>
+    </div>
+    <br />
+    <div class="col-sm-2">
+      <button (click)="sendChat()">Send Message</button>
+    </div>
+
+
+  </div>
 </div>
