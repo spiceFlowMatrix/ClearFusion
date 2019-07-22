@@ -85,7 +85,7 @@
 
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-    <!-- oldui -->
+   <!-- oldui -->
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm install" />
     <Exec WorkingDirectory="$(SpaRootOldUI)" Command="npm run build" />
@@ -100,7 +100,6 @@
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
-
 
     <!-- newui -->
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
@@ -117,5 +116,6 @@
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
+
   </Target>
 </Project>
