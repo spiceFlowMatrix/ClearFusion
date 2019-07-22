@@ -151,7 +151,7 @@ namespace HumanitarianAssistance.WebApi
             services.AddTransient<IFileManagement, FileManagementService>();
             services.AddTransient<IHiringRequestService, HiringRequestService>();
             services.AddTransient<IChat, ChatService>();
-            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddTransient<UserManager<AppUser>>();
 
             var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
