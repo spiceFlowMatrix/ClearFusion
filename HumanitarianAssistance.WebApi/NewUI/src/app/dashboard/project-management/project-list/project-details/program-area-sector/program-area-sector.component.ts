@@ -978,8 +978,6 @@ export class ProgramAreaSectorComponent implements OnInit {
     }
   }
 
-
-
   GetProvinceByCountryId(model: any) {
     const id = model;
     this.ProvinceSelectionList = [];

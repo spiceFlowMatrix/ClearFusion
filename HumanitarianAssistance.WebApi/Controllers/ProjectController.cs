@@ -607,6 +607,16 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
 
         [HttpPost]
+        public APIResponse GetCountryMultiSelectByProjectId([FromBody]long Id)
+        {
+            APIResponse apiresponse = _iProject.GetCountryMultiSelectByProjectId(Id);
+
+            return apiresponse;
+        }
+
+
+
+        [HttpPost]
         public APIResponse GetProvinceMultiSelectByCountryId([FromBody]int[] Id)
         {
             APIResponse apiresponse = _iProject.GetProvinceMultiSelectByCountryId(Id);
