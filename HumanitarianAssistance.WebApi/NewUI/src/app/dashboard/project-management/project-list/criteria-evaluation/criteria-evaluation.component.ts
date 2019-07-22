@@ -4,7 +4,7 @@ import {
   HostListener,
   EventEmitter,
   Output
-} from '@angular/core';
+} from "@angular/core";
 import {
   DonorCEModel,
   EligibilityCEModel,
@@ -14,14 +14,15 @@ import {
   RiskSecurityModel,
   ProductAndServiceCEModel,
   TargetBeneficiaryModel,
-  FinancialProjectDetailModel
-} from '../project-details/models/project-details.model';
-import { CriteriaEvaluationService } from '../service/criteria-evaluation.service';
-import { GLOBAL } from 'src/app/shared/global';
-import { AppUrlService } from 'src/app/shared/services/app-url.service';
-import { FormControl, Validators } from '@angular/forms';
-import { SelectItem } from 'primeng/primeng';
-import { ToastrService } from 'ngx-toastr';
+  FinancialProjectDetailModel,
+  CurrencyModel
+} from "../project-details/models/project-details.model";
+import { CriteriaEvaluationService } from "../service/criteria-evaluation.service";
+import { GLOBAL } from "src/app/shared/global";
+import { AppUrlService } from "src/app/shared/services/app-url.service";
+import { FormControl, Validators } from "@angular/forms";
+import { SelectItem } from "primeng/primeng";
+import { ToastrService } from "ngx-toastr";
 import {
   IPriorityOtherModel,
   IFeasibilityExpert,
@@ -30,17 +31,17 @@ import {
   ICEOccupationModel,
   ICEDonorEligibilityModel,
   ICEisCESubmitModel
-} from './criteria-evaluation.model';
-import { ActivatedRoute } from '@angular/router';
+} from "./criteria-evaluation.model";
+import { ActivatedRoute } from "@angular/router";
 import {
   TargetBeneficiaryTypes_Enum,
   criteriaEvaluationScores
-} from 'src/app/shared/enum';
+} from "src/app/shared/enum";
 
 @Component({
-  selector: 'app-criteria-evaluation',
-  templateUrl: './criteria-evaluation.component.html',
-  styleUrls: ['./criteria-evaluation.component.scss']
+  selector: "app-criteria-evaluation",
+  templateUrl: "./criteria-evaluation.component.html",
+  styleUrls: ["./criteria-evaluation.component.scss"]
 })
 export class CriteriaEvaluationComponent implements OnInit {
   //#region  agegroup and occupation
@@ -59,24 +60,26 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region "Variables"
   methodOfFundingList = [
-    { Id: 1, Name: 'Sole' },
-    { Id: 2, Name: 'Source/Co-finance' }
+    { Id: 1, Name: "Sole" },
+    { Id: 2, Name: "Source/Co-finance" }
   ];
 
   financialHistory = [
-    { Id: 1, Name: 'Good' },
-    { Id: 2, Name: 'Neutral' },
-    { Id: 3, Name: 'Bad' }
+    { Id: 1, Name: "Good" },
+    { Id: 2, Name: "Neutral" },
+    { Id: 3, Name: "Bad" }
   ];
 
   sectorAndThemes = [
     {
       Id: 1,
-      Name: 'Products'
+      Name: "Products"
     },
-    { Id: 2, Name: 'Services' }
+    { Id: 2, Name: "Services" }
   ];
 
+  disableCriteriaEvaluationForm = false;
+  isExpanded = true;
   isDisabledCriticism = true;
   isDisabledEligibilityCriteria: boolean;
   // isDisabledEligibilityCriteria = false;
@@ -110,7 +113,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   submitButton: any;
 
   // Count values
-  proposalExperiemce = '';
+  proposalExperiemce = "";
 
   //#region  Donor eligibility creteia variables
   onDonorELegibilityCrteria = 0;
@@ -188,6 +191,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   ageGroupList: ICEAgeDEtailModel[] = [];
   occupatonList: ICEOccupationModel[] = [];
   donorEligibilityList: ICEDonorEligibilityModel[] = [];
+  CurrencyList: CurrencyModel[];
 
   // screen
   screenHeight: any;
@@ -207,7 +211,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   ngOnInit() {
     this.routeActive.parent.params.subscribe(params => {
-      this.ProjectId = +params['id'];
+      this.ProjectId = +params["id"];
     });
     this.initializeList();
     this.initilizeDonorEligibilityList();
@@ -219,11 +223,12 @@ export class CriteriaEvaluationComponent implements OnInit {
     this.initRiskModel();
     this.initProductAndServiceModel();
     this.GetCriteraiEvaluationDetailById(this.ProjectId);
-    this.CostOfCompensation = new FormControl('', [
+    this.CostOfCompensation = new FormControl("", [
       Validators.max(12),
       Validators.min(1)
     ]);
     this.GetAllProjectList();
+    this.GetAllCurrency();
     this.initProjectSelctionModel();
     this.getPriorityListByProjectId(this.ProjectId);
     this.getAssumptionByprojectId(this.ProjectId);
@@ -236,15 +241,15 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   //#region "Dynamic Scroll"
-  @HostListener('window:resize', ['$event'])
+  @HostListener("window:resize", ["$event"])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
 
     this.scrollStyles = {
-      'overflow-y': 'auto',
-      height: this.screenHeight - 190 + 'px',
-      'overflow-x': 'hidden'
+      "overflow-y": "auto",
+      height: this.screenHeight - 190 + "px",
+      "overflow-x": "hidden"
     };
   }
   //#endregion
@@ -430,10 +435,18 @@ export class CriteriaEvaluationComponent implements OnInit {
       Ethinc: null,
       Social: null,
       Traditional: null,
+
+      Geographical: null,
+      Insecurity: null,
+      Season: null,
+      Ethnicity: null,
+      Culture: null,
+      ReligiousBeliefs: null,
       FocusDivertingrisk: null,
       Financiallosses: null,
       Opportunityloss: null,
       ProjectSelectionId: null,
+      CurrencyId: null,
       Probablydelaysinfunding: null,
       OtherOrganizationalHarms: null,
       OrganizationalDescription: null
@@ -540,10 +553,10 @@ export class CriteriaEvaluationComponent implements OnInit {
     this.AddEditDonorCEForm(this.donorCEForm);
   }
   onProposalExperiemceChange(value) {
-    if (value.value === 'pre') {
+    if (value.value === "pre") {
       this.donorCEForm.ProposalExperience = true;
       this.proposalExperiemce = criteriaEvaluationScores.pre_ProposalExperience;
-    } else if (value.value === 'post') {
+    } else if (value.value === "post") {
       this.donorCEForm.ProposalExperience = false;
       this.proposalExperiemce =
         criteriaEvaluationScores.post_ProposalExperience;
@@ -606,7 +619,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onOtherTypeDeliverablesChange(ev, data: any) {
-    if ((ev = 'OtherDeliverableType')) {
+    if ((ev = "OtherDeliverableType")) {
       if (data != null) {
         this.donorCEForm.OtherDeliverableType = data;
       } else {
@@ -1090,8 +1103,8 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onCostOfCompensationChange(ev, data: any) {
-    if (data <= 12 && data != null && data !== undefined && data !== '') {
-      if (ev === 'CostOfCompensation') {
+    if (data <= 12 && data != null && data !== undefined && data !== "") {
+      if (ev === "CostOfCompensation") {
         this.feasibilityForm.CostOfCompensationMonth = data;
         // this.costOfCompensation = -1 * data;
         this.AddEditFeasibilityCEForm(this.feasibilityForm);
@@ -1100,7 +1113,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
   onCostOfCompensationMoneyChange(ev, data: any) {
     // if (data != null && data != undefined && data != "" && data >= 5000) {
-    if (ev === 'CostOfCompensationMoney') {
+    if (ev === "CostOfCompensationMoney") {
       this.feasibilityForm.CostOfCompensationMoney = data;
       // this.costOfCompensationMoney = -1 * data / 5000;
       this.AddEditFeasibilityCEForm(this.feasibilityForm);
@@ -1177,7 +1190,10 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onProjectallowedByLawChange(value) {
-    if (value.checked === true) {
+    if (value.checked === false) {
+      this.isExpanded = false;
+      this.disableCriteriaEvaluationForm = true;
+    } else if (value.checked === true) {
       this.projectallowedByLaw =
         criteriaEvaluationScores.projectAllowedByLaw_Yes;
     } else {
@@ -1268,14 +1284,14 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onProjectRealCostChange(data: any) {
-    if (data != null && data !== undefined && data !== '') {
+    if (data != null && data !== undefined && data !== "") {
       this.feasibilityForm.ProjectRealCost = data;
       this.AddEditFeasibilityCEForm(this.feasibilityForm);
     }
   }
 
   onCostGreaterBudgetChange(data: any) {
-    if (data != null && data !== undefined && data !== '') {
+    if (data != null && data !== undefined && data !== "") {
       this.feasibilityForm.PerCostGreaterthenBudget = data;
       this.AddEditFeasibilityCEForm(this.feasibilityForm);
     }
@@ -1480,24 +1496,24 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region Financial profitability form
   onProjectActivityChange(ev, data: any) {
-    if (data != null && data !== '' && data !== undefined) {
+    if (data != null && data !== "" && data !== undefined) {
       // var total = data;
-      if (ev === 'projectActivity') {
+      if (ev === "projectActivity") {
         this.financialForm.ProjectActivities = data;
         this.projectactivity = data;
         this.AddEditFinancialProfitability(this.financialForm);
       }
-      if (ev === 'operational') {
+      if (ev === "operational") {
         this.financialForm.Operational = data;
         this.operational = data;
         this.AddEditFinancialProfitability(this.financialForm);
       }
-      if (ev === 'overheadAdmin') {
+      if (ev === "overheadAdmin") {
         this.admin = data;
         this.financialForm.Overhead_Admin = data;
         this.AddEditFinancialProfitability(this.financialForm);
       }
-      if (ev === 'lumpsum') {
+      if (ev === "lumpsum") {
         this.lump = data;
         this.financialForm.Lump_Sum = data;
         this.AddEditFinancialProfitability(this.financialForm);
@@ -1526,24 +1542,24 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onRiskChildChange(ev, data: any) {
-    if (data != null && data !== '' && data !== undefined) {
-      if (ev === 'Staff') {
+    if (data != null && data !== "" && data !== undefined) {
+      if (ev === "Staff") {
         this.riskForm.Staff = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === 'Assets') {
+      if (ev === "Assets") {
         this.riskForm.ProjectAssets = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === 'Suppliers') {
+      if (ev === "Suppliers") {
         this.riskForm.Suppliers = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === 'Beneficiaries') {
+      if (ev === "Beneficiaries") {
         this.riskForm.Beneficiaries = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === 'OverallOrganization') {
+      if (ev === "OverallOrganization") {
         this.riskForm.OverallOrganization = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
@@ -1561,6 +1577,12 @@ export class CriteriaEvaluationComponent implements OnInit {
       this.riskForm.Ethinc = false;
       this.riskForm.Social = false;
       this.riskForm.Traditional = false;
+      this.riskForm.Geographical = false;
+      this.riskForm.Insecurity = false;
+      this.riskForm.Season = false;
+      this.riskForm.Ethnicity = false;
+      this.riskForm.Culture = false;
+      this.riskForm.ReligiousBeliefs = false;
       this.riskForm.FocusDivertingrisk = false;
       // this.riskReputation = criteriaEvaluationScores.riskSecurity_No
     }
@@ -1569,27 +1591,47 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onReputationChildChange(ev, data: any) {
-    if (data != null && data !== '' && data !== undefined) {
-      if (ev === 'Religious') {
+    if (data != null && data !== "" && data !== undefined) {
+      if (ev === "Religious") {
         this.riskForm.Religious = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === 'Sectarian') {
+      if (ev === "Sectarian") {
         this.riskForm.Sectarian = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === 'Ethnic') {
+      if (ev === "Ethnic") {
         this.riskForm.Ethinc = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === 'Social') {
+      if (ev === "Social") {
         this.riskForm.Social = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === 'Traditional') {
+      if (ev === "Traditional") {
         this.riskForm.Traditional = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
+      if (ev === "Geographical") {
+        this.riskForm.Geographical = data;
+        this.AddEditRiskSecurityCEForm(this.riskForm);
+      } if (ev === "Insecurity") {
+        this.riskForm.Insecurity = data;
+        this.AddEditRiskSecurityCEForm(this.riskForm);
+      } if (ev === "Season") {
+        this.riskForm.Season = data;
+        this.AddEditRiskSecurityCEForm(this.riskForm);
+      } if (ev === "Ethnicity") {
+        this.riskForm.Ethnicity = data;
+        this.AddEditRiskSecurityCEForm(this.riskForm);
+      } if (ev === "Culture") {
+        this.riskForm.Culture = data;
+        this.AddEditRiskSecurityCEForm(this.riskForm);
+      } if (ev === "ReligiousBeliefs") {
+        this.riskForm.ReligiousBeliefs = data;
+        this.AddEditRiskSecurityCEForm(this.riskForm);
+      }
+
     }
   }
 
@@ -1613,16 +1655,16 @@ export class CriteriaEvaluationComponent implements OnInit {
     this.AddEditRiskSecurityCEForm(this.riskForm);
   }
   onRiskDeliveryFailureChildChange(ev, data: any) {
-    if (data != null && data !== '' && data !== undefined) {
-      if (ev === 'PrematureSeizure') {
+    if (data != null && data !== "" && data !== undefined) {
+      if (ev === "PrematureSeizure") {
         this.riskForm.PrematureSeizure = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === 'GovernmentConfiscation') {
+      if (ev === "GovernmentConfiscation") {
         this.riskForm.GovernmentConfiscation = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === 'TerroristActivity') {
+      if (ev === "TerroristActivity") {
         this.riskForm.DesctructionByTerroristActivity = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
@@ -1652,7 +1694,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onProjectotherDetailsChange(ev, data: number[]) {
-    if (ev === 'projectSelction' && data != null) {
+    if (ev === "projectSelction" && data != null) {
       this.riskForm.ProjectSelectionId = data;
       // var unique = Array.from(new Set(data))
       this.AddEditRiskSecurityCEForm(this.riskForm);
@@ -1660,11 +1702,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onProbabilityDelayChange(value) {
-    // if (value.checked === true) {
-    //   this.opportunityDelay = criteriaEvaluationScores.probabilityDelayCuts_Yes
-    // } else {
-    //   this.opportunityDelay = criteriaEvaluationScores.probabilityDelayCuts_No
-    // }
+
     this.riskForm.Probablydelaysinfunding = value.checked;
     this.AddEditRiskSecurityCEForm(this.riskForm);
   }
@@ -1682,8 +1720,8 @@ export class CriteriaEvaluationComponent implements OnInit {
     this.AddEditRiskSecurityCEForm(this.riskForm);
   }
   onOrganizationalDescriptionChange(ev, data: any) {
-    if (data != null && data !== '' && data !== undefined) {
-      if (ev === 'OrganizationalDescription') {
+    if (data != null && data !== "" && data !== undefined) {
+      if (ev === "OrganizationalDescription") {
         this.riskForm.OrganizationalDescription = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
@@ -1717,6 +1755,37 @@ export class CriteriaEvaluationComponent implements OnInit {
       });
   }
   //#endregion
+
+  //#region "getAllcurrency"
+GetAllCurrency() {
+  // this.currencyDetailLoader = true;
+  this.CurrencyList = [];
+  this.criteriaEvalService
+    .GetAllCurrency(this.appurl.getApiUrl() + GLOBAL.API_code_GetAllCurrency)
+    .subscribe(
+      data => {
+        if (data != null && data.StatusCode === 200) {
+          if (data.data.CurrencyList != null) {
+            data.data.CurrencyList.forEach(element => {
+              this.CurrencyList.push({
+                CurrencyId: element.CurrencyId,
+                CurrencyCode: element.CurrencyCode
+              });
+            });
+          }
+        }
+        this._cdr.detectChanges();
+        this.currencyDetailLoader = false;
+      },
+      error => {
+        this.currencyDetailLoader = false;
+      }
+    );
+}
+
+
+//#endregion
+
 
   //#region Get Criteria evaluation by ProjectId Donor
   GetCriteraiEvaluationDetailById(ProjectId: number) {
@@ -1959,6 +2028,13 @@ export class CriteriaEvaluationComponent implements OnInit {
                   data.data.CriteriaEveluationModel.EnoughTimeForProject;
                 this.feasibilityForm.ProjectAllowedBylaw =
                   data.data.CriteriaEveluationModel.ProjectAllowedBylaw;
+                if (this.feasibilityForm.ProjectAllowedBylaw === false) {
+                  this.disableCriteriaEvaluationForm = true;
+                  this.isExpanded = false;
+                } else {
+                  this.disableCriteriaEvaluationForm = false;
+                  this.isExpanded = true;
+                }
                 this.feasibilityForm.ProjectByLeadership =
                   data.data.CriteriaEveluationModel.ProjectByLeadership;
                 this.feasibilityForm.IsProjectPractical =
@@ -2122,6 +2198,18 @@ export class CriteriaEvaluationComponent implements OnInit {
                 this.riskForm.Social = data.data.CriteriaEveluationModel.Social;
                 this.riskForm.Traditional =
                   data.data.CriteriaEveluationModel.Traditional;
+                  this.riskForm.Geographical =
+                  data.data.CriteriaEveluationModel.Geographical;
+                  this.riskForm.Insecurity =
+                  data.data.CriteriaEveluationModel.Insecurity;
+                  this.riskForm.Season =
+                  data.data.CriteriaEveluationModel.Season;
+                  this.riskForm.Ethnicity =
+                  data.data.CriteriaEveluationModel.Ethnicity;
+                  this.riskForm.Culture =
+                  data.data.CriteriaEveluationModel.Culture;
+                  this.riskForm.ReligiousBeliefs =
+                  data.data.CriteriaEveluationModel.ReligiousBeliefs;
                 this.riskForm.FocusDivertingrisk =
                   data.data.CriteriaEveluationModel.FocusDivertingrisk;
                 this.riskForm.Financiallosses =
@@ -2154,7 +2242,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           },
           error => {
             this.criteriaEvaluationLoader = false;
-            this.toastr.error('Something Went Wrong..! Please Try Again.');
+            this.toastr.error("Something Went Wrong..! Please Try Again.");
           }
         );
     }
@@ -2201,7 +2289,6 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region  add edit purpose of initialting
   AddEditPurposeOfInitiatingForm(model: any) {
-    debugger;
     if (model != null) {
       const obj: ProductAndServiceCEModel = {
         ProjectId: this.ProjectId,
@@ -2418,7 +2505,7 @@ export class CriteriaEvaluationComponent implements OnInit {
             }
           },
           error => {
-            this.toastr.error('Something went wrong! Please try Agian');
+            this.toastr.error("Something went wrong! Please try Agian");
           }
         );
     }
@@ -2447,10 +2534,17 @@ export class CriteriaEvaluationComponent implements OnInit {
         Ethinc: model.Ethinc,
         Social: model.Social,
         Traditional: model.Traditional,
+        Geographical: model.Geographical,
+        Insecurity: model.Insecurity,
+        Season: model.Season,
+        Ethnicity: model.Ethnicity,
+        Culture: model.Culture,
+        ReligiousBeliefs: model.ReligiousBeliefs,
         FocusDivertingrisk: model.FocusDivertingrisk,
         Financiallosses: model.Financiallosses,
         Opportunityloss: model.Opportunityloss,
         ProjectSelectionId: model.ProjectSelectionId,
+        CurrencyId: model.CurrencyId,
         Probablydelaysinfunding: model.Probablydelaysinfunding,
         OtherOrganizationalHarms: model.OtherOrganizationalHarms,
         OrganizationalDescription: model.OrganizationalDescription
@@ -2467,6 +2561,18 @@ export class CriteriaEvaluationComponent implements OnInit {
     }
   }
   //#endregion
+
+//#region "currencyDetailsChange"
+currencyDetailsChange(ev, data: any ) {
+  // this.currencyDetailLoader = true;
+  if (data != null && data !== "" && data !== undefined) {
+    if (ev === "currencySelction") {
+      this.riskForm.CurrencyId = data;
+      this.AddEditRiskSecurityCEForm(this.riskForm);
+    }
+  }
+}
+//#endregion
 
   //#region to calculate total value
   get totalValue() {
@@ -2761,16 +2867,19 @@ export class CriteriaEvaluationComponent implements OnInit {
         ? criteriaEvaluationScores.enoughTimeToPrepareproposal_Yes
         : criteriaEvaluationScores.enoughTimeToPrepareproposal_No) +
       // Note: **don't delete:condition for if the costGreaterThanBudget_Yes value is set to be 0
-      // ((this.feasibilityForm.IsCostGreaterthenBudget === false && this.feasibilityForm.IsCostGreaterthenBudget != null)
-      // ? criteriaEvaluationScores.costGreaterThanBudget_No : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
-
+      (this.feasibilityForm.IsCostGreaterthenBudget === false &&
+      this.feasibilityForm.IsCostGreaterthenBudget != null
+        ? criteriaEvaluationScores.costGreaterThanBudget_No
+        : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
       // Note: **don't delete :condition for if the costGreaterThanBudget_Yes value is set to be -1
       // (this.feasibilityForm.IsCostGreaterthenBudget === false
       // ? criteriaEvaluationScores.costGreaterThanBudget_No :
       // this.feasibilityForm.IsCostGreaterthenBudget === null ? 0 : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
-      (this.feasibilityForm.IsCostGreaterthenBudget === true
-        ? criteriaEvaluationScores.costGreaterThanBudget_Yes
-        : criteriaEvaluationScores.costGreaterThanBudget_No) +
+
+      // Note : below comment by pk 22 july 2019 if costGreaterThanBudget_Yes = -1
+      // (this.feasibilityForm.IsCostGreaterthenBudget === true
+      //   ? criteriaEvaluationScores.costGreaterThanBudget_Yes
+      //   : criteriaEvaluationScores.costGreaterThanBudget_No) +
       (this.feasibilityForm.IsFinancialContribution === true
         ? criteriaEvaluationScores.financialCopntributionFulfil_Yes
         : criteriaEvaluationScores.financialCopntributionFulfil_No) +
@@ -2816,18 +2925,26 @@ export class CriteriaEvaluationComponent implements OnInit {
       // (this.riskForm.Security === false && this.riskForm.Security != null
       //   ? criteriaEvaluationScores.riskSecurity_No
       //   : criteriaEvaluationScores.riskSecurity_Yes) +
-      (this.riskForm.Security === true
+      (this.riskForm.Security === true || this.riskForm.Security == null
         ? criteriaEvaluationScores.riskSecurity_Yes
         : criteriaEvaluationScores.riskSecurity_No) +
       // (this.riskForm.DeliveryFaiLure === false && this.riskForm.DeliveryFaiLure != null
       //   ? criteriaEvaluationScores.deliveryFailure_No
       //   : criteriaEvaluationScores.deliveryFailure_Yes) +
-      (this.riskForm.DeliveryFaiLure === true
+      (this.riskForm.DeliveryFaiLure === true ||
+      this.riskForm.DeliveryFaiLure == null
         ? criteriaEvaluationScores.deliveryFailure_Yes
         : criteriaEvaluationScores.deliveryFailure_No) +
-      (this.riskForm.Reputation === true
+      (this.riskForm.Reputation === true || this.riskForm.Reputation == null
         ? criteriaEvaluationScores.riskReputation_Yes
         : criteriaEvaluationScores.riskReputation_No) +
+        (this.riskForm.Geographical === true ? criteriaEvaluationScores.Geographical_Yes : criteriaEvaluationScores.Geographical_No) +
+        (this.riskForm.Insecurity === true ? criteriaEvaluationScores.Insecurity_Yes : criteriaEvaluationScores.Insecurity_No) +
+        (this.riskForm.Season === true ? criteriaEvaluationScores.Season_Yes : criteriaEvaluationScores.Season_No) +
+        (this.riskForm.Ethnicity === true ? criteriaEvaluationScores.Ethnicity_Yes : criteriaEvaluationScores.Ethnicity_No) +
+        (this.riskForm.Culture === true ? criteriaEvaluationScores.Culture_Yes : criteriaEvaluationScores.Culture_No) +
+        (this.riskForm.ReligiousBeliefs === true ? criteriaEvaluationScores.ReligiousBeliefs_Yes :
+           criteriaEvaluationScores.ReligiousBeliefs_No) +
       (this.riskForm.FocusDivertingrisk === true
         ? criteriaEvaluationScores.focusDeliveryRisk_Yes
         : criteriaEvaluationScores.focusDeliveryRisk_No) +
@@ -2846,11 +2963,9 @@ export class CriteriaEvaluationComponent implements OnInit {
 
     return this.totalScore.toFixed(2);
   }
+//#endregion
 
-  // convertstring(totalScore) {
-  //   let number_parsed: any = parseFloat(totalScore).toFixed(2)
-  //   return number_parsed
-  // }
+
 
   //#region "show / hide"
   toggleInputFieldAge() {
@@ -2863,7 +2978,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region "onAdd" target benificiary
   onAddtargetBeneficiary(type: number, value: string) {
-    if (value != null && value !== undefined && value !== '') {
+    if (value != null && value !== undefined && value !== "") {
       let obj: TargetBeneficiaryModel = {
         ProjectId: this.ProjectId,
         TargetType: 0
@@ -2954,7 +3069,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           } else if (TargetType === this.Occupation_ID) {
             this.OccupationList[index]._error = true;
           }
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3019,7 +3134,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           }
         },
         error => {
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3124,7 +3239,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           this.priorityOtherList[index]._IsDeleted = false;
           this.priorityOtherList[index]._IsLoading = false;
           this.priorityOtherList[index]._IsError = true;
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3134,7 +3249,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   onAddPriorityOther() {
     const obj: IPriorityOtherModel = {
       PriorityOtherDetailId: 0,
-      Name: '',
+      Name: "",
       ProjectId: null,
       _IsDeleted: false,
       _IsError: false,
@@ -3201,7 +3316,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   onAddFeasibitlityExpertOther() {
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: 0,
-      Name: '',
+      Name: "",
       ProjectId: this.ProjectId,
       _IsDeleted: false,
       _IsError: false,
@@ -3245,7 +3360,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           }
         },
         error => {
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3309,7 +3424,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           // error handling
           this.feasivilityList[index]._IsLoading = false;
           this.feasivilityList[index]._IsError = true;
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3375,7 +3490,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           this.feasivilityList[index]._IsDeleted = false;
           this.feasivilityList[index]._IsLoading = false;
           this.feasivilityList[index]._IsError = true;
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3412,7 +3527,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   onAddAssumption() {
     const obj: ICEAssumptionModel = {
       AssumptionDetailId: 0,
-      Name: '',
+      Name: "",
       ProjectId: null,
       _IsDeleted: false,
       _IsError: false,
@@ -3453,7 +3568,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           }
         },
         error => {
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3519,7 +3634,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           // error handling
           this.assumptionList[index]._IsLoading = false;
           this.assumptionList[index]._IsError = true;
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3586,7 +3701,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           this.assumptionList[index]._IsDeleted = false;
           this.assumptionList[index]._IsLoading = false;
           this.assumptionList[index]._IsError = true;
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3622,7 +3737,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   onAddAgeDetail() {
     const obj: ICEAgeDEtailModel = {
       AgeGroupOtherDetailId: 0,
-      Name: '',
+      Name: "",
       ProjectId: null,
       _IsDeleted: false,
       _IsError: false,
@@ -3664,7 +3779,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           }
         },
         error => {
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3730,7 +3845,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           // error handling
           this.ageGroupList[index]._IsLoading = false;
           this.ageGroupList[index]._IsError = true;
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3796,7 +3911,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           this.ageGroupList[index]._IsDeleted = false;
           this.ageGroupList[index]._IsLoading = false;
           this.ageGroupList[index]._IsError = true;
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3833,7 +3948,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   onAddOccupationDetail() {
     const obj: ICEOccupationModel = {
       OccupationOtherDetailId: 0,
-      Name: '',
+      Name: "",
       ProjectId: null,
       _IsDeleted: false,
       _IsError: false,
@@ -3874,7 +3989,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           }
         },
         error => {
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -3940,7 +4055,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           // error handling
           this.occupatonList[index]._IsLoading = false;
           this.occupatonList[index]._IsError = true;
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -4044,7 +4159,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   onAddDonorEligibilityDetail() {
     const obj: ICEDonorEligibilityModel = {
       DonorEligibilityDetailId: 0,
-      Name: '',
+      Name: "",
       ProjectId: null,
       _IsDeleted: false,
       _IsError: false,
@@ -4085,7 +4200,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           }
         },
         error => {
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -4152,7 +4267,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           // error handling
           this.donorEligibilityList[index]._IsLoading = false;
           this.donorEligibilityList[index]._IsError = true;
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -4219,7 +4334,7 @@ export class CriteriaEvaluationComponent implements OnInit {
           this.donorEligibilityList[index]._IsDeleted = false;
           this.donorEligibilityList[index]._IsLoading = false;
           this.donorEligibilityList[index]._IsError = true;
-          this.toastr.error('Something went wrong ! Try Again');
+          this.toastr.error("Something went wrong ! Try Again");
         }
       );
   }
@@ -4227,7 +4342,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region to check the isCriteiaEvaluationSUBMIT
   OnCriteriaEvaluationSubmitChange(ev) {
-    if (ev === 'IsCESubmit') {
+    if (ev === "IsCESubmit") {
       this.startCriteriaEvaluationSubmitLoader = true;
       (this.IsSubmitCEform.IsCriteriaEvaluationSubmit = true),
         (this.IsSubmitCEform.ProjectId = this.ProjectId);

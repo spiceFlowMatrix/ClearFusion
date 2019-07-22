@@ -60,8 +60,8 @@ export enum criteriaEvaluationScores {
   proposalAccepted_Yes = 1,
   proposalAccepted_No = 0,
 
-  pre_ProposalExperience = "pre",
-  post_ProposalExperience = "Post",
+  pre_ProposalExperience = 'pre',
+  post_ProposalExperience = 'Post',
 
   proposalExp_Professional_Yes = 1,
   proposalExp_Professional_No = 0,
@@ -343,8 +343,9 @@ export enum criteriaEvaluationScores {
   enoughTimeToPrepareproposal_No = 0,
 
   // cost efficiency
-  costGreaterThanBudget_Yes = -1, // 0 (real score -1 but use only 0 for right calculation)
+  costGreaterThanBudget_Yes = 0, // -1 (real score -1 but use only 0 for right calculation)
   costGreaterThanBudget_No = 1,
+  costGreaterThanBudgetDefault = 0,
 
   financialCopntributionFulfil_Yes = 1,
   financialCopntributionFulfil_No = 0,
@@ -408,6 +409,7 @@ export enum criteriaEvaluationScores {
   riskSecurity_Yes = 0,
   riskSecurity_No = 1,
 
+
   riskReputation_Yes = 0,
   riskReputation_No = 1,
 
@@ -427,7 +429,25 @@ export enum criteriaEvaluationScores {
   opportunityLoss_No = 0,
 
   probabilityDelayCuts_Yes = 1,
-  probabilityDelayCuts_No = 0
+  probabilityDelayCuts_No = 0,
+
+  Geographical_Yes = -1,
+  Geographical_No = 0,
+
+  Insecurity_Yes = -2,
+  Insecurity_No = 0,
+
+  Season_Yes = -1,
+  Season_No = 0,
+
+  Ethnicity_Yes = -1,
+  Ethnicity_No = 0,
+
+  Culture_Yes = -2,
+  Culture_No = 0,
+
+  ReligiousBeliefs_Yes = -2,
+  ReligiousBeliefs_No = 0,
 
   //#endregion
 }

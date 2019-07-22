@@ -1,3 +1,5 @@
+import { BlockScrollStrategy } from "@angular/cdk/overlay";
+
 export interface ProjectDetailModel {
   ProjectId?: number;
   ProjectCode?: string;
@@ -416,10 +418,18 @@ export interface RiskSecurityModel {
   Ethinc?: any;
   Social?: any;
   Traditional?: any;
+  Geographical?: boolean;
+  Insecurity?: boolean;
+  Season ?: boolean;
+  Ethnicity ?: boolean;
+  Culture ?: boolean;
+  ReligiousBeliefs?: boolean;
+
   FocusDivertingrisk?: any;
   Financiallosses?: any;
   Opportunityloss?: any;
   ProjectSelectionId?: number[];
+  CurrencyId: number;
   Probablydelaysinfunding?: any;
   OtherOrganizationalHarms?: any;
   OrganizationalDescription?: any;

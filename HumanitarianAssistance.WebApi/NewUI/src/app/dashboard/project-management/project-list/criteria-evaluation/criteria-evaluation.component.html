@@ -32,10 +32,13 @@
         <div class="row">
           <div class="col-sm-12">
             <h5 class="main_heading pull-right">
-
-
-              <span *ngIf="!criteriaEvaluationLoader; else criteriaEvaluationLoaderTemplate"> Total
-                Score:{{ totalValue }}</span></h5>
+              <span *ngIf="feasibilityForm.ProjectAllowedBylaw== false; else scoreTempalte">
+                Score: 0.00 </span>
+              <ng-template #scoreTempalte>
+                <span *ngIf="!criteriaEvaluationLoader; else criteriaEvaluationLoaderTemplate"> Total
+                  Score:{{ totalValue }}</span>
+              </ng-template>
+            </h5>
             <ng-template #criteriaEvaluationLoaderTemplate>
               <div class="spinner_center padding_top_5 padding_bottom_5">
                 <mat-spinner [diameter]="20"> </mat-spinner>
@@ -49,7 +52,7 @@
 
       <mat-card [ngStyle]="scrollStyles">
         <mat-accordion>
-          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel [disabled]="disableCriteriaEvaluationForm" [(expanded)]="isExpanded">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 FEASIBILITY
@@ -60,7 +63,7 @@
                 <div class="col-sm-6">
                   <div class="proposal-header">
                     IS PROJECT PRACTICAL
-                    <mat-slide-toggle  (change)="onIsProjectPracticalChange($event)"
+                    <mat-slide-toggle (change)="onIsProjectPracticalChange($event)"
                       [(ngModel)]="feasibilityForm.IsProjectPractical">
                     </mat-slide-toggle>
                   </div>
@@ -343,7 +346,7 @@
               </div>
             </div>
           </mat-expansion-panel>
-          <mat-expansion-panel>
+          <mat-expansion-panel [disabled]="disableCriteriaEvaluationForm">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 DONOR
@@ -555,7 +558,7 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel [disabled]="disableCriteriaEvaluationForm">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 PURPOSE OF INITIATIVE
@@ -917,7 +920,8 @@
 
           </mat-expansion-panel>
 
-          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel [disabled]="disableCriteriaEvaluationForm" (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 ELIGIBILITY
@@ -955,7 +959,8 @@
 
 
 
-          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel [disabled]="disableCriteriaEvaluationForm" (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 PRIORITY ADDED VALUE
@@ -1065,7 +1070,8 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel [disabled]="disableCriteriaEvaluationForm" (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 FINANCIAL PROFITABILITY (Funds)
@@ -1076,8 +1082,7 @@
               <div class="col-sm-3">
                 <!-- <label>Project Activities</label> -->
                 <mat-form-field class="pull-right">
-                  <input matInput [(ngModel)]="financialForm.ProjectActivities" placeholder="Project Activities"
-                    (focusout)="
+                  <input matInput [(ngModel)]="financialForm.ProjectActivities" placeholder="Direct Costs" (focusout)="
                       onProjectActivityChange(
                         'projectActivity',
                         financialForm.ProjectActivities
@@ -1093,12 +1098,22 @@
                         financialForm.Operational
                       )
                     " type="number" />
+
+
+
                 </mat-form-field>
+                <span
+                  *ngIf="financialForm.ProjectActivities > 0 || financialForm.Operational > 0 || financialForm.Overhead_Admin > 0 || financialForm.Lump_Sum > 0">
+                  {{((financialForm.Operational/(financialForm.ProjectActivities +
+                    financialForm.Operational +
+                    financialForm.Overhead_Admin +
+                    financialForm.Lump_Sum)) * 100).toFixed(2) }} % (Operational overhead)
+                </span>
               </div>
 
               <div class="col-sm-3">
                 <mat-form-field class="pull-right">
-                  <input matInput name="overheadAdmin" placeholder="Overhead Admin"
+                  <input matInput name="overheadAdmin" placeholder="Admin Overhead "
                     [(ngModel)]="financialForm.Overhead_Admin" (focusout)="
                       onProjectActivityChange(
                         'overheadAdmin',
@@ -1106,11 +1121,18 @@
                       )
                     " type="number" />
                 </mat-form-field>
+                <span
+                  *ngIf="financialForm.ProjectActivities > 0 || financialForm.Operational > 0 || financialForm.Overhead_Admin > 0 || financialForm.Lump_Sum > 0">
+                  {{((financialForm.Overhead_Admin/(financialForm.ProjectActivities +
+                    financialForm.Operational +
+                    financialForm.Overhead_Admin +
+                    financialForm.Lump_Sum)) * 100).toFixed(2) }} % (Admin overhead)
+                </span>
               </div>
               <div class="col-sm-3">
                 <!-- <label>Lump Sum (From Organisation)</label> -->
                 <mat-form-field class="pull-right">
-                  <input matInput name="lumpsum" placeholder="Lump Sum (From Organisation)"
+                  <input matInput name="lumpsum" placeholder="Organizational Contribution"
                     [(ngModel)]="financialForm.Lump_Sum" (focusout)="
                       onProjectActivityChange('lumpsum', financialForm.Lump_Sum)
                     " type="number" />
@@ -1150,7 +1172,8 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel [disabled]="disableCriteriaEvaluationForm" (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 RISKS
@@ -1260,6 +1283,65 @@
                               )
                             " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Traditional"></mat-slide-toggle>
                         </li>
+                        <li class="clearfix">
+                          Geographical
+                          <mat-slide-toggle class="pull-right" name="Geographical" (change)="
+                                onReputationChildChange(
+                                  'Geographical',
+                                  riskForm.Geographical
+                                )
+                              " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Geographical">
+                          </mat-slide-toggle>
+                        </li>
+                        <li class="clearfix">
+                          Insecurity
+                          <mat-slide-toggle class="pull-right" name="Insecurity" (change)="
+                                  onReputationChildChange(
+                                    'Insecurity',
+                                    riskForm.Insecurity
+                                  )
+                                " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Insecurity">
+                          </mat-slide-toggle>
+                        </li>
+                        <li class="clearfix">
+                          Season
+                          <mat-slide-toggle class="pull-right" name="Season" (change)="
+                                    onReputationChildChange(
+                                      'Season',
+                                      riskForm.Season
+                                    )
+                                  " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Season"></mat-slide-toggle>
+                        </li>
+                        <li class="clearfix">
+                          Ethnicity
+                          <mat-slide-toggle class="pull-right" name="Ethnicity" (change)="
+                                      onReputationChildChange(
+                                        'Ethnicity',
+                                        riskForm.Ethnicity
+                                      )
+                                    " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Ethnicity">
+                          </mat-slide-toggle>
+                        </li>
+                        <li class="clearfix">
+                          Culture
+                          <mat-slide-toggle class="pull-right" name="Culture" (change)="
+                                        onReputationChildChange(
+                                          'Culture',
+                                          riskForm.Culture
+                                        )
+                                      " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Culture">
+                          </mat-slide-toggle>
+                        </li>
+                        <li class="clearfix">
+                          Religious Beliefs
+                          <mat-slide-toggle class="pull-right" name="ReligiousBeliefs" (change)="
+                                          onReputationChildChange(
+                                            'ReligiousBeliefs',
+                                            riskForm.ReligiousBeliefs
+                                          )
+                                        " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.ReligiousBeliefs">
+                          </mat-slide-toggle>
+                        </li>
                       </ul>
                     </div>
                     <div class="middle-header">
@@ -1343,13 +1425,22 @@
                                 {{ item.label }}</mat-option>
                             </mat-select>
                           </mat-form-field>
-                          <!--
-                                <p-multiSelect [options]="ProjectSelection" dropdownIcon="fa fa-fw fa-caret-down" showHeader="true"
-                                placeholder="Multiple Opportunity Project Selection"  [(ngModel)]="selectedprojectSelction" name="projectSelction"
-                                  (onChange)="onProjectotherDetailsChange('projectSelction',selectedprojectSelction)"
-                                  [panelStyle]="{minWidth:'12em'}">
-                                </p-multiSelect>
-                              -->
+
+                        </div>
+                        <div class="clearfix">
+
+                          <mat-form-field class="example-full-width">
+                            <mat-select placeholder="Currency" name="currency"[(ngModel)]="riskForm.CurrencyId"
+                              (selectionChange)="currencyDetailsChange('currencySelction',
+                              riskForm.CurrencyId)">
+                              <mat-option *ngFor="let item of CurrencyList" [value]="item.CurrencyId">
+                                {{item.CurrencyCode}}
+                              </mat-option>
+                            </mat-select>
+                            <!-- <mat-spinner class="center_loader right_load_r" *ngIf="currencyDetailLoader" diameter="20">
+                            </mat-spinner> -->
+                          </mat-form-field>
+
                         </div>
                         <li></li>
                         <li class="clearfix">
@@ -1367,7 +1458,7 @@
                   </div>
                   <div class="middle-header">
                     <mat-form-field class="example-full-width">
-                      <textarea matInput placeholder=" Describe Organisational harms here..."
+                      <textarea matInput placeholder="Describe Organisational harms here..." rows="5"
                         [(ngModel)]="riskForm.OrganizationalDescription" [disabled]="IsOtherOrganizationalHarms"
                         name="OrganizationalDescription" (focusout)="
                           onOrganizationalDescriptionChange(
@@ -1383,7 +1474,8 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel [disabled]="disableCriteriaEvaluationForm" (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 ASSUMPTION
@@ -1416,7 +1508,8 @@
             </div>
           </mat-expansion-panel>
 
-          <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel [disabled]="disableCriteriaEvaluationForm" (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 DONOR ELIGIBILITY CRITERIA
