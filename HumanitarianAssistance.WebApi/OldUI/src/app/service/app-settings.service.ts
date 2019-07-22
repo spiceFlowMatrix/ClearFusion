@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AppSettingsService {
@@ -7,16 +8,13 @@ export class AppSettingsService {
 
 
     public getBaseUrl(): string {
-        return '/api/';
-        // return this.baseUrl + 'api/';
+        return environment.apiUrl;
     }
     public getDocUrl(): string {
-        return '/Docs/';
-        // return this.baseUrl + 'Docs/';
+        return environment.docUrl;
     }
     public getHubUrl(): string {
-        return '/chathub/';
-        // return this.baseUrl+ 'chathub/';
+        return environment.hubUrl;
     }
 
     // private getApiURL(baseURL): string {
