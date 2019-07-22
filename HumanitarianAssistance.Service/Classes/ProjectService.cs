@@ -1490,7 +1490,7 @@ namespace HumanitarianAssistance.Service.Classes
         /// Get All Area Details
         /// </summary>
         /// <returns></returns>
-        public APIResponse GetAllProvinceDetails()
+          public APIResponse GetAllProvinceDetails()
         {
             APIResponse response = new APIResponse();
             try
@@ -1519,15 +1519,20 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-        public APIResponse GetCountryMultiSelectByProjectId(long ProjectId)  
+
+        public APIResponse GetAllProvinceDetailsByCountryId(int[] countryId)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var CountryDetailsList = _uow.GetDbContext().CountryDetails.Where(x => x.IsDeleted == false).ToList();
-                //var NewList = CountryDetailsList.Where(x => CountryId.Any(y => x.CountryId == y)).ToList();
+                var provincelist = _uow.GetDbContext().ProvinceDetails.Where(x => x.IsDeleted == false).ToList();
+                var Newlist = provincelist.Where(x => countryId.Any(y => x.CountryId == y)).Select(x => new ProvinceDetailsModel
+                {
+                    ProvinceId = x.ProvinceId,
+                    ProvinceName = x.ProvinceName
+                }).OrderBy(x => x.ProvinceName).ToList();
 
-                response.data.CountryDetailsList = CountryDetailsList;
+                response.data.ProvinceDetailsList = Newlist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1536,22 +1541,20 @@ namespace HumanitarianAssistance.Service.Classes
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
-            return response;
+            return response; 
         }
 
-        public APIResponse GetProvinceMultiSelectByCountryId(int[] CountryId)   
+        public APIResponse GetCountryMultiSelectByProjectId(long ProjectId) 
         {
             APIResponse response = new APIResponse();
             try
-            {
-                // var ProvinceDetailsList = _uow.GetDbContext().ProvinceDetails.Where(x => x.IsDeleted == false).ToList();
-                List<int> SelectedProvinceList = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).Select(x => x.ProvinceId).ToList();
-                var NewList = ProvinceDetailsList.Where(x => CountryId.Any(y => x.CountryId == y)).ToList();
-                
+            { 
+
+                List<int?> SelectedCountryList = _uow.GetDbContext().CountryMultiSelectDetails.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).Select(x => x.CountryId).ToList();
 
                 //details.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
-                //List<int> selectedProvinceList = NewList.Select(x => x.ProvinceId).ToList();
-                response.data.Provincelist = NewList;
+
+                response.data.CountryMultiSelectById = SelectedCountryList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
@@ -1562,14 +1565,109 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+
+        public APIResponse GetProvinceMultiSelectByProjectId(long ProjectId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                List<int> SelectedProvinceList = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == ProjectId && x.IsDeleted == false).Select(x => x.ProvinceId).ToList();
+
+                //details.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
+
+                response.data.ProvinceMultiSelectById = SelectedProvinceList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response; 
+        }
+
+        public APIResponse AddEditCountryMultiSelectDetail(CountryMultiSelectModel model, string UserId)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+
+                if (model.CountryId != null)
+                {
+
+                    //bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
+                    var countryExist = _uow.GetDbContext().CountryMultiSelectDetails.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).ToList();
+
+                    var noExistCountryId = countryExist.Where(x => !model.CountryId.Contains(x.CountryId)).Select(x => x.CountryId).ToList();
+
+                    if (countryExist.Any())
+                    {
+                        var provinceExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => noExistCountryId.Contains(x.CountryMultiSelectDetails.CountryId) && x.IsDeleted == false).ToList();
+                        if (provinceExist.Any())
+                        {
+                            var district = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.IsDeleted == false).ToList();
+                            if (district.Any())
+                            {
+                                _uow.GetDbContext().DistrictMultiSelect.RemoveRange(district);
+                                _uow.GetDbContext().SaveChanges();
+                            }
+                            _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
+                            _uow.GetDbContext().SaveChanges();
+                        }
+                    }
+
+                    _uow.GetDbContext().CountryMultiSelectDetails.RemoveRange(countryExist);
+                    _uow.GetDbContext().SaveChanges();
+
+
+                    List<CountryMultiSelectDetails> countryList = new List<CountryMultiSelectDetails>();
+
+                    foreach (var item in model.CountryId)
+                    {
+                        CountryMultiSelectDetails _data = new CountryMultiSelectDetails();
+
+                        _data.CountryId = item;
+                        _data.ProjectId = model.ProjectId;
+                        _data.IsDeleted = false;
+                        _data.CreatedById = UserId;
+                        _data.CreatedDate = DateTime.UtcNow;
+
+                        countryList.Add(_data);
+                    }
+
+                    //Add
+                    _uow.GetDbContext().CountryMultiSelectDetails.AddRange(countryList);
+                    _uow.GetDbContext().SaveChanges();
+                }
+
+
+
+                //response.CommonId.Id = Convert.ToInt32(_detail.SecurityConsiderationId);
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+
+            return response;
+        }
+
+
 
         public APIResponse AddEditProvinceMultiSelectDetail(ProvinceMultiSelectModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             try
             {
+
                 if (model.ProvinceId != null)
                 {
+
                     //bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
                     var provinceExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).ToList();
 
@@ -1584,6 +1682,7 @@ namespace HumanitarianAssistance.Service.Classes
                             _uow.GetDbContext().SaveChanges();
                         }
                     }
+
                     _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
                     _uow.GetDbContext().SaveChanges();
 
@@ -1623,72 +1722,6 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public APIResponse AddEditCountryMultiSelectDetail(CountryMultiSelectModel model, string UserId)
-        {
-            APIResponse response = new APIResponse();
-            try
-            {
-                if (model.CountryId != null)
-                {
-
-                    
-                    var countryExist = _uow.GetDbContext().CountryMultiSelectDetails.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).ToList();
-
-                    var noExistcountryId = countryExist.Where(x => !model.CountryId.Contains(x.CountryId)).Select(x => x.CountryId).ToList();
-
-                    if (countryExist.Any())
-                    {
-                        var provinceExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => noExistcountryId.Contains(x.CountryMultiSelectDetails.CountryId) && x.IsDeleted == false).ToList();
-                        if (provinceExist.Any())
-                        {
-                            _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
-                            _uow.GetDbContext().SaveChanges();
-                            var district=_uow.GetDbContext().DistrictMultiSelect.Where(x => x.IsDeleted == false).ToList();
-                            if (district.Any())
-                            {
-                                _uow.GetDbContext().DistrictMultiSelect.RemoveRange(district);
-                                _uow.GetDbContext().SaveChanges();
-                            }
-                        }
-                        _uow.GetDbContext().CountryMultiSelectDetails.RemoveRange(countryExist);
-                        _uow.GetDbContext().SaveChanges();
-                    }
-                    List<CountryMultiSelectDetails> countryList = new List<CountryMultiSelectDetails>();
-
-                    foreach (var item in model.CountryId)
-                    {
-                        CountryMultiSelectDetails _data = new CountryMultiSelectDetails();
-
-                        _data.CountryId = item;
-                        _data.ProjectId = model.ProjectId;
-                        _data.IsDeleted = false;
-                        _data.CreatedById = UserId;
-                        _data.CreatedDate = DateTime.UtcNow;
-
-                        countryList.Add(_data);
-                    }
-
-                    //Add
-                    _uow.GetDbContext().CountryMultiSelectDetails.AddRange(countryList);
-                    _uow.GetDbContext().SaveChanges();
-                }
-
-
-
-                //response.CommonId.Id = Convert.ToInt32(_detail.SecurityConsiderationId);
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-
-            return response;
-        }
-
-
         public APIResponse GetDistrictMultiSelectByProjectId(long ProjectId)
         {
             APIResponse response = new APIResponse();
@@ -1710,8 +1743,6 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
-
-
         public APIResponse AddEditDistrictMultiSelectDetail(DistrictMultiSelectModel model, string UserId)
         {
             APIResponse response = new APIResponse();

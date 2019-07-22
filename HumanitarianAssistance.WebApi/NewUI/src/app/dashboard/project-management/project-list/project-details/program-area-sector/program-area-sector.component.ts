@@ -12,7 +12,7 @@ import {
   securityConsiderationMultiSelectModel,
   ProvinceMultiSelectModel,
   DistrictMultiSelectModel,
-  CountryMultiSelectModel,
+  CountryMultiSelectModel
 } from './../models/project-details.model';
 import { Validators } from '@angular/forms';
 import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
@@ -139,6 +139,7 @@ export class ProgramAreaSectorComponent implements OnInit {
   OfficeName: string;
   OtherProjectList: any[];
   GenderConsiderationName: string;
+
   CountrySelectionList: SelectItem[];
   ProvinceSelectionList: SelectItem[];
   SecurityConsiderationList: SelectItem[];
@@ -152,11 +153,10 @@ export class ProgramAreaSectorComponent implements OnInit {
   sectorModel: SectorModel;
 
   //#region flag
-  provinceSelectedFlag = false;
-  provinceDistrictFlag = false;
-  countrySelectedFlag = false;
+  countrySelectedFlag = true;
   countryDistrictFlag = false;
-  districtSelectedFlag = false;
+  provinceSelectedFlag = true;
+  provinceDistrictFlag = false;
   programListFlag = false;
   areaListFlag = false;
   sectorListFlag = false;
@@ -199,8 +199,9 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.GetAllProgramList();
     this.GetAllAreaList();
     this.GetAllSectorList();
+
     this.getAllCountryList();
-    //this.getAllProvinceList();
+   // this.getAllProvinceList();
     this.GetAllCurrency();
     this.GetAllStrengthConsiderationDetails();
     this.GetAllSecurityDetails();
@@ -212,6 +213,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.initMultiselctSecurityModel();
     this.GetSecurityConsiderationByProjectId(this.ProjectId);
     this.GetCountryByProjectId(this.ProjectId);
+    this.GetProvinceByProjectId(this.ProjectId);
     this.initCountryMultiSelectModel();
     this.initProvinceMultiSelectModel();
     this.initDistrictMultiSelectModel();
@@ -265,20 +267,22 @@ export class ProgramAreaSectorComponent implements OnInit {
       ProjectId: null
     };
   }
+
+  initCountryMultiSelectModel(){
+    this.countryMultiSelectModel = {
+      CountryMultiSelectId: null,
+      ProjectId: null,
+      CountryId: null,
+      CountrySelectionId: null
+    };
+  }
+
   initProvinceMultiSelectModel() {
     this.provinceMultiSelectModel = {
       ProvinceMultiSelectId: null,
       ProjectId: null,
       ProvinceId: null,
       ProvinceSelectionId: null
-    };
-  }
-  initCountryMultiSelectModel() {
-    this.countryMultiSelectModel = {
-      CountryMultiSelectId: null,
-      ProjectId: null,
-      CountryId: null,
-      CountrySelectionId: null
     };
   }
 
@@ -503,11 +507,13 @@ export class ProgramAreaSectorComponent implements OnInit {
               this.programListFlag = false;
             }
           );
-      } else {
+      }
+      else {
         this.programListFlag = false;
         this.toastr.warning('Please check Program name');
       }
-    } else {
+    }
+    else {
       this.toastr.warning('Please add new Program');
       this.programListFlag = false;
     }
@@ -861,36 +867,8 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   // GetAllProvinceList
 
-  // getAllProvinceList() {
-  //   // this.Province = [];
-  //   this.provinceDistrictFlag = true;
-  //   this.ProvinceSelectionList = [];
-  //   this.projectListService
-  //     .getAllProvinceList(
-  //       this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProvinceDetails
-  //     )
-  //     .subscribe(
-  //       data => {
-  //         if (data.StatusCode === 200 && data != null) {
-  //           if (data.data.ProvinceDetailsList != null) {
-  //             data.data.ProvinceDetailsList.forEach(element => {
-  //               this.ProvinceSelectionList.push({
-  //                 value: element.ProvinceId,
-  //                 label: element.ProvinceName
-  //               });
-  //             });
-  //             // this.GetOtherProjectDetailById(this.ProjectId);
-  //           }
-  //           this.provinceDistrictFlag = false;
-  //         }
-  //       },
-  //       error => {
-  //         this.provinceDistrictFlag = false;
-  //       }
-  //     );
-  // }
-
   getAllCountryList() {
+    // this.Province = [];
     this.countryDistrictFlag = true;
     this.CountrySelectionList = [];
     this.projectListService
@@ -899,7 +877,6 @@ export class ProgramAreaSectorComponent implements OnInit {
       )
       .subscribe(
         data => {
-          console.log(data);
           if (data.StatusCode === 200 && data != null) {
             if (data.data.CountryDetailsList != null) {
               data.data.CountryDetailsList.forEach(element => {
@@ -919,17 +896,46 @@ export class ProgramAreaSectorComponent implements OnInit {
       );
   }
 
-  onCountryDetailsChange(ev, data: number[]) {
+  GetCountryByProjectId(ProjectId: number) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
+      this.projectListService
+        .GetOtherSecurityConsiByProjectId(
+          this.appurl.getApiUrl() + GLOBAL.API_GetCountryByProjectId,
+          ProjectId
+        )
+        .subscribe(data => {
+          if (data != null) {
+            if (data.data.CountryMultiSelectById != null) {
+              this.countryMultiSelectModel.CountryId =
+                data.data.CountryMultiSelectById;
+              this.getAllProvinceListByCountryId(
+                this.countryMultiSelectModel.CountryId
+              );
+              // this.GetDistrictByProjectId(this.ProjectId);
+            }
+          }
+        });
+    }
+  }
+
+   // add province by id
+
+   onCountryDetailsChange(ev, data: number[]) {
     this.countryDistrictFlag = true;
     if (ev === 'countrySelction' && data != null) {
       this.countryMultiSelectModel.CountryId = data;
       this.AddEditonCountryDetails(this.countryMultiSelectModel);
+      if (this.countryMultiSelectModel.CountryId != null) {
+        // if (data.length > 0)
+        // this.GetAllDistrictvalueByProvinceId(data);
+      }
     }
   }
 
   AddEditonCountryDetails(model: any) {
     if (model != null) {
       const obj: CountryMultiSelectModel = {
+        // SecurityConsiderationMultiSelectId:model.SecurityConsiderationMultiSelectId,
         ProjectId: this.ProjectId,
         CountryId: model.CountryId
       };
@@ -943,24 +949,62 @@ export class ProgramAreaSectorComponent implements OnInit {
           response => {
             if (response.StatusCode === 200) {
               this.countryDistrictFlag = false;
-              this.GetProvinceByCountryId(
+              this.getAllProvinceListByCountryId(
                 this.countryMultiSelectModel.CountryId
               );
             }
-            this.countryDistrictFlag = false;
+            this.provinceSelectedFlag = false;
           },
           error => {
-            this.countryDistrictFlag = false;
+            this.provinceSelectedFlag = false;
           }
         );
     }
   }
 
-  GetCountryByProjectId(ProjectId: number) {
+  getAllProvinceListByCountryId(model: any) {
+    const id = model;
+    console.log(id);
+    this.provinceDistrictFlag = true;
+    this.ProvinceSelectionList = [];
+    this.projectListService
+      .getAllProvinceListByCountryId(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProvinceDetailsByCountryId,
+        id
+      )
+      .subscribe(
+        data => {
+          if (data.StatusCode === 200 && data != null) {
+            if (data.data.ProvinceDetailsList != null) {
+              data.data.ProvinceDetailsList.forEach(element => {
+                this.ProvinceSelectionList.push({
+                  value: element.ProvinceId,
+                  label: element.ProvinceName
+                });
+              });
+              // this.GetOtherProjectDetailById(this.ProjectId);
+            }
+            this.GetProvinceByProjectId(this.ProjectId);
+            this.provinceDistrictFlag = false;
+          }
+        },
+        error => {
+          this.provinceDistrictFlag = false;
+        }
+      );
+  }
+
+  //#region displaySelectedSector from sector List selection
+  displaySelectedSector(obj?: SectorModel): string | undefined {
+    return obj ? obj.SectorName : undefined;
+  }
+  //#endregion
+
+  GetProvinceByProjectId(ProjectId: number) {
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.projectListService
         .GetOtherSecurityConsiByProjectId(
-          this.appurl.getApiUrl() + GLOBAL.API_GetCountryByProjectId,
+          this.appurl.getApiUrl() + GLOBAL.API_GetProvinceByProjectId,
           ProjectId
         )
         .subscribe(data => {
@@ -978,39 +1022,6 @@ export class ProgramAreaSectorComponent implements OnInit {
     }
   }
 
-  GetProvinceByCountryId(model: any) {
-    const id = model;
-    this.ProvinceSelectionList = [];
-      this.projectListService
-        .GetProvinceByCountryId(
-          this.appurl.getApiUrl() + GLOBAL.API_GetProvinceByCountryId,
-          id
-        )
-        .subscribe(data => {
-          if (data != null) {
-            this.provinceSelectedFlag = false;
-            if (data.data.Provincelist != null) {
-              data.data.Provincelist.forEach(element => {
-                this.ProvinceSelectionList.push({
-                  value: element.ProvinceId,
-                  label: element.ProvinceName
-                });
-              });
-                this.GetAllDistrictvalueByProvinceId(
-                this.provinceMultiSelectModel.ProvinceId
-              );
-            }
-          }
-        });
-  }
-
-  //#region displaySelectedSector from sector List selection
-  displaySelectedSector(obj?: SectorModel): string | undefined {
-    return obj ? obj.SectorName : undefined;
-  }
-  //#endregion
-
-
   // add province by id
 
   onProvinceDetailsChange(ev, data: number[]) {
@@ -1018,6 +1029,10 @@ export class ProgramAreaSectorComponent implements OnInit {
     if (ev === 'provinceSelction' && data != null) {
       this.provinceMultiSelectModel.ProvinceId = data;
       this.AddEditonProvinceDetails(this.provinceMultiSelectModel);
+      if (this.provinceMultiSelectModel.ProvinceId != null) {
+        // if (data.length > 0)
+        // this.GetAllDistrictvalueByProvinceId(data);
+      }
     }
   }
 
@@ -1042,16 +1057,16 @@ export class ProgramAreaSectorComponent implements OnInit {
                 this.provinceMultiSelectModel.ProvinceId
               );
             }
-            this.provinceDistrictFlag = false;
+            this.provinceSelectedFlag = false;
           },
           error => {
-            this.provinceDistrictFlag = false;
+            this.provinceSelectedFlag = false;
           }
         );
     }
   }
 
- // to get the list of District on select of province id
+  // to get the list of District on select of province id
   GetAllDistrictvalueByProvinceId(model: any) {
     // this.provinceSelectedFlag = true;
     const id = model;
@@ -1088,6 +1103,8 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   // get District byProject id
   GetDistrictByProjectId(ProjectId: number) {
+    //  this.provinceSelectedFlag = true;
+
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.provinceSelectedFlag = true;
       this.projectListService

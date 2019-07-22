@@ -227,6 +227,7 @@ export interface CountryMultiSelectModel {
   ProjectId?: number;
   CountryId?: number[];
   CountrySelectionId?: number;
+
 }
 
 export interface ProvinceMultiSelectModel {

@@ -263,15 +263,15 @@ export class ProjectListService {
 
   //#endregion
   //#region "getAllProvinceList"
+  getAllCountryList(url: string) {
+    return this.globalService.getList(url);
+  }
+  //#endregion
+  //#region "getAllProvinceList"
   getAllProvinceList(url: string) {
     return this.globalService.getList(url);
   }
   //#endregion
-    //#region "getAllProvinceList"
-    getAllCountryList(url: string) {
-      return this.globalService.getList(url);
-    }
-    //#endregion
   //#region "GetAllStrengthConsiderationDetails"
   GetAllStrengthConsiderationDetails(url: string) {
     return this.globalService.getList(url);
@@ -306,6 +306,11 @@ export class ProjectListService {
     return this.globalService.getListByListId(url, Id);
   }
   //#endregion
+   //#region "GetAllDistrictvalueByProvinceId"
+   getAllProvinceListByCountryId(url: string, Id: any) {
+    return this.globalService.getListByListId(url, Id);
+  }
+  //#endregion
 
   //#region "AddProjectDetail other details"
   AddEditProjectotherDetail(url: string, data: ProjectOtherDetailModel) {
@@ -323,11 +328,7 @@ export class ProjectListService {
     return this.globalService.getListById(url, id);
   }
   //#endregion
- //#region GetotherprojectlistById
- GetProvinceByCountryId(url: string, id: any) {
-  return this.globalService.getListById(url, id);
-}
-//#endregion
+
   //#region "AddProjectDetail"
   GetAllOfficeList(url: string) {
     return this.globalService.getList(url);
@@ -387,15 +388,16 @@ export class ProjectListService {
   }
   //#endregion
   //#region "AddProjectDetail other details"
-  AddEditProvinceMultiSelect(url: string, data: ProvinceMultiSelectModel) {
-    return this.globalService.post(url, data);
-  }
-  //#endregion
-  //#region "AddProjectDetail other details"
   AddEditCountryMultiSelect(url: string, data: CountryMultiSelectModel) {
     return this.globalService.post(url, data);
   }
   //#endregion
+  //#region "AddProjectDetail other details"
+  AddEditProvinceMultiSelect(url: string, data: ProvinceMultiSelectModel) {
+    return this.globalService.post(url, data);
+  }
+  //#endregion
+
   //#region "AddProjectDetail other details"
   AddEditDistricteMultiSelect(url: string, data: DistrictMultiSelectModel) {
     return this.globalService.post(url, data);
