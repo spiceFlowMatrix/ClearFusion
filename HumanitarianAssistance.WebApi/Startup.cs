@@ -34,6 +34,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -55,13 +56,13 @@ namespace HumanitarianAssistance.WebApi
             Configuration = configuration;
 
             var builder = new ConfigurationBuilder()
-                                .SetBasePath(env.ContentRootPath)
-                                .AddJsonFile(StaticResource.appsettingJsonFile, optional: true, reloadOnChange: true)
-                                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                                .AddEnvironmentVariables();
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile(StaticResource.appsettingJsonFile, optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            .AddEnvironmentVariables();
 
             //string sAppPath = env.ContentRootPath; //Application Base Path
-            //string swwwRootPath = env.WebRootPath;  //wwwroot folder path
+            //string swwwRootPath = env.WebRootPath; //wwwroot folder path
 
             Configuration = builder.Build();
         }
@@ -99,12 +100,12 @@ namespace HumanitarianAssistance.WebApi
                 o.Password.RequiredLength = 6;
 
             }).AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders();
 
 
             services.AddSingleton<IFileProvider>(
-                     new PhysicalFileProvider(
-                         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+            new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
             services.AddSingleton<IRole, RoleService>();
             services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
             services.Configure<WebSiteUrl>(Configuration.GetSection("WEB_SITE_URL"));
@@ -178,33 +179,33 @@ namespace HumanitarianAssistance.WebApi
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
 
             services
-                .AddAuthentication(options =>
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            })
+            .AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+                cfg.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-                })
-                .AddJwtBearer(cfg =>
-                {
-                    cfg.RequireHttpsMetadata = false;
-                    cfg.SaveToken = true;
-                    cfg.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidIssuer = Configuration["JwtIssuerOptions:Issuer"],
-                        ValidAudience = Configuration["JwtIssuerOptions:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
-                        RequireExpirationTime = true,
-                        ClockSkew = TimeSpan.Zero
+                    ValidIssuer = Configuration["JwtIssuerOptions:Issuer"],
+                    ValidAudience = Configuration["JwtIssuerOptions:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+                    RequireExpirationTime = true,
+                    ClockSkew = TimeSpan.Zero
 
 
-                    };
-                });
+                };
+            });
 
             // api user claim policy
             services.AddAuthorization(options =>
             {
-                //  options.AddPolicy("Trust", policy => policy.RequireClaim("Permission", "dashboardhome"));
+                // options.AddPolicy("Trust", policy => policy.RequireClaim("Permission", "dashboardhome"));
                 options.AddPolicy("Trust", policy => policy.RequireClaim("Roles", "Admin", "SuperAdmin", "Accounting Manager", "HR Manager", "Project Manager", "Administrator"));
                 options.AddPolicy("DepartmentUser", policy => policy.RequireClaim("OfficeCode"));
                 options.AddPolicy("HRManager", policy => policy.RequireClaim("Roles", "HR Manager"));
@@ -238,58 +239,61 @@ namespace HumanitarianAssistance.WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddMvc()
-                .AddJsonOptions(config =>
-                {
-                    // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
-                    config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                });
+            .AddJsonOptions(config =>
+            {
+    // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+    config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+                config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            });
             services.AddMvc(
-                     config => { config.Filters.Add(typeof(CustomException)); }
-                     ).AddJsonOptions(a => a.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
+            config => { config.Filters.Add(typeof(CustomException)); }
+            ).AddJsonOptions(a => a.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
 
             services.AddRouting();
             services.AddSignalR();
 
-
-
-
-
-            services.AddSwaggerGen(p =>
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
             {
-                p.SwaggerDoc("v1", new Info { Title = "CHA Core API", Description = "Swagger API" });
-                // p.SwaggerDoc("accounting", new Info { Title = "Accounting API's", Description = "VocuherTransaction, Financial Report, ChartOfAccount, ExchangeRate, GainLossReport" });
-                
-                p.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                configuration.RootPath = "NewUI/dist";
+            });
+
+
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1.0", new Info { Title = "Humanitarian Assistance API v1.0", Version = "v1.0" });
+
+                // Swagger 2.+ support
+                var security = new Dictionary<string, IEnumerable<string>>
+{
+{"Bearer", new string[] { }},
+};
+
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = "header",
                     Type = "apiKey"
                 });
+                c.AddSecurityRequirement(security);
 
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                p.IncludeXmlComments(xmlPath);
-            });
-
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                //configuration.RootPath = "ClientApp/dist";
-                configuration.RootPath = "NewUI/dist";
-                //configuration.RootPath = "OldUI/dist";
+                c.IncludeXmlComments(xmlPath);
+                //});
             });
 
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<DbInitializer> logger)
         {
             // update database
-            UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+            UpdateDatabase(app, userManager, roleManager, logger).Wait();
 
             if (env.IsDevelopment())
             {
@@ -313,7 +317,7 @@ namespace HumanitarianAssistance.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "My API V1");
                 // c.SwaggerEndpoint("/swagger/accounting/swagger.json", "Accounting API's");
             });
 
@@ -325,14 +329,14 @@ namespace HumanitarianAssistance.WebApi
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                name: "default",
+                template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpaStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
-            });
+            //app.UseSpaStaticFiles(new StaticFileOptions
+            //{
+            // FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
+            //});
 
             app.Map("/newui", client =>
             {
@@ -345,7 +349,6 @@ namespace HumanitarianAssistance.WebApi
                     {
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-
                 });
             });
 
@@ -364,19 +367,17 @@ namespace HumanitarianAssistance.WebApi
                 });
             });
 
-            //app.Map("/clientapp", admin =>
+            //app.UseSpa(spa =>
             //{
-            //    admin.UseSpa(spa =>
-            //    {
-            //        spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-            //        spa.Options.SourcePath = "ClientApp";
+            // // To learn more about options for serving an Angular SPA from ASP.NET Core,
+            // // see https://go.microsoft.com/fwlink/?linkid=864501
+            // spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+            // spa.Options.SourcePath = "NewUI";
 
-            //        if (env.IsDevelopment())
-            //        {
-            //            spa.UseAngularCliServer(npmScript: "start");
-            //        }
-
-            //    });
+            // if (env.IsDevelopment())
+            // {
+            // spa.UseAngularCliServer(npmScript: "start");
+            // }
             //});
         }
 
@@ -384,8 +385,8 @@ namespace HumanitarianAssistance.WebApi
         private static async Task UpdateDatabase(IApplicationBuilder app, UserManager<AppUser> um, RoleManager<IdentityRole> rm, ILogger<DbInitializer> logger)
         {
             using (var serviceScope = app.ApplicationServices
-              .GetRequiredService<IServiceScopeFactory>()
-              .CreateScope())
+            .GetRequiredService<IServiceScopeFactory>()
+            .CreateScope())
             {
                 using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
                 {

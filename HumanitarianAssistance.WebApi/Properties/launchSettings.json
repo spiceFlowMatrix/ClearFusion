@@ -12,7 +12,7 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
     "HumanitarianAssistance.WebApi": {
@@ -21,7 +21,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:5001/;http://localhost:5000/"
+      "applicationUrl": "https://localhost:5001/;http://localhost:5000/",
+      "launchUrl": "https://localhost:5001/newui"
     }
   }
 }

@@ -860,6 +860,7 @@ namespace HumanitarianAssistance.Service.Classes
                     Recurring = x.Recurring,
                     RecurringCount = x.RecurringCount,
                     RecurrinTypeId = x.RecurrinTypeId,
+                    
                     Progress = Math.Round(x.Progress, 2),
                     Slippage = x.Sleepage
                 }).ToList();

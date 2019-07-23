@@ -232,36 +232,35 @@
                         <td width="1%" class="text-center"></td>
                       </tr>
                       <tr
-                        (click)="onProjectActivityClick(item)"
                         *ngFor="let item of projectActivityList"
                         [ngClass]="{
                           selected: selectedProjectActivityId == item.ActivityId
                         }"
                       >
                         <td width="1%"><p class="width_8"></p></td>
-                        <td
+                        <td (click)="onProjectActivityClick(item)"
                           width="37%"
                           class="grey-text"
                         >
                           <p>{{ item.ActivityDescription }}</p>
                         </td>
-                        <td width="10%" text-align="left">
+                        <td width="10%" text-align="left" (click)="onProjectActivityClick(item)">
                           <p class="diamond">
                             {{ item.PlannedStartDate | date: "dd/MM/yyyy" }}
                           </p>
                         </td>
-                        <td width="10%" text-align="left">
+                        <td width="10%" text-align="left" (click)="onProjectActivityClick(item)">
                           <p class="text_overflow">
                             {{ item.PlannedEndDate | date: "dd/MM/yyyy" }}
                           </p>
                         </td>
-                        <td width="10%" class="text-center">
+                        <td width="10%" class="text-center" (click)="onProjectActivityClick(item)">
                           {{ item.Progress }}
                         </td>
-                        <td width="10%" class="text-center">
+                        <td width="10%" class="text-center" (click)="onProjectActivityClick(item)">
                           {{ item.Slippage }}
                         </td>
-                        <td width="20%" class="text-center">
+                        <td width="20%" class="text-center" (click)="onProjectActivityClick(item)">
                           {{ item.StatusId | projectPhase: projectPhasesList }}
                         </td>
                         <td width="1%" class="text-center">

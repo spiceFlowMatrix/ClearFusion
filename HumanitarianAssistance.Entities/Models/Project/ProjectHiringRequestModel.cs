@@ -30,7 +30,9 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
 
         public string RequestedBy { get; set; }
 
-
+        public int? pageIndex { get; set; }
+        public int? pageSize { get; set; }
+        public int? totalCount { get; set; }
 
 
     }

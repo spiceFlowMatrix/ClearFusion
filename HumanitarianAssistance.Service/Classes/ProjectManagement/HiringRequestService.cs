@@ -32,52 +32,67 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             _userManager = userManager;
         }
 
-        public async Task<APIResponse> GetallHiringRequestDetail()
+        public async Task<APIResponse> GetallHiringRequestDetail(ProjectHiringRequestModel model)
         {
             APIResponse response = new APIResponse();
             try
             {
-                var requestDetail = await _uow.GetDbContext().ProjectHiringRequestDetail
-                                                              .Include(c => c.CurrencyDetails)
-                                                              .Include(b => b.ProjectBudgetLineDetail)
-                                                              .Include(o => o.OfficeDetails)
-                                                              .Include(c => c.JobGrade)
-                                                              .Include(e => e.EmployeeDetail)
-                                                              .Include(f => f.ProfessionDetails)
-                                                              .Where(x => x.IsDeleted == false)
-                                                              .ToListAsync();
-                var hiringRequestList = requestDetail.Select(x => new ProjectHiringRequestModel
-                {
-                    HiringRequestId = x.HiringRequestId,
-                    HiringRequestCode = x.HiringRequestCode,
-                    CurrencyId = x.CurrencyId,
-                    BudgetLineId = x.BudgetLineId,
-                    OfficeId = x.OfficeId.Value,
-                    GradeId = x.GradeId,
-                    BasicPay = x.BasicPay,
-                    BudgetName = x.ProjectBudgetLineDetail?.BudgetName ?? null,
-                    Description = x.Description,
-                    CurrencyName = x.CurrencyDetails?.CurrencyName ?? null,
-                    EmployeeID = x.EmployeeDetail?.EmployeeID ?? null,
-                    EmployeeName = x.EmployeeDetail?.EmployeeName ?? null,
-                    FilledVacancies = x.FilledVacancies,
-                    GradeName = x.JobGrade?.GradeName ?? null,
-                    IsCompleted = x.IsCompleted,
-                    OfficeName = x.OfficeDetails?.OfficeName ?? null,
-                    Position = x.Position,
-                    ProjectId = x.ProjectId,
-                    ProfessionId = x.ProfessionId,
-                    ProfessionName = x.ProfessionDetails?.ProfessionName ?? null,
-                    TotalVacancies = x.TotalVacancies,
-                    RequestedBy = _uow.GetDbContext().UserDetails.Select(z => new
-                    {
-                        FullName = z.FirstName + " " + z.LastName,
-                        z.AspNetUserId,
-                        z.IsDeleted
-                    }).FirstOrDefault(u => u.AspNetUserId == x.CreatedById && u.IsDeleted == false).FullName
+                int totalCount = await _uow.GetDbContext().ProjectHiringRequestDetail.CountAsync(x => x.IsDeleted == false && x.ProjectId == model.ProjectId);
 
-                }).ToList();
-                response.data.ProjectHiringRequestModel = hiringRequestList.OrderByDescending(x => x.HiringRequestId).ToList();
+
+                var requestDetail = (from hr in _uow.GetDbContext().ProjectHiringRequestDetail.Where(x => x.IsDeleted == false &&
+                                                                                                         x.ProjectId == model.ProjectId)
+                                     join c in _uow.GetDbContext().CurrencyDetails on hr.CurrencyId equals c.CurrencyId into h
+                                     from c in h.DefaultIfEmpty()
+                                     join b in _uow.GetDbContext().ProjectBudgetLineDetail on hr.BudgetLineId equals b.BudgetLineId into bl
+                                     from b in bl.DefaultIfEmpty()
+                                     join o in _uow.GetDbContext().OfficeDetail on hr.OfficeId equals o.OfficeId into od
+                                     from o in od.DefaultIfEmpty()
+                                     join g in _uow.GetDbContext().JobGrade on hr.GradeId equals g.GradeId into gd
+                                     from g in gd.DefaultIfEmpty()
+                                     join e in _uow.GetDbContext().EmployeeDetail on hr.EmployeeID equals e.EmployeeID into ed
+                                     from e in ed.DefaultIfEmpty()
+                                     join p in _uow.GetDbContext().ProfessionDetails on hr.ProfessionId equals p.ProfessionId into pd
+                                     from p in pd.DefaultIfEmpty()
+                                     join u in _uow.GetDbContext().UserDetails on hr.CreatedById equals u.AspNetUserId into ud
+                                     from u in ud.DefaultIfEmpty()
+                                     select new ProjectHiringRequestModel
+                                     {
+                                         HiringRequestId = hr.HiringRequestId,
+                                         HiringRequestCode = hr.HiringRequestCode,
+                                         CurrencyId = c.CurrencyId,
+                                         BudgetLineId = b.BudgetLineId,
+                                         OfficeId = o.OfficeId,
+                                         GradeId = g.GradeId,
+                                         BasicPay = hr.BasicPay,
+                                         BudgetName = b.BudgetName ,
+                                         Description = hr.Description,
+                                         CurrencyName = c.CurrencyName ,
+                                         EmployeeID = e.EmployeeID,
+                                         EmployeeName = e.EmployeeName ,
+                                         FilledVacancies = hr.FilledVacancies,
+                                         GradeName = g.GradeName,
+                                         IsCompleted = hr.IsCompleted,
+                                         OfficeName = o.OfficeName,
+                                         Position = hr.Position,
+                                         ProjectId = hr.ProjectId,
+                                         ProfessionId = hr.ProfessionId,
+                                         ProfessionName = p.ProfessionName,
+                                         TotalVacancies = hr.TotalVacancies,
+                                         RequestedBy = ud.Select(x => new
+                                         {
+                                             FullName = x.FirstName + " " + x.LastName,
+                                             x.AspNetUserId,
+                                             x.IsDeleted
+                                         }).FirstOrDefault(a => a.AspNetUserId == hr.CreatedById && a.IsDeleted == false).FullName
+
+                                    })
+                                     .Skip(model.pageSize.Value * model.pageIndex.Value)
+                                     .Take(model.pageSize.Value)
+                                     .ToList();
+
+                response.data.TotalCount = totalCount;
+                response.data.ProjectHiringRequestModel = requestDetail.OrderByDescending(x => x.HiringRequestId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
