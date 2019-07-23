@@ -1,13 +1,14 @@
-<div class="row">
-  <div class="col-sm-12">
-    <h4 class="main_heading dialog_heading">
+<div class="row dialog_heading">
+  <div class="col-sm-4">
+    <h4 class="main_heading">
       Project Details
-      <!-- <a mat-href (click)="closeProgramAreaSectorModal()" class="pull-right close_btn"><i class="material-icons">
-          cancel </i></a> -->
-      <button mat-icon-button class="pull-right" (click)="closeProgramAreaSectorModal()">
-        <mat-icon aria-label="Example cancel icon">clear</mat-icon>
-      </button>
     </h4>
+  </div>
+  <div class="col-sm-1">
+        <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon>
+  </div>
+  <div class="col-sm-7">
+        <mat-icon class="pull-right icon_cursor" aria-label="cancel" (click)="closeProgramAreaSectorModal()">clear</mat-icon>
   </div>
 </div>
 <div *ngIf="projectOtherDetailPageFlag; else projectListTemplate" class="col-sm-12">
@@ -585,3 +586,132 @@
 
   </div>
 </ng-template>
+
+<!-- style="display: none" -->
+<div id="projectOtherDetailPdfTemplate" #projectOtherDetailPdfTemplate >
+
+    <h5>{{projectOtherDetailPdf.ProjectName}}</h5>
+    <h6><strong>{{projectOtherDetailPdf.Description}}</strong></h6>
+  
+  <!-- Opportunity Details -->
+  <div>
+    <h5><strong>Opportunity Details</strong></h5>
+    <p>Opportunity Type</p>
+    <p>{{projectOtherDetailPdf.OpportunityType}}</p>
+
+    <p>Donor</p>
+    <p>{{projectOtherDetailPdf.Donor}}</p>
+
+    <p>Opportunity No</p>
+    <p>{{projectOtherDetailPdf.OpportunityNo}}</p>
+
+    <p>Opportunity</p>
+    <p>{{projectOtherDetailPdf.Opportunity}}</p>
+
+    <p>Opportunity Description</p>
+    <p>{{projectOtherDetailPdf.OpportunityDescription}}</p>
+    
+    <p>Country</p>
+    <p>{{projectOtherDetailPdf.Country}}</p>
+    
+    <p>Province</p>
+    <p>{{projectOtherDetailPdf.Province}}</p>
+    
+    <p>District</p>
+    <p>{{projectOtherDetailPdf.District}}</p>
+    
+    <p>Office</p>
+    <p>{{projectOtherDetailPdf.Office}}</p>
+
+    <p>Sector</p>
+    <p>{{projectOtherDetailPdf.Sector}}</p>
+    
+    <p>Program</p>
+    <p>{{projectOtherDetailPdf.Program}}</p>
+
+    <p>StartDate</p>
+    <p>{{projectOtherDetailPdf.StartDate}}</p>
+
+    <p>EndDate</p>
+    <p>{{projectOtherDetailPdf.EndDate}}</p>
+  </div>
+
+  <!-- Project Objective & Goal -->
+  <div>
+    <h5><strong>Project Objective & Goal</strong></h5>
+    <p>Project Goal</p>
+    <p>{{projectOtherDetailPdf.ProjectGoal}}</p>
+
+    
+    <p>Project Objective</p>
+    <p>{{projectOtherDetailPdf.ProjectObjective}}</p>
+    
+    <p>Main Activities</p>
+    <p>{{projectOtherDetailPdf.MainActivities}}</p>
+    
+    <p>REOI Receive Date</p>
+    <p>{{projectOtherDetailPdf.REOIReceiveDate}}</p>
+    
+    <p>Submission Date</p>
+    <p>{{projectOtherDetailPdf.SubmissionDate}}</p>
+
+  </div>
+
+  <!-- Beneficiary Details -->
+  <div>
+    <h5><strong>Beneficiary Details</strong></h5>
+
+    <p>Direct Beneficiar Male</p>
+    <p>{{projectOtherDetailPdf.DirectbeneficiarMale}}</p>
+    
+    <p>In-Direct Beneficiar Male</p>
+    <p>{{projectOtherDetailPdf.InDirectbeneficiarMale}}</p>
+    
+    <p>Direct Beneficiar Female</p>
+    <p>{{projectOtherDetailPdf.DirectbeneficiarFemale}}</p>
+    
+    <p>In-Direct Beneficiar Female</p>
+    <p>{{projectOtherDetailPdf.InDirectbeneficiarFemale}}</p>
+    
+    <p>Total Direct Beneficiary</p>
+    <p>{{projectOtherDetailPdf.TotalDirectBeneficiary}}</p>
+    
+    <p>Total In-Direct Beneficiary</p>
+    <p>{{projectOtherDetailPdf.TotalInDirectBeneficiary}}</p>
+  </div>
+
+  <!-- Gender Consideration -->
+  <div>
+    <h5><strong>Gender Consideration</strong></h5>
+
+    <p>Strength Consideration</p>
+    <p>{{projectOtherDetailPdf.StrengthConsideration}}</p>
+    
+    <p>Gender Consideration</p>
+    <p>{{projectOtherDetailPdf.GenderConsideration}}</p>
+    
+    <p>Gender Remarks</p>
+    <p>{{projectOtherDetailPdf.GenderRemarks}}</p>
+  </div>
+
+  <!-- Security Consideration -->
+  <div>
+    <h5><strong>Security Consideration</strong></h5>
+
+    <p>Security</p>
+    <p>{{projectOtherDetailPdf.Security}}</p>
+    
+    <p>Security Consideration</p>
+    <p>{{projectOtherDetailPdf.SecurityConsideration}}</p>
+    
+    <p>Security Remarks</p>
+    <p>{{projectOtherDetailPdf.SecurityRemarks}}</p>
+    
+    <p>StartDate</p>
+    <p>{{projectOtherDetailPdf.StartDate}}</p>
+    
+    <p>StartDate</p>
+    <p>{{projectOtherDetailPdf.StartDate}}</p>
+  </div>
+
+</div>

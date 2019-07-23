@@ -79,6 +79,7 @@ import { HiringRequestDetailsComponent } from './project-list/hiring-requests/hi
 import { HiringRequestsListingComponent } from './project-list/hiring-requests/hiring-requests-listing/hiring-requests-listing.component';
 import { AddCandidateDaialogComponent } from './project-list/hiring-requests/add-candidate-daialog/add-candidate-daialog.component';
 import { EditCandidateDetailDialogComponent } from './project-list/hiring-requests/edit-candidate-detail-dialog/edit-candidate-detail-dialog.component';
+import { ProjectOtherDetailPdfService } from './project-list/project-details/program-area-sector/project-other-detail-pdf.service';
 
 @NgModule({
   imports: [
@@ -168,7 +169,10 @@ import { EditCandidateDetailDialogComponent } from './project-list/hiring-reques
     ProjectActivitiesService,
     ProjectCashFlowService,
     ProposalReportService,
-    MessageService
+    MessageService,
+
+    //pdf
+    ProjectOtherDetailPdfService
   ],
   entryComponents: [
     AddbudgetLineComponent,
