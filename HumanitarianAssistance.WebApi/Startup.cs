@@ -21,6 +21,7 @@ using HumanitarianAssistance.WebApi.Filter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -72,20 +73,24 @@ namespace HumanitarianAssistance.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             //get and set environment variable at run time
             string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
-
             string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
+
             DefaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
             string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
             string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
+
             string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
 
             Console.WriteLine("Connection string: {0}\n", connectionString);
 
-
+            // use it to host on IIS
+            // services.Configure<IISOptions>(options =>
+            // {
+            //     options.AutomaticAuthentication = false;
+            // });
 
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
@@ -233,9 +238,6 @@ namespace HumanitarianAssistance.WebApi
             });
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-
-
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddMvc()
@@ -251,14 +253,6 @@ namespace HumanitarianAssistance.WebApi
 
             services.AddRouting();
             services.AddSignalR();
-
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "NewUI/dist";
-            });
-
-
 
             services.AddSwaggerGen(c =>
             {
@@ -285,8 +279,6 @@ namespace HumanitarianAssistance.WebApi
                 c.IncludeXmlComments(xmlPath);
                 //});
             });
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -308,9 +300,8 @@ namespace HumanitarianAssistance.WebApi
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
 
-            //app.UseCookiePolicy();
+            app.UseCookiePolicy();
             app.UseCors(DefaultCorsPolicyName);
             app.UseAuthentication();
 
@@ -333,13 +324,26 @@ namespace HumanitarianAssistance.WebApi
                 template: "{controller}/{action=Index}/{id?}");
             });
 
-            //app.UseSpaStaticFiles(new StaticFileOptions
-            //{
-            // FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()))
-            //});
-
-            app.Map("/newui", client =>
+            // for each angular client we want to host. 
+            app.Map(new PathString("/newui"), client =>
             {
+
+                string oldUiPath = env.IsDevelopment() ? "NewUI" : @"NewUI/dist";
+
+                // Each map gets its own physical path
+                // for it to map the static files to. 
+                StaticFileOptions olduiDist = new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(
+                            Path.Combine(Directory.GetCurrentDirectory(), oldUiPath)
+                        )
+                };
+
+                // Each map its own static files otherwise
+                // it will only ever serve index.html no matter the filename 
+                client.UseSpaStaticFiles(olduiDist);
+
+
                 client.UseSpa(spa =>
                 {
                     spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
@@ -347,38 +351,50 @@ namespace HumanitarianAssistance.WebApi
 
                     if (env.IsDevelopment())
                     {
+                        // it will use package.json & will search for start command to run
                         spa.UseAngularCliServer(npmScript: "start");
                     }
+                    else
+                    {
+                        spa.Options.DefaultPageStaticFileOptions = olduiDist;
+                    }
+
                 });
             });
 
-            app.Map("/oldui", admin =>
+            // for each angular client we want to host. 
+            app.Map(new PathString("/oldui"), client =>
             {
-                admin.UseSpa(spa =>
+                string oldUiPath = env.IsDevelopment() ? "OldUI" : @"OldUI/dist";
+
+                // Each map gets its own physical path for it to map the static files to. 
+                StaticFileOptions olduiDist = new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(
+                            Path.Combine(Directory.GetCurrentDirectory(), oldUiPath)
+                        )
+                };
+
+                // Each map its own static files otherwise it will only ever serve index.html no matter the filename 
+                client.UseSpaStaticFiles(olduiDist);
+
+                client.UseSpa(spa =>
                 {
                     spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
                     spa.Options.SourcePath = "OldUI";
 
                     if (env.IsDevelopment())
                     {
+                        // it will use package.json & will search for start command to run
                         spa.UseAngularCliServer(npmScript: "start");
                     }
-
+                    else
+                    {
+                        spa.Options.DefaultPageStaticFileOptions = olduiDist;
+                    }
                 });
             });
 
-            //app.UseSpa(spa =>
-            //{
-            // // To learn more about options for serving an Angular SPA from ASP.NET Core,
-            // // see https://go.microsoft.com/fwlink/?linkid=864501
-            // spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-            // spa.Options.SourcePath = "NewUI";
-
-            // if (env.IsDevelopment())
-            // {
-            // spa.UseAngularCliServer(npmScript: "start");
-            // }
-            //});
         }
 
         //2011

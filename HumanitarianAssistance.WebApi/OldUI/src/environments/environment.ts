@@ -5,8 +5,7 @@
 
 export const environment = {
   production: false,
-   baseUrl: 'http://localhost:5001/api/',
-   docUrl : 'http://localhost:5001/Docs/',
-   hubUrl : 'http://localhost:5001/chathub',
-   appUrl : 'http://localhost:4000/#/'
+  apiUrl: '/api/',
+  docUrl: '/Docs/',
+  hubUrl: '/chathub/'
 };

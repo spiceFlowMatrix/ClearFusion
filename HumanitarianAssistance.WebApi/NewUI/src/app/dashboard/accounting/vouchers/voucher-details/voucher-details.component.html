@@ -17,17 +17,17 @@
                 <div class="row">
                   <div class="col-sm-5">
                     <button *ngIf="voucherDetail.IsVoucherVerified" mat-raised-button color="accent"
-                      pTooltip="Voucher Verified" tooltipPosition="top" aria-label="Voucher Verified"
+                      pTooltip="Voucher validated" tooltipPosition="top" aria-label="Voucher validated"
                       (click)="onVoucherVerify()">
                       <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">done</mat-icon>
-                      Verified
+                      Validate
                     </button>
-                    <button *ngIf="!voucherDetail.IsVoucherVerified" mat-stroked-button pTooltip="Verify voucher"
+                    <button *ngIf="!voucherDetail.IsVoucherVerified" mat-stroked-button pTooltip="Validate voucher"
                       tooltipPosition="top" aria-label="Verify voucher" (click)="onVoucherVerify()">
                       <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">
                         done
                       </mat-icon>
-                      Verify
+                      Invalidate
                     </button>
                   </div>
 
