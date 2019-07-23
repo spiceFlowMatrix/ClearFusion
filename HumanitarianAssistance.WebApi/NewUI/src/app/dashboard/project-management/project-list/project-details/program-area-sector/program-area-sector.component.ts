@@ -967,6 +967,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     console.log(id);
     this.provinceDistrictFlag = true;
     this.ProvinceSelectionList = [];
+    this.DistrictMultiSelectList = [];
     this.projectListService
       .getAllProvinceListByCountryId(
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProvinceDetailsByCountryId,
@@ -1574,9 +1575,11 @@ export class ProgramAreaSectorComponent implements OnInit {
               }
               if (this.projectotherDetail.beneficiaryFemale === undefined
                 ? 0 : this.projectotherDetail.beneficiaryFemale) {
-                this.projectotherDetail.projectGoal =
-                  data.data.OtherProjectDetailById.projectGoal;
+                this.projectotherDetail.beneficiaryFemale =
+                  data.data.OtherProjectDetailById.beneficiaryFemale;
               }
+              this.projectotherDetail.projectGoal =
+              data.data.OtherProjectDetailById.projectGoal;
               this.projectotherDetail.projectObjective =
                 data.data.OtherProjectDetailById.projectObjective;
               this.projectotherDetail.mainActivities =

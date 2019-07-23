@@ -182,15 +182,15 @@
                 *ngIf="detailsLoaderFlag"
                 [diameter]="20"
               ></mat-spinner>
-              <button
-              mat-raised-button
-              *ngIf="!detailsLoaderFlag"
-              color="accent"
-              class="main_heading"
-              (click)="openFormModal(0)"
-              matTooltip="Click here to fill other Project details">
-              Add Details
-            </button>
+            <button
+            mat-button
+            *ngIf="!detailsLoaderFlag"
+            class="asign_check assign_custom"
+            color="accent"
+            (click)="openFormModal(0)"
+            pTooltip="Fill other Project details" tooltipPosition="top" >
+            Add Other Details
+          </button>
           </div>
         </div>
 
