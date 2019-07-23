@@ -308,9 +308,12 @@ namespace HumanitarianAssistance.WebApi
 
 
             // var options = new RewriteOptions()
-            // .AddRedirect("redirect-rule/(.*)", "redirected/$1")
-            // .AddRewrite(@"^rewrite-rule/(\d+)/(\d+)", "rewritten?var1=$1&var2=$2", 
-            //     skipRemainingRules: true);
+            // // .AddRedirect("redirect-rule/(.*)", "redirected/$1")
+            // // .AddRewrite(@"^rewrite-rule/(\d+)/(\d+)", "rewritten?var1=$1&var2=$2", 
+            // //     skipRemainingRules: true)
+            // // .AddRedirect("(.*)", "newui");
+            // .AddRewrite(@"()", "newui", skipRemainingRules: true);
+
 
             // app.UseRewriter(options);
 
