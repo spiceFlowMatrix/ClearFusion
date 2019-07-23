@@ -41,8 +41,7 @@ namespace HumanitarianAssistance.WebApi
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                    .UseStartup<Startup>()
-                    .UseUrls("http://*/newui");
+                    .UseStartup<Startup>();
         //.UseUrls("http://*:5004");
     }
 }

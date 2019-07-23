@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -304,6 +305,15 @@ namespace HumanitarianAssistance.WebApi
             app.UseCookiePolicy();
             app.UseCors(DefaultCorsPolicyName);
             app.UseAuthentication();
+
+
+            // var options = new RewriteOptions()
+            // .AddRedirect("redirect-rule/(.*)", "redirected/$1")
+            // .AddRewrite(@"^rewrite-rule/(\d+)/(\d+)", "rewritten?var1=$1&var2=$2", 
+            //     skipRemainingRules: true);
+
+            // app.UseRewriter(options);
+
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
