@@ -84,11 +84,12 @@
                         <p class="width_8"></p>
                       </td>
                       <td width="15%">Code/Id</td>
-                      <td width="20%">Description</td>
+                      <td width="15%">Description</td>
                       <td width="15%">Job Code/Job Id</td>
-                      <td width="20%">Project Job </td>
+                      <td width="15%">Project Job </td>
                       <td width="10%">Currency</td>
-                      <td width="20%" class="text-right">Initial Budget</td>
+                      <td width="20%" >Initial Budget</td>
+                      <td width="10%" class="text-right">Expenditure</td>
                     </tr>
                     <tr (click)="onItemClick(item)" *ngFor="let item of BudgetLineDetailList"
                       [ngClass]="{'txtColor': item.DebitPercentage >= 80,'selected': selectedBudgetId == item.BudgetLineId }">
@@ -99,7 +100,7 @@
                         {{ item.BudgetCode }}/{{ item.BudgetLineId }}
                       </td>
 
-                      <td width="20%">
+                      <td width="15%">
                         <p [ngClass]="[ item.DebitPercentage >= 80 ? 'diamonds':'diamond']"></p>
                         {{ item.BudgetName }}
                       </td>
@@ -107,14 +108,17 @@
                         {{ item.ProjectJobCode }}/ {{ item.ProjectJobId }}
                       </td>
 
-                      <td width="20%">
+                      <td width="15%">
                         <p class="diamond"> </p>{{ item.ProjectJobName }}
                       </td>
                       <td width="10%" >
                         {{ item.CurrencyName }}
                       </td>
-                      <td width="20%" class="text-right">
+                      <td width="20%">
                         {{ item.InitialBudget }}
+                      </td>
+                      <td width="20%">
+                        UI Testings
                       </td>
 
                       <td width="1%" class="text-center"><i *ngIf="selectedBudgetId == item.BudgetLineId"

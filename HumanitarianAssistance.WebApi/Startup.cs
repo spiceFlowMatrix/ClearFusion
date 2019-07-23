@@ -57,13 +57,13 @@ namespace HumanitarianAssistance.WebApi
             Configuration = configuration;
 
             var builder = new ConfigurationBuilder()
-                                .SetBasePath(env.ContentRootPath)
-                                .AddJsonFile(StaticResource.appsettingJsonFile, optional: true, reloadOnChange: true)
-                                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                                .AddEnvironmentVariables();
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile(StaticResource.appsettingJsonFile, optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            .AddEnvironmentVariables();
 
             //string sAppPath = env.ContentRootPath; //Application Base Path
-            //string swwwRootPath = env.WebRootPath;  //wwwroot folder path
+            //string swwwRootPath = env.WebRootPath; //wwwroot folder path
 
             Configuration = builder.Build();
         }
@@ -105,12 +105,12 @@ namespace HumanitarianAssistance.WebApi
                 o.Password.RequiredLength = 6;
 
             }).AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders();
 
 
             services.AddSingleton<IFileProvider>(
-                     new PhysicalFileProvider(
-                         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+            new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
             services.AddSingleton<IRole, RoleService>();
             services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
             services.Configure<WebSiteUrl>(Configuration.GetSection("WEB_SITE_URL"));
@@ -184,33 +184,33 @@ namespace HumanitarianAssistance.WebApi
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
 
             services
-                .AddAuthentication(options =>
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            })
+            .AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+                cfg.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-                })
-                .AddJwtBearer(cfg =>
-                {
-                    cfg.RequireHttpsMetadata = false;
-                    cfg.SaveToken = true;
-                    cfg.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidIssuer = Configuration["JwtIssuerOptions:Issuer"],
-                        ValidAudience = Configuration["JwtIssuerOptions:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
-                        RequireExpirationTime = true,
-                        ClockSkew = TimeSpan.Zero
+                    ValidIssuer = Configuration["JwtIssuerOptions:Issuer"],
+                    ValidAudience = Configuration["JwtIssuerOptions:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+                    RequireExpirationTime = true,
+                    ClockSkew = TimeSpan.Zero
 
 
-                    };
-                });
+                };
+            });
 
             // api user claim policy
             services.AddAuthorization(options =>
             {
-                //  options.AddPolicy("Trust", policy => policy.RequireClaim("Permission", "dashboardhome"));
+                // options.AddPolicy("Trust", policy => policy.RequireClaim("Permission", "dashboardhome"));
                 options.AddPolicy("Trust", policy => policy.RequireClaim("Roles", "Admin", "SuperAdmin", "Accounting Manager", "HR Manager", "Project Manager", "Administrator"));
                 options.AddPolicy("DepartmentUser", policy => policy.RequireClaim("OfficeCode"));
                 options.AddPolicy("HRManager", policy => policy.RequireClaim("Roles", "HR Manager"));
@@ -241,28 +241,28 @@ namespace HumanitarianAssistance.WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddMvc()
-                .AddJsonOptions(config =>
-                {
-                    // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
-                    config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                });
+            .AddJsonOptions(config =>
+            {
+    // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+    config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+                config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            });
             services.AddMvc(
-                     config => { config.Filters.Add(typeof(CustomException)); }
-                     ).AddJsonOptions(a => a.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
+            config => { config.Filters.Add(typeof(CustomException)); }
+            ).AddJsonOptions(a => a.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
 
             services.AddRouting();
             services.AddSignalR();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1.0", new Info { Title = "Humanitarian Assistance  API v1.0", Version = "v1.0" });
+                c.SwaggerDoc("v1.0", new Info { Title = "Humanitarian Assistance API v1.0", Version = "v1.0" });
 
                 // Swagger 2.+ support
                 var security = new Dictionary<string, IEnumerable<string>>
-                {
-                    {"Bearer", new string[] { }},
-                };
+{
+{"Bearer", new string[] { }},
+};
 
                 c.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
@@ -282,10 +282,10 @@ namespace HumanitarianAssistance.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<AppUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<DbInitializer> logger)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<DbInitializer> logger)
         {
             // update database
-            UpdateDatabase(app, _userManager, _roleManager, logger).Wait();
+            UpdateDatabase(app, userManager, roleManager, logger).Wait();
 
             if (env.IsDevelopment())
             {
@@ -320,8 +320,8 @@ namespace HumanitarianAssistance.WebApi
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                name: "default",
+                template: "{controller}/{action=Index}/{id?}");
             });
 
             // for each angular client we want to host. 
@@ -343,6 +343,7 @@ namespace HumanitarianAssistance.WebApi
                 // it will only ever serve index.html no matter the filename 
                 client.UseSpaStaticFiles(olduiDist);
 
+
                 client.UseSpa(spa =>
                 {
                     spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
@@ -357,6 +358,7 @@ namespace HumanitarianAssistance.WebApi
                     {
                         spa.Options.DefaultPageStaticFileOptions = olduiDist;
                     }
+
                 });
             });
 
@@ -399,8 +401,8 @@ namespace HumanitarianAssistance.WebApi
         private static async Task UpdateDatabase(IApplicationBuilder app, UserManager<AppUser> um, RoleManager<IdentityRole> rm, ILogger<DbInitializer> logger)
         {
             using (var serviceScope = app.ApplicationServices
-              .GetRequiredService<IServiceScopeFactory>()
-              .CreateScope())
+            .GetRequiredService<IServiceScopeFactory>()
+            .CreateScope())
             {
                 using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
                 {

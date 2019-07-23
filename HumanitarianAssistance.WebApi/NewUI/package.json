@@ -66,6 +66,7 @@
     "ngx-order-pipe": "^2.0.2",
     "ngx-spinner": "^6.1.2",
     "ngx-toastr": "^9.1.1",
+    "nyc": "^14.1.1",
     "primeicons": "^1.0.0",
     "primeng": "^6.1.6",
     "rrule": "^2.6.0",
