@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --servePath / --baseHref /newui/",
-    "build": "ng build --baseHref /newui/",
-    "build:ssr": "npm run build --baseHref /newui/ -- --app=ssr --output-hashing=media",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:ssr": "npm run build -- --app=ssr --output-hashing=media",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
