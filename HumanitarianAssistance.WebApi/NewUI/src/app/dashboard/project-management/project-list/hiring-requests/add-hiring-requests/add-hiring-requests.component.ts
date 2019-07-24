@@ -131,12 +131,12 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
         .subscribe(
           (response: IResponseData) => {
             if (response.statusCode === 200) {
-              this.onCancelPopup();
-              this.hiringRequestListRefresh();
               this.toastr.success('New request is created successfully');
             } else {
               this.toastr.error(response.message);
             }
+            this.onCancelPopup();
+            this.hiringRequestListRefresh();
             this.addHiringRequestLoader = false;
           },
           error => {
