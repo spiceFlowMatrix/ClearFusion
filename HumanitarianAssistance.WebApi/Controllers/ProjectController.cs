@@ -939,72 +939,11 @@ namespace HumanitarianAssistance.WebApi.Controllers
         }
 
         [HttpPost]
-        public APIResponse GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
+        public async Task<APIResponse> GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
         {
-            APIResponse apiRespone = null;
-
-            apiRespone = _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
-
-<<<<<<< HEAD
-    [HttpPost]
-    public async Task<APIResponse> GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
-    {
-      APIResponse apiRespone = null;
-
-      apiRespone =await _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
-=======
+            APIResponse apiRespone = await _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
             return apiRespone;
-        }
-        [HttpPost]
-        public async Task<APIResponse> AddEditPriorityCriteria([FromBody]PriorityCriteriaModel Model)
-        {
-            APIResponse apiRespone = null;
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                var id = user.Id;
-                apiRespone = await _iProject.AddEditPriorityCriteria(Model, id);
-            }
-            return apiRespone;
-        }
-        [HttpPost]
-        public async Task<APIResponse> AddEditFinancialCriteria([FromBody]FinancialCriteriaModel Model)
-        {
-            APIResponse apiRespone = null;
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                var id = user.Id;
-                apiRespone = _iProject.AddEditFinancialCriteria(Model, id);
-            }
-            return apiRespone;
-        }
-
-        [HttpPost]
-        public async Task<APIResponse> AddEditRiskCriteria([FromBody]RiskCriteriaModel Model)
-        {
-            APIResponse apiRespone = null;
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                var id = user.Id;
-                apiRespone = _iProject.AddEditRiskCriteria(Model, id);
-            }
-            return apiRespone;
-        }
-        [HttpPost]
-        public async Task<APIResponse> AddEditTargetBeneficiary([FromBody]TargetBeneficiaryDetail Model)
-        {
-            APIResponse apiRespone = null;
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                var id = user.Id;
-                apiRespone = _iProject.AddEditTargetBeneficiary(Model, id);
-            }
-            return apiRespone;
-        }
->>>>>>> f73796b84f0e6d3d04ee71abf11400868ddb1505
+       }
 
         [HttpPost]
         public async Task<APIResponse> AddEditFinanacialProjectDetail([FromBody]FinancialProjectDetailModel Model)

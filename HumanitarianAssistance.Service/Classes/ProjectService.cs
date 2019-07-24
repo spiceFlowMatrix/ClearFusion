@@ -1693,12 +1693,8 @@ namespace HumanitarianAssistance.Service.Classes
                             _uow.GetDbContext().SaveChanges();
 
                         }
-<<<<<<< HEAD
-
-=======
                         _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
                         _uow.GetDbContext().SaveChanges();
->>>>>>> f73796b84f0e6d3d04ee71abf11400868ddb1505
                     }
 
                     List<ProvinceMultiSelect> provinceList = new List<ProvinceMultiSelect>();
@@ -3700,11 +3696,7 @@ namespace HumanitarianAssistance.Service.Classes
                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
 
 
-<<<<<<< HEAD
                 List<long?> selectedProjects = await  _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId &&
-=======
-                List<long?> selectedProjects = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId &&
->>>>>>> f73796b84f0e6d3d04ee71abf11400868ddb1505
                                                                                                      x.IsDeleted == false
                                                                                                 ).Select(x => x.ProjectSelectionId).
                                                                                                   ToListAsync();

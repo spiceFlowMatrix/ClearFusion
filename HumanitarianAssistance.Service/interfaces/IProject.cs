@@ -122,13 +122,8 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddEditPurposeofInitiativeCriteria(PurposeofInitiativeCriteriaModel model, string UserId);
         APIResponse AddEditEligibilityCriteriaDetail(EligibilityCriteriaDetailModel model, string UserId);
         APIResponse AddEditFeasibilityCriteria(FeasibilityCriteriaModel model, string UserId);
-<<<<<<< HEAD
        Task<APIResponse> GetAllCriteriaEvaluationDetalByProjectId(long projectId);
        Task<APIResponse> AddEditPriorityCriteria(PriorityCriteriaModel model, string UserId);
-=======
-        APIResponse GetAllCriteriaEvaluationDetalByProjectId(long projectId);
-        Task<APIResponse> AddEditPriorityCriteria(PriorityCriteriaModel model, string UserId);
->>>>>>> f73796b84f0e6d3d04ee71abf11400868ddb1505
         APIResponse AddEditFinancialCriteria(FinancialCriteriaModel model, string UserId);
         APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId);
         APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId);

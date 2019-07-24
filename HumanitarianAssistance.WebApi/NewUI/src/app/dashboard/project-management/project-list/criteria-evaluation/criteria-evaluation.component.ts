@@ -4,7 +4,7 @@ import {
   HostListener,
   EventEmitter,
   Output
-} from "@angular/core";
+} from '@angular/core';
 import {
   DonorCEModel,
   EligibilityCEModel,
@@ -16,13 +16,13 @@ import {
   TargetBeneficiaryModel,
   FinancialProjectDetailModel,
   CurrencyModel
-} from "../project-details/models/project-details.model";
-import { CriteriaEvaluationService } from "../service/criteria-evaluation.service";
-import { GLOBAL } from "src/app/shared/global";
-import { AppUrlService } from "src/app/shared/services/app-url.service";
-import { FormControl, Validators } from "@angular/forms";
-import { SelectItem } from "primeng/primeng";
-import { ToastrService } from "ngx-toastr";
+} from '../project-details/models/project-details.model';
+import { CriteriaEvaluationService } from '../service/criteria-evaluation.service';
+import { GLOBAL } from 'src/app/shared/global';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { FormControl, Validators } from '@angular/forms';
+import { SelectItem } from 'primeng/primeng';
+import { ToastrService } from 'ngx-toastr';
 import {
   IPriorityOtherModel,
   IFeasibilityExpert,
@@ -31,17 +31,17 @@ import {
   ICEOccupationModel,
   ICEDonorEligibilityModel,
   ICEisCESubmitModel
-} from "./criteria-evaluation.model";
-import { ActivatedRoute } from "@angular/router";
+} from './criteria-evaluation.model';
+import { ActivatedRoute } from '@angular/router';
 import {
   TargetBeneficiaryTypes_Enum,
   criteriaEvaluationScores
-} from "src/app/shared/enum";
+} from 'src/app/shared/enum';
 
 @Component({
-  selector: "app-criteria-evaluation",
-  templateUrl: "./criteria-evaluation.component.html",
-  styleUrls: ["./criteria-evaluation.component.scss"]
+  selector: 'app-criteria-evaluation',
+  templateUrl: './criteria-evaluation.component.html',
+  styleUrls: ['./criteria-evaluation.component.scss']
 })
 export class CriteriaEvaluationComponent implements OnInit {
   //#region  agegroup and occupation
@@ -60,22 +60,22 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region "Variables"
   methodOfFundingList = [
-    { Id: 1, Name: "Sole" },
-    { Id: 2, Name: "Source/Co-finance" }
+    { Id: 1, Name: 'Sole' },
+    { Id: 2, Name: 'Source/Co-finance' }
   ];
 
   financialHistory = [
-    { Id: 1, Name: "Good" },
-    { Id: 2, Name: "Neutral" },
-    { Id: 3, Name: "Bad" }
+    { Id: 1, Name: 'Good' },
+    { Id: 2, Name: 'Neutral' },
+    { Id: 3, Name: 'Bad' }
   ];
 
   sectorAndThemes = [
     {
       Id: 1,
-      Name: "Products"
+      Name: 'Products'
     },
-    { Id: 2, Name: "Services" }
+    { Id: 2, Name: 'Services' }
   ];
 
   disableCriteriaEvaluationForm = false;
@@ -113,7 +113,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   submitButton: any;
 
   // Count values
-  proposalExperiemce = "";
+  proposalExperiemce = '';
 
   //#region  Donor eligibility creteia variables
   onDonorELegibilityCrteria = 0;
@@ -211,7 +211,7 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   ngOnInit() {
     this.routeActive.parent.params.subscribe(params => {
-      this.ProjectId = +params["id"];
+      this.ProjectId = +params['id'];
     });
     this.initializeList();
     this.initilizeDonorEligibilityList();
@@ -223,7 +223,7 @@ export class CriteriaEvaluationComponent implements OnInit {
     this.initRiskModel();
     this.initProductAndServiceModel();
     this.GetCriteraiEvaluationDetailById(this.ProjectId);
-    this.CostOfCompensation = new FormControl("", [
+    this.CostOfCompensation = new FormControl('', [
       Validators.max(12),
       Validators.min(1)
     ]);
@@ -241,15 +241,15 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   //#region "Dynamic Scroll"
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
 
     this.scrollStyles = {
-      "overflow-y": "auto",
-      height: this.screenHeight - 190 + "px",
-      "overflow-x": "hidden"
+      'overflow-y': 'auto',
+      height: this.screenHeight - 190 + 'px',
+      'overflow-x': 'hidden'
     };
   }
   //#endregion
@@ -553,10 +553,10 @@ export class CriteriaEvaluationComponent implements OnInit {
     this.AddEditDonorCEForm(this.donorCEForm);
   }
   onProposalExperiemceChange(value) {
-    if (value.value === "pre") {
+    if (value.value === 'pre') {
       this.donorCEForm.ProposalExperience = true;
       this.proposalExperiemce = criteriaEvaluationScores.pre_ProposalExperience;
-    } else if (value.value === "post") {
+    } else if (value.value === 'post') {
       this.donorCEForm.ProposalExperience = false;
       this.proposalExperiemce =
         criteriaEvaluationScores.post_ProposalExperience;
@@ -619,7 +619,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onOtherTypeDeliverablesChange(ev, data: any) {
-    if ((ev = "OtherDeliverableType")) {
+    if ((ev = 'OtherDeliverableType')) {
       if (data != null) {
         this.donorCEForm.OtherDeliverableType = data;
       } else {
@@ -1103,8 +1103,8 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onCostOfCompensationChange(ev, data: any) {
-    if (data <= 12 && data != null && data !== undefined && data !== "") {
-      if (ev === "CostOfCompensation") {
+    if (data <= 12 && data != null && data !== undefined && data !== '') {
+      if (ev === 'CostOfCompensation') {
         this.feasibilityForm.CostOfCompensationMonth = data;
         // this.costOfCompensation = -1 * data;
         this.AddEditFeasibilityCEForm(this.feasibilityForm);
@@ -1113,7 +1113,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
   onCostOfCompensationMoneyChange(ev, data: any) {
     // if (data != null && data != undefined && data != "" && data >= 5000) {
-    if (ev === "CostOfCompensationMoney") {
+    if (ev === 'CostOfCompensationMoney') {
       this.feasibilityForm.CostOfCompensationMoney = data;
       // this.costOfCompensationMoney = -1 * data / 5000;
       this.AddEditFeasibilityCEForm(this.feasibilityForm);
@@ -1284,14 +1284,14 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onProjectRealCostChange(data: any) {
-    if (data != null && data !== undefined && data !== "") {
+    if (data != null && data !== undefined && data !== '') {
       this.feasibilityForm.ProjectRealCost = data;
       this.AddEditFeasibilityCEForm(this.feasibilityForm);
     }
   }
 
   onCostGreaterBudgetChange(data: any) {
-    if (data != null && data !== undefined && data !== "") {
+    if (data != null && data !== undefined && data !== '') {
       this.feasibilityForm.PerCostGreaterthenBudget = data;
       this.AddEditFeasibilityCEForm(this.feasibilityForm);
     }
@@ -1496,24 +1496,24 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   //#region Financial profitability form
   onProjectActivityChange(ev, data: any) {
-    if (data != null && data !== "" && data !== undefined) {
+    if (data != null && data !== '' && data !== undefined) {
       // var total = data;
-      if (ev === "projectActivity") {
+      if (ev === 'projectActivity') {
         this.financialForm.ProjectActivities = data;
         this.projectactivity = data;
         this.AddEditFinancialProfitability(this.financialForm);
       }
-      if (ev === "operational") {
+      if (ev === 'operational') {
         this.financialForm.Operational = data;
         this.operational = data;
         this.AddEditFinancialProfitability(this.financialForm);
       }
-      if (ev === "overheadAdmin") {
+      if (ev === 'overheadAdmin') {
         this.admin = data;
         this.financialForm.Overhead_Admin = data;
         this.AddEditFinancialProfitability(this.financialForm);
       }
-      if (ev === "lumpsum") {
+      if (ev === 'lumpsum') {
         this.lump = data;
         this.financialForm.Lump_Sum = data;
         this.AddEditFinancialProfitability(this.financialForm);
@@ -1542,24 +1542,24 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onRiskChildChange(ev, data: any) {
-    if (data != null && data !== "" && data !== undefined) {
-      if (ev === "Staff") {
+    if (data != null && data !== '' && data !== undefined) {
+      if (ev === 'Staff') {
         this.riskForm.Staff = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "Assets") {
+      if (ev === 'Assets') {
         this.riskForm.ProjectAssets = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "Suppliers") {
+      if (ev === 'Suppliers') {
         this.riskForm.Suppliers = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "Beneficiaries") {
+      if (ev === 'Beneficiaries') {
         this.riskForm.Beneficiaries = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "OverallOrganization") {
+      if (ev === 'OverallOrganization') {
         this.riskForm.OverallOrganization = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
@@ -1591,43 +1591,43 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onReputationChildChange(ev, data: any) {
-    if (data != null && data !== "" && data !== undefined) {
-      if (ev === "Religious") {
+    if (data != null && data !== '' && data !== undefined) {
+      if (ev === 'Religious') {
         this.riskForm.Religious = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "Sectarian") {
+      if (ev === 'Sectarian') {
         this.riskForm.Sectarian = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "Ethnic") {
+      if (ev === 'Ethnic') {
         this.riskForm.Ethinc = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "Social") {
+      if (ev === 'Social') {
         this.riskForm.Social = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "Traditional") {
+      if (ev === 'Traditional') {
         this.riskForm.Traditional = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "Geographical") {
+      if (ev === 'Geographical') {
         this.riskForm.Geographical = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
-      } if (ev === "Insecurity") {
+      } if (ev === 'Insecurity') {
         this.riskForm.Insecurity = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
-      } if (ev === "Season") {
+      } if (ev === 'Season') {
         this.riskForm.Season = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
-      } if (ev === "Ethnicity") {
+      } if (ev === 'Ethnicity') {
         this.riskForm.Ethnicity = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
-      } if (ev === "Culture") {
+      } if (ev === 'Culture') {
         this.riskForm.Culture = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
-      } if (ev === "ReligiousBeliefs") {
+      } if (ev === 'ReligiousBeliefs') {
         this.riskForm.ReligiousBeliefs = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
@@ -1655,16 +1655,16 @@ export class CriteriaEvaluationComponent implements OnInit {
     this.AddEditRiskSecurityCEForm(this.riskForm);
   }
   onRiskDeliveryFailureChildChange(ev, data: any) {
-    if (data != null && data !== "" && data !== undefined) {
-      if (ev === "PrematureSeizure") {
+    if (data != null && data !== '' && data !== undefined) {
+      if (ev === 'PrematureSeizure') {
         this.riskForm.PrematureSeizure = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "GovernmentConfiscation") {
+      if (ev === 'GovernmentConfiscation') {
         this.riskForm.GovernmentConfiscation = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-      if (ev === "TerroristActivity") {
+      if (ev === 'TerroristActivity') {
         this.riskForm.DesctructionByTerroristActivity = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
@@ -1694,7 +1694,7 @@ export class CriteriaEvaluationComponent implements OnInit {
   }
 
   onProjectotherDetailsChange(ev, data: number[]) {
-    if (ev === "projectSelction" && data != null) {
+    if (ev === 'projectSelction' && data != null) {
       this.riskForm.ProjectSelectionId = data;
       // var unique = Array.from(new Set(data))
       this.AddEditRiskSecurityCEForm(this.riskForm);
@@ -1720,8 +1720,8 @@ export class CriteriaEvaluationComponent implements OnInit {
     this.AddEditRiskSecurityCEForm(this.riskForm);
   }
   onOrganizationalDescriptionChange(ev, data: any) {
-    if (data != null && data !== "" && data !== undefined) {
-      if (ev === "OrganizationalDescription") {
+    if (data != null && data !== '' && data !== undefined) {
+      if (ev === 'OrganizationalDescription') {
         this.riskForm.OrganizationalDescription = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
@@ -1774,11 +1774,10 @@ GetAllCurrency() {
             });
           }
         }
-        this._cdr.detectChanges();
-        this.currencyDetailLoader = false;
+        // this.currencyDetailLoader = false;
       },
       error => {
-        this.currencyDetailLoader = false;
+        // this.currencyDetailLoader = false;
       }
     );
 }
@@ -2242,7 +2241,7 @@ GetAllCurrency() {
           },
           error => {
             this.criteriaEvaluationLoader = false;
-            this.toastr.error("Something Went Wrong..! Please Try Again.");
+            this.toastr.error('Something Went Wrong..! Please Try Again.');
           }
         );
     }
@@ -2505,7 +2504,7 @@ GetAllCurrency() {
             }
           },
           error => {
-            this.toastr.error("Something went wrong! Please try Agian");
+            this.toastr.error('Something went wrong! Please try Agian');
           }
         );
     }
@@ -2565,8 +2564,8 @@ GetAllCurrency() {
 //#region "currencyDetailsChange"
 currencyDetailsChange(ev, data: any ) {
   // this.currencyDetailLoader = true;
-  if (data != null && data !== "" && data !== undefined) {
-    if (ev === "currencySelction") {
+  if (data != null && data !== '' && data !== undefined) {
+    if (ev === 'currencySelction') {
       this.riskForm.CurrencyId = data;
       this.AddEditRiskSecurityCEForm(this.riskForm);
     }
@@ -2978,7 +2977,7 @@ currencyDetailsChange(ev, data: any ) {
 
   //#region "onAdd" target benificiary
   onAddtargetBeneficiary(type: number, value: string) {
-    if (value != null && value !== undefined && value !== "") {
+    if (value != null && value !== undefined && value !== '') {
       let obj: TargetBeneficiaryModel = {
         ProjectId: this.ProjectId,
         TargetType: 0
@@ -3069,7 +3068,7 @@ currencyDetailsChange(ev, data: any ) {
           } else if (TargetType === this.Occupation_ID) {
             this.OccupationList[index]._error = true;
           }
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3134,7 +3133,7 @@ currencyDetailsChange(ev, data: any ) {
           }
         },
         error => {
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3239,7 +3238,7 @@ currencyDetailsChange(ev, data: any ) {
           this.priorityOtherList[index]._IsDeleted = false;
           this.priorityOtherList[index]._IsLoading = false;
           this.priorityOtherList[index]._IsError = true;
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3249,7 +3248,7 @@ currencyDetailsChange(ev, data: any ) {
   onAddPriorityOther() {
     const obj: IPriorityOtherModel = {
       PriorityOtherDetailId: 0,
-      Name: "",
+      Name: '',
       ProjectId: null,
       _IsDeleted: false,
       _IsError: false,
@@ -3316,7 +3315,7 @@ currencyDetailsChange(ev, data: any ) {
   onAddFeasibitlityExpertOther() {
     const obj: IFeasibilityExpert = {
       ExpertOtherDetailId: 0,
-      Name: "",
+      Name: '',
       ProjectId: this.ProjectId,
       _IsDeleted: false,
       _IsError: false,
@@ -3360,7 +3359,7 @@ currencyDetailsChange(ev, data: any ) {
           }
         },
         error => {
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3424,7 +3423,7 @@ currencyDetailsChange(ev, data: any ) {
           // error handling
           this.feasivilityList[index]._IsLoading = false;
           this.feasivilityList[index]._IsError = true;
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3490,7 +3489,7 @@ currencyDetailsChange(ev, data: any ) {
           this.feasivilityList[index]._IsDeleted = false;
           this.feasivilityList[index]._IsLoading = false;
           this.feasivilityList[index]._IsError = true;
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3527,7 +3526,7 @@ currencyDetailsChange(ev, data: any ) {
   onAddAssumption() {
     const obj: ICEAssumptionModel = {
       AssumptionDetailId: 0,
-      Name: "",
+      Name: '',
       ProjectId: null,
       _IsDeleted: false,
       _IsError: false,
@@ -3568,7 +3567,7 @@ currencyDetailsChange(ev, data: any ) {
           }
         },
         error => {
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3634,7 +3633,7 @@ currencyDetailsChange(ev, data: any ) {
           // error handling
           this.assumptionList[index]._IsLoading = false;
           this.assumptionList[index]._IsError = true;
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3701,7 +3700,7 @@ currencyDetailsChange(ev, data: any ) {
           this.assumptionList[index]._IsDeleted = false;
           this.assumptionList[index]._IsLoading = false;
           this.assumptionList[index]._IsError = true;
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3737,7 +3736,7 @@ currencyDetailsChange(ev, data: any ) {
   onAddAgeDetail() {
     const obj: ICEAgeDEtailModel = {
       AgeGroupOtherDetailId: 0,
-      Name: "",
+      Name: '',
       ProjectId: null,
       _IsDeleted: false,
       _IsError: false,
@@ -3779,7 +3778,7 @@ currencyDetailsChange(ev, data: any ) {
           }
         },
         error => {
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3845,7 +3844,7 @@ currencyDetailsChange(ev, data: any ) {
           // error handling
           this.ageGroupList[index]._IsLoading = false;
           this.ageGroupList[index]._IsError = true;
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3911,7 +3910,7 @@ currencyDetailsChange(ev, data: any ) {
           this.ageGroupList[index]._IsDeleted = false;
           this.ageGroupList[index]._IsLoading = false;
           this.ageGroupList[index]._IsError = true;
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -3948,7 +3947,7 @@ currencyDetailsChange(ev, data: any ) {
   onAddOccupationDetail() {
     const obj: ICEOccupationModel = {
       OccupationOtherDetailId: 0,
-      Name: "",
+      Name: '',
       ProjectId: null,
       _IsDeleted: false,
       _IsError: false,
@@ -3989,7 +3988,7 @@ currencyDetailsChange(ev, data: any ) {
           }
         },
         error => {
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -4055,7 +4054,7 @@ currencyDetailsChange(ev, data: any ) {
           // error handling
           this.occupatonList[index]._IsLoading = false;
           this.occupatonList[index]._IsError = true;
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -4159,7 +4158,7 @@ currencyDetailsChange(ev, data: any ) {
   onAddDonorEligibilityDetail() {
     const obj: ICEDonorEligibilityModel = {
       DonorEligibilityDetailId: 0,
-      Name: "",
+      Name: '',
       ProjectId: null,
       _IsDeleted: false,
       _IsError: false,
@@ -4200,7 +4199,7 @@ currencyDetailsChange(ev, data: any ) {
           }
         },
         error => {
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -4267,7 +4266,7 @@ currencyDetailsChange(ev, data: any ) {
           // error handling
           this.donorEligibilityList[index]._IsLoading = false;
           this.donorEligibilityList[index]._IsError = true;
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -4334,7 +4333,7 @@ currencyDetailsChange(ev, data: any ) {
           this.donorEligibilityList[index]._IsDeleted = false;
           this.donorEligibilityList[index]._IsLoading = false;
           this.donorEligibilityList[index]._IsError = true;
-          this.toastr.error("Something went wrong ! Try Again");
+          this.toastr.error('Something went wrong ! Try Again');
         }
       );
   }
@@ -4342,7 +4341,7 @@ currencyDetailsChange(ev, data: any ) {
 
   //#region to check the isCriteiaEvaluationSUBMIT
   OnCriteriaEvaluationSubmitChange(ev) {
-    if (ev === "IsCESubmit") {
+    if (ev === 'IsCESubmit') {
       this.startCriteriaEvaluationSubmitLoader = true;
       (this.IsSubmitCEform.IsCriteriaEvaluationSubmit = true),
         (this.IsSubmitCEform.ProjectId = this.ProjectId);
