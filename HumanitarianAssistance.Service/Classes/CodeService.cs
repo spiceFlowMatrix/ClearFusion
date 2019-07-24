@@ -192,6 +192,35 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
+       public async Task<APIResponse> DeleteQualificationDetails(QualificationDetailsModel model)
+        {
+            APIResponse response = new APIResponse();
+            try
+            {
+                var existrecord = await _uow.QualificationDetailsRepository.FindAsync(x => x.QualificationId == model.QualificationId);
+                if (existrecord != null)
+                {
+                    existrecord.IsDeleted = true;
+
+                    await _uow.QualificationDetailsRepository.UpdateAsyn(existrecord);
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+                }
+                else
+                {
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = "No Record Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
         public async Task<APIResponse> GetAllInterviewRoundList()
         {
             APIResponse response = new APIResponse();

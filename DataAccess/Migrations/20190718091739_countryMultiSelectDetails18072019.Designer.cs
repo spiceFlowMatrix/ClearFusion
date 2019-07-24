@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190718091739_countryMultiSelectDetails18072019")]
+    partial class countryMultiSelectDetails18072019
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6354,7 +6356,7 @@ namespace DataAccess.Migrations
                     b.Property<long>("CountryMultiSelectId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CountryId");
+                    b.Property<int>("CountryId");
 
                     b.Property<long?>("CountrySelectionId");
 
@@ -7982,8 +7984,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<long?>("CountryMultiSelectId");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -8001,8 +8001,6 @@ namespace DataAccess.Migrations
                     b.Property<long?>("ProvinceSelectionId");
 
                     b.HasKey("ProvinceMultiSelectId");
-
-                    b.HasIndex("CountryMultiSelectId");
 
                     b.HasIndex("CreatedById");
 
@@ -12316,7 +12314,8 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("DataAccess.DbEntities.CountryDetails", "CountryDetails")
                         .WithMany()
-                        .HasForeignKey("CountryId");
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
@@ -13040,10 +13039,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProvinceMultiSelect", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.Project.CountryMultiSelectDetails", "CountryMultiSelectDetails")
-                        .WithMany()
-                        .HasForeignKey("CountryMultiSelectId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");

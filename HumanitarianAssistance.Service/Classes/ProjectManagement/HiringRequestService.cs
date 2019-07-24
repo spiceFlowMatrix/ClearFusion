@@ -185,7 +185,7 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message =   ex.Message;
             }
             return response;
         }

@@ -15,12 +15,16 @@ namespace DataAccess.DbEntities.Project
         [ForeignKey("ProjectId")]
         public ProjectDetail ProjectDetail { get; set; }
         public long ProjectId { get; set; }
-       
+
+        [ForeignKey("CountryMultiSelectId")]
+        public long? CountryMultiSelectId { get; set; }
+        public CountryMultiSelectDetails CountryMultiSelectDetails { get; set; }
+
         [ForeignKey("ProvinceId")]
         public ProvinceDetails ProvinceDetails { get; set; }
         public int ProvinceId { get; set; }
 
         public long? ProvinceSelectionId { get; set; }
-   
+
     }
 }
