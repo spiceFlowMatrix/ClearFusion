@@ -98,6 +98,7 @@ export class ProjectActivityDocumentsComponent implements OnInit, OnDestroy {
 
   //#region "uploadActivityDocument"
   uploadActivityDocument(data: any) {
+    debugger;
     this.commonLoader.showLoader();
     this.uploadActivitySubscribe = this.activitiesService
       .UploadProjectActivityDocument(data)

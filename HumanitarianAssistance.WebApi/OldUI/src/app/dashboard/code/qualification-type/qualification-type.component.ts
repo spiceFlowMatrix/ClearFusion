@@ -25,6 +25,12 @@ export class QualificationTypeComponent implements OnInit {
   qualificationListLoading = false;
   qualificationPopupLoading = false;
 
+  deleteQualificationPopupLoading = false;
+
+// confirmation     
+  deleteConfirmationPopupVisible = false;
+
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -155,7 +161,64 @@ export class QualificationTypeComponent implements OnInit {
   showHideQualificationListLoading(flag: boolean) {
     this.qualificationListLoading = flag;
   }
+
+  //#region "deleteQualificationById"
+  deleteQualificationById(data: any) {
+    if (data != null) {
+      this.qualificationData = {
+        QualificationId: data.data.QualificationId,
+        QualificationName: data.data.QualificationName
+      };
+      this.showDeleteQualificationPopup();
+    }
+  }
+  //#endregion
+
+  showDeleteQualificationPopup(){
+    this.deleteConfirmationPopupVisible = true;
+  }
+
+  hideDeleteQualificationPopup() {
+    this.deleteConfirmationPopupVisible = false;
+  }
+
+  showDeleteQualificationPopupLoading() {
+    this.deleteQualificationPopupLoading = true;
+  }
+  hideDeleteQualificationPopupLoading() {
+    this.deleteQualificationPopupLoading = false;
+  }
+
+ //#region "Delete qualification "
+ deleteQualificationDetail() {
+  if (this.qualificationData != null) {
+    this.showDeleteQualificationPopupLoading();
+
+    this.codeservice
+      .AddEditDetails(
+        this.setting.getBaseUrl() + GLOBAL.API_Code_DeleteQualifactionDetails,
+        this.qualificationData
+      )
+      .subscribe(data => {
+        if (data.StatusCode === 200) {
+          this.toastr.success('Deleted Successfully!!!');
+        } else if (data.StatusCode === 900) {
+          this.toastr.error(data.Message);
+        } else {
+          this.toastr.error(data.Message);
+        }
+
+        this.getQualificationList();
+        this.hideDeleteQualificationPopup();
+        this.hideDeleteQualificationPopupLoading();
+      });
+  }
 }
+//#endregion
+
+}
+
+
 
 export interface Qualification {
   QualificationId: number;
