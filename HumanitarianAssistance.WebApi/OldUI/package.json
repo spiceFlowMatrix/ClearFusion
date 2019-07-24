@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --servePath / --baseHref /oldui/",
-    "build": " node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod -aot -vc -cc -dop --buildOptimize --baseHref /oldui/",
+    "build": "ng build --baseHref /oldui/",
     "build:ssr": "npm run build --baseHref /oldui/ -- --app=ssr --output-hashing=media",
     "test": "ng test",
     "lint": "ng lint",
