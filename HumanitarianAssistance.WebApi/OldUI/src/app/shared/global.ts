@@ -235,6 +235,9 @@ export class GLOBAL {
   public static API_Code_AddDesignation = 'Code/AddDesignation';
   public static API_Code_AddQualificationDetails = 'Code/AddQualificationDetails';
   public static API_Code_EditQualifactionDetails = 'Code/EditQualifactionDetails';
+  public static API_Code_DeleteQualifactionDetails = 'Code/DeleteQualifactionDetails';
+
+
 
   public static API_Hr_GetAllEmployeesAttendanceByDate = 'HREmployee/GetAllEmployeesAttendanceByDate';
   public static API_Hr_EditEmployeeAttendanceByDate = 'HREmployee/EditEmployeeAttendanceByDate';

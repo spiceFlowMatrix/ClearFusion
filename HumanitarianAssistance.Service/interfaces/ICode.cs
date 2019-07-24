@@ -35,6 +35,8 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> AddQualificationDetails(QualificationDetailsModel model);
         Task<APIResponse> EditQualifactionDetails(QualificationDetailsModel model);
+        Task<APIResponse> DeleteQualificationDetails(QualificationDetailsModel model);
+
         Task<APIResponse> AddSalaryHead(SalaryHeadModel model);
         Task<APIResponse> EditSalaryHead(SalaryHeadModel model);
         Task<APIResponse> DeleteSalaryHead(SalaryHeadModel model);

@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190718134535_addColumnCountryMultiSelectAddColoumn18072019")]
+    partial class addColumnCountryMultiSelectAddColoumn18072019
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7982,8 +7984,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<long?>("CountryMultiSelectId");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -8002,8 +8002,6 @@ namespace DataAccess.Migrations
 
                     b.HasKey("ProvinceMultiSelectId");
 
-                    b.HasIndex("CountryMultiSelectId");
-
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ModifiedById");
@@ -8021,123 +8019,81 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<bool?>("AcceleratedLearningProgram");
-
-                    b.Property<bool?>("Advocacy");
-
-                    b.Property<bool?>("AggriculutreCapacityBuilding");
+                    b.Property<bool?>("Aggriculture");
 
                     b.Property<bool?>("Awareness");
 
-                    b.Property<bool?>("CapacityBuilding");
-
                     b.Property<bool?>("Children");
 
-                    b.Property<bool?>("CommunicableDisease");
-
-                    b.Property<bool?>("CommunityBasedEducation");
+                    b.Property<bool?>("CommunityDevelopment");
 
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool?>("Disabled");
+                    b.Property<bool?>("Culture");
 
-                    b.Property<bool?>("DisasterCapacityBuilding");
+                    b.Property<bool?>("DRR");
 
-                    b.Property<bool?>("DisasterRiskHygiene");
+                    b.Property<bool?>("Documentaries");
 
-                    b.Property<bool?>("EducationCapacityBuilding");
+                    b.Property<bool?>("DrugAbuses");
 
-                    b.Property<bool?>("EducationInEmergency");
+                    b.Property<bool?>("Education");
 
-                    b.Property<bool?>("EmergencyResponse");
+                    b.Property<bool?>("HealthAndNutrition");
 
-                    b.Property<bool?>("EnvironmentalHealth");
-
-                    b.Property<bool?>("FoodSecurity");
-
-                    b.Property<bool?>("HealthCapacityBuilding");
-
-                    b.Property<bool?>("Horticulture");
-
-                    b.Property<bool?>("Hygiene");
-
-                    b.Property<bool?>("IDPs");
-
-                    b.Property<bool?>("Immunization");
-
-                    b.Property<bool?>("IncomeGeneration");
-
-                    b.Property<bool?>("InfantandYoungChildFeeding");
-
-                    b.Property<bool?>("Infrastructure");
-
-                    b.Property<bool?>("Irrigation");
+                    b.Property<bool?>("InvestigativeJournalism");
 
                     b.Property<bool?>("IsDeleted");
-
-                    b.Property<bool?>("Kuchis");
-
-                    b.Property<bool?>("Literacy");
-
-                    b.Property<bool?>("Livelihood");
-
-                    b.Property<bool?>("LivestockManagement");
-
-                    b.Property<bool?>("Men");
-
-                    b.Property<bool?>("MentalHealthandDisabilityService");
-
-                    b.Property<bool?>("MitigationProjects");
-
-                    b.Property<bool?>("Mobilization");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<bool?>("NaturalResourceManagement");
+                    b.Property<bool?>("Music");
 
-                    b.Property<bool?>("Nutrition");
+                    b.Property<bool?>("News");
 
-                    b.Property<bool?>("OnlineEducation");
+                    b.Property<string>("OtherActivity");
 
-                    b.Property<bool?>("PeaceBuilding");
+                    b.Property<bool?>("Others");
 
-                    b.Property<bool?>("PrimaryHealthServices");
+                    b.Property<bool?>("PrintedMedia");
+
+                    b.Property<bool?>("Product");
 
                     b.Property<long>("ProjectId");
 
-                    b.Property<bool?>("RenewableEnergy");
+                    b.Property<bool?>("RadioProduction");
 
-                    b.Property<bool?>("ReproductiveHealth");
+                    b.Property<bool?>("Reports");
 
-                    b.Property<bool?>("ResearchandPublication");
+                    b.Property<bool?>("Right");
 
-                    b.Property<bool?>("Returnees");
+                    b.Property<bool?>("RoundTable");
 
-                    b.Property<bool?>("Sanitation");
+                    b.Property<bool?>("Service");
 
-                    b.Property<bool?>("SchoolUpgrading");
+                    b.Property<bool?>("ServiceEducation");
 
-                    b.Property<bool?>("Shelter");
+                    b.Property<bool?>("ServiceHealthAndNutrition");
 
-                    b.Property<bool?>("SocialProtection");
+                    b.Property<bool?>("SocioPolitiacalDebate");
 
-                    b.Property<bool?>("SustainableLivelihood");
+                    b.Property<bool?>("Studies");
 
-                    b.Property<bool?>("Telemedicine");
+                    b.Property<bool?>("TVProgram");
 
-                    b.Property<bool?>("ValueChain");
+                    b.Property<bool?>("TargetBenificaiaryWomen");
 
-                    b.Property<bool?>("WaterSupply");
+                    b.Property<bool?>("TargetBenificiaryAgeGroup");
 
-                    b.Property<bool?>("Widows");
+                    b.Property<bool?>("TargetBenificiaryMen");
+
+                    b.Property<bool?>("TargetBenificiaryaOccupation");
 
                     b.Property<bool?>("Women");
-
-                    b.Property<bool?>("Youth");
 
                     b.HasKey("ProductServiceId");
 
@@ -13082,10 +13038,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProvinceMultiSelect", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.Project.CountryMultiSelectDetails", "CountryMultiSelectDetails")
-                        .WithMany()
-                        .HasForeignKey("CountryMultiSelectId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");

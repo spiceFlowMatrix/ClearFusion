@@ -6,7 +6,6 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap';
 import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
-import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { UserService } from './user/user.service';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { DashboardComponent } from './dashboard.component';
@@ -50,7 +49,6 @@ import { AppSettingsService } from '../service/app-settings.service';
       secondaryColour: '#000',
       tertiaryColour: '#a129'
     }),
-    NgIdleKeepaliveModule.forRoot(),
     NgxPermissionsModule.forRoot()
   ],
   declarations: [

@@ -221,6 +221,17 @@ export interface securityConsiderationMultiSelectModel {
   ProjectId: number;
 }
 
+<<<<<<< HEAD
+=======
+export interface CountryMultiSelectModel {
+  CountryMultiSelectId?: number;
+  ProjectId?: number;
+  CountryId?: number[];
+  CountrySelectionId?: number;
+
+}
+
+>>>>>>> f73796b84f0e6d3d04ee71abf11400868ddb1505
 export interface ProvinceMultiSelectModel {
   ProvinceMultiSelectId?: number;
   ProjectId?: number;
