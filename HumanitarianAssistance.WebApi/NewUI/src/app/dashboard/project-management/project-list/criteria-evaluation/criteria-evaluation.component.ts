@@ -1774,11 +1774,11 @@ GetAllCurrency() {
             });
           }
         }
-        this._cdr.detectChanges();
-        this.currencyDetailLoader = false;
+        // this._cdr.detectChanges();
+        // this.currencyDetailLoader = false;
       },
       error => {
-        this.currencyDetailLoader = false;
+        // this.currencyDetailLoader = false;
       }
     );
 }
