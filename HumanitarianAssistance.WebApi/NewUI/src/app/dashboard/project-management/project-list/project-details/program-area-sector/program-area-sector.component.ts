@@ -268,7 +268,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     };
   }
 
-  initCountryMultiSelectModel(){
+  initCountryMultiSelectModel() {
     this.countryMultiSelectModel = {
       CountryMultiSelectId: null,
       ProjectId: null,
@@ -507,13 +507,11 @@ export class ProgramAreaSectorComponent implements OnInit {
               this.programListFlag = false;
             }
           );
-      }
-      else {
+      } else {
         this.programListFlag = false;
         this.toastr.warning('Please check Program name');
       }
-    }
-    else {
+    } else {
       this.toastr.warning('Please add new Program');
       this.programListFlag = false;
     }
@@ -1446,7 +1444,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region "openedChange" for project donor detail change
   openedChange(event: any, data: any) {
-    this.projectotherDetail.DonorId = event.Value != undefined ? event.Value : this.projectotherDetail.DonorId;
+    this.projectotherDetail.DonorId = event.Value !== undefined ? event.Value : this.projectotherDetail.DonorId;
     // let obj = this.donorDataSource.findIndex(x => x.Id == event.Value);
     // this.onProjectotherDetailsChange(data, this.donorDataSource[obj].Name);
     this.onProjectotherDetailsChange(data, event.Value);
@@ -1893,14 +1891,14 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region "openedOfficeChange" for project oddice detail change
   openeOpportunityChange(event: any, data: any) {
-    this.projectotherDetail.OpportunityType = event.Value != undefined ? event.Value : this.projectotherDetail.OpportunityType;
+    this.projectotherDetail.OpportunityType = event.Value !== undefined ? event.Value : this.projectotherDetail.OpportunityType;
     this.onProjectotherDetailsChange(data, this.projectotherDetail.OpportunityType);
   }
   //#endregion
 
   //#region "openedOfficeChange" for project oddice detail change
   openedOfficeChange(event: any, data: any) {
-    this.projectotherDetail.OfficeId = event.Value != undefined ? event.Value : this.projectotherDetail.OfficeId;
+    this.projectotherDetail.OfficeId = event.Value !== undefined ? event.Value : this.projectotherDetail.OfficeId;
     this.onProjectotherDetailsChange(data, this.projectotherDetail.OfficeId);
   }
   //#endregion
@@ -1915,7 +1913,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region "openedGenderChange"
   openedGenderChange(event: any, data: any) {
-    this.projectotherDetail.GenderConsiderationId = event.Value != undefined ? event.Value : this.projectotherDetail.GenderConsiderationId;
+    this.projectotherDetail.GenderConsiderationId = event.Value !== undefined ? event.Value : this.projectotherDetail.GenderConsiderationId;
     this.onProjectotherDetailsChange(data, this.projectotherDetail.GenderConsiderationId);
   }
   //#endregion
