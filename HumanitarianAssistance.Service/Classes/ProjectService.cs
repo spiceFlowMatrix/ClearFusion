@@ -1594,7 +1594,7 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
 
-                if (model.CountryId.Count != 0)
+if (model.CountryId.Count != 0)
                 {
 
                     //bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
@@ -5365,7 +5365,8 @@ namespace HumanitarianAssistance.Service.Classes
                                           ProjectJobName = x.ProjectJobDetail.ProjectJobName,
                                           CreatedDate = x.CreatedDate,
                                           DebitPercentage = ((x.VoucherTransactions.Where(y => y.IsDeleted == false &&
-                                                                              y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s => s.Debit)) / x.InitialBudget) * 100
+                                                                              y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s => s.Debit)) / x.InitialBudget) * 100,
+                                          Expenditure = (x.VoucherTransactions.Where(y => y.IsDeleted == false && y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s => s.Debit))
                                       })
                                       .Skip(budgeLineFilterModel.pageSize.Value * budgeLineFilterModel.pageIndex.Value)
                                       .Take(budgeLineFilterModel.pageSize.Value)
