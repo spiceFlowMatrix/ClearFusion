@@ -106,8 +106,8 @@ namespace HumanitarianAssistance.Common.Enums
 
     public enum Currency
     {
-        AFG = 1,
-        EUR = 2,
+        AFG = 1, 
+        EUR = 2, 
         PKR = 3,
         USD = 4
     }
