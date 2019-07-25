@@ -165,8 +165,8 @@ export class BudgetLineDetailsComponent implements OnInit, OnChanges {
         if (response.statusCode === 200) {
           // To get updated transaction list
           this.getTransactionList(data);
-          data.Expenditure = this.getTotalExpenditures;
-          this.budgetDetailChanged.emit(data);
+          // data.Expenditure = this.getTotalExpenditures;
+          // this.budgetDetailChanged.emit(data);
         } else if (response.statusCode === 400) {
           this.toastr.warning(response.message);
         }
@@ -244,6 +244,8 @@ export class BudgetLineDetailsComponent implements OnInit, OnChanges {
            this.noDataFoundFlag = true;
             // this.toastr.warning(response.message);
           }
+          BudgetLineDetailList.Expenditure = this.getTotalExpenditures;
+          this.budgetDetailChanged.emit(BudgetLineDetailList);
 
           // this.BudgetListLoaderFlag = false;
         },
