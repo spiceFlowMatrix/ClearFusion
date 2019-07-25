@@ -11,7 +11,6 @@ export interface IBudgetLineModel {
   CurrencyName: string;
   CreatedDate: any;
   DebitPercentage: number;
-  Expenditure?: number;
 }
 
 

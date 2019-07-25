@@ -19,6 +19,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public string BudgetCodeName { get; set; }
         public double? DebitPercentage { get; set; }
         public  DateTime? CreatedDate { get; set; }
-        public double? Expenditure { get; set; } 
+
+
     }
 }

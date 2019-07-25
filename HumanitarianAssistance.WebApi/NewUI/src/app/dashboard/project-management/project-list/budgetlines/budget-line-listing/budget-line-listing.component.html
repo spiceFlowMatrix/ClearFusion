@@ -89,7 +89,7 @@
                       <td width="15%">Project Job </td>
                       <td width="10%">Currency</td>
                       <td width="20%" >Initial Budget</td>
-                      <td width="10%">Expenditure</td>
+                      <td width="10%" class="text-right">Expenditure</td>
                     </tr>
                     <tr (click)="onItemClick(item)" *ngFor="let item of BudgetLineDetailList"
                       [ngClass]="{'txtColor': item.DebitPercentage >= 80,'selected': selectedBudgetId == item.BudgetLineId }">
@@ -117,8 +117,8 @@
                       <td width="20%">
                         {{ item.InitialBudget }}
                       </td>
-                      <td width="10%">
-                        {{ item.Expenditure }}
+                      <td width="20%">
+                        UI Testings
                       </td>
 
                       <td width="1%" class="text-center"><i *ngIf="selectedBudgetId == item.BudgetLineId"
