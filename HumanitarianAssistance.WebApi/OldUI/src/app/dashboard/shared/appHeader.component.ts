@@ -11,8 +11,6 @@ import {
   Router,
 } from '@angular/router';
 // import {ChangePasswordComponent} from '../shared/changePassword.component';
-import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
-import { Keepalive } from '@ng-idle/keepalive';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import {
   Validators,
@@ -87,8 +85,6 @@ export class AppHeaderComponent implements OnInit {
   notificationDataSource: any;
 
   constructor(
-    private idle: Idle,
-    private keepalive: Keepalive,
     private route: ActivatedRoute,
     private router: Router,
     private zone: NgZone,
@@ -105,23 +101,6 @@ export class AppHeaderComponent implements OnInit {
   ) {
     const token = localStorage.getItem('authenticationtoken');
 
-    idle.setIdle(86400);
-    idle.setTimeout(400);
-    idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
-    idle.onIdleEnd.subscribe(() => (this.idleState = 'No longer idle.'));
-    idle.onTimeout.subscribe(() => {
-      this.idleState = 'Timed out!';
-      this.timedOut = true;
-      // this.logout();
-      this.autoLogOut();
-    });
-    idle.onIdleStart.subscribe(() => (this.idleState = 'You\'ve gone idle!'));
-    idle.onTimeoutWarning.subscribe(
-      countdown =>
-        (this.idleState = 'You will time out in ' + countdown + ' seconds!')
-    );
-    keepalive.interval(60);
-    keepalive.onPing.subscribe(() => (this.lastPing = new Date()));
     this.reset();
 
     this.CurrentPassword = new FormControl(
@@ -180,28 +159,11 @@ export class AppHeaderComponent implements OnInit {
 
   //#region "For Automatic logOut"
   autoLogOut() {
-    // localStorage.removeItem('authenticationtoken');
-    // localStorage.removeItem('ng2Idle.main.expiry');
-    // localStorage.removeItem('ng2Idle.main.idling');
-    // localStorage.removeItem('UserId');
-    // localStorage.removeItem('UserId');
-    // localStorage.removeItem('UserName');
-    // localStorage.removeItem('SelectedVoucherNumber');
-    // localStorage.removeItem('SelectedVoucherCurrency');
-    // localStorage.removeItem('SelectedOfficeId');
-    // localStorage.removeItem('OFFICEID');
-    // localStorage.removeItem('HIREDON');
-    // localStorage.removeItem('SelectedEmployee');
-    // localStorage.removeItem('SelectedEmployeeName');
-    // localStorage.removeItem('UserRoles');
-    // localStorage.removeItem('ApplicationPages');
-    // localStorage.removeItem('RolePermissions');
 
     localStorage.clear();
     this.router.navigate(['../login']);
     this.authGuard.previousUrl = this.router.url;
     this.checkToken.emit();
-    this.idle.stop();
   }
   //#endregion
 
@@ -270,34 +232,17 @@ export class AppHeaderComponent implements OnInit {
   }
 
   logout() {
-    // localStorage.removeItem('authenticationtoken');
-    // localStorage.removeItem('ng2Idle.main.expiry');
-    // localStorage.removeItem('ng2Idle.main.idling');
-    // localStorage.removeItem('UserId');
-    // localStorage.removeItem('UserId');
-    // localStorage.removeItem('UserName');
-    // localStorage.removeItem('SelectedVoucherNumber');
-    // localStorage.removeItem('SelectedVoucherCurrency');
-    // localStorage.removeItem('SelectedOfficeId');
-    // localStorage.removeItem('OFFICEID');
-    // localStorage.removeItem('HIREDON');
-    // localStorage.removeItem('SelectedEmployee');
-    // localStorage.removeItem('SelectedEmployeeName');
-    // localStorage.removeItem('UserRoles');
-    // localStorage.removeItem('SelectedInventoryItem');
 
     localStorage.clear();
 
     this.router.navigate(['../login']);
     this.authGuard.previousUrl = '/dashboard';
     this.checkToken.emit();
-    this.idle.stop();
   }
   changePassword(display: boolean) {
     // this.changepassword.clickme(true);
   }
   reset() {
-    this.idle.watch();
     this.idleState = 'Started.';
     this.timedOut = false;
   }

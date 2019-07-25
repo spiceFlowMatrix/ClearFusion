@@ -5,7 +5,6 @@ import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
 import { CodeService } from '../../../code/code.service';
 import { TranslateService } from '@ngx-translate/core';
-import { LocalStorage } from '@ng-idle/core';
 import {applicationPages, applicationModule} from '../../../../shared/application-pages-enum';
 import { CommonService } from '../../../../service/common.service';
 import { AppSettingsService } from '../../../../service/app-settings.service';

@@ -61,7 +61,7 @@ namespace HumanitarianAssistance.Service.interfaces
         #region AddEditProjectDetail
         APIResponse AddEditProjectDetail(ProjectDetailNewModel model, string UserId);
         Task<APIResponse> DeleteProjectDetail(long ProjectId, string UserId);
-        Task<APIResponse> GetAllProjectFilterList(ProjectFilterModel projectFilterModel );
+        Task<APIResponse> GetAllProjectFilterList(ProjectFilterModel projectFilterModel);
         Task<APIResponse> GetAllProjectList();
 
         APIResponse GetProjectListById(long ProjectId);
@@ -103,6 +103,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetBudgetLinesByMultipleProjectJobIds(List<long?> projectJobIds);
         #region GetAllProvinceDetails
         APIResponse GetAllProvinceDetails();
+        APIResponse GetAllProvinceDetailsByCountryId(int[] countryId); 
         APIResponse GetAllStrengthConsiderationDetails();
         APIResponse GetAllGenderConsiderationDetails();
         APIResponse GetAllSecurityDetails();
@@ -181,13 +182,15 @@ namespace HumanitarianAssistance.Service.interfaces
 
 
         APIResponse GetSecurityConsiMultiSelectByProjectId(long ProjectId);
+        APIResponse GetCountryMultiSelectByProjectId(long ProjectId);
         APIResponse GetProvinceMultiSelectByProjectId(long ProjectId);
         APIResponse GetDistrictMultiSelectByProjectId(long ProjectId);
         APIResponse AddEditDistrictMultiSelectDetail(DistrictMultiSelectModel model, string UserId);
+        APIResponse AddEditCountryMultiSelectDetail(CountryMultiSelectModel model, string UserId);
         // APIResponse SaveErrorlog(Errorlog obj, string UserId);
 
 
-        Task<APIResponse>AddEditProjectJobDetail(ProjectJobDetailModel model, string UserId);
+        Task<APIResponse> AddEditProjectJobDetail(ProjectJobDetailModel model, string UserId);
 
         Task<APIResponse> GetAllProjectJobDetail();
         Task<APIResponse> GetAllProjectJobDetail(long prejectId);
@@ -202,7 +205,7 @@ namespace HumanitarianAssistance.Service.interfaces
 
         Task<APIResponse> GetAllBudgetFilterList(BudgetLineFilterModel voucherNewFilterModel, long projectId);
 
-        Task<APIResponse> GetTransactionListByProjectId(long projectId,string userName);
+        Task<APIResponse> GetTransactionListByProjectId(long projectId, string userName);
         Task<APIResponse> GetTransactionList(string username, int currencyId, long budgetLineId);
 
         Task<APIResponse> DeleteProjectJob(long jobId, string UserId);
@@ -211,7 +214,7 @@ namespace HumanitarianAssistance.Service.interfaces
         #endregion
         #region "cashflow"
         Task<APIResponse> FilterProjectCashFlow(ProjectCashFlowFilterModel model);
-        Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineBreakdownFilterModel model);        
+        Task<APIResponse> FilterBudgetLineBreakdown(BudgetLineBreakdownFilterModel model);
         #endregion
 
         #region start proposal 25/03/219
@@ -231,7 +234,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetProjectIndicatorDetailById(long IndicatorId);
         Task<APIResponse> GetProjectIndicatorQuestionsById(long id);
         //void GetExcelFile(IFormFile fileKey, string UserId);
-        Task<APIResponse> GetExcelFile(Stream file, string UserId,long projectId);
+        Task<APIResponse> GetExcelFile(Stream file, string UserId, long projectId);
 
     }
 }
