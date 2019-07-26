@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -243,8 +244,8 @@ namespace HumanitarianAssistance.WebApi
             services.AddMvc()
             .AddJsonOptions(config =>
             {
-    // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-    config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+                // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
                 config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
             services.AddMvc(
@@ -305,6 +306,8 @@ namespace HumanitarianAssistance.WebApi
             app.UseCors(DefaultCorsPolicyName);
             app.UseAuthentication();
 
+
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -324,43 +327,55 @@ namespace HumanitarianAssistance.WebApi
                 template: "{controller}/{action=Index}/{id?}");
             });
 
-            // for each angular client we want to host. 
-            app.Map(new PathString("/newui"), client =>
-            {
 
-                string oldUiPath = env.IsDevelopment() ? "NewUI" : @"NewUI/dist";
+            // var options = new RewriteOptions()
+            //            // .AddRedirect("redirect-rule/(.*)", "redirected/$1")
+            //            // .AddRewrite(@"^rewrite-rule/(\d+)/(\d+)", "rewritten?var1=$1&var2=$2", 
+            //            //     skipRemainingRules: true)
+            //            .AddRedirect("$", "newui")
+            //            .AddRewrite(@"^$", "newui", skipRemainingRules: true);
 
-                // Each map gets its own physical path
-                // for it to map the static files to. 
-                StaticFileOptions olduiDist = new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(
-                            Path.Combine(Directory.GetCurrentDirectory(), oldUiPath)
-                        )
-                };
-
-                // Each map its own static files otherwise
-                // it will only ever serve index.html no matter the filename 
-                client.UseSpaStaticFiles(olduiDist);
+            // app.UseRewriter(options);
 
 
-                client.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "NewUI";
 
-                    if (env.IsDevelopment())
-                    {
-                        // it will use package.json & will search for start command to run
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-                    else
-                    {
-                        spa.Options.DefaultPageStaticFileOptions = olduiDist;
-                    }
+            // // for each angular client we want to host. 
+            // app.Map(new PathString("/newui"), client =>
+            // {
 
-                });
-            });
+            //     string oldUiPath = env.IsDevelopment() ? "NewUI" : @"NewUI/dist";
+
+            //     // Each map gets its own physical path
+            //     // for it to map the static files to. 
+            //     StaticFileOptions olduiDist = new StaticFileOptions()
+            //     {
+            //         FileProvider = new PhysicalFileProvider(
+            //                 Path.Combine(Directory.GetCurrentDirectory(), oldUiPath)
+            //             )
+            //     };
+
+            //     // Each map its own static files otherwise
+            //     // it will only ever serve index.html no matter the filename 
+            //     client.UseSpaStaticFiles(olduiDist);
+
+
+            //     client.UseSpa(spa =>
+            //     {
+            //         spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+            //         spa.Options.SourcePath = "NewUI";
+
+            //         if (env.IsDevelopment())
+            //         {
+            //             // it will use package.json & will search for start command to run
+            //             spa.UseAngularCliServer(npmScript: "start");
+            //         }
+            //         else
+            //         {
+            //             spa.Options.DefaultPageStaticFileOptions = olduiDist;
+            //         }
+
+            //     });
+            // });
 
             // for each angular client we want to host. 
             app.Map(new PathString("/oldui"), client =>
@@ -393,6 +408,32 @@ namespace HumanitarianAssistance.WebApi
                         spa.Options.DefaultPageStaticFileOptions = olduiDist;
                     }
                 });
+            });
+
+            // without map redirect to newui
+            string defaultPath = env.IsDevelopment() ? "NewUI" : @"NewUI/dist";
+            StaticFileOptions defaultDist = new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), defaultPath)
+                    )
+            };
+            app.UseSpaStaticFiles(defaultDist);
+            app.UseSpa(spa =>
+            {
+                spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                spa.Options.SourcePath = "NewUI";
+
+                if (env.IsDevelopment())
+                {
+                        // it will use package.json & will search for start command to run
+                        spa.UseAngularCliServer(npmScript: "start");
+                }
+                else
+                {
+                    spa.Options.DefaultPageStaticFileOptions = defaultDist;
+                }
+
             });
 
         }

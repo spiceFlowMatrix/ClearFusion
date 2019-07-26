@@ -908,7 +908,23 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpPost]
+        [HttpPost]
+        public async Task<object> DeleteQualifactionDetails([FromBody]QualificationDetailsModel model)
+        {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (user != null)
+            {
+                var id = user.Id;
+                model.ModifiedById = id;
+                model.ModifiedDate = DateTime.UtcNow;
+            }
+            APIResponse response = await _icode.DeleteQualificationDetails(model);
+            return response;
+        }
+
+
+
+        [HttpPost]
     public async Task<object> AddSalaryHead([FromBody] SalaryHeadModel model)
     {
       var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);

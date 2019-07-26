@@ -232,7 +232,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
           (response: IResponseData) => {
             if (response.statusCode === 200 && response.data !== null) {
               this.updateActivityStatusId.emit(response.data);
-              this.subActivityCompletedFlag = true;
+              this.subActivityCompletedFlag = !this.subActivityCompletedFlag;
             } else {
               this.toastr.error(response.message);
             }
