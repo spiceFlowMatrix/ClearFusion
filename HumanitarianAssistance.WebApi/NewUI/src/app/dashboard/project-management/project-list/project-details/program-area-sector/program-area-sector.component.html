@@ -129,13 +129,13 @@
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select class="example-full-width" placeholder="Select Country"
-                    [(ngModel)]="countryMultiSelectModel.CountryId " (selectionChange)="
+                    [(ngModel)]="countryMultiSelectModel.CountryId" (selectionChange)="
                                    onCountryDetailsChange(
                                   'countrySelction',
                                   countryMultiSelectModel.CountryId
                                 )
                               " name="countrySelction"
-                    [disabled]="CountrySelectionList.length<0 || !isEditingAllowed" multiple>
+                    [disabled]="CountrySelectionList.length < 0 || !isEditingAllowed">
                     <mat-option *ngFor="let item of CountrySelectionList" [value]="item.value">{{ item.label }}
                     </mat-option>
                   </mat-select>
@@ -171,7 +171,7 @@
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select placeholder="Select District" [(ngModel)]="districtMultiSelctModel.DistrictID"
-                    [disabled]="provinceSelectedFlag || !isEditingAllowed" (selectionChange)="
+                    (selectionChange)="
                       onDistrictDetailsChange(
                               'districtSelction',
                               districtMultiSelctModel.DistrictID

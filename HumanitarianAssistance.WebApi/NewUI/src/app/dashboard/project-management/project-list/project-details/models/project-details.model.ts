@@ -228,7 +228,7 @@ export interface securityConsiderationMultiSelectModel {
 export interface CountryMultiSelectModel {
   CountryMultiSelectId?: number;
   ProjectId?: number;
-  CountryId?: number[];
+  CountryId?: number;
   CountrySelectionId?: number;
 
 }

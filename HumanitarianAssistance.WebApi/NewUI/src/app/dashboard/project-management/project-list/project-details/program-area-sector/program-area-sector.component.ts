@@ -904,10 +904,10 @@ export class ProgramAreaSectorComponent implements OnInit {
         .subscribe(data => {
           if (data != null) {
             if (data.data.CountryMultiSelectById != null) {
-              this.countryMultiSelectModel.CountryId =
+              [this.countryMultiSelectModel.CountryId] =
                 data.data.CountryMultiSelectById;
               this.getAllProvinceListByCountryId(
-                this.countryMultiSelectModel.CountryId
+                [this.countryMultiSelectModel.CountryId]
               );
               // this.GetDistrictByProjectId(this.ProjectId);
             }
@@ -918,8 +918,8 @@ export class ProgramAreaSectorComponent implements OnInit {
 
    // add province by id
 
-   onCountryDetailsChange(ev, data: number[]) {
-    this.countryDistrictFlag = true;
+   onCountryDetailsChange(ev, data: number) {
+    // this.countryDistrictFlag = true;
     if (ev === 'countrySelction' && data != null) {
       this.countryMultiSelectModel.CountryId = data;
       this.AddEditonCountryDetails(this.countryMultiSelectModel);
@@ -932,10 +932,12 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   AddEditonCountryDetails(model: any) {
     if (model != null) {
-      const obj: CountryMultiSelectModel = {
+      this.countryDistrictFlag = true;
+
+      const obj: any = {
         // SecurityConsiderationMultiSelectId:model.SecurityConsiderationMultiSelectId,
         ProjectId: this.ProjectId,
-        CountryId: model.CountryId
+        CountryId: [model.CountryId]
       };
       this.projectListService
         .AddEditCountryMultiSelect(
@@ -946,14 +948,16 @@ export class ProgramAreaSectorComponent implements OnInit {
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
-              this.countryDistrictFlag = false;
+              // this.countryDistrictFlag = false;
               this.getAllProvinceListByCountryId(
-                this.countryMultiSelectModel.CountryId
+                [this.countryMultiSelectModel.CountryId]
               );
             }
+            this.countryDistrictFlag = false;
             this.provinceSelectedFlag = false;
           },
           error => {
+            this.countryDistrictFlag = false;
             this.provinceSelectedFlag = false;
           }
         );
@@ -965,7 +969,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     console.log(id);
     this.provinceDistrictFlag = true;
     this.ProvinceSelectionList = [];
-    this.DistrictMultiSelectList = [];
+    //this.DistrictMultiSelectList = [];
     this.projectListService
       .getAllProvinceListByCountryId(
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProvinceDetailsByCountryId,
@@ -984,8 +988,8 @@ export class ProgramAreaSectorComponent implements OnInit {
               // this.GetOtherProjectDetailById(this.ProjectId);
             }
             this.GetProvinceByProjectId(this.ProjectId);
-            this.provinceDistrictFlag = false;
           }
+          this.provinceDistrictFlag = false;
         },
         error => {
           this.provinceDistrictFlag = false;
