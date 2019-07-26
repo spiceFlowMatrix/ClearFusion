@@ -602,13 +602,39 @@
 </ng-template>
 
 <!-- style="display: none" -->
-<div id="projectOtherDetailPdfTemplate" #projectOtherDetailPdfTemplate >
+<div id="projectOtherDetailPdfTemplate" #projectOtherDetailPdfTemplate style="font-family: 'Roboto', sans-serif;">
 
-    <h5>{{projectOtherDetailPdf.ProjectName}}</h5>
-    <h6><strong>{{projectOtherDetailPdf.Description}}</strong></h6>
+
+  <div id="projectOtherDetailHeaderPdfTemplate">
+    <tr>
+        <td>
+          <h4>{{projectOtherDetailPdf.ProjectName}}</h4>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p style="color: #9f9e9e; font-size: 15px; line-height: 26px;">{{projectOtherDetailPdf.Description}} </p>
+        </td>
+      </tr>
+    </div>
+
+
+        <!-- <tr>
+            <td>
+              <h4>{{projectOtherDetailPdf.ProjectName}}</h4>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="color: #9f9e9e; font-size: 15px; line-height: 26px;">{{projectOtherDetailPdf.Description}} </p>
+            </td>
+          </tr> -->
+
+    <!-- <h5>{{projectOtherDetailPdf.ProjectName}}</h5>
+    <h6><strong>{{projectOtherDetailPdf.Description}}</strong></h6> -->
   
   <!-- Opportunity Details -->
-  <div>
+  <!-- <div>
     <h5><strong>Opportunity Details</strong></h5>
     <p>Opportunity Type</p>
     <p>{{projectOtherDetailPdf.OpportunityType}}</p>
@@ -648,10 +674,10 @@
 
     <p>EndDate</p>
     <p>{{projectOtherDetailPdf.EndDate}}</p>
-  </div>
+  </div> -->
 
   <!-- Project Objective & Goal -->
-  <div>
+  <!-- <div>
     <h5><strong>Project Objective & Goal</strong></h5>
     <p>Project Goal</p>
     <p>{{projectOtherDetailPdf.ProjectGoal}}</p>
@@ -669,10 +695,10 @@
     <p>Submission Date</p>
     <p>{{projectOtherDetailPdf.SubmissionDate}}</p>
 
-  </div>
+  </div> -->
 
   <!-- Beneficiary Details -->
-  <div>
+  <!-- <div>
     <h5><strong>Beneficiary Details</strong></h5>
 
     <p>Direct Beneficiar Male</p>
@@ -692,10 +718,10 @@
     
     <p>Total In-Direct Beneficiary</p>
     <p>{{projectOtherDetailPdf.TotalInDirectBeneficiary}}</p>
-  </div>
+  </div> -->
 
   <!-- Gender Consideration -->
-  <div>
+  <!-- <div>
     <h5><strong>Gender Consideration</strong></h5>
 
     <p>Strength Consideration</p>
@@ -706,10 +732,10 @@
     
     <p>Gender Remarks</p>
     <p>{{projectOtherDetailPdf.GenderRemarks}}</p>
-  </div>
+  </div> -->
 
   <!-- Security Consideration -->
-  <div>
+  <!-- <div>
     <h5><strong>Security Consideration</strong></h5>
 
     <p>Security</p>
@@ -726,6 +752,6 @@
     
     <p>StartDate</p>
     <p>{{projectOtherDetailPdf.StartDate}}</p>
-  </div>
+  </div> -->
 
 </div>

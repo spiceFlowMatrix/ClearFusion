@@ -1,5 +1,5 @@
 # CHANGELOG
-Humanitarian Assistance ERP project features/bug fixes [Live site](http://34.90.15.30/newui)
+Humanitarian Assistance ERP project features/bug fixes [Live site](http://34.90.15.30)
 
 <a name="unreleased"></a>
 ## [Unreleased]

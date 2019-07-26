@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { IProjectOtherDetailPdf } from '../models/project-details.model';
 
 declare const require: any;
 const jsPDF = require('jspdf');
@@ -11,46 +12,94 @@ require('jspdf-autotable');
 export class ProjectOtherDetailPdfService {
   
   margins = {
-    top: 70,
+    top: 40,
     bottom: 40,
-    left: 30,
-    width: 550
+    left: 40,
+    right: 40,
+    width: 500
   };
 
   constructor() { }
 
   
-  onExportPdf() {
+  onExportPdf(projectOtherDetailPdf: IProjectOtherDetailPdf) {
 
     const doc = new jsPDF('p', 'pt', 'a4');
 
     const pageHeight = doc.internal.pageSize.height;
     const pageWidth = doc.internal.pageSize.width;
-
-    
-    doc.setFontSize(18);
-    doc.fromHTML(
-      document.getElementById('projectOtherDetailPdfTemplate'),
-      this.margins.left, // x coord
-      this.margins.top,
-      {
-        // y coord
-        width: this.margins.width // max width of content on PDF
-      },
-      //   this.headerFooterFormatting(doc, doc.internal.getNumberOfPages())
-      // ,
-      this.margins
-    );
-
-
-
    
+    doc.setFontSize(11);
+    
+    // doc.fromHTML(
+    //   document.getElementById('projectOtherDetailHeaderPdfTemplate'),
+    //   this.margins.left, // x coord
+    //   this.margins.top,
+    //   {
+    //     // y coord
+    //     width: this.margins.width
+    //   },
+    //   this.margins
+    // );
 
-    // let printContents, popupWin;
-    // printContents = document.getElementById('print-content-ledger-report')
-    //   .innerHTML;
-    // popupWin = window.open('', '_blank', '');
-    // popupWin.document.open();
+    // // horizontal line
+    // doc.setLineWidth(0.2);
+    // doc.line(10, 30, 200, 30);
+
+    const linePadding = 20;
+    const pageMiddle = this.margins.width - 150;
+    let splitTitle = "";
+    let textCurrentLocationYAxis = this.margins.top;
+
+    splitTitle = doc.splitTextToSize(projectOtherDetailPdf.ProjectName, this.margins.width);
+    for (let i = 0; i < splitTitle.length; i++) {                
+        if (textCurrentLocationYAxis > this.margins.width) {
+          textCurrentLocationYAxis = linePadding;
+            doc.addPage();
+        }
+        doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
+        textCurrentLocationYAxis += linePadding;
+    }
+    
+    // Project Description
+    splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Description, this.margins.width);
+    for (let i = 0; i < splitTitle.length; i++) {                
+        if (textCurrentLocationYAxis > this.margins.width) {
+          textCurrentLocationYAxis = linePadding;
+            doc.addPage();
+        }
+        doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
+        textCurrentLocationYAxis += linePadding;
+    }
+    
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Opportunity Details");
+    
+    // OpportunityType
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Opportunity Type");
+    splitTitle = doc.splitTextToSize(projectOtherDetailPdf.OpportunityType, this.margins.width);
+    for (let i = 0; i < splitTitle.length; i++) {                
+        if (textCurrentLocationYAxis > this.margins.width) {
+          textCurrentLocationYAxis = linePadding;
+            doc.addPage();
+        }
+        doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
+        textCurrentLocationYAxis += linePadding;
+    }
+
+    // Donor
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Donor");
+    splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Donor, this.margins.width);
+    for (let i = 0; i < splitTitle.length; i++) {                
+        if (textCurrentLocationYAxis > this.margins.width) {
+          textCurrentLocationYAxis = linePadding;
+            doc.addPage();
+        }
+        doc.text(this.margins.left, textCurrentLocationYAxis += 20, splitTitle[i]);
+        textCurrentLocationYAxis += linePadding;
+    }
+
+    // doc.text(projectOtherDetailPdf.ProjectName, 20, 20);
+    // doc.text(projectOtherDetailPdf.Description, 20, 40);
 
 
     doc.save('abc.pdf');

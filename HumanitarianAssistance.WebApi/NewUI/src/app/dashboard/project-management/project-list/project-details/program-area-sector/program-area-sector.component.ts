@@ -2107,7 +2107,7 @@ export class ProgramAreaSectorComponent implements OnInit {
       TotalInDirectBeneficiary: this.projectotherDetail.InDirectBeneficiaryMale != null && this.projectotherDetail.InDirectBeneficiaryFemale != null ? (this.projectotherDetail.InDirectBeneficiaryMale + this.projectotherDetail.InDirectBeneficiaryFemale).toString() : '',
   
       // Gender Consideration
-      StrengthConsideration: this.projectotherDetail.StrengthConsiderationId != null ? this.strengthDataSource.find(x => x.Id === this.projectotherDetail.StrengthConsiderationId).Name : '',
+      StrengthConsideration: this.projectotherDetail.StrengthConsiderationId != null ? (this.strengthDataSource.find(x => x.Id === this.projectotherDetail.StrengthConsiderationId) ?  this.strengthDataSource.find(x => x.Id === this.projectotherDetail.StrengthConsiderationId).Name : '') : '',
       GenderConsideration:  this.projectotherDetail.GenderConsiderationId != null ? this.GenderConsiderationvaluelist.find(x => x.GenderConsiderationId === this.projectotherDetail.GenderConsiderationId).GenderConsiderationName : '',
       GenderRemarks: this.projectotherDetail.GenderRemarks != null ? this.projectotherDetail.GenderRemarks : '',
   
@@ -2171,7 +2171,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     };
     console.log(this.projectOtherDetailPdf);
 
-    this.pDetailPdfService.onExportPdf();
+    this.pDetailPdfService.onExportPdf(this.projectOtherDetailPdf);
   }
   //#endregion
 
