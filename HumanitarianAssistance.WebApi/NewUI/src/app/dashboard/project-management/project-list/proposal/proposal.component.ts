@@ -720,9 +720,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._cdr.detach();
-
     this.destroyed$.next(true);
     this.destroyed$.complete();
-
   }
 }

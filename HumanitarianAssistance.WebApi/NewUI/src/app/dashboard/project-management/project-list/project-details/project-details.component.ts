@@ -3,7 +3,7 @@ import { ProjectListService } from '../service/project-list.service';
 import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
 import { projectPagesMaster } from 'src/app/shared/applicationpagesenum';
 import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectDetailComponent } from './project-detail/project-detail.component';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
@@ -23,56 +23,7 @@ export class ProjectDetailsComponent implements OnInit {
   setProjectHeader = 'Project';
   isProjectWin = false;
 
-  menuList: IMenuList[] = [
-    {
-      Id: 1,
-      PageId: projectPagesMaster.ProjectDetails,
-      Text: 'Details',
-      Link: 'detail'
-    },
-    {
-      Id: 2,
-      PageId: projectPagesMaster.CriteriaEvaluation,
-      Text: 'Criteria Evaluation',
-      Link: 'criteria-evaluation'
-    },
-    {
-      Id: 3,
-      PageId: projectPagesMaster.Proposal,
-      Text: 'Proposal',
-      Link: 'proposal'
-    },
-    {
-      Id: 4,
-      PageId: projectPagesMaster.ProjectJobs,
-      Text: 'Project Jobs',
-      Link: 'project-jobs'
-    },
-    {
-      Id: 5,
-      PageId: projectPagesMaster.ProjectBudgetLine,
-      Text: 'Budget Lines',
-      Link: 'budget-lines'
-    },
-    {
-      Id: 6,
-      PageId: projectPagesMaster.ProjectActivities,
-      Text: 'Project Activities',
-      Link: 'project-activities'
-    },
-    {
-      Id: 7,
-      PageId: projectPagesMaster.ProjectPeople,
-      Text: 'People',
-      Link: 'people'
-    },
-    {
-      Id: 8,
-      PageId: projectPagesMaster.HiringRequests,
-      Text: 'Hiring Requests',
-      Link: 'hiring-request'
-    }
-  ];
+  menuList: IMenuList[] = this.projectListService.menuList;
   authorizedMenuList: IMenuList[] = [];
 
   // screen scroll
@@ -80,20 +31,21 @@ export class ProjectDetailsComponent implements OnInit {
   screenWidth: number;
   scrollStyles: any;
   //#endregion
-
   constructor(
     private routeActive: ActivatedRoute,
     private localStorageService: LocalStorageService,
     public projectListService: ProjectListService,
     private globalService: GlobalSharedService,
-    private appurl: AppUrlService
+    private appurl: AppUrlService,
+    private router : Router
   ) {
+
     this.getScreenSize();
 
     this.projectId = +this.routeActive.snapshot.paramMap.get('id');
 
     this.menuList.map(
-      x => (x.Link = '/project/my-project/' + this.projectId + '/' + x.Link)
+      x => (x.Link = this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) + x.Link)
     ); // important for routing
 
     // Set Menu Header Name
@@ -134,6 +86,29 @@ export class ProjectDetailsComponent implements OnInit {
 
   //#region Get win loss deytail by  project id
   getProjectWinLossDetail(projectId: number) {
+    this.projectListService
+      .GetProjectWinLossDetail(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectWinLossStatus,
+        projectId
+      )
+      .subscribe(
+        data => {
+          if (data != null) {
+            if (data.data.ProjectWinLoss != null) {
+              // check weather the project is win or loss
+              this.isProjectWin = data.data.ProjectWinLoss;
+              this.setHeaderMenu();
+            }
+          }
+        },
+        error => {}
+      );
+  }
+  //#endregion
+
+
+  //#region Get win loss deytail by  project id
+  getCriteriaEvaluationApprovedDetail(projectId: number) {
     this.projectListService
       .GetProjectWinLossDetail(
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectWinLossStatus,

@@ -3,7 +3,10 @@ import {
   OnInit,
   HostListener,
   EventEmitter,
-  Output
+  Output,
+  ChangeDetectorRef,
+  AfterViewChecked,
+  OnDestroy
 } from '@angular/core';
 import {
   DonorCEModel,
@@ -37,13 +40,17 @@ import {
   TargetBeneficiaryTypes_Enum,
   criteriaEvaluationScores
 } from 'src/app/shared/enum';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
+import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
+import { ProjectListService } from '../service/project-list.service';
 
 @Component({
   selector: 'app-criteria-evaluation',
   templateUrl: './criteria-evaluation.component.html',
   styleUrls: ['./criteria-evaluation.component.scss']
 })
-export class CriteriaEvaluationComponent implements OnInit {
+export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, OnDestroy {
   //#region  agegroup and occupation
   inputFieldAgeFlag = false;
   inputFieldOccupationFlag = false;
@@ -57,6 +64,9 @@ export class CriteriaEvaluationComponent implements OnInit {
 
   ProjectSelectionList: SelectItem[];
   selectedprojectSelction: string[] = [];
+
+  projectAllowedByLaw = false; // add one more property
+
 
   //#region "Variables"
   methodOfFundingList = [
@@ -193,6 +203,11 @@ export class CriteriaEvaluationComponent implements OnInit {
   donorEligibilityList: ICEDonorEligibilityModel[] = [];
   CurrencyList: CurrencyModel[];
 
+  // to set project header menu
+  menuList: IMenuList[] = [];
+  authorizedMenuList: IMenuList[] = [];
+
+
   // screen
   screenHeight: any;
   screenWidth: any;
@@ -206,13 +221,20 @@ export class CriteriaEvaluationComponent implements OnInit {
     private routeActive: ActivatedRoute,
     private appurl: AppUrlService,
     public criteriaEvalService: CriteriaEvaluationService,
-    public toastr: ToastrService
-  ) {}
+    public toastr: ToastrService,
+    private cdRef: ChangeDetectorRef,
+    private globalService: GlobalSharedService,
+    public projectListService: ProjectListService,
+    private localStorageService: LocalStorageService
+  ) {
+  }
+
 
   ngOnInit() {
     this.routeActive.parent.params.subscribe(params => {
       this.ProjectId = +params['id'];
     });
+
     this.initializeList();
     this.initilizeDonorEligibilityList();
     this.initDonorCEModel();
@@ -240,6 +262,15 @@ export class CriteriaEvaluationComponent implements OnInit {
     this.getScreenSize();
   }
 
+  ngAfterViewChecked() {
+    const projectAllowedByLaw = this.feasibilityForm.ProjectAllowedBylaw;
+    if (projectAllowedByLaw !== this.projectAllowedByLaw) { // check if it change, tell CD update view
+      this.projectAllowedByLaw = projectAllowedByLaw;
+      this.cdRef.detectChanges();
+    }
+  }
+
+
   //#region "Dynamic Scroll"
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
@@ -253,6 +284,20 @@ export class CriteriaEvaluationComponent implements OnInit {
     };
   }
   //#endregion
+
+  // setHeaderMenu() {
+  //   this.menuList = this.projectListService.getAllProjectMenu();
+  //   // check weather the project is win or loss
+  //   this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
+  //     this.IsSubmitCEform.IsCriteriaEvaluationSubmit
+  //       ? this.menuList
+  //       : this.menuList.filter((i, index) => index < 2)
+  //   );
+
+  //   // Set Menu Header List
+  //   this.globalService.setMenuList(this.authorizedMenuList);
+  // }
+
 
   //#region  Initilize model
 
@@ -4385,4 +4430,8 @@ currencyDetailsChange(ev, data: any ) {
       );
   }
   //#endregion
+
+  ngOnDestroy() {
+    this.cdRef.detach();
+  }
 }

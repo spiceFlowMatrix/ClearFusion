@@ -356,7 +356,7 @@ export interface FeasibilityCEModel {
   FeasibilityExpert?: any;
 
   EnoughTimeForProject?: any;
-  ProjectAllowedBylaw?: any;
+  ProjectAllowedBylaw?: boolean;
   ProjectByLeadership?: any;
   IsProjectPractical?: any;
   PresenceCoverageInProject?: any;
