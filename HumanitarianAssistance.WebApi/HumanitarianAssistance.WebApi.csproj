@@ -90,25 +90,25 @@
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
-      <DistFiles Include="$(SpaRootOldUI)dist\**; $(SpaRootOldUI)dist-server\**" />
-      <DistFiles Include="$(SpaRootOldUI)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
-      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-        <RelativePath>%(DistFiles.Identity)</RelativePath>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </ResolvedFileToPublish>
+      <!-- <DistFiles Include="$(SpaRootOldUI)dist\**; $(SpaRootOldUI)dist-server\**" />
+      <DistFiles Include="$(SpaRootOldUI)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" /> -->
+      <!-- <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)"> -->
+        <!-- <RelativePath>%(DistFiles.Identity)</RelativePath>-->
+        <!-- <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory> -->
+      <!-- </ResolvedFileToPublish> -->
     </ItemGroup>
 
     <!-- newui -->
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
 
     <!-- Include the newly-built files in the publish output -->
-    <ItemGroup>
+    <ItemGroup><!-- 
       <DistFiles Include="$(SpaRootNewUI)dist\**; $(SpaRootNewUI)dist-server\**" />
       <DistFiles Include="$(SpaRootNewUI)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </ResolvedFileToPublish>
+      </ResolvedFileToPublish> -->
     </ItemGroup>
 
   </Target>
