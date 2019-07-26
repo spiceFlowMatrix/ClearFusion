@@ -19,4 +19,4 @@ build-backend:
         - "cd HumanitarianAssistance.WebApi"
         - "dotnet restore"
     script:
-        - "dotnet build"
+        - "dotnet publish -c Release -o release"
