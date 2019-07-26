@@ -10,7 +10,7 @@ build-webapps:
         - "cd HumanitarianAssistance.WebApi/NewUI/"
         - npm install
     script:
-        - ng build --prod
+        - npm run build --prod
 
 build-backend:
     image: microsoft/dotnet:latest
