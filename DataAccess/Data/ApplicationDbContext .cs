@@ -199,6 +199,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ChatDetail> ChatDetail { get; set; }
         public DbSet<EntitySourceDocumentDetail> EntitySourceDocumentDetails { get; set; }
 
+
         #region Project
         public DbSet<DonorDetail> DonorDetail { get; set; }
         public DbSet<SectorDetails> SectorDetails { get; set; }
@@ -264,6 +265,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<ProjectHiringRequestDetail> ProjectHiringRequestDetail { get; set; }
         public DbSet<HiringRequestCandidates> HiringRequestCandidates { get; set; }
 
+        public DbSet<CountryMultiSelectDetails> CountryMultiSelectDetails { get; set; }
 
         #endregion
 

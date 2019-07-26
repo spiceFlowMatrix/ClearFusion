@@ -4,19 +4,21 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190718131736_dropCountrymultiSelectAddColoumnProvinceMultiselect18072019")]
+    partial class dropCountrymultiSelectAddColoumnProvinceMultiselect18072019
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099");
 
             modelBuilder.Entity("DataAccess.DbEntities.AccountHeadType", b =>
                 {
@@ -1003,40 +1005,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("CategoryPopulator");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.ChatDetail", b =>
-                {
-                    b.Property<long>("ChatId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ChatSourceEntityId");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int>("EntityId");
-
-                    b.Property<long?>("EntitySourceDocumentId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("Message");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("ChatId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("EntitySourceDocumentId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("ChatDetail");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.CodeType", b =>
@@ -3469,55 +3437,10 @@ namespace DataAccess.Migrations
                     b.ToTable("EmployeeType");
 
                     b.HasData(
-                        new
-                        {
-                            EmployeeTypeId = 1,
-                            EmployeeTypeName = "Prospective",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            EmployeeTypeId = 2,
-                            EmployeeTypeName = "Active",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            EmployeeTypeId = 3,
-                            EmployeeTypeName = "Terminated",
-                            IsDeleted = false
-                        });
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.EntitySourceDocumentDetail", b =>
-                {
-                    b.Property<long>("EntitySourceDocumentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<long>("DocumentFileId");
-
-                    b.Property<long>("EntityId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("EntitySourceDocumentId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("DocumentFileId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("EntitySourceDocumentDetails");
+                        new { EmployeeTypeId = 1, EmployeeTypeName = "Prospective", IsDeleted = false },
+                        new { EmployeeTypeId = 2, EmployeeTypeName = "Active", IsDeleted = false },
+                        new { EmployeeTypeId = 3, EmployeeTypeName = "Terminated", IsDeleted = false }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.ErrorLog.Errorlog", b =>
@@ -6433,8 +6356,6 @@ namespace DataAccess.Migrations
                     b.Property<long>("CountryMultiSelectId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CountryId");
-
                     b.Property<long?>("CountrySelectionId");
 
                     b.Property<string>("CreatedById");
@@ -6447,17 +6368,11 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<long>("ProjectId");
-
                     b.HasKey("CountryMultiSelectId");
-
-                    b.HasIndex("CountryId");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("CountryMultiSelectDetails");
                 });
@@ -8061,8 +7976,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<long?>("CountryMultiSelectId");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -8080,8 +7993,6 @@ namespace DataAccess.Migrations
                     b.Property<long?>("ProvinceSelectionId");
 
                     b.HasKey("ProvinceMultiSelectId");
-
-                    b.HasIndex("CountryMultiSelectId");
 
                     b.HasIndex("CreatedById");
 
@@ -9932,6 +9843,38 @@ namespace DataAccess.Migrations
                     b.ToTable("VoucherDetail");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.VoucherDocumentDetail", b =>
+                {
+                    b.Property<long>("VoucherDocumentId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<long>("DocumentFileId");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<long>("VoucherNo");
+
+                    b.HasKey("VoucherDocumentId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("DocumentFileId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("VoucherNo");
+
+                    b.ToTable("VoucherDocumentDetail");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactions", b =>
                 {
                     b.Property<long>("TransactionId")
@@ -10485,21 +10428,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.ChatDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.EntitySourceDocumentDetail", "EntitySourceDocumentDetail")
-                        .WithMany()
-                        .HasForeignKey("EntitySourceDocumentId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -11279,22 +11207,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.EntitySourceDocumentDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.DocumentFileDetail", "DocumentFileDetail")
-                        .WithMany()
-                        .HasForeignKey("DocumentFileId")
-                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -12392,10 +12304,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.CountryMultiSelectDetails", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.CountryDetails", "CountryDetails")
-                        .WithMany()
-                        .HasForeignKey("CountryId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -12403,11 +12311,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
                         .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.DistrictMultiSelect", b =>
@@ -13118,10 +13021,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProvinceMultiSelect", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.Project.CountryMultiSelectDetails", "CountryMultiSelectDetails")
-                        .WithMany()
-                        .HasForeignKey("CountryMultiSelectId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -13798,6 +13697,27 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.VoucherType", "VoucherTypes")
                         .WithMany()
                         .HasForeignKey("VoucherTypeId");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.VoucherDocumentDetail", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.DocumentFileDetail", "DocumentFileDetail")
+                        .WithMany()
+                        .HasForeignKey("DocumentFileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.VoucherDetail", "VoucherDetails")
+                        .WithMany()
+                        .HasForeignKey("VoucherNo")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactions", b =>

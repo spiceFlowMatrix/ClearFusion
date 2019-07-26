@@ -137,6 +137,8 @@ export class GLOBAL {
   public static API_Project_EditDonorDetails = 'Project/EditDonorDetails';
   // public static API_Project_AddApprovalProjectDetail = 'Project/AddApprovalProjectDetail';
   public static API_Project_WinApprovalProjectDetail = 'Project/WinApprovalProjectDetail';
+
+  public static API_Project_GetAllCountryDetails = 'Code/GetAllCountry';
   public static API_Project_GetAllProvinceDetails = 'Project/GetAllProvinceDetails';
   public static API_Project_GetAllStrengthConsiderationDetails = 'Project/GetAllStrengthConsiderationDetails';
   public static API_Project_GetAllGenderConsiderationDetails = 'Project/GetAllGenderConsiderationDetails';
@@ -270,13 +272,16 @@ export class GLOBAL {
   public static API_Project_IsCriteriaEvaluationSubmit = 'Project/AddEditCriteriaEvaluationSubmit';
   public static API_Project_AddEditMultiSelectSecurityConsideration = 'Project/AddEditSecurityConsiMultiselect';
   public static API_GetSecurityConsiderationById = 'Project/GetSecurityConsiMultiSelectByProjectId';
+
+  public static API_Project_AddEditMultiSelectCountry = 'Project/AddEditCountryMultiselect';
   public static API_Project_AddEditMultiSelectProvince = 'Project/AddEditProvinceMultiselect';
   public static API_GetProvinceByProjectId = 'Project/GetProvinceMultiSelectByProjectId';
+  public static API_GetCountryByProjectId = 'Project/GetCountryMultiSelectByProjectId';
 
   public static API_GetDistrictByProjectId = 'Project/GetDistrictMultiSelectByProjectId';
   public static API_Project_AddEditMultiSelectDistrict = 'Project/AddEditDistrictMultiselect';
 
-
+  public static API_Project_GetAllProvinceDetailsByCountryId = 'Project/GetAllProvinceDetailsByCountryId';
 
   // Permissions
   public static API_Code_GetApplicationPages = 'Code/GetApplicationPages';

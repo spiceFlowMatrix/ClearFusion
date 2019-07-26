@@ -124,7 +124,28 @@
               </div>
             </div>
             <br>
+
             <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-select class="example-full-width" placeholder="Select Country"
+                    [(ngModel)]="countryMultiSelectModel.CountryId" (selectionChange)="
+                                   onCountryDetailsChange(
+                                  'countrySelction',
+                                  countryMultiSelectModel.CountryId
+                                )
+                              " name="countrySelction"
+                    [disabled]="CountrySelectionList.length < 0 || !isEditingAllowed">
+                    <mat-option *ngFor="let item of CountrySelectionList" [value]="item.value">{{ item.label }}
+                    </mat-option>
+                  </mat-select>
+
+                  <mat-spinner class="center_loader custom_load" *ngIf="countryDistrictFlag;" diameter="20">
+                  </mat-spinner>
+                </mat-form-field>
+
+
+              </div>
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select class="example-full-width" placeholder="Select Province"
@@ -134,7 +155,7 @@
                                   provinceMultiSelectModel.ProvinceId
                                 )
                               " name="provinceSelction"
-                    [disabled]="ProvinceSelectionList.length<0 || !isEditingAllowed" multiple>
+                    multiple>
                     <mat-option *ngFor="let item of ProvinceSelectionList" [value]="item.value">{{ item.label }}
                     </mat-option>
                   </mat-select>
@@ -145,10 +166,12 @@
 
 
               </div>
+            </div><br>
+            <div class="row">
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select placeholder="Select District" [(ngModel)]="districtMultiSelctModel.DistrictID"
-                    [disabled]="provinceSelectedFlag || !isEditingAllowed" (selectionChange)="
+                    (selectionChange)="
                       onDistrictDetailsChange(
                               'districtSelction',
                               districtMultiSelctModel.DistrictID
@@ -162,9 +185,6 @@
                 </mat-form-field>
 
               </div>
-            </div>
-            <br>
-            <div class="row">
               <div class="col-sm-6">
                 <lib-search-dropdown placeholder="Select Office" [multiSelect]="false"
                   placeholderSearchLabel="Search Office..." noEntriesFoundLabel="No matching Office found"
@@ -172,6 +192,8 @@
                   (openedChange)="openedOfficeChange($event,'Office')">
                 </lib-search-dropdown>
               </div>
+            </div><br>
+            <div class="row">
               <div class="col-sm-6">
                 <div class="autoComplete">
                   <mat-form-field class="example-full-width">
@@ -187,9 +209,6 @@
                   <button *ngIf="isEditingAllowed" type="button" (click)="AddSectorDeatil(myControlSector)">+</button>
                 </div>
               </div>
-            </div>
-            <br>
-            <div class="row">
               <div class="col-sm-6">
                 <div class="autoComplete">
                   <mat-form-field class="example-full-width">
@@ -205,6 +224,8 @@
                   <button *ngIf="isEditingAllowed" type="button" (click)="AddProgram(myControl)">+</button>
                 </div>
               </div>
+            </div><br>
+            <div class="row">
               <div class="col-sm-6">
                 <div class="form-group ">
                   <span class="ui-float-label">
@@ -222,9 +243,6 @@
                   </span>
                 </div>
               </div>
-            </div>
-            <br>
-            <div class="row">
               <div class="col-sm-6">
                 <div class="form-group">
                   <span class="ui-float-label">
@@ -242,11 +260,7 @@
                   </span>
                 </div>
               </div>
-              <div class="col-sm-6">
-
-              </div>
             </div>
-
           </mat-card>
         </div>
       </div>
@@ -259,14 +273,14 @@
             <div class="col-sm-6">
               <div class="form-group  ">
                 <mat-form-field class="example-full-width">
-                  <input matInput #ProjectGoalID type="text" [(ngModel)]="projectotherDetail.projectGoal"
+                  <textarea rows="4" matInput #ProjectGoalID type="text" [(ngModel)]="projectotherDetail.projectGoal"
                     maxlength="150" placeholder="Project Goal" name="projectGoal" [formControl]="projectGoal"
                     (focusout)="
                         onProjectotherDetailsChange(
                           'projectGoal',
                           ProjectGoalID.value
                         )
-                      " [disableControl]="!isEditingAllowed" />
+                      " [disableControl]="!isEditingAllowed" ></textarea>
 
                   <mat-error *ngIf="projectGoal.hasError('required')">
                     Project Goal is <strong>required</strong>
@@ -277,14 +291,14 @@
             <div class="col-sm-6">
               <div class="form-group ">
                 <mat-form-field class="example-full-width">
-                  <input matInput #ProjectObjectiveID type="text" [(ngModel)]="projectotherDetail.projectObjective"
+                  <textarea rows="4" matInput #ProjectObjectiveID type="text" [(ngModel)]="projectotherDetail.projectObjective"
                     maxlength="150" placeholder="Project Objective" name="projectObjective"
                     [formControl]="projectObjective" (focusout)="
                       onProjectotherDetailsChange(
                         'projectObjective',
                         ProjectObjectiveID.value
                       )
-                    " [disableControl]="!isEditingAllowed" />
+                    " [disableControl]="!isEditingAllowed" ></textarea>
 
                   <mat-error *ngIf="projectObjective.hasError('required')">
                     Project Objective is <strong>required</strong>

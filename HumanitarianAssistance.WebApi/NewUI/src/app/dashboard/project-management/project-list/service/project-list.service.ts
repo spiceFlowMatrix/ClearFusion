@@ -14,7 +14,8 @@ import {
   ProposalDocModel,
   securityConsiderationMultiSelectModel,
   ProvinceMultiSelectModel,
-  DistrictMultiSelectModel
+  DistrictMultiSelectModel,
+  CountryMultiSelectModel
 } from '../project-details/models/project-details.model';
 import { IProjectFilterModel } from '../models/projectList.model';
 import { ProjectJobsFilterModel } from '../project-jobs/project-jobsmodel';
@@ -262,6 +263,11 @@ export class ProjectListService {
 
   //#endregion
   //#region "getAllProvinceList"
+  getAllCountryList(url: string) {
+    return this.globalService.getList(url);
+  }
+  //#endregion
+  //#region "getAllProvinceList"
   getAllProvinceList(url: string) {
     return this.globalService.getList(url);
   }
@@ -297,6 +303,11 @@ export class ProjectListService {
 
   //#region "GetAllDistrictvalueByProvinceId"
   GetAllDistrictvalueByProvinceId(url: string, Id: any) {
+    return this.globalService.getListByListId(url, Id);
+  }
+  //#endregion
+   //#region "GetAllDistrictvalueByProvinceId"
+   getAllProvinceListByCountryId(url: string, Id: any) {
     return this.globalService.getListByListId(url, Id);
   }
   //#endregion
@@ -373,6 +384,11 @@ export class ProjectListService {
     url: string,
     data: securityConsiderationMultiSelectModel
   ) {
+    return this.globalService.post(url, data);
+  }
+  //#endregion
+  //#region "AddProjectDetail other details"
+  AddEditCountryMultiSelect(url: string, data: CountryMultiSelectModel) {
     return this.globalService.post(url, data);
   }
   //#endregion

@@ -14,6 +14,11 @@ Humanitarian Assistance ERP project features/bug fixes [Live site](http://34.90.
 - Resizable voucher details panels
 
 
+
+- Changes to project details view
+- Display budget line expenditures in a column in the budget line listing
+
+
 <a name="0.1.1"></a>
 ## [0.1.1] - 2019-07-22
 ### Bug Fixes
