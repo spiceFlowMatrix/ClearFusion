@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190726061155_EntitySourceDocumentDetailTableAdd")]
+    partial class EntitySourceDocumentDetailTableAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1686,8 +1688,6 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("EntityId");
 
-                    b.Property<long?>("EntitySourceDocumentId");
-
                     b.Property<bool?>("IsDeleted");
 
                     b.Property<string>("Message");
@@ -1699,8 +1699,6 @@ namespace DataAccess.Migrations
                     b.HasKey("ChatId");
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("EntitySourceDocumentId");
 
                     b.HasIndex("ModifiedById");
 
@@ -12868,10 +12866,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.EntitySourceDocumentDetail", "EntitySourceDocumentDetail")
-                        .WithMany()
-                        .HasForeignKey("EntitySourceDocumentId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()

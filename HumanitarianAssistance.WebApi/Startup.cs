@@ -77,8 +77,8 @@ namespace HumanitarianAssistance.WebApi
 
             DefaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
-            string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
-            string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
+            string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
+            //string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
 
             string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
 
@@ -315,6 +315,7 @@ namespace HumanitarianAssistance.WebApi
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chathub");
+                routes.MapHub<NotifyHub>("/notifyhub");
             });
 
             app.UseMvc(routes =>

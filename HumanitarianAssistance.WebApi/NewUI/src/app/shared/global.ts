@@ -400,6 +400,7 @@ export class GLOBAL {
   public static API_HREmployee_GetAllEmployeeContractType = 'HREmployee/GetAllEmployeeContractType';
   public static API_HREmployee_EditEmployeeProfessionalDetail = 'HREmployee/EditEmployeeProfessionalDetail';
   public static API_HiringRequest_DeleteCandidatDetail = 'HiringRequest/DeleteCandidatDetail';
+  public static API_Chat_AddMessage = 'Chat/AddMessage';
 
   //#endregion
 

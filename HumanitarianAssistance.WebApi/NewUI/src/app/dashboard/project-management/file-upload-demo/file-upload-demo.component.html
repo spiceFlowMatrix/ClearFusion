@@ -40,9 +40,13 @@
 
     <br />
     <div class="col-sm-12">
-      <span *ngFor="let message of Messages">
-        {{message}}
-      </span>
+        <table>
+          <tr *ngFor="let message of Messages">
+            <td>{{message.userName}}</td>
+            <td>: </td>
+            <td>{{message.message}}</td>
+          </tr>
+        </table>
     </div>
     <br />
     <div class="col-sm-2">

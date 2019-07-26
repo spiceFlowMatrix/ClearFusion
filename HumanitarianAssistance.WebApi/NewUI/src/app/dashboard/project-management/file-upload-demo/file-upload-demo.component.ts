@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import * as jsPDF from 'jspdf';
 import { SignalRService } from 'src/app/shared/services/signal-r.service';
 import { FileSourceEntityTypes } from 'src/app/shared/enum';
+import { GLOBAL } from 'src/app/shared/global';
+import { NotifySignalRService } from 'src/app/shared/services/notify-signalr.service';
 
 @Component({
   selector: 'app-file-upload-demo',
@@ -16,7 +18,7 @@ import { FileSourceEntityTypes } from 'src/app/shared/enum';
 export class FileUploadDemoComponent implements OnInit, OnDestroy {
   uploadActivitySubscribe: Subscription;
 
-  Messages: string[];
+  Messages: IChatModel[];
   sampleMessage: string;
   ChatModel: IChatModel;
 
@@ -24,10 +26,22 @@ export class FileUploadDemoComponent implements OnInit, OnDestroy {
     private commonLoader: CommonLoaderService,
     private activitiesService: ProjectActivitiesService,
     private toastr: ToastrService,
-    private signalRService: SignalRService
-  ) {}
+    private notifySignalRService: NotifySignalRService
+  ) {
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.Messages = [];
+
+    this.notifySignalRService.DemoMessage$.subscribe(data => {
+      this.Messages.push(data);
+      console.log(this.Messages);
+    });
+  }
+
+  public BroadcastMessageOn() {
+
+  }
 
   //#region "uploadDocument"
   uploadDocument(data: any) {
@@ -211,26 +225,20 @@ export class FileUploadDemoComponent implements OnInit, OnDestroy {
   }
 
   sendChat() {
-
     this.ChatModel = {
       EntityId: 1,
       Message: this.sampleMessage,
-      SourceEntityTypeId: FileSourceEntityTypes.ProjectDetail
+      SourceEntityTypeId: FileSourceEntityTypes.ProjectDetail,
+      UserName: ''
     };
-
-    this.signalRService.AddMessageInvoke(this.ChatModel);
- debugger;
-    this.signalRService.DemoMessage$.subscribe((x: any) => {
-      console.log(x);
-    });
+      this.activitiesService.AddMessage(this.ChatModel).subscribe(data => {
+      });
   }
-
-
-
 }
 
 interface IChatModel {
 SourceEntityTypeId: number;
 EntityId: number;
 Message: string;
+UserName: string;
 }

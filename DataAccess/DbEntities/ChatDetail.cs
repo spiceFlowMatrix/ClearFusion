@@ -15,5 +15,8 @@ namespace DataAccess.DbEntities
         public int ChatSourceEntityId { get; set; }
         public int EntityId { get; set; }
         public string Message { get; set; }
+        public long? EntitySourceDocumentId { get; set; }
+        [ForeignKey("EntitySourceDocumentId")]
+        public EntitySourceDocumentDetail EntitySourceDocumentDetail { get; set; }
     }
 }

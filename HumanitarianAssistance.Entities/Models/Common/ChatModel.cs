@@ -10,5 +10,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Common
         public string Message { get; set; }
         public int ChatSourceEntityId { get; set; }
         public int EntityId { get; set; }
+        public long? EntitySourceDocumentId { get; set; }
+        public string UserName { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 using DataAccess.DbEntities;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models.Common;
+using HumanitarianAssistance.WebApi.SignalRHub.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

@@ -1,6 +1,5 @@
 ﻿using DataAccess;
 using DataAccess.DbEntities;
-using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
@@ -9,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HumanitarianAssistance.Service.Classes
@@ -41,22 +39,29 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     CreatedDate = DateTime.UtcNow,
                     CreatedById = model.CreatedById,
-                    IsDeleted= false,
+                    IsDeleted = false,
                     ChatSourceEntityId = model.ChatSourceEntityId,
                     EntityId = model.EntityId,
-                    Message = model.Message
+                    Message = model.Message,
+                    EntitySourceDocumentId = model.EntitySourceDocumentId
                 };
 
                 await _uow.GetDbContext().ChatDetail.AddAsync(chatDetail);
                 await _uow.GetDbContext().SaveChangesAsync();
 
+                UserDetails user = await _uow.GetDbContext().UserDetails.FirstOrDefaultAsync(x => x.IsDeleted == false && x.AspNetUserId == model.CreatedById);
+
+                model.ChatId = chatDetail.ChatId;
+                model.UserName = user.Username;
+
+                response.ResponseData = model;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -85,6 +90,7 @@ namespace HumanitarianAssistance.Service.Classes
                 chatDetail.ChatSourceEntityId = model.ChatSourceEntityId;
                 chatDetail.EntityId = model.EntityId;
                 chatDetail.Message = model.Message;
+                chatDetail.EntitySourceDocumentId = model.EntitySourceDocumentId;
 
                 _uow.GetDbContext().ChatDetail.Update(chatDetail);
                 await _uow.GetDbContext().SaveChangesAsync();
@@ -155,7 +161,8 @@ namespace HumanitarianAssistance.Service.Classes
                                                        ChatId= x.ChatId,
                                                        ChatSourceEntityId= x.ChatSourceEntityId,
                                                        EntityId= x.EntityId,
-                                                       Message= x.Message
+                                                       Message= x.Message,
+                                                       EntitySourceDocumentId= x.EntitySourceDocumentId
                                                    }).ToListAsync();
 
                 response.ResponseData = chatDetailList;

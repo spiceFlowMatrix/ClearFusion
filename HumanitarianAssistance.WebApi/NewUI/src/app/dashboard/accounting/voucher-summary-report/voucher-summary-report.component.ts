@@ -339,7 +339,6 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
 
   //#region "getProjectList"
   // getSignedURL(event: any) {
-  //   debugger;
 
   //   const files = event.srcElement.files[0];
 
