@@ -45,10 +45,8 @@ build-backend:
 combine-apps:
     stage: integration
     script:
-        - find .
         - mkdir HumanitarianAssistance.WebApi/release/NewUI
-        - mkdir HumanitarianAssistance.WebApi/release/NewUI/dist
         - mkdir HumanitarianAssistance.WebApi/release/OldUI
-        - mkdir HumanitarianAssistance.WebApi/release/OldUI/dist
         - cp -r HumanitarianAssistance.WebApi/NewUI/dist/ HumanitarianAssistance.WebApi/release/NewUI/dist
         - cp -r HumanitarianAssistance.WebApi/OldUI/dist/ HumanitarianAssistance.WebApi/release/OldUI/dist
+        - find .
