@@ -50,5 +50,5 @@ combine-apps:
         - cp -r HumanitarianAssistance.WebApi/NewUI/dist/ HumanitarianAssistance.WebApi/release/NewUI/dist
         - cp -r HumanitarianAssistance.WebApi/OldUI/dist/ HumanitarianAssistance.WebApi/release/OldUI/dist
     artifacts:
-    paths:
-        - HumanitarianAssistance.WebApi/release/
+        paths:
+            - HumanitarianAssistance.WebApi/release/
