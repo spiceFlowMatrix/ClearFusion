@@ -49,3 +49,6 @@ combine-apps:
         - mkdir HumanitarianAssistance.WebApi/release/OldUI
         - cp -r HumanitarianAssistance.WebApi/NewUI/dist/ HumanitarianAssistance.WebApi/release/NewUI/dist
         - cp -r HumanitarianAssistance.WebApi/OldUI/dist/ HumanitarianAssistance.WebApi/release/OldUI/dist
+    artifacts:
+    paths:
+        - HumanitarianAssistance.WebApi/release/
