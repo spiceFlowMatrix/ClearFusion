@@ -3,13 +3,6 @@ stages:
     - integration
     - publish
 
-cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-        - HumanitarianAssistance.WebApi/NewUI/dist/
-        - HumanitarianAssistance.WebApi/OldUI/dist/
-        - HumanitarianAssistance.WebApi/release/
-
 build-newui:
     image: node:latest
     stage: build-apps
@@ -19,6 +12,10 @@ build-newui:
         - npm install
     script:
         - npm run build --prod
+    artifacts:
+        paths:
+            - HumanitarianAssistance.WebApi/NewUI/dist/
+            
 
 build-oldui:
     image: node:latest
@@ -29,6 +26,9 @@ build-oldui:
         - npm install
     script:
         - npm run build --prod
+    artifacts:
+        paths:
+            - HumanitarianAssistance.WebApi/OldUI/dist/
 
 build-backend:
     image: microsoft/dotnet:latest
@@ -38,6 +38,9 @@ build-backend:
         - dotnet restore
     script:
         - dotnet publish -c Release -o release
+    artifacts:
+        paths:
+            - HumanitarianAssistance.WebApi/release/
 
 combine-apps:
     stage: integration
