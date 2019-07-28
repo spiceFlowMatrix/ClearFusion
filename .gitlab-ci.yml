@@ -1,7 +1,7 @@
 stages:
     - build-apps
     - integration
-    - publish
+    - deploy
 
 build-newui:
     image: node:latest
@@ -52,3 +52,6 @@ combine-apps:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/release/
+
+publish-container:
+    stage: deploy
