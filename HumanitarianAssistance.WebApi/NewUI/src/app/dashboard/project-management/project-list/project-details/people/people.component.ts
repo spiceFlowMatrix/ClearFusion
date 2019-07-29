@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { ProjectListService } from '../../service/project-list.service';
 import { IUserListModel } from '../models/project-details.model';
 import { SignalRService } from 'src/app/shared/services/signal-r.service';
+import { NotifySignalRService } from 'src/app/shared/services/notify-signalr.service';
 
 @Component({
   selector: 'app-people',
@@ -23,7 +24,7 @@ export class PeopleComponent implements OnInit {
 
   constructor(
     private projectListService: ProjectListService,
-    private signalRService: SignalRService) {
+    private signalRService: NotifySignalRService) {
     this.getScreenSize();
   }
 

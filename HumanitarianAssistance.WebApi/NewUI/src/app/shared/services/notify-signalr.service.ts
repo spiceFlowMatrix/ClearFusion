@@ -3,6 +3,7 @@ import * as signalR from '@aspnet/signalr';
 import { environment } from 'src/environments/environment';
 import { AppUrlService } from './app-url.service';
 import { Subject } from 'rxjs/internal/Subject';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { Subject } from 'rxjs/internal/Subject';
 export class NotifySignalRService {
 
   private hubConnection: signalR.HubConnection;
-
+  public activityPermission$ = new BehaviorSubject<any[]>([]);
   public DemoMessage$ = new Subject<IChatModel>();
 
   constructor(private appUrlService: AppUrlService) {
@@ -43,11 +44,26 @@ export class NotifySignalRService {
       .catch(err => console.log('Error while closing connection: ' + err));
   }
 
-  //#region "activityPermissionChanged - on"
-  public BroadcastMessageOn() {
-
+  //#region "activityPermissionChanged - invoke"
+  public activityPermissionChangedInvoke(data: any): void {
+    this.hubConnection.invoke('ActivityPermissionChanged', data);
   }
   //#endregion
+
+  //#region "activityPermissionChanged - on"
+  public activityPermissionChangedOn(): void {
+    this.hubConnection.on('activityPermissionChanged', data => {
+      console.log(data);
+      this.activityPermission$.next(data);
+    });
+  }
+  //#endregion
+
+  public addTransferChartDataListener(): void {
+    this.hubConnection.on('transferchartdata', data => {
+      console.log(data);
+    });
+  }
 }
 
 interface IChatModel {

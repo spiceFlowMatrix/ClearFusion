@@ -938,7 +938,6 @@ export class ProgramAreaSectorComponent implements OnInit {
                   label: element.CountryName
                 });
               });
-              // this.GetOtherProjectDetailById(this.ProjectId);
             }
             this.countryDistrictFlag = false;
           }
@@ -963,7 +962,6 @@ export class ProgramAreaSectorComponent implements OnInit {
               this.getAllProvinceListByCountryId(
                 [this.projectotherDetail.CountryId]
               );
-              // this.GetDistrictByProjectId(this.ProjectId);
             }
           }
         });
@@ -986,7 +984,6 @@ export class ProgramAreaSectorComponent implements OnInit {
       this.countryDistrictFlag = true;
 
       const obj: any = {
-        // SecurityConsiderationMultiSelectId:model.SecurityConsiderationMultiSelectId,
         ProjectId: this.ProjectId,
         CountryId: [model.CountryId]
       };
@@ -999,7 +996,6 @@ export class ProgramAreaSectorComponent implements OnInit {
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
-              // this.countryDistrictFlag = false;
               this.getAllProvinceListByCountryId(
                 [this.projectotherDetail.CountryId]
               );
@@ -1020,7 +1016,6 @@ export class ProgramAreaSectorComponent implements OnInit {
     console.log(id);
     this.provinceDistrictFlag = true;
     this.ProvinceSelectionList = [];
-    //this.DistrictMultiSelectList = [];
     this.projectListService
       .getAllProvinceListByCountryId(
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProvinceDetailsByCountryId,
@@ -1036,7 +1031,6 @@ export class ProgramAreaSectorComponent implements OnInit {
                   label: element.ProvinceName
                 });
               });
-              // this.GetOtherProjectDetailById(this.ProjectId);
             }
             this.GetProvinceByProjectId(this.ProjectId);
           }
@@ -1069,7 +1063,6 @@ export class ProgramAreaSectorComponent implements OnInit {
               this.GetAllDistrictvalueByProvinceId(
                 this.provinceMultiSelectModel.ProvinceId
               );
-              // this.GetDistrictByProjectId(this.ProjectId);
             }
           }
         });
@@ -1090,7 +1083,6 @@ export class ProgramAreaSectorComponent implements OnInit {
   AddEditonProvinceDetails(model: any) {
     if (model != null) {
       const obj: ProvinceMultiSelectModel = {
-        // SecurityConsiderationMultiSelectId:model.SecurityConsiderationMultiSelectId,
         ProjectId: this.ProjectId,
         ProvinceId: model.ProvinceId
       };
@@ -1119,7 +1111,6 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   // to get the list of District on select of province id
   GetAllDistrictvalueByProvinceId(model: any) {
-    // this.provinceSelectedFlag = true;
     const id = model;
     this.provinceSelectedFlag = true;
     this.DistrictMultiSelectList = [];
@@ -1154,8 +1145,6 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   // get District byProject id
   GetDistrictByProjectId(ProjectId: number) {
-    //  this.provinceSelectedFlag = true;
-
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.provinceSelectedFlag = true;
       this.projectListService
@@ -1186,7 +1175,6 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.districtFlag = true;
     if (ev === 'districtSelction' && data != null) {
       this.districtMultiSelctModel.DistrictID = data;
-      // var unique = Array.from(new Set(data))
       this.AddEditDistrictMultiSelect(this.districtMultiSelctModel);
     }
   }
@@ -1194,7 +1182,6 @@ export class ProgramAreaSectorComponent implements OnInit {
   AddEditDistrictMultiSelect(model: any) {
     if (model != null) {
       const obj: DistrictMultiSelectModel = {
-        // SecurityConsiderationMultiSelectId:model.SecurityConsiderationMultiSelectId,
         ProjectId: this.ProjectId,
         DistrictID: model.DistrictID,
         ProvinceId: this.provinceMultiSelectModel.ProvinceId
