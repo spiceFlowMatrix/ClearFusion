@@ -317,7 +317,7 @@ namespace HumanitarianAssistance.WebApi
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ChatHub>("/chathub");
+               // routes.MapHub<ChatHub>("/chathub");
                 routes.MapHub<NotifyHub>("/notifyhub");
             });
 

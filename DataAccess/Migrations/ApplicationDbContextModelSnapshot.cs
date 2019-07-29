@@ -8044,6 +8044,40 @@ namespace DataAccess.Migrations
                     b.ToTable("CEOccupationDetail");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Project.CountryMultiSelectDetails", b =>
+                {
+                    b.Property<long>("CountryMultiSelectId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("CountryId");
+
+                    b.Property<long?>("CountrySelectionId");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<long>("ProjectId");
+
+                    b.HasKey("CountryMultiSelectId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("CountryMultiSelectDetails");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Project.DistrictMultiSelect", b =>
                 {
                     b.Property<long>("DistrictMultiSelectId")
@@ -9686,6 +9720,8 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
+                    b.Property<long?>("CountryMultiSelectId");
+
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -9703,6 +9739,8 @@ namespace DataAccess.Migrations
                     b.Property<long?>("ProvinceSelectionId");
 
                     b.HasKey("ProvinceMultiSelectId");
+
+                    b.HasIndex("CountryMultiSelectId");
 
                     b.HasIndex("CreatedById");
 
@@ -14804,6 +14842,26 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.Project.CountryMultiSelectDetails", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.CountryDetails", "CountryDetails")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.Project.DistrictMultiSelect", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -15512,6 +15570,10 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProvinceMultiSelect", b =>
                 {
+                    b.HasOne("DataAccess.DbEntities.Project.CountryMultiSelectDetails", "CountryMultiSelectDetails")
+                        .WithMany()
+                        .HasForeignKey("CountryMultiSelectId");
+
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
