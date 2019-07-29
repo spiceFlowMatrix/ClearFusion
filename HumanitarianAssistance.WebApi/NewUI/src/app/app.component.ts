@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
 
   startHubConnection() {
     this.notifyService.startConnection();
-    this.signalRService.startConnection();
+    // this.signalRService.startConnection();
   }
 
 }
