@@ -1751,6 +1751,8 @@ export class ProgramAreaSectorComponent implements OnInit {
       OpportunityType: model.OpportunityType
     };
 
+    console.log(obj);
+
     this.projectListService
       .AddEditProjectotherDetail(
         this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditProjectotherDetail,
@@ -2058,11 +2060,11 @@ export class ProgramAreaSectorComponent implements OnInit {
       // Opportunity Details
       ProjectName : this.data.projectName,
       Description : this.data.description,
-      OpportunityType: this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType).Name,
+      OpportunityType: this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType) != null ? this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType).Name : '',
       Donor: this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
-      OpportunityNo:  this.projectotherDetail.opportunityNo,
-      Opportunity:  this.projectotherDetail.opportunity,
-      OpportunityDescription: this.projectotherDetail.opportunitydescription,
+      OpportunityNo:  this.projectotherDetail.opportunityNo != null ? this.projectotherDetail.opportunityNo : '',
+      Opportunity:  this.projectotherDetail.opportunity != null ? this.projectotherDetail.opportunity : '',
+      OpportunityDescription: this.projectotherDetail.opportunitydescription != null ? this.projectotherDetail.opportunitydescription : '',
 
       Country: this.CountrySelectionList.find(x => x.value === this.projectotherDetail.CountryId) != null ? this.CountrySelectionList.find(x => x.value === this.projectotherDetail.CountryId).label : '',
       Province: this.projectotherDetail.ProvinceId.map(x => this.ProvinceSelectionList.filter(y => y.value === x).map(z => z.label)).toString(),
@@ -2070,15 +2072,15 @@ export class ProgramAreaSectorComponent implements OnInit {
       Office: this.donorDataSource.find(x => x.Id === this.projectotherDetail.OfficeId) != null ? this.officeDataSource.find(x => x.Id === this.projectotherDetail.OfficeId).Name : '', 
       Sector: this.Sectorlist.find(x => x.SectorId === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '', 
       // Program: this.Programlist.find(x => x.ProgramId === this.projectotherDetail.projectGoal) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
-      StartDate: this.projectotherDetail.StartDate,
-      EndDate: this.projectotherDetail.EndDate,
+      StartDate: this.projectotherDetail.StartDate != null ? this.projectotherDetail.StartDate : '',
+      EndDate: this.projectotherDetail.EndDate != null ? this.projectotherDetail.EndDate : '',
   
       // Project Objective & Goal
-      ProjectGoal: this.projectotherDetail.projectGoal,
-      ProjectObjective: this.projectotherDetail.projectObjective,
-      MainActivities: this.projectotherDetail.mainActivities,
-      REOIReceiveDate: this.projectotherDetail.REOIReceiveDate,
-      SubmissionDate: this.projectotherDetail.SubmissionDate,
+      ProjectGoal: this.projectotherDetail.projectGoal != null ? this.projectotherDetail.projectGoal : '',
+      ProjectObjective: this.projectotherDetail.projectObjective != null ? this.projectotherDetail.projectObjective : '',
+      MainActivities: this.projectotherDetail.mainActivities != null ? this.projectotherDetail.mainActivities : '',
+      REOIReceiveDate: this.projectotherDetail.REOIReceiveDate != null ? this.projectotherDetail.REOIReceiveDate : '',
+      SubmissionDate: this.projectotherDetail.SubmissionDate != null ? this.projectotherDetail.SubmissionDate : '',
   
       // Beneficiary Details
       DirectbeneficiarMale: this.projectotherDetail.beneficiaryMale != null ?  this.projectotherDetail.beneficiaryMale.toString() : '',

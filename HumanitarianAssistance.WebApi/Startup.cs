@@ -112,7 +112,6 @@ namespace HumanitarianAssistance.WebApi
                 c.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
 
-
             services.AddRouting();
             services.AddSignalR();
 

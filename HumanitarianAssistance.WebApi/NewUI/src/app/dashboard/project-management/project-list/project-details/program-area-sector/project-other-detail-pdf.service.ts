@@ -267,7 +267,7 @@ export class ProjectOtherDetailPdfService {
     }
 
     doc.addPage();
-
+    textCurrentLocationYAxis = linePadding
 
      // Project Objective & Goal
     doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Project Objective & Goal");
