@@ -73,6 +73,7 @@ export interface ProjectOtherDetailModel {
     opportunityNo?: string;
     opportunity?: string;
     opportunitydescription?: string;
+    CountryId?: number;
     ProjectId?: number;
     // ProvinceId?: string;
     ProvinceId?: number[];

@@ -959,10 +959,9 @@ export class ProgramAreaSectorComponent implements OnInit {
         .subscribe(data => {
           if (data != null) {
             if (data.data.CountryMultiSelectById != null) {
-              [this.countryMultiSelectModel.CountryId] =
-                data.data.CountryMultiSelectById;
+              this.projectotherDetail.CountryId = data.data.CountryMultiSelectById.length > 0 ? data.data.CountryMultiSelectById[0] : null;
               this.getAllProvinceListByCountryId(
-                [this.countryMultiSelectModel.CountryId]
+                [this.projectotherDetail.CountryId]
               );
               // this.GetDistrictByProjectId(this.ProjectId);
             }
@@ -976,12 +975,9 @@ export class ProgramAreaSectorComponent implements OnInit {
    onCountryDetailsChange(ev, data: number) {
     // this.countryDistrictFlag = true;
     if (ev === 'countrySelction' && data != null) {
+      this.projectotherDetail.CountryId = data;
       this.countryMultiSelectModel.CountryId = data;
       this.AddEditonCountryDetails(this.countryMultiSelectModel);
-      if (this.countryMultiSelectModel.CountryId != null) {
-        // if (data.length > 0)
-        // this.GetAllDistrictvalueByProvinceId(data);
-      }
     }
   }
 
@@ -1005,7 +1001,7 @@ export class ProgramAreaSectorComponent implements OnInit {
             if (response.StatusCode === 200) {
               // this.countryDistrictFlag = false;
               this.getAllProvinceListByCountryId(
-                [this.countryMultiSelectModel.CountryId]
+                [this.projectotherDetail.CountryId]
               );
             }
             this.countryDistrictFlag = false;
@@ -1068,8 +1064,8 @@ export class ProgramAreaSectorComponent implements OnInit {
         .subscribe(data => {
           if (data != null) {
             if (data.data.ProvinceMultiSelectById != null) {
-              this.provinceMultiSelectModel.ProvinceId =
-                data.data.ProvinceMultiSelectById;
+              this.projectotherDetail.ProvinceId = data.data.ProvinceMultiSelectById;
+              this.provinceMultiSelectModel.ProvinceId = data.data.ProvinceMultiSelectById;
               this.GetAllDistrictvalueByProvinceId(
                 this.provinceMultiSelectModel.ProvinceId
               );
@@ -1085,12 +1081,9 @@ export class ProgramAreaSectorComponent implements OnInit {
   onProvinceDetailsChange(ev, data: number[]) {
     this.provinceDistrictFlag = true;
     if (ev === 'provinceSelction' && data != null) {
+      this.projectotherDetail.ProvinceId = data;
       this.provinceMultiSelectModel.ProvinceId = data;
       this.AddEditonProvinceDetails(this.provinceMultiSelectModel);
-      if (this.provinceMultiSelectModel.ProvinceId != null) {
-        // if (data.length > 0)
-        // this.GetAllDistrictvalueByProvinceId(data);
-      }
     }
   }
 
@@ -1706,7 +1699,7 @@ export class ProgramAreaSectorComponent implements OnInit {
               }
             }
 
-            this.setProjectOtherDetailValueForPdf();
+            // this.setProjectOtherDetailValueForPdf();
 
           }
           if (data.StatusCode === 400) {
@@ -2073,7 +2066,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
 
   setProjectOtherDetailValueForPdf() {
-    
+
     this.projectOtherDetailPdf = {
       // Opportunity Details
       ProjectName : this.data.projectName,
@@ -2083,12 +2076,13 @@ export class ProgramAreaSectorComponent implements OnInit {
       OpportunityNo:  this.projectotherDetail.opportunityNo,
       Opportunity:  this.projectotherDetail.opportunity,
       OpportunityDescription: this.projectotherDetail.opportunitydescription,
-      Country: this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
-      Province: this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
-      District: '',
+
+      Country: this.CountrySelectionList.find(x => x.value === this.projectotherDetail.CountryId) != null ? this.CountrySelectionList.find(x => x.value === this.projectotherDetail.CountryId).label : '',
+      Province: this.projectotherDetail.ProvinceId.map(x => this.ProvinceSelectionList.filter(y => y.value === x).map(z => z.label)).toString(),
+      District: this.districtMultiSelctModel.DistrictID.map(x => this.DistrictMultiSelectList.filter(y => y.value === x).map(z => z.label)).toString(),
       Office: this.donorDataSource.find(x => x.Id === this.projectotherDetail.OfficeId) != null ? this.officeDataSource.find(x => x.Id === this.projectotherDetail.OfficeId).Name : '', 
       Sector: this.Sectorlist.find(x => x.SectorId === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '', 
-      Program: '',
+      // Program: this.Programlist.find(x => x.ProgramId === this.projectotherDetail.projectGoal) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
       StartDate: this.projectotherDetail.StartDate,
       EndDate: this.projectotherDetail.EndDate,
   
@@ -2128,49 +2122,8 @@ export class ProgramAreaSectorComponent implements OnInit {
   onExportPdf() {
     // set your pdf values here
 
-    this.projectOtherDetailPdf = {
-      // Opportunity Details
-      ProjectName : this.data.projectName,
-      Description : this.data.description,
-      OpportunityType: this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType).Name,
-      Donor: this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
-      OpportunityNo:  this.projectotherDetail.opportunitydescription,
-      Opportunity:  this.projectotherDetail.opportunitydescription,
-      OpportunityDescription: this.projectotherDetail.opportunitydescription,
-      Country: '',
-      Province: '',
-      District: '',
-      Office: '',
-      Sector: '',
-      Program: '',
-      StartDate: '',
-      EndDate: '',
-  
-      // Project Objective & Goal
-      ProjectGoal: '',
-      ProjectObjective: '',
-      MainActivities: '',
-      REOIReceiveDate: '',
-      SubmissionDate: '',
-  
-      // Beneficiary Details
-      DirectbeneficiarMale: '',
-      InDirectbeneficiarMale: '',
-      DirectbeneficiarFemale: '',
-      InDirectbeneficiarFemale: '',
-      TotalDirectBeneficiary: '',
-      TotalInDirectBeneficiary: '',
-  
-      // Gender Consideration
-      StrengthConsideration: '',
-      GenderConsideration: '',
-      GenderRemarks: '',
-  
-      // Security Consideration
-      Security: '',
-      SecurityConsideration: '',
-      SecurityRemarks: ''
-    };
+    this.setProjectOtherDetailValueForPdf();
+    
     console.log(this.projectOtherDetailPdf);
 
     this.pDetailPdfService.onExportPdf(this.projectOtherDetailPdf);

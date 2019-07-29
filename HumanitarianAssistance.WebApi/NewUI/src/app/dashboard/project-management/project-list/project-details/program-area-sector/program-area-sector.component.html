@@ -130,10 +130,10 @@
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select class="example-full-width" placeholder="Select Country"
-                    [(ngModel)]="countryMultiSelectModel.CountryId" (selectionChange)="
+                    [(ngModel)]="projectotherDetail.CountryId" (selectionChange)="
                                    onCountryDetailsChange(
                                   'countrySelction',
-                                  countryMultiSelectModel.CountryId
+                                  projectotherDetail.CountryId
                                 )
                               " name="countrySelction"
                     [disabled]="CountrySelectionList.length < 0 || !isEditingAllowed">
@@ -150,10 +150,10 @@
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select class="example-full-width" placeholder="Select Province"
-                    [(ngModel)]="provinceMultiSelectModel.ProvinceId " (selectionChange)="
+                    [(ngModel)]="projectotherDetail.ProvinceId" (selectionChange)="
                                    onProvinceDetailsChange(
                                   'provinceSelction',
-                                  provinceMultiSelectModel.ProvinceId
+                                  projectotherDetail.ProvinceId
                                 )
                               " name="provinceSelction"
                     multiple>
@@ -601,11 +601,10 @@
   </div>
 </ng-template>
 
-<!-- style="display: none" -->
-<div id="projectOtherDetailPdfTemplate" #projectOtherDetailPdfTemplate style="font-family: 'Roboto', sans-serif;">
+<div id="projectOtherDetailPdfTemplate" #projectOtherDetailPdfTemplate style="display: none; font-family: 'Roboto', sans-serif;" >
 
 
-  <div id="projectOtherDetailHeaderPdfTemplate">
+  <!-- <div id="projectOtherDetailHeaderPdfTemplate">
     <tr>
         <td>
           <h4>{{projectOtherDetailPdf.ProjectName}}</h4>
@@ -616,7 +615,7 @@
           <p style="color: #9f9e9e; font-size: 15px; line-height: 26px;">{{projectOtherDetailPdf.Description}} </p>
         </td>
       </tr>
-    </div>
+    </div> -->
 
 
         <!-- <tr>
