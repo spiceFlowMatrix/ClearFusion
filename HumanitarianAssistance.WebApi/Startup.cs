@@ -13,16 +13,14 @@ using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.Service.interfaces.AccountingNew;
 using HumanitarianAssistance.Service.interfaces.Marketing;
 using HumanitarianAssistance.Service.interfaces.ProjectManagement;
-using HumanitarianAssistance.WebApi;
 using HumanitarianAssistance.WebApi.Auth;
-using HumanitarianAssistance.WebApi.ChaHub;
 using HumanitarianAssistance.WebApi.Extensions;
 using HumanitarianAssistance.WebApi.Filter;
+using HumanitarianAssistance.WebApi.SignalRHub;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
@@ -80,8 +78,8 @@ namespace HumanitarianAssistance.WebApi
 
             DefaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
-            string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
-            string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
+            string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
+            //string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
 
             string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
 
@@ -153,6 +151,8 @@ namespace HumanitarianAssistance.WebApi
             services.AddTransient<IProjectPeopleService, ProjectPeopleService>();
             services.AddTransient<IFileManagement, FileManagementService>();
             services.AddTransient<IHiringRequestService, HiringRequestService>();
+            services.AddTransient<IChat, ChatService>();
+            //services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddTransient<UserManager<AppUser>>();
 
             var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
@@ -317,7 +317,8 @@ namespace HumanitarianAssistance.WebApi
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ProjectChatHub>("/chathub");
+                routes.MapHub<ChatHub>("/chathub");
+                routes.MapHub<NotifyHub>("/notifyhub");
             });
 
             app.UseMvc(routes =>

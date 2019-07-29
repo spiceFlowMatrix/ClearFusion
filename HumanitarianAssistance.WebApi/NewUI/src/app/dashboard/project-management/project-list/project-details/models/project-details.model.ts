@@ -158,6 +158,7 @@ export interface SecurityModel {
     SecurityId?: number;
     SecurityName?: string;
 }
+// tslint:disable-next-line: class-name
 export interface strengthModel {
     StrengthConsiderationId?: number;
     StrengthConsiderationName?: string;
@@ -182,6 +183,7 @@ export interface SecurityModel {
     SecurityId?: number;
     SecurityName?: string;
 }
+// tslint:disable-next-line: class-name
 export interface strengthModel {
     StrengthConsiderationId?: number;
     StrengthConsiderationName?: string;
@@ -214,7 +216,8 @@ export interface UserListModel {
     Username?: string;
 }
 
-//multiselect
+// multiselect
+// tslint:disable-next-line: class-name
 export interface securityConsiderationMultiSelectModel {
 
     SecurityConsiderationMultiSelectId?: number;
@@ -225,7 +228,7 @@ export interface securityConsiderationMultiSelectModel {
 export interface CountryMultiSelectModel {
   CountryMultiSelectId?: number;
   ProjectId?: number;
-  CountryId?: number[];
+  CountryId?: number;
   CountrySelectionId?: number;
 
 }
@@ -248,7 +251,7 @@ export interface DistrictMultiSelectModel {
 }
 
 
-//Critera evaluation form
+// Critera evaluation form
 
 export interface DonorCEModel {
     ProjectId?: number;
@@ -348,7 +351,7 @@ export interface FeasibilityCEModel {
     ProjectInLineWithOrgFocus?: any;
     EnoughTimeToPrepareProposal?: any;
 
-    ProjectRealCost?: any
+    ProjectRealCost?: any;
     IsCostGreaterthenBudget?: boolean;
     PerCostGreaterthenBudget?: any;
     IsFinancialContribution?: boolean;
@@ -431,9 +434,9 @@ export interface FinancialProjectDetailModel {
 }
 
 export interface IApproveRejectModel {
-    text: string,
-    flag: boolean,
-    data: any
+    text: string;
+    flag: boolean;
+    data: any;
 }
 
 export interface IUserListModel {

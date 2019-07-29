@@ -26,6 +26,10 @@ export class AppUrlService {
     return environment.uploadUrl;
   }
 
+  public getNotifyHubUrl(): string {
+    return environment.notifyHubUrl;
+  }
+
   // private getApiURL(baseURL):string {
 
   //  return (baseURL.substring(baseURL.lastIndexOf('/')))

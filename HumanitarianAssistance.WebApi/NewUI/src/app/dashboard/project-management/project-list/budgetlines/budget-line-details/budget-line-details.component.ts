@@ -63,7 +63,7 @@ export class BudgetLineDetailsComponent implements OnInit, OnChanges {
   //#region "ngOnInit"
   ngOnInit() {
     this.initForm();
-    //  this.getProjectTransactionList(this.Projectid);
+  //  this.getProjectTransactionList(this.Projectid);
   }
   //#endregion
 
@@ -163,8 +163,10 @@ export class BudgetLineDetailsComponent implements OnInit, OnChanges {
     this.budgetService.EditBudgetLineDetailById(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
-          this.budgetDetailChanged.emit(data);
-          this.budgetLineDetail.InitialBudget = data.InitialBudget;
+          // To get updated transaction list
+          this.getTransactionList(data);
+          // data.Expenditure = this.getTotalExpenditures;
+          // this.budgetDetailChanged.emit(data);
         } else if (response.statusCode === 400) {
           this.toastr.warning(response.message);
         }
@@ -242,6 +244,8 @@ export class BudgetLineDetailsComponent implements OnInit, OnChanges {
            this.noDataFoundFlag = true;
             // this.toastr.warning(response.message);
           }
+          BudgetLineDetailList.Expenditure = this.getTotalExpenditures;
+          this.budgetDetailChanged.emit(BudgetLineDetailList);
 
           // this.BudgetListLoaderFlag = false;
         },

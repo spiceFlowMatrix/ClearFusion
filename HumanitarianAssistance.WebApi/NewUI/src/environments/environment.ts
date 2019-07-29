@@ -4,5 +4,6 @@ export const environment = {
   docUrl: '/Docs/',
   hubUrl: '/chathub/',
   oldUiUrl: '/oldui/#/',
+  notifyHubUrl: '/notifyhub/',
   uploadUrl: 'https://storage.cloud.google.com/' // proposal doc
 };

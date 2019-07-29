@@ -246,7 +246,7 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
               InitialBudget: element.InitialBudget,
               ProjectId: element.ProjectId,
               CreatedDate: element.CreatedDate,
-              DebitPercentage: element.DebitPercentage
+              DebitPercentage: element.DebitPercentage,
             });
           });
         } else if (response.statusCode === 400 && response.data === null) {
