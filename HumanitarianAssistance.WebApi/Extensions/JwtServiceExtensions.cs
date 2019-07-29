@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.WebApi.Extensions
 
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration Configuration)
         {
-            _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtIssuerOptions:JwtKey"]));
+            _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"]));
 
             // jwt token configuration
             var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
