@@ -268,7 +268,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     };
   }
 
-  initCountryMultiSelectModel(){
+  initCountryMultiSelectModel() {
     this.countryMultiSelectModel = {
       CountryMultiSelectId: null,
       ProjectId: null,
@@ -507,13 +507,11 @@ export class ProgramAreaSectorComponent implements OnInit {
               this.programListFlag = false;
             }
           );
-      }
-      else {
+      } else {
         this.programListFlag = false;
         this.toastr.warning('Please check Program name');
       }
-    }
-    else {
+    } else {
       this.toastr.warning('Please add new Program');
       this.programListFlag = false;
     }
@@ -885,7 +883,6 @@ export class ProgramAreaSectorComponent implements OnInit {
                   label: element.CountryName
                 });
               });
-              // this.GetOtherProjectDetailById(this.ProjectId);
             }
             this.countryDistrictFlag = false;
           }
@@ -906,12 +903,11 @@ export class ProgramAreaSectorComponent implements OnInit {
         .subscribe(data => {
           if (data != null) {
             if (data.data.CountryMultiSelectById != null) {
-              this.countryMultiSelectModel.CountryId =
+              [this.countryMultiSelectModel.CountryId] =
                 data.data.CountryMultiSelectById;
               this.getAllProvinceListByCountryId(
-                this.countryMultiSelectModel.CountryId
+                [this.countryMultiSelectModel.CountryId]
               );
-              // this.GetDistrictByProjectId(this.ProjectId);
             }
           }
         });
@@ -920,24 +916,23 @@ export class ProgramAreaSectorComponent implements OnInit {
 
    // add province by id
 
-   onCountryDetailsChange(ev, data: number[]) {
-    this.countryDistrictFlag = true;
+   onCountryDetailsChange(ev, data: number) {
+    // this.countryDistrictFlag = true;
     if (ev === 'countrySelction' && data != null) {
       this.countryMultiSelectModel.CountryId = data;
       this.AddEditonCountryDetails(this.countryMultiSelectModel);
       if (this.countryMultiSelectModel.CountryId != null) {
-        // if (data.length > 0)
-        // this.GetAllDistrictvalueByProvinceId(data);
       }
     }
   }
 
   AddEditonCountryDetails(model: any) {
     if (model != null) {
-      const obj: CountryMultiSelectModel = {
-        // SecurityConsiderationMultiSelectId:model.SecurityConsiderationMultiSelectId,
+      this.countryDistrictFlag = true;
+
+      const obj: any = {
         ProjectId: this.ProjectId,
-        CountryId: model.CountryId
+        CountryId: [model.CountryId]
       };
       this.projectListService
         .AddEditCountryMultiSelect(
@@ -948,14 +943,15 @@ export class ProgramAreaSectorComponent implements OnInit {
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
-              this.countryDistrictFlag = false;
               this.getAllProvinceListByCountryId(
-                this.countryMultiSelectModel.CountryId
+                [this.countryMultiSelectModel.CountryId]
               );
             }
+            this.countryDistrictFlag = false;
             this.provinceSelectedFlag = false;
           },
           error => {
+            this.countryDistrictFlag = false;
             this.provinceSelectedFlag = false;
           }
         );
@@ -967,7 +963,6 @@ export class ProgramAreaSectorComponent implements OnInit {
     console.log(id);
     this.provinceDistrictFlag = true;
     this.ProvinceSelectionList = [];
-    this.DistrictMultiSelectList = [];
     this.projectListService
       .getAllProvinceListByCountryId(
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProvinceDetailsByCountryId,
@@ -983,11 +978,10 @@ export class ProgramAreaSectorComponent implements OnInit {
                   label: element.ProvinceName
                 });
               });
-              // this.GetOtherProjectDetailById(this.ProjectId);
             }
             this.GetProvinceByProjectId(this.ProjectId);
-            this.provinceDistrictFlag = false;
           }
+          this.provinceDistrictFlag = false;
         },
         error => {
           this.provinceDistrictFlag = false;
@@ -1016,7 +1010,6 @@ export class ProgramAreaSectorComponent implements OnInit {
               this.GetAllDistrictvalueByProvinceId(
                 this.provinceMultiSelectModel.ProvinceId
               );
-              // this.GetDistrictByProjectId(this.ProjectId);
             }
           }
         });
@@ -1030,17 +1023,12 @@ export class ProgramAreaSectorComponent implements OnInit {
     if (ev === 'provinceSelction' && data != null) {
       this.provinceMultiSelectModel.ProvinceId = data;
       this.AddEditonProvinceDetails(this.provinceMultiSelectModel);
-      if (this.provinceMultiSelectModel.ProvinceId != null) {
-        // if (data.length > 0)
-        // this.GetAllDistrictvalueByProvinceId(data);
-      }
     }
   }
 
   AddEditonProvinceDetails(model: any) {
     if (model != null) {
       const obj: ProvinceMultiSelectModel = {
-        // SecurityConsiderationMultiSelectId:model.SecurityConsiderationMultiSelectId,
         ProjectId: this.ProjectId,
         ProvinceId: model.ProvinceId
       };
@@ -1069,7 +1057,6 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   // to get the list of District on select of province id
   GetAllDistrictvalueByProvinceId(model: any) {
-    // this.provinceSelectedFlag = true;
     const id = model;
     this.provinceSelectedFlag = true;
     this.DistrictMultiSelectList = [];
@@ -1104,8 +1091,6 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   // get District byProject id
   GetDistrictByProjectId(ProjectId: number) {
-    //  this.provinceSelectedFlag = true;
-
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.provinceSelectedFlag = true;
       this.projectListService
@@ -1136,7 +1121,6 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.districtFlag = true;
     if (ev === 'districtSelction' && data != null) {
       this.districtMultiSelctModel.DistrictID = data;
-      // var unique = Array.from(new Set(data))
       this.AddEditDistrictMultiSelect(this.districtMultiSelctModel);
     }
   }
@@ -1144,7 +1128,6 @@ export class ProgramAreaSectorComponent implements OnInit {
   AddEditDistrictMultiSelect(model: any) {
     if (model != null) {
       const obj: DistrictMultiSelectModel = {
-        // SecurityConsiderationMultiSelectId:model.SecurityConsiderationMultiSelectId,
         ProjectId: this.ProjectId,
         DistrictID: model.DistrictID,
         ProvinceId: this.provinceMultiSelectModel.ProvinceId
@@ -1446,7 +1429,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region "openedChange" for project donor detail change
   openedChange(event: any, data: any) {
-    this.projectotherDetail.DonorId = event.Value != undefined ? event.Value : this.projectotherDetail.DonorId;
+    this.projectotherDetail.DonorId = event.Value !== undefined ? event.Value : this.projectotherDetail.DonorId;
     // let obj = this.donorDataSource.findIndex(x => x.Id == event.Value);
     // this.onProjectotherDetailsChange(data, this.donorDataSource[obj].Name);
     this.onProjectotherDetailsChange(data, event.Value);
@@ -1893,14 +1876,14 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region "openedOfficeChange" for project oddice detail change
   openeOpportunityChange(event: any, data: any) {
-    this.projectotherDetail.OpportunityType = event.Value != undefined ? event.Value : this.projectotherDetail.OpportunityType;
+    this.projectotherDetail.OpportunityType = event.Value !== undefined ? event.Value : this.projectotherDetail.OpportunityType;
     this.onProjectotherDetailsChange(data, this.projectotherDetail.OpportunityType);
   }
   //#endregion
 
   //#region "openedOfficeChange" for project oddice detail change
   openedOfficeChange(event: any, data: any) {
-    this.projectotherDetail.OfficeId = event.Value != undefined ? event.Value : this.projectotherDetail.OfficeId;
+    this.projectotherDetail.OfficeId = event.Value !== undefined ? event.Value : this.projectotherDetail.OfficeId;
     this.onProjectotherDetailsChange(data, this.projectotherDetail.OfficeId);
   }
   //#endregion
@@ -1915,7 +1898,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region "openedGenderChange"
   openedGenderChange(event: any, data: any) {
-    this.projectotherDetail.GenderConsiderationId = event.Value != undefined ? event.Value : this.projectotherDetail.GenderConsiderationId;
+    this.projectotherDetail.GenderConsiderationId = event.Value !== undefined ? event.Value : this.projectotherDetail.GenderConsiderationId;
     this.onProjectotherDetailsChange(data, this.projectotherDetail.GenderConsiderationId);
   }
   //#endregion

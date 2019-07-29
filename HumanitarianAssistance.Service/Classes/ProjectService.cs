@@ -1600,20 +1600,20 @@ namespace HumanitarianAssistance.Service.Classes
                     //bool securityPresent = _uow.GetDbContext().ProvinceMultiSelect.Any(x => x.ProjectId == model.ProjectId && x.IsDeleted == false);
                     var countryExist = _uow.GetDbContext().CountryMultiSelectDetails.Where(x => x.ProjectId == model.ProjectId && x.IsDeleted == false).ToList();
 
-                    var noExistCountryId = countryExist.Where(x => !model.CountryId.Contains(x.CountryId)).Select(x => x.CountryId).ToList();
+                    //var noExistCountryId = countryExist.Where(x => !model.CountryId.Contains(x.CountryId)).Select(x => x.CountryId).ToList();
 
                     if (countryExist.Any())
                     {
-                        var provinceExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => noExistCountryId.Contains(x.CountryMultiSelectDetails.CountryId) && x.IsDeleted == false).ToList();
+                        var provinceExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.IsDeleted == false).ToList();
                         if (provinceExist.Any())
                         {
-                            var district = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.IsDeleted == false).ToList();
-                            if (district.Any())
-                            {
-                                _uow.GetDbContext().DistrictMultiSelect.RemoveRange(district);
-                                _uow.GetDbContext().SaveChanges();
-                            }
                             _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
+                            _uow.GetDbContext().SaveChanges();
+                        }
+                        var district = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.IsDeleted == false).ToList();
+                        if (district.Any())
+                        {
+                            _uow.GetDbContext().DistrictMultiSelect.RemoveRange(district);
                             _uow.GetDbContext().SaveChanges();
                         }
                         _uow.GetDbContext().CountryMultiSelectDetails.RemoveRange(countryExist);
@@ -1639,22 +1639,22 @@ namespace HumanitarianAssistance.Service.Classes
                     _uow.GetDbContext().CountryMultiSelectDetails.AddRange(countryList);
                     _uow.GetDbContext().SaveChanges();
                 }
-                else
-                {
-                    var provinceExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.IsDeleted == false).ToList();
-                    if (provinceExist.Any())
-                    {
-                        _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
-                        _uow.GetDbContext().SaveChanges();
-                    }
-                    var district = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.IsDeleted == false).ToList();
-                    if (district.Any())
-                    {
-                        _uow.GetDbContext().DistrictMultiSelect.RemoveRange(district);
-                        _uow.GetDbContext().SaveChanges();
-                    }
+                //else
+                //{
+                //    var provinceExist = _uow.GetDbContext().ProvinceMultiSelect.Where(x => x.IsDeleted == false).ToList();
+                //    if (provinceExist.Any())
+                //    {
+                //        _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
+                //        _uow.GetDbContext().SaveChanges();
+                //    }
+                //    var district = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.IsDeleted == false).ToList();
+                //    if (district.Any())
+                //    {
+                //        _uow.GetDbContext().DistrictMultiSelect.RemoveRange(district);
+                //        _uow.GetDbContext().SaveChanges();
+                //    }
 
-                }
+                //}
                 //response.CommonId.Id = Convert.ToInt32(_detail.SecurityConsiderationId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -1696,37 +1696,34 @@ namespace HumanitarianAssistance.Service.Classes
                         _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
                         _uow.GetDbContext().SaveChanges();
                     }
-
-                    List<ProvinceMultiSelect> provinceList = new List<ProvinceMultiSelect>();
-
-                    foreach (var item in model.ProvinceId)
-                    {
-                        ProvinceMultiSelect _data = new ProvinceMultiSelect();
-
-                        _data.ProvinceId = item;
-                        _data.ProjectId = model.ProjectId;
-                        _data.IsDeleted = false;
-                        _data.CreatedById = UserId;
-                        _data.CreatedDate = DateTime.UtcNow;
-
-                        provinceList.Add(_data);
-                    }
-
-                    //Add
-                    _uow.GetDbContext().ProvinceMultiSelect.AddRange(provinceList);
-                    _uow.GetDbContext().SaveChanges();
                 }
                 else
                 {
-                    var district = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.IsDeleted == false).ToList();
-                    if (district.Any())
+                    var districtExist = _uow.GetDbContext().DistrictMultiSelect.Where(x => x.IsDeleted == false).ToList();
+                    if (districtExist.Any())
                     {
-                        _uow.GetDbContext().DistrictMultiSelect.RemoveRange(district);
+                        _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
                         _uow.GetDbContext().SaveChanges();
                     }
-
                 }
 
+                List<ProvinceMultiSelect> provinceList = new List<ProvinceMultiSelect>();
+
+                foreach (var item in model.ProvinceId)
+                {
+                    ProvinceMultiSelect _data = new ProvinceMultiSelect();
+
+                    _data.ProvinceId = item;
+                    _data.ProjectId = model.ProjectId;
+                    _data.IsDeleted = false;
+                    _data.CreatedById = UserId;
+                    _data.CreatedDate = DateTime.UtcNow;
+
+                    provinceList.Add(_data);
+                }
+                //Add
+                _uow.GetDbContext().ProvinceMultiSelect.AddRange(provinceList);
+                _uow.GetDbContext().SaveChanges();
                 //response.CommonId.Id = Convert.ToInt32(_detail.SecurityConsiderationId);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -5430,7 +5427,8 @@ namespace HumanitarianAssistance.Service.Classes
                                           ProjectJobName = x.ProjectJobDetail.ProjectJobName,
                                           CreatedDate = x.CreatedDate,
                                           DebitPercentage = ((x.VoucherTransactions.Where(y => y.IsDeleted == false &&
-                                                                              y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s => s.Debit)) / x.InitialBudget) * 100
+                                                                              y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s => s.Debit)) / x.InitialBudget) * 100,
+                                          Expenditure = (x.VoucherTransactions.Where(y => y.IsDeleted == false && y.VoucherDetails.CurrencyId == x.CurrencyId).Sum(s => s.Debit))
                                       })
                                       .Skip(budgeLineFilterModel.pageSize.Value * budgeLineFilterModel.pageIndex.Value)
                                       .Take(budgeLineFilterModel.pageSize.Value)

@@ -158,6 +158,7 @@ export interface SecurityModel {
   SecurityId?: number;
   SecurityName?: string;
 }
+// tslint:disable-next-line: class-name
 export interface strengthModel {
   StrengthConsiderationId?: number;
   StrengthConsiderationName?: string;
@@ -182,6 +183,7 @@ export interface SecurityModel {
   SecurityId?: number;
   SecurityName?: string;
 }
+// tslint:disable-next-line: class-name
 export interface strengthModel {
   StrengthConsiderationId?: number;
   StrengthConsiderationName?: string;
@@ -214,7 +216,8 @@ export interface UserListModel {
   Username?: string;
 }
 
-//multiselect
+// multiselect
+// tslint:disable-next-line: class-name
 export interface securityConsiderationMultiSelectModel {
   SecurityConsiderationMultiSelectId?: number;
   SecurityConsiderationId?: number[];
@@ -224,7 +227,7 @@ export interface securityConsiderationMultiSelectModel {
 export interface CountryMultiSelectModel {
   CountryMultiSelectId?: number;
   ProjectId?: number;
-  CountryId?: number[];
+  CountryId?: number;
   CountrySelectionId?: number;
 
 }
