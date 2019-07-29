@@ -3541,7 +3541,7 @@ namespace HumanitarianAssistance.Service.Classes
                      from financial in fi.DefaultIfEmpty()
                      join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri
                      from risk in ri.DefaultIfEmpty()
-                        
+
                      select new CriteriaEveluationModel
                      {
                          ProjectId = obj.ProjectId,
@@ -3613,7 +3613,7 @@ namespace HumanitarianAssistance.Service.Classes
                          ValueChain = purpose.ValueChain,
                          Women = purpose.Women,
                          Youth = purpose.Youth,
-                         Men=purpose.Men,
+                         Men = purpose.Men,
                          Children = purpose.Children,
                          Disabled = purpose.Disabled,
                          IDPs = purpose.IDPs,
@@ -3684,17 +3684,26 @@ namespace HumanitarianAssistance.Service.Classes
                          FocusDivertingrisk = risk.FocusDivertingrisk,
                          Financiallosses = risk.Financiallosses,
                          Opportunityloss = risk.Opportunityloss,
-
+                         Geographical=risk.Geographical,
+                         Insecurity = risk.Insecurity,
+                         Season = risk.Season,
+                         Ethnicity = risk.Ethnicity,
+                         Culture = risk.Culture,
+                         ReligiousBeliefs = risk.ReligiousBeliefs,
+                         CurrencyId =risk.CurrencyId,
+                         CurrencyName = risk.CurrencyDetails.CurrencyName,
                          //ProjectSelectionId = selected.ProjectSelectionId,
 
                          Probablydelaysinfunding = risk.Probablydelaysinfunding,
                          OtherOrganizationalHarms = risk.OtherOrganizationalHarms,
-                         OrganizationalDescription = risk.OrganizationalDescription
+                         OrganizationalDescription = risk.OrganizationalDescription,
+
+
                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
 
 
-                List<long?> selectedProjects = await  _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId &&
-                                                                                                     x.IsDeleted == false
+                List<long?> selectedProjects = await _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId &&
+                                                                                                    x.IsDeleted == false
                                                                                                 ).Select(x => x.ProjectSelectionId).
                                                                                                   ToListAsync();
 
@@ -3822,14 +3831,14 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
-        public APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId)
+        public async Task<APIResponse> AddEditRiskCriteria(RiskCriteriaModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             RiskCriteriaDetail _detail = new RiskCriteriaDetail();
             try
             {
-                _detail = _uow.GetDbContext().RiskCriteriaDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId &&
-                                                                                     x.IsDeleted == false);
+                _detail = await _uow.GetDbContext().RiskCriteriaDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
+                                                                                                x.IsDeleted == false);
                 if (_detail == null)
                 {
                     _detail = new RiskCriteriaDetail
@@ -3859,13 +3868,20 @@ namespace HumanitarianAssistance.Service.Classes
                         OtherOrganizationalHarms = model.OtherOrganizationalHarms,
                         OrganizationalDescription = model.OrganizationalDescription,
                         ProjectId = model.ProjectId.Value,
+                        Geographical = model.Geographical,
+                        Insecurity = model.Insecurity,
+                        Season = model.Season,
+                        Ethnicity = model.Ethnicity,
+                        Culture = model.Culture,
+                        ReligiousBeliefs = model.ReligiousBeliefs,
+                        CurrencyId = model.CurrencyId,
                         IsDeleted = false,
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow
                     };
 
 
-                    _uow.RiskCriteriaDetailRepository.Add(_detail);
+                    await _uow.RiskCriteriaDetailRepository.AddAsyn(_detail);
 
 
                 }
@@ -3896,26 +3912,33 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.OtherOrganizationalHarms = model.OtherOrganizationalHarms;
                     _detail.OrganizationalDescription = model.OrganizationalDescription;
                     _detail.ProjectId = model.ProjectId.Value;
+                    _detail.Geographical = model.Geographical;
+                    _detail.Insecurity = model.Insecurity;
+                    _detail.Season = model.Season;
+                    _detail.Ethnicity = model.Ethnicity;
+                    _detail.Culture = model.Culture;
+                    _detail.ReligiousBeliefs = model.ReligiousBeliefs;
+                    _detail.CurrencyId = model.CurrencyId;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.UtcNow;
-                    _uow.GetDbContext().RiskCriteriaDetail.Update(_detail);
-                    _uow.GetDbContext().SaveChanges();
+                    await _uow.RiskCriteriaDetailRepository.UpdateAsyn(_detail);
+                    await _uow.GetDbContext().SaveChangesAsync();
                 }
-
 
 
                 if (model.ProjectSelectionId != null)
                 {
                     //check is project exists
-                    bool projectPresent = _uow.GetDbContext().FinancialProjectDetail.Any(x => x.ProjectId == model.ProjectId &&
-                                                                                              x.IsDeleted == false);
+                    bool projectPresent = await _uow.GetDbContext().FinancialProjectDetail.AnyAsync(x => x.ProjectId == model.ProjectId &&
+                                                                                                         x.IsDeleted == false);
 
                     //if exist then remove
                     if (projectPresent)
                     {
-                        var projectExist = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == model.ProjectId &&
-                                                                                                 x.IsDeleted == false);
+                        FinancialProjectDetail projectExist = await _uow.GetDbContext().FinancialProjectDetail
+                                                                                       .FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
+                                                                                                                 x.IsDeleted == false);
 
                         // if exist then remove it
                         _uow.GetDbContext().FinancialProjectDetail.RemoveRange(projectExist);

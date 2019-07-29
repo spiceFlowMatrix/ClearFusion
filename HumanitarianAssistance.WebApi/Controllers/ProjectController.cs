@@ -980,7 +980,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
             if (user != null)
             {
                 var id = user.Id;
-                apiRespone = _iProject.AddEditRiskCriteria(Model, id);
+                apiRespone = await _iProject.AddEditRiskCriteria(Model, id);
             }
             return apiRespone;
         }

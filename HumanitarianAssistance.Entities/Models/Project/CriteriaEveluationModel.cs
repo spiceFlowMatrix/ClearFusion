@@ -154,6 +154,14 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? OtherOrganizationalHarms { get; set; }
         public string OrganizationalDescription { get; set; }
         public bool? IsCriteriaEvaluationSubmit { get; set; }
+        public int? CurrencyId { get; set; }
+        public bool? Geographical { get; set; }
+        public bool? Insecurity { get; set; }
+        public bool? Season { get; set; }
+        public bool? Ethnicity { get; set; }
+        public bool? Culture { get; set; }
+        public bool? ReligiousBeliefs { get; set; }
+        public string CurrencyName { get; set; }
 
     }
 }

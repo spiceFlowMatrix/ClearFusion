@@ -103,7 +103,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetBudgetLinesByMultipleProjectJobIds(List<long?> projectJobIds);
         #region GetAllProvinceDetails
         APIResponse GetAllProvinceDetails();
-        APIResponse GetAllProvinceDetailsByCountryId(int[] countryId); 
+        APIResponse GetAllProvinceDetailsByCountryId(int[] countryId);
         APIResponse GetAllStrengthConsiderationDetails();
         APIResponse GetAllGenderConsiderationDetails();
         APIResponse GetAllSecurityDetails();
@@ -122,10 +122,10 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddEditPurposeofInitiativeCriteria(PurposeofInitiativeCriteriaModel model, string UserId);
         APIResponse AddEditEligibilityCriteriaDetail(EligibilityCriteriaDetailModel model, string UserId);
         APIResponse AddEditFeasibilityCriteria(FeasibilityCriteriaModel model, string UserId);
-       Task<APIResponse> GetAllCriteriaEvaluationDetalByProjectId(long projectId);
-       Task<APIResponse> AddEditPriorityCriteria(PriorityCriteriaModel model, string UserId);
+        Task<APIResponse> GetAllCriteriaEvaluationDetalByProjectId(long projectId);
+        Task<APIResponse> AddEditPriorityCriteria(PriorityCriteriaModel model, string UserId);
         APIResponse AddEditFinancialCriteria(FinancialCriteriaModel model, string UserId);
-        APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId);
+        Task<APIResponse> AddEditRiskCriteria(RiskCriteriaModel model, string UserId);
         APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId);
 
         APIResponse AddEditFinancialProjectDetail(FinancialProjectDetailModel model, string UserId);
