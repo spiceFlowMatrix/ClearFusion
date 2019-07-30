@@ -104,21 +104,21 @@ namespace HumanitarianAssistance.Service.Classes
                     await _uow.GetDbContext().DocumentFileDetail.AddAsync(fileDetail);
                     await _uow.GetDbContext().SaveChangesAsync();
 
-                    switch (model.PageId)
-                    {
-                        case (int)FileSourceEntityTypes.Voucher:
+                    //switch (model.PageId)
+                    //{
+                    //    case (int)FileSourceEntityTypes.Voucher:
 
                             //add entry to voucherdocumentdetail table
-                            VoucherDocumentDetail voucherDocumentDetail = new VoucherDocumentDetail();
-                            voucherDocumentDetail.CreatedDate = DateTime.UtcNow;
-                            voucherDocumentDetail.CreatedById = model.CreatedById;
-                            voucherDocumentDetail.DocumentFileId = fileDetail.DocumentFileId;
-                            voucherDocumentDetail.VoucherNo = model.RecordId;
-                            voucherDocumentDetail.IsDeleted = false;
-                            await _uow.GetDbContext().VoucherDocumentDetail.AddAsync(voucherDocumentDetail);
-                            await _uow.GetDbContext().SaveChangesAsync();
-                            break;
-                    }
+                            EntitySourceDocumentDetail docDetail = new EntitySourceDocumentDetail();
+                    docDetail.CreatedDate = DateTime.UtcNow;
+                    docDetail.CreatedById = model.CreatedById;
+                    docDetail.DocumentFileId = fileDetail.DocumentFileId;
+                    docDetail.EntityId = model.RecordId;
+                    docDetail.IsDeleted = false;
+                     await _uow.GetDbContext().EntitySourceDocumentDetails.AddAsync(docDetail);
+                     await _uow.GetDbContext().SaveChangesAsync();
+                            //break;
+                    //}
                 }
                
                 response.StatusCode = StaticResource.successStatusCode;
@@ -143,21 +143,22 @@ namespace HumanitarianAssistance.Service.Classes
 
                     List<FileListModel> fileList = new List<FileListModel>();
 
-                    switch (model.PageId)
-                    {
-                        case (int)FileSourceEntityTypes.Voucher:
+                    //switch (model.PageId)
+                    //{
+                    //    case (int)FileSourceEntityTypes.Voucher:
 
-                            fileList = await _uow.GetDbContext().VoucherDocumentDetail
-                                               .Include(x => x.DocumentFileDetail)
-                                               .Where(x => x.IsDeleted == false && x.VoucherNo == model.RecordId)
-                                               .Select(x => new FileListModel
-                                               {
-                                                   FileName = x.DocumentFileDetail.Name,
-                                                   FilePath = x.DocumentFileDetail.StorageDirectoryPath,
-                                                   DocumentFileId= x.DocumentFileId
-                                               }).ToListAsync();
-                            break;
-                    }
+                    fileList = await _uow.GetDbContext().EntitySourceDocumentDetails
+                                       .Include(x => x.DocumentFileDetail)
+                                       .Where(x => x.IsDeleted == false && x.EntityId == model.RecordId
+                                              && x.DocumentFileDetail.PageId== model.PageId)
+                                       .Select(x => new FileListModel
+                                       {
+                                           FileName = x.DocumentFileDetail.Name,
+                                           FilePath = x.DocumentFileDetail.StorageDirectoryPath,
+                                           DocumentFileId = x.DocumentFileId
+                                       }).ToListAsync();
+                    //        break;
+                    //}
 
                     if (fileList.Any())
                     {
@@ -219,23 +220,35 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 if (model.DocumentFileId != null)
                 {
-                    switch (model.PageId)
-                    {
-                        case (int)FileSourceEntityTypes.Voucher:
+                    //switch (model.PageId)
+                    //{
+                    //    case (int)FileSourceEntityTypes.Voucher:
 
-                            var result = await _uow.GetDbContext()
-                                       .VoucherDocumentDetail
-                                       .Include(x => x.DocumentFileDetail)
-                                       .FirstOrDefaultAsync(x => x.IsDeleted == false && x.DocumentFileId == model.DocumentFileId);
+                    //        //var result = await _uow.GetDbContext()
+                    //        //           .VoucherDocumentDetail
+                    //        //           .Include(x => x.DocumentFileDetail)
+                    //        //           .FirstOrDefaultAsync(x => x.IsDeleted == false && x.DocumentFileId == model.DocumentFileId);
 
-                            result.IsDeleted = true;
-                            result.DocumentFileDetail.IsDeleted = true;
+                    //        //result.IsDeleted = true;
+                    //        //result.DocumentFileDetail.IsDeleted = true;
 
-                             _uow.GetDbContext().VoucherDocumentDetail.Update(result);
-                             await _uow.GetDbContext().SaveChangesAsync();
+                    //        // _uow.GetDbContext().VoucherDocumentDetail.Update(result);
+                    //        // await _uow.GetDbContext().SaveChangesAsync();
 
-                            break;
-                    }
+                    //        break;
+                    //}
+
+
+                    var result = await _uow.GetDbContext()
+                               .EntitySourceDocumentDetails
+                               .Include(x => x.DocumentFileDetail)
+                               .FirstOrDefaultAsync(x => x.IsDeleted == false && x.DocumentFileId == model.DocumentFileId);
+
+                    result.IsDeleted = true;
+                    result.DocumentFileDetail.IsDeleted = true;
+
+                    _uow.GetDbContext().EntitySourceDocumentDetails.Update(result);
+                    await _uow.GetDbContext().SaveChangesAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;

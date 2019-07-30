@@ -34,6 +34,8 @@ import { MonitoringModel } from 'src/app/dashboard/project-management/project-li
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { IProjectRoles } from '../project-details/models/project-people.model';
+import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
+import { projectPagesMaster } from 'src/app/shared/applicationpagesenum';
 @Injectable({
   providedIn: 'root'
 })
@@ -124,10 +126,68 @@ export class ProjectListService {
     }
   ];
 
+
+  menuList: IMenuList[] = [
+    {
+      Id: 1,
+      PageId: projectPagesMaster.ProjectDetails,
+      Text: 'Details',
+      Link: 'detail'
+    },
+    {
+      Id: 2,
+      PageId: projectPagesMaster.CriteriaEvaluation,
+      Text: 'Criteria Evaluation',
+      Link: 'criteria-evaluation'
+    },
+    {
+      Id: 3,
+      PageId: projectPagesMaster.Proposal,
+      Text: 'Proposal',
+      Link: 'proposal'
+    },
+    {
+      Id: 4,
+      PageId: projectPagesMaster.ProjectJobs,
+      Text: 'Project Jobs',
+      Link: 'project-jobs'
+    },
+    {
+      Id: 5,
+      PageId: projectPagesMaster.ProjectBudgetLine,
+      Text: 'Budget Lines',
+      Link: 'budget-lines'
+    },
+    {
+      Id: 6,
+      PageId: projectPagesMaster.ProjectActivities,
+      Text: 'Project Activities',
+      Link: 'project-activities'
+    },
+    {
+      Id: 7,
+      PageId: projectPagesMaster.ProjectPeople,
+      Text: 'People',
+      Link: 'people'
+    },
+    {
+      Id: 8,
+      PageId: projectPagesMaster.HiringRequests,
+      Text: 'Hiring Requests',
+      Link: 'hiring-request'
+    }
+  ];
+
   constructor(
     private globalService: GlobalService,
     private appurl: AppUrlService
   ) {}
+
+  //#region "AddProjectDetail"
+  getAllProjectMenu(): IMenuList[]  {
+    return this.menuList;
+  }
+  //#endregion
 
   //#region "AddProjectDetail"
   AddProjectDetail(url: string, data: ProjectDetailModel) {

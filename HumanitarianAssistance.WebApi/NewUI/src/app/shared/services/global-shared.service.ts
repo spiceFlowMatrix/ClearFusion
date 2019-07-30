@@ -84,7 +84,7 @@ export class GlobalSharedService {
   //#endregion
 
   //#region "uploadFile"
-  uploadFile(pageId: number, recordId: number, file: any) {
+  uploadFile(pageId: number, entityId: number, file: any) {
     let objectName = SignedUrlObjectName.getSignedURLObjectName(pageId);
 
     if (objectName == null && objectName === '' && objectName === undefined) {
@@ -94,7 +94,8 @@ export class GlobalSharedService {
     objectName = objectName + file.name;
 
     const DownloadObjectGCBucketModel = {
-      ObjectName: objectName
+      ObjectName: objectName,
+      FileName: file.name
     };
 
      return this.globalService
@@ -121,7 +122,7 @@ export class GlobalSharedService {
                     FileSize: file.size,
                     FileType: file.type,
                     PageId: pageId,
-                    RecordId: recordId
+                    RecordId: entityId
                   };
 
                    return this.saveUploadedFileInfo(data)
@@ -139,7 +140,8 @@ export class GlobalSharedService {
           }
         }));
   }
-  //#endregion
+  ////#endregion
+
 
   //#region "saveUploadedFileInfo"
   saveUploadedFileInfo(data: FileModel) {

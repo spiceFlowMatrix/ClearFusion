@@ -1,28 +1,14 @@
-using DataAccess;
+using AutoMapper;
 using DataAccess.Data;
 using DataAccess.DbEntities;
-using HumanitarianAssistance.Common.ApplicationSettings;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Entities;
-using HumanitarianAssistance.Service;
-using HumanitarianAssistance.Service.Classes;
-using HumanitarianAssistance.Service.Classes.AccountingNew;
-using HumanitarianAssistance.Service.Classes.Marketing;
-using HumanitarianAssistance.Service.Classes.ProjectManagement;
-using HumanitarianAssistance.Service.interfaces;
-using HumanitarianAssistance.Service.interfaces.AccountingNew;
-using HumanitarianAssistance.Service.interfaces.Marketing;
-using HumanitarianAssistance.Service.interfaces.ProjectManagement;
-using HumanitarianAssistance.WebApi;
-using HumanitarianAssistance.WebApi.Auth;
-using HumanitarianAssistance.WebApi.ChaHub;
 using HumanitarianAssistance.WebApi.Extensions;
 using HumanitarianAssistance.WebApi.Filter;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using HumanitarianAssistance.WebApi.SignalRHub;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -33,12 +19,9 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Swagger;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,7 +29,7 @@ namespace HumanitarianAssistance.WebApi
 {
     public class Startup
     {
-        private string DefaultCorsPolicyName;
+        private string defaultCorsPolicyName;
         private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
         public static IHostingEnvironment _Env;
@@ -62,9 +45,6 @@ namespace HumanitarianAssistance.WebApi
             .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
             .AddEnvironmentVariables();
 
-            //string sAppPath = env.ContentRootPath; //Application Base Path
-            //string swwwRootPath = env.WebRootPath; //wwwroot folder path
-
             Configuration = builder.Build();
         }
 
@@ -76,26 +56,16 @@ namespace HumanitarianAssistance.WebApi
             //get and set environment variable at run time
             string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
             string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
+            string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
 
-            DefaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
+            defaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
-            string DefaultCorsPolic = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
-            string DefaultCorsPolicyUrl = Configuration["DEFAULT_CORS_POLICY_URL"];
-
-            string WebSiteUrl = Environment.GetEnvironmentVariable("WEB_SITE_URL");
-
+            // Database connection
             Console.WriteLine("Connection string: {0}\n", connectionString);
-
-            // use it to host on IIS
-            // services.Configure<IISOptions>(options =>
-            // {
-            //     options.AutomaticAuthentication = false;
-            // });
-
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
 
-            // ===== Add Identity ========
+            // Add Identity
             services.AddIdentity<AppUser, IdentityRole>(o =>
             {
                 o.Password.RequireDigit = false;
@@ -105,180 +75,52 @@ namespace HumanitarianAssistance.WebApi
                 o.Password.RequiredLength = 6;
 
             }).AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+              .AddDefaultTokenProviders();
 
 
-            services.AddSingleton<IFileProvider>(
-            new PhysicalFileProvider(
-            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
-            services.AddSingleton<IRole, RoleService>();
-            services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
-            services.Configure<WebSiteUrl>(Configuration.GetSection("WEB_SITE_URL"));
-            services.Configure<SwaggerEndPoint>(Configuration.GetSection("SwaggerEndPoint"));
-            services.AddSingleton<IJwtFactory, JwtFactory>();
-            services.AddTransient<IPermissions, PermissionService>();
-            services.AddTransient<IOfficeDetails, OfficeDetailsService>();
-            services.AddTransient<IPermissionsInRoles, PermissionsInRolesService>();
-            services.AddTransient<IUserDetails, UserDetailsService>();
-            services.AddTransient<ICurrency, CurrencyService>();
-            services.AddTransient<IJournalDetail, JournalDetailService>();
-            services.AddTransient<IEmailSetting, EmailSettingService>();
-            services.AddTransient<IChartAccoutDetail, ChartAccountDetailService>();
-            services.AddTransient<IVoucherDetail, VoucherDetailService>();
-            services.AddTransient<IExchangeRate, ExchangeRateService>();
-            services.AddTransient<IHREmployee, HREmployeeService>();
-            services.AddTransient<IDesignation, DesignationService>();
-            services.AddTransient<IAccountBalance, AccountBalanceService>();
-            services.AddTransient<IProfession, ProfessionService>();
-            services.AddTransient<ICode, CodeService>();
-            services.AddTransient<ITaskAndActivity, TaskAndActivityService>();
-            services.AddTransient<IStore, StoreService>();
-            services.AddTransient<INotificationManager, NotificationManagerService>();
-            services.AddTransient<IEmployeeDetail, EmployeeDetailService>();
-            services.AddTransient<IEmployeeHR, EmployeeHRService>();
-            services.AddTransient<IAccountRecords, AccountReportsService>();
-            services.AddTransient<IProject, ProjectService>();
-            services.AddTransient<IMasterPageService, MasterPageService>();
-            services.AddTransient<IJobDetailsService, JobDetailsService>();
-            services.AddTransient<IContractDetailsService, ContractDetailService>();
-            services.AddTransient<IChartOfAccountNewService, ChartOfAccountNewService>();
-            services.AddTransient<IPolicyService, PolicyService>();
-            services.AddTransient<IClientDetails, ClientDetailsService>();
-            services.AddTransient<IVoucherNewService, VoucherNewService>();
-            services.AddTransient<ISchedulerService, SchedulerService>();
-            services.AddTransient<IAccountBalance, AccountBalanceService>();
-            services.AddTransient<IProjectActivityService, ProjectActivityService>();
-            services.AddTransient<IDashboardService, DashboardService>();
-            services.AddTransient<IProjectPeopleService, ProjectPeopleService>();
-            services.AddTransient<IFileManagement, FileManagementService>();
-            services.AddTransient<IHiringRequestService, HiringRequestService>();
-            //services.AddTransient<UserManager<AppUser>>();
+            // Dependency Injection
+            services.AddDependencyInjection(Configuration);
 
-            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
-            // Configure JwtIssuerOptions
-
-            services.Configure<JwtIssuerOptions>(options =>
-            {
-                options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
-                options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
-                options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
-            });
-
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                // The signing key must match!
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = _signingKey,
-                // Validate the JWT Issuer (iss) claim
-                ValidateIssuer = true,
-                ValidIssuer = Configuration.GetSection("JwtIssuerOptions:Issuer").Value,
-                // Validate the JWT Audience (aud) claim
-                ValidateAudience = true,
-                ValidAudience = Configuration.GetSection("JwtIssuerOptions:Audience").Value,
-                // Validate the token expiry
-                ValidateLifetime = true,
-                // If you want to allow a certain amount of clock drift, set that here:
-                ClockSkew = TimeSpan.Zero
-            };
-
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
-
-            services
-            .AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            })
-            .AddJwtBearer(cfg =>
-            {
-                cfg.RequireHttpsMetadata = false;
-                cfg.SaveToken = true;
-                cfg.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidIssuer = Configuration["JwtIssuerOptions:Issuer"],
-                    ValidAudience = Configuration["JwtIssuerOptions:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
-                    RequireExpirationTime = true,
-                    ClockSkew = TimeSpan.Zero
-
-
-                };
-            });
+            // AutoMapper will scan our assembly and look for classes that inherit from Profile, then load their mapping configurations.
+            services.AddAutoMapper();
 
             // api user claim policy
             services.AddAuthorization(options =>
             {
-                // options.AddPolicy("Trust", policy => policy.RequireClaim("Permission", "dashboardhome"));
                 options.AddPolicy("Trust", policy => policy.RequireClaim("Roles", "Admin", "SuperAdmin", "Accounting Manager", "HR Manager", "Project Manager", "Administrator"));
-                options.AddPolicy("DepartmentUser", policy => policy.RequireClaim("OfficeCode"));
-                options.AddPolicy("HRManager", policy => policy.RequireClaim("Roles", "HR Manager"));
-                options.AddPolicy("Accounting", policy => policy.RequireClaim("Roles", "Accounting Manager"));
-
-                options.AddPolicy("DepartmentUser", policy => policy.RequireClaim("DepartmentId"));
-
             });
-            var config1 = new AutoMapper.MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new AutoMapperProfile());
-            });
-
-            var mapper = config1.CreateMapper();
-            services.AddSingleton(mapper);
 
             //For Cors Setting
             services.AddCors(options =>
             {
-                options.AddPolicy(DefaultCorsPolicyName, p =>
+                options.AddPolicy(defaultCorsPolicyName, p =>
                 {
-                    //todo: Get from confiuration
-                    p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
+                    //todo: Get from configuration
+                    p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+
                 });
             });
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // set compatibility
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddMvc()
-            .AddJsonOptions(config =>
+            // filter & default response set to json  
+            services.AddMvc(c => { c.Filters.Add(typeof(CustomException)); })
+            .AddJsonOptions(c =>
             {
-    // config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-    config.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
-                config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                c.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+                c.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
-            services.AddMvc(
-            config => { config.Filters.Add(typeof(CustomException)); }
-            ).AddJsonOptions(a => a.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
 
             services.AddRouting();
             services.AddSignalR();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1.0", new Info { Title = "Humanitarian Assistance API v1.0", Version = "v1.0" });
 
-                // Swagger 2.+ support
-                var security = new Dictionary<string, IEnumerable<string>>
-{
-{"Bearer", new string[] { }},
-};
+            // Jwt Config
+            services.AddJwtAuthentication(Configuration);
 
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = "header",
-                    Type = "apiKey"
-                });
-                c.AddSecurityRequirement(security);
-
-                // Set the comments path for the Swagger JSON and UI.
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-                //});
-            });
+            // swagger configuration
+            services.AddSwaggerDocumentation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -302,19 +144,17 @@ namespace HumanitarianAssistance.WebApi
             app.UseStaticFiles();
 
             app.UseCookiePolicy();
-            app.UseCors(DefaultCorsPolicyName);
+            app.UseCors(defaultCorsPolicyName);
             app.UseAuthentication();
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "My API V1");
-                // c.SwaggerEndpoint("/swagger/accounting/swagger.json", "Accounting API's");
-            });
+            // swagger configuration
+            app.UseSwaggerDocumentation();
 
+            // signal-R
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ProjectChatHub>("/chathub");
+               // routes.MapHub<ChatHub>("/chathub");
+                routes.MapHub<NotifyHub>("/notifyhub");
             });
 
             app.UseMvc(routes =>
@@ -324,43 +164,16 @@ namespace HumanitarianAssistance.WebApi
                 template: "{controller}/{action=Index}/{id?}");
             });
 
-            // for each angular client we want to host. 
-            app.Map(new PathString("/newui"), client =>
-            {
+            // NOTE: Use to update web.config for redirection redirection 
+            // var options = new RewriteOptions()
+            //            // .AddRedirect("redirect-rule/(.*)", "redirected/$1")
+            //            // .AddRewrite(@"^rewrite-rule/(\d+)/(\d+)", "rewritten?var1=$1&var2=$2", 
+            //            //     skipRemainingRules: true)
+            //            .AddRedirect("$", "newui")
+            //            .AddRewrite(@"^$", "newui", skipRemainingRules: true);
 
-                string oldUiPath = env.IsDevelopment() ? "NewUI" : @"NewUI/dist";
+            // app.UseRewriter(options);
 
-                // Each map gets its own physical path
-                // for it to map the static files to. 
-                StaticFileOptions olduiDist = new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(
-                            Path.Combine(Directory.GetCurrentDirectory(), oldUiPath)
-                        )
-                };
-
-                // Each map its own static files otherwise
-                // it will only ever serve index.html no matter the filename 
-                client.UseSpaStaticFiles(olduiDist);
-
-
-                client.UseSpa(spa =>
-                {
-                    spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
-                    spa.Options.SourcePath = "NewUI";
-
-                    if (env.IsDevelopment())
-                    {
-                        // it will use package.json & will search for start command to run
-                        spa.UseAngularCliServer(npmScript: "start");
-                    }
-                    else
-                    {
-                        spa.Options.DefaultPageStaticFileOptions = olduiDist;
-                    }
-
-                });
-            });
 
             // for each angular client we want to host. 
             app.Map(new PathString("/oldui"), client =>
@@ -393,6 +206,31 @@ namespace HumanitarianAssistance.WebApi
                         spa.Options.DefaultPageStaticFileOptions = olduiDist;
                     }
                 });
+            });
+
+            // without map redirect to newui
+            string defaultPath = env.IsDevelopment() ? "NewUI" : @"NewUI/dist";
+            StaticFileOptions defaultDist = new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), defaultPath)
+                    )
+            };
+            app.UseSpaStaticFiles(defaultDist);
+            app.UseSpa(spa =>
+            {
+                spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                spa.Options.SourcePath = "NewUI";
+
+                if (env.IsDevelopment())
+                {
+                    // it will use package.json & will search for start command to run
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+                else
+                {
+                    spa.Options.DefaultPageStaticFileOptions = defaultDist;
+                }
             });
 
         }
@@ -437,7 +275,6 @@ namespace HumanitarianAssistance.WebApi
                 }
             }
         }
-
 
     }
 }
