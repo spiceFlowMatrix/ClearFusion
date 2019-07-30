@@ -2054,11 +2054,11 @@ export class ProgramAreaSectorComponent implements OnInit {
       OpportunityDescription: this.projectotherDetail.opportunitydescription != null ? this.projectotherDetail.opportunitydescription : '',
 
       Country: this.CountrySelectionList.find(x => x.value === this.countryMultiSelectModel.CountryId) != null ? this.CountrySelectionList.find(x => x.value === this.countryMultiSelectModel.CountryId).label : '',
-      Province: this.projectotherDetail.ProvinceId.map(x => this.ProvinceSelectionList.filter(y => y.value === x).map(z => z.label)).toString(),
+      Province: this.provinceMultiSelectModel.ProvinceId.map(x => this.ProvinceSelectionList.filter(y => y.value === x).map(z => z.label)).toString(),
       District: this.districtMultiSelctModel.DistrictID.map(x => this.DistrictMultiSelectList.filter(y => y.value === x).map(z => z.label)).toString(),
       Office: this.donorDataSource.find(x => x.Id === this.projectotherDetail.OfficeId) != null ? this.officeDataSource.find(x => x.Id === this.projectotherDetail.OfficeId).Name : '', 
-      Sector: this.Sectorlist.find(x => x.SectorId === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '', 
-      // Program: this.Programlist.find(x => x.ProgramId === this.projectotherDetail.projectGoal) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
+      Sector: this.Sector.toString(),
+      Program: this.Program.toString(),
       StartDate: this.projectotherDetail.StartDate != null ? this.projectotherDetail.StartDate : '',
       EndDate: this.projectotherDetail.EndDate != null ? this.projectotherDetail.EndDate : '',
   
@@ -2085,10 +2085,7 @@ export class ProgramAreaSectorComponent implements OnInit {
   
       // Security Consideration
       Security: this.projectotherDetail.StrengthConsiderationId != null ? this.Securitylist.find(x => x.SecurityId === this.projectotherDetail.SecurityId).SecurityName : '',
-      SecurityConsideration: '',
-      // this.projectotherDetail.StrengthConsiderationId != null ? 
-      //                             this.securityConsDataSource.filter(x => x.Id === this.projectotherDetail.SecurityConsiderationId)
-      //                             .SecurityName : '',
+      SecurityConsideration: this.securityConsiderationMultiselect.SecurityConsiderationId.map(x => this.securityConsDataSource.filter(y => y.Id === x).map(z => z.Name)).toString(),
       SecurityRemarks: this.projectotherDetail.SecurityRemarks != null ? this.projectotherDetail.SecurityRemarks : ''
     };
   }
