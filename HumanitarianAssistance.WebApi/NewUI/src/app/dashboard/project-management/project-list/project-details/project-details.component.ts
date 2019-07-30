@@ -23,7 +23,7 @@ export class ProjectDetailsComponent implements OnInit {
   setProjectHeader = 'Project';
   isProjectWin = false;
 
-  menuList: IMenuList[] = this.projectListService.menuList;
+  menuList: IMenuList[] ;
   authorizedMenuList: IMenuList[] = [];
 
   // screen scroll
@@ -41,8 +41,18 @@ export class ProjectDetailsComponent implements OnInit {
   ) {
 
     this.getScreenSize();
-
     this.projectId = +this.routeActive.snapshot.paramMap.get('id');
+
+    this.menuList = [];
+
+    this.projectListService.menuList.forEach(x => {
+      this.menuList.push({
+        Id: x.Id,
+        PageId: x.PageId,
+        Text: x.Text,
+        Link: x.Link
+      });
+    });
 
     this.menuList.map(
       x => (x.Link = this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) + x.Link)

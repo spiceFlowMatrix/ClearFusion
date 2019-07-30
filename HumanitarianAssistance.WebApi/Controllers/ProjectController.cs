@@ -943,7 +943,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
     {
       APIResponse apiRespone = null;
 
-      apiRespone =await _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
+      apiRespone = await _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
 
             return apiRespone;
         }

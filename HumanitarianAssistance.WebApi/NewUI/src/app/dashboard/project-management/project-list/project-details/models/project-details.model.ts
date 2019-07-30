@@ -468,3 +468,7 @@ export interface IAddPeoplePermissionModel {
   UserId: number;
   RoleId: number;
 }
+export interface CurrencyDetailModel {
+  ProjectId: number;
+  CurrencyId: number;
+}

@@ -3541,6 +3541,9 @@ namespace HumanitarianAssistance.Service.Classes
                      from financial in fi.DefaultIfEmpty()
                      join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri
                      from risk in ri.DefaultIfEmpty()
+                      join currency in _uow.GetDbContext().ProjectProposalDetail on obj.ProjectId equals currency.ProjectId into cr
+                     from currency in ri.DefaultIfEmpty()
+                     
 
                      select new CriteriaEveluationModel
                      {
@@ -3684,14 +3687,14 @@ namespace HumanitarianAssistance.Service.Classes
                          FocusDivertingrisk = risk.FocusDivertingrisk,
                          Financiallosses = risk.Financiallosses,
                          Opportunityloss = risk.Opportunityloss,
-                         Geographical=risk.Geographical,
+                         Geographical = risk.Geographical,
                          Insecurity = risk.Insecurity,
                          Season = risk.Season,
                          Ethnicity = risk.Ethnicity,
                          Culture = risk.Culture,
                          ReligiousBeliefs = risk.ReligiousBeliefs,
-                         CurrencyId =risk.CurrencyId,
-                         CurrencyName = risk.CurrencyDetails.CurrencyName,
+                         CurrencyId =  currency.CurrencyId,
+
                          //ProjectSelectionId = selected.ProjectSelectionId,
 
                          Probablydelaysinfunding = risk.Probablydelaysinfunding,
@@ -3703,7 +3706,7 @@ namespace HumanitarianAssistance.Service.Classes
 
 
                 List<long?> selectedProjects = await _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId &&
-                                                                                                    x.IsDeleted == false
+                                                                                                   x.IsDeleted == false
                                                                                                 ).Select(x => x.ProjectSelectionId).
                                                                                                   ToListAsync();
 
@@ -3874,7 +3877,6 @@ namespace HumanitarianAssistance.Service.Classes
                         Ethnicity = model.Ethnicity,
                         Culture = model.Culture,
                         ReligiousBeliefs = model.ReligiousBeliefs,
-                        CurrencyId = model.CurrencyId,
                         IsDeleted = false,
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow
@@ -3882,7 +3884,6 @@ namespace HumanitarianAssistance.Service.Classes
 
 
                     await _uow.RiskCriteriaDetailRepository.AddAsyn(_detail);
-
 
                 }
                 else
@@ -3918,13 +3919,14 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.Ethnicity = model.Ethnicity;
                     _detail.Culture = model.Culture;
                     _detail.ReligiousBeliefs = model.ReligiousBeliefs;
-                    _detail.CurrencyId = model.CurrencyId;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.UtcNow;
                     await _uow.RiskCriteriaDetailRepository.UpdateAsyn(_detail);
                     await _uow.GetDbContext().SaveChangesAsync();
+                   
                 }
+
 
 
                 if (model.ProjectSelectionId != null)
@@ -3976,6 +3978,7 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
+
         public APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId)
         {
             APIResponse response = new APIResponse();

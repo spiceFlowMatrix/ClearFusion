@@ -18,7 +18,9 @@ import {
   ProductAndServiceCEModel,
   TargetBeneficiaryModel,
   FinancialProjectDetailModel,
-  CurrencyModel
+  CurrencyModel,
+  ProposalDocModel,
+  CurrencyDetailModel
 } from '../project-details/models/project-details.model';
 import { CriteriaEvaluationService } from '../service/criteria-evaluation.service';
 import { GLOBAL } from 'src/app/shared/global';
@@ -116,7 +118,7 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   productAndServiceForm: ProductAndServiceCEModel;
   projectSelctionForm: FinancialProjectDetailModel;
   IsSubmitCEform: ICEisCESubmitModel;
-
+  currencyDetailModel: CurrencyDetailModel;
   ProjectId: any;
   CostOfCompensation: FormControl;
   TotalProjectActivity: any;
@@ -259,6 +261,7 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     this.GetOccupationByProjectId(this.ProjectId);
     this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
     this.initIsSubmitCE();
+    this.initCurrencyDetailModel();
     this.getScreenSize();
   }
 
@@ -541,6 +544,13 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       ProjectId: null,
 
       IsCriteriaEvaluationSubmit: false
+    };
+  }
+
+  initCurrencyDetailModel() {
+    this.currencyDetailModel = {
+ ProjectId: null,
+ CurrencyId: null,
     };
   }
   //#endregion
@@ -1241,6 +1251,8 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     } else if (value.checked === true) {
       this.projectallowedByLaw =
         criteriaEvaluationScores.projectAllowedByLaw_Yes;
+        this.isExpanded = true;
+      this.disableCriteriaEvaluationForm = false;
     } else {
       // this.toastr.warning('Project should be allowed by law');
       this.projectallowedByLaw =
@@ -1262,7 +1274,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   }
 
   onIsProjectPracticalChange(value) {
-    debugger;
     if (value.checked === true) {
       this.isProjectPractical = criteriaEvaluationScores.isProjectPractical_Yes;
     } else {
@@ -1617,7 +1628,7 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       this.isDisabledReputation = false;
       // this.riskReputation = criteriaEvaluationScores.riskSecurity_Yes
     } else {
-      this.isDisabledReputation = false;
+      this.isDisabledReputation = true;
       this.riskForm.Religious = false;
       this.riskForm.Sectarian = false;
       this.riskForm.Ethinc = false;
@@ -2218,7 +2229,7 @@ GetAllCurrency() {
                   data.data.CriteriaEveluationModel.OverallOrganization;
                 this.riskForm.DeliveryFaiLure =
                   data.data.CriteriaEveluationModel.DeliveryFaiLure;
-                if (this.riskForm.DeliveryFaiLure == true) {
+                if (this.riskForm.DeliveryFaiLure === true) {
                   this.isDisabledDelivery = false;
                 } else {
                   this.isDisabledDelivery = true;
@@ -2231,7 +2242,7 @@ GetAllCurrency() {
                   data.data.CriteriaEveluationModel.DesctructionByTerroristActivity;
                 this.riskForm.Reputation =
                   data.data.CriteriaEveluationModel.Reputation;
-                if (this.riskForm.Reputation == true) {
+                if (this.riskForm.Reputation === true) {
                   this.isDisabledReputation = false;
                 } else {
                   this.isDisabledReputation = true;
@@ -2254,6 +2265,7 @@ GetAllCurrency() {
                   data.data.CriteriaEveluationModel.Ethnicity;
                   this.riskForm.Culture =
                   data.data.CriteriaEveluationModel.Culture;
+                  this.currencyDetailModel.CurrencyId = data.data.CriteriaEveluationModel.CurrencyId;
                   this.riskForm.ReligiousBeliefs =
                   data.data.CriteriaEveluationModel.ReligiousBeliefs;
                 this.riskForm.FocusDivertingrisk =
@@ -2609,14 +2621,41 @@ GetAllCurrency() {
   //#endregion
 
 //#region "currencyDetailsChange"
-currencyDetailsChange(ev, data: any ) {
-  // this.currencyDetailLoader = true;
-  if (data != null && data !== '' && data !== undefined) {
-    if (ev === 'currencySelction') {
-      this.riskForm.CurrencyId = data;
-      this.AddEditRiskSecurityCEForm(this.riskForm);
-    }
+currencyDetailsChange(value) {
+  this.currencyDetailModel.CurrencyId = value;
+  this.currencyDetailModel.ProjectId = this.ProjectId;
+  this.AddEditProjectProposal(this.currencyDetailModel);
   }
+
+//#endregion
+
+//#region  add/edit other project
+AddEditProjectProposal(model: any) {
+  const currencyModel: CurrencyDetailModel = {
+    ProjectId: model.ProjectId,
+    CurrencyId: model.CurrencyId,
+  };
+
+  this.projectListService
+    .AddEditProjectProposalDetail(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_Project_AddEditProjectProposalDetail,
+        currencyModel
+    )
+    .pipe()
+    .subscribe(
+      response => {
+        if (response.StatusCode === 200) {
+          if (response.data.ProjectProposalDetail != null) {
+
+          }
+        }
+
+      },
+      error => {
+
+      }
+    );
 }
 //#endregion
 
