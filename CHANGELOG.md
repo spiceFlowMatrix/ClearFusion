@@ -20,7 +20,6 @@ Humanitarian Assistance ERP project features/bug fixes [Live site](http://34.90.
     - Employee contract rework
     - Enhancements to employee interviews functionality
     - Employee exit interview rework and implementation in new interface
-    - Fix seed data for currencies
 
 ### Bug Fixes
 
@@ -42,6 +41,7 @@ Humanitarian Assistance ERP project features/bug fixes [Live site](http://34.90.
 - Changes to project details view
 - Display budget line expenditures in a column in the budget line listing
 - Messaging/Chat REST API (NOT LIVE CHAT)
+- Fix seed data for currencies
 
 
 <a name="0.1.1"></a>
