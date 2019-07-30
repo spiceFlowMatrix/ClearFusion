@@ -69,38 +69,39 @@ export interface ProjectProvinceModel {
 }
 
 export interface ProjectOtherDetailModel {
-  ProjectOtherDetailId?: number;
-  opportunityNo?: string;
-  opportunity?: string;
-  opportunitydescription?: string;
-  ProjectId?: number;
-  // ProvinceId?: string;
-  ProvinceId?: number[];
-  DistrictID?: string;
-  OfficeId?: any;
-  StartDate?: any;
-  EndDate?: any;
-  CurrencyId?: any;
-  budget?: string;
-  beneficiaryMale?: number;
-  beneficiaryFemale?: number;
-  projectGoal?: string;
-  projectObjective?: string;
-  mainActivities?: string;
-  DonorId?: any;
-  SubmissionDate?: any;
-  REOIReceiveDate?: any;
-  StrengthConsiderationId?: number;
-  GenderConsiderationId?: number;
-  GenderRemarks?: string;
-  SecurityId?: number;
-  SecurityConsiderationId?: string;
-  SecurityRemarks?: string;
+    ProjectOtherDetailId?: number;
+    opportunityNo?: string;
+    opportunity?: string;
+    opportunitydescription?: string;
+    CountryId?: number;
+    ProjectId?: number;
+    // ProvinceId?: string;
+    ProvinceId?: number[];
+    DistrictID?: string;
+    OfficeId?: any;
+    StartDate?: any;
+    EndDate?: any;
+    CurrencyId?: any;
+    budget?: string;
+    beneficiaryMale?: number;
+    beneficiaryFemale?: number;
+    projectGoal?: string;
+    projectObjective?: string;
+    mainActivities?: string;
+    DonorId?: any;
+    SubmissionDate?: any;
+    REOIReceiveDate?: any;
+    StrengthConsiderationId?: number;
+    GenderConsiderationId?: number;
+    GenderRemarks?: string;
+    SecurityId?: number;
+    SecurityConsiderationId?: string;
+    SecurityRemarks?: string;
 
-  ProvinceIdList?: number[];
-  InDirectBeneficiaryMale?: number;
-  InDirectBeneficiaryFemale?: number;
-  OpportunityType?: number;
+    ProvinceIdList?: number[];
+    InDirectBeneficiaryMale?: number;
+    InDirectBeneficiaryFemale?: number;
+    OpportunityType?: number;
 }
 export interface SectorModel {
   SectorId?: number;
@@ -472,3 +473,46 @@ export interface CurrencyDetailModel {
   ProjectId: number;
   CurrencyId: number;
 }
+
+export interface IProjectOtherDetailPdf {
+    ProjectName?: string;
+    Description?: string;
+    OpportunityType?: string;
+    Donor?: string;
+    OpportunityNo?: string;
+    Opportunity?: string;
+    OpportunityDescription?: string;
+    Country?: string;
+    Province?: string;
+    District?: string;
+    Office?: string;
+    Sector?: string;
+    Program?: string;
+    StartDate?: string;
+    EndDate?: string;
+
+    // Project Objective & Goal
+    ProjectGoal?: string;
+    ProjectObjective?: string;
+    MainActivities?: string;
+    REOIReceiveDate?: string;
+    SubmissionDate?: string;
+
+    // Beneficiary Details
+    DirectbeneficiarMale?: string;
+    InDirectbeneficiarMale?: string;
+    DirectbeneficiarFemale?: string;
+    InDirectbeneficiarFemale?: string;
+    TotalDirectBeneficiary?: string;
+    TotalInDirectBeneficiary?: string;
+
+    // Gender Consideration
+    StrengthConsideration?: string;
+    GenderConsideration?: string;
+    GenderRemarks?: string;
+
+    // Security Consideration
+    Security?: string;
+    SecurityConsideration?: string;
+    SecurityRemarks?: string;
+  }

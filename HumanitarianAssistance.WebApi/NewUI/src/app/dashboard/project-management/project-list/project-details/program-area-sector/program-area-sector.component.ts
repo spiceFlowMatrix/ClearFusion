@@ -12,7 +12,8 @@ import {
   securityConsiderationMultiSelectModel,
   ProvinceMultiSelectModel,
   DistrictMultiSelectModel,
-  CountryMultiSelectModel
+  CountryMultiSelectModel,
+  IProjectOtherDetailPdf
 } from './../models/project-details.model';
 import { Validators } from '@angular/forms';
 import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
@@ -36,6 +37,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationPages } from 'src/app/shared/applicationpagesenum';
 import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { ProjectOtherDetailPdfService } from './project-other-detail-pdf.service';
 
 @Component({
   selector: 'app-program-area-sector',
@@ -44,6 +46,51 @@ import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 })
 export class ProgramAreaSectorComponent implements OnInit {
   //#region variables
+
+  projectOtherDetailPdf: IProjectOtherDetailPdf = {
+    // Opportunity Details
+    ProjectName: '',
+    Description: '',
+    OpportunityType: '',
+    Donor: '',
+    OpportunityNo: '',
+    Opportunity: '',
+    OpportunityDescription: '',
+    Country: '',
+    Province: '',
+    District: '',
+    Office: '',
+    Sector: '',
+    Program: '',
+    StartDate: '',
+    EndDate: '',
+
+    // Project Objective & Goal
+    ProjectGoal: '',
+    ProjectObjective: '',
+    MainActivities: '',
+    REOIReceiveDate: '',
+    SubmissionDate: '',
+
+    // Beneficiary Details
+    DirectbeneficiarMale: '',
+    InDirectbeneficiarMale: '',
+    DirectbeneficiarFemale: '',
+    InDirectbeneficiarFemale: '',
+    TotalDirectBeneficiary: '',
+    TotalInDirectBeneficiary: '',
+
+    // Gender Consideration
+    StrengthConsideration: '',
+    GenderConsideration: '',
+    GenderRemarks: '',
+
+    // Security Consideration
+    Security: '',
+    SecurityConsideration: '',
+    SecurityRemarks: ''
+  };
+
 
   opportunityNo = new FormControl('', [
     Validators.required,
@@ -182,6 +229,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     public toastr: ToastrService,
     public router: Router,
     public commonLoaderService: CommonLoaderService,
+    private pDetailPdfService: ProjectOtherDetailPdfService,
     private _cdr: ChangeDetectorRef,
 
 
@@ -918,11 +966,10 @@ export class ProgramAreaSectorComponent implements OnInit {
 
    onCountryDetailsChange(ev, data: number) {
     // this.countryDistrictFlag = true;
+    this.ProvinceSelectionList = [];
     if (ev === 'countrySelction' && data != null) {
       this.countryMultiSelectModel.CountryId = data;
       this.AddEditonCountryDetails(this.countryMultiSelectModel);
-      if (this.countryMultiSelectModel.CountryId != null) {
-      }
     }
   }
 
@@ -1020,6 +1067,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   onProvinceDetailsChange(ev, data: number[]) {
     this.provinceDistrictFlag = true;
+    this.DistrictMultiSelectList = [];
     if (ev === 'provinceSelction' && data != null) {
       this.provinceMultiSelectModel.ProvinceId = data;
       this.AddEditonProvinceDetails(this.provinceMultiSelectModel);
@@ -1991,4 +2039,68 @@ export class ProgramAreaSectorComponent implements OnInit {
   // }
 
   //#endregion
+
+  
+  setProjectOtherDetailValueForPdf() {
+
+    this.projectOtherDetailPdf = {
+      // Opportunity Details
+      ProjectName : this.data.projectName,
+      Description : this.data.description,
+      OpportunityType: this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType) != null ? this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType).Name : '',
+      Donor: this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
+      OpportunityNo:  this.projectotherDetail.opportunityNo != null ? this.projectotherDetail.opportunityNo : '',
+      Opportunity:  this.projectotherDetail.opportunity != null ? this.projectotherDetail.opportunity : '',
+      OpportunityDescription: this.projectotherDetail.opportunitydescription != null ? this.projectotherDetail.opportunitydescription : '',
+
+      Country: this.CountrySelectionList.find(x => x.value === this.countryMultiSelectModel.CountryId) != null ? this.CountrySelectionList.find(x => x.value === this.countryMultiSelectModel.CountryId).label : '',
+      Province: this.provinceMultiSelectModel.ProvinceId.map(x => this.ProvinceSelectionList.filter(y => y.value === x).map(z => z.label)).toString(),
+      District: this.districtMultiSelctModel.DistrictID.map(x => this.DistrictMultiSelectList.filter(y => y.value === x).map(z => z.label)).toString(),
+      Office: this.donorDataSource.find(x => x.Id === this.projectotherDetail.OfficeId) != null ? this.officeDataSource.find(x => x.Id === this.projectotherDetail.OfficeId).Name : '', 
+      Sector: this.Sector.toString(),
+      Program: this.Program.toString(),
+      StartDate: this.projectotherDetail.StartDate != null ? this.projectotherDetail.StartDate : '',
+      EndDate: this.projectotherDetail.EndDate != null ? this.projectotherDetail.EndDate : '',
+  
+      // Project Objective & Goal
+      ProjectGoal: this.projectotherDetail.projectGoal != null ? this.projectotherDetail.projectGoal : '',
+      ProjectObjective: this.projectotherDetail.projectObjective != null ? this.projectotherDetail.projectObjective : '',
+      MainActivities: this.projectotherDetail.mainActivities != null ? this.projectotherDetail.mainActivities : '',
+      REOIReceiveDate: this.projectotherDetail.REOIReceiveDate != null ? this.projectotherDetail.REOIReceiveDate : '',
+      SubmissionDate: this.projectotherDetail.SubmissionDate != null ? this.projectotherDetail.SubmissionDate : '',
+  
+      // Beneficiary Details
+      DirectbeneficiarMale: this.projectotherDetail.beneficiaryMale != null ?  this.projectotherDetail.beneficiaryMale.toString() : '',
+      InDirectbeneficiarMale: this.projectotherDetail.InDirectBeneficiaryMale != null ?  this.projectotherDetail.InDirectBeneficiaryMale.toString() : '',
+      DirectbeneficiarFemale: this.projectotherDetail.beneficiaryFemale != null ?  this.projectotherDetail.beneficiaryFemale.toString() : '',
+      InDirectbeneficiarFemale: this.projectotherDetail.InDirectBeneficiaryFemale != null ?  this.projectotherDetail.InDirectBeneficiaryFemale.toString() : '',
+     
+      TotalDirectBeneficiary: this.projectotherDetail.beneficiaryFemale != null && this.projectotherDetail.beneficiaryMale != null ? (this.projectotherDetail.beneficiaryFemale + this.projectotherDetail.beneficiaryMale).toString() : '',
+      TotalInDirectBeneficiary: this.projectotherDetail.InDirectBeneficiaryMale != null && this.projectotherDetail.InDirectBeneficiaryFemale != null ? (this.projectotherDetail.InDirectBeneficiaryMale + this.projectotherDetail.InDirectBeneficiaryFemale).toString() : '',
+  
+      // Gender Consideration
+      StrengthConsideration: this.projectotherDetail.StrengthConsiderationId != null ? (this.strengthDataSource.find(x => x.Id === this.projectotherDetail.StrengthConsiderationId) ?  this.strengthDataSource.find(x => x.Id === this.projectotherDetail.StrengthConsiderationId).Name : '') : '',
+      GenderConsideration:  this.projectotherDetail.GenderConsiderationId != null ? this.GenderConsiderationvaluelist.find(x => x.GenderConsiderationId === this.projectotherDetail.GenderConsiderationId).GenderConsiderationName : '',
+      GenderRemarks: this.projectotherDetail.GenderRemarks != null ? this.projectotherDetail.GenderRemarks : '',
+  
+      // Security Consideration
+      Security: this.projectotherDetail.StrengthConsiderationId != null ? this.Securitylist.find(x => x.SecurityId === this.projectotherDetail.SecurityId).SecurityName : '',
+      SecurityConsideration: this.securityConsiderationMultiselect.SecurityConsiderationId.map(x => this.securityConsDataSource.filter(y => y.Id === x).map(z => z.Name)).toString(),
+      SecurityRemarks: this.projectotherDetail.SecurityRemarks != null ? this.projectotherDetail.SecurityRemarks : ''
+    };
+  }
+
+
+  //#region "onExportPdf"
+  onExportPdf() {
+    // set your pdf values here
+
+    this.setProjectOtherDetailValueForPdf();
+    
+    console.log(this.projectOtherDetailPdf);
+
+    this.pDetailPdfService.onExportPdf(this.projectOtherDetailPdf);
+  }
+  //#endregion
+
 }

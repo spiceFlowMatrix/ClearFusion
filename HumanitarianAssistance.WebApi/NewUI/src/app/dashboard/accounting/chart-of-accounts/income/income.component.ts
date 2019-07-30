@@ -964,6 +964,7 @@ export class IncomeComponent implements OnInit {
 
       item.AccountName = obj.AccountName;
       item.AccountFilterTypeId = obj.AccountFilterTypeId;
+      item.AccountTypeId = obj.AccountTypeId; // its needed
 
     const index = this.chartOfAccountList[mainLevelIndex].Children[controlLevelIndex].Children.indexOf(item);
     this.chartOfAccountList[mainLevelIndex].Children[controlLevelIndex].Children[index]._IsLoading = true;

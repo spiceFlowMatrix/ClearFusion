@@ -15,7 +15,6 @@ namespace HumanitarianAssistance.Service.Classes
     public class ChatService : IChat
     {
 
-
         IUnitOfWork _uow;
 
         public ChatService(IUnitOfWork uow)
@@ -80,7 +79,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                   .FirstOrDefaultAsync(x => x.IsDeleted == false
                                                    && x.ChatId == model.ChatId);
 
-                if (chatDetail != null)
+                if (chatDetail == null)
                 {
                     throw new Exception(StaticResource.ChatNotFound);
                 }
@@ -120,7 +119,7 @@ namespace HumanitarianAssistance.Service.Classes
                                                   .FirstOrDefaultAsync(x => x.IsDeleted == false
                                                    && x.ChatId == chatId);
 
-                if (chatDetail != null)
+                if (chatDetail == null)
                 {
                     throw new Exception(StaticResource.ChatNotFound);
                 }

@@ -3,6 +3,6 @@ export const environment = {
   apiUrl: '/api/',
   docUrl: '/Docs/',
   hubUrl: '/chathub/',
-  oldUiUrl: '/oldui/',
+  oldUiUrl: '/oldui/#/',
   uploadUrl: 'https://storage.cloud.google.com/' // proposal doc
 };

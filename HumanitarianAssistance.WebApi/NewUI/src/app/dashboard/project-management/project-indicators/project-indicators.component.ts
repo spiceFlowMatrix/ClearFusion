@@ -45,7 +45,7 @@ export class ProjectIndicatorsComponent implements OnInit {
       Id: 4,
       PageId: projectPagesMaster.ProjectCashFlow,
       Text: 'Cash Flow',
-      Link: '/project-cash-flow'
+      Link: '/project/project-cash-flow'
     },
     {
       Id: 5,
