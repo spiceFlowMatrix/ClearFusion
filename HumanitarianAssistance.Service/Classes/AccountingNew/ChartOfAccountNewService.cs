@@ -104,10 +104,11 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
         public async Task<bool> GetAccountBalanceTypeByAccountType(int accountTypeId)
         {
-            var accountType = await _uow.GetDbContext().AccountType.Where(x => x.AccountTypeId == accountTypeId)
-                .FirstOrDefaultAsync();
+            var accountType = await _uow.GetDbContext().AccountType
+                                        .FirstOrDefaultAsync(x => x.AccountTypeId == accountTypeId);
+
             var accountHeadType = await _uow.GetDbContext().AccountHeadType
-                .Where(x => x.AccountHeadTypeId == accountType.AccountHeadTypeId).FirstOrDefaultAsync();
+                                            .FirstOrDefaultAsync(x => x.AccountHeadTypeId == accountType.AccountHeadTypeId);
             return accountHeadType.IsCreditBalancetype;
         }
 
@@ -147,6 +148,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                         obj.AccountLevelId = (int)AccountLevels.MainLevel;
                         obj.AccountHeadTypeId = model.AccountHeadTypeId;
+                        obj.AccountTypeId = model.AccountTypeId;
                         obj.ParentID = -1;
                         obj.AccountName = model.AccountName;
                         obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode;
@@ -193,6 +195,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         {
                             obj.AccountLevelId = (int)AccountLevels.ControlLevel;
                             obj.AccountHeadTypeId = model.AccountHeadTypeId;
+                            obj.AccountTypeId = model.AccountTypeId;
                             obj.ParentID = model.ParentID;
                             obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode;
                             obj.AccountName = model.AccountName;
@@ -243,6 +246,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
 
                             obj.AccountLevelId = (int)AccountLevels.SubLevel;
                             obj.AccountHeadTypeId = model.AccountHeadTypeId;
+                            obj.AccountTypeId = model.AccountTypeId;
                             obj.ParentID = model.ParentID;
                             obj.AccountName = model.AccountName;
                             obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode;
@@ -310,6 +314,7 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
                         {
                             obj.AccountLevelId = (int)AccountLevels.InputLevel;
                             obj.AccountHeadTypeId = model.AccountHeadTypeId;
+                            obj.AccountTypeId = model.AccountTypeId;
                             obj.ParentID = model.ParentID;
                             obj.ChartOfAccountNewCode = model.ChartOfAccountNewCode;
                             obj.AccountName = model.AccountName;
@@ -381,12 +386,18 @@ namespace HumanitarianAssistance.Service.Classes.AccountingNew
         public async Task UpdateBalanceMetadataForInputAccounts(ChartOfAccountNew subLvlAccount)
         {
             var accounts = await _uow.GetDbContext().ChartOfAccountNew.Where(x => x.ParentID == subLvlAccount.ChartOfAccountNewId).ToListAsync();
+           
             var accType = await _uow.GetDbContext().AccountType
-                .FirstOrDefaultAsync(x => x.AccountTypeId == subLvlAccount.AccountTypeId);
-            var accHeadType = await _uow.GetDbContext().AccountHeadType
-                .FirstOrDefaultAsync(x => x.AccountHeadTypeId == accType.AccountHeadTypeId);
-            subLvlAccount.IsCreditBalancetype = accHeadType.IsCreditBalancetype;
+                                    .FirstOrDefaultAsync(x => x.AccountTypeId == subLvlAccount.AccountTypeId);
+            if(accType != null) {
+                var accHeadType = await _uow.GetDbContext().AccountHeadType
+                                        .FirstOrDefaultAsync(x => x.AccountHeadTypeId == accType.AccountHeadTypeId);
+            
+                subLvlAccount.IsCreditBalancetype = accHeadType.IsCreditBalancetype;
+           }
+       
             _uow.GetDbContext().ChartOfAccountNew.Update(subLvlAccount);
+           
             foreach (var account in accounts)
             {
                 account.IsCreditBalancetype = subLvlAccount.IsCreditBalancetype;
