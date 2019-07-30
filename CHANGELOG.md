@@ -13,6 +13,10 @@ Humanitarian Assistance ERP project features/bug fixes [Live site](http://34.90.
 - Project Hiring Management control view
 - Resizable voucher details panels
 
+- Change verification button text in voucher to say "Validate"/"Invalidate" instead
+- Add delete function for qualifications in master page
+- Changes to criteria evaluation form
+
 
 
 - Changes to project details view
