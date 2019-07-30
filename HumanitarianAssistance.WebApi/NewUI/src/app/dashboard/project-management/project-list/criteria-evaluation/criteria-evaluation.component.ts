@@ -1262,6 +1262,7 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   }
 
   onIsProjectPracticalChange(value) {
+    debugger;
     if (value.checked === true) {
       this.isProjectPractical = criteriaEvaluationScores.isProjectPractical_Yes;
     } else {
