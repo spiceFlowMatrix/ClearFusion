@@ -1777,7 +1777,7 @@ export class ProgramAreaSectorComponent implements OnInit {
           }
           if (response.StatusCode === 400) {
             this.toastr.error(response.Message);
-            this.donorFlag = true;
+            this.donorFlag = false;
             this.opportunityFlag = false;
           }
         },
@@ -1785,7 +1785,7 @@ export class ProgramAreaSectorComponent implements OnInit {
           this.toastr.error('Something went wrong! Please try again');
           this.commonLoaderService.hideLoader();
           this.opportunityFlag = false;
-          this.donorFlag = true;
+          this.donorFlag = false;
         }
       );
   }
