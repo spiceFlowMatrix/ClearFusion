@@ -130,10 +130,10 @@
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select class="example-full-width" placeholder="Select Country"
-                    [(ngModel)]="projectotherDetail.CountryId" (selectionChange)="
+                    [(ngModel)]="countryMultiSelectModel.CountryId" (selectionChange)="
                                    onCountryDetailsChange(
                                   'countrySelction',
-                                  projectotherDetail.CountryId
+                                  countryMultiSelectModel.CountryId
                                 )
                               " name="countrySelction"
                     [disabled]="CountrySelectionList.length < 0 || !isEditingAllowed">
@@ -150,10 +150,10 @@
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select class="example-full-width" placeholder="Select Province"
-                    [(ngModel)]="projectotherDetail.ProvinceId" (selectionChange)="
+                    [(ngModel)]="provinceMultiSelectModel.ProvinceId " (selectionChange)="
                                    onProvinceDetailsChange(
                                   'provinceSelction',
-                                  projectotherDetail.ProvinceId
+                                  provinceMultiSelectModel.ProvinceId
                                 )
                               " name="provinceSelction"
                     multiple>
@@ -600,157 +600,3 @@
 
   </div>
 </ng-template>
-
-<div id="projectOtherDetailPdfTemplate" #projectOtherDetailPdfTemplate style="display: none; font-family: 'Roboto', sans-serif;" >
-
-
-  <!-- <div id="projectOtherDetailHeaderPdfTemplate">
-    <tr>
-        <td>
-          <h4>{{projectOtherDetailPdf.ProjectName}}</h4>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <p style="color: #9f9e9e; font-size: 15px; line-height: 26px;">{{projectOtherDetailPdf.Description}} </p>
-        </td>
-      </tr>
-    </div> -->
-
-
-        <!-- <tr>
-            <td>
-              <h4>{{projectOtherDetailPdf.ProjectName}}</h4>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <p style="color: #9f9e9e; font-size: 15px; line-height: 26px;">{{projectOtherDetailPdf.Description}} </p>
-            </td>
-          </tr> -->
-
-    <!-- <h5>{{projectOtherDetailPdf.ProjectName}}</h5>
-    <h6><strong>{{projectOtherDetailPdf.Description}}</strong></h6> -->
-  
-  <!-- Opportunity Details -->
-  <!-- <div>
-    <h5><strong>Opportunity Details</strong></h5>
-    <p>Opportunity Type</p>
-    <p>{{projectOtherDetailPdf.OpportunityType}}</p>
-
-    <p>Donor</p>
-    <p>{{projectOtherDetailPdf.Donor}}</p>
-
-    <p>Opportunity No</p>
-    <p>{{projectOtherDetailPdf.OpportunityNo}}</p>
-
-    <p>Opportunity</p>
-    <p>{{projectOtherDetailPdf.Opportunity}}</p>
-
-    <p>Opportunity Description</p>
-    <p>{{projectOtherDetailPdf.OpportunityDescription}}</p>
-    
-    <p>Country</p>
-    <p>{{projectOtherDetailPdf.Country}}</p>
-    
-    <p>Province</p>
-    <p>{{projectOtherDetailPdf.Province}}</p>
-    
-    <p>District</p>
-    <p>{{projectOtherDetailPdf.District}}</p>
-    
-    <p>Office</p>
-    <p>{{projectOtherDetailPdf.Office}}</p>
-
-    <p>Sector</p>
-    <p>{{projectOtherDetailPdf.Sector}}</p>
-    
-    <p>Program</p>
-    <p>{{projectOtherDetailPdf.Program}}</p>
-
-    <p>StartDate</p>
-    <p>{{projectOtherDetailPdf.StartDate}}</p>
-
-    <p>EndDate</p>
-    <p>{{projectOtherDetailPdf.EndDate}}</p>
-  </div> -->
-
-  <!-- Project Objective & Goal -->
-  <!-- <div>
-    <h5><strong>Project Objective & Goal</strong></h5>
-    <p>Project Goal</p>
-    <p>{{projectOtherDetailPdf.ProjectGoal}}</p>
-
-    
-    <p>Project Objective</p>
-    <p>{{projectOtherDetailPdf.ProjectObjective}}</p>
-    
-    <p>Main Activities</p>
-    <p>{{projectOtherDetailPdf.MainActivities}}</p>
-    
-    <p>REOI Receive Date</p>
-    <p>{{projectOtherDetailPdf.REOIReceiveDate}}</p>
-    
-    <p>Submission Date</p>
-    <p>{{projectOtherDetailPdf.SubmissionDate}}</p>
-
-  </div> -->
-
-  <!-- Beneficiary Details -->
-  <!-- <div>
-    <h5><strong>Beneficiary Details</strong></h5>
-
-    <p>Direct Beneficiar Male</p>
-    <p>{{projectOtherDetailPdf.DirectbeneficiarMale}}</p>
-    
-    <p>In-Direct Beneficiar Male</p>
-    <p>{{projectOtherDetailPdf.InDirectbeneficiarMale}}</p>
-    
-    <p>Direct Beneficiar Female</p>
-    <p>{{projectOtherDetailPdf.DirectbeneficiarFemale}}</p>
-    
-    <p>In-Direct Beneficiar Female</p>
-    <p>{{projectOtherDetailPdf.InDirectbeneficiarFemale}}</p>
-    
-    <p>Total Direct Beneficiary</p>
-    <p>{{projectOtherDetailPdf.TotalDirectBeneficiary}}</p>
-    
-    <p>Total In-Direct Beneficiary</p>
-    <p>{{projectOtherDetailPdf.TotalInDirectBeneficiary}}</p>
-  </div> -->
-
-  <!-- Gender Consideration -->
-  <!-- <div>
-    <h5><strong>Gender Consideration</strong></h5>
-
-    <p>Strength Consideration</p>
-    <p>{{projectOtherDetailPdf.StrengthConsideration}}</p>
-    
-    <p>Gender Consideration</p>
-    <p>{{projectOtherDetailPdf.GenderConsideration}}</p>
-    
-    <p>Gender Remarks</p>
-    <p>{{projectOtherDetailPdf.GenderRemarks}}</p>
-  </div> -->
-
-  <!-- Security Consideration -->
-  <!-- <div>
-    <h5><strong>Security Consideration</strong></h5>
-
-    <p>Security</p>
-    <p>{{projectOtherDetailPdf.Security}}</p>
-    
-    <p>Security Consideration</p>
-    <p>{{projectOtherDetailPdf.SecurityConsideration}}</p>
-    
-    <p>Security Remarks</p>
-    <p>{{projectOtherDetailPdf.SecurityRemarks}}</p>
-    
-    <p>StartDate</p>
-    <p>{{projectOtherDetailPdf.StartDate}}</p>
-    
-    <p>StartDate</p>
-    <p>{{projectOtherDetailPdf.StartDate}}</p>
-  </div> -->
-
-</div>

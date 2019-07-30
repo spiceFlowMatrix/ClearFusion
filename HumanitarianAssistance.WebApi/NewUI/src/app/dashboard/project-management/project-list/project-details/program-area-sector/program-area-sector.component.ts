@@ -12,11 +12,11 @@ import {
   securityConsiderationMultiSelectModel,
   ProvinceMultiSelectModel,
   DistrictMultiSelectModel,
-  IProjectOtherDetailPdf,
-  CountryMultiSelectModel
+  CountryMultiSelectModel,
+  IProjectOtherDetailPdf
 } from './../models/project-details.model';
 import { Validators } from '@angular/forms';
-import { Component, OnInit, Inject, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { ProjectListService } from '../../service/project-list.service';
@@ -39,10 +39,6 @@ import { LocalStorageService } from 'src/app/shared/services/localstorage.servic
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ProjectOtherDetailPdfService } from './project-other-detail-pdf.service';
 
-declare const require: any;
-const jsPDF = require('jspdf');
-require('jspdf-autotable');
-
 @Component({
   selector: 'app-program-area-sector',
   templateUrl: './program-area-sector.component.html',
@@ -50,6 +46,7 @@ require('jspdf-autotable');
 })
 export class ProgramAreaSectorComponent implements OnInit {
   //#region variables
+
   projectOtherDetailPdf: IProjectOtherDetailPdf = {
     // Opportunity Details
     ProjectName: '',
@@ -93,6 +90,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     SecurityConsideration: '',
     SecurityRemarks: ''
   };
+
 
   opportunityNo = new FormControl('', [
     Validators.required,
@@ -231,7 +229,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     public toastr: ToastrService,
     public router: Router,
     public commonLoaderService: CommonLoaderService,
-    public pDetailPdfService: ProjectOtherDetailPdfService,
+    private pDetailPdfService: ProjectOtherDetailPdfService,
     private _cdr: ChangeDetectorRef,
 
 
@@ -240,11 +238,6 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   ngOnInit() {
     this.ProjectId = this.data.id;
-
-    // pdf
-    this.projectOtherDetailPdf.ProjectName = this.data.projectName;
-    this.projectOtherDetailPdf.Description = this.data.description;
-    
     this.donorDataSource = [];
     this.officeDataSource = [];
     this.strengthDataSource = [];
@@ -958,9 +951,10 @@ export class ProgramAreaSectorComponent implements OnInit {
         .subscribe(data => {
           if (data != null) {
             if (data.data.CountryMultiSelectById != null) {
-              this.projectotherDetail.CountryId = data.data.CountryMultiSelectById.length > 0 ? data.data.CountryMultiSelectById[0] : null;
+              [this.countryMultiSelectModel.CountryId] =
+                data.data.CountryMultiSelectById;
               this.getAllProvinceListByCountryId(
-                [this.projectotherDetail.CountryId]
+                [this.countryMultiSelectModel.CountryId]
               );
             }
           }
@@ -973,9 +967,10 @@ export class ProgramAreaSectorComponent implements OnInit {
    onCountryDetailsChange(ev, data: number) {
     // this.countryDistrictFlag = true;
     if (ev === 'countrySelction' && data != null) {
-      this.projectotherDetail.CountryId = data;
       this.countryMultiSelectModel.CountryId = data;
       this.AddEditonCountryDetails(this.countryMultiSelectModel);
+      if (this.countryMultiSelectModel.CountryId != null) {
+      }
     }
   }
 
@@ -997,7 +992,7 @@ export class ProgramAreaSectorComponent implements OnInit {
           response => {
             if (response.StatusCode === 200) {
               this.getAllProvinceListByCountryId(
-                [this.projectotherDetail.CountryId]
+                [this.countryMultiSelectModel.CountryId]
               );
             }
             this.countryDistrictFlag = false;
@@ -1058,8 +1053,8 @@ export class ProgramAreaSectorComponent implements OnInit {
         .subscribe(data => {
           if (data != null) {
             if (data.data.ProvinceMultiSelectById != null) {
-              this.projectotherDetail.ProvinceId = data.data.ProvinceMultiSelectById;
-              this.provinceMultiSelectModel.ProvinceId = data.data.ProvinceMultiSelectById;
+              this.provinceMultiSelectModel.ProvinceId =
+                data.data.ProvinceMultiSelectById;
               this.GetAllDistrictvalueByProvinceId(
                 this.provinceMultiSelectModel.ProvinceId
               );
@@ -1074,7 +1069,6 @@ export class ProgramAreaSectorComponent implements OnInit {
   onProvinceDetailsChange(ev, data: number[]) {
     this.provinceDistrictFlag = true;
     if (ev === 'provinceSelction' && data != null) {
-      this.projectotherDetail.ProvinceId = data;
       this.provinceMultiSelectModel.ProvinceId = data;
       this.AddEditonProvinceDetails(this.provinceMultiSelectModel);
     }
@@ -1685,9 +1679,6 @@ export class ProgramAreaSectorComponent implements OnInit {
                 }
               }
             }
-
-            // this.setProjectOtherDetailValueForPdf();
-
           }
           if (data.StatusCode === 400) {
             this.toastr.error('No data found');
@@ -1751,8 +1742,6 @@ export class ProgramAreaSectorComponent implements OnInit {
       OpportunityType: model.OpportunityType
     };
 
-    console.log(obj);
-
     this.projectListService
       .AddEditProjectotherDetail(
         this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditProjectotherDetail,
@@ -1777,7 +1766,7 @@ export class ProgramAreaSectorComponent implements OnInit {
           }
           if (response.StatusCode === 400) {
             this.toastr.error(response.Message);
-            this.donorFlag = false;
+            this.donorFlag = true;
             this.opportunityFlag = false;
           }
         },
@@ -1785,7 +1774,7 @@ export class ProgramAreaSectorComponent implements OnInit {
           this.toastr.error('Something went wrong! Please try again');
           this.commonLoaderService.hideLoader();
           this.opportunityFlag = false;
-          this.donorFlag = false;
+          this.donorFlag = true;
         }
       );
   }
@@ -1979,7 +1968,6 @@ export class ProgramAreaSectorComponent implements OnInit {
 
 
   // #region to GetAllOfficeList
-
   // to unsbscribe the the service code
   // this.service.unsubscribe();
 
@@ -2008,7 +1996,6 @@ export class ProgramAreaSectorComponent implements OnInit {
         }
       });
   }
-
   filterOfficeSingle(event) {
     const query = event.query;
     return (this.Officevalue = this.filterOffice(query, this.Officelist));
@@ -2053,7 +2040,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#endregion
 
-
+  
   setProjectOtherDetailValueForPdf() {
 
     this.projectOtherDetailPdf = {
@@ -2066,7 +2053,7 @@ export class ProgramAreaSectorComponent implements OnInit {
       Opportunity:  this.projectotherDetail.opportunity != null ? this.projectotherDetail.opportunity : '',
       OpportunityDescription: this.projectotherDetail.opportunitydescription != null ? this.projectotherDetail.opportunitydescription : '',
 
-      Country: this.CountrySelectionList.find(x => x.value === this.projectotherDetail.CountryId) != null ? this.CountrySelectionList.find(x => x.value === this.projectotherDetail.CountryId).label : '',
+      Country: this.CountrySelectionList.find(x => x.value === this.countryMultiSelectModel.CountryId) != null ? this.CountrySelectionList.find(x => x.value === this.countryMultiSelectModel.CountryId).label : '',
       Province: this.projectotherDetail.ProvinceId.map(x => this.ProvinceSelectionList.filter(y => y.value === x).map(z => z.label)).toString(),
       District: this.districtMultiSelctModel.DistrictID.map(x => this.DistrictMultiSelectList.filter(y => y.value === x).map(z => z.label)).toString(),
       Office: this.donorDataSource.find(x => x.Id === this.projectotherDetail.OfficeId) != null ? this.officeDataSource.find(x => x.Id === this.projectotherDetail.OfficeId).Name : '', 
