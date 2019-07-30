@@ -966,11 +966,10 @@ export class ProgramAreaSectorComponent implements OnInit {
 
    onCountryDetailsChange(ev, data: number) {
     // this.countryDistrictFlag = true;
+    this.ProvinceSelectionList = [];
     if (ev === 'countrySelction' && data != null) {
       this.countryMultiSelectModel.CountryId = data;
       this.AddEditonCountryDetails(this.countryMultiSelectModel);
-      if (this.countryMultiSelectModel.CountryId != null) {
-      }
     }
   }
 
@@ -1068,6 +1067,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   onProvinceDetailsChange(ev, data: number[]) {
     this.provinceDistrictFlag = true;
+    this.DistrictMultiSelectList = [];
     if (ev === 'provinceSelction' && data != null) {
       this.provinceMultiSelectModel.ProvinceId = data;
       this.AddEditonProvinceDetails(this.provinceMultiSelectModel);
