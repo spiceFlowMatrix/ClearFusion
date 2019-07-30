@@ -938,12 +938,12 @@ namespace HumanitarianAssistance.WebApi.Controllers
             return apiRespone;
         }
 
-        [HttpPost]
-        public APIResponse GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
-        {
-            APIResponse apiRespone = null;
+    [HttpPost]
+    public async Task<APIResponse> GetAllCriteriaEvaluationDetail([FromBody]long ProjectId)
+    {
+      APIResponse apiRespone = null;
 
-            apiRespone = _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
+      apiRespone =await _iProject.GetAllCriteriaEvaluationDetalByProjectId(ProjectId);
 
             return apiRespone;
         }
@@ -980,7 +980,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
             if (user != null)
             {
                 var id = user.Id;
-                apiRespone = _iProject.AddEditRiskCriteria(Model, id);
+                apiRespone = await _iProject.AddEditRiskCriteria(Model, id);
             }
             return apiRespone;
         }

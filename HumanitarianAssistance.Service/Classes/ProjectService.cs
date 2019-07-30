@@ -1691,6 +1691,7 @@ namespace HumanitarianAssistance.Service.Classes
                         {
                             _uow.GetDbContext().DistrictMultiSelect.RemoveRange(districtExist);
                             _uow.GetDbContext().SaveChanges();
+
                         }
                         _uow.GetDbContext().ProvinceMultiSelect.RemoveRange(provinceExist);
                         _uow.GetDbContext().SaveChanges();
@@ -3247,82 +3248,126 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     _detail = new PurposeofInitiativeCriteria
                     {
-                        Women = model.Women,
-                        Children = model.Children,
+
                         Awareness = model.Awareness,
-                        Education = model.Education,
-                        DrugAbuses = model.DrugAbuses,
-                        Right = model.Right,
-                        Culture = model.Culture,
-                        Music = model.Music,
-                        Documentaries = model.Documentaries,
-                        InvestigativeJournalism = model.InvestigativeJournalism,
-                        HealthAndNutrition = model.HealthAndNutrition,
-                        News = model.News,
-                        SocioPolitiacalDebate = model.SocioPolitiacalDebate,
-                        Studies = model.Studies,
-                        Reports = model.Reports,
-                        CommunityDevelopment = model.CommunityDevelopment,
-                        Aggriculture = model.Aggriculture,
-                        DRR = model.DRR,
-                        ServiceEducation = model.ServiceEducation,
-                        ServiceHealthAndNutrition = model.ServiceHealthAndNutrition,
-                        RadioProduction = model.RadioProduction,
-                        TVProgram = model.TVProgram,
-                        PrintedMedia = model.PrintedMedia,
-                        RoundTable = model.RoundTable,
-                        Others = model.Others,
-                        OtherActivity = model.OtherActivity,
-                        TargetBenificaiaryWomen = model.TargetBenificaiaryWomen,
-                        TargetBenificiaryMen = model.TargetBenificiaryMen,
-                        TargetBenificiaryAgeGroup = model.TargetBenificiaryAgeGroup,
-                        TargetBenificiaryaOccupation = model.TargetBenificiaryaOccupation,
+                        Infrastructure = model.Infrastructure,
+                        CapacityBuilding = model.CapacityBuilding,
+                        IncomeGeneration = model.IncomeGeneration,
+                        Mobilization = model.Mobilization,
+                        PeaceBuilding = model.PeaceBuilding,
+                        SocialProtection = model.SocialProtection,
+                        SustainableLivelihood = model.SustainableLivelihood,
+                        Advocacy = model.Advocacy,
+                        Literacy = model.Literacy,
+                        EducationCapacityBuilding = model.EducationCapacityBuilding,
+                        SchoolUpgrading = model.SchoolUpgrading,
+                        EducationInEmergency = model.EducationInEmergency,
+                        OnlineEducation = model.OnlineEducation,
+                        CommunityBasedEducation = model.CommunityBasedEducation,
+                        AcceleratedLearningProgram = model.AcceleratedLearningProgram,
+                        PrimaryHealthServices = model.PrimaryHealthServices,
+                        ReproductiveHealth = model.ReproductiveHealth,
+                        Immunization = model.Immunization,
+                        InfantandYoungChildFeeding = model.InfantandYoungChildFeeding,
+                        Nutrition = model.Nutrition,
+                        CommunicableDisease = model.CommunityBasedEducation,
+                        Hygiene = model.Hygiene,
+                        EnvironmentalHealth = model.EnvironmentalHealth,
+                        MentalHealthandDisabilityService = model.MentalHealthandDisabilityService,
+                        HealthCapacityBuilding = model.HealthCapacityBuilding,
+                        Telemedicine = model.Telemedicine,
+                        MitigationProjects = model.MitigationProjects,
+                        WaterSupply = model.WaterSupply,
+                        Sanitation = model.Sanitation,
+                        DisasterRiskHygiene = model.DisasterRiskHygiene,
+                        DisasterCapacityBuilding = model.DisasterCapacityBuilding,
+                        EmergencyResponse = model.EmergencyResponse,
+                        RenewableEnergy = model.RenewableEnergy,
+                        Shelter = model.Shelter,
+                        NaturalResourceManagement = model.NaturalResourceManagement,
+                        AggriculutreCapacityBuilding = model.AggriculutreCapacityBuilding,
+                        LivestockManagement = model.LivestockManagement,
+                        FoodSecurity = model.FoodSecurity,
+                        ResearchandPublication = model.ResearchandPublication,
+                        Horticulture = model.Horticulture,
+                        Irrigation = model.Irrigation,
+                        Livelihood = model.Livelihood,
+                        ValueChain = model.ValueChain,
+                        Children = model.Children,
+                        Disabled = model.Disabled,
+                        IDPs = model.IDPs,
+                        Returnees = model.Returnees,
+                        Kuchis = model.Kuchis,
+                        Widows = model.Widows,
+                        Women = model.Women,
+                        Youth = model.Youth,
+                        Men = model.Men,
                         ProjectId = model.ProjectId,
                         IsDeleted = false,
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow,
-                        Product = model.Product,
-                        Service = model.Service
                     };
                     await _uow.PurposeofInitiativeCriteriaRepository.AddAsyn(_detail);
                 }
                 else
                 {
-                    _detail.Women = model.Women;
-                    _detail.Children = model.Children;
+
                     _detail.Awareness = model.Awareness;
-                    _detail.Education = model.Education;
-                    _detail.DrugAbuses = model.DrugAbuses;
-                    _detail.Right = model.Right;
-                    _detail.Culture = model.Culture;
-                    _detail.Music = model.Music;
-                    _detail.Documentaries = model.Documentaries;
-                    _detail.InvestigativeJournalism = model.InvestigativeJournalism;
-                    _detail.HealthAndNutrition = model.HealthAndNutrition;
-                    _detail.News = model.News;
-                    _detail.SocioPolitiacalDebate = model.SocioPolitiacalDebate;
-                    _detail.Studies = model.Studies;
-                    _detail.Reports = model.Reports;
-                    _detail.CommunityDevelopment = model.CommunityDevelopment;
-                    _detail.Aggriculture = model.Aggriculture;
-                    _detail.DRR = model.DRR;
-                    _detail.ServiceEducation = model.ServiceEducation;
-                    _detail.ServiceHealthAndNutrition = model.ServiceHealthAndNutrition;
-                    _detail.RadioProduction = model.RadioProduction;
-                    _detail.TVProgram = model.TVProgram;
-                    _detail.PrintedMedia = model.PrintedMedia;
-                    _detail.RoundTable = model.RoundTable;
-                    _detail.Others = model.Others;
-                    _detail.OtherActivity = model.OtherActivity;
-                    _detail.TargetBenificaiaryWomen = model.TargetBenificaiaryWomen;
-                    _detail.TargetBenificiaryMen = model.TargetBenificiaryMen;
-                    _detail.TargetBenificiaryAgeGroup = model.TargetBenificiaryAgeGroup;
-                    _detail.TargetBenificiaryaOccupation = model.TargetBenificiaryaOccupation;
+                    _detail.Infrastructure = model.Infrastructure;
+                    _detail.CapacityBuilding = model.CapacityBuilding;
+                    _detail.IncomeGeneration = model.IncomeGeneration;
+                    _detail.Mobilization = model.Mobilization;
+                    _detail.PeaceBuilding = model.PeaceBuilding;
+                    _detail.SocialProtection = model.SocialProtection;
+                    _detail.SustainableLivelihood = model.SustainableLivelihood;
+                    _detail.Advocacy = model.Advocacy;
+                    _detail.Literacy = model.Literacy;
+                    _detail.EducationCapacityBuilding = model.EducationCapacityBuilding;
+                    _detail.SchoolUpgrading = model.SchoolUpgrading;
+                    _detail.EducationInEmergency = model.EducationInEmergency;
+                    _detail.OnlineEducation = model.OnlineEducation;
+                    _detail.CommunityBasedEducation = model.CommunityBasedEducation;
+                    _detail.AcceleratedLearningProgram = model.AcceleratedLearningProgram;
+                    _detail.PrimaryHealthServices = model.PrimaryHealthServices;
+                    _detail.ReproductiveHealth = model.ReproductiveHealth;
+                    _detail.Immunization = model.Immunization;
+                    _detail.InfantandYoungChildFeeding = model.InfantandYoungChildFeeding;
+                    _detail.Nutrition = model.Nutrition;
+                    _detail.CommunicableDisease = model.CommunityBasedEducation;
+                    _detail.Hygiene = model.Hygiene;
+                    _detail.EnvironmentalHealth = model.EnvironmentalHealth;
+                    _detail.MentalHealthandDisabilityService = model.MentalHealthandDisabilityService;
+                    _detail.HealthCapacityBuilding = model.HealthCapacityBuilding;
+                    _detail.Telemedicine = model.Telemedicine;
+                    _detail.MitigationProjects = model.MitigationProjects;
+                    _detail.WaterSupply = model.WaterSupply;
+                    _detail.Sanitation = model.Sanitation;
+                    _detail.DisasterRiskHygiene = model.DisasterRiskHygiene;
+                    _detail.DisasterCapacityBuilding = model.DisasterCapacityBuilding;
+                    _detail.EmergencyResponse = model.EmergencyResponse;
+                    _detail.RenewableEnergy = model.RenewableEnergy;
+                    _detail.Shelter = model.Shelter;
+                    _detail.NaturalResourceManagement = model.NaturalResourceManagement;
+                    _detail.AggriculutreCapacityBuilding = model.AggriculutreCapacityBuilding;
+                    _detail.LivestockManagement = model.LivestockManagement;
+                    _detail.FoodSecurity = model.FoodSecurity;
+                    _detail.ResearchandPublication = model.ResearchandPublication;
+                    _detail.Horticulture = model.Horticulture;
+                    _detail.Irrigation = model.Irrigation;
+                    _detail.Livelihood = model.Livelihood;
+                    _detail.ValueChain = model.ValueChain;
+                    _detail.Children = model.Children;
+                    _detail.Disabled = model.Disabled;
+                    _detail.IDPs = model.IDPs;
+                    _detail.Returnees = model.Returnees;
+                    _detail.Kuchis = model.Kuchis;
+                    _detail.Widows = model.Widows;
+                    _detail.Women = model.Women;
+                    _detail.Youth = model.Youth;
+                    _detail.Men = model.Men;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.UtcNow;
-                    _detail.Product = model.Product;
-                    _detail.Service = model.Service;
                     await _uow.PurposeofInitiativeCriteriaRepository.UpdateAsyn(_detail);
                     await _uow.GetDbContext().SaveChangesAsync();
                 }
@@ -3474,7 +3519,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public APIResponse GetAllCriteriaEvaluationDetalByProjectId(long ProjectId)
+        public async Task<APIResponse> GetAllCriteriaEvaluationDetalByProjectId(long ProjectId)
         {
             APIResponse response = new APIResponse();
 
@@ -3496,8 +3541,7 @@ namespace HumanitarianAssistance.Service.Classes
                      from financial in fi.DefaultIfEmpty()
                      join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri
                      from risk in ri.DefaultIfEmpty()
-                         //join selected in _uow.GetDbContext().FinancialProjectDetail on obj.ProjectId equals selected.ProjectId into sp
-                         //from selected in sp.DefaultIfEmpty()
+
                      select new CriteriaEveluationModel
                      {
                          ProjectId = obj.ProjectId,
@@ -3523,38 +3567,59 @@ namespace HumanitarianAssistance.Service.Classes
                          ReligiousStanding = donor.ReligiousStanding,
                          PoliticalStanding = donor.PoliticalStanding,
                          ProductServiceId = purpose != null ? purpose.ProductServiceId : 0,
-                         Women = purpose.Women,
-                         Children = purpose.Children,
                          Awareness = purpose.Awareness,
-                         Education = purpose.Education,
-                         DrugAbuses = purpose.DrugAbuses,
-                         Right = purpose.Right,
-                         Culture = purpose.Culture,
-                         Music = purpose.Music,
-                         Documentaries = purpose.Documentaries,
-                         InvestigativeJournalism = purpose.InvestigativeJournalism,
-                         HealthAndNutrition = purpose.HealthAndNutrition,
-                         News = purpose.News,
-                         SocioPolitiacalDebate = purpose.SocioPolitiacalDebate,
-                         Studies = purpose.Studies,
-                         Reports = purpose.Reports,
-                         CommunityDevelopment = purpose.CommunityDevelopment,
-                         Aggriculture = purpose.Aggriculture,
-                         DRR = purpose.DRR,
-                         ServiceEducation = purpose.ServiceEducation,
-                         ServiceHealthAndNutrition = purpose.ServiceHealthAndNutrition,
-                         RadioProduction = purpose.RadioProduction,
-                         TVProgram = purpose.TVProgram,
-                         PrintedMedia = purpose.PrintedMedia,
-                         RoundTable = purpose.RoundTable,
-                         Others = purpose.Others,
-                         OtherActivity = purpose.OtherActivity,
-                         TargetBenificaiaryWomen = purpose.TargetBenificaiaryWomen,
-                         TargetBenificiaryMen = purpose.TargetBenificiaryMen,
-                         TargetBenificiaryAgeGroup = purpose.TargetBenificiaryAgeGroup,
-                         TargetBenificiaryaOccupation = purpose.TargetBenificiaryaOccupation,
-                         Product = purpose.Product,
-                         Service = purpose.Service,
+                         Infrastructure = purpose.Infrastructure,
+                         CapacityBuilding = purpose.CapacityBuilding,
+                         IncomeGeneration = purpose.IncomeGeneration,
+                         Mobilization = purpose.Mobilization,
+                         PeaceBuilding = purpose.PeaceBuilding,
+                         SocialProtection = purpose.SocialProtection,
+                         SustainableLivelihood = purpose.SustainableLivelihood,
+                         Advocacy = purpose.Advocacy,
+                         Literacy = purpose.Literacy,
+                         EducationCapacityBuilding = purpose.EducationCapacityBuilding,
+                         SchoolUpgrading = purpose.SchoolUpgrading,
+                         EducationInEmergency = purpose.EducationInEmergency,
+                         OnlineEducation = purpose.OnlineEducation,
+                         CommunityBasedEducation = purpose.CommunityBasedEducation,
+                         AcceleratedLearningProgram = purpose.AcceleratedLearningProgram,
+                         PrimaryHealthServices = purpose.PrimaryHealthServices,
+                         ReproductiveHealth = purpose.ReproductiveHealth,
+                         Immunization = purpose.Immunization,
+                         InfantandYoungChildFeeding = purpose.InfantandYoungChildFeeding,
+                         Nutrition = purpose.Nutrition,
+                         CommunicableDisease = purpose.CommunityBasedEducation,
+                         Hygiene = purpose.Hygiene,
+                         EnvironmentalHealth = purpose.EnvironmentalHealth,
+                         MentalHealthandDisabilityService = purpose.MentalHealthandDisabilityService,
+                         HealthCapacityBuilding = purpose.HealthCapacityBuilding,
+                         Telemedicine = purpose.Telemedicine,
+                         MitigationProjects = purpose.MitigationProjects,
+                         WaterSupply = purpose.WaterSupply,
+                         Sanitation = purpose.Sanitation,
+                         DisasterRiskHygiene = purpose.DisasterRiskHygiene,
+                         DisasterCapacityBuilding = purpose.DisasterCapacityBuilding,
+                         EmergencyResponse = purpose.EmergencyResponse,
+                         RenewableEnergy = purpose.RenewableEnergy,
+                         Shelter = purpose.Shelter,
+                         NaturalResourceManagement = purpose.NaturalResourceManagement,
+                         AggriculutreCapacityBuilding = purpose.AggriculutreCapacityBuilding,
+                         LivestockManagement = purpose.LivestockManagement,
+                         FoodSecurity = purpose.FoodSecurity,
+                         ResearchandPublication = purpose.ResearchandPublication,
+                         Horticulture = purpose.Horticulture,
+                         Irrigation = purpose.Irrigation,
+                         Livelihood = purpose.Livelihood,
+                         ValueChain = purpose.ValueChain,
+                         Women = purpose.Women,
+                         Youth = purpose.Youth,
+                         Men = purpose.Men,
+                         Children = purpose.Children,
+                         Disabled = purpose.Disabled,
+                         IDPs = purpose.IDPs,
+                         Returnees = purpose.Returnees,
+                         Kuchis = purpose.Kuchis,
+                         Widows = purpose.Widows,
                          DonorCriteriaMet = eligibility.DonorCriteriaMet,
                          EligibilityDealine = eligibility.EligibilityDealine,
                          CoPartnership = eligibility.CoPartnership,
@@ -3619,19 +3684,28 @@ namespace HumanitarianAssistance.Service.Classes
                          FocusDivertingrisk = risk.FocusDivertingrisk,
                          Financiallosses = risk.Financiallosses,
                          Opportunityloss = risk.Opportunityloss,
-
+                         Geographical=risk.Geographical,
+                         Insecurity = risk.Insecurity,
+                         Season = risk.Season,
+                         Ethnicity = risk.Ethnicity,
+                         Culture = risk.Culture,
+                         ReligiousBeliefs = risk.ReligiousBeliefs,
+                         CurrencyId =risk.CurrencyId,
+                         CurrencyName = risk.CurrencyDetails.CurrencyName,
                          //ProjectSelectionId = selected.ProjectSelectionId,
 
                          Probablydelaysinfunding = risk.Probablydelaysinfunding,
                          OtherOrganizationalHarms = risk.OtherOrganizationalHarms,
-                         OrganizationalDescription = risk.OrganizationalDescription
+                         OrganizationalDescription = risk.OrganizationalDescription,
+
+
                      }).FirstOrDefault(x => x.ProjectId == ProjectId);
 
 
-                List<long?> selectedProjects = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId &&
-                                                                                                     x.IsDeleted == false
+                List<long?> selectedProjects = await _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == ProjectId &&
+                                                                                                    x.IsDeleted == false
                                                                                                 ).Select(x => x.ProjectSelectionId).
-                                                                                                  ToList();
+                                                                                                  ToListAsync();
 
                 details.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
 
@@ -3757,14 +3831,14 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
-        public APIResponse AddEditRiskCriteria(RiskCriteriaModel model, string UserId)
+        public async Task<APIResponse> AddEditRiskCriteria(RiskCriteriaModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             RiskCriteriaDetail _detail = new RiskCriteriaDetail();
             try
             {
-                _detail = _uow.GetDbContext().RiskCriteriaDetail.FirstOrDefault(x => x.ProjectId == model.ProjectId &&
-                                                                                     x.IsDeleted == false);
+                _detail = await _uow.GetDbContext().RiskCriteriaDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
+                                                                                                x.IsDeleted == false);
                 if (_detail == null)
                 {
                     _detail = new RiskCriteriaDetail
@@ -3794,13 +3868,20 @@ namespace HumanitarianAssistance.Service.Classes
                         OtherOrganizationalHarms = model.OtherOrganizationalHarms,
                         OrganizationalDescription = model.OrganizationalDescription,
                         ProjectId = model.ProjectId.Value,
+                        Geographical = model.Geographical,
+                        Insecurity = model.Insecurity,
+                        Season = model.Season,
+                        Ethnicity = model.Ethnicity,
+                        Culture = model.Culture,
+                        ReligiousBeliefs = model.ReligiousBeliefs,
+                        CurrencyId = model.CurrencyId,
                         IsDeleted = false,
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow
                     };
 
 
-                    _uow.RiskCriteriaDetailRepository.Add(_detail);
+                    await _uow.RiskCriteriaDetailRepository.AddAsyn(_detail);
 
 
                 }
@@ -3831,26 +3912,33 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.OtherOrganizationalHarms = model.OtherOrganizationalHarms;
                     _detail.OrganizationalDescription = model.OrganizationalDescription;
                     _detail.ProjectId = model.ProjectId.Value;
+                    _detail.Geographical = model.Geographical;
+                    _detail.Insecurity = model.Insecurity;
+                    _detail.Season = model.Season;
+                    _detail.Ethnicity = model.Ethnicity;
+                    _detail.Culture = model.Culture;
+                    _detail.ReligiousBeliefs = model.ReligiousBeliefs;
+                    _detail.CurrencyId = model.CurrencyId;
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.UtcNow;
-                    _uow.GetDbContext().RiskCriteriaDetail.Update(_detail);
-                    _uow.GetDbContext().SaveChanges();
+                    await _uow.RiskCriteriaDetailRepository.UpdateAsyn(_detail);
+                    await _uow.GetDbContext().SaveChangesAsync();
                 }
-
 
 
                 if (model.ProjectSelectionId != null)
                 {
                     //check is project exists
-                    bool projectPresent = _uow.GetDbContext().FinancialProjectDetail.Any(x => x.ProjectId == model.ProjectId &&
-                                                                                              x.IsDeleted == false);
+                    bool projectPresent = await _uow.GetDbContext().FinancialProjectDetail.AnyAsync(x => x.ProjectId == model.ProjectId &&
+                                                                                                         x.IsDeleted == false);
 
                     //if exist then remove
                     if (projectPresent)
                     {
-                        var projectExist = _uow.GetDbContext().FinancialProjectDetail.Where(x => x.ProjectId == model.ProjectId &&
-                                                                                                 x.IsDeleted == false);
+                        FinancialProjectDetail projectExist = await _uow.GetDbContext().FinancialProjectDetail
+                                                                                       .FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
+                                                                                                                 x.IsDeleted == false);
 
                         // if exist then remove it
                         _uow.GetDbContext().FinancialProjectDetail.RemoveRange(projectExist);

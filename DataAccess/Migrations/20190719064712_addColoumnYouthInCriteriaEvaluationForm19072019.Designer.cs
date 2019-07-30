@@ -4,19 +4,21 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190719064712_addColoumnYouthInCriteriaEvaluationForm19072019")]
+    partial class addColoumnYouthInCriteriaEvaluationForm19072019
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099");
 
             modelBuilder.Entity("DataAccess.DbEntities.AccountHeadType", b =>
                 {
@@ -47,111 +49,12 @@ namespace DataAccess.Migrations
                     b.ToTable("AccountHeadType");
 
                     b.HasData(
-                        new
-                        {
-                            AccountHeadTypeId = 1,
-                            AccountHeadTypeName = "Assets",
-                            IsCreditBalancetype = false,
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            AccountHeadTypeId = 2,
-                            AccountHeadTypeName = "Liabilities",
-                            IsCreditBalancetype = true,
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            AccountHeadTypeId = 3,
-                            AccountHeadTypeName = "Donors Equity",
-                            IsCreditBalancetype = true,
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            AccountHeadTypeId = 4,
-                            AccountHeadTypeName = "Income",
-                            IsCreditBalancetype = true,
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            AccountHeadTypeId = 5,
-                            AccountHeadTypeName = "Expense",
-                            IsCreditBalancetype = false,
-                            IsDeleted = false
-                        });
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.AccountLevel", b =>
-                {
-                    b.Property<int>("AccountLevelId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("AccountLevelName")
-                        .HasMaxLength(50);
-
-                    b.HasKey("AccountLevelId");
-
-                    b.ToTable("AccountLevel");
-
-                    b.HasData(
-                        new
-                        {
-                            AccountLevelId = 1,
-                            AccountLevelName = "Main Level Accounts"
-                        },
-                        new
-                        {
-                            AccountLevelId = 2,
-                            AccountLevelName = "Control Level Accounts"
-                        },
-                        new
-                        {
-                            AccountLevelId = 3,
-                            AccountLevelName = "Sub Level Accounts"
-                        },
-                        new
-                        {
-                            AccountLevelId = 4,
-                            AccountLevelName = "Input Level Accounts"
-                        });
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.AccountType", b =>
-                {
-                    b.Property<int>("AccountTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<int?>("AccountCategory");
-
-                    b.Property<int>("AccountHeadTypeId");
-
-                    b.Property<string>("AccountTypeName")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("AccountTypeId");
-
-                    b.HasIndex("AccountHeadTypeId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("AccountType");
+                        new { AccountHeadTypeId = 1, AccountHeadTypeName = "Assets", IsCreditBalancetype = false, IsDeleted = false },
+                        new { AccountHeadTypeId = 2, AccountHeadTypeName = "Liabilities", IsCreditBalancetype = true, IsDeleted = false },
+                        new { AccountHeadTypeId = 3, AccountHeadTypeName = "Donors Equity", IsCreditBalancetype = true, IsDeleted = false },
+                        new { AccountHeadTypeId = 4, AccountHeadTypeName = "Income", IsCreditBalancetype = true, IsDeleted = false },
+                        new { AccountHeadTypeId = 5, AccountHeadTypeName = "Expense", IsCreditBalancetype = false, IsDeleted = false }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AccountingNew.AccountFilterType", b =>
@@ -181,18 +84,9 @@ namespace DataAccess.Migrations
                     b.ToTable("AccountFilterType");
 
                     b.HasData(
-                        new
-                        {
-                            AccountFilterTypeId = 1,
-                            AccountFilterTypeName = "Inventory Account",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            AccountFilterTypeId = 2,
-                            AccountFilterTypeName = "Salary Account",
-                            IsDeleted = false
-                        });
+                        new { AccountFilterTypeId = 1, AccountFilterTypeName = "Inventory Account", IsDeleted = false },
+                        new { AccountFilterTypeId = 2, AccountFilterTypeName = "Salary Account", IsDeleted = false }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AccountingNew.ChartOfAccountNew", b =>
@@ -269,6 +163,61 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("ExchangeRateVerifications");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.AccountLevel", b =>
+                {
+                    b.Property<int>("AccountLevelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<string>("AccountLevelName")
+                        .HasMaxLength(50);
+
+                    b.HasKey("AccountLevelId");
+
+                    b.ToTable("AccountLevel");
+
+                    b.HasData(
+                        new { AccountLevelId = 1, AccountLevelName = "Main Level Accounts" },
+                        new { AccountLevelId = 2, AccountLevelName = "Control Level Accounts" },
+                        new { AccountLevelId = 3, AccountLevelName = "Sub Level Accounts" },
+                        new { AccountLevelId = 4, AccountLevelName = "Input Level Accounts" }
+                    );
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.AccountType", b =>
+                {
+                    b.Property<int>("AccountTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<int?>("AccountCategory");
+
+                    b.Property<int>("AccountHeadTypeId");
+
+                    b.Property<string>("AccountTypeName")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.HasKey("AccountTypeId");
+
+                    b.HasIndex("AccountHeadTypeId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("AccountType");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.ActivityMaster", b =>
@@ -486,62 +435,6 @@ namespace DataAccess.Migrations
                     b.ToTable("AnalyticalDetail");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.AppUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<string>("FirstName");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LastName");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.ApplicationPages", b =>
                 {
                     b.Property<int>("PageId")
@@ -573,710 +466,95 @@ namespace DataAccess.Migrations
                     b.ToTable("ApplicationPages");
 
                     b.HasData(
-                        new
-                        {
-                            PageId = 1,
-                            IsDeleted = false,
-                            ModuleId = 1,
-                            ModuleName = "Users",
-                            PageName = "Users"
-                        },
-                        new
-                        {
-                            PageId = 2,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "ChartOfAccount"
-                        },
-                        new
-                        {
-                            PageId = 3,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "JournalCodes"
-                        },
-                        new
-                        {
-                            PageId = 4,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "CurrencyCodes"
-                        },
-                        new
-                        {
-                            PageId = 5,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "OfficeCodes"
-                        },
-                        new
-                        {
-                            PageId = 6,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "FinancialYear"
-                        },
-                        new
-                        {
-                            PageId = 7,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "PensionRate"
-                        },
-                        new
-                        {
-                            PageId = 8,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "EmployeeContract"
-                        },
-                        new
-                        {
-                            PageId = 9,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "AppraisalQuestions"
-                        },
-                        new
-                        {
-                            PageId = 10,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "TechnicalQuestions"
-                        },
-                        new
-                        {
-                            PageId = 11,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "EmailSettings"
-                        },
-                        new
-                        {
-                            PageId = 12,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "ExchangeRate"
-                        },
-                        new
-                        {
-                            PageId = 13,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "LeaveReason"
-                        },
-                        new
-                        {
-                            PageId = 14,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "Profession"
-                        },
-                        new
-                        {
-                            PageId = 15,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "Department"
-                        },
-                        new
-                        {
-                            PageId = 16,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "Qualification"
-                        },
-                        new
-                        {
-                            PageId = 17,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "Designation"
-                        },
-                        new
-                        {
-                            PageId = 18,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "JobGrade"
-                        },
-                        new
-                        {
-                            PageId = 19,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "SalaryHead"
-                        },
-                        new
-                        {
-                            PageId = 20,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "SalaryTaxReportContent"
-                        },
-                        new
-                        {
-                            PageId = 21,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "SetPayrollAccount"
-                        },
-                        new
-                        {
-                            PageId = 22,
-                            IsDeleted = true,
-                            ModuleId = 3,
-                            ModuleName = "Accounting",
-                            PageName = "Vouchers"
-                        },
-                        new
-                        {
-                            PageId = 23,
-                            IsDeleted = false,
-                            ModuleId = 3,
-                            ModuleName = "Accounting",
-                            PageName = "Journal"
-                        },
-                        new
-                        {
-                            PageId = 24,
-                            IsDeleted = false,
-                            ModuleId = 3,
-                            ModuleName = "Accounting",
-                            PageName = "LedgerStatement"
-                        },
-                        new
-                        {
-                            PageId = 25,
-                            IsDeleted = false,
-                            ModuleId = 3,
-                            ModuleName = "Accounting",
-                            PageName = "BudgetBalance"
-                        },
-                        new
-                        {
-                            PageId = 26,
-                            IsDeleted = false,
-                            ModuleId = 3,
-                            ModuleName = "Accounting",
-                            PageName = "TrialBalance"
-                        },
-                        new
-                        {
-                            PageId = 27,
-                            IsDeleted = false,
-                            ModuleId = 3,
-                            ModuleName = "Accounting",
-                            PageName = "FinancialReport"
-                        },
-                        new
-                        {
-                            PageId = 28,
-                            IsDeleted = true,
-                            ModuleId = 3,
-                            ModuleName = "Accounting",
-                            PageName = "CategoryPopulator"
-                        },
-                        new
-                        {
-                            PageId = 29,
-                            IsDeleted = false,
-                            ModuleId = 3,
-                            ModuleName = "Accounting",
-                            PageName = "ExchangeGainLoss"
-                        },
-                        new
-                        {
-                            PageId = 30,
-                            IsDeleted = false,
-                            ModuleId = 3,
-                            ModuleName = "Accounting",
-                            PageName = "GainLossTransaction"
-                        },
-                        new
-                        {
-                            PageId = 31,
-                            IsDeleted = false,
-                            ModuleId = 3,
-                            ModuleName = "Accounting",
-                            PageName = "PensionPayments"
-                        },
-                        new
-                        {
-                            PageId = 32,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "Employees"
-                        },
-                        new
-                        {
-                            PageId = 33,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "PayrollDailyHours"
-                        },
-                        new
-                        {
-                            PageId = 34,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "Holidays"
-                        },
-                        new
-                        {
-                            PageId = 35,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "Attendance"
-                        },
-                        new
-                        {
-                            PageId = 36,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "ApproveLeave"
-                        },
-                        new
-                        {
-                            PageId = 37,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "MonthlyPayrollRegister"
-                        },
-                        new
-                        {
-                            PageId = 38,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "Jobs"
-                        },
-                        new
-                        {
-                            PageId = 39,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "Interview"
-                        },
-                        new
-                        {
-                            PageId = 40,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "EmployeeAppraisal"
-                        },
-                        new
-                        {
-                            PageId = 41,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "Advances"
-                        },
-                        new
-                        {
-                            PageId = 42,
-                            IsDeleted = false,
-                            ModuleId = 4,
-                            ModuleName = "HR",
-                            PageName = "Summary"
-                        },
-                        new
-                        {
-                            PageId = 43,
-                            IsDeleted = false,
-                            ModuleId = 5,
-                            ModuleName = "Store",
-                            PageName = "Categories"
-                        },
-                        new
-                        {
-                            PageId = 44,
-                            IsDeleted = false,
-                            ModuleId = 5,
-                            ModuleName = "Store",
-                            PageName = "StoreSourceCodes"
-                        },
-                        new
-                        {
-                            PageId = 45,
-                            IsDeleted = false,
-                            ModuleId = 5,
-                            ModuleName = "Store",
-                            PageName = "PaymentTypes"
-                        },
-                        new
-                        {
-                            PageId = 46,
-                            IsDeleted = false,
-                            ModuleId = 5,
-                            ModuleName = "Store",
-                            PageName = "Store"
-                        },
-                        new
-                        {
-                            PageId = 47,
-                            IsDeleted = false,
-                            ModuleId = 5,
-                            ModuleName = "Store",
-                            PageName = "ProcurementSummary"
-                        },
-                        new
-                        {
-                            PageId = 48,
-                            IsDeleted = false,
-                            ModuleId = 5,
-                            ModuleName = "Store",
-                            PageName = "DepreciationReport"
-                        },
-                        new
-                        {
-                            PageId = 49,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "TimeCategory"
-                        },
-                        new
-                        {
-                            PageId = 50,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Quality"
-                        },
-                        new
-                        {
-                            PageId = 51,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Phase"
-                        },
-                        new
-                        {
-                            PageId = 52,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Nature"
-                        },
-                        new
-                        {
-                            PageId = 53,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Medium"
-                        },
-                        new
-                        {
-                            PageId = 54,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "MediaCategory"
-                        },
-                        new
-                        {
-                            PageId = 55,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "ActivityType"
-                        },
-                        new
-                        {
-                            PageId = 56,
-                            IsDeleted = false,
-                            ModuleId = 7,
-                            ModuleName = "AccountingNew",
-                            PageName = "Assets"
-                        },
-                        new
-                        {
-                            PageId = 57,
-                            IsDeleted = false,
-                            ModuleId = 7,
-                            ModuleName = "AccountingNew",
-                            PageName = "Liabilities"
-                        },
-                        new
-                        {
-                            PageId = 58,
-                            IsDeleted = false,
-                            ModuleId = 7,
-                            ModuleName = "AccountingNew",
-                            PageName = "Income"
-                        },
-                        new
-                        {
-                            PageId = 59,
-                            IsDeleted = false,
-                            ModuleId = 7,
-                            ModuleName = "AccountingNew",
-                            PageName = "Expense"
-                        },
-                        new
-                        {
-                            PageId = 60,
-                            IsDeleted = false,
-                            ModuleId = 7,
-                            ModuleName = "AccountingNew",
-                            PageName = "BalanceSheet"
-                        },
-                        new
-                        {
-                            PageId = 61,
-                            IsDeleted = false,
-                            ModuleId = 7,
-                            ModuleName = "AccountingNew",
-                            PageName = "IncomeExpenseReport"
-                        },
-                        new
-                        {
-                            PageId = 62,
-                            IsDeleted = false,
-                            ModuleId = 7,
-                            ModuleName = "AccountingNew",
-                            PageName = "Vouchers"
-                        },
-                        new
-                        {
-                            PageId = 63,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Clients"
-                        },
-                        new
-                        {
-                            PageId = 64,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "UnitRates"
-                        },
-                        new
-                        {
-                            PageId = 65,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Jobs"
-                        },
-                        new
-                        {
-                            PageId = 66,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Contracts"
-                        },
-                        new
-                        {
-                            PageId = 67,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "MyProjects"
-                        },
-                        new
-                        {
-                            PageId = 68,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "Donors"
-                        },
-                        new
-                        {
-                            PageId = 69,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "ProjectDetails"
-                        },
-                        new
-                        {
-                            PageId = 70,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "Proposal"
-                        },
-                        new
-                        {
-                            PageId = 71,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "CriteriaEvaluation"
-                        },
-                        new
-                        {
-                            PageId = 72,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Producer"
-                        },
-                        new
-                        {
-                            PageId = 73,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Policy"
-                        },
-                        new
-                        {
-                            PageId = 74,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "ProjectJobs"
-                        },
-                        new
-                        {
-                            PageId = 75,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "ProjectActivities"
-                        },
-                        new
-                        {
-                            PageId = 76,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Channel"
-                        },
-                        new
-                        {
-                            PageId = 77,
-                            IsDeleted = false,
-                            ModuleId = 6,
-                            ModuleName = "Marketing",
-                            PageName = "Scheduler"
-                        },
-                        new
-                        {
-                            PageId = 78,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "ProjectDashboard"
-                        },
-                        new
-                        {
-                            PageId = 79,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "ProjectCashFlow"
-                        },
-                        new
-                        {
-                            PageId = 80,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "ProjectBudgetLine"
-                        },
-                        new
-                        {
-                            PageId = 81,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "BroadCastPolicy"
-                        },
-                        new
-                        {
-                            PageId = 82,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "ProposalReport"
-                        },
-                        new
-                        {
-                            PageId = 83,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "ProjectIndicators"
-                        },
-                        new
-                        {
-                            PageId = 84,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "ProjectPeople"
-                        },
-                        new
-                        {
-                            PageId = 85,
-                            IsDeleted = false,
-                            ModuleId = 7,
-                            ModuleName = "AccountingNew",
-                            PageName = "VoucherSummaryReport"
-                        },
-                        new
-                        {
-                            PageId = 86,
-                            IsDeleted = false,
-                            ModuleId = 8,
-                            ModuleName = "Projects",
-                            PageName = "HiringRequests"
-                        },
-                        new
-                        {
-                            PageId = 87,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "PensionDebitAccount"
-                        },
-                        new
-                        {
-                            PageId = 88,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "AttendanceGroupMaster"
-                        });
+                        new { PageId = 1, IsDeleted = false, ModuleId = 1, ModuleName = "Users", PageName = "Users" },
+                        new { PageId = 2, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "ChartOfAccount" },
+                        new { PageId = 3, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "JournalCodes" },
+                        new { PageId = 4, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "CurrencyCodes" },
+                        new { PageId = 5, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "OfficeCodes" },
+                        new { PageId = 6, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "FinancialYear" },
+                        new { PageId = 7, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "PensionRate" },
+                        new { PageId = 8, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "EmployeeContract" },
+                        new { PageId = 9, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "AppraisalQuestions" },
+                        new { PageId = 10, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "TechnicalQuestions" },
+                        new { PageId = 11, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "EmailSettings" },
+                        new { PageId = 12, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "ExchangeRate" },
+                        new { PageId = 13, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "LeaveReason" },
+                        new { PageId = 14, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Profession" },
+                        new { PageId = 15, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Department" },
+                        new { PageId = 16, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Qualification" },
+                        new { PageId = 17, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "Designation" },
+                        new { PageId = 18, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "JobGrade" },
+                        new { PageId = 19, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SalaryHead" },
+                        new { PageId = 20, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SalaryTaxReportContent" },
+                        new { PageId = 21, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "SetPayrollAccount" },
+                        new { PageId = 22, IsDeleted = true, ModuleId = 3, ModuleName = "Accounting", PageName = "Vouchers" },
+                        new { PageId = 23, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "Journal" },
+                        new { PageId = 24, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "LedgerStatement" },
+                        new { PageId = 25, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "BudgetBalance" },
+                        new { PageId = 26, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "TrialBalance" },
+                        new { PageId = 27, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "FinancialReport" },
+                        new { PageId = 28, IsDeleted = true, ModuleId = 3, ModuleName = "Accounting", PageName = "CategoryPopulator" },
+                        new { PageId = 29, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "ExchangeGainLoss" },
+                        new { PageId = 30, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "GainLossTransaction" },
+                        new { PageId = 31, IsDeleted = false, ModuleId = 3, ModuleName = "Accounting", PageName = "PensionPayments" },
+                        new { PageId = 32, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Employees" },
+                        new { PageId = 33, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "PayrollDailyHours" },
+                        new { PageId = 34, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Holidays" },
+                        new { PageId = 35, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Attendance" },
+                        new { PageId = 36, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "ApproveLeave" },
+                        new { PageId = 37, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "MonthlyPayrollRegister" },
+                        new { PageId = 38, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Jobs" },
+                        new { PageId = 39, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Interview" },
+                        new { PageId = 40, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "EmployeeAppraisal" },
+                        new { PageId = 41, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Advances" },
+                        new { PageId = 42, IsDeleted = false, ModuleId = 4, ModuleName = "HR", PageName = "Summary" },
+                        new { PageId = 43, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "Categories" },
+                        new { PageId = 44, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "StoreSourceCodes" },
+                        new { PageId = 45, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "PaymentTypes" },
+                        new { PageId = 46, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "Store" },
+                        new { PageId = 47, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "ProcurementSummary" },
+                        new { PageId = 48, IsDeleted = false, ModuleId = 5, ModuleName = "Store", PageName = "DepreciationReport" },
+                        new { PageId = 49, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "TimeCategory" },
+                        new { PageId = 50, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Quality" },
+                        new { PageId = 51, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Phase" },
+                        new { PageId = 52, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Nature" },
+                        new { PageId = 53, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Medium" },
+                        new { PageId = 54, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "MediaCategory" },
+                        new { PageId = 55, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "ActivityType" },
+                        new { PageId = 56, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "Assets" },
+                        new { PageId = 57, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "Liabilities" },
+                        new { PageId = 58, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "Income" },
+                        new { PageId = 59, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "Expense" },
+                        new { PageId = 60, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "BalanceSheet" },
+                        new { PageId = 61, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "IncomeExpenseReport" },
+                        new { PageId = 62, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "Vouchers" },
+                        new { PageId = 63, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Clients" },
+                        new { PageId = 64, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "UnitRates" },
+                        new { PageId = 65, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Jobs" },
+                        new { PageId = 66, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Contracts" },
+                        new { PageId = 67, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "MyProjects" },
+                        new { PageId = 68, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "Donors" },
+                        new { PageId = 69, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectDetails" },
+                        new { PageId = 70, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "Proposal" },
+                        new { PageId = 71, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "CriteriaEvaluation" },
+                        new { PageId = 72, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Producer" },
+                        new { PageId = 73, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Policy" },
+                        new { PageId = 74, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectJobs" },
+                        new { PageId = 75, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectActivities" },
+                        new { PageId = 76, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Channel" },
+                        new { PageId = 77, IsDeleted = false, ModuleId = 6, ModuleName = "Marketing", PageName = "Scheduler" },
+                        new { PageId = 78, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectDashboard" },
+                        new { PageId = 79, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectCashFlow" },
+                        new { PageId = 80, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectBudgetLine" },
+                        new { PageId = 81, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "BroadCastPolicy" },
+                        new { PageId = 82, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProposalReport" },
+                        new { PageId = 83, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectIndicators" },
+                        new { PageId = 84, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "ProjectPeople" },
+                        new { PageId = 85, IsDeleted = false, ModuleId = 7, ModuleName = "AccountingNew", PageName = "VoucherSummaryReport" },
+                        new { PageId = 86, IsDeleted = false, ModuleId = 8, ModuleName = "Projects", PageName = "HiringRequests" },
+                        new { PageId = 87, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "PensionDebitAccount" },
+                        new { PageId = 88, IsDeleted = false, ModuleId = 2, ModuleName = "Code", PageName = "AttendanceGroupMaster" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AppraisalGeneralQuestions", b =>
@@ -1345,6 +623,62 @@ namespace DataAccess.Migrations
                     b.HasIndex("PageId");
 
                     b.ToTable("ApproveRejectPermission");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.AppUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.AssignActivity", b =>
@@ -1673,40 +1007,6 @@ namespace DataAccess.Migrations
                     b.ToTable("CategoryPopulator");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.ChatDetail", b =>
-                {
-                    b.Property<long>("ChatId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ChatSourceEntityId");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int>("EntityId");
-
-                    b.Property<long?>("EntitySourceDocumentId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("Message");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("ChatId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("EntitySourceDocumentId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("ChatDetail");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.CodeType", b =>
                 {
                     b.Property<int>("CodeTypeId")
@@ -1720,31 +1020,12 @@ namespace DataAccess.Migrations
                     b.ToTable("CodeType");
 
                     b.HasData(
-                        new
-                        {
-                            CodeTypeId = 1,
-                            CodeTypeName = "Organizations"
-                        },
-                        new
-                        {
-                            CodeTypeId = 2,
-                            CodeTypeName = "Suppliers"
-                        },
-                        new
-                        {
-                            CodeTypeId = 3,
-                            CodeTypeName = "Repair Shops"
-                        },
-                        new
-                        {
-                            CodeTypeId = 4,
-                            CodeTypeName = "Individual/Others"
-                        },
-                        new
-                        {
-                            CodeTypeId = 5,
-                            CodeTypeName = "Locations/Stores"
-                        });
+                        new { CodeTypeId = 1, CodeTypeName = "Organizations" },
+                        new { CodeTypeId = 2, CodeTypeName = "Suppliers" },
+                        new { CodeTypeId = 3, CodeTypeName = "Repair Shops" },
+                        new { CodeTypeId = 4, CodeTypeName = "Individual/Others" },
+                        new { CodeTypeId = 5, CodeTypeName = "Locations/Stores" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.ContractTypeContent", b =>
@@ -1809,18 +1090,9 @@ namespace DataAccess.Migrations
                     b.ToTable("CountryDetails");
 
                     b.HasData(
-                        new
-                        {
-                            CountryId = 1,
-                            CountryName = "Afghanistan",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            CountryId = 2,
-                            CountryName = "United States",
-                            IsDeleted = false
-                        });
+                        new { CountryId = 1, CountryName = "Afghanistan", IsDeleted = false },
+                        new { CountryId = 2, CountryName = "United States", IsDeleted = false }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.CurrencyDetails", b =>
@@ -1859,42 +1131,11 @@ namespace DataAccess.Migrations
                     b.ToTable("CurrencyDetails");
 
                     b.HasData(
-                        new
-                        {
-                            CurrencyId = 1,
-                            CurrencyCode = "AFN",
-                            CurrencyName = "Afghanistan",
-                            IsDeleted = false,
-                            SalaryTaxFlag = true,
-                            Status = false
-                        },
-                        new
-                        {
-                            CurrencyId = 2,
-                            CurrencyCode = "EUR",
-                            CurrencyName = "European Curency",
-                            IsDeleted = false,
-                            SalaryTaxFlag = false,
-                            Status = false
-                        },
-                        new
-                        {
-                            CurrencyId = 3,
-                            CurrencyCode = "PKR",
-                            CurrencyName = "Pakistani Rupees",
-                            IsDeleted = false,
-                            SalaryTaxFlag = false,
-                            Status = true
-                        },
-                        new
-                        {
-                            CurrencyId = 4,
-                            CurrencyCode = "USD",
-                            CurrencyName = "US Dollars",
-                            IsDeleted = false,
-                            SalaryTaxFlag = false,
-                            Status = false
-                        });
+                        new { CurrencyId = 1, CurrencyCode = "AFG", CurrencyName = "Afghanistan", IsDeleted = false, SalaryTaxFlag = true, Status = false },
+                        new { CurrencyId = 2, CurrencyCode = "EUR", CurrencyName = "European Curency", IsDeleted = false, SalaryTaxFlag = false, Status = false },
+                        new { CurrencyId = 3, CurrencyCode = "PKR", CurrencyName = "Pakistani Rupees", IsDeleted = false, SalaryTaxFlag = false, Status = true },
+                        new { CurrencyId = 4, CurrencyCode = "USD", CurrencyName = "US Dollars", IsDeleted = false, SalaryTaxFlag = false, Status = false }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Department", b =>
@@ -1930,13 +1171,8 @@ namespace DataAccess.Migrations
                     b.ToTable("Department");
 
                     b.HasData(
-                        new
-                        {
-                            DepartmentId = 1,
-                            DepartmentName = "Administration",
-                            IsDeleted = false,
-                            OfficeId = 1
-                        });
+                        new { DepartmentId = 1, DepartmentName = "Administration", IsDeleted = false, OfficeId = 1 }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.DesignationDetail", b =>
@@ -1998,867 +1234,130 @@ namespace DataAccess.Migrations
                     b.ToTable("DistrictDetail");
 
                     b.HasData(
-                        new
-                        {
-                            DistrictID = 1L,
-                            District = "Jawand",
-                            IsDeleted = false,
-                            ProvinceID = 1
-                        },
-                        new
-                        {
-                            DistrictID = 2L,
-                            District = "Muqur",
-                            IsDeleted = false,
-                            ProvinceID = 1
-                        },
-                        new
-                        {
-                            DistrictID = 3L,
-                            District = "Qadis",
-                            IsDeleted = false,
-                            ProvinceID = 1
-                        },
-                        new
-                        {
-                            DistrictID = 4L,
-                            District = "Baghlani Jadid",
-                            IsDeleted = false,
-                            ProvinceID = 2
-                        },
-                        new
-                        {
-                            DistrictID = 5L,
-                            District = "Dahana i Ghuri",
-                            IsDeleted = false,
-                            ProvinceID = 2
-                        },
-                        new
-                        {
-                            DistrictID = 6L,
-                            District = "Chahar Bolak",
-                            IsDeleted = false,
-                            ProvinceID = 3
-                        },
-                        new
-                        {
-                            DistrictID = 7L,
-                            District = "Chahar Kint",
-                            IsDeleted = false,
-                            ProvinceID = 3
-                        },
-                        new
-                        {
-                            DistrictID = 8L,
-                            District = "Panjab",
-                            IsDeleted = false,
-                            ProvinceID = 4
-                        },
-                        new
-                        {
-                            DistrictID = 9L,
-                            District = "Shibar",
-                            IsDeleted = false,
-                            ProvinceID = 4
-                        },
-                        new
-                        {
-                            DistrictID = 10L,
-                            District = "Bamyan",
-                            IsDeleted = false,
-                            ProvinceID = 4
-                        },
-                        new
-                        {
-                            DistrictID = 11L,
-                            District = "Gizab",
-                            IsDeleted = false,
-                            ProvinceID = 5
-                        },
-                        new
-                        {
-                            DistrictID = 12L,
-                            District = "Bala Buluk",
-                            IsDeleted = false,
-                            ProvinceID = 6
-                        },
-                        new
-                        {
-                            DistrictID = 13L,
-                            District = "Bakwa",
-                            IsDeleted = false,
-                            ProvinceID = 6
-                        },
-                        new
-                        {
-                            DistrictID = 14L,
-                            District = "Andkhoy",
-                            IsDeleted = false,
-                            ProvinceID = 7
-                        },
-                        new
-                        {
-                            DistrictID = 15L,
-                            District = "Almar",
-                            IsDeleted = false,
-                            ProvinceID = 7
-                        },
-                        new
-                        {
-                            DistrictID = 16L,
-                            District = "Bilchiragh",
-                            IsDeleted = false,
-                            ProvinceID = 7
-                        },
-                        new
-                        {
-                            DistrictID = 17L,
-                            District = "Ajristan",
-                            IsDeleted = false,
-                            ProvinceID = 8
-                        },
-                        new
-                        {
-                            DistrictID = 18L,
-                            District = "Andar",
-                            IsDeleted = false,
-                            ProvinceID = 8
-                        },
-                        new
-                        {
-                            DistrictID = 19L,
-                            District = "Shahrak",
-                            IsDeleted = false,
-                            ProvinceID = 9
-                        },
-                        new
-                        {
-                            DistrictID = 20L,
-                            District = "Tulak",
-                            IsDeleted = false,
-                            ProvinceID = 9
-                        },
-                        new
-                        {
-                            DistrictID = 21L,
-                            District = "Baghran",
-                            IsDeleted = false,
-                            ProvinceID = 10
-                        },
-                        new
-                        {
-                            DistrictID = 22L,
-                            District = "Garmsir",
-                            IsDeleted = false,
-                            ProvinceID = 10
-                        },
-                        new
-                        {
-                            DistrictID = 23L,
-                            District = "Chishti Sharif",
-                            IsDeleted = false,
-                            ProvinceID = 11
-                        },
-                        new
-                        {
-                            DistrictID = 24L,
-                            District = "Aqcha",
-                            IsDeleted = false,
-                            ProvinceID = 12
-                        },
-                        new
-                        {
-                            DistrictID = 25L,
-                            District = "Fayzabad",
-                            IsDeleted = false,
-                            ProvinceID = 12
-                        },
-                        new
-                        {
-                            DistrictID = 26L,
-                            District = "GuzDarzabara",
-                            IsDeleted = false,
-                            ProvinceID = 12
-                        },
-                        new
-                        {
-                            DistrictID = 27L,
-                            District = "Chahar Asyab",
-                            IsDeleted = false,
-                            ProvinceID = 13
-                        },
-                        new
-                        {
-                            DistrictID = 28L,
-                            District = "Deh Sabz",
-                            IsDeleted = false,
-                            ProvinceID = 13
-                        },
-                        new
-                        {
-                            DistrictID = 29L,
-                            District = "Bagrami",
-                            IsDeleted = false,
-                            ProvinceID = 13
-                        },
-                        new
-                        {
-                            DistrictID = 30L,
-                            District = "Daman",
-                            IsDeleted = false,
-                            ProvinceID = 14
-                        },
-                        new
-                        {
-                            DistrictID = 31L,
-                            District = "Ghorak",
-                            IsDeleted = false,
-                            ProvinceID = 14
-                        },
-                        new
-                        {
-                            DistrictID = 32L,
-                            District = "Alasay",
-                            IsDeleted = false,
-                            ProvinceID = 15
-                        },
-                        new
-                        {
-                            DistrictID = 33L,
-                            District = "Bak",
-                            IsDeleted = false,
-                            ProvinceID = 16
-                        },
-                        new
-                        {
-                            DistrictID = 34L,
-                            District = "Gurbuz",
-                            IsDeleted = false,
-                            ProvinceID = 16
-                        },
-                        new
-                        {
-                            DistrictID = 35L,
-                            District = "Asadabad",
-                            IsDeleted = false,
-                            ProvinceID = 17
-                        },
-                        new
-                        {
-                            DistrictID = 36L,
-                            District = "Bar Kunar",
-                            IsDeleted = false,
-                            ProvinceID = 17
-                        },
-                        new
-                        {
-                            DistrictID = 37L,
-                            District = "Ali Abad",
-                            IsDeleted = false,
-                            ProvinceID = 18
-                        },
-                        new
-                        {
-                            DistrictID = 38L,
-                            District = "Archi",
-                            IsDeleted = false,
-                            ProvinceID = 18
-                        },
-                        new
-                        {
-                            DistrictID = 39L,
-                            District = "Alingar",
-                            IsDeleted = false,
-                            ProvinceID = 19
-                        },
-                        new
-                        {
-                            DistrictID = 40L,
-                            District = "Alishing",
-                            IsDeleted = false,
-                            ProvinceID = 19
-                        },
-                        new
-                        {
-                            DistrictID = 41L,
-                            District = "Baraki Barak",
-                            IsDeleted = false,
-                            ProvinceID = 20
-                        },
-                        new
-                        {
-                            DistrictID = 42L,
-                            District = "Charkh",
-                            IsDeleted = false,
-                            ProvinceID = 20
-                        },
-                        new
-                        {
-                            DistrictID = 43L,
-                            District = "Maidan Wardak",
-                            IsDeleted = false,
-                            ProvinceID = 21
-                        },
-                        new
-                        {
-                            DistrictID = 44L,
-                            District = "Achin",
-                            IsDeleted = false,
-                            ProvinceID = 22
-                        },
-                        new
-                        {
-                            DistrictID = 45L,
-                            District = "Bati Kot",
-                            IsDeleted = false,
-                            ProvinceID = 22
-                        },
-                        new
-                        {
-                            DistrictID = 46L,
-                            District = "Kang",
-                            IsDeleted = false,
-                            ProvinceID = 23
-                        },
-                        new
-                        {
-                            DistrictID = 47L,
-                            District = "Chakhansur",
-                            IsDeleted = false,
-                            ProvinceID = 23
-                        },
-                        new
-                        {
-                            DistrictID = 48L,
-                            District = "Kamdesh",
-                            IsDeleted = false,
-                            ProvinceID = 24
-                        },
-                        new
-                        {
-                            DistrictID = 49L,
-                            District = "Mandol",
-                            IsDeleted = false,
-                            ProvinceID = 24
-                        },
-                        new
-                        {
-                            DistrictID = 50L,
-                            District = "Gardez",
-                            IsDeleted = false,
-                            ProvinceID = 25
-                        },
-                        new
-                        {
-                            DistrictID = 51L,
-                            District = "Jaji",
-                            IsDeleted = false,
-                            ProvinceID = 25
-                        },
-                        new
-                        {
-                            DistrictID = 52L,
-                            District = "Zurmat",
-                            IsDeleted = false,
-                            ProvinceID = 25
-                        },
-                        new
-                        {
-                            DistrictID = 53L,
-                            District = "Wuza Zadran",
-                            IsDeleted = false,
-                            ProvinceID = 25
-                        },
-                        new
-                        {
-                            DistrictID = 54L,
-                            District = "Dila",
-                            IsDeleted = false,
-                            ProvinceID = 26
-                        },
-                        new
-                        {
-                            DistrictID = 55L,
-                            District = "Barmal",
-                            IsDeleted = false,
-                            ProvinceID = 26
-                        },
-                        new
-                        {
-                            DistrictID = 56L,
-                            District = "Kal",
-                            IsDeleted = false,
-                            ProvinceID = 26
-                        },
-                        new
-                        {
-                            DistrictID = 57L,
-                            District = "Chang",
-                            IsDeleted = false,
-                            ProvinceID = 26
-                        },
-                        new
-                        {
-                            DistrictID = 58L,
-                            District = "Anaba",
-                            IsDeleted = false,
-                            ProvinceID = 27
-                        },
-                        new
-                        {
-                            DistrictID = 59L,
-                            District = "Bagram",
-                            IsDeleted = false,
-                            ProvinceID = 28
-                        },
-                        new
-                        {
-                            DistrictID = 60L,
-                            District = "Chaharikar",
-                            IsDeleted = false,
-                            ProvinceID = 28
-                        },
-                        new
-                        {
-                            DistrictID = 61L,
-                            District = "Jabal Saraj",
-                            IsDeleted = false,
-                            ProvinceID = 28
-                        },
-                        new
-                        {
-                            DistrictID = 62L,
-                            District = "Kohi Safi",
-                            IsDeleted = false,
-                            ProvinceID = 28
-                        },
-                        new
-                        {
-                            DistrictID = 63L,
-                            District = "Salang",
-                            IsDeleted = false,
-                            ProvinceID = 28
-                        },
-                        new
-                        {
-                            DistrictID = 64L,
-                            District = "Aybak",
-                            IsDeleted = false,
-                            ProvinceID = 29
-                        },
-                        new
-                        {
-                            DistrictID = 65L,
-                            District = "Balkhab",
-                            IsDeleted = false,
-                            ProvinceID = 30
-                        },
-                        new
-                        {
-                            DistrictID = 66L,
-                            District = "Bangi",
-                            IsDeleted = false,
-                            ProvinceID = 31
-                        },
-                        new
-                        {
-                            DistrictID = 67L,
-                            District = "Uakhar",
-                            IsDeleted = false,
-                            ProvinceID = 32
-                        },
-                        new
-                        {
-                            DistrictID = 68L,
-                            District = "Argahandab",
-                            IsDeleted = false,
-                            ProvinceID = 33
-                        },
-                        new
-                        {
-                            DistrictID = 69L,
-                            District = "Atghar",
-                            IsDeleted = false,
-                            ProvinceID = 33
-                        },
-                        new
-                        {
-                            DistrictID = 70L,
-                            District = "Alabama",
-                            IsDeleted = false,
-                            ProvinceID = 34
-                        },
-                        new
-                        {
-                            DistrictID = 71L,
-                            District = "Arizona",
-                            IsDeleted = false,
-                            ProvinceID = 35
-                        },
-                        new
-                        {
-                            DistrictID = 72L,
-                            District = "Jurors",
-                            IsDeleted = false,
-                            ProvinceID = 35
-                        },
-                        new
-                        {
-                            DistrictID = 73L,
-                            District = "Arona",
-                            IsDeleted = false,
-                            ProvinceID = 35
-                        },
-                        new
-                        {
-                            DistrictID = 74L,
-                            District = "Arkansas",
-                            IsDeleted = false,
-                            ProvinceID = 36
-                        },
-                        new
-                        {
-                            DistrictID = 75L,
-                            District = "California",
-                            IsDeleted = false,
-                            ProvinceID = 37
-                        },
-                        new
-                        {
-                            DistrictID = 76L,
-                            District = "Califor",
-                            IsDeleted = false,
-                            ProvinceID = 37
-                        },
-                        new
-                        {
-                            DistrictID = 77L,
-                            District = "Colorado",
-                            IsDeleted = false,
-                            ProvinceID = 38
-                        },
-                        new
-                        {
-                            DistrictID = 78L,
-                            District = "Connecticut",
-                            IsDeleted = false,
-                            ProvinceID = 39
-                        },
-                        new
-                        {
-                            DistrictID = 79L,
-                            District = "Aelaware",
-                            IsDeleted = false,
-                            ProvinceID = 40
-                        },
-                        new
-                        {
-                            DistrictID = 80L,
-                            District = "Florida",
-                            IsDeleted = false,
-                            ProvinceID = 41
-                        },
-                        new
-                        {
-                            DistrictID = 81L,
-                            District = "Georia",
-                            IsDeleted = false,
-                            ProvinceID = 42
-                        },
-                        new
-                        {
-                            DistrictID = 82L,
-                            District = "Hawaii",
-                            IsDeleted = false,
-                            ProvinceID = 43
-                        },
-                        new
-                        {
-                            DistrictID = 83L,
-                            District = "Idaho",
-                            IsDeleted = false,
-                            ProvinceID = 44
-                        },
-                        new
-                        {
-                            DistrictID = 84L,
-                            District = "Illinois",
-                            IsDeleted = false,
-                            ProvinceID = 45
-                        },
-                        new
-                        {
-                            DistrictID = 85L,
-                            District = "Indiana",
-                            IsDeleted = false,
-                            ProvinceID = 46
-                        },
-                        new
-                        {
-                            DistrictID = 86L,
-                            District = "Undia",
-                            IsDeleted = false,
-                            ProvinceID = 46
-                        },
-                        new
-                        {
-                            DistrictID = 87L,
-                            District = "Iowa",
-                            IsDeleted = false,
-                            ProvinceID = 47
-                        },
-                        new
-                        {
-                            DistrictID = 88L,
-                            District = "Lansa",
-                            IsDeleted = false,
-                            ProvinceID = 48
-                        },
-                        new
-                        {
-                            DistrictID = 89L,
-                            District = "Kentucky",
-                            IsDeleted = false,
-                            ProvinceID = 49
-                        },
-                        new
-                        {
-                            DistrictID = 90L,
-                            District = "Louisiana",
-                            IsDeleted = false,
-                            ProvinceID = 50
-                        },
-                        new
-                        {
-                            DistrictID = 91L,
-                            District = "Maine",
-                            IsDeleted = false,
-                            ProvinceID = 51
-                        },
-                        new
-                        {
-                            DistrictID = 92L,
-                            District = "Maryland",
-                            IsDeleted = false,
-                            ProvinceID = 52
-                        },
-                        new
-                        {
-                            DistrictID = 93L,
-                            District = "Massachusetts",
-                            IsDeleted = false,
-                            ProvinceID = 53
-                        },
-                        new
-                        {
-                            DistrictID = 94L,
-                            District = "Michigan",
-                            IsDeleted = false,
-                            ProvinceID = 54
-                        },
-                        new
-                        {
-                            DistrictID = 95L,
-                            District = "Minnesota",
-                            IsDeleted = false,
-                            ProvinceID = 55
-                        },
-                        new
-                        {
-                            DistrictID = 96L,
-                            District = "Mississippi",
-                            IsDeleted = false,
-                            ProvinceID = 56
-                        },
-                        new
-                        {
-                            DistrictID = 97L,
-                            District = "Missouri",
-                            IsDeleted = false,
-                            ProvinceID = 57
-                        },
-                        new
-                        {
-                            DistrictID = 98L,
-                            District = "Montana",
-                            IsDeleted = false,
-                            ProvinceID = 58
-                        },
-                        new
-                        {
-                            DistrictID = 99L,
-                            District = "Nebraska",
-                            IsDeleted = false,
-                            ProvinceID = 59
-                        },
-                        new
-                        {
-                            DistrictID = 100L,
-                            District = "Yevada",
-                            IsDeleted = false,
-                            ProvinceID = 60
-                        },
-                        new
-                        {
-                            DistrictID = 101L,
-                            District = "New Hampshire",
-                            IsDeleted = false,
-                            ProvinceID = 61
-                        },
-                        new
-                        {
-                            DistrictID = 102L,
-                            District = "New Jersey",
-                            IsDeleted = false,
-                            ProvinceID = 62
-                        },
-                        new
-                        {
-                            DistrictID = 103L,
-                            District = "New Mexico",
-                            IsDeleted = false,
-                            ProvinceID = 63
-                        },
-                        new
-                        {
-                            DistrictID = 104L,
-                            District = "New York",
-                            IsDeleted = false,
-                            ProvinceID = 64
-                        },
-                        new
-                        {
-                            DistrictID = 105L,
-                            District = "North Carolina",
-                            IsDeleted = false,
-                            ProvinceID = 65
-                        },
-                        new
-                        {
-                            DistrictID = 106L,
-                            District = "North Dakota",
-                            IsDeleted = false,
-                            ProvinceID = 66
-                        },
-                        new
-                        {
-                            DistrictID = 107L,
-                            District = "Ohio",
-                            IsDeleted = false,
-                            ProvinceID = 67
-                        },
-                        new
-                        {
-                            DistrictID = 108L,
-                            District = "Oklahoma",
-                            IsDeleted = false,
-                            ProvinceID = 68
-                        },
-                        new
-                        {
-                            DistrictID = 109L,
-                            District = "Tregon",
-                            IsDeleted = false,
-                            ProvinceID = 69
-                        },
-                        new
-                        {
-                            DistrictID = 110L,
-                            District = "Pennsylvania",
-                            IsDeleted = false,
-                            ProvinceID = 70
-                        },
-                        new
-                        {
-                            DistrictID = 111L,
-                            District = "Rhode Island",
-                            IsDeleted = false,
-                            ProvinceID = 71
-                        },
-                        new
-                        {
-                            DistrictID = 112L,
-                            District = "South Carolina",
-                            IsDeleted = false,
-                            ProvinceID = 72
-                        },
-                        new
-                        {
-                            DistrictID = 113L,
-                            District = "South Dakota",
-                            IsDeleted = false,
-                            ProvinceID = 73
-                        },
-                        new
-                        {
-                            DistrictID = 114L,
-                            District = "Tennessee",
-                            IsDeleted = false,
-                            ProvinceID = 74
-                        },
-                        new
-                        {
-                            DistrictID = 115L,
-                            District = "Texas",
-                            IsDeleted = false,
-                            ProvinceID = 75
-                        },
-                        new
-                        {
-                            DistrictID = 116L,
-                            District = "Wtaha",
-                            IsDeleted = false,
-                            ProvinceID = 76
-                        },
-                        new
-                        {
-                            DistrictID = 117L,
-                            District = "Oermont",
-                            IsDeleted = false,
-                            ProvinceID = 77
-                        },
-                        new
-                        {
-                            DistrictID = 118L,
-                            District = "Virginia",
-                            IsDeleted = false,
-                            ProvinceID = 78
-                        },
-                        new
-                        {
-                            DistrictID = 119L,
-                            District = "Washinn",
-                            IsDeleted = false,
-                            ProvinceID = 79
-                        },
-                        new
-                        {
-                            DistrictID = 120L,
-                            District = "West Virginia",
-                            IsDeleted = false,
-                            ProvinceID = 80
-                        },
-                        new
-                        {
-                            DistrictID = 121L,
-                            District = "Nouit Vinia",
-                            IsDeleted = false,
-                            ProvinceID = 80
-                        },
-                        new
-                        {
-                            DistrictID = 122L,
-                            District = "Wisconsin",
-                            IsDeleted = false,
-                            ProvinceID = 81
-                        },
-                        new
-                        {
-                            DistrictID = 123L,
-                            District = "Wyoming",
-                            IsDeleted = false,
-                            ProvinceID = 82
-                        });
+                        new { DistrictID = 1L, District = "Jawand", IsDeleted = false, ProvinceID = 1 },
+                        new { DistrictID = 2L, District = "Muqur", IsDeleted = false, ProvinceID = 1 },
+                        new { DistrictID = 3L, District = "Qadis", IsDeleted = false, ProvinceID = 1 },
+                        new { DistrictID = 4L, District = "Baghlani Jadid", IsDeleted = false, ProvinceID = 2 },
+                        new { DistrictID = 5L, District = "Dahana i Ghuri", IsDeleted = false, ProvinceID = 2 },
+                        new { DistrictID = 6L, District = "Chahar Bolak", IsDeleted = false, ProvinceID = 3 },
+                        new { DistrictID = 7L, District = "Chahar Kint", IsDeleted = false, ProvinceID = 3 },
+                        new { DistrictID = 8L, District = "Panjab", IsDeleted = false, ProvinceID = 4 },
+                        new { DistrictID = 9L, District = "Shibar", IsDeleted = false, ProvinceID = 4 },
+                        new { DistrictID = 10L, District = "Bamyan", IsDeleted = false, ProvinceID = 4 },
+                        new { DistrictID = 11L, District = "Gizab", IsDeleted = false, ProvinceID = 5 },
+                        new { DistrictID = 12L, District = "Bala Buluk", IsDeleted = false, ProvinceID = 6 },
+                        new { DistrictID = 13L, District = "Bakwa", IsDeleted = false, ProvinceID = 6 },
+                        new { DistrictID = 14L, District = "Andkhoy", IsDeleted = false, ProvinceID = 7 },
+                        new { DistrictID = 15L, District = "Almar", IsDeleted = false, ProvinceID = 7 },
+                        new { DistrictID = 16L, District = "Bilchiragh", IsDeleted = false, ProvinceID = 7 },
+                        new { DistrictID = 17L, District = "Ajristan", IsDeleted = false, ProvinceID = 8 },
+                        new { DistrictID = 18L, District = "Andar", IsDeleted = false, ProvinceID = 8 },
+                        new { DistrictID = 19L, District = "Shahrak", IsDeleted = false, ProvinceID = 9 },
+                        new { DistrictID = 20L, District = "Tulak", IsDeleted = false, ProvinceID = 9 },
+                        new { DistrictID = 21L, District = "Baghran", IsDeleted = false, ProvinceID = 10 },
+                        new { DistrictID = 22L, District = "Garmsir", IsDeleted = false, ProvinceID = 10 },
+                        new { DistrictID = 23L, District = "Chishti Sharif", IsDeleted = false, ProvinceID = 11 },
+                        new { DistrictID = 24L, District = "Aqcha", IsDeleted = false, ProvinceID = 12 },
+                        new { DistrictID = 25L, District = "Fayzabad", IsDeleted = false, ProvinceID = 12 },
+                        new { DistrictID = 26L, District = "GuzDarzabara", IsDeleted = false, ProvinceID = 12 },
+                        new { DistrictID = 27L, District = "Chahar Asyab", IsDeleted = false, ProvinceID = 13 },
+                        new { DistrictID = 28L, District = "Deh Sabz", IsDeleted = false, ProvinceID = 13 },
+                        new { DistrictID = 29L, District = "Bagrami", IsDeleted = false, ProvinceID = 13 },
+                        new { DistrictID = 30L, District = "Daman", IsDeleted = false, ProvinceID = 14 },
+                        new { DistrictID = 31L, District = "Ghorak", IsDeleted = false, ProvinceID = 14 },
+                        new { DistrictID = 32L, District = "Alasay", IsDeleted = false, ProvinceID = 15 },
+                        new { DistrictID = 33L, District = "Bak", IsDeleted = false, ProvinceID = 16 },
+                        new { DistrictID = 34L, District = "Gurbuz", IsDeleted = false, ProvinceID = 16 },
+                        new { DistrictID = 35L, District = "Asadabad", IsDeleted = false, ProvinceID = 17 },
+                        new { DistrictID = 36L, District = "Bar Kunar", IsDeleted = false, ProvinceID = 17 },
+                        new { DistrictID = 37L, District = "Ali Abad", IsDeleted = false, ProvinceID = 18 },
+                        new { DistrictID = 38L, District = "Archi", IsDeleted = false, ProvinceID = 18 },
+                        new { DistrictID = 39L, District = "Alingar", IsDeleted = false, ProvinceID = 19 },
+                        new { DistrictID = 40L, District = "Alishing", IsDeleted = false, ProvinceID = 19 },
+                        new { DistrictID = 41L, District = "Baraki Barak", IsDeleted = false, ProvinceID = 20 },
+                        new { DistrictID = 42L, District = "Charkh", IsDeleted = false, ProvinceID = 20 },
+                        new { DistrictID = 43L, District = "Maidan Wardak", IsDeleted = false, ProvinceID = 21 },
+                        new { DistrictID = 44L, District = "Achin", IsDeleted = false, ProvinceID = 22 },
+                        new { DistrictID = 45L, District = "Bati Kot", IsDeleted = false, ProvinceID = 22 },
+                        new { DistrictID = 46L, District = "Kang", IsDeleted = false, ProvinceID = 23 },
+                        new { DistrictID = 47L, District = "Chakhansur", IsDeleted = false, ProvinceID = 23 },
+                        new { DistrictID = 48L, District = "Kamdesh", IsDeleted = false, ProvinceID = 24 },
+                        new { DistrictID = 49L, District = "Mandol", IsDeleted = false, ProvinceID = 24 },
+                        new { DistrictID = 50L, District = "Gardez", IsDeleted = false, ProvinceID = 25 },
+                        new { DistrictID = 51L, District = "Jaji", IsDeleted = false, ProvinceID = 25 },
+                        new { DistrictID = 52L, District = "Zurmat", IsDeleted = false, ProvinceID = 25 },
+                        new { DistrictID = 53L, District = "Wuza Zadran", IsDeleted = false, ProvinceID = 25 },
+                        new { DistrictID = 54L, District = "Dila", IsDeleted = false, ProvinceID = 26 },
+                        new { DistrictID = 55L, District = "Barmal", IsDeleted = false, ProvinceID = 26 },
+                        new { DistrictID = 56L, District = "Kal", IsDeleted = false, ProvinceID = 26 },
+                        new { DistrictID = 57L, District = "Chang", IsDeleted = false, ProvinceID = 26 },
+                        new { DistrictID = 58L, District = "Anaba", IsDeleted = false, ProvinceID = 27 },
+                        new { DistrictID = 59L, District = "Bagram", IsDeleted = false, ProvinceID = 28 },
+                        new { DistrictID = 60L, District = "Chaharikar", IsDeleted = false, ProvinceID = 28 },
+                        new { DistrictID = 61L, District = "Jabal Saraj", IsDeleted = false, ProvinceID = 28 },
+                        new { DistrictID = 62L, District = "Kohi Safi", IsDeleted = false, ProvinceID = 28 },
+                        new { DistrictID = 63L, District = "Salang", IsDeleted = false, ProvinceID = 28 },
+                        new { DistrictID = 64L, District = "Aybak", IsDeleted = false, ProvinceID = 29 },
+                        new { DistrictID = 65L, District = "Balkhab", IsDeleted = false, ProvinceID = 30 },
+                        new { DistrictID = 66L, District = "Bangi", IsDeleted = false, ProvinceID = 31 },
+                        new { DistrictID = 67L, District = "Uakhar", IsDeleted = false, ProvinceID = 32 },
+                        new { DistrictID = 68L, District = "Argahandab", IsDeleted = false, ProvinceID = 33 },
+                        new { DistrictID = 69L, District = "Atghar", IsDeleted = false, ProvinceID = 33 },
+                        new { DistrictID = 70L, District = "Alabama", IsDeleted = false, ProvinceID = 34 },
+                        new { DistrictID = 71L, District = "Arizona", IsDeleted = false, ProvinceID = 35 },
+                        new { DistrictID = 72L, District = "Jurors", IsDeleted = false, ProvinceID = 35 },
+                        new { DistrictID = 73L, District = "Arona", IsDeleted = false, ProvinceID = 35 },
+                        new { DistrictID = 74L, District = "Arkansas", IsDeleted = false, ProvinceID = 36 },
+                        new { DistrictID = 75L, District = "California", IsDeleted = false, ProvinceID = 37 },
+                        new { DistrictID = 76L, District = "Califor", IsDeleted = false, ProvinceID = 37 },
+                        new { DistrictID = 77L, District = "Colorado", IsDeleted = false, ProvinceID = 38 },
+                        new { DistrictID = 78L, District = "Connecticut", IsDeleted = false, ProvinceID = 39 },
+                        new { DistrictID = 79L, District = "Aelaware", IsDeleted = false, ProvinceID = 40 },
+                        new { DistrictID = 80L, District = "Florida", IsDeleted = false, ProvinceID = 41 },
+                        new { DistrictID = 81L, District = "Georia", IsDeleted = false, ProvinceID = 42 },
+                        new { DistrictID = 82L, District = "Hawaii", IsDeleted = false, ProvinceID = 43 },
+                        new { DistrictID = 83L, District = "Idaho", IsDeleted = false, ProvinceID = 44 },
+                        new { DistrictID = 84L, District = "Illinois", IsDeleted = false, ProvinceID = 45 },
+                        new { DistrictID = 85L, District = "Indiana", IsDeleted = false, ProvinceID = 46 },
+                        new { DistrictID = 86L, District = "Undia", IsDeleted = false, ProvinceID = 46 },
+                        new { DistrictID = 87L, District = "Iowa", IsDeleted = false, ProvinceID = 47 },
+                        new { DistrictID = 88L, District = "Lansa", IsDeleted = false, ProvinceID = 48 },
+                        new { DistrictID = 89L, District = "Kentucky", IsDeleted = false, ProvinceID = 49 },
+                        new { DistrictID = 90L, District = "Louisiana", IsDeleted = false, ProvinceID = 50 },
+                        new { DistrictID = 91L, District = "Maine", IsDeleted = false, ProvinceID = 51 },
+                        new { DistrictID = 92L, District = "Maryland", IsDeleted = false, ProvinceID = 52 },
+                        new { DistrictID = 93L, District = "Massachusetts", IsDeleted = false, ProvinceID = 53 },
+                        new { DistrictID = 94L, District = "Michigan", IsDeleted = false, ProvinceID = 54 },
+                        new { DistrictID = 95L, District = "Minnesota", IsDeleted = false, ProvinceID = 55 },
+                        new { DistrictID = 96L, District = "Mississippi", IsDeleted = false, ProvinceID = 56 },
+                        new { DistrictID = 97L, District = "Missouri", IsDeleted = false, ProvinceID = 57 },
+                        new { DistrictID = 98L, District = "Montana", IsDeleted = false, ProvinceID = 58 },
+                        new { DistrictID = 99L, District = "Nebraska", IsDeleted = false, ProvinceID = 59 },
+                        new { DistrictID = 100L, District = "Yevada", IsDeleted = false, ProvinceID = 60 },
+                        new { DistrictID = 101L, District = "New Hampshire", IsDeleted = false, ProvinceID = 61 },
+                        new { DistrictID = 102L, District = "New Jersey", IsDeleted = false, ProvinceID = 62 },
+                        new { DistrictID = 103L, District = "New Mexico", IsDeleted = false, ProvinceID = 63 },
+                        new { DistrictID = 104L, District = "New York", IsDeleted = false, ProvinceID = 64 },
+                        new { DistrictID = 105L, District = "North Carolina", IsDeleted = false, ProvinceID = 65 },
+                        new { DistrictID = 106L, District = "North Dakota", IsDeleted = false, ProvinceID = 66 },
+                        new { DistrictID = 107L, District = "Ohio", IsDeleted = false, ProvinceID = 67 },
+                        new { DistrictID = 108L, District = "Oklahoma", IsDeleted = false, ProvinceID = 68 },
+                        new { DistrictID = 109L, District = "Tregon", IsDeleted = false, ProvinceID = 69 },
+                        new { DistrictID = 110L, District = "Pennsylvania", IsDeleted = false, ProvinceID = 70 },
+                        new { DistrictID = 111L, District = "Rhode Island", IsDeleted = false, ProvinceID = 71 },
+                        new { DistrictID = 112L, District = "South Carolina", IsDeleted = false, ProvinceID = 72 },
+                        new { DistrictID = 113L, District = "South Dakota", IsDeleted = false, ProvinceID = 73 },
+                        new { DistrictID = 114L, District = "Tennessee", IsDeleted = false, ProvinceID = 74 },
+                        new { DistrictID = 115L, District = "Texas", IsDeleted = false, ProvinceID = 75 },
+                        new { DistrictID = 116L, District = "Wtaha", IsDeleted = false, ProvinceID = 76 },
+                        new { DistrictID = 117L, District = "Oermont", IsDeleted = false, ProvinceID = 77 },
+                        new { DistrictID = 118L, District = "Virginia", IsDeleted = false, ProvinceID = 78 },
+                        new { DistrictID = 119L, District = "Washinn", IsDeleted = false, ProvinceID = 79 },
+                        new { DistrictID = 120L, District = "West Virginia", IsDeleted = false, ProvinceID = 80 },
+                        new { DistrictID = 121L, District = "Nouit Vinia", IsDeleted = false, ProvinceID = 80 },
+                        new { DistrictID = 122L, District = "Wisconsin", IsDeleted = false, ProvinceID = 81 },
+                        new { DistrictID = 123L, District = "Wyoming", IsDeleted = false, ProvinceID = 82 }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.DocumentFileDetail", b =>
@@ -3006,18 +1505,9 @@ namespace DataAccess.Migrations
                     b.ToTable("EmailType");
 
                     b.HasData(
-                        new
-                        {
-                            EmailTypeId = 1,
-                            EmailTypeName = "General",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            EmailTypeId = 2,
-                            EmailTypeName = "Bidding Panel",
-                            IsDeleted = false
-                        });
+                        new { EmailTypeId = 1, EmailTypeName = "General", IsDeleted = false },
+                        new { EmailTypeId = 2, EmailTypeName = "Bidding Panel", IsDeleted = false }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeAnalyticalDetail", b =>
@@ -3401,21 +1891,10 @@ namespace DataAccess.Migrations
                     b.ToTable("EmployeeContractType");
 
                     b.HasData(
-                        new
-                        {
-                            EmployeeContractTypeId = 1,
-                            EmployeeContractTypeName = "Probationary"
-                        },
-                        new
-                        {
-                            EmployeeContractTypeId = 2,
-                            EmployeeContractTypeName = "PartTime"
-                        },
-                        new
-                        {
-                            EmployeeContractTypeId = 3,
-                            EmployeeContractTypeName = "Permanent"
-                        });
+                        new { EmployeeContractTypeId = 1, EmployeeContractTypeName = "Probationary" },
+                        new { EmployeeContractTypeId = 2, EmployeeContractTypeName = "PartTime" },
+                        new { EmployeeContractTypeId = 3, EmployeeContractTypeName = "Permanent" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.EmployeeDetail", b =>
@@ -4958,55 +3437,10 @@ namespace DataAccess.Migrations
                     b.ToTable("EmployeeType");
 
                     b.HasData(
-                        new
-                        {
-                            EmployeeTypeId = 1,
-                            EmployeeTypeName = "Prospective",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            EmployeeTypeId = 2,
-                            EmployeeTypeName = "Active",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            EmployeeTypeId = 3,
-                            EmployeeTypeName = "Terminated",
-                            IsDeleted = false
-                        });
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.EntitySourceDocumentDetail", b =>
-                {
-                    b.Property<long>("EntitySourceDocumentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<long>("DocumentFileId");
-
-                    b.Property<long>("EntityId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("EntitySourceDocumentId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("DocumentFileId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("EntitySourceDocumentDetails");
+                        new { EmployeeTypeId = 1, EmployeeTypeName = "Prospective", IsDeleted = false },
+                        new { EmployeeTypeId = 2, EmployeeTypeName = "Active", IsDeleted = false },
+                        new { EmployeeTypeId = 3, EmployeeTypeName = "Terminated", IsDeleted = false }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.ErrorLog.Errorlog", b =>
@@ -5299,15 +3733,8 @@ namespace DataAccess.Migrations
                     b.ToTable("FinancialYearDetail");
 
                     b.HasData(
-                        new
-                        {
-                            FinancialYearId = 1,
-                            EndDate = new DateTime(2019, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FinancialYearName = "2019 Financial Year",
-                            IsDefault = true,
-                            IsDeleted = false,
-                            StartDate = new DateTime(2019, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
+                        new { FinancialYearId = 1, EndDate = new DateTime(2019, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), FinancialYearName = "2019 Financial Year", IsDefault = true, IsDeleted = false, StartDate = new DateTime(2019, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.GainLossSelectedAccounts", b =>
@@ -5337,39 +3764,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("GainLossSelectedAccounts");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.HRJobInterviewers", b =>
-                {
-                    b.Property<long>("HRJobInterviewerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int>("EmployeeId");
-
-                    b.Property<int>("InterviewDetailsId");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("HRJobInterviewerId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("InterviewDetailsId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("HRJobInterviewers");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.HolidayDetails", b =>
@@ -5448,6 +3842,39 @@ namespace DataAccess.Migrations
                     b.HasIndex("OfficeId");
 
                     b.ToTable("HolidayWeeklyDetails");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.HRJobInterviewers", b =>
+                {
+                    b.Property<long>("HRJobInterviewerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("serial");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("EmployeeId");
+
+                    b.Property<int>("InterviewDetailsId");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.HasKey("HRJobInterviewerId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("InterviewDetailsId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("HRJobInterviewers");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.InterviewDetails", b =>
@@ -6008,72 +4435,18 @@ namespace DataAccess.Migrations
                     b.ToTable("LanguageDetail");
 
                     b.HasData(
-                        new
-                        {
-                            LanguageId = 1,
-                            IsDeleted = false,
-                            LanguageName = "Arabic"
-                        },
-                        new
-                        {
-                            LanguageId = 2,
-                            IsDeleted = false,
-                            LanguageName = "Dari"
-                        },
-                        new
-                        {
-                            LanguageId = 3,
-                            IsDeleted = false,
-                            LanguageName = "English"
-                        },
-                        new
-                        {
-                            LanguageId = 4,
-                            IsDeleted = false,
-                            LanguageName = "French"
-                        },
-                        new
-                        {
-                            LanguageId = 5,
-                            IsDeleted = false,
-                            LanguageName = "German"
-                        },
-                        new
-                        {
-                            LanguageId = 6,
-                            IsDeleted = false,
-                            LanguageName = "Pashto"
-                        },
-                        new
-                        {
-                            LanguageId = 7,
-                            IsDeleted = false,
-                            LanguageName = "Russian"
-                        },
-                        new
-                        {
-                            LanguageId = 8,
-                            IsDeleted = false,
-                            LanguageName = "Turkish"
-                        },
-                        new
-                        {
-                            LanguageId = 9,
-                            IsDeleted = false,
-                            LanguageName = "Turkmani"
-                        },
-                        new
-                        {
-                            LanguageId = 10,
-                            IsDeleted = false,
-                            LanguageName = "Urdu"
-                        },
-                        new
-                        {
-                            LanguageId = 11,
-                            IsDeleted = false,
-                            LanguageName = "Uzbek"
-                        });
+                        new { LanguageId = 1, IsDeleted = false, LanguageName = "Arabic" },
+                        new { LanguageId = 2, IsDeleted = false, LanguageName = "Dari" },
+                        new { LanguageId = 3, IsDeleted = false, LanguageName = "English" },
+                        new { LanguageId = 4, IsDeleted = false, LanguageName = "French" },
+                        new { LanguageId = 5, IsDeleted = false, LanguageName = "German" },
+                        new { LanguageId = 6, IsDeleted = false, LanguageName = "Pashto" },
+                        new { LanguageId = 7, IsDeleted = false, LanguageName = "Russian" },
+                        new { LanguageId = 8, IsDeleted = false, LanguageName = "Turkish" },
+                        new { LanguageId = 9, IsDeleted = false, LanguageName = "Turkmani" },
+                        new { LanguageId = 10, IsDeleted = false, LanguageName = "Urdu" },
+                        new { LanguageId = 11, IsDeleted = false, LanguageName = "Uzbek" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.LeaveReasonDetail", b =>
@@ -6106,27 +4479,10 @@ namespace DataAccess.Migrations
                     b.ToTable("LeaveReasonDetail");
 
                     b.HasData(
-                        new
-                        {
-                            LeaveReasonId = 1,
-                            IsDeleted = false,
-                            ReasonName = "Casual Leave",
-                            Unit = 12
-                        },
-                        new
-                        {
-                            LeaveReasonId = 2,
-                            IsDeleted = false,
-                            ReasonName = "Emergency Leave",
-                            Unit = 6
-                        },
-                        new
-                        {
-                            LeaveReasonId = 3,
-                            IsDeleted = false,
-                            ReasonName = "Maternity Leave",
-                            Unit = 90
-                        });
+                        new { LeaveReasonId = 1, IsDeleted = false, ReasonName = "Casual Leave", Unit = 12 },
+                        new { LeaveReasonId = 2, IsDeleted = false, ReasonName = "Emergency Leave", Unit = 6 },
+                        new { LeaveReasonId = 3, IsDeleted = false, ReasonName = "Maternity Leave", Unit = 90 }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.LoggerDetails", b =>
@@ -6187,18 +4543,9 @@ namespace DataAccess.Migrations
                     b.ToTable("ActivityTypes");
 
                     b.HasData(
-                        new
-                        {
-                            ActivityTypeId = 1L,
-                            ActivityName = "Broadcasting",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ActivityTypeId = 2L,
-                            ActivityName = "Production",
-                            IsDeleted = false
-                        });
+                        new { ActivityTypeId = 1L, ActivityName = "Broadcasting", IsDeleted = false },
+                        new { ActivityTypeId = 2L, ActivityName = "Production", IsDeleted = false }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Marketing.Category", b =>
@@ -7186,14 +5533,8 @@ namespace DataAccess.Migrations
                     b.ToTable("OfficeDetail");
 
                     b.HasData(
-                        new
-                        {
-                            OfficeId = 1,
-                            IsDeleted = false,
-                            OfficeCode = "A0001",
-                            OfficeKey = "AF",
-                            OfficeName = "Afghanistan"
-                        });
+                        new { OfficeId = 1, IsDeleted = false, OfficeCode = "A0001", OfficeKey = "AF", OfficeName = "Afghanistan" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.OnlyForDT.EmployeeDetailDT", b =>
@@ -7528,46 +5869,12 @@ namespace DataAccess.Migrations
                     b.ToTable("PayrollAccountHead");
 
                     b.HasData(
-                        new
-                        {
-                            PayrollHeadId = 1,
-                            IsDeleted = false,
-                            PayrollHeadName = "Net Salary",
-                            PayrollHeadTypeId = 3,
-                            TransactionTypeId = 1
-                        },
-                        new
-                        {
-                            PayrollHeadId = 2,
-                            IsDeleted = false,
-                            PayrollHeadName = "Advance Deduction",
-                            PayrollHeadTypeId = 2,
-                            TransactionTypeId = 1
-                        },
-                        new
-                        {
-                            PayrollHeadId = 3,
-                            IsDeleted = false,
-                            PayrollHeadName = "Salary Tax",
-                            PayrollHeadTypeId = 2,
-                            TransactionTypeId = 1
-                        },
-                        new
-                        {
-                            PayrollHeadId = 4,
-                            IsDeleted = true,
-                            PayrollHeadName = "Gross Salary",
-                            PayrollHeadTypeId = 3,
-                            TransactionTypeId = 2
-                        },
-                        new
-                        {
-                            PayrollHeadId = 5,
-                            IsDeleted = false,
-                            PayrollHeadName = "Pension",
-                            PayrollHeadTypeId = 2,
-                            TransactionTypeId = 1
-                        });
+                        new { PayrollHeadId = 1, IsDeleted = false, PayrollHeadName = "Net Salary", PayrollHeadTypeId = 3, TransactionTypeId = 1 },
+                        new { PayrollHeadId = 2, IsDeleted = false, PayrollHeadName = "Advance Deduction", PayrollHeadTypeId = 2, TransactionTypeId = 1 },
+                        new { PayrollHeadId = 3, IsDeleted = false, PayrollHeadName = "Salary Tax", PayrollHeadTypeId = 2, TransactionTypeId = 1 },
+                        new { PayrollHeadId = 4, IsDeleted = true, PayrollHeadName = "Gross Salary", PayrollHeadTypeId = 3, TransactionTypeId = 2 },
+                        new { PayrollHeadId = 5, IsDeleted = false, PayrollHeadName = "Pension", PayrollHeadTypeId = 2, TransactionTypeId = 1 }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.PayrollMonthlyHourDetail", b =>
@@ -8044,40 +6351,6 @@ namespace DataAccess.Migrations
                     b.ToTable("CEOccupationDetail");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CountryMultiSelectDetails", b =>
-                {
-                    b.Property<long>("CountryMultiSelectId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("CountryId");
-
-                    b.Property<long?>("CountrySelectionId");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long>("ProjectId");
-
-                    b.HasKey("CountryMultiSelectId");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("CountryMultiSelectDetails");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.DistrictMultiSelect", b =>
                 {
                     b.Property<long>("DistrictMultiSelectId")
@@ -8430,54 +6703,15 @@ namespace DataAccess.Migrations
                     b.ToTable("GenderConsiderationDetail");
 
                     b.HasData(
-                        new
-                        {
-                            GenderConsiderationId = 1L,
-                            GenderConsiderationName = "50 % F - 50 % M Excellent",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            GenderConsiderationId = 2L,
-                            GenderConsiderationName = "40 % F - 60 % M Very Good",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            GenderConsiderationId = 3L,
-                            GenderConsiderationName = "30 % F - 70 % M Good",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            GenderConsiderationId = 4L,
-                            GenderConsiderationName = "25 % F - 75 % M Poor",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            GenderConsiderationId = 5L,
-                            GenderConsiderationName = "20 % F - 80 % M Poor",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            GenderConsiderationId = 6L,
-                            GenderConsiderationName = "10 % F - 90 % M Poor",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            GenderConsiderationId = 7L,
-                            GenderConsiderationName = "5 % F - 95 % M Poor",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            GenderConsiderationId = 8L,
-                            GenderConsiderationName = "0 % F - 100 % M Poor",
-                            IsDeleted = false
-                        });
+                        new { GenderConsiderationId = 1L, GenderConsiderationName = "50 % F - 50 % M Excellent", IsDeleted = false },
+                        new { GenderConsiderationId = 2L, GenderConsiderationName = "40 % F - 60 % M Very Good", IsDeleted = false },
+                        new { GenderConsiderationId = 3L, GenderConsiderationName = "30 % F - 70 % M Good", IsDeleted = false },
+                        new { GenderConsiderationId = 4L, GenderConsiderationName = "25 % F - 75 % M Poor", IsDeleted = false },
+                        new { GenderConsiderationId = 5L, GenderConsiderationName = "20 % F - 80 % M Poor", IsDeleted = false },
+                        new { GenderConsiderationId = 6L, GenderConsiderationName = "10 % F - 90 % M Poor", IsDeleted = false },
+                        new { GenderConsiderationId = 7L, GenderConsiderationName = "5 % F - 95 % M Poor", IsDeleted = false },
+                        new { GenderConsiderationId = 8L, GenderConsiderationName = "0 % F - 100 % M Poor", IsDeleted = false }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.HiringRequestCandidates", b =>
@@ -9516,12 +7750,8 @@ namespace DataAccess.Migrations
                     b.ToTable("ProjectPhaseDetails");
 
                     b.HasData(
-                        new
-                        {
-                            ProjectPhaseDetailsId = 1L,
-                            IsDeleted = false,
-                            ProjectPhase = "Data Entry"
-                        });
+                        new { ProjectPhaseDetailsId = 1L, IsDeleted = false, ProjectPhase = "Data Entry" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectPhaseTime", b =>
@@ -9720,8 +7950,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("serial");
 
-                    b.Property<long?>("CountryMultiSelectId");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -9739,8 +7967,6 @@ namespace DataAccess.Migrations
                     b.Property<long?>("ProvinceSelectionId");
 
                     b.HasKey("ProvinceMultiSelectId");
-
-                    b.HasIndex("CountryMultiSelectId");
 
                     b.HasIndex("CreatedById");
 
@@ -9900,27 +8126,17 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool?>("Culture");
-
-                    b.Property<int?>("CurrencyId");
-
                     b.Property<bool?>("DeliveryFaiLure");
 
                     b.Property<bool?>("DesctructionByTerroristActivity");
 
                     b.Property<bool?>("Ethinc");
 
-                    b.Property<bool?>("Ethnicity");
-
                     b.Property<bool?>("Financiallosses");
 
                     b.Property<bool?>("FocusDivertingrisk");
 
-                    b.Property<bool?>("Geographical");
-
                     b.Property<bool?>("GovernmentConfiscation");
-
-                    b.Property<bool?>("Insecurity");
 
                     b.Property<bool?>("IsDeleted");
 
@@ -9948,11 +8164,7 @@ namespace DataAccess.Migrations
 
                     b.Property<bool?>("Religious");
 
-                    b.Property<bool?>("ReligiousBeliefs");
-
                     b.Property<bool?>("Reputation");
-
-                    b.Property<bool?>("Season");
 
                     b.Property<bool?>("Sectarian");
 
@@ -9969,8 +8181,6 @@ namespace DataAccess.Migrations
                     b.HasKey("RiskCriteriaDetailId");
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("CurrencyId");
 
                     b.HasIndex("ModifiedById");
 
@@ -10035,72 +8245,18 @@ namespace DataAccess.Migrations
                     b.ToTable("SecurityConsiderationDetail");
 
                     b.HasData(
-                        new
-                        {
-                            SecurityConsiderationId = 1L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "Project Staff Cannot Visit Project Site"
-                        },
-                        new
-                        {
-                            SecurityConsiderationId = 2L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "Beneficiaries cannot be reached"
-                        },
-                        new
-                        {
-                            SecurityConsiderationId = 3L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "Resources cannot be deployed"
-                        },
-                        new
-                        {
-                            SecurityConsiderationId = 4L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "Threat exit for future (Highly)"
-                        },
-                        new
-                        {
-                            SecurityConsiderationId = 5L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "Project staff access the are partially"
-                        },
-                        new
-                        {
-                            SecurityConsiderationId = 6L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "Bonfires can be reached partially"
-                        },
-                        new
-                        {
-                            SecurityConsiderationId = 7L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "Resources can be deployed partially"
-                        },
-                        new
-                        {
-                            SecurityConsiderationId = 8L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "Future Threats exits"
-                        },
-                        new
-                        {
-                            SecurityConsiderationId = 9L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "No barrier for staff to access the area"
-                        },
-                        new
-                        {
-                            SecurityConsiderationId = 10L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "No obstacle for deploying Resources & office"
-                        },
-                        new
-                        {
-                            SecurityConsiderationId = 11L,
-                            IsDeleted = false,
-                            SecurityConsiderationName = "Future Threats expected"
-                        });
+                        new { SecurityConsiderationId = 1L, IsDeleted = false, SecurityConsiderationName = "Project Staff Cannot Visit Project Site" },
+                        new { SecurityConsiderationId = 2L, IsDeleted = false, SecurityConsiderationName = "Beneficiaries cannot be reached" },
+                        new { SecurityConsiderationId = 3L, IsDeleted = false, SecurityConsiderationName = "Resources cannot be deployed" },
+                        new { SecurityConsiderationId = 4L, IsDeleted = false, SecurityConsiderationName = "Threat exit for future (Highly)" },
+                        new { SecurityConsiderationId = 5L, IsDeleted = false, SecurityConsiderationName = "Project staff access the are partially" },
+                        new { SecurityConsiderationId = 6L, IsDeleted = false, SecurityConsiderationName = "Bonfires can be reached partially" },
+                        new { SecurityConsiderationId = 7L, IsDeleted = false, SecurityConsiderationName = "Resources can be deployed partially" },
+                        new { SecurityConsiderationId = 8L, IsDeleted = false, SecurityConsiderationName = "Future Threats exits" },
+                        new { SecurityConsiderationId = 9L, IsDeleted = false, SecurityConsiderationName = "No barrier for staff to access the area" },
+                        new { SecurityConsiderationId = 10L, IsDeleted = false, SecurityConsiderationName = "No obstacle for deploying Resources & office" },
+                        new { SecurityConsiderationId = 11L, IsDeleted = false, SecurityConsiderationName = "Future Threats expected" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.SecurityConsiderationMultiSelect", b =>
@@ -10165,24 +8321,10 @@ namespace DataAccess.Migrations
                     b.ToTable("SecurityDetail");
 
                     b.HasData(
-                        new
-                        {
-                            SecurityId = 1L,
-                            IsDeleted = false,
-                            SecurityName = "Insecure"
-                        },
-                        new
-                        {
-                            SecurityId = 2L,
-                            IsDeleted = false,
-                            SecurityName = "Partially Insecure"
-                        },
-                        new
-                        {
-                            SecurityId = 3L,
-                            IsDeleted = false,
-                            SecurityName = "Secure (Green Area)"
-                        });
+                        new { SecurityId = 1L, IsDeleted = false, SecurityName = "Insecure" },
+                        new { SecurityId = 2L, IsDeleted = false, SecurityName = "Partially Insecure" },
+                        new { SecurityId = 3L, IsDeleted = false, SecurityName = "Secure (Green Area)" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.StrengthConsiderationDetail", b =>
@@ -10212,24 +8354,10 @@ namespace DataAccess.Migrations
                     b.ToTable("StrengthConsiderationDetail");
 
                     b.HasData(
-                        new
-                        {
-                            StrengthConsiderationId = 1L,
-                            IsDeleted = false,
-                            StrengthConsiderationName = "Gender Friendly"
-                        },
-                        new
-                        {
-                            StrengthConsiderationId = 2L,
-                            IsDeleted = false,
-                            StrengthConsiderationName = "Not Gender Friendly"
-                        },
-                        new
-                        {
-                            StrengthConsiderationId = 3L,
-                            IsDeleted = false,
-                            StrengthConsiderationName = "Not Applicable"
-                        });
+                        new { StrengthConsiderationId = 1L, IsDeleted = false, StrengthConsiderationName = "Gender Friendly" },
+                        new { StrengthConsiderationId = 2L, IsDeleted = false, StrengthConsiderationName = "Not Gender Friendly" },
+                        new { StrengthConsiderationId = 3L, IsDeleted = false, StrengthConsiderationName = "Not Applicable" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.TargetBeneficiaryDetail", b =>
@@ -10422,587 +8550,90 @@ namespace DataAccess.Migrations
                     b.ToTable("ProvinceDetails");
 
                     b.HasData(
-                        new
-                        {
-                            ProvinceId = 1,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Badghis"
-                        },
-                        new
-                        {
-                            ProvinceId = 2,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Baghlan"
-                        },
-                        new
-                        {
-                            ProvinceId = 3,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Balkh"
-                        },
-                        new
-                        {
-                            ProvinceId = 4,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Bamyan"
-                        },
-                        new
-                        {
-                            ProvinceId = 5,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Daykundi"
-                        },
-                        new
-                        {
-                            ProvinceId = 6,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Farah"
-                        },
-                        new
-                        {
-                            ProvinceId = 7,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Faryab"
-                        },
-                        new
-                        {
-                            ProvinceId = 8,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Ghazni"
-                        },
-                        new
-                        {
-                            ProvinceId = 9,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Ghor"
-                        },
-                        new
-                        {
-                            ProvinceId = 10,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Helmand"
-                        },
-                        new
-                        {
-                            ProvinceId = 11,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Herat"
-                        },
-                        new
-                        {
-                            ProvinceId = 12,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Jowzjan"
-                        },
-                        new
-                        {
-                            ProvinceId = 13,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Kabul"
-                        },
-                        new
-                        {
-                            ProvinceId = 14,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Kandahar"
-                        },
-                        new
-                        {
-                            ProvinceId = 15,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Kapisa"
-                        },
-                        new
-                        {
-                            ProvinceId = 16,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Khost"
-                        },
-                        new
-                        {
-                            ProvinceId = 17,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Kunar"
-                        },
-                        new
-                        {
-                            ProvinceId = 18,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Kunduz"
-                        },
-                        new
-                        {
-                            ProvinceId = 19,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Laghman"
-                        },
-                        new
-                        {
-                            ProvinceId = 20,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Logar"
-                        },
-                        new
-                        {
-                            ProvinceId = 21,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Maidan Wardak"
-                        },
-                        new
-                        {
-                            ProvinceId = 22,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Nangarhar"
-                        },
-                        new
-                        {
-                            ProvinceId = 23,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Nimruz"
-                        },
-                        new
-                        {
-                            ProvinceId = 24,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Nuristan"
-                        },
-                        new
-                        {
-                            ProvinceId = 25,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Paktia"
-                        },
-                        new
-                        {
-                            ProvinceId = 26,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Paktika"
-                        },
-                        new
-                        {
-                            ProvinceId = 27,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Panjshir"
-                        },
-                        new
-                        {
-                            ProvinceId = 28,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Parwan"
-                        },
-                        new
-                        {
-                            ProvinceId = 29,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Samangan"
-                        },
-                        new
-                        {
-                            ProvinceId = 30,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Sar-e Pol"
-                        },
-                        new
-                        {
-                            ProvinceId = 31,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Takhar"
-                        },
-                        new
-                        {
-                            ProvinceId = 32,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Urozgan"
-                        },
-                        new
-                        {
-                            ProvinceId = 33,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Zabul"
-                        },
-                        new
-                        {
-                            ProvinceId = 34,
-                            CountryId = 1,
-                            IsDeleted = false,
-                            ProvinceName = "Alabama"
-                        },
-                        new
-                        {
-                            ProvinceId = 35,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Alaska"
-                        },
-                        new
-                        {
-                            ProvinceId = 36,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Arizona"
-                        },
-                        new
-                        {
-                            ProvinceId = 37,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Arkansas"
-                        },
-                        new
-                        {
-                            ProvinceId = 38,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "California"
-                        },
-                        new
-                        {
-                            ProvinceId = 39,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Colorado"
-                        },
-                        new
-                        {
-                            ProvinceId = 40,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Connecticut"
-                        },
-                        new
-                        {
-                            ProvinceId = 41,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Delaware"
-                        },
-                        new
-                        {
-                            ProvinceId = 42,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Florida"
-                        },
-                        new
-                        {
-                            ProvinceId = 43,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Georgia"
-                        },
-                        new
-                        {
-                            ProvinceId = 44,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Hawaii"
-                        },
-                        new
-                        {
-                            ProvinceId = 45,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Idaho"
-                        },
-                        new
-                        {
-                            ProvinceId = 46,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Illinois"
-                        },
-                        new
-                        {
-                            ProvinceId = 47,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Indiana"
-                        },
-                        new
-                        {
-                            ProvinceId = 48,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Iowa"
-                        },
-                        new
-                        {
-                            ProvinceId = 49,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Kansas"
-                        },
-                        new
-                        {
-                            ProvinceId = 50,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Kentucky"
-                        },
-                        new
-                        {
-                            ProvinceId = 51,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Louisiana"
-                        },
-                        new
-                        {
-                            ProvinceId = 52,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Maine"
-                        },
-                        new
-                        {
-                            ProvinceId = 53,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Maryland"
-                        },
-                        new
-                        {
-                            ProvinceId = 54,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Massachusetts"
-                        },
-                        new
-                        {
-                            ProvinceId = 55,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Michigan"
-                        },
-                        new
-                        {
-                            ProvinceId = 56,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Minnesota"
-                        },
-                        new
-                        {
-                            ProvinceId = 57,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Mississippi"
-                        },
-                        new
-                        {
-                            ProvinceId = 58,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Missouri"
-                        },
-                        new
-                        {
-                            ProvinceId = 59,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Montana"
-                        },
-                        new
-                        {
-                            ProvinceId = 60,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Nebraska"
-                        },
-                        new
-                        {
-                            ProvinceId = 61,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Nevada"
-                        },
-                        new
-                        {
-                            ProvinceId = 62,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "New Hampshire"
-                        },
-                        new
-                        {
-                            ProvinceId = 63,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "New Jersey"
-                        },
-                        new
-                        {
-                            ProvinceId = 64,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "New Mexico"
-                        },
-                        new
-                        {
-                            ProvinceId = 65,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "New York"
-                        },
-                        new
-                        {
-                            ProvinceId = 66,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "North Carolina"
-                        },
-                        new
-                        {
-                            ProvinceId = 67,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "North Dakota"
-                        },
-                        new
-                        {
-                            ProvinceId = 68,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Ohio"
-                        },
-                        new
-                        {
-                            ProvinceId = 69,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Oklahoma"
-                        },
-                        new
-                        {
-                            ProvinceId = 70,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Oregon"
-                        },
-                        new
-                        {
-                            ProvinceId = 71,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Pennsylvania"
-                        },
-                        new
-                        {
-                            ProvinceId = 72,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Rhode Island"
-                        },
-                        new
-                        {
-                            ProvinceId = 73,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "South Carolina"
-                        },
-                        new
-                        {
-                            ProvinceId = 74,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "South Dakota"
-                        },
-                        new
-                        {
-                            ProvinceId = 75,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Tennessee"
-                        },
-                        new
-                        {
-                            ProvinceId = 76,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Texas"
-                        },
-                        new
-                        {
-                            ProvinceId = 77,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Utah"
-                        },
-                        new
-                        {
-                            ProvinceId = 78,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Vermont"
-                        },
-                        new
-                        {
-                            ProvinceId = 79,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Virginia"
-                        },
-                        new
-                        {
-                            ProvinceId = 80,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Washington"
-                        },
-                        new
-                        {
-                            ProvinceId = 81,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "West Virginia"
-                        },
-                        new
-                        {
-                            ProvinceId = 82,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Wisconsin"
-                        },
-                        new
-                        {
-                            ProvinceId = 83,
-                            CountryId = 2,
-                            IsDeleted = false,
-                            ProvinceName = "Wyoming"
-                        });
+                        new { ProvinceId = 1, CountryId = 1, IsDeleted = false, ProvinceName = "Badghis" },
+                        new { ProvinceId = 2, CountryId = 1, IsDeleted = false, ProvinceName = "Baghlan" },
+                        new { ProvinceId = 3, CountryId = 1, IsDeleted = false, ProvinceName = "Balkh" },
+                        new { ProvinceId = 4, CountryId = 1, IsDeleted = false, ProvinceName = "Bamyan" },
+                        new { ProvinceId = 5, CountryId = 1, IsDeleted = false, ProvinceName = "Daykundi" },
+                        new { ProvinceId = 6, CountryId = 1, IsDeleted = false, ProvinceName = "Farah" },
+                        new { ProvinceId = 7, CountryId = 1, IsDeleted = false, ProvinceName = "Faryab" },
+                        new { ProvinceId = 8, CountryId = 1, IsDeleted = false, ProvinceName = "Ghazni" },
+                        new { ProvinceId = 9, CountryId = 1, IsDeleted = false, ProvinceName = "Ghor" },
+                        new { ProvinceId = 10, CountryId = 1, IsDeleted = false, ProvinceName = "Helmand" },
+                        new { ProvinceId = 11, CountryId = 1, IsDeleted = false, ProvinceName = "Herat" },
+                        new { ProvinceId = 12, CountryId = 1, IsDeleted = false, ProvinceName = "Jowzjan" },
+                        new { ProvinceId = 13, CountryId = 1, IsDeleted = false, ProvinceName = "Kabul" },
+                        new { ProvinceId = 14, CountryId = 1, IsDeleted = false, ProvinceName = "Kandahar" },
+                        new { ProvinceId = 15, CountryId = 1, IsDeleted = false, ProvinceName = "Kapisa" },
+                        new { ProvinceId = 16, CountryId = 1, IsDeleted = false, ProvinceName = "Khost" },
+                        new { ProvinceId = 17, CountryId = 1, IsDeleted = false, ProvinceName = "Kunar" },
+                        new { ProvinceId = 18, CountryId = 1, IsDeleted = false, ProvinceName = "Kunduz" },
+                        new { ProvinceId = 19, CountryId = 1, IsDeleted = false, ProvinceName = "Laghman" },
+                        new { ProvinceId = 20, CountryId = 1, IsDeleted = false, ProvinceName = "Logar" },
+                        new { ProvinceId = 21, CountryId = 1, IsDeleted = false, ProvinceName = "Maidan Wardak" },
+                        new { ProvinceId = 22, CountryId = 1, IsDeleted = false, ProvinceName = "Nangarhar" },
+                        new { ProvinceId = 23, CountryId = 1, IsDeleted = false, ProvinceName = "Nimruz" },
+                        new { ProvinceId = 24, CountryId = 1, IsDeleted = false, ProvinceName = "Nuristan" },
+                        new { ProvinceId = 25, CountryId = 1, IsDeleted = false, ProvinceName = "Paktia" },
+                        new { ProvinceId = 26, CountryId = 1, IsDeleted = false, ProvinceName = "Paktika" },
+                        new { ProvinceId = 27, CountryId = 1, IsDeleted = false, ProvinceName = "Panjshir" },
+                        new { ProvinceId = 28, CountryId = 1, IsDeleted = false, ProvinceName = "Parwan" },
+                        new { ProvinceId = 29, CountryId = 1, IsDeleted = false, ProvinceName = "Samangan" },
+                        new { ProvinceId = 30, CountryId = 1, IsDeleted = false, ProvinceName = "Sar-e Pol" },
+                        new { ProvinceId = 31, CountryId = 1, IsDeleted = false, ProvinceName = "Takhar" },
+                        new { ProvinceId = 32, CountryId = 1, IsDeleted = false, ProvinceName = "Urozgan" },
+                        new { ProvinceId = 33, CountryId = 1, IsDeleted = false, ProvinceName = "Zabul" },
+                        new { ProvinceId = 34, CountryId = 1, IsDeleted = false, ProvinceName = "Alabama" },
+                        new { ProvinceId = 35, CountryId = 2, IsDeleted = false, ProvinceName = "Alaska" },
+                        new { ProvinceId = 36, CountryId = 2, IsDeleted = false, ProvinceName = "Arizona" },
+                        new { ProvinceId = 37, CountryId = 2, IsDeleted = false, ProvinceName = "Arkansas" },
+                        new { ProvinceId = 38, CountryId = 2, IsDeleted = false, ProvinceName = "California" },
+                        new { ProvinceId = 39, CountryId = 2, IsDeleted = false, ProvinceName = "Colorado" },
+                        new { ProvinceId = 40, CountryId = 2, IsDeleted = false, ProvinceName = "Connecticut" },
+                        new { ProvinceId = 41, CountryId = 2, IsDeleted = false, ProvinceName = "Delaware" },
+                        new { ProvinceId = 42, CountryId = 2, IsDeleted = false, ProvinceName = "Florida" },
+                        new { ProvinceId = 43, CountryId = 2, IsDeleted = false, ProvinceName = "Georgia" },
+                        new { ProvinceId = 44, CountryId = 2, IsDeleted = false, ProvinceName = "Hawaii" },
+                        new { ProvinceId = 45, CountryId = 2, IsDeleted = false, ProvinceName = "Idaho" },
+                        new { ProvinceId = 46, CountryId = 2, IsDeleted = false, ProvinceName = "Illinois" },
+                        new { ProvinceId = 47, CountryId = 2, IsDeleted = false, ProvinceName = "Indiana" },
+                        new { ProvinceId = 48, CountryId = 2, IsDeleted = false, ProvinceName = "Iowa" },
+                        new { ProvinceId = 49, CountryId = 2, IsDeleted = false, ProvinceName = "Kansas" },
+                        new { ProvinceId = 50, CountryId = 2, IsDeleted = false, ProvinceName = "Kentucky" },
+                        new { ProvinceId = 51, CountryId = 2, IsDeleted = false, ProvinceName = "Louisiana" },
+                        new { ProvinceId = 52, CountryId = 2, IsDeleted = false, ProvinceName = "Maine" },
+                        new { ProvinceId = 53, CountryId = 2, IsDeleted = false, ProvinceName = "Maryland" },
+                        new { ProvinceId = 54, CountryId = 2, IsDeleted = false, ProvinceName = "Massachusetts" },
+                        new { ProvinceId = 55, CountryId = 2, IsDeleted = false, ProvinceName = "Michigan" },
+                        new { ProvinceId = 56, CountryId = 2, IsDeleted = false, ProvinceName = "Minnesota" },
+                        new { ProvinceId = 57, CountryId = 2, IsDeleted = false, ProvinceName = "Mississippi" },
+                        new { ProvinceId = 58, CountryId = 2, IsDeleted = false, ProvinceName = "Missouri" },
+                        new { ProvinceId = 59, CountryId = 2, IsDeleted = false, ProvinceName = "Montana" },
+                        new { ProvinceId = 60, CountryId = 2, IsDeleted = false, ProvinceName = "Nebraska" },
+                        new { ProvinceId = 61, CountryId = 2, IsDeleted = false, ProvinceName = "Nevada" },
+                        new { ProvinceId = 62, CountryId = 2, IsDeleted = false, ProvinceName = "New Hampshire" },
+                        new { ProvinceId = 63, CountryId = 2, IsDeleted = false, ProvinceName = "New Jersey" },
+                        new { ProvinceId = 64, CountryId = 2, IsDeleted = false, ProvinceName = "New Mexico" },
+                        new { ProvinceId = 65, CountryId = 2, IsDeleted = false, ProvinceName = "New York" },
+                        new { ProvinceId = 66, CountryId = 2, IsDeleted = false, ProvinceName = "North Carolina" },
+                        new { ProvinceId = 67, CountryId = 2, IsDeleted = false, ProvinceName = "North Dakota" },
+                        new { ProvinceId = 68, CountryId = 2, IsDeleted = false, ProvinceName = "Ohio" },
+                        new { ProvinceId = 69, CountryId = 2, IsDeleted = false, ProvinceName = "Oklahoma" },
+                        new { ProvinceId = 70, CountryId = 2, IsDeleted = false, ProvinceName = "Oregon" },
+                        new { ProvinceId = 71, CountryId = 2, IsDeleted = false, ProvinceName = "Pennsylvania" },
+                        new { ProvinceId = 72, CountryId = 2, IsDeleted = false, ProvinceName = "Rhode Island" },
+                        new { ProvinceId = 73, CountryId = 2, IsDeleted = false, ProvinceName = "South Carolina" },
+                        new { ProvinceId = 74, CountryId = 2, IsDeleted = false, ProvinceName = "South Dakota" },
+                        new { ProvinceId = 75, CountryId = 2, IsDeleted = false, ProvinceName = "Tennessee" },
+                        new { ProvinceId = 76, CountryId = 2, IsDeleted = false, ProvinceName = "Texas" },
+                        new { ProvinceId = 77, CountryId = 2, IsDeleted = false, ProvinceName = "Utah" },
+                        new { ProvinceId = 78, CountryId = 2, IsDeleted = false, ProvinceName = "Vermont" },
+                        new { ProvinceId = 79, CountryId = 2, IsDeleted = false, ProvinceName = "Virginia" },
+                        new { ProvinceId = 80, CountryId = 2, IsDeleted = false, ProvinceName = "Washington" },
+                        new { ProvinceId = 81, CountryId = 2, IsDeleted = false, ProvinceName = "West Virginia" },
+                        new { ProvinceId = 82, CountryId = 2, IsDeleted = false, ProvinceName = "Wisconsin" },
+                        new { ProvinceId = 83, CountryId = 2, IsDeleted = false, ProvinceName = "Wyoming" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.QualificationDetails", b =>
@@ -11143,105 +8774,18 @@ namespace DataAccess.Migrations
                     b.ToTable("SalaryHeadDetails");
 
                     b.HasData(
-                        new
-                        {
-                            SalaryHeadId = 1,
-                            Description = "Tr Allowance",
-                            HeadName = "Tr Allowance",
-                            HeadTypeId = 1,
-                            IsDeleted = false,
-                            TransactionTypeId = 2
-                        },
-                        new
-                        {
-                            SalaryHeadId = 2,
-                            Description = "Food Allowance",
-                            HeadName = "Food Allowance",
-                            HeadTypeId = 1,
-                            IsDeleted = false,
-                            TransactionTypeId = 2
-                        },
-                        new
-                        {
-                            SalaryHeadId = 3,
-                            Description = "Fine Deduction",
-                            HeadName = "Fine Deduction",
-                            HeadTypeId = 2,
-                            IsDeleted = false,
-                            TransactionTypeId = 1
-                        },
-                        new
-                        {
-                            SalaryHeadId = 4,
-                            Description = "Capacity Building Deduction",
-                            HeadName = "Capacity Building Deduction",
-                            HeadTypeId = 2,
-                            IsDeleted = false,
-                            TransactionTypeId = 1
-                        },
-                        new
-                        {
-                            SalaryHeadId = 5,
-                            Description = "Security Deduction",
-                            HeadName = "Security Deduction",
-                            HeadTypeId = 2,
-                            IsDeleted = false,
-                            TransactionTypeId = 1
-                        },
-                        new
-                        {
-                            SalaryHeadId = 6,
-                            Description = "Other Allowance",
-                            HeadName = "Other Allowance",
-                            HeadTypeId = 1,
-                            IsDeleted = false,
-                            TransactionTypeId = 2
-                        },
-                        new
-                        {
-                            SalaryHeadId = 7,
-                            Description = "Other Deduction",
-                            HeadName = "Other Deduction",
-                            HeadTypeId = 2,
-                            IsDeleted = false,
-                            TransactionTypeId = 1
-                        },
-                        new
-                        {
-                            SalaryHeadId = 8,
-                            Description = "Medical Allowance",
-                            HeadName = "Medical Allowance",
-                            HeadTypeId = 1,
-                            IsDeleted = false,
-                            TransactionTypeId = 2
-                        },
-                        new
-                        {
-                            SalaryHeadId = 9,
-                            Description = "Other1Allowance",
-                            HeadName = "Other1Allowance",
-                            HeadTypeId = 1,
-                            IsDeleted = false,
-                            TransactionTypeId = 2
-                        },
-                        new
-                        {
-                            SalaryHeadId = 10,
-                            Description = "Other2Allowance",
-                            HeadName = "Other2Allowance",
-                            HeadTypeId = 1,
-                            IsDeleted = false,
-                            TransactionTypeId = 2
-                        },
-                        new
-                        {
-                            SalaryHeadId = 11,
-                            Description = "Basic Pay (In hours)",
-                            HeadName = "Basic Pay (In hours)",
-                            HeadTypeId = 3,
-                            IsDeleted = false,
-                            TransactionTypeId = 2
-                        });
+                        new { SalaryHeadId = 1, Description = "Tr Allowance", HeadName = "Tr Allowance", HeadTypeId = 1, IsDeleted = false, TransactionTypeId = 2 },
+                        new { SalaryHeadId = 2, Description = "Food Allowance", HeadName = "Food Allowance", HeadTypeId = 1, IsDeleted = false, TransactionTypeId = 2 },
+                        new { SalaryHeadId = 3, Description = "Fine Deduction", HeadName = "Fine Deduction", HeadTypeId = 2, IsDeleted = false, TransactionTypeId = 1 },
+                        new { SalaryHeadId = 4, Description = "Capacity Building Deduction", HeadName = "Capacity Building Deduction", HeadTypeId = 2, IsDeleted = false, TransactionTypeId = 1 },
+                        new { SalaryHeadId = 5, Description = "Security Deduction", HeadName = "Security Deduction", HeadTypeId = 2, IsDeleted = false, TransactionTypeId = 1 },
+                        new { SalaryHeadId = 6, Description = "Other Allowance", HeadName = "Other Allowance", HeadTypeId = 1, IsDeleted = false, TransactionTypeId = 2 },
+                        new { SalaryHeadId = 7, Description = "Other Deduction", HeadName = "Other Deduction", HeadTypeId = 2, IsDeleted = false, TransactionTypeId = 1 },
+                        new { SalaryHeadId = 8, Description = "Medical Allowance", HeadName = "Medical Allowance", HeadTypeId = 1, IsDeleted = false, TransactionTypeId = 2 },
+                        new { SalaryHeadId = 9, Description = "Other1Allowance", HeadName = "Other1Allowance", HeadTypeId = 1, IsDeleted = false, TransactionTypeId = 2 },
+                        new { SalaryHeadId = 10, Description = "Other2Allowance", HeadName = "Other2Allowance", HeadTypeId = 1, IsDeleted = false, TransactionTypeId = 2 },
+                        new { SalaryHeadId = 11, Description = "Basic Pay (In hours)", HeadName = "Basic Pay (In hours)", HeadTypeId = 3, IsDeleted = false, TransactionTypeId = 2 }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.SalaryTaxReportContent", b =>
@@ -11627,48 +9171,14 @@ namespace DataAccess.Migrations
                     b.ToTable("ReceiptType");
 
                     b.HasData(
-                        new
-                        {
-                            ReceiptTypeId = 1,
-                            IsDeleted = false,
-                            ReceiptTypeName = "Purchased"
-                        },
-                        new
-                        {
-                            ReceiptTypeId = 2,
-                            IsDeleted = false,
-                            ReceiptTypeName = "Transfers"
-                        },
-                        new
-                        {
-                            ReceiptTypeId = 3,
-                            IsDeleted = false,
-                            ReceiptTypeName = "Donation"
-                        },
-                        new
-                        {
-                            ReceiptTypeId = 4,
-                            IsDeleted = false,
-                            ReceiptTypeName = "Take Over"
-                        },
-                        new
-                        {
-                            ReceiptTypeId = 5,
-                            IsDeleted = false,
-                            ReceiptTypeName = "Loan"
-                        },
-                        new
-                        {
-                            ReceiptTypeId = 6,
-                            IsDeleted = false,
-                            ReceiptTypeName = "Return"
-                        },
-                        new
-                        {
-                            ReceiptTypeId = 7,
-                            IsDeleted = false,
-                            ReceiptTypeName = "Other"
-                        });
+                        new { ReceiptTypeId = 1, IsDeleted = false, ReceiptTypeName = "Purchased" },
+                        new { ReceiptTypeId = 2, IsDeleted = false, ReceiptTypeName = "Transfers" },
+                        new { ReceiptTypeId = 3, IsDeleted = false, ReceiptTypeName = "Donation" },
+                        new { ReceiptTypeId = 4, IsDeleted = false, ReceiptTypeName = "Take Over" },
+                        new { ReceiptTypeId = 5, IsDeleted = false, ReceiptTypeName = "Loan" },
+                        new { ReceiptTypeId = 6, IsDeleted = false, ReceiptTypeName = "Return" },
+                        new { ReceiptTypeId = 7, IsDeleted = false, ReceiptTypeName = "Other" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Store.StatusAtTimeOfIssue", b =>
@@ -11698,60 +9208,16 @@ namespace DataAccess.Migrations
                     b.ToTable("StatusAtTimeOfIssue");
 
                     b.HasData(
-                        new
-                        {
-                            StatusAtTimeOfIssueId = 1,
-                            IsDeleted = false,
-                            StatusName = "New"
-                        },
-                        new
-                        {
-                            StatusAtTimeOfIssueId = 2,
-                            IsDeleted = false,
-                            StatusName = "Useable"
-                        },
-                        new
-                        {
-                            StatusAtTimeOfIssueId = 3,
-                            IsDeleted = false,
-                            StatusName = "To Repair"
-                        },
-                        new
-                        {
-                            StatusAtTimeOfIssueId = 4,
-                            IsDeleted = false,
-                            StatusName = "Damage"
-                        },
-                        new
-                        {
-                            StatusAtTimeOfIssueId = 5,
-                            IsDeleted = false,
-                            StatusName = "Sold"
-                        },
-                        new
-                        {
-                            StatusAtTimeOfIssueId = 6,
-                            IsDeleted = false,
-                            StatusName = "Stolen"
-                        },
-                        new
-                        {
-                            StatusAtTimeOfIssueId = 7,
-                            IsDeleted = false,
-                            StatusName = "Handover"
-                        },
-                        new
-                        {
-                            StatusAtTimeOfIssueId = 8,
-                            IsDeleted = false,
-                            StatusName = "Demolished"
-                        },
-                        new
-                        {
-                            StatusAtTimeOfIssueId = 9,
-                            IsDeleted = false,
-                            StatusName = "Broken"
-                        });
+                        new { StatusAtTimeOfIssueId = 1, IsDeleted = false, StatusName = "New" },
+                        new { StatusAtTimeOfIssueId = 2, IsDeleted = false, StatusName = "Useable" },
+                        new { StatusAtTimeOfIssueId = 3, IsDeleted = false, StatusName = "To Repair" },
+                        new { StatusAtTimeOfIssueId = 4, IsDeleted = false, StatusName = "Damage" },
+                        new { StatusAtTimeOfIssueId = 5, IsDeleted = false, StatusName = "Sold" },
+                        new { StatusAtTimeOfIssueId = 6, IsDeleted = false, StatusName = "Stolen" },
+                        new { StatusAtTimeOfIssueId = 7, IsDeleted = false, StatusName = "Handover" },
+                        new { StatusAtTimeOfIssueId = 8, IsDeleted = false, StatusName = "Demolished" },
+                        new { StatusAtTimeOfIssueId = 9, IsDeleted = false, StatusName = "Broken" }
+                    );
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Store.StoreItemGroup", b =>
@@ -12393,6 +9859,38 @@ namespace DataAccess.Migrations
                     b.ToTable("VoucherDetail");
                 });
 
+            modelBuilder.Entity("DataAccess.DbEntities.VoucherDocumentDetail", b =>
+                {
+                    b.Property<long>("VoucherDocumentId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<long>("DocumentFileId");
+
+                    b.Property<bool?>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<long>("VoucherNo");
+
+                    b.HasKey("VoucherDocumentId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("DocumentFileId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("VoucherNo");
+
+                    b.ToTable("VoucherDocumentDetail");
+                });
+
             modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactions", b =>
                 {
                     b.Property<long>("TransactionId")
@@ -12503,16 +10001,9 @@ namespace DataAccess.Migrations
                     b.ToTable("VoucherType");
 
                     b.HasData(
-                        new
-                        {
-                            VoucherTypeId = 1,
-                            VoucherTypeName = "Adjustment"
-                        },
-                        new
-                        {
-                            VoucherTypeId = 2,
-                            VoucherTypeName = "Journal"
-                        });
+                        new { VoucherTypeId = 1, VoucherTypeName = "Adjustment" },
+                        new { VoucherTypeId = 2, VoucherTypeName = "Journal" }
+                    );
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -12633,22 +10124,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.AccountType", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AccountHeadType", "AccountHeadType")
-                        .WithMany()
-                        .HasForeignKey("AccountHeadTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.AccountingNew.AccountFilterType", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -12686,6 +10161,22 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.AccountingNew.ExchangeRateVerification", b =>
                 {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.AccountType", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AccountHeadType", "AccountHeadType")
+                        .WithMany()
+                        .HasForeignKey("AccountHeadTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -12953,21 +10444,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.ChatDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.EntitySourceDocumentDetail", "EntitySourceDocumentDetail")
-                        .WithMany()
-                        .HasForeignKey("EntitySourceDocumentId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -13753,22 +11229,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.EntitySourceDocumentDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.DocumentFileDetail", "DocumentFileDetail")
-                        .WithMany()
-                        .HasForeignKey("DocumentFileId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.ErrorLog.Errorlog", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -13857,27 +11317,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("ModifiedById");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.HRJobInterviewers", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.InterviewDetails", "InterviewDetails")
-                        .WithMany("HRJobInterviewersList")
-                        .HasForeignKey("InterviewDetailsId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.HolidayDetails", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -13916,6 +11355,27 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("OfficeId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.HRJobInterviewers", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.InterviewDetails", "InterviewDetails")
+                        .WithMany("HRJobInterviewersList")
+                        .HasForeignKey("InterviewDetailsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.InterviewDetails", b =>
@@ -14858,26 +12318,6 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.CountryMultiSelectDetails", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.CountryDetails", "CountryDetails")
-                        .WithMany()
-                        .HasForeignKey("CountryId");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.DistrictMultiSelect", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
@@ -15586,10 +13026,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProvinceMultiSelect", b =>
                 {
-                    b.HasOne("DataAccess.DbEntities.Project.CountryMultiSelectDetails", "CountryMultiSelectDetails")
-                        .WithMany()
-                        .HasForeignKey("CountryMultiSelectId");
-
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -15630,10 +13066,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.CurrencyDetails", "CurrencyDetails")
-                        .WithMany()
-                        .HasForeignKey("CurrencyId");
 
                     b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
                         .WithMany()
@@ -16270,6 +13702,27 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.DbEntities.VoucherType", "VoucherTypes")
                         .WithMany()
                         .HasForeignKey("VoucherTypeId");
+                });
+
+            modelBuilder.Entity("DataAccess.DbEntities.VoucherDocumentDetail", b =>
+                {
+                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("DataAccess.DbEntities.DocumentFileDetail", "DocumentFileDetail")
+                        .WithMany()
+                        .HasForeignKey("DocumentFileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById");
+
+                    b.HasOne("DataAccess.DbEntities.VoucherDetail", "VoucherDetails")
+                        .WithMany()
+                        .HasForeignKey("VoucherNo")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.VoucherTransactions", b =>
