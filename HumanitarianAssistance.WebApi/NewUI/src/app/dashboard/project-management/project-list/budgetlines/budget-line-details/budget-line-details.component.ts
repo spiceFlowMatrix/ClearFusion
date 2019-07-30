@@ -244,6 +244,7 @@ export class BudgetLineDetailsComponent implements OnInit, OnChanges {
            this.noDataFoundFlag = true;
             // this.toastr.warning(response.message);
           }
+          this.selectedCurrency = BudgetLineDetailList.CurrencyId;
           BudgetLineDetailList.Expenditure = this.getTotalExpenditures;
           this.budgetDetailChanged.emit(BudgetLineDetailList);
 
