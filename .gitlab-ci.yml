@@ -42,16 +42,10 @@ build-backend:
         paths:
             - HumanitarianAssistance.WebApi/release/
 
-combine-apps:
+publish-container:
     stage: integration
     script:
         - mkdir HumanitarianAssistance.WebApi/release/NewUI
         - mkdir HumanitarianAssistance.WebApi/release/OldUI
         - cp -r HumanitarianAssistance.WebApi/NewUI/dist/ HumanitarianAssistance.WebApi/release/NewUI/dist
         - cp -r HumanitarianAssistance.WebApi/OldUI/dist/ HumanitarianAssistance.WebApi/release/OldUI/dist
-    artifacts:
-        paths:
-            - HumanitarianAssistance.WebApi/release/
-
-publish-container:
-    stage: deploy
