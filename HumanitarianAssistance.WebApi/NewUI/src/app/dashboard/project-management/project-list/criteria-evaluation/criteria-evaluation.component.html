@@ -1433,11 +1433,13 @@
                           <mat-slide-toggle class="pull-right" (change)="onFinancialLossesChange($event)"
                             [(ngModel)]="riskForm.Financiallosses"></mat-slide-toggle>
                         </li>
+                        <span class="note_text">"Warning: If the organization stands to make financial losses by foregoing this project, it puts this project at a greater value to the organization."</span>
                         <li>
                           Opportunity Loss
                           <mat-slide-toggle class="pull-right" (change)="onOpportunityLossChange($event)"
                             [(ngModel)]="riskForm.Opportunityloss"></mat-slide-toggle>
                         </li>
+                        <span class="note_text">"Warning: If the organization stands to lose on other opportunities outside of the project by foregoing this project, this project is more valuable to the organization."</span>
 
                         <div class="clearfix">
                           <mat-form-field>
@@ -1464,7 +1466,8 @@
                           Probably Delay/Cuts in funding
                           <mat-slide-toggle class="pull-right" (change)="onProbabilityDelayChange($event)"
                             [(ngModel)]="riskForm.Probablydelaysinfunding"></mat-slide-toggle>
-                        </li>
+                          </li>
+                          <span class="note_text">"Warning: If there is a chance that other funds may get cut on the organization as a result of losing this project, this project has a greater value to the organization."</span>
                       </ul>
                     </div>
                   </div>
