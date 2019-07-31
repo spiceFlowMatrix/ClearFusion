@@ -3537,7 +3537,7 @@ namespace HumanitarianAssistance.Service.Classes
                      from feasibility in g.DefaultIfEmpty()
                      join Priority in _uow.GetDbContext().PriorityCriteriaDetail on obj.ProjectId equals Priority.ProjectId into pr
                      from Priority in pr.DefaultIfEmpty()
-                     join financial in _uow.GetDbContext().FinancialCriteriaDetail on obj.ProjectId equals financial.ProjectId into fi
+                     join financial in _uow.GetDbContext().FinancialCriteriaDetail on obj.GetProjectWinLossStatusProjectId equals financial.ProjectId into fi
                      from financial in fi.DefaultIfEmpty()
                      join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri
                      from risk in ri.DefaultIfEmpty()
@@ -4452,8 +4452,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
-
-
         #region CEOccupationDtail
 
         public async Task<APIResponse> GetAllOccuopationList()
@@ -4585,7 +4583,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
-
         #region assumprtionDetail
         public async Task<APIResponse> GetAllAssumptionList()
         {
@@ -4714,8 +4711,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
-
-
         #region donorEligibilityCriteria
         public async Task<APIResponse> GetAllDonorEligibilityDetailList()
         {
@@ -4843,8 +4838,6 @@ namespace HumanitarianAssistance.Service.Classes
 
         #endregion
 
-
-
         #region add/edit IscriteriaEvalutaionSubmit
 
         public async Task<APIResponse> AddEditCriteriaEvalutionSubmitDetail(ProjectDetailNewModel model)
@@ -4879,6 +4872,10 @@ namespace HumanitarianAssistance.Service.Classes
             }
             return response;
         }
+        #endregion
+
+        #region "getIsAprrovedCriteriaEvaluationDetail"
+        GetIsAprrovedCriteriaEvaluationDetail
         #endregion
 
         #endregion
