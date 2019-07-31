@@ -46,7 +46,7 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
 import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
 import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
 import { ProjectListService } from '../service/project-list.service';
-
+import { forkJoin, Observable } from 'rxjs';
 @Component({
   selector: 'app-criteria-evaluation',
   templateUrl: './criteria-evaluation.component.html',
@@ -236,7 +236,8 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     this.routeActive.parent.params.subscribe(params => {
       this.ProjectId = +params['id'];
     });
-
+    this.getData();
+    this.getScreenSize();
     this.initializeList();
     this.initilizeDonorEligibilityList();
     this.initDonorCEModel();
@@ -246,23 +247,22 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     this.initFinancialProfitabilityModel();
     this.initRiskModel();
     this.initProductAndServiceModel();
-    this.GetCriteraiEvaluationDetailById(this.ProjectId);
+    this.initProjectSelctionModel();
+    this.initIsSubmitCE();
+    this.initCurrencyDetailModel();
+    // this.GetCriteraiEvaluationDetailById(this.ProjectId);
     this.CostOfCompensation = new FormControl('', [
       Validators.max(12),
       Validators.min(1)
     ]);
-    this.GetAllProjectList();
-    this.GetAllCurrency();
-    this.initProjectSelctionModel();
-    this.getPriorityListByProjectId(this.ProjectId);
-    this.getAssumptionByprojectId(this.ProjectId);
-    this.GetAgegroupByProjectId(this.ProjectId);
-    this.getFeasibilityExpertByProjectId(this.ProjectId);
-    this.GetOccupationByProjectId(this.ProjectId);
-    this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
-    this.initIsSubmitCE();
-    this.initCurrencyDetailModel();
-    this.getScreenSize();
+    // this.GetAllProjectList();
+    // this.GetAllCurrency();
+    // this.getPriorityListByProjectId(this.ProjectId);
+    // this.getAssumptionByprojectId(this.ProjectId);
+    // this.GetAgegroupByProjectId(this.ProjectId);
+    // this.getFeasibilityExpertByProjectId(this.ProjectId);
+    // this.GetOccupationByProjectId(this.ProjectId);
+    // this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
   }
 
   ngAfterViewChecked() {
@@ -274,6 +274,23 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   }
 
 
+
+  getData(): any {
+ const response1 =  this.GetCriteraiEvaluationDetailById(this.ProjectId);
+ const response2 =  this.GetAllProjectList();
+ const response3 =  this.GetAllCurrency();
+ const response4 =  this.getPriorityListByProjectId(this.ProjectId);
+ const response5 =  this.getAssumptionByprojectId(this.ProjectId);
+ const response6 =  this.GetAgegroupByProjectId(this.ProjectId);
+ const response7 =  this.getFeasibilityExpertByProjectId(this.ProjectId);
+ const response8 =  this.GetOccupationByProjectId(this.ProjectId);
+ const response9 =  this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
+    return forkJoin([response1, response2, response3, response4 ,
+       response5, response6, response7, response8, response9]).subscribe((res) => {
+      console.log('res2', response1);
+      this.criteriaEvaluationLoader = false;
+    });
+  }
   //#region "Dynamic Scroll"
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {

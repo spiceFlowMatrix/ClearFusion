@@ -3542,7 +3542,7 @@ namespace HumanitarianAssistance.Service.Classes
                      join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri
                      from risk in ri.DefaultIfEmpty()
                       join currency in _uow.GetDbContext().ProjectProposalDetail on obj.ProjectId equals currency.ProjectId into cr
-                     from currency in ri.DefaultIfEmpty()
+                     from currency in cr.DefaultIfEmpty()
                      
 
                      select new CriteriaEveluationModel
