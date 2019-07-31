@@ -236,7 +236,7 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     this.routeActive.parent.params.subscribe(params => {
       this.ProjectId = +params['id'];
     });
-    this.getData();
+    // this.getData();
     this.getScreenSize();
     this.initializeList();
     this.initilizeDonorEligibilityList();
@@ -250,19 +250,19 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     this.initProjectSelctionModel();
     this.initIsSubmitCE();
     this.initCurrencyDetailModel();
-    // this.GetCriteraiEvaluationDetailById(this.ProjectId);
+     this.GetCriteraiEvaluationDetailById(this.ProjectId);
     this.CostOfCompensation = new FormControl('', [
       Validators.max(12),
       Validators.min(1)
     ]);
-    // this.GetAllProjectList();
-    // this.GetAllCurrency();
-    // this.getPriorityListByProjectId(this.ProjectId);
-    // this.getAssumptionByprojectId(this.ProjectId);
-    // this.GetAgegroupByProjectId(this.ProjectId);
-    // this.getFeasibilityExpertByProjectId(this.ProjectId);
-    // this.GetOccupationByProjectId(this.ProjectId);
-    // this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
+    this.GetAllProjectList();
+    this.GetAllCurrency();
+    this.getPriorityListByProjectId(this.ProjectId);
+    this.getAssumptionByprojectId(this.ProjectId);
+    this.GetAgegroupByProjectId(this.ProjectId);
+    this.getFeasibilityExpertByProjectId(this.ProjectId);
+    this.GetOccupationByProjectId(this.ProjectId);
+    this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
   }
 
   ngAfterViewChecked() {
@@ -4444,14 +4444,19 @@ AddEditProjectProposal(model: any) {
 
   //#region to check the isCriteiaEvaluationSUBMIT
   OnCriteriaEvaluationSubmitChange(ev) {
-    if (ev === 'IsCESubmit') {
-      this.startCriteriaEvaluationSubmitLoader = true;
-      (this.IsSubmitCEform.IsCriteriaEvaluationSubmit = true),
-        (this.IsSubmitCEform.ProjectId = this.ProjectId);
-
-      // this.editPriorityOther(obj);
+    if ( this.ProjectId != null) {
+      if (ev === 'IsCESubmit') {
+        this.startCriteriaEvaluationSubmitLoader = true;
+        this.IsSubmitCEform.IsCriteriaEvaluationSubmit = true;
+      } else if (ev === 'IsCEReject') {
+        this.startCriteriaEvaluationSubmitLoader = true;
+        this.IsSubmitCEform.IsCriteriaEvaluationSubmit = false;
+      }
+      this.IsSubmitCEform.ProjectId = this.ProjectId;
       this.AddIsSubmitCEDetail(this.IsSubmitCEform);
+
     }
+
   }
   //#endregion
 

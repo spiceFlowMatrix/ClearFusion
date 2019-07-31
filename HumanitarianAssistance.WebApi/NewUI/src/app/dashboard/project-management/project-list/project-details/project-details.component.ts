@@ -117,7 +117,7 @@ export class ProjectDetailsComponent implements OnInit {
   //#endregion
 
 
-  //#region Get win loss deytail by  project id
+  //#region Get criteria evaluation approved by  project id
   getCriteriaEvaluationApprovedDetail(projectId: number) {
     this.projectListService
       .GetProjectWinLossDetail(
