@@ -565,7 +565,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
   //#region "currencyDetailsChange"
   currencyDetailsChange(value) {
     this.currencyDetailLoader = true;
-    this.ProposalModel.CurrencyId = value; // this.UserList.find(x => x.UserID.toUpperCase() === data.toUpperCase()).CurrencyId;
+    this.ProposalModel.CurrencyId = value;
 
     this.AddEditProjectProposal(this.ProposalModel);
   }
@@ -720,9 +720,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._cdr.detach();
-
     this.destroyed$.next(true);
     this.destroyed$.complete();
-
   }
 }

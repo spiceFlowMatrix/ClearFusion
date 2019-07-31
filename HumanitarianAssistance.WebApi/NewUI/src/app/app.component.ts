@@ -6,6 +6,7 @@ import {
 } from '@angular/router';
 import { CommonLoaderService } from './shared/common-loader/common-loader.service';
 import { SignalRService } from './shared/services/signal-r.service';
+import { NotifySignalRService } from './shared/services/notify-signalr.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     public commonLoader: CommonLoaderService,
-    private signalRService: SignalRService
+    private signalRService: SignalRService,
+    private notifyService: NotifySignalRService
   ) {}
 
   ngOnInit() {
@@ -35,7 +37,8 @@ export class AppComponent implements OnInit {
   }
 
   startHubConnection() {
-    this.signalRService.startConnection();
+    this.notifyService.startConnection();
+    // this.signalRService.startConnection();
   }
 
 }

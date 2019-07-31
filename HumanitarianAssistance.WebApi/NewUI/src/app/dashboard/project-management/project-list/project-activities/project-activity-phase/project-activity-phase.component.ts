@@ -24,6 +24,7 @@ import { MonitoringComponent } from './monitoring/monitoring.component';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { SignalRService } from 'src/app/shared/services/signal-r.service';
+import { NotifySignalRService } from 'src/app/shared/services/notify-signalr.service';
 
 @Component({
   selector: 'app-project-activity-phase',
@@ -71,7 +72,7 @@ export class ProjectActivityPhaseComponent
   //#endregion
 
   constructor(
-    public signalRService: SignalRService,
+    public signalRService: NotifySignalRService,
     public activitiesService: ProjectActivitiesService,
     private toastr: ToastrService,
     public dialog: MatDialog

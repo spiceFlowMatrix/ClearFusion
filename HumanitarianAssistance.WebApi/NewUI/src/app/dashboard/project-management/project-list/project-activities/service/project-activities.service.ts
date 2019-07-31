@@ -803,6 +803,23 @@ export class ProjectActivitiesService {
   }
   //#endregion
 
+  //#region "UploadDocument"
+  AddMessage(data: any) {
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_Chat_AddMessage, data)
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.activityDocumnentDetail,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
   setActivityPermissions(permissionList: IProjectPermissionMode[]) {
     this.activityPermissionSubject.next(permissionList);
   }

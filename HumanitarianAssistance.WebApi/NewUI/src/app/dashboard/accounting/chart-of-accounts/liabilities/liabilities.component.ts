@@ -999,6 +999,7 @@ export class LiabilitiesComponent implements OnInit {
 
     item.AccountName = obj.AccountName;
     item.AccountFilterTypeId = obj.AccountFilterTypeId;
+    item.AccountTypeId = obj.AccountTypeId;
 
     const index = this.chartOfAccountList[mainLevelIndex].Children[
       controlLevelIndex

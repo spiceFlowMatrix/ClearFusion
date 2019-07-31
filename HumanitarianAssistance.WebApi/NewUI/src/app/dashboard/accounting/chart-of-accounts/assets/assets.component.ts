@@ -941,6 +941,7 @@ export class AssetsComponent implements OnInit {
       AccountFilterTypeId: model.AccountFilterTypeId
     };
 
+    console.log(obj);
 
     // Main Level
     const mainLevelItem = this.chartOfAccountList.find(x => x.ChartOfAccountNewId === mainLevelData.ChartOfAccountNewId);
@@ -959,6 +960,7 @@ export class AssetsComponent implements OnInit {
                                                         .find(x => x.ChartOfAccountNewId === model.ChartOfAccountNewId);
     item.AccountName = obj.AccountName; // its needed
     item.AccountFilterTypeId = obj.AccountFilterTypeId; // its needed
+    item.AccountTypeId = obj.AccountTypeId; // its needed
     const index = this.chartOfAccountList[mainLevelIndex].Children[controlLevelIndex].Children.indexOf(item);
     this.chartOfAccountList[mainLevelIndex].Children[controlLevelIndex].Children[index]._IsLoading = true;
     this.chartOfAccountList[mainLevelIndex].Children[controlLevelIndex].Children[index]._IsError = false;
@@ -970,6 +972,7 @@ export class AssetsComponent implements OnInit {
       )
       .subscribe(
         response => {
+          console.log(obj);
           if (response.StatusCode === 200) {
 
             // Error Handling
@@ -1600,6 +1603,8 @@ export class AssetsComponent implements OnInit {
     data: any
   ) {
 
+    console.log('subLevelData -- ', subLevelData);
+
     if (data !== '') {
 
       const subLevelDetail: ChartOfAccountModel = {
@@ -1611,6 +1616,8 @@ export class AssetsComponent implements OnInit {
         AccountTypeId: subLevelData.AccountTypeId,
         AccountFilterTypeId: data
       };
+
+      console.log('AccountFilterType', subLevelDetail);
 
       this.editSubLevelAccountDetail(mainLevelData, controlLevelData, subLevelDetail);
       // this.editAnyAccountDetail(controlLevelDetail);
@@ -1626,6 +1633,8 @@ export class AssetsComponent implements OnInit {
     data: any
   ) {
 
+    console.log(data);
+
     if (data !== '') {
 
       const subLevelDetail: ChartOfAccountModel = {
@@ -1637,6 +1646,8 @@ export class AssetsComponent implements OnInit {
         AccountTypeId: data,
         AccountFilterTypeId: subLevelData.AccountFilterTypeId
       };
+
+      console.log('AccountType', subLevelDetail);
 
       this.editSubLevelAccountDetail(mainLevelData, controlLevelData, subLevelDetail);
       // this.editAnyAccountDetail(controlLevelDetail);

@@ -80,7 +80,11 @@ export class CriteriaEvaluationService {
     return this.globalService.getList(url);
   }
   //#endregion
-
+ //#region "GetAllCurrency"
+ GetAllCurrency(url: string) {
+  return this.globalService.getList(url);
+}
+//#endregion
   //#region "AddEditPriorityOther"
   AddEditPriorityOther(url: string, data: IPriorityOtherModel) {
     return this.globalService.post(url, data);

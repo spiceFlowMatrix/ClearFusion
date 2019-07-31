@@ -416,5 +416,10 @@ namespace HumanitarianAssistance.Common.Helpers
 
         public const string sameRoleAlreadyExistForTheUser= "Same Role already exist for this user";
 
+        #region Chat
+        public const string ChatMessageEmpty = "Message cannot be empty";
+        public const string ChatNotFound = "Could not find chat to edit";
+        #endregion
+
     }
 }
