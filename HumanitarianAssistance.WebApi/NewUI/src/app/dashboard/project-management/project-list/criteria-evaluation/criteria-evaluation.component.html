@@ -15,23 +15,23 @@
 
 
                 <ng-template #stopCriteriaEvaluationSubmitLoder>
-                    <button mat-icon-button *ngIf="!IsSubmitCEform.IsCriteriaEvaluationSubmit"
+                    <button mat-icon-button *ngIf="!IsSubmitCEform.IsCriteriaEvaluationSubmit && !criteriaEvaluationLoader"
                       [disabled]="disableCriteriaEvaluationForm" (click)="OnCriteriaEvaluationSubmitChange('IsCESubmit')"
                       class="pull-right" matTooltip="Click Here To Submit For Approval" matTooltipPosition="above">
                       <mat-icon aria-label="approved" class="grey_color">check</mat-icon>
                     </button>
-                    <button mat-icon-button *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit"
+                    <button mat-icon-button *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit  && !criteriaEvaluationLoader"
                       [disabled]="disableCriteriaEvaluationForm"
                       class="pull-right" matTooltip="Approved" matTooltipPosition="above">
                       <mat-icon aria-label="approved" class="green">check</mat-icon>
                     </button>
 
-                    <button mat-icon-button *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit == true"
+                    <button mat-icon-button *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit == true  && !criteriaEvaluationLoader"
                     [disabled]="disableCriteriaEvaluationForm" (click)="OnCriteriaEvaluationSubmitChange('IsCEReject')"
                     class="pull-right" matTooltip="Click Here To Reject" matTooltipPosition="above">
                     <mat-icon aria-label="Reject" class="grey_color">clear</mat-icon>
                   </button>
-                  <button mat-icon-button *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit == false"
+                  <button mat-icon-button *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit == false  && !criteriaEvaluationLoader"
                     [disabled]="disableCriteriaEvaluationForm"
                     class="pull-right" matTooltip="Rejected" matTooltipPosition="above">
                     <mat-icon aria-label="Rejected" class="red">clear</mat-icon>
