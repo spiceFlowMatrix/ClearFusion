@@ -469,46 +469,50 @@ export interface IAddPeoplePermissionModel {
   UserId: number;
   RoleId: number;
 }
+export interface CurrencyDetailModel {
+  ProjectId: number;
+  CurrencyId: number;
+}
 
 export interface IProjectOtherDetailPdf {
-    ProjectName?: string,
-    Description?: string,
-    OpportunityType?: string,
-    Donor?: string,
-    OpportunityNo?: string,
-    Opportunity?: string,
-    OpportunityDescription?: string,
-    Country?: string,
-    Province?: string,
-    District?: string,
-    Office?: string,
-    Sector?: string,
-    Program?: string,
-    StartDate?: string,
-    EndDate?: string,
+    ProjectName?: string;
+    Description?: string;
+    OpportunityType?: string;
+    Donor?: string;
+    OpportunityNo?: string;
+    Opportunity?: string;
+    OpportunityDescription?: string;
+    Country?: string;
+    Province?: string;
+    District?: string;
+    Office?: string;
+    Sector?: string;
+    Program?: string;
+    StartDate?: string;
+    EndDate?: string;
 
     // Project Objective & Goal
-    ProjectGoal?: string,
-    ProjectObjective?: string,
-    MainActivities?: string,
-    REOIReceiveDate?: string,
-    SubmissionDate?: string,
+    ProjectGoal?: string;
+    ProjectObjective?: string;
+    MainActivities?: string;
+    REOIReceiveDate?: string;
+    SubmissionDate?: string;
 
     // Beneficiary Details
-    DirectbeneficiarMale?: string,
-    InDirectbeneficiarMale?: string,
-    DirectbeneficiarFemale?: string,
-    InDirectbeneficiarFemale?: string,
-    TotalDirectBeneficiary?: string,
-    TotalInDirectBeneficiary?: string,
+    DirectbeneficiarMale?: string;
+    InDirectbeneficiarMale?: string;
+    DirectbeneficiarFemale?: string;
+    InDirectbeneficiarFemale?: string;
+    TotalDirectBeneficiary?: string;
+    TotalInDirectBeneficiary?: string;
 
     // Gender Consideration
-    StrengthConsideration?: string,
-    GenderConsideration?: string,
-    GenderRemarks?: string,
+    StrengthConsideration?: string;
+    GenderConsideration?: string;
+    GenderRemarks?: string;
 
     // Security Consideration
-    Security?: string,
-    SecurityConsideration?: string,
-    SecurityRemarks?: string
-  };
+    Security?: string;
+    SecurityConsideration?: string;
+    SecurityRemarks?: string;
+  }

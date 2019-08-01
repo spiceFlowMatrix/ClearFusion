@@ -22,8 +22,8 @@ export class ProjectDetailsComponent implements OnInit {
   projectId: number;
   setProjectHeader = 'Project';
   isProjectWin = false;
-
-  menuList: IMenuList[] = this.projectListService.menuList;
+  isCEApproved = false;
+  menuList: IMenuList[] ;
   authorizedMenuList: IMenuList[] = [];
 
   // screen scroll
@@ -41,8 +41,18 @@ export class ProjectDetailsComponent implements OnInit {
   ) {
 
     this.getScreenSize();
-
     this.projectId = +this.routeActive.snapshot.paramMap.get('id');
+
+    this.menuList = [];
+
+    this.projectListService.menuList.forEach(x => {
+      this.menuList.push({
+        Id: x.Id,
+        PageId: x.PageId,
+        Text: x.Text,
+        Link: x.Link
+      });
+    });
 
     this.menuList.map(
       x => (x.Link = this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) + x.Link)
@@ -53,19 +63,27 @@ export class ProjectDetailsComponent implements OnInit {
     this.globalService.setMenuList(this.menuList.filter((i, index) => index < 3));
 
     // this.setHeaderMenu();
-    this.getProjectWinLossDetail(this.projectId);
+   this.getProjectWinLossDetail(this.projectId);
+  this.getCriteriaEvaluationApprovedDetail(this.projectId);
   }
   ngOnInit() {
   }
 
   setHeaderMenu() {
-    // check weather the project is win or loss
+    // check weather the criteria evaluation is approved
+    if (this.isProjectWin === true) {
+      this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
+        this.isProjectWin
+          ? this.menuList
+          : this.menuList.filter((i, index) => index < 3)
+      );
+    } else {
     this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
-      this.isProjectWin
-        ? this.menuList
-        : this.menuList.filter((i, index) => index < 3)
+      this.isCEApproved
+        ? this.menuList.filter((i, index) => index < 3)
+        : this.menuList.filter((i, index) => index < 2)
     );
-
+    }
     // Set Menu Header List
     this.globalService.setMenuList(this.authorizedMenuList);
   }
@@ -107,19 +125,19 @@ export class ProjectDetailsComponent implements OnInit {
   //#endregion
 
 
-  //#region Get win loss deytail by  project id
+  //#region Get criteria evaluation approved by  project id
   getCriteriaEvaluationApprovedDetail(projectId: number) {
     this.projectListService
-      .GetProjectWinLossDetail(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectWinLossStatus,
+      .GetIsApprovedCriteriaEvaluationDetail(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_GetIsApprovedCriteriaEvaluationStatus,
         projectId
       )
       .subscribe(
         data => {
           if (data != null) {
-            if (data.data.ProjectWinLoss != null) {
+            if (data.data.IsApprovedCriteriaEvaluation != null) {
               // check weather the project is win or loss
-              this.isProjectWin = data.data.ProjectWinLoss;
+              this.isCEApproved = data.data.IsApprovedCriteriaEvaluation;
               this.setHeaderMenu();
             }
           }
