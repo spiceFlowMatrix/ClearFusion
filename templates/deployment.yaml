@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: clearfusion
-          image: registry.gitlab.com/edgsolutions-engineering/clear-fusion/clearfusion:{{ .Values.image.tag }}
+          image: eu.gcr.io/{{ .Values.project.name }}/clearfusion:{{ .Values.image.tag }}
           ports:
             - containerPort: 8080
           livenessProbe:
@@ -36,3 +36,5 @@ spec:
               port: 8080
             initialDelaySeconds: 2
             periodSeconds: 2
+          env:
+          - name: GOOGLE_APPLICATION_CREDENTIALS
