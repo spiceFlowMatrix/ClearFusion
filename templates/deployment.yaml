@@ -38,3 +38,29 @@ spec:
             periodSeconds: 2
           env:
           - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: {{ .Values.secret.volume.path }}
+          - name: LINUX_DBCONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                key: {{ .Values.db.secret.key}}
+                name: {{ .Values.db.secret.value}}
+          - name: POSTGRES_DB_HOST
+            value: 127.0.0.1:5432
+          - name: POSTGRES_DB_USER
+            valueFrom:
+              secretKeyRef:
+                key: {{ .Values.secret.postgres.user.key }}
+                name: {{ .Values.secret.postgres.user.value }}
+          - name: POSTGRES_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: {{ .Values.secret.postgres.password.key }}
+                name: {{ .Values.secret.postgres.password.value }}
+          - name: DEFAULT_CORS_POLICY_NAME
+            value: {{ .Values.cors.name}}
+          - name: DEFAULT_CORS_POLICY_URL
+            value: {{ .Values.cors.url}}
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          imagePullPolicy: IfNotPresent
+

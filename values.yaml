@@ -1,2 +1,6 @@
 replicas: 3
 image.tag: latest
+project.name: none
+secret.volume.path: /etc/secrets
+cors.name: localhost
+cors.url: https://legacyapptestedg.cha-net.org
