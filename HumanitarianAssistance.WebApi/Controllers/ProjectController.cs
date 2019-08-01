@@ -921,7 +921,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
             if (user != null)
             {
                 var id = user.Id;
-                apiRespone = _iProject.AddEditEligibilityCriteriaDetail(Model, id);
+                apiRespone =await _iProject.AddEditEligibilityCriteriaDetail(Model, id);
             }
             return apiRespone;
         }
@@ -933,7 +933,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
             if (user != null)
             {
                 var id = user.Id;
-                apiRespone = _iProject.AddEditFeasibilityCriteria(Model, id);
+                apiRespone = await _iProject.AddEditFeasibilityCriteria(Model, id);
             }
             return apiRespone;
         }
@@ -967,7 +967,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
             if (user != null)
             {
                 var id = user.Id;
-                apiRespone = _iProject.AddEditFinancialCriteria(Model, id);
+                apiRespone = await _iProject.AddEditFinancialCriteria(Model, id);
             }
             return apiRespone;
         }
@@ -992,7 +992,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
             if (user != null)
             {
                 var id = user.Id;
-                apiRespone = _iProject.AddEditTargetBeneficiary(Model, id);
+                apiRespone = await _iProject.AddEditTargetBeneficiary(Model, id);
             }
             return apiRespone;
         }
@@ -1369,6 +1369,15 @@ namespace HumanitarianAssistance.WebApi.Controllers
             return apiRespone;
         }
 
+
+        #region "GetIsApprovedCriteriaEvaluationStatus"
+        [HttpPost]
+        public async Task<APIResponse> GetIsApprovedCriteriaEvaluationStatus([FromBody]long ProjectId)
+        {
+            APIResponse apiresponse = await _iProject.GetIsApprovedCriteriaEvaluationStatus(ProjectId);
+            return apiresponse;
+        }
+        #endregion
 
         #endregion
 

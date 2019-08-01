@@ -222,6 +222,9 @@ export class ProjectListService {
     return this.globalService.post(url, id);
   }
 
+  GetIsApprovedCriteriaEvaluationDetail(url: string, id: number) {
+    return this.globalService.post(url, id);
+  }
   //#region  show/Hide
   onShowHideHeader(flag: boolean) {
     this.showHideHeader = flag;

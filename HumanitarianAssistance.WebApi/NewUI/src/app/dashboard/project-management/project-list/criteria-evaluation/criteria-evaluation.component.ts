@@ -19,7 +19,6 @@ import {
   TargetBeneficiaryModel,
   FinancialProjectDetailModel,
   CurrencyModel,
-  ProposalDocModel,
   CurrencyDetailModel
 } from '../project-details/models/project-details.model';
 import { CriteriaEvaluationService } from '../service/criteria-evaluation.service';
@@ -42,8 +41,6 @@ import {
   TargetBeneficiaryTypes_Enum,
   criteriaEvaluationScores
 } from 'src/app/shared/enum';
-import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
-import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
 import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
 import { ProjectListService } from '../service/project-list.service';
 import { forkJoin, Observable } from 'rxjs';
@@ -225,9 +222,7 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     public criteriaEvalService: CriteriaEvaluationService,
     public toastr: ToastrService,
     private cdRef: ChangeDetectorRef,
-    private globalService: GlobalSharedService,
     public projectListService: ProjectListService,
-    private localStorageService: LocalStorageService
   ) {
   }
 
