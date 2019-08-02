@@ -27,10 +27,6 @@ spec:
             value: /secrets/gcp/credentials.json
           - name: POSTGRES_DB_HOST
             value: 127.0.0.1:5432
-          - name: DEFAULT_CORS_POLICY_NAME
-            value: {{ .Values.cors.name}}
-          - name: DEFAULT_CORS_POLICY_URL
-            value: {{ .Values.cors.url }}
           volumeMounts:
             - name: APPLICATION_GCP_SERVICEACCOUNT
               mountPath: /secrets

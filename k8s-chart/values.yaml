@@ -6,5 +6,3 @@ web.image: registry.gitlab.com/edgsolutions-engineering/clear-fusion:new
 dbsecretconnection.value: Host=localhost;Database=postgres;Username=postgres;Password=mypassword
 secret.postgres.user.value: proxyuser
 secret.postgres.password.value: mypassword
-cors.name: localhost
-cors.url: https://legacyapptestedg.cha-net.org
