@@ -37,7 +37,7 @@ export class ProjectDetailsComponent implements OnInit {
     public projectListService: ProjectListService,
     private globalService: GlobalSharedService,
     private appurl: AppUrlService,
-    private router : Router
+    private router: Router
   ) {
 
     this.getScreenSize();
@@ -60,10 +60,10 @@ export class ProjectDetailsComponent implements OnInit {
 
     // Set Menu Header Name
     this.globalService.setMenuHeaderName(this.setProjectHeader);
-    this.globalService.setMenuList(this.menuList.filter((i, index) => index < 3));
+    this.globalService.setMenuList(this.menuList.filter((i, index) => index < 2));
 
     // this.setHeaderMenu();
-   this.getProjectWinLossDetail(this.projectId);
+  this.getProjectWinLossDetail(this.projectId);
   this.getCriteriaEvaluationApprovedDetail(this.projectId);
   }
   ngOnInit() {

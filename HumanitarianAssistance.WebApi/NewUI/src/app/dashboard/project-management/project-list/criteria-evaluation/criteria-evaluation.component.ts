@@ -44,6 +44,8 @@ import {
 import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
 import { ProjectListService } from '../service/project-list.service';
 import { forkJoin, Observable } from 'rxjs';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
 @Component({
   selector: 'app-criteria-evaluation',
   templateUrl: './criteria-evaluation.component.html',
@@ -222,6 +224,8 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     public criteriaEvalService: CriteriaEvaluationService,
     public toastr: ToastrService,
     private cdRef: ChangeDetectorRef,
+    private globalService: GlobalSharedService,
+    private localStorageService: LocalStorageService,
     public projectListService: ProjectListService,
   ) {
   }
@@ -270,22 +274,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
 
 
 
-  getData(): any {
- const response1 =  this.GetCriteraiEvaluationDetailById(this.ProjectId);
- const response2 =  this.GetAllProjectList();
- const response3 =  this.GetAllCurrency();
- const response4 =  this.getPriorityListByProjectId(this.ProjectId);
- const response5 =  this.getAssumptionByprojectId(this.ProjectId);
- const response6 =  this.GetAgegroupByProjectId(this.ProjectId);
- const response7 =  this.getFeasibilityExpertByProjectId(this.ProjectId);
- const response8 =  this.GetOccupationByProjectId(this.ProjectId);
- const response9 =  this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
-    return forkJoin([response1, response2, response3, response4 ,
-       response5, response6, response7, response8, response9]).subscribe((res) => {
-      console.log('res2', response1);
-      this.criteriaEvaluationLoader = false;
-    });
-  }
   //#region "Dynamic Scroll"
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
@@ -299,20 +287,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     };
   }
   //#endregion
-
-  // setHeaderMenu() {
-  //   this.menuList = this.projectListService.getAllProjectMenu();
-  //   // check weather the project is win or loss
-  //   this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
-  //     this.IsSubmitCEform.IsCriteriaEvaluationSubmit
-  //       ? this.menuList
-  //       : this.menuList.filter((i, index) => index < 2)
-  //   );
-
-  //   // Set Menu Header List
-  //   this.globalService.setMenuList(this.authorizedMenuList);
-  // }
-
 
   //#region  Initilize model
 
@@ -1000,6 +974,7 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   }
 
   onMenChange(value) {
+    debugger
     this.productAndServiceForm.Men = value.checked;
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
@@ -2415,7 +2390,7 @@ GetAllCurrency() {
         Kuchis: model.Kuchis,
         Widows: model.Widows,
         Women: model.Women,
-        Men: model.men,
+        Men: model.Men,
         Youth: model.Youth
       };
       this.criteriaEvalService
@@ -4443,6 +4418,7 @@ AddEditProjectProposal(model: any) {
       if (ev === 'IsCESubmit') {
         this.startCriteriaEvaluationSubmitLoader = true;
         this.IsSubmitCEform.IsCriteriaEvaluationSubmit = true;
+        this.setHeaderMenu();
       } else if (ev === 'IsCEReject') {
         this.startCriteriaEvaluationSubmitLoader = true;
         this.IsSubmitCEform.IsCriteriaEvaluationSubmit = false;
@@ -4454,6 +4430,20 @@ AddEditProjectProposal(model: any) {
 
   }
   //#endregion
+
+//#region "setHeaderMenu"
+  setHeaderMenu() {
+    // check weather the criteria evaluation is approved
+    this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
+      this.IsSubmitCEform.IsCriteriaEvaluationSubmit
+        ? this.menuList.filter((i, index) => index < 3)
+        : this.menuList.filter((i, index) => index < 2)
+    );
+
+    // Set Menu Header List
+    this.globalService.setMenuList(this.authorizedMenuList);
+  }
+//#endregion
 
   //#region AddIsDeletedEligibilityDetail
   AddIsSubmitCEDetail(model: ICEisCESubmitModel) {
