@@ -25,10 +25,6 @@ build-newui:
         - npm install
     script:
         - npm run build --prod
-    cache:
-        key: ${CI_COMMIT_REF_SLUG}
-        paths:
-            - HumanitarianAssistance.WebApi/NewUI/node_modules/
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/NewUI/dist/
@@ -43,10 +39,6 @@ build-oldui:
         - npm install
     script:
         - npm run build --prod
-    cache:
-        key: ${CI_COMMIT_REF_SLUG}
-        paths:
-            - HumanitarianAssistance.WebApi/OldUI/node_modules/
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/OldUI/dist/
