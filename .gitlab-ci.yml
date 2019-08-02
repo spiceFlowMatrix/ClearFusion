@@ -69,6 +69,8 @@ publish-container:
 deploy-review:
     stage: deploy
     image: devth/helm
+    before_script:
+        - *functions
     script:
         - init_helm
         - helm upgrade
@@ -93,6 +95,3 @@ deploy-review:
         gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --zone ${GKE_ZONE} --project ${GKE_PROJECT}
         helm init --service-account tiller --wait --upgrade
     }
-
-before_script:
-- *functions
