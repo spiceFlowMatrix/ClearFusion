@@ -69,6 +69,9 @@ publish-container:
 deploy-review:
     stage: deploy
     image: devth/helm
+    environment:
+        name: review
+        url: https://apptestedg.cha-net.org
     script:
         - init_helm
         - helm upgrade
