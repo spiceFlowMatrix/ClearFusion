@@ -12,6 +12,7 @@ variables:
     GKE_CLUSTER_NAME: clearfusion-primary
     GKE_CLUSTER_ZONE: europe-west4-b
     GKE_PROJECT: clear-fusion-193608
+    GKE_ZONE: europe-west4-b
     URL_REVIEW: ${CI_COMMIT_REF_SLUG}.cha-net.org
     URL_CHAPROD: manage.cha-net.org
 
