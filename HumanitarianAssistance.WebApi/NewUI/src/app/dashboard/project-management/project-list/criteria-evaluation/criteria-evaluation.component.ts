@@ -36,7 +36,7 @@ import {
   ICEDonorEligibilityModel,
   ICEisCESubmitModel
 } from './criteria-evaluation.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   TargetBeneficiaryTypes_Enum,
   criteriaEvaluationScores
@@ -207,12 +207,15 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   // to set project header menu
   menuList: IMenuList[] = [];
   authorizedMenuList: IMenuList[] = [];
+  setProjectHeader = 'Project';
 
 
   // screen
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
+
+  //#endregion
 
   //#region Input/Output
   @Output() isCriteriaEvaluationFormSubmit = new EventEmitter();
@@ -227,7 +230,27 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     private globalService: GlobalSharedService,
     private localStorageService: LocalStorageService,
     public projectListService: ProjectListService,
+    private router: Router
+
   ) {
+
+    // set menu header for project listing
+    this.menuList = [];
+    this.projectListService.menuList.forEach(x => {
+      this.menuList.push({
+        Id: x.Id,
+        PageId: x.PageId,
+        Text: x.Text,
+        Link: x.Link
+      });
+    });
+
+    this.menuList.map(
+      x => (x.Link = this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) + x.Link)
+    ); // important for routing
+
+    // Set Menu Header Name
+    this.globalService.setMenuHeaderName(this.setProjectHeader);
   }
 
 
@@ -543,13 +566,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
 
   //#region DonorForm section
   onMethofOfFundingChange(value) {
-    // if (value == 1) {
-    // this.methodOfFunding = criteriaEvaluationScores.methodOfFunding_Sole
-    // } else {
-    // this.methodOfFunding = criteriaEvaluationScores.methodOfFunding_Source
-
-    // }
-
     this.donorCEForm.MethodOfFunding = value;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
@@ -558,10 +574,8 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   onPastFundingExperienceChange(value) {
     if (value.checked === true) {
       this.isDisabled = false;
-      // this.pastFundingExperience = criteriaEvaluationScores.pastFundingExperience_Yes
     } else {
       this.isDisabled = true;
-      // this.pastFundingExperience = criteriaEvaluationScores.pastFundingExperience_No
       this.donorCEForm.ProposalAccepted = false;
       this.donorCEForm.ProposalExperience = null;
       this.donorCEForm.Professional = false;
@@ -572,23 +586,13 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       this.donorCEForm.OtherDeliverableType = null;
       this.donorCEForm.ProjectId = this.ProjectId;
       this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
-      // this.proposaAccept = 0;
-      // this.professional = 0;
-      // this.fundsOnTime = 0;
-      // this.effectiveCommunication = 0;
-      // this.disputes = 0;
-      // this.otherDeliverables = 0;
+
     }
     this.donorCEForm.PastFundingExperience = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
 
   onProposalAcceptChange(value) {
-    // if (value.checked === true) {
-    //   this.proposaAccept = criteriaEvaluationScores.proposalExp_Disputes_Yes
-    // } else {
-    //   this.proposaAccept = criteriaEvaluationScores.proposalExp_Disputes_No
-    // }
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.ProposalAccepted = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
@@ -607,53 +611,29 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   }
 
   onProfessionalChange(value) {
-    // if (value.checked === true) {
-    //   this.professional = criteriaEvaluationScores.proposalExp_Professional_Yes
-    // } else {
-    //   this.professional = criteriaEvaluationScores.proposalExp_Professional_No
-    // }
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.Professional = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
 
   onFundsOnTimeChange(value) {
-    // if (value.checked === true) {
-    //   this.fundsOnTime = criteriaEvaluationScores.proposalExp_FundsOnTime_Yes
-    // } else {
-    //   this.fundsOnTime = criteriaEvaluationScores.proposalExp_Professional_No
-    // }
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.FundsOnTime = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
   onEffectiveCommunicationChange(value) {
-    // if (value.checked === true) {
-    //   this.effectiveCommunication = criteriaEvaluationScores.proposalExp_EffectiveCommunication_Yes
-    // } else {
-    //   this.effectiveCommunication = criteriaEvaluationScores.proposalExp_EffectiveCommunication_No
-    // }
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.EffectiveCommunication = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
   onDisputesChange(value) {
-    // if (value.checked === true) {
-    //   this.disputes = criteriaEvaluationScores.proposalExp_EffectiveCommunication_Yes
-    // } else {
-    //   this.disputes = criteriaEvaluationScores.proposalExp_EffectiveCommunication_No
-    // }
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.Dispute = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
 
   onOtherDeliverablesChange(value) {
-    // if (value.checked === true) {
-    //   this.otherDeliverables = criteriaEvaluationScores.proposalExp_OtherDeliverable_Yes
-    // } else {
-    //   this.otherDeliverables = criteriaEvaluationScores.proposalExp_OtherDeliverable_No
-    // }
+
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.OtherDeliverable = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
@@ -672,75 +652,44 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   onPastWorkExperienceChange(value) {
     if (value.checked === true) {
       this.isDisabledCriticism = false;
-      // this.pastWorkExperience = criteriaEvaluationScores.pastWorkExperoence_Yes
     } else {
       this.isDisabledCriticism = true;
-      // this.pastWorkExperience = criteriaEvaluationScores.pastWorkExperoence_No
       this.donorCEForm.CriticismPerformance = false;
       this.donorCEForm.TimeManagement = false;
       this.donorCEForm.MoneyAllocation = false;
       this.donorCEForm.Accountability = false;
       this.donorCEForm.DeliverableQuality = false;
-      // this.criticismPerformance = 0;
-      // this.criticismTimeManagement = 0;
-      // this.criticismMoneyAllocation = 0;
-      // this.criticismAccountability = 0;
-      // this.criticismDeliverableQuality = 0;
+
     }
     this.donorCEForm.PastWorkingExperience = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
 
   onPerformanceChange(value) {
-    if (value.checked === true) {
-      // this.criticismPerformance = criteriaEvaluationScores.pastCriticismPerfomance_Yes
-    } else {
-      // this.criticismPerformance = criteriaEvaluationScores.pastCriticismPerfomance_No
-    }
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.CriticismPerformance = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
 
   onTimeManagementChange(value) {
-    if (value.checked === true) {
-      // this.criticismTimeManagement = criteriaEvaluationScores.pastCriticismTimeManagement_Yes
-    } else {
-      // this.criticismTimeManagement = criteriaEvaluationScores.pastCriticismTimeManagement_No
-    }
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.TimeManagement = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
 
   onMoneyAllocationChange(value) {
-    if (value.checked === true) {
-      // this.criticismMoneyAllocation = criteriaEvaluationScores.pastCriticismMoneyAllocation_Yes
-    } else {
-      // this.criticismMoneyAllocation = criteriaEvaluationScores.pastCriticismMoneyAllocation_No
-    }
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.MoneyAllocation = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
 
   onAccountabilityChange(value) {
-    if (value.checked === true) {
-      // this.criticismAccountability = criteriaEvaluationScores.pastCriticismAccountability_Yes
-    } else {
-      // this.criticismAccountability = criteriaEvaluationScores.pastCriticismAccountability_No
-    }
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.Accountability = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
   }
 
   onDeliverableQualityChange(value) {
-    // if (value.checked === true) {
-    //   this.criticismDeliverableQuality = criteriaEvaluationScores.pastCriticismQualityDeliverable_Yes
-    // } else {
-    //   this.criticismDeliverableQuality = criteriaEvaluationScores.pastCriticismQualityDeliverable_No
-    // }
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.DeliverableQuality = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
@@ -974,7 +923,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   }
 
   onMenChange(value) {
-    debugger
     this.productAndServiceForm.Men = value.checked;
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
@@ -986,7 +934,7 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     this.productAndServiceForm.Children = value.checked;
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
-  onDisabledChange(value) {
+  onDisabledChange(value: any) {
     this.productAndServiceForm.Disabled = value.checked;
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
@@ -4418,11 +4366,11 @@ AddEditProjectProposal(model: any) {
       if (ev === 'IsCESubmit') {
         this.startCriteriaEvaluationSubmitLoader = true;
         this.IsSubmitCEform.IsCriteriaEvaluationSubmit = true;
-        this.setHeaderMenu();
       } else if (ev === 'IsCEReject') {
         this.startCriteriaEvaluationSubmitLoader = true;
         this.IsSubmitCEform.IsCriteriaEvaluationSubmit = false;
       }
+      this.setHeaderMenu();
       this.IsSubmitCEform.ProjectId = this.ProjectId;
       this.AddIsSubmitCEDetail(this.IsSubmitCEform);
 
