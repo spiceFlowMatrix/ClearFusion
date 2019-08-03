@@ -3,11 +3,11 @@ kind: Service
 metadata:
     name: {{ .Values.web.name }}
     labels:
-        my-super-app: {{ .Values.web.name }}
+        app: {{ .Values.web.name }}
 spec:
     ports:
         - name: http
           port: 80
           targetPort: 80
     selector:
-        my-super-app: {{ .Values.web.name }}
+        app: {{ .Values.web.name }}

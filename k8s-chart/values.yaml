@@ -1,5 +1,4 @@
 replicas: 3
-project.name: none
 web.name: clearfusion-dev
 web.host: apitestedg.cha-net.org
 web.image: registry.gitlab.com/edgsolutions-engineering/clear-fusion:new
