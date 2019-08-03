@@ -28,7 +28,7 @@ spec:
           - name: POSTGRES_DB_HOST
             value: 127.0.0.1:5432
           volumeMounts:
-            - name: APPLICATION_GCP_SERVICEACCOUNT
+            - name: application-gcp-serviceaccount
               mountPath: /secrets
               readOnly: true
         - name: cloudsql-proxy
@@ -38,11 +38,11 @@ spec:
                     "-instances=clear-fusion-193608:europe-west4:cf-prod-primary=tcp:3306",
                     "-credential_file=/secrets/gcp/credentials.json"]
           volumeMounts:
-            - name: APPLICATION_GCP_SERVICEACCOUNT
+            - name: application-gcp-serviceaccount
               mountPath: /secrets
               readOnly: true
       volumes:
-      - name: APPLICATION_GCP_SERVICEACCOUNT
+      - name: application-gcp-serviceaccount
         secret:
           secretName: APPLICATION_GCP_SERVICEACCOUNT
           items:
