@@ -80,7 +80,7 @@ deploy-review:
           --set web.name="clearfusion-${CI_COMMIT_REF_SLUG}"
           --set web.image="${IMAGE}"
           --set web.host="${URL_REVIEW}"
-          --set app.env="Development"
+          --set app.env="Production"
           --set secret.appdbconnectionstring="${LINUX_DBCONNECTION_STRING}"
           --set secret.postgresuser="${POSTGRES_DB_USER}"
           --set secret.postgrespassword="${POSTGRES_DB_PASSWORD}"
