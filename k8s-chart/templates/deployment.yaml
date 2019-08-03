@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   name: {{ .Values.web.name }}
   annotations:
-    app.gitlab.com/app: {{ .Values.project.path }}
-    app.gitlab.com/env: {{ .Values.project.environment }}
+    app.gitlab.com/app: {{ .Values.ci.project.path }}
+    app.gitlab.com/env: {{ .Values.ci.project.environment }}
   labels:
     app: {{ .Values.web.name }}
   namespace: {{ .Values.deployment.namespace }}
