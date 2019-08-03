@@ -1,4 +1,4 @@
-image: docker:stable
+image: 
 services:
     - docker:dind
 stages:
@@ -13,7 +13,7 @@ variables:
     GKE_CLUSTER_ZONE: europe-west4-b
     GKE_PROJECT: clear-fusion-193608
     GKE_ZONE: europe-west4-b
-    URL_REVIEW: ${CI_COMMIT_REF_SLUG}.cha-net.org
+    URL_REVIEW: ${CI_COMMIT_REF_SLUG}.apptestedg.cha-net.org
     URL_CHAPROD: manage.cha-net.org
 
 build-newui:
@@ -56,6 +56,9 @@ build-backend:
             - HumanitarianAssistance.WebApi/release/
 
 publish-container:
+    image: docker:stable
+    services:
+        - docker:dind
     stage: integration
     script:
         - mkdir HumanitarianAssistance.WebApi/release/NewUI
@@ -80,6 +83,12 @@ deploy-review:
           --set web.name="clearfusion-${CI_COMMIT_REF_SLUG}"
           --set web.image="${IMAGE}"
           --set web.host="${URL_REVIEW}"
+          --set app.env="Development"
+          --set secret.app-db-connectionstring="${LINUX_DBCONNECTION_STRING}"
+          --set secret.postgres-user="${POSTGRES_DB_USER}"
+          --set secret.postgres-password="${POSTGRES_DB_PASSWORD}"
+          --set secret.app-service-account="${APPLICATION_GCP_SERVICEACCOUNT}"
+          --set secret.google-bucket-name="${APP_GOOGLE_BUCKET_NAME}"
           --wait
           --force
           clearfusion-${CI_COMMIT_REF_SLUG}

@@ -25,8 +25,38 @@ spec:
           env:
           - name: GOOGLE_APPLICATION_CREDENTIALS
             value: /secrets/gcp/credentials.json
+          - name: LINUX_DBCONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.web.name }}-secrets
+                key: app-db-connectionstring
           - name: POSTGRES_DB_HOST
             value: 127.0.0.1:5432
+          - name: POSTGRES_DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.web.name }}-secrets
+                key: postgres-user
+          - name: POSTGRES_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.web.name }}-secrets
+                key: postgres-password
+          - name: DEFAULT_CORS_POLICY_NAME
+            value: localhost
+          - name: DEFAULT_CORS_POLICY_URL
+            value: https://legacyapptestedg.cha-net.org
+          - name: WEB_SITE_URL
+            value: http://localhost:4000/
+          - name: GOOGLE_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.web.name }}-secrets
+                key: google-bucket-name
+          - name: DOCS_URL
+            value: {{ .Values.app.docsurl }}
+          - name: ASPNETCORE_ENVIRONMENT
+            value: {{ .Values.app.env }}
           volumeMounts:
             - name: application-gcp-serviceaccount
               mountPath: /secrets
@@ -35,7 +65,7 @@ spec:
           image: gcr.io/cloudsql-docker/gce-proxy:1.11
           imagePullPolicy: IfNotPresent
           command: ["/cloud_sql_proxy",
-                    "-instances=clear-fusion-193608:europe-west4:cf-prod-primary=tcp:3306",
+                    "-instances=clear-fusion-193608:europe-west4:cf-prod-primary=tcp:5432",
                     "-credential_file=/secrets/gcp/credentials.json"]
           volumeMounts:
             - name: application-gcp-serviceaccount
@@ -44,8 +74,7 @@ spec:
       volumes:
       - name: application-gcp-serviceaccount
         secret:
-          secretName: APPLICATION_GCP_SERVICEACCOUNT
+          secretName: {{ .Values.web.name }}-secrets
           items:
-          - key: APPLICATION_GCP_SERVICEACCOUNT
+          - key: app-service-account
             path: gcp/credentials.json
-

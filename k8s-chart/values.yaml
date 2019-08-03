@@ -2,6 +2,10 @@ replicas: 3
 web.name: clearfusion-dev
 web.host: apitestedg.cha-net.org
 web.image: registry.gitlab.com/edgsolutions-engineering/clear-fusion:new
-dbsecretconnection.value: Host=localhost;Database=postgres;Username=postgres;Password=mypassword
-secret.postgres.user.value: proxyuser
-secret.postgres.password.value: mypassword
+app.env: Development
+app.docsurl: https://drive.google.com/open?id=1ecimKSFwY_RhnZZ9y34Lfdl7sKa102u6
+secret.app-db-connectionstring: Host=localhost;Database=postgres;Username=postgres;Password=mypassword
+secret.postgres-user: proxyuser
+secret.postgres-password: mypassword
+secret.app-service-account: empty
+secret.google-bucket-name: cf-staging-edg
