@@ -4,6 +4,9 @@ web.host: apitestedg.cha-net.org
 web.image: registry.gitlab.com/edgsolutions-engineering/clear-fusion:new
 app.env: Development
 app.docsurl: https://drive.google.com/open?id=1ecimKSFwY_RhnZZ9y34Lfdl7sKa102u6
+deployment.namespace: review
+project.path: none
+project.environment: review
 secret.appdbconnectionstring: Host=localhost;Database=postgres;Username=postgres;Password=mypassword
 secret.postgresuser: proxyuser
 secret.postgrespassword: mypassword

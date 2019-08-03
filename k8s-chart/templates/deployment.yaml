@@ -2,8 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.web.name }}
+  annotations:
+    app.gitlab.com/app: {{ .Values.project.path }}
+    app.gitlab.com/env: {{ .Values.project.environment }}
   labels:
     app: {{ .Values.web.name }}
+  namespace: {{ .Values.deployment.namespace }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:

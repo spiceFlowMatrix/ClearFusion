@@ -25,7 +25,6 @@ build-newui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/NewUI/dist/
-            
 
 build-oldui:
     image: node:latest
@@ -81,6 +80,9 @@ deploy-review:
           --set web.image="${IMAGE}"
           --set web.host="${URL_REVIEW}"
           --set app.env="Production"
+          --set deployment.namespace="${KUBE_NAMESPACE}"
+          --set project.path="${CI_PROJECT_PATH_SLUG}"
+          --set project.environment="${CI_ENVIRONMENT_SLUG}"
           --set secret.appdbconnectionstring="${LINUX_DBCONNECTION_STRING}"
           --set secret.postgresuser="${POSTGRES_DB_USER}"
           --set secret.postgrespassword="${POSTGRES_DB_PASSWORD}"
