@@ -2,6 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ .Values.web.name }}-ingress
+  namespace: {{ .Values.deployment.namespace }}
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
