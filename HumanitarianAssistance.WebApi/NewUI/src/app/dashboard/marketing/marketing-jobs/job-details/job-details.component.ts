@@ -253,7 +253,7 @@ export class JobDetailsComponent implements OnInit, OnChanges {
 
     doc.setFontSize(10);
     const img = new Image();
-    img.src = '../../../../../assets/img/agreement-logo-small.png';
+    img.src = './assets/img/agreement-logo-small.png';
     img.addEventListener('load', function() {
       doc.addImage(img, 'png', 150, 5);
 
@@ -774,7 +774,7 @@ export class JobDetailsComponent implements OnInit, OnChanges {
     const doc = new jsPDF();
     doc.setFontSize(10);
     const img = new Image();
-    img.src = '../../../../../assets/img/agreement-logo-small.png';
+    img.src = './assets/img/agreement-logo-small.png';
     img.addEventListener('load', function() {
       // start red border
       doc.setDrawColor(255, 0, 0);

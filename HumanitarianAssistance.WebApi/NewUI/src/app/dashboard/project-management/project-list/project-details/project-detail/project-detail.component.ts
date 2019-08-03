@@ -181,7 +181,11 @@ export class ProjectDetailComponent implements OnInit {
     const dialogRef = this.dialog.open(ProgramAreaSectorComponent, {
       height: '600px',
       width: '800px',
-      data: { id: this.projectId }
+      data: { 
+        id: this.projectId,
+        projectName: this.projectDetail.ProjectName,
+        description: this.projectDetail.ProjectDescription,
+      }
     });
     dialogRef.afterClosed().subscribe(result => {});
   }

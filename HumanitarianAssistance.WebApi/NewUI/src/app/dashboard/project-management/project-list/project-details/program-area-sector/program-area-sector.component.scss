@@ -10,7 +10,7 @@
         :host /deep/  .ui-multiselect-label{font-weight:400;}
         :host /deep/  .ui-multiselect .ui-multiselect-panel{width:100%;}
         :host /deep/  .mat-dialog-container{padding:0;}
-        :host /deep/ .dialog_heading{border-bottom:1px solid;padding-bottom:18px;}
+        :host /deep/ .dialog_heading{border-bottom:1px solid;padding-bottom:5px;}
         :host /deep/ .cdk-overlay-pane{position: relative; top:25px;}
         :host /deep/ .mat-dialog-container{border-radius: 0;}
         :host /deep/   .ui-multiselect-label-container label {
@@ -51,3 +51,4 @@
   .example-full-width {
     width: 100%;
   }
+  .padding_top_5px { padding-top: 5px;}

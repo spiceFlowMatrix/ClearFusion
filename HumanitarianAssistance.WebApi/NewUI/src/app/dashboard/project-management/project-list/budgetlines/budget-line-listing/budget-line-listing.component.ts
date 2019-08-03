@@ -240,7 +240,8 @@ export class BudgetLineListingComponent implements OnInit {
               InitialBudget: element.InitialBudget,
               ProjectId: element.ProjectId,
               CreatedDate: element.CreatedDate,
-              DebitPercentage: element.DebitPercentage
+              DebitPercentage: element.DebitPercentage,
+              Expenditure: element.Expenditure
             });
           });
         }
@@ -288,7 +289,8 @@ export class BudgetLineListingComponent implements OnInit {
                     : null,
                 BudgetLineId: element.BudgetLineId,
                 ProjectId: element.Projectid,
-                DebitPercentage: element.DebitPercentage
+                DebitPercentage: element.DebitPercentage,
+                Expenditure: element.Expenditure
               });
             });
           }
@@ -323,6 +325,8 @@ export class BudgetLineListingComponent implements OnInit {
       x => x.ProjectJobId === event.ProjectJobId
     ).ProjectJobName;
     // event.DebitPercentage === this.transactionList.reduce((a, { Debit }) => a + Debit, 0);
+
+    console.log(event);
     this.BudgetLineDetailList[indexOfBudget] = event;
   }
   //#endregion

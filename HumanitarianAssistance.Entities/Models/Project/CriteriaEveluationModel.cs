@@ -54,39 +54,60 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? IsGeographical { get; set; }
         public bool? IsSeasonal { get; set; }
         public long ProductServiceId { get; set; }
-        public bool? Women { get; set; }
         public long EligibilityId { get; set; }
-        public bool? Children { get; set; }
         public bool? Awareness { get; set; }
-        public bool? Education { get; set; }
-        public bool? DrugAbuses { get; set; }
-        public bool? Right { get; set; }
-        public bool? Culture { get; set; }
-        public bool? Music { get; set; }
-        public bool? Documentaries { get; set; }
-        public bool? InvestigativeJournalism { get; set; }
-        public bool? HealthAndNutrition { get; set; }
-        public bool? News { get; set; }
-        public bool? SocioPolitiacalDebate { get; set; }
-        public bool? Studies { get; set; }
-        public bool? Reports { get; set; }
-        public bool? CommunityDevelopment { get; set; }
-        public bool? Aggriculture { get; set; }
-        public bool? DRR { get; set; }
-        public bool? ServiceEducation { get; set; }
-        public bool? ServiceHealthAndNutrition { get; set; }
-        public bool? RadioProduction { get; set; }
-        public bool? TVProgram { get; set; }
-        public bool? PrintedMedia { get; set; }
-        public bool? RoundTable { get; set; }
-        public bool? Others { get; set; }
-        public string OtherActivity { get; set; }
-        public bool? TargetBenificaiaryWomen { get; set; }
-        public bool? TargetBenificiaryMen { get; set; }
-        public bool? TargetBenificiaryAgeGroup { get; set; }
-        public bool? TargetBenificiaryaOccupation { get; set; }
-        public bool? Service { get; set; }
-        public bool? Product { get; set; }
+        public bool? Infrastructure { get; set; }
+        public bool? CapacityBuilding { get; set; }
+        public bool? IncomeGeneration { get; set; }
+        public bool? Mobilization { get; set; }
+        public bool? PeaceBuilding { get; set; }
+        public bool? SocialProtection { get; set; }
+        public bool? SustainableLivelihood { get; set; }
+        public bool? Advocacy { get; set; }
+        public bool? Literacy { get; set; }
+        public bool? EducationCapacityBuilding { get; set; }
+        public bool? SchoolUpgrading { get; set; }
+        public bool? EducationInEmergency { get; set; }
+        public bool? OnlineEducation { get; set; }
+        public bool? CommunityBasedEducation { get; set; }
+        public bool? AcceleratedLearningProgram { get; set; }
+        public bool? PrimaryHealthServices { get; set; }
+        public bool? ReproductiveHealth { get; set; }
+        public bool? Immunization { get; set; }
+        public bool? InfantandYoungChildFeeding { get; set; }
+        public bool? Nutrition { get; set; }
+        public bool? CommunicableDisease { get; set; }
+        public bool? Hygiene { get; set; }
+        public bool? EnvironmentalHealth { get; set; }
+        public bool? MentalHealthandDisabilityService { get; set; }
+        public bool? HealthCapacityBuilding { get; set; }
+        public bool? Telemedicine { get; set; }
+        public bool? MitigationProjects { get; set; }
+        public bool? WaterSupply { get; set; }
+        public bool? Sanitation { get; set; }
+        public bool? DisasterRiskHygiene { get; set; }
+        public bool? DisasterCapacityBuilding { get; set; }
+        public bool? EmergencyResponse { get; set; }
+        public bool? RenewableEnergy { get; set; }
+        public bool? Shelter { get; set; }
+        public bool? NaturalResourceManagement { get; set; }
+        public bool? AggriculutreCapacityBuilding { get; set; }
+        public bool? LivestockManagement { get; set; }
+        public bool? FoodSecurity { get; set; }
+        public bool? ResearchandPublication { get; set; }
+        public bool? Horticulture { get; set; }
+        public bool? Irrigation { get; set; }
+        public bool? Livelihood { get; set; }
+        public bool? ValueChain { get; set; }
+        public bool? Children { get; set; }
+        public bool? Disabled { get; set; }
+        public bool? IDPs { get; set; }
+        public bool? Returnees { get; set; }
+        public bool? Kuchis { get; set; }
+        public bool? Widows { get; set; }
+        public bool? Men { get; set; }
+        public bool? Women { get; set; }
+        public bool? Youth { get; set; }
         public bool? DonorCriteriaMet { get; set; }
         public bool? EligibilityDealine { get; set; }
         public bool? CoPartnership { get; set; }
@@ -133,6 +154,14 @@ namespace HumanitarianAssistance.ViewModels.Models.Project
         public bool? OtherOrganizationalHarms { get; set; }
         public string OrganizationalDescription { get; set; }
         public bool? IsCriteriaEvaluationSubmit { get; set; }
+        public int? CurrencyId { get; set; }
+        public bool? Geographical { get; set; }
+        public bool? Insecurity { get; set; }
+        public bool? Season { get; set; }
+        public bool? Ethnicity { get; set; }
+        public bool? Culture { get; set; }
+        public bool? ReligiousBeliefs { get; set; }
+        public string CurrencyName { get; set; }
 
     }
 }

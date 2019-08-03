@@ -57,7 +57,7 @@ namespace HumanitarianAssistance.Entities
 
         public DbSet<VoucherDetail> VoucherDetail { get; set; }
 
-        public DbSet<VoucherDocumentDetail> VoucherDocumentDetail { get; set; }
+       // public DbSet<VoucherDocumentDetail> VoucherDocumentDetail { get; set; }
 
         public DbSet<Department> Department { get; set; }
         public DbSet<PermissionsInRoles> PermissionsInRoles { get; set; }
@@ -196,7 +196,8 @@ namespace HumanitarianAssistance.Entities
         public DbSet<Errorlog> errorlog { get; set; }
         public DbSet<DocumentFileDetail> DocumentFileDetail { get; set; }
         public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
-
+        public DbSet<ChatDetail> ChatDetail { get; set; }
+        public DbSet<EntitySourceDocumentDetail> EntitySourceDocumentDetails { get; set; }
 
 
         #region Project
@@ -366,7 +367,7 @@ namespace HumanitarianAssistance.Entities
             );
 
             modelBuilder.Entity<CurrencyDetails>().HasData(
-                new CurrencyDetails { CurrencyId = 1, CurrencyName = "Afghanistan", CurrencyCode = "AFG", IsDeleted = false, Status = false, SalaryTaxFlag = true },
+                new CurrencyDetails { CurrencyId = 1, CurrencyName = "Afghanistan", CurrencyCode = "AFN", IsDeleted = false, Status = false, SalaryTaxFlag = true },
                 new CurrencyDetails { CurrencyId = 2, CurrencyName = "European Curency", CurrencyCode = "EUR", IsDeleted = false, Status = false, SalaryTaxFlag = false },
                 new CurrencyDetails { CurrencyId = 3, CurrencyName = "Pakistani Rupees", CurrencyCode = "PKR", IsDeleted = false, Status = true, SalaryTaxFlag = false }, //base currency :  Status = true
                 new CurrencyDetails { CurrencyId = 4, CurrencyName = "US Dollars", CurrencyCode = "USD", IsDeleted = false, Status = false, SalaryTaxFlag = false }

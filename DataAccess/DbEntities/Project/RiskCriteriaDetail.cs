@@ -38,5 +38,14 @@ namespace DataAccess.DbEntities.Project
         public bool? Probablydelaysinfunding { get; set; }
         public bool? OtherOrganizationalHarms { get; set; }
         public string OrganizationalDescription { get; set; }
+        public int? CurrencyId { get; set; }
+        [ForeignKey("CurrencyId")]
+        public CurrencyDetails CurrencyDetails { get; set; }
+        public bool? Geographical { get; set; }
+        public bool? Insecurity { get; set; }
+        public bool? Season { get; set; }
+        public bool? Ethnicity { get; set; }
+        public bool? Culture { get; set; }
+        public bool? ReligiousBeliefs { get; set; }
     }
 }

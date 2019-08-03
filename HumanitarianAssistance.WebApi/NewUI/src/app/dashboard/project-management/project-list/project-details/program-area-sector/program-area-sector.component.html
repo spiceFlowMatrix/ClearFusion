@@ -1,13 +1,14 @@
-<div class="row">
-  <div class="col-sm-12">
-    <h4 class="main_heading dialog_heading">
+<div class="row dialog_heading">
+  <div class="col-sm-4">
+    <h4 class="main_heading">
       Project Details
-      <!-- <a mat-href (click)="closeProgramAreaSectorModal()" class="pull-right close_btn"><i class="material-icons">
-          cancel </i></a> -->
-      <button mat-icon-button class="pull-right" (click)="closeProgramAreaSectorModal()">
-        <mat-icon aria-label="Example cancel icon">clear</mat-icon>
-      </button>
     </h4>
+  </div>
+  <div class="col-sm-1">
+        <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon>
+  </div>
+  <div class="col-sm-7">
+        <mat-icon class="pull-right icon_cursor" aria-label="cancel" (click)="closeProgramAreaSectorModal()">clear</mat-icon>
   </div>
 </div>
 <div *ngIf="projectOtherDetailPageFlag; else projectListTemplate" class="col-sm-12">
@@ -129,13 +130,13 @@
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select class="example-full-width" placeholder="Select Country"
-                    [(ngModel)]="countryMultiSelectModel.CountryId " (selectionChange)="
+                    [(ngModel)]="countryMultiSelectModel.CountryId" (selectionChange)="
                                    onCountryDetailsChange(
                                   'countrySelction',
                                   countryMultiSelectModel.CountryId
                                 )
                               " name="countrySelction"
-                    [disabled]="CountrySelectionList.length<0 || !isEditingAllowed" multiple>
+                    [disabled]="CountrySelectionList.length < 0 || !isEditingAllowed">
                     <mat-option *ngFor="let item of CountrySelectionList" [value]="item.value">{{ item.label }}
                     </mat-option>
                   </mat-select>
@@ -171,7 +172,7 @@
               <div class="col-sm-6">
                 <mat-form-field>
                   <mat-select placeholder="Select District" [(ngModel)]="districtMultiSelctModel.DistrictID"
-                    [disabled]="provinceSelectedFlag || !isEditingAllowed" (selectionChange)="
+                    (selectionChange)="
                       onDistrictDetailsChange(
                               'districtSelction',
                               districtMultiSelctModel.DistrictID
@@ -332,7 +333,7 @@
                 <mat-form-field>
                   <input matInput [(ngModel)]="projectotherDetail.REOIReceiveDate" [matDatepicker]="picker4"
                     placeholder="REOI Receive Date" (dateChange)="
-                  onProjectotherDetailsChange('rEOIReceiveDate', REOIReceiveDate)
+                  onProjectotherDetailsChange('rEOIReceiveDate', projectotherDetail.REOIReceiveDate)
                 " [disabled]="!isEditingAllowed" />
                   <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                   <mat-datepicker #picker4></mat-datepicker>
@@ -347,7 +348,7 @@
                 <mat-form-field>
                   <input matInput [(ngModel)]="projectotherDetail.SubmissionDate" [matDatepicker]="picker"
                     placeholder="Submission Date" (dateChange)="
-                            onProjectotherDetailsChange('submissionDate', SubmissionDate)
+                            onProjectotherDetailsChange('submissionDate', projectotherDetail.SubmissionDate)
                           " [disabled]="!isEditingAllowed" />
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
