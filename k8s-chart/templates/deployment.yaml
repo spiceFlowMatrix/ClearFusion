@@ -29,19 +29,19 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.web.name }}-secrets
-                key: app-db-connectionstring
+                key: appdbconnectionstring
           - name: POSTGRES_DB_HOST
             value: 127.0.0.1:5432
           - name: POSTGRES_DB_USER
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.web.name }}-secrets
-                key: postgres-user
+                key: postgresuser
           - name: POSTGRES_DB_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.web.name }}-secrets
-                key: postgres-password
+                key: postgrespassword
           - name: DEFAULT_CORS_POLICY_NAME
             value: localhost
           - name: DEFAULT_CORS_POLICY_URL
@@ -52,7 +52,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.web.name }}-secrets
-                key: google-bucket-name
+                key: googlebucketname
           - name: DOCS_URL
             value: {{ .Values.app.docsurl }}
           - name: ASPNETCORE_ENVIRONMENT
@@ -76,5 +76,5 @@ spec:
         secret:
           secretName: {{ .Values.web.name }}-secrets
           items:
-          - key: app-service-account
+          - key: appserviceaccount
             path: gcp/credentials.json

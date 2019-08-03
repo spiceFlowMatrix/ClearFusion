@@ -81,11 +81,11 @@ deploy-review:
           --set web.image="${IMAGE}"
           --set web.host="${URL_REVIEW}"
           --set app.env="Development"
-          --set secret.app-db-connectionstring="${LINUX_DBCONNECTION_STRING}"
-          --set secret.postgres-user="${POSTGRES_DB_USER}"
-          --set secret.postgres-password="${POSTGRES_DB_PASSWORD}"
-          --set secret.app-service-account="${APPLICATION_GCP_SERVICEACCOUNT}"
-          --set secret.google-bucket-name="${APP_GOOGLE_BUCKET_NAME}"
+          --set secret.appdbconnectionstring="${LINUX_DBCONNECTION_STRING}"
+          --set secret.postgresuser="${POSTGRES_DB_USER}"
+          --set secret.postgrespassword="${POSTGRES_DB_PASSWORD}"
+          --set secret.appserviceaccount="${APPLICATION_GCP_SERVICEACCOUNT}"
+          --set secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
           --wait
           --force
           clearfusion-${CI_COMMIT_REF_SLUG}
