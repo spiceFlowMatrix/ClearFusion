@@ -168,20 +168,22 @@ export class ProjectListComponent implements OnInit {
       .subscribe(
         res => {
           this.projectList = [];
-          if (res.data.ProjectDetailModel.length > 0 && res.StatusCode === 200) {
-            this.projectFilterModel.totalCount =
-            res.data.TotalCount != null ? res.data.TotalCount : 0;
-            res.data.ProjectDetailModel.forEach(element => {
-            this.projectList.push({
-              ProjectId: element.ProjectId,
-              ProjectName: element.ProjectName,
-              ProjectPhase: element.ProjectPhase,
-              TotalDaysinHours: element.TotalDaysinHours,
-              ProjectCode: element.ProjectCode,
-              ProjectDescription: element.ProjectDescription,
-              IsWin: element.IsWin
+          if (res.data.ProjectDetailModel != null && res.data.ProjectDetailModel != undefined) {
+            if (res.data.ProjectDetailModel.length > 0 && res.StatusCode === 200) {
+              this.projectFilterModel.totalCount =
+              res.data.TotalCount != null ? res.data.TotalCount : 0;
+              res.data.ProjectDetailModel.forEach(element => {
+              this.projectList.push({
+                ProjectId: element.ProjectId,
+                ProjectName: element.ProjectName,
+                ProjectPhase: element.ProjectPhase,
+                TotalDaysinHours: element.TotalDaysinHours,
+                ProjectCode: element.ProjectCode,
+                ProjectDescription: element.ProjectDescription,
+                IsWin: element.IsWin
+              });
             });
-          });
+            }
           }
             this.projectListLoaderFlag = false;
         },
