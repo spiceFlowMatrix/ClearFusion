@@ -75,8 +75,6 @@ deploy-review:
         url: https://apptestedg.cha-net.org
     script:
         - init_helm
-        - echo ${POSTGRES_DB_USER}
-        - echo ${POSTGRES_DB_PASSWORD}
         - helm upgrade
           --install
           --set web.name="${CF_APP_NAME}"
