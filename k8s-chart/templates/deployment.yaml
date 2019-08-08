@@ -19,7 +19,7 @@ spec:
       containers:
         - name: {{ .Values.web.name }}
           image: {{ .Values.web.image }}
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
           env:
