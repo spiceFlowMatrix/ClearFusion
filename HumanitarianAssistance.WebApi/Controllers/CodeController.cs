@@ -141,7 +141,7 @@ namespace HumanitarianAssistance.Controllers
 
     }
 
-    [HttpGet]
+    [HttpGet] //not used
     public async Task<object> GetOfficeDetailsByOfficeCode(string OfficeCode)
     {
       APIResponse apiRespone = null;
@@ -259,7 +259,7 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpGet] // -------------------- not used
     public async Task<object> GetJournalDetailByCode(int JournalCode)
     {
       APIResponse apiRespone = null;
@@ -267,14 +267,15 @@ namespace HumanitarianAssistance.Controllers
       return apiRespone;
     }
 
-    [HttpGet]
+    [HttpGet] //--------------------- not used
     public async Task<object> GetJournalDetailByName(string JournalName)
     {
       APIResponse apiRespone = null;
       apiRespone = await _ijournalDetail.GetJournalDetailByName(JournalName);
       return apiRespone;
     }
-    //Journal Details Module Controller
+  
+     //Journal Details Module Controller
 
 
     //Email Setting Details Module Controller
