@@ -501,7 +501,7 @@ export class StoreMainComponent implements OnInit, OnDestroy {
         res => {
           if (res.StatusCode === 200) {
             this.toastr.success('Item Group Updated Successfully!');
-            // this.getAllInventoryDetails(this.storeSelectedTab);
+            this.getAllInventoryDetails(this.storeSelectedTab);
             this.hideItemGroupEditPopup();
           } else {
             this.toastr.error(res.Message);
