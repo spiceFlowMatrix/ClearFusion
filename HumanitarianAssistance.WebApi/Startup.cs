@@ -141,13 +141,13 @@ namespace HumanitarianAssistance.WebApi
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), @"Documents")),
-                RequestPath = new PathString("/Docs")
-            });
-
+            //app.UseStaticFiles(new StaticFileOptions()
+            //{
+             //   FileProvider = new PhysicalFileProvider(
+             //   Path.Combine(Directory.GetCurrentDirectory(), @"Documents")),
+            //    RequestPath = new PathString("/Docs")
+            //});
+            app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseCors(defaultCorsPolicyName);
             app.UseAuthentication();
