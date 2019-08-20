@@ -1,6 +1,16 @@
+// export const environment = {
+//   production: false,
+//   apiUrl: '/api/',
+//   docUrl: '/Docs/',
+//   hubUrl: '/chathub/',
+//   oldUiUrl: '/oldui/#/',
+//   notifyHubUrl: '/notifyhub/',
+//   uploadUrl: 'https://storage.cloud.google.com/' // proposal doc
+// };
+
 export const environment = {
   production: false,
-  apiUrl: '/api/',
+  apiUrl: 'https://localhost:5001/api/',
   docUrl: '/Docs/',
   hubUrl: '/chathub/',
   oldUiUrl: '/oldui/#/',

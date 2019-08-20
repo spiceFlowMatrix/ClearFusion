@@ -54,7 +54,7 @@ namespace HumanitarianAssistance.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             //get and set environment variable at run time
-            string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
+            string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRINGTWO");
             string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
             string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
 
@@ -225,7 +225,7 @@ namespace HumanitarianAssistance.WebApi
                 if (env.IsDevelopment())
                 {
                     // it will use package.json & will search for start command to run
-                    spa.UseAngularCliServer(npmScript: "start");
+                    // spa.UseAngularCliServer(npmScript: "start");
                 }
                 else
                 {
