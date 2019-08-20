@@ -1053,11 +1053,11 @@ namespace HumanitarianAssistance.Service.Classes
 
                 foreach (var item in purchasesModel)
                 {
-                    var exchangeRate = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date <= item.PurchaseDate && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
+                    var exchangeRate = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date.Date <= item.PurchaseDate.Date && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
 
                     if (exchangeRate == null)
                     {
-                        throw new Exception($"Exchange Rates not defined for Date {item.PurchaseDate.Date}");
+                        throw new Exception($"Exchange Rates not defined for Date {item.PurchaseDate.Date.ToString("dd/MM/yyyy")}");
                     }
 
                     item.TotalCostUSD = item.TotalCost * (double)exchangeRate.Rate;
