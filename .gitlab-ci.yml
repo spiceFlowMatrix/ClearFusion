@@ -63,6 +63,7 @@ publish-container:
         - cp -r HumanitarianAssistance.WebApi/NewUI/dist/ HumanitarianAssistance.WebApi/release/NewUI/dist
         - cp -r HumanitarianAssistance.WebApi/OldUI/dist/ HumanitarianAssistance.WebApi/release/OldUI/dist
         - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+        - docker pull ${CF_APP_IMAGE} || true
         - docker build --cache-from ${CF_APP_IMAGE} -t ${CF_APP_IMAGE} -f ./Dockerfile .
         - docker push ${CF_APP_IMAGE}
 
