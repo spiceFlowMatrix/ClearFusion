@@ -29,6 +29,11 @@ Humanitarian Assistance ERP project features/bug fixes [Live site](http://34.90.
 <a name="released"></a>
 ## [Released]
 
+<a name="1.0.0"></a>
+## [0.2.0] - 2019-07-30
+### Features
+- Clean Architecture Setup
+
 <a name="0.2.0"></a>
 ## [0.2.0] - 2019-07-30
 ### Features

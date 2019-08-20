@@ -649,7 +649,7 @@ export class EmployeesComponent implements OnInit {
               });
             });
 
-            const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+            const AllOffices = localStorage.getItem('ALLOFFICES') != null ? localStorage.getItem('ALLOFFICES').split(',') : [];
 
             data.data.OfficeDetailsList.forEach(element => {
               const officeFound = AllOffices.indexOf('' + element.OfficeId);

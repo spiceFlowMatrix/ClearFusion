@@ -1,229 +1,166 @@
-using DataAccess.DbEntities;
-using HumanitarianAssistance.Service.APIResponses;
-using HumanitarianAssistance.Service.interfaces.ProjectManagement;
-using HumanitarianAssistance.ViewModels.Models.Project;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Project.Commands.Common;
+using HumanitarianAssistance.Application.Project.Commands.Create;
+using HumanitarianAssistance.Application.Project.Commands.Delete;
+using HumanitarianAssistance.Application.Project.Commands.Update;
+using HumanitarianAssistance.Application.Project.Queries;
+using HumanitarianAssistance.Common.Enums;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HumanitarianAssistance.WebApi.Controllers.Project
 {
-
-  [Produces("application/json")]
-  [Route("api/ProjectPeople/[Action]")]
-  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-  public class ProjectPeopleController : Controller
-  {
-    private readonly UserManager<AppUser> _userManager;
-
-    private IProjectPeopleService _iProjectPeopleService;
-
-    public ProjectPeopleController(
-            UserManager<AppUser> userManager,
-            IProjectPeopleService iProjectPeopleService
-            )
+    [ApiController]
+    [Produces("application/json")]
+    [Route("api/ProjectPeople/[Action]")]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.Project))]
+    public class ProjectPeopleController : BaseController
     {
-      _userManager = userManager;
-      _iProjectPeopleService = iProjectPeopleService;
+        [HttpPost]
+        public async Task<ApiResponse> GetOpportunityControlList([FromBody] long projectId)
+        {
+            return await _mediator.Send(new GetOpportunityControlListQuery { projectId = projectId });
+        }
+        [HttpPost]
+        public async Task<ApiResponse> GetLogisticsControlList([FromBody] long projectId)
+        {
+            return await _mediator.Send(new GetLogisticsControlListQuery { projectId = projectId });
+        }
+        [HttpPost]
+        public async Task<ApiResponse> GetActivitiesControl([FromBody] long projectId)
+        {
+            return await _mediator.Send(new GetActivitiesControlListQuery { projectId = projectId });
+        }
+        [HttpPost]
+        public async Task<ApiResponse> GetActivitiesControlPermission([FromBody] long projectId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(new GetActivitiesControlPermissionQuery
+            {
+                projectId = projectId,
+                userId = userId
+            });
+        }
+        [HttpPost]
+        public async Task<ApiResponse> GetHiringControl([FromBody] long projectId)
+        {
+            return await _mediator.Send(new GetHiringControlListQuery { projectId = projectId });
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddOpportunityControl([FromBody]AddOpportunityControlCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command); 
+        }
+        [HttpPost]
+        public async Task<ApiResponse> EditOpportunityControl([FromBody]EditOpportunityControlCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(command);
+        }
+        [HttpPost]
+        public async Task<ApiResponse> DeleteOpportunityControl([FromBody] long id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(new DeleteOpportunityControlCommand
+            {
+                id = id,
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow
+            }); 
+        }
+        [HttpPost]
+        public async Task<ApiResponse> AddLogisticsControl([FromBody]AddLogisticsControlCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value; 
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command); 
+        }
+        [HttpPost]
+        public async Task<ApiResponse> EditLogisticsControl([FromBody]EditLogisticsControlCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId; 
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command); 
+        }
+        [HttpPost]
+        public async Task<ApiResponse> DeleteLogisticsControl([FromBody] long id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(new DeleteLogisticsControlCommand 
+            {
+                id = id,
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow
+            }); 
+        }
+        [HttpPost]
+        public async Task<ApiResponse> AddActivitiesControl([FromBody]AddActivitiesControlCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow; 
+            return await _mediator.Send(command); 
+        } 
+        [HttpPost]
+        public async Task<ApiResponse> EditActivitiesControl([FromBody]EditActivitiesControlCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command); 
+        }
+        [HttpPost]
+        public async Task<ApiResponse> DeleteActivitiesControl([FromBody] long id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(new DeleteActivitiesControlCommand
+            {
+                id = id,
+                ModifiedById = userId, 
+                ModifiedDate = DateTime.UtcNow
+            }); 
+        }
+        [HttpPost]
+        public async Task<ApiResponse> AddHiringControl([FromBody]AddHiringControlCommand command)
+        { 
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command); 
+        }
+        [HttpPost]
+        public async Task<ApiResponse> EditHiringControl([FromBody]EditHiringControlCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command); 
+        }
+        [HttpPost]
+        public async Task<ApiResponse> DeleteHiringControl([FromBody] long id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(new DeleteHiringControlCommand
+            {
+                id = id,
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow 
+            });
+        }
     }
-
-
-    [HttpPost]
-    public async Task<APIResponse> GetOpportunityControlList([FromBody] long projectId)
-    {
-      APIResponse response = await _iProjectPeopleService.GetOpportunityControlList(projectId);
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> AddOpportunityControl([FromBody] OpportunityControlAddModel model)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.AddOpportunityControl(model, user.Id);
-      }
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> EditOpportunityControl([FromBody] OpportunityControlEditModel model)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.EditOpportunityControl(model, user.Id);
-      }
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> DeleteOpportunityControl([FromBody] long id)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.DeleteOpportunityControl(id, user.Id);
-      }
-      return response;
-    }
-
-
-
-
-    [HttpPost]
-    public async Task<APIResponse> GetLogisticsControlList([FromBody] long projectId)
-    {
-      APIResponse response = await _iProjectPeopleService.GetLogisticsControlList(projectId);
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> AddLogisticsControl([FromBody] LogisticsControlAddModel model)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.AddLogisticsControl(model, user.Id);
-      }
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> EditLogisticsControl([FromBody] LogisticsControlEditModel model)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.EditLogisticsControl(model, user.Id);
-      }
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> DeleteLogisticsControl([FromBody] long id)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.DeleteLogisticsControl(id, user.Id);
-      }
-      return response;
-    }
-
-
-
-    [HttpPost]
-    public async Task<APIResponse> GetActivitiesControl([FromBody] long projectId)
-    {
-      APIResponse response = await _iProjectPeopleService.GetActivitiesControlList(projectId);
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> AddActivitiesControl([FromBody] ActivitiesControlAddModel model)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.AddActivitiesControl(model, user.Id);
-      }
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> EditActivitiesControl([FromBody] ActivitiesControlEditModel model)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.EditActivitiesControl(model, user.Id);
-      }
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> DeleteActivitiesControl([FromBody] long id)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.DeleteActivitiesControl(id, user.Id);
-      }
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> GetActivitiesControlPermission([FromBody] long projectId)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.GetActivitiesControlPermission(projectId, user.Id);
-      }
-      return response;
-    }
-
-
-
-    
-
-
-    [HttpPost]
-    public async Task<APIResponse> GetHiringControl([FromBody] long projectId)
-    {
-      APIResponse response = await _iProjectPeopleService.GetHiringControlList(projectId);
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> AddHiringControl([FromBody] HiringControlAddModel model)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.AddHiringControl(model, user.Id);
-      }
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> EditHiringControl([FromBody] HiringControlEditModel model)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.EditHiringControl(model, user.Id);
-      }
-      return response;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> DeleteHiringControl([FromBody] long id)
-    {
-      APIResponse response = new APIResponse();
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        response = await _iProjectPeopleService.DeleteHiringControl(id, user.Id);
-      }
-      return response;
-    }
- 
-  }
 }
+
+

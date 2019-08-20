@@ -103,7 +103,7 @@ export class SetPayrollAccountComponent implements OnInit {
     this.codeservice
       .GetAllDetails(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetLevelFourAccountDetails
+          GLOBAL.API_Accounting_GetAllInputLevelAccountCode
       )
       .subscribe(
         data => {

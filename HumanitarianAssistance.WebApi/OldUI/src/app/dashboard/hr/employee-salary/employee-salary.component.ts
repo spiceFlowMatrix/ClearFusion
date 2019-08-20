@@ -1017,7 +1017,7 @@ export class EmployeeSalaryComponent implements OnInit {
     this.accountservice
       .GetAccountDetails(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetLevelFourAccountDetails
+          GLOBAL.API_Accounting_GetAllInputLevelAccountCode
       )
       .subscribe(
         data => {
@@ -1084,7 +1084,7 @@ export class EmployeeSalaryComponent implements OnInit {
             data.StatusCode === 200 &&
             data.data.OfficeDetailsList.length > 0
           ) {
-            const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+            const AllOffices = localStorage.getItem('ALLOFFICES') != null ? localStorage.getItem('ALLOFFICES').split(',') : [];
             data.data.OfficeDetailsList.forEach(element => {
               const officeFound = AllOffices.indexOf('' + element.OfficeId);
               if (officeFound !== -1) {

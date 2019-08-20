@@ -79,8 +79,11 @@ export class JournalCodeComponent implements OnInit {
 
           if (
             data.StatusCode === 200 &&
-            data.data.JournalDetailList.length > 0
+            data.data.JournalDetailList != null
           ) {
+            if (
+              data.data.JournalDetailList.length > 0
+            ) {
             data.data.JournalDetailList.forEach(element => {
               this.journalcodelist.push({
                 JournalCode: element.JournalCode,
@@ -88,6 +91,7 @@ export class JournalCodeComponent implements OnInit {
               });
             });
           }
+        }
           this.commonservice.setLoader(false);
         },
         error => {

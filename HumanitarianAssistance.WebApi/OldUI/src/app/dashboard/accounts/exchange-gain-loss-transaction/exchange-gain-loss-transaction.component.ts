@@ -118,8 +118,8 @@ export class ExchangeGainLossTransactionComponent implements OnInit {
     this.accountservice
       .GetAllDetailsByModel(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetExchangeGainOrLossTransactionAmount,
-          model
+        GLOBAL.API_Accounting_GetExchangeGainOrLossTransactionAmount,
+        model
       )
       .subscribe(
         data => {
@@ -186,7 +186,7 @@ export class ExchangeGainLossTransactionComponent implements OnInit {
     this.accountservice
       .GetAccountDetails(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetLevelFourAccountDetails
+        GLOBAL.API_Accounting_GetAllInputLevelAccountCode
       )
       .subscribe(
         data => {
@@ -254,7 +254,7 @@ export class ExchangeGainLossTransactionComponent implements OnInit {
             );
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
@@ -272,22 +272,26 @@ export class ExchangeGainLossTransactionComponent implements OnInit {
 
           if (
             data.StatusCode === 200 &&
-            data.data.JournalDetailList.length > 0
+            data.data.JournalDetailList != null
           ) {
-            data.data.JournalDetailList.forEach(element => {
-              this.journalDropdown.push({
-                JournalCode: element.JournalCode,
-                JournalName: element.JournalName
+            if (
+              data.data.JournalDetailList.length > 0
+            ) {
+              data.data.JournalDetailList.forEach(element => {
+                this.journalDropdown.push({
+                  JournalCode: element.JournalCode,
+                  JournalName: element.JournalName
+                });
               });
-            });
 
-            this.commonService.sortDropdown(
-              this.journalDropdown,
-              'JournalName'
-            );
+              this.commonService.sortDropdown(
+                this.journalDropdown,
+                'JournalName'
+              );
+            }
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
@@ -301,7 +305,7 @@ export class ExchangeGainLossTransactionComponent implements OnInit {
     this.codeservice
       .GetDetailByPassingModel(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetAllVoucherByJouranlId,
+        GLOBAL.API_Accounting_GetAllVoucherByJouranlId,
         JournalVoucherFilters
       )
       .subscribe(
@@ -357,7 +361,7 @@ export class ExchangeGainLossTransactionComponent implements OnInit {
             }
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
@@ -435,7 +439,7 @@ export class ExchangeGainLossTransactionComponent implements OnInit {
     this.accountservice
       .AddVoucher(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_AddExchangeGainLossVoucher,
+        GLOBAL.API_Accounting_AddExchangeGainLossVoucher,
         voucherData
       )
       .subscribe(
@@ -571,7 +575,7 @@ export class ExchangeGainLossTransactionComponent implements OnInit {
     this.accountservice
       .GetAllVoucherByOfficeId(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetExchangeGainLossVoucherList,
+        GLOBAL.API_Accounting_GetExchangeGainLossVoucherList,
         OfficeId
       )
       .subscribe(
@@ -608,7 +612,7 @@ export class ExchangeGainLossTransactionComponent implements OnInit {
     this.accountservice
       .DeleteVoucher(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_DeleteExchangeGainLossVoucher,
+        GLOBAL.API_Accounting_DeleteExchangeGainLossVoucher,
         voucherNo,
         userId
       )

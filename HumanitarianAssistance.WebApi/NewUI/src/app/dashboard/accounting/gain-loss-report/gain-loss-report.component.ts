@@ -420,6 +420,8 @@ export class GainLossReportComponent
     if (this.gainLossAddVoucherForm.CurrencyId !== null) {
       this.gainLossAddVoucherLoader = true;
 
+      data.TimezoneOffset = new Date().getTimezoneOffset();
+
       this.gainLossReportService.AddGainLossVoucher(data).subscribe(
         (response: IResponseData) => {
           if (response.statusCode === 200 && response.data !== null) {

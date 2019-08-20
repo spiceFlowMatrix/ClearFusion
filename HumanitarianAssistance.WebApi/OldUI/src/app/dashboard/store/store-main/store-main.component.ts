@@ -433,7 +433,7 @@ export class StoreMainComponent implements OnInit, OnDestroy {
           this.setting.getBaseUrl() +
             GLOBAL.API_Store_GetItemSpecificationsMaster,
           officeId,
-          itemDetails.itemType
+          itemDetails.ItemType
         )
         .subscribe(
           data => {
@@ -502,6 +502,9 @@ export class StoreMainComponent implements OnInit, OnDestroy {
           if (res.StatusCode === 200) {
             this.toastr.success('Item Group Updated Successfully!');
             // this.getAllInventoryDetails(this.storeSelectedTab);
+            const itemIndex = this.itemGroupDataSource.findIndex(x=>x.ItemGroupId == data.ItemGroupId);
+            this.itemGroupDataSource[itemIndex] = data;
+         
             this.hideItemGroupEditPopup();
           } else {
             this.toastr.error(res.Message);
@@ -527,7 +530,9 @@ export class StoreMainComponent implements OnInit, OnDestroy {
         res => {
           if (res.StatusCode === 200) {
             this.toastr.success('Inventory Updated Successfully!');
-            this.getAllInventoryDetails(this.storeSelectedTab);
+          //  this.getAllInventoryDetails(this.storeSelectedTab);
+          const itemIndex = this.inventoryItemDataSource.findIndex(x=>x.ItemId == data.ItemId);
+          this.inventoryItemDataSource[itemIndex] = data;
             this.hideInventoryItemEditPopup();
           } else {
             this.toastr.error(res.Message);
@@ -1037,7 +1042,7 @@ export class StoreMainComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         data => {
-          const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+          const AllOffices = localStorage.getItem('ALLOFFICES') != null ? localStorage.getItem('ALLOFFICES').split(',') : [];
           this.officecodelist = [];
           if (
             data.StatusCode === 200 &&

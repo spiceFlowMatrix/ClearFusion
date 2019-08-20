@@ -97,7 +97,6 @@ export class SummaryComponent implements OnInit {
                 CurrencyId: element.CurrencyId,
                 CurrencyCode: element.CurrencyCode,
                 CurrencyName: element.CurrencyName,
-                CurrencyRate: element.CurrencyRate
               });
               this.currencyId = this.currencyTypeList[0].CurrencyId;
             });

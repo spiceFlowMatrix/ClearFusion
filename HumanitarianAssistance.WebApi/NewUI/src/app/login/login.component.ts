@@ -89,6 +89,16 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('OrderScheduleRolePermissions', JSON.stringify(data.data.OrderSchedulePermissionsInRole));
             }
 
+              // check if Office Id present
+              localStorage.setItem('ALLOFFICES', '');
+              if (
+                data.data.UserOfficeList != null &&
+                data.data.UserOfficeList.length > 0
+              ) {
+                const Offices = data.data.UserOfficeList.join(',');
+                localStorage.setItem('ALLOFFICES', Offices);
+              }
+
             // redirect to dashboard
             this.router.navigate(['']);
 

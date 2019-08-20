@@ -44,7 +44,7 @@ export class ExchangeGainLossComponent implements OnInit {
     private setting: AppSettingsService,
     private toastr: ToastrService,
     private commonService: CommonService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -87,8 +87,8 @@ export class ExchangeGainLossComponent implements OnInit {
     this.accountservice
       .GetAllDetailsByModel(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetExchangeGainOrLossAmount,
-          model
+        GLOBAL.API_Accounting_GetExchangeGainOrLossAmount,
+        model
       )
       .subscribe(
         data => {
@@ -198,7 +198,7 @@ export class ExchangeGainLossComponent implements OnInit {
             });
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
@@ -216,23 +216,27 @@ export class ExchangeGainLossComponent implements OnInit {
 
           if (
             data.StatusCode === 200 &&
-            data.data.JournalDetailList.length > 0
+            data.data.JournalDetailList != null
           ) {
-            data.data.JournalDetailList.forEach(element => {
-              this.journalDropdown.push({
-                JournalCode: element.JournalCode,
-                JournalName: element.JournalName
+            if (
+              data.data.JournalDetailList.length > 0
+            ) {
+              data.data.JournalDetailList.forEach(element => {
+                this.journalDropdown.push({
+                  JournalCode: element.JournalCode,
+                  JournalName: element.JournalName
+                });
               });
-            });
 
-            this.commonService.sortDropdown(
-              this.journalDropdown,
-              'JournalName'
-            );
-            this.exchangeGainLossFilter.JournalId = this.journalDropdown[0].JournalCode;
+              this.commonService.sortDropdown(
+                this.journalDropdown,
+                'JournalName'
+              );
+              this.exchangeGainLossFilter.JournalId = this.journalDropdown[0].JournalCode;
+            }
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
@@ -246,7 +250,7 @@ export class ExchangeGainLossComponent implements OnInit {
     this.codeservice
       .GetDetailByPassingModel(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetAllVoucherByJouranlId,
+        GLOBAL.API_Accounting_GetAllVoucherByJouranlId,
         JournalVoucherFilters
       )
       .subscribe(
@@ -300,7 +304,7 @@ export class ExchangeGainLossComponent implements OnInit {
             }
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion

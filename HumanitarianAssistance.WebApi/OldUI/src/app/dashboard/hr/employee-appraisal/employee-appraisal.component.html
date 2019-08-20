@@ -1,19 +1,27 @@
 <div class="main-employee-appraisal">
 
   <div class="row">
-    <div class="col-sm-12">
-      <div class="main-heading clearfix">
-        <h3 class="page-headin">Employee Appraisal Details</h3>
+    <div>
+        <div class="main-heading clearfix">
+            <h3 class="page-headin">Employee Appraisal Details</h3>
 
-        <div *ngIf="backButtonFlag">
-          <dx-button class="button-info btn btn-default btn-green" text="Back" (onClick)="onBackButtonClick()" 
-          *ngIf="isEditingAllowed"></dx-button>
+            <div class="col-sm-2">
+                <dx-select-box [dataSource]="officeDropdownList" placeholder="Choose Office"
+                               (onItemClick)="onOfficeSelected($event.itemData.OfficeId)" displayExpr="OfficeName"
+                               valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
+                </dx-select-box>
+            </div>
+
+            <div class="col-sm-10">
+                <div *ngIf="backButtonFlag">
+                    <dx-button class="button-info btn btn-default btn-green" text="Back" (onClick)="onBackButtonClick()"
+                               *ngIf="isEditingAllowed"></dx-button>
+                </div>
+            </div>
+
+            </div>
+
         </div>
-
-      </div>
-
-
-    </div>
 
     <div class="col-sm-12 container">
       <div class="row" *ngIf="employeeAppraisalListFlag">

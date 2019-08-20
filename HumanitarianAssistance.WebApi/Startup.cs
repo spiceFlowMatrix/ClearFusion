@@ -1,11 +1,9 @@
-using AutoMapper;
-using DataAccess.Data;
-using DataAccess.DbEntities;
-using HumanitarianAssistance.Common.Helpers;
-using HumanitarianAssistance.Entities;
+using MediatR;
+using HumanitarianAssistance.Application.Accounting.Queries;
+using HumanitarianAssistance.Domain.Entities;
+using HumanitarianAssistance.Infrastructure.Extensions;
+using HumanitarianAssistance.Persistence;
 using HumanitarianAssistance.WebApi.Extensions;
-using HumanitarianAssistance.WebApi.Filter;
-using HumanitarianAssistance.WebApi.SignalRHub;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,57 +13,42 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
+using AutoMapper;
 using Newtonsoft.Json;
 using System;
+using Microsoft.Extensions.FileProviders;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using HumanitarianAssistance.WebApi.SignalRHub;
 
 namespace HumanitarianAssistance.WebApi
 {
     public class Startup
     {
-        private string defaultCorsPolicyName;
-        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
-        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
-        public static IHostingEnvironment _Env;
+        private string defaultCorsPolicyName = string.Empty;
 
-
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
-            var builder = new ConfigurationBuilder()
-            .SetBasePath(env.ContentRootPath)
-            .AddJsonFile(StaticResource.appsettingJsonFile, optional: true, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-            .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             //get and set environment variable at run time
             string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
-            string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
             string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
+            // string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
 
             defaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
             // Database connection
             Console.WriteLine("Connection string: {0}\n", connectionString);
-            services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContextPool<HumanitarianAssistanceDbContext>(options => options.UseNpgsql(connectionString));
 
-
-            // Add Identity
+            // identity
             services.AddIdentity<AppUser, IdentityRole>(o =>
             {
                 o.Password.RequireDigit = false;
@@ -74,12 +57,15 @@ namespace HumanitarianAssistance.WebApi
                 o.Password.RequireNonAlphanumeric = false;
                 o.Password.RequiredLength = 6;
 
-            }).AddEntityFrameworkStores<ApplicationDbContext>()
-              .AddDefaultTokenProviders();
+            }).AddEntityFrameworkStores<HumanitarianAssistanceDbContext>().AddDefaultTokenProviders();
 
+
+            // Mediater Between Send To Handler
+            services.AddMediatR(typeof(Startup));
+            services.AddMediatR(typeof(GetMainLevelAccountQueryHandler).GetTypeInfo().Assembly);
 
             // Dependency Injection
-            services.AddDependencyInjection(Configuration);
+            services.AddDependencyInjection();
 
             // AutoMapper will scan our assembly and look for classes that inherit from Profile, then load their mapping configurations.
             services.AddAutoMapper();
@@ -89,6 +75,7 @@ namespace HumanitarianAssistance.WebApi
             {
                 options.AddPolicy("Trust", policy => policy.RequireClaim("Roles", "Admin", "SuperAdmin", "Accounting Manager", "HR Manager", "Project Manager", "Administrator"));
             });
+
 
             //For Cors Setting
             services.AddCors(options =>
@@ -101,12 +88,12 @@ namespace HumanitarianAssistance.WebApi
                 });
             });
 
+
             // set compatibility
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // filter & default response set to json  
-            services.AddMvc(c => { c.Filters.Add(typeof(CustomException)); })
-            .AddJsonOptions(c =>
+            // default response set to json  
+            services.AddMvc().AddJsonOptions(c =>
             {
                 c.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
                 c.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -121,14 +108,13 @@ namespace HumanitarianAssistance.WebApi
 
             // swagger configuration
             services.AddSwaggerDocumentation();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<DbInitializer> logger)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            // update database
-            UpdateDatabase(app, userManager, roleManager, logger).Wait();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -140,8 +126,14 @@ namespace HumanitarianAssistance.WebApi
                 app.UseHsts();
             }
 
+
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), @"Documents")),
+                RequestPath = new PathString("/Docs")
+            });
 
             app.UseCookiePolicy();
             app.UseCors(defaultCorsPolicyName);
@@ -153,9 +145,9 @@ namespace HumanitarianAssistance.WebApi
             // signal-R
             app.UseSignalR(routes =>
             {
-               // routes.MapHub<ChatHub>("/chathub");
                 routes.MapHub<NotifyHub>("/notifyhub");
             });
+
 
             app.UseMvc(routes =>
             {
@@ -164,16 +156,8 @@ namespace HumanitarianAssistance.WebApi
                 template: "{controller}/{action=Index}/{id?}");
             });
 
-            // NOTE: Use to update web.config for redirection redirection 
-            // var options = new RewriteOptions()
-            //            // .AddRedirect("redirect-rule/(.*)", "redirected/$1")
-            //            // .AddRewrite(@"^rewrite-rule/(\d+)/(\d+)", "rewritten?var1=$1&var2=$2", 
-            //            //     skipRemainingRules: true)
-            //            .AddRedirect("$", "newui")
-            //            .AddRewrite(@"^$", "newui", skipRemainingRules: true);
 
-            // app.UseRewriter(options);
-
+            #region "Frontend config"
 
             // for each angular client we want to host. 
             app.Map(new PathString("/oldui"), client =>
@@ -233,49 +217,13 @@ namespace HumanitarianAssistance.WebApi
                 }
             });
 
-        }
+            #endregion
 
-        //2011
-        private static async Task UpdateDatabase(IApplicationBuilder app, UserManager<AppUser> um, RoleManager<IdentityRole> rm, ILogger<DbInitializer> logger)
-        {
-            using (var serviceScope = app.ApplicationServices
-            .GetRequiredService<IServiceScopeFactory>()
-            .CreateScope())
+
+            app.Run(async (context) =>
             {
-                using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
-                {
-                    context.Database.Migrate();
-
-                    if (!context.Users.Any())
-                    {
-                        await DbInitializer.CreateDefaultUserAndRoleForApplication(um, rm, context, logger);
-                    }
-
-                    // check if Contract Content present or not
-                    if (!context.ContractTypeContent.Any())
-                    {
-                        await DbInitializer.AddContractClauses(context);
-                    }
-
-                    // check if JobGrade present or not
-                    if (!context.JobGrade.Any())
-                    {
-                        await DbInitializer.AddJobGrades(context);
-                    }
-
-                    // check if Categories present or not
-                    if (!context.Categories.Any())
-                    {
-                        await DbInitializer.AddMarketingCategory(context);
-                    }
-                    if (!context.ActivityStatusDetail.Any())
-                    {
-                        await DbInitializer.AddActivityStatus(context);
-                    }
-                }
-            }
+                await context.Response.WriteAsync("<h1>Humanitarian Assistance app running ... </h1>");
+            });
         }
-
     }
-    
 }

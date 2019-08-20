@@ -169,8 +169,7 @@ export class AdvancesComponent implements OnInit {
               this.currencyDataSource.push({
                 CurrencyId: element.CurrencyId,
                 CurrencyCode: element.CurrencyCode,
-                CurrencyName: element.CurrencyName,
-                CurrencyRate: element.CurrencyRate
+                CurrencyName: element.CurrencyName
               });
             });
           }
@@ -630,7 +629,6 @@ class CurrencyCode {
   CurrencyId: number;
   CurrencyCode: string;
   CurrencyName: string;
-  CurrencyRate: DoubleRange;
 }
 
 class EmployeeListModel {

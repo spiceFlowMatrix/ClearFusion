@@ -99,7 +99,7 @@ export class PayrollComponent implements OnInit {
 
     this.getCurrencyCodeList();
     this.GetEmployeePayrollDetails();
-    this.GetAllEmployeesProject();
+    //this.GetAllEmployeesProject();
     this.GetLevelFourAccountDetails();
     this.initializeForm();
     this.isEditingAllowed = this.commonService.IsEditingAllowed(
@@ -449,7 +449,7 @@ export class PayrollComponent implements OnInit {
   onContentReadyProject(data) {
     if (this.count === 1) {
       this.count = 0;
-      this.AddEmployeeProjectDetails(this.employeeProjectList);
+      // this.AddEmployeeProjectDetails(this.employeeProjectList);
     }
   }
 
@@ -490,7 +490,7 @@ export class PayrollComponent implements OnInit {
           } else if (data.StatusCode === 400)
             this.toastr.error('Something went wrong!');
 
-          this.GetAllEmployeesProject();
+         // this.GetAllEmployeesProject();
         },
         error => {
           if (error.StatusCode === 500) {
@@ -520,7 +520,7 @@ export class PayrollComponent implements OnInit {
     this.accountservice
       .GetAccountDetails(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetLevelFourAccountDetails
+          GLOBAL.API_Accounting_GetAllInputLevelAccountCode
       )
       .subscribe(
         data => {

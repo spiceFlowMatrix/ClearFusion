@@ -71,8 +71,7 @@ export class PensionComponent implements OnInit {
     this.currencyData = {
       CurrencyCode: null,
       CurrencyId: null,
-      CurrencyName: null,
-      CurrencyRate: null
+      CurrencyName: null
     };
 
     this.pensionFilter = {
@@ -222,8 +221,7 @@ export class PensionComponent implements OnInit {
             this.currencycodeList.push({
               CurrencyId: element.CurrencyId,
               CurrencyCode: element.CurrencyCode,
-              CurrencyName: element.CurrencyName,
-              CurrencyRate: element.CurrencyRate
+              CurrencyName: element.CurrencyName
             });
           });
         }else if (data.StatusCode === 400) {
@@ -441,7 +439,6 @@ export interface CurrencyCodeModel {
   CurrencyId: any;
   CurrencyCode: string;
   CurrencyName: string;
-  CurrencyRate: any;
 }
 
 class EmployeeTaxReportModel {

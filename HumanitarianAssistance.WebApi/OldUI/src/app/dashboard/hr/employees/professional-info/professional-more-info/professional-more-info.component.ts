@@ -126,8 +126,7 @@ export class ProfessionalMoreInfoComponent implements OnInit {
               this.currencyDataSource.push({
                 CurrencyId: element.CurrencyId,
                 CurrencyCode: element.CurrencyCode,
-                CurrencyName: element.CurrencyName,
-                CurrencyRate: element.CurrencyRate
+                CurrencyName: element.CurrencyName
               });
             });
           }

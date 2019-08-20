@@ -1,93 +1,71 @@
-﻿using DataAccess.DbEntities;
-using HumanitarianAssistance.Service.APIResponses;
-using HumanitarianAssistance.Service.interfaces.AccountingNew;
-using HumanitarianAssistance.ViewModels.Models.AccountingNew;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Application.Accounting.Commands.Create;
+using HumanitarianAssistance.Application.Accounting.Commands.Delete;
+using HumanitarianAssistance.Application.Accounting.Commands.Update;
+using HumanitarianAssistance.Application.Accounting.Queries;
+using HumanitarianAssistance.Application.Infrastructure;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 {
+    [ApiController]
     [Produces("application/json")]
-    [Route("api/ChartOfAccount/[Action]/")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ChartOfAccountController : Controller
+    [Route("api/ChartOfAccount/[Action]")]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.Accounting))]
+    [Authorize]
+    public class ChartOfAccountController : BaseController
     {
-        private readonly UserManager<AppUser> _userManager;
-        private IChartOfAccountNewService _iChartOfAccountNewService;
 
-        public ChartOfAccountController(
-            UserManager<AppUser> userManager,
-            IChartOfAccountNewService iChartOfAccountNew
-        )
+        [HttpPost]
+        public async Task<ApiResponse> GetMainLevelAccount([FromBody]long id)
         {
-            _userManager = userManager;
-            _iChartOfAccountNewService = iChartOfAccountNew;
+            return await _mediator.Send(new GetMainLevelAccountQuery { Id = id });
         }
 
         [HttpPost]
-        public async Task<APIResponse> GetMainLevelAccount([FromBody]long id)
+        public async Task<ApiResponse> GetAllAccountsByParentId([FromBody]int id)
         {
-            APIResponse response = await _iChartOfAccountNewService.GetMainLevelAccount(id);
-            return response;
-        }
-
-
-        [HttpPost]
-        public async Task<APIResponse> GetAllAccountsByParentId([FromBody]int id)
-        {
-            APIResponse response = await _iChartOfAccountNewService.GetAllAccountsByParentId(id);
-            return response;
+            return await _mediator.Send(new GetAllAccountsByParentIdQuery { ParentId = id });
         }
 
         [HttpPost]
-        public async Task<object> AddChartOfAccount([FromBody]ChartOfAccountNewModel model)
+        public async Task<ApiResponse> AddChartOfAccount([FromBody]AddChartOfAccountCommand model)
         {
-            APIResponse response = new APIResponse();
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> EditChartOfAccount([FromBody]EditChartOfAccountCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> DeleteChartOfAccount([FromBody]long accountId)
+        {
+            // var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            return await _mediator.Send(new DeleteChartOfAccountCommand
             {
-                model.CreatedById = user.Id;
-                model.CreatedDate = DateTime.UtcNow;
-
-                response = await _iChartOfAccountNewService.AddChartOfAccount(model);
-            }
-            return response;
+                AccountId = accountId,
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow
+            });
         }
-
-
-        [HttpPost]
-        public async Task<APIResponse> EditChartOfAccount([FromBody]ChartOfAccountNewModel model)
-        {
-            APIResponse response = new APIResponse();
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                model.ModifiedById = user.Id;
-                model.ModifiedDate = DateTime.UtcNow;
-
-                response = await _iChartOfAccountNewService.EditChartOfAccount(model);
-            }
-            return response;
-        }
-
-
-        [HttpPost]
-        public async Task<APIResponse> DeleteChartOfAccount([FromBody]long accountId)
-        {
-            APIResponse response = new APIResponse();
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (user != null)
-            {
-                response = await _iChartOfAccountNewService.DeleteChartOfAccount(accountId, user.Id);
-            }
-            return response;
-        }
-
 
     }
 }

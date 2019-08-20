@@ -8,34 +8,34 @@ export interface IExchangeRateFilterModel {
 }
 
 export interface IExchangeRateModel {
-ExchangeRateDate: any;
-VerificationStatus: string;
+  ExchangeRateDate: any;
+  VerificationStatus: string;
 }
 
 export interface IExchangeRateAddModel {
   CurrencyId: number;
   Date: any;
-  }
+}
 
-  export interface ICurrencyListModel {
-    CurrencyId: number;
-    CurrencyName: string;
-  }
+export interface ICurrencyListModel {
+  CurrencyId: number;
+  CurrencyName: string;
+}
 
-  export interface IOfficeListModel {
-    OfficeId: number;
-    OfficeName: string;
-  }
+export interface IOfficeListModel {
+  OfficeId: number;
+  OfficeName: string;
+}
 
-  export interface IExchangeRateModels {
-    FromCurrencyId: number;
-    ToCurrencyId: number;
-    Date: any;
-    Rate: number;
-    }
+export interface IExchangeRateModels {
+  FromCurrencyId: number;
+  ToCurrencyId: number;
+  Date: any;
+  Rate: number;
+}
 
 export interface IOfficeExchangeRateModels {
-    ExchangeRatesViewModel: IExchangeRateModels[];
-    OfficeId: number;
-    SaveForAllOffices: boolean;
+  GenerateExchangeRateModel: IExchangeRateModels[];
+  OfficeId: number;
+  SaveForAllOffices: boolean;
 }

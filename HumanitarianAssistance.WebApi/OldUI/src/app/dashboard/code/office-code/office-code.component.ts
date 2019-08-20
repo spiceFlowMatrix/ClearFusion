@@ -163,7 +163,7 @@ export class OfficeCodeComponent implements OnInit {
           } else if (data.StatusCode === 900) {
             this.toastr.error('Office Code already exist!!!');
           } else {
-            this.toastr.error('Error!!!');
+            this.toastr.error(data.Message);
           }
           this.officeCodePopupLoading = false;
         },
@@ -201,7 +201,7 @@ export class OfficeCodeComponent implements OnInit {
           } else if (data.StatusCode === 900) {
             this.toastr.error('Office Code already exist!!!');
           } else {
-            this.toastr.error('Error!!!');
+            this.toastr.error(data.Message);
           }
           this.officeCodePopupLoading = false;
         },
@@ -229,7 +229,7 @@ export class OfficeCodeComponent implements OnInit {
             this.toastr.success('Office Code Deleted Successfully!!!');
             this.getOfficeCodeList();
           } else {
-            this.toastr.error('Error!!!');
+            this.toastr.error(data.Message);
           }
         },
         error => {

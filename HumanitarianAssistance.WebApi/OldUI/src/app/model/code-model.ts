@@ -2,8 +2,6 @@ export interface CurrencyCode {
     CurrencyId: any;
     CurrencyCode: string;
     CurrencyName: string;
-    CurrencyRate: DoubleRange;
-    Status: boolean;
 }
 
 export interface OfficeCode {
@@ -26,7 +24,7 @@ export interface EmailSetting {
     EmailTypeName: string;
     EmailTypeId: any;
     SenderPassword: string;
-    SmtpPort: any;
+    SmtpPort: number;
     SmtpServer: string;
     EnableSSL: boolean;
 }

@@ -1,4 +1,4 @@
-using HumanitarianAssistance.ViewModels.Models.Common;
+using HumanitarianAssistance.Application.Chat.Models;
 using System.Threading.Tasks;
 
 namespace HumanitarianAssistance.WebApi.SignalRHub.Interface

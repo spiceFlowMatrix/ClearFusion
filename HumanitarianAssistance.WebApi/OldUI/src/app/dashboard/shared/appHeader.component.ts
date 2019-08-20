@@ -33,6 +33,8 @@ import { CommonService } from '../../service/common.service';
 import { AppSettingsService } from '../../service/app-settings.service';
 import { Subject } from 'rxjs/Subject';
 import { AuthGuard } from '../../auths/authentications';
+import * as jwt_decode from 'jwt-decode';
+
 @Component({
   selector: 'app-header',
   templateUrl: './appHeader.component.html',
@@ -42,7 +44,7 @@ export class AppHeaderComponent implements OnInit {
   @Output() checkToken: EventEmitter<any> = new EventEmitter<any>();
 
   notificationPanelVisible = false;
-  notificationIsReadCount: any;
+  notificationIsReadCount = 0;
 
   isConfirmPassword = true;
   isFormValid = false;
@@ -77,7 +79,7 @@ export class AppHeaderComponent implements OnInit {
   selectedOffice: any;
 
   // private _hubConnection: HubConnection | undefined;
-  private _hubConnection: HubConnection;
+  // private _hubConnection: HubConnection;
   public async: any;
   message = '';
   messages: string[] = [];
@@ -131,30 +133,31 @@ export class AppHeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.UserName = localStorage.getItem('UserName');
+   const decodedToken = jwt_decode(localStorage.getItem('authenticationtoken'));
+    this.UserName = decodedToken.email;
 
     // Get All Office
     this.getOfficeCodeList();
 
-    // Notification count
-    this.getNotificationCount();
+    // // Notification count
+    // this.getNotificationCount();
 
     // SignalR
-    this._hubConnection = new signalR.HubConnectionBuilder()
-      // .withUrl(this.settings.getHubUrl + 'chathub')
-      // .withUrl('http://localhost:5000/chathub')
-      .withUrl(this.setting.getHubUrl())
-      .configureLogging(signalR.LogLevel.Information)
-      .build();
+    // this._hubConnection = new signalR.HubConnectionBuilder()
+    //   // .withUrl(this.settings.getHubUrl + 'chathub')
+    //   // .withUrl('http://localhost:5000/chathub')
+    //   .withUrl(this.setting.getHubUrl())
+    //   .configureLogging(signalR.LogLevel.Information)
+    //   .build();
 
-    this._hubConnection.start().catch(err => console.error(err.toString()));
+    // this._hubConnection.start().catch(err => console.error(err.toString()));
 
-    this._hubConnection.on('Send', (data: any) => {
-      this.notificationDataSource = data;
-      // this.toastr.success(data);
-      const received = `Received: ${data}`;
-      this.messages.push(received);
-    });
+    // this._hubConnection.on('Send', (data: any) => {
+    //   this.notificationDataSource = data;
+    //   // this.toastr.success(data);
+    //   const received = `Received: ${data}`;
+    //   this.messages.push(received);
+    // });
   }
 
   //#region "For Automatic logOut"
@@ -273,7 +276,7 @@ export class AppHeaderComponent implements OnInit {
       )
       .subscribe(
         data => {
-          const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+          const AllOffices = localStorage.getItem('ALLOFFICES') != null ? localStorage.getItem('ALLOFFICES').split(',') : [];
           this.officecodelist = [];
           if (
             data.StatusCode === 200 &&
@@ -311,20 +314,20 @@ export class AppHeaderComponent implements OnInit {
   }
   //#endregion
 
-  //#region "getNotificationCount"
-  getNotificationCount() {
-    this.codeservice
-      .GetAllCodeList(
-        this.setting.getBaseUrl() +
-          GLOBAL.API_Notification_GetNotificationIsReadCount
-      )
-      .subscribe(data => {
-        if (data.StatusCode === 200) {
-          this.notificationIsReadCount = data.data.notificationIsReadCount;
-        }
-      });
-  }
-  //#endregion
+  // //#region "getNotificationCount"
+  // getNotificationCount() {
+  //   this.codeservice
+  //     .GetAllCodeList(
+  //       this.setting.getBaseUrl() +
+  //         GLOBAL.API_Notification_GetNotificationIsReadCount
+  //     )
+  //     .subscribe(data => {
+  //       if (data.StatusCode === 200) {
+  //         this.notificationIsReadCount = data.data.notificationIsReadCount;
+  //       }
+  //     });
+  // }
+  // //#endregion
 
   //#region "on office Selected"
   onOfficeSelected(event) {
@@ -341,27 +344,7 @@ export class AppHeaderComponent implements OnInit {
   }
   //#endregion
 
-  // public sendMessage(): void {
-
-  //     const data = `Sent: ${this.message}`;
-  //     if (this._hubConnection) {
-
-  //         this._hubConnection.invoke('Send', "ALPIT");
-  //     }
-  //     this.messages.push(data);
-  // }
-
   public setNotificationIsReadCount(dataCount: any) {
     this.notificationIsReadCount = dataCount;
   }
-}
-
-class LoggerDetailsModel {
-  LoggerDetailsId: any;
-  NotificationId: any;
-  IsRead: any;
-  UserName: any;
-  UserId: any;
-  LoggedDetail: any;
-  CreatedDate: any;
 }

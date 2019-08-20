@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,11 +7,10 @@ namespace HumanitarianAssistance.Common.Helpers
     public static class StaticResource
     {
 
-        //appsetting joson file 
+        // appsetting json file 
         public const string appsettingJsonFile = "appsettings.json";
         public const string googleCredential = "GoogleCredentials/";
-        //public const string googleCredential = "GoogleCredentials/";
-
+        public const string googleCredentialNotFound = "Google Credentials not found";
 
         public const string EmailId = "hamza@edgsolutions.net";
         public const string ApplicationName = "OAuth client";
@@ -25,7 +24,6 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string uploadUrl = "https://storage.cloud.google.com/";
         public const string TrainingDocUrl = "https://drive.google.com/3r234?fa4r";
 
-
         public const string credentialsJsonFile = "credentials.json";
 
         public const int projectNotFound = 404;
@@ -34,7 +32,6 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string invalidDate = "Actual date must be greater than or equal to start date";
         public const string validData = "Please enter valid data";
         public const int notValid = 501;
-
 
         public const int notFoundCode = 120;
         public const int successStatusCode = 200;
@@ -318,7 +315,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string QuestionnaireDeleted = "QuestionnaireDeleted";
         public const string NoEvalutorFound = "No Evalutor Found";
         public const string NoReportFound = "No Report Found";
-        public const string SomethingWentWrong = "SomethingWentWrong";
+        public const string SomethingWentWrong = "Something Went Wrong";
         //
         public const string QuestionnaireDedlineDateNotPassed = "Questionnaire DedlineDate Not Passed";
         public const string SubAssetClassAdded = " Sub Asset class has added";
@@ -356,6 +353,7 @@ namespace HumanitarianAssistance.Common.Helpers
 
         //HR
         public const string PensionPaymentCreated = "Pension Payment Done On {0} for {1}";
+        public const string NoAttendanceToAdd ="No Attendance to Add";
         public const string PensionPayment = "Pension Payment";
         // Marketing
         public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
@@ -387,14 +385,17 @@ namespace HumanitarianAssistance.Common.Helpers
 
         public const string VoucherVerified = "Voucher is verified";
         public const string VoucherUnVerified = "Voucher is Unverified";
+        public const string VoucherNotSaved = "Unable to Create Voucher";
         public const string CurrencyNotFound = "Currency not found";
         public const string defaultFinancialYearIsNotSet = "Default Financial year is not set";
+        public const string FinancialYearAlreadyExists = "Financial Year Already exists!";
+        public const string FinancialYearNotFound = "Financial Year not found";
         public const string officeCodeNotFound = "Office Code Not Found";
         public const string TransactionNotFound = "Transaction Not Found";
         public const string AccountNotFound = "Account Not Found";
         public const string DeleteAllTransactions = "Transactions Exist";
         public const string DeleteAllChildAccount = "Child Account Exist";
-
+        public const string TransactionsNotSaved = "Transactions Not Saved";
 
         #endregion
 
@@ -414,7 +415,9 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string ActivitiesControlNotfound = "Activities Control not found";
         public const string HiringControlNotfound = "Hiring Control not found";
 
-        public const string sameRoleAlreadyExistForTheUser= "Same Role already exist for this user";
+        public const string sameRoleAlreadyExistForTheUser = "Same Role already exist for this user";
+        public const string NoTransactionToUpDate = "No Transaction To UpDate";
+        public const string JournalNotFound = "Journal not found";
 
         #region Chat
         public const string ChatMessageEmpty = "Message cannot be empty";

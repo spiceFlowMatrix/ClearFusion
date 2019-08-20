@@ -27,7 +27,7 @@ export class CommonService implements OnInit {
   private Loading = new Subject<any>();
   // private _hubConnection: HubConnection | undefined;
 
-  private _hubConnection: HubConnection;
+  // private _hubConnection: HubConnection;
   public async: any;
   message = '';
   messages: string[] = [];
@@ -38,14 +38,14 @@ export class CommonService implements OnInit {
     private toastr: ToastrService
   ) {
     // #region "SignalR"
-    this._hubConnection = new signalR.HubConnectionBuilder()
-      // .withUrl(this.settings.getHubUrl + 'chathub')
-      // .withUrl('http://localhost:5000/chathub')
-      .withUrl(this.settings.getHubUrl())
-      .configureLogging(signalR.LogLevel.Information)
-      .build();
+    // this._hubConnection = new signalR.HubConnectionBuilder()
+    //   // .withUrl(this.settings.getHubUrl + 'chathub')
+    //   // .withUrl('http://localhost:5000/chathub')
+    //   .withUrl(this.settings.getHubUrl())
+    //   .configureLogging(signalR.LogLevel.Information)
+    //   .build();
 
-    this._hubConnection.start().catch(err => console.error(err.toString()));
+    // this._hubConnection.start().catch(err => console.error(err.toString()));
 
     //#endregion
   }
@@ -177,10 +177,10 @@ export class CommonService implements OnInit {
   //#region "Signal R"
   public sendMessage(data: any) {
     // var data = modelData;
-    if (this._hubConnection) {
-      this._hubConnection.invoke('Send', data);
-      // this._hubConnection.invoke('Send', JSON.stringify(data));
-    }
+    // if (this._hubConnection) {
+    //   this._hubConnection.invoke('Send', data);
+    //   // this._hubConnection.invoke('Send', JSON.stringify(data));
+    // }
   }
 
   //#endregion

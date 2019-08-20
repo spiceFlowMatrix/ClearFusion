@@ -89,7 +89,7 @@ export class SearchDropdownComponent implements OnInit, OnChanges {
   //#region "selectAll"
   selectAll() {
     if (this.allSelected.selected) {
-      this.selectedValue = [...this.dataSource.map(item => item.Id), 0];
+      this.selectedValue = this.dataSource != null ?  [...this.dataSource.map(item => item.Id), 0] : [];
     } else {
       this.selectedValue = [];
     }

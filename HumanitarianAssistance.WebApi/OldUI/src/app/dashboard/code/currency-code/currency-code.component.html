@@ -1,30 +1,44 @@
 <div class="main-currency-code">
+    <div class="heading-hdr">
+        <div class="clearfix">
+            <h3 class="page-heading">Currency Code</h3>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-12">
             <div class="main-heading clearfix">
-                <h3 class="page-heading">Currency Code</h3>
+                <div *ngIf="isEditingAllowed">
+                    <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showPopup()">
+                    </dx-button>
+                </div>
             </div>
+        </div>
+        <div class="col-sm-12">
             <div>
-                <dx-data-grid id="gridContainer" [dataSource]="currencycodedt" [allowColumnReordering]="true" [allowColumnResizing]="true"
-                    [columnAutoWidth]="true" [showRowLines]="true">
+
+                <dx-data-grid id="gridContainer" [dataSource]="currencycodedt" [allowColumnReordering]="true"
+                    [allowColumnResizing]="true" [columnAutoWidth]="true" [showRowLines]="true">
                     <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
                     <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
-                    <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+                    <dxo-group-panel [visible]="false"
+                        emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
                     <dxo-header-filter [visible]="true">
                     </dxo-header-filter>
                     <dxo-filter-row [visible]="showFilterRow">
                     </dxo-filter-row>
                     <dxi-column dataField="CurrencyCode"></dxi-column>
                     <dxi-column dataField="CurrencyName"></dxi-column>
-                    <dxi-column dataField="CurrencyRate"></dxi-column>
+                    <!-- <dxi-column dataField="CurrencyRate"></dxi-column>
 
-                    <dxi-column dataField="Status" caption="Base Currency" alignment="center" [width]="200" cellTemplate="CellTemplateStatus"></dxi-column>
+                    <dxi-column dataField="Status" caption="Base Currency" alignment="center" [width]="200"
+                        cellTemplate="CellTemplateStatus"></dxi-column>
                     <div *dxTemplate="let cell of 'CellTemplateStatus'">
                         <div *ngIf="cell.value == true" style="color:green">Active</div>
                         <div *ngIf="cell.value == false" style="color:red"> In-Active </div>
-                    </div>
+                    </div> -->
 
-                    <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
+                    <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit"
+                        *ngIf="isEditingAllowed"></dxi-column>
                     <div *dxTemplate="let data of 'CellTemplateEdit'">
                         <a href="javascript:void(0)" (click)="GetCurrencyDetailByCode(data)">Edit</a>
                     </div>
@@ -36,12 +50,12 @@
     </div>
 </div>
 
-<dx-popup class="popup" [width]="600" [height]="350" [showTitle]="true" title="Add/Edit Currency Details" [dragEnabled]="false"
-    [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+<dx-popup class="popup" [width]="600" [height]="250" [showTitle]="true" title="Add/Edit Currency Details"
+    [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
     <div *dxTemplate="let data of 'content'">
         <form action="your-action" (submit)="onFormSubmit(currencydata)">
-            <dx-form id="form" [formData]="currencydata" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
-                validationGroup="customerData">
+            <dx-form id="form" [formData]="currencydata" [readOnly]="false" [showColonAfterLabel]="true"
+                [showValidationSummary]="true" validationGroup="customerData">
                 <dxi-item dataField="CurrencyCode">
                     <dxi-validation-rule type="required" message="Currency Code is required">
                     </dxi-validation-rule>
@@ -50,20 +64,16 @@
                     <dxi-validation-rule type="required" message="Currency Name is required">
                     </dxi-validation-rule>
                 </dxi-item>
-                <dxi-item dataField="CurrencyRate" editorType="dxNumberBox">
-                    <dxi-validation-rule type="required" message="Currency Rate is required">
-                    </dxi-validation-rule>
-                </dxi-item>
-                <dxi-item dataField="Status" editorType="dxCheckBox">
-                </dxi-item>
             </dx-form>
             <br />
             <div class="btn-grp-wrap">
-                <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true">
+                </dx-button>
                 <dx-button text="Cancel" (onClick)="HidePopup()"></dx-button>
             </div>
         </form>
-        <ngx-loading [show]="currencyCodePopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+        <ngx-loading [show]="currencyCodePopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }">
+        </ngx-loading>
 
     </div>
 </dx-popup>

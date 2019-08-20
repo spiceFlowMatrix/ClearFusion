@@ -63,40 +63,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
       });
     }
     this.dummy = this.notificationDataSource;
-    // this.dummy = [{
-    //   CreatedDate: "22/02/2018",
-    //   UserName: "Alpit G",
-    //   UserId: 23,
-    //   NotificationId: 34343,
-    //   LoggerDetailsId: 2323,
-    //   LoggedDetail: "Voucher Edited",
-    //   IsRead: true
-    // }, {
-    //   CreatedDate: "22/02/2018",
-    //   UserName: "Sanju R",
-    //   UserId: 23,
-    //   NotificationId: 34343,
-    //   LoggerDetailsId: 2323,
-    //   LoggedDetail: "Successfull",
-    //   IsRead: false
-    // }, {
-    //   CreatedDate: "22/02/2018",
-    //   UserName: "Shubham K",
-    //   UserId: 23,
-    //   NotificationId: 34343,
-    //   LoggerDetailsId: 2323,
-    //   LoggedDetail: "Employee Created",
-    //   IsRead: false
-    // }, {
-    //   CreatedDate: "22/02/2018",
-    //   UserName: "Sachin R",
-    //   UserId: 23,
-    //   NotificationId: 34343,
-    //   LoggerDetailsId: 2323,
-    //   LoggedDetail: "Successfull",
-    //   IsRead: false
-    // },
-    // ];
+   
   }
 
   //#region "getAllNotificationList"

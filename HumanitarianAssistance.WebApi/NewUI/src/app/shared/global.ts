@@ -185,7 +185,7 @@ export class GLOBAL {
 
   // Financial Report
   public static API_FinancialReport_GetAllAccountBalancesByCategory = 'FinancialReport/GetAllAccountBalancesByCategory';
-  public static API_FinancialReport_GetAllAccountIncomeExpensesByCategory = 'FinancialReport/GetAllAccountIncomeExpensesByCategory';
+  public static API_FinancialReport_GetAllAccountIncomeExpensesByCategory = 'AccountReports/GetAllAccountIncomeExpensesByCategory';
 
   // Voucher Transaction
   public static API_VoucherTransaction_GetAllVoucherList = 'VoucherTransaction/GetAllVoucherList';
@@ -205,15 +205,15 @@ export class GLOBAL {
   public static API_ExchangeRates_DeleteExchangeRates = 'ExchangeRates/DeleteExchangeRates';
 
   // Gain Loss Report
+  public static API_GainLossReport_GetExchangeGainLossReport = 'GainLossReport/GetExchangeGainLossReport';
   public static API_GainLossReport_GetExchangeGainLossFilterAccountList = 'GainLossReport/GetExchangeGainLossFilterAccountList';
   public static API_GainLossReport_GetExchangeGainLossVoucherList = 'GainLossReport/GetExchangeGainLossVoucherList';
   public static API_GainLossReport_AddExchangeGainLossVoucher = 'GainLossReport/AddExchangeGainLossVoucher';
   public static API_GainLossReport_DeleteGainLossVoucherTransaction = 'GainLossReport/DeleteGainLossVoucherTransaction';
 
   // Financial Report
-  public static API_FinancialReport_GetExchangeGainLossReport = 'FinancialReport/GetExchangeGainLossReport';
-  public static API_FinancialReport_SaveGainLossAccountList = 'FinancialReport/SaveGainLossAccountList';
-  public static API_FinancialReport_GetDetailOfNotes = 'FinancialReport/GetDetailOfNotes';
+  public static API_FinancialReport_SaveGainLossAccountList = 'AccountReports/SaveGainLossAccountList';
+  public static API_FinancialReport_GetDetailOfNotes = 'AccountReports/GetDetailOfNotes';
 
   // Voucher Summary Report
   public static API_AccountReports_GetVoucherSummaryReportList = 'AccountReports/GetVoucherSummaryReportList';
@@ -393,7 +393,7 @@ export class GLOBAL {
 
 
   //#region "Hiring request"
-  public static API_HREmployee_GetAllJobGrade = 'HREmployee/GetAllJobGrade';
+  public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
   public static API_HiringRequest_GetProjectHiringRequestDetail = 'HiringRequest/GetProjectHiringRequestDetail';
   public static API_HiringRequest_EditHiringRequestDetail = 'HiringRequest/EditHiringRequestDetail';
@@ -405,8 +405,8 @@ export class GLOBAL {
   public static API_HiringRequest_HiringRequestSelectCandidate = 'HiringRequest/HiringRequestSelectCandidate';
   public static API_HiringRequest_CompleteHiringRequest = 'HiringRequest/CompleteHiringRequest';
   public static API_Code_GetAttendanceGroupst = 'Code/GetAttendanceGroups';
-  public static API_HREmployee_GetAllEmployeeContractType = 'HREmployee/GetAllEmployeeContractType';
-  public static API_HREmployee_EditEmployeeProfessionalDetail = 'HREmployee/EditEmployeeProfessionalDetail';
+  public static API_HREmployee_GetAllEmployeeContractType = 'Code/GetAllEmployeeContractType';
+  public static API_HREmployee_EditEmployeeProfessionalDetail = 'EmployeeDetail/EditEmployeeProfessionalDetail';
   public static API_HiringRequest_DeleteCandidatDetail = 'HiringRequest/DeleteCandidatDetail';
   public static API_Chat_AddMessage = 'Chat/AddMessage';
 

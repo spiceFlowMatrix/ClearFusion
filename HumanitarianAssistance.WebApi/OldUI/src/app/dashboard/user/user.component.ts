@@ -944,10 +944,10 @@ export class UserComponent implements OnInit, OnDestroy {
       )
       .subscribe(data => {
         if (data.StatusCode === 200) {
-          this.toastr.success('Passowrd Reset Successfully!');
+          this.toastr.success('Password Reset Successfully!');
           this.modalResetPassword.hide();
         } else {
-          this.toastr.error('Ther is somme error');
+          this.toastr.error('There is somme error');
         }
       });
   }
