@@ -3,7 +3,9 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  Input
+  Input,
+
+  ViewChild
 } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { StoreService } from '../../store.service';
@@ -12,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { CodeService } from '../../../code/code.service';
 import { CommonService } from '../../../../service/common.service';
 import { AppSettingsService } from '../../../../service/app-settings.service';
+import { DxFileUploaderComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-purchases',
@@ -19,6 +22,9 @@ import { AppSettingsService } from '../../../../service/app-settings.service';
   styleUrls: ['./purchases.component.css']
 })
 export class PurchasesComponent implements OnInit {
+
+    @ViewChild('imageUploader') imageUploader: DxFileUploaderComponent;
+    @ViewChild('invoiceUploader') invoiceUploader: DxFileUploaderComponent;
   @Output() getItemAmounts: EventEmitter<string> = new EventEmitter<string>();
   @Input() isEditingAllowed: boolean;
 
@@ -171,79 +177,86 @@ export class PurchasesComponent implements OnInit {
       .subscribe(
         data => {
           this.purchaseDataSource = [];
-          if (data.data.StoreItemsPurchaseViewList != null) {
-            if (data.data.StoreItemsPurchaseViewList.length > 0) {
-              data.data.StoreItemsPurchaseViewList.forEach(element => {
-                this.purchaseDataSource.push({
-                  PurchaseId: element.PurchaseId,
-                  SerialNo: element.SerialNo,
-                  Currency: element.Currency,
-                  UnitCost: element.UnitCost,
-                  Quantity: element.Quantity,
-                  TotalCost: element.TotalCost,
-                  UnitType: element.UnitType,
-                  TotalCostUSD: element.TotalCostUSD,
-                  CurrentQuantity: element.CurrentQuantity,
-                  ImageFileName:
-                    element.ImageFileName === ''
-                      ? this.defaultImagePath
-                      : this.setting.getDocUrl() + element.ImageFileName,
-                  InvoiceFileName: element.Invoice,
-                  PurchaseDate:
-                    element.PurchaseDate != null
-                      ? new Date(
-                          new Date(element.PurchaseDate).getTime() -
-                            new Date().getTimezoneOffset() * 60000
-                        )
-                      : null, // mandatory
-                  DeliveryDate:
-                    element.DeliveryDate != null
-                      ? new Date(
-                          new Date(element.DeliveryDate).getTime() -
-                            new Date().getTimezoneOffset() * 60000
-                        )
-                      : null, // mandatory
-                  ApplyDepreciation: element.ApplyDepreciation,
-                  DepreciationRate: element.DepreciationRate,
-                  PurchasedById: element.PurchasedById,
-                  InventoryItem: element.InventoryItem,
-                  // newly added fields
-                  VoucherId: element.VoucherId,
-                  VoucherDate:
-                    element.VoucherDate != null
-                      ? new Date(
-                          new Date(element.VoucherDate).getTime() -
-                            new Date().getTimezoneOffset() * 60000
-                        )
-                      : null, // mandatory
-                  AssetTypeId: element.AssetTypeId, // 1.Cash, 2.In Kind
-                  InvoiceNo: element.InvoiceNo,
-                  InvoiceDate:
-                    element.InvoiceDate != null
-                      ? new Date(
-                          new Date(element.InvoiceDate).getTime() -
-                            new Date().getTimezoneOffset() * 60000
-                        )
-                      : null, // mandatory
-                  Status: element.Status,
-                  ReceiptTypeId: element.ReceiptTypeId,
-                  ReceivedFromLocation: element.ReceivedFromLocation,
-                  ProjectId: element.ProjectId,
-                  BudgetLineId: element.BudgetLineId,
-                  PaymentTypeId: element.PaymentTypeId,
-                  IsPurchaseVerified: element.IsPurchaseVerified,
-                  VerifiedPurchaseVoucher: element.VerifiedPurchaseVoucher,
-                  OfficeId: element.OfficeId,
-                  JournalCode: element.JournalCode,
-                  VerifiedPurchaseVoucherReferenceNo:
-                    element.VerifiedPurchaseVoucherReferenceNo,
-                    TimezoneOffset: new Date().getTimezoneOffset()
-                });
-              });
+            if (data.data.StoreItemsPurchaseViewList != null) {
+                if (data.data.StoreItemsPurchaseViewList.length > 0) {
+                    data.data.StoreItemsPurchaseViewList.forEach(element => {
+                        this.purchaseDataSource.push({
+                            PurchaseId: element.PurchaseId,
+                            SerialNo: element.SerialNo,
+                            Currency: element.Currency,
+                            UnitCost: element.UnitCost,
+                            Quantity: element.Quantity,
+                            TotalCost: element.TotalCost,
+                            UnitType: element.UnitType,
+                            TotalCostUSD: element.TotalCostUSD,
+                            CurrentQuantity: element.CurrentQuantity,
+                            ImageFileName:
+                                element.ImageFileName === ''
+                                    ? this.defaultImagePath
+                                    : this.setting.getDocUrl() + element.ImageFileName,
+                            InvoiceFileName: element.Invoice,
+                            PurchaseDate:
+                                element.PurchaseDate != null
+                                    ? new Date(
+                                        new Date(element.PurchaseDate).getTime() -
+                                        new Date().getTimezoneOffset() * 60000
+                                    )
+                                    : null, // mandatory
+                            DeliveryDate:
+                                element.DeliveryDate != null
+                                    ? new Date(
+                                        new Date(element.DeliveryDate).getTime() -
+                                        new Date().getTimezoneOffset() * 60000
+                                    )
+                                    : null, // mandatory
+                            ApplyDepreciation: element.ApplyDepreciation,
+                            DepreciationRate: element.DepreciationRate,
+                            PurchasedById: element.PurchasedById,
+                            InventoryItem: element.InventoryItem,
+                            // newly added fields
+                            VoucherId: element.VoucherId,
+                            VoucherDate:
+                                element.VoucherDate != null
+                                    ? new Date(
+                                        new Date(element.VoucherDate).getTime() -
+                                        new Date().getTimezoneOffset() * 60000
+                                    )
+                                    : null, // mandatory
+                            AssetTypeId: element.AssetTypeId, // 1.Cash, 2.In Kind
+                            InvoiceNo: element.InvoiceNo,
+                            InvoiceDate:
+                                element.InvoiceDate != null
+                                    ? new Date(
+                                        new Date(element.InvoiceDate).getTime() -
+                                        new Date().getTimezoneOffset() * 60000
+                                    )
+                                    : null, // mandatory
+                            Status: element.Status,
+                            ReceiptTypeId: element.ReceiptTypeId,
+                            ReceivedFromLocation: element.ReceivedFromLocation,
+                            ProjectId: element.ProjectId,
+                            BudgetLineId: element.BudgetLineId,
+                            PaymentTypeId: element.PaymentTypeId,
+                            IsPurchaseVerified: element.IsPurchaseVerified,
+                            VerifiedPurchaseVoucher: element.VerifiedPurchaseVoucher,
+                            OfficeId: element.OfficeId,
+                            JournalCode: element.JournalCode,
+                            VerifiedPurchaseVoucherReferenceNo:
+                                element.VerifiedPurchaseVoucherReferenceNo,
+                            TimezoneOffset: new Date().getTimezoneOffset()
+                        });
+                    });
+                }
+            } else {
+                if (data.StatusCode == 400) {
+                    this.toastr.error(data.Message);
+                }
             }
-          }
         },
-        error => {}
+        error => {
+            debugger;
+            this.toastr.error(error.Message);
+        }
       );
   }
   //#endregion
@@ -578,7 +591,8 @@ export class PurchasesComponent implements OnInit {
           );
           this.getAllPurchaseList(
             localStorage.getItem('SelectedInventoryItem')
-          );
+            );
+           this.imageUploader.instance.reset();
           this.hideAddPurchaseFormPopupVisible();
           this.hideAddPurchaseFormPopupLoading();
         },
@@ -867,7 +881,10 @@ export class PurchasesComponent implements OnInit {
       JournalCode: null,
       VerifiedPurchaseVoucherReferenceNo: null,
       TimezoneOffset: null
-    };
+      };
+      debugger;
+
+     
 
     this.showAddPurchaseFormPopupVisible();
   }
@@ -1118,7 +1135,13 @@ export class PurchasesComponent implements OnInit {
           this.hideEditPurchaseFormPopupLoading();
         }
       );
-  }
+    }
+
+    onAddPurchasePopUpHide() {
+        debugger;
+        this.imageUploader.instance.reset();
+        this.invoiceUploader.instance.reset();
+    }
 
   //#region "onSelectPurchaseForDoc"
   onSelectPurchaseForDoc(data: PurchaseModel) {
@@ -1146,7 +1169,9 @@ export class PurchasesComponent implements OnInit {
     this.addPurchaseFormPopupVisible = true;
   }
   hideAddPurchaseFormPopupVisible() {
-    this.addPurchaseFormPopupVisible = false;
+      this.addPurchaseFormPopupVisible = false;
+      this.imageUploader.instance.reset();
+      this.invoiceUploader.instance.reset();
   }
 
   // edit popup

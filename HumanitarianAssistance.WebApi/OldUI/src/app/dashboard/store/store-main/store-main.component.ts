@@ -501,7 +501,10 @@ export class StoreMainComponent implements OnInit, OnDestroy {
         res => {
           if (res.StatusCode === 200) {
             this.toastr.success('Item Group Updated Successfully!');
-            // this.getAllInventoryDetails(this.storeSelectedTab);
+           // this.getAllInventoryDetails(this.storeSelectedTab);
+            const itemIndex = this.itemGroupDataSource.findIndex(x=>x.ItemGroupId == data.ItemGroupId);
+            this.itemGroupDataSource[itemIndex] = data;
+         
             this.hideItemGroupEditPopup();
           } else {
             this.toastr.error(res.Message);
@@ -527,7 +530,10 @@ export class StoreMainComponent implements OnInit, OnDestroy {
         res => {
           if (res.StatusCode === 200) {
             this.toastr.success('Inventory Updated Successfully!');
-            this.getAllInventoryDetails(this.storeSelectedTab);
+           // this.getAllInventoryDetails(this.storeSelectedTab);
+           const itemIndex = this.inventoryItemDataSource.findIndex(x=>x.ItemId == data.ItemId);
+            this.inventoryItemDataSource[itemIndex] = data;
+        
             this.hideInventoryItemEditPopup();
           } else {
             this.toastr.error(res.Message);
@@ -912,6 +918,7 @@ export class StoreMainComponent implements OnInit, OnDestroy {
       Description: data.Description,
       InventoryId: data.InventoryId
     };
+    console.log(this.itemGroupDataSource, data);
 
     this.showItemGroupEditPopup();
   }

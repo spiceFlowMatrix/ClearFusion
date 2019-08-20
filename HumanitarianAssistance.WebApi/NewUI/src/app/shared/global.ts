@@ -351,6 +351,9 @@ export class GLOBAL {
   public static API_Project_GetProjectProposalReport = 'Project/GetProjectProposalReport';
   public static API_Project_GetProjectProposalAmountSummary = 'Project/GetProjectProposalAmountSummary';
   public static API_Project_GetProjectWinLossStatus = 'Project/GetProjectWinLossStatus';
+  public static API_Project_GetIsApprovedCriteriaEvaluationStatus = 'Project/GetIsApprovedCriteriaEvaluationStatus';
+
+
   public static API_Account_GetRoles = 'Account/GetRoles';
   public static API_FileManagement_GetSignedURL = 'FileManagement/GetSignedURL';
 

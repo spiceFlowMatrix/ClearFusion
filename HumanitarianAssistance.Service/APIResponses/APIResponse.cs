@@ -303,6 +303,8 @@ namespace HumanitarianAssistance.Service.APIResponses
         public ProjectDetailNewModel ProjectDetailModel1 { get; set; }
         public ProjectDetail ProjectDetail { get; set; }
         public bool ProjectWinLoss { get; set; }
+        public bool IsApprovedCriteriaEvaluation { get; set; }
+
         public DonorDetail DonorDetailById { get; set; }
         public ProjectOtherDetail OtherProjectDetailById { get; set; }
         public SecurityConsiderationMultiSelect MultiSecurityConsiderationById { get; set; }

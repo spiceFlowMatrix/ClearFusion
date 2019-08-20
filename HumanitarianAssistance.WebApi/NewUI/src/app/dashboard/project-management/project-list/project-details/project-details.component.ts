@@ -8,6 +8,7 @@ import { ProjectDetailComponent } from './project-detail/project-detail.componen
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { Observable, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-project-details',
@@ -22,7 +23,7 @@ export class ProjectDetailsComponent implements OnInit {
   projectId: number;
   setProjectHeader = 'Project';
   isProjectWin = false;
-
+  isCEApproved = false;
   menuList: IMenuList[] ;
   authorizedMenuList: IMenuList[] = [];
 
@@ -37,7 +38,7 @@ export class ProjectDetailsComponent implements OnInit {
     public projectListService: ProjectListService,
     private globalService: GlobalSharedService,
     private appurl: AppUrlService,
-    private router : Router
+    private router: Router
   ) {
 
     this.getScreenSize();
@@ -60,22 +61,43 @@ export class ProjectDetailsComponent implements OnInit {
 
     // Set Menu Header Name
     this.globalService.setMenuHeaderName(this.setProjectHeader);
-    this.globalService.setMenuList(this.menuList.filter((i, index) => index < 3));
+    this.globalService.setMenuList(this.menuList.filter((i, index) => index < 2));
 
-    // this.setHeaderMenu();
-    this.getProjectWinLossDetail(this.projectId);
+   // this.setHeaderMenu();
+  // this.getProjectWinLossDetail(this.projectId);
+  // this.getCriteriaEvaluationApprovedDetail(this.projectId);
   }
   ngOnInit() {
+    this.getMultipleApiReuest().subscribe((res) => {
+      this.getResponseProjectWinLossDetail(res[0]);
+      this.getResponseCriteriaEvaluationApproved(res[1]);
+      this.setHeaderMenu();
+     });
   }
 
-  setHeaderMenu() {
-    // check weather the project is win or loss
-    this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
-      this.isProjectWin
-        ? this.menuList
-        : this.menuList.filter((i, index) => index < 3)
-    );
+// fork join to get multiple api response
+  getMultipleApiReuest(): Observable<any>{
+    const projectDetailResp = this.getProjectWinLossDetail(this.projectId);
+    const approvedCEResp = this.getCriteriaEvaluationApprovedDetail(this.projectId);
+    return forkJoin([projectDetailResp, approvedCEResp]);
+  }
 
+
+  setHeaderMenu() {
+    // check weather the criteria evaluation is approved
+    if (this.isProjectWin === true) {
+      this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
+        this.isProjectWin
+          ? this.menuList
+          : this.menuList.filter((i, index) => index < 3)
+      );
+    } else {
+    this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
+      this.isCEApproved
+        ? this.menuList.filter((i, index) => index < 3)
+        : this.menuList.filter((i, index) => index < 2)
+    );
+    }
     // Set Menu Header List
     this.globalService.setMenuList(this.authorizedMenuList);
   }
@@ -96,46 +118,69 @@ export class ProjectDetailsComponent implements OnInit {
 
   //#region Get win loss deytail by  project id
   getProjectWinLossDetail(projectId: number) {
-    this.projectListService
+    return this.projectListService
       .GetProjectWinLossDetail(
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectWinLossStatus,
         projectId
-      )
-      .subscribe(
-        data => {
-          if (data != null) {
-            if (data.data.ProjectWinLoss != null) {
-              // check weather the project is win or loss
-              this.isProjectWin = data.data.ProjectWinLoss;
-              this.setHeaderMenu();
-            }
-          }
-        },
-        error => {}
       );
+      // .subscribe(
+      //   data => {
+      //     if (data != null) {
+      //       if (data.data.ProjectWinLoss != null) {
+      //         // check weather the project is win or loss
+      //         this.isProjectWin = data.data.ProjectWinLoss;
+      //         this.setHeaderMenu();
+      //       }
+      //     }
+      //   },
+      //   error => {}
+      // );
   }
   //#endregion
 
 
-  //#region Get win loss deytail by  project id
+  //#region Get criteria evaluation approved by  project id
   getCriteriaEvaluationApprovedDetail(projectId: number) {
-    this.projectListService
-      .GetProjectWinLossDetail(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectWinLossStatus,
+    return this.projectListService
+      .GetIsApprovedCriteriaEvaluationDetail(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_GetIsApprovedCriteriaEvaluationStatus,
         projectId
-      )
-      .subscribe(
-        data => {
-          if (data != null) {
-            if (data.data.ProjectWinLoss != null) {
-              // check weather the project is win or loss
-              this.isProjectWin = data.data.ProjectWinLoss;
-              this.setHeaderMenu();
-            }
-          }
-        },
-        error => {}
       );
+      // .subscribe(
+      //   data => {
+      //     if (data != null) {
+      //       if (data.data.IsApprovedCriteriaEvaluation != null) {
+      //         // check weather the project is win or loss
+      //         this.isCEApproved = data.data.IsApprovedCriteriaEvaluation;
+      //         this.setHeaderMenu();
+      //       }
+      //     }
+      //   },
+      //   error => {}
+      // );
   }
   //#endregion
+
+//#region "getResponseProjectWinLossDetail"
+getResponseProjectWinLossDetail(res) {
+  if (res != null) {
+    if (res.data.ProjectWinLoss != null) {
+      // check weather the project is win or loss
+      this.isProjectWin = res.data.ProjectWinLoss;
+    }
+  }
+
+}
+
+//#endregion
+//#region "getResponseCriteriaEvaluationApproved"
+getResponseCriteriaEvaluationApproved(data) {
+  if (data != null) {
+    if (data.data.IsApprovedCriteriaEvaluation != null) {
+      // check weather the project is win or loss
+      this.isCEApproved = data.data.IsApprovedCriteriaEvaluation;
+    }
+  }
+}
+//#endregion
 }
