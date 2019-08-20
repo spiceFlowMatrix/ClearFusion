@@ -120,13 +120,13 @@ namespace HumanitarianAssistance.Service.interfaces
         APIResponse GetOtherProjectListById(long ProjectId);
         Task<APIResponse> AddEditDonorCriteria(DonorCriteriaModel model, string UserId);
         Task<APIResponse> AddEditPurposeofInitiativeCriteria(PurposeofInitiativeCriteriaModel model, string UserId);
-        APIResponse AddEditEligibilityCriteriaDetail(EligibilityCriteriaDetailModel model, string UserId);
-        APIResponse AddEditFeasibilityCriteria(FeasibilityCriteriaModel model, string UserId);
+        Task<APIResponse> AddEditEligibilityCriteriaDetail(EligibilityCriteriaDetailModel model, string UserId);
+       Task<APIResponse> AddEditFeasibilityCriteria(FeasibilityCriteriaModel model, string UserId);
         Task<APIResponse> GetAllCriteriaEvaluationDetalByProjectId(long projectId);
         Task<APIResponse> AddEditPriorityCriteria(PriorityCriteriaModel model, string UserId);
-        APIResponse AddEditFinancialCriteria(FinancialCriteriaModel model, string UserId);
+        Task<APIResponse> AddEditFinancialCriteria(FinancialCriteriaModel model, string UserId);
         Task<APIResponse> AddEditRiskCriteria(RiskCriteriaModel model, string UserId);
-        APIResponse AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId);
+        Task<APIResponse> AddEditTargetBeneficiary(TargetBeneficiaryDetail model, string UserId);
 
         APIResponse AddEditFinancialProjectDetail(FinancialProjectDetailModel model, string UserId);
 
@@ -175,7 +175,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> DeleteDonorEligibilityCriteriaOtherDetails(long Id, string userId);
 
         Task<APIResponse> AddEditCriteriaEvalutionSubmitDetail(ProjectDetailNewModel model);
-
+        Task<APIResponse> GetIsApprovedCriteriaEvaluationStatus(long projectId);
 
         APIResponse AddEditSecurityConsidMultiDetail(SecurityConsiderationMultiSelectModel model, string UserId);
         APIResponse AddEditProvinceMultiSelectDetail(ProvinceMultiSelectModel model, string UserId);

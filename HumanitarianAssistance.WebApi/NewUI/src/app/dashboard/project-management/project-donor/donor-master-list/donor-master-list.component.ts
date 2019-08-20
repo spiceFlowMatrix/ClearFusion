@@ -188,25 +188,27 @@ export class DonorMasterListComponent implements OnInit {
         this.donorFilterModel
       )
       .subscribe(
-        data => {
-          this.donorList = [];
-          if (data.data.DonorDetail.length > 0 && data.StatusCode === 200) {
-            // this.projectFilterModel.totalCount = res.data.TotalCount != null ? res.data.TotalCount : 0;
-            this.donorFilterModel.totalCount =
-              data.data.TotalCount != null ? data.data.TotalCount : 0;
-            // this.tottalRecord = data.data.DonorDetail.length;
-            data.data.DonorDetail.forEach(element => {
-              this.donorList.push({
-                DonorId: element.DonorId,
-                Name: element.Name,
-                ContactPerson: element.ContactPerson,
-                ContactDesignation: element.ContactDesignation,
-                ContactPersonEmail: element.ContactPersonEmail,
-                ContactPersonCell: element.ContactPersonCell
-              });
-              this.DonorDetailModel = this.donorList;
+      data => {
+        this.donorList = [];
+        if (data.data.DonorDetail != null && data.data.DonorDetail != undefined) {
+        if (data.data.DonorDetail.length > 0 && data.StatusCode === 200) {
+          // this.projectFilterModel.totalCount = res.data.TotalCount != null ? res.data.TotalCount : 0;
+          this.donorFilterModel.totalCount =
+            data.data.TotalCount != null ? data.data.TotalCount : 0;
+          // this.tottalRecord = data.data.DonorDetail.length;
+          data.data.DonorDetail.forEach(element => {
+            this.donorList.push({
+              DonorId: element.DonorId,
+              Name: element.Name,
+              ContactPerson: element.ContactPerson,
+              ContactDesignation: element.ContactDesignation,
+              ContactPersonEmail: element.ContactPersonEmail,
+              ContactPersonCell: element.ContactPersonCell
             });
-          }
+            this.DonorDetailModel = this.donorList;
+          });
+        }
+      }
 
           this.donorListLoaderFlag = false;
         },
