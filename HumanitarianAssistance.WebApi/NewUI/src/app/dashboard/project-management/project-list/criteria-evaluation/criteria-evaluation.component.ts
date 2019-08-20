@@ -227,11 +227,12 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     public criteriaEvalService: CriteriaEvaluationService,
     public toastr: ToastrService,
     private cdRef: ChangeDetectorRef,
+
     private globalService: GlobalSharedService,
     private localStorageService: LocalStorageService,
     public projectListService: ProjectListService,
     private router: Router
-
+     
   ) {
 
     // set menu header for project listing
@@ -4370,6 +4371,7 @@ AddEditProjectProposal(model: any) {
         this.startCriteriaEvaluationSubmitLoader = true;
         this.IsSubmitCEform.IsCriteriaEvaluationSubmit = false;
       }
+
       this.setHeaderMenu();
       this.IsSubmitCEform.ProjectId = this.ProjectId;
       this.AddIsSubmitCEDetail(this.IsSubmitCEform);
